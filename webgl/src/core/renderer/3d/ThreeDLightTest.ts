@@ -361,10 +361,8 @@ function main() {
 
     // Make a view matrix from the camera matrix.
     var viewMatrix = glMatrix.mat4.invert(null, cameraMatrix);
-
     // Compute a view projection matrix
     var viewProjectionMatrix = glMatrix.mat4.multiply(null, projectionMatrix, viewMatrix);
-
     // Draw a F at the origin
     var worldMatrix = glMatrix.mat4.identity(null);
     glMatrix.mat4.rotateY(worldMatrix, worldMatrix, fRotationRadians);
@@ -380,10 +378,8 @@ function main() {
       u_color: [0.2, 1, 0.2, 1],
       u_reverseLightDirection: glMatrix.vec3.normalize(null, [0.5, 0.7, 1])
     }
-    
     G_ShaderFactory.setBuffersAndAttributes(programShader.attrSetters, cubeBufferInfo);
     G_ShaderFactory.setUniforms(programShader.uniSetters, uniformData);
-
     G_ShaderFactory.drawBufferInfo(cubeBufferInfo, gl.TRIANGLES);
   }
 }

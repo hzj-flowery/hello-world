@@ -3,8 +3,8 @@
 import Device from "./Device";
 import LoaderManager from "./LoaderManager";
 import { G_ShaderFactory } from "./core/renderer/shader/Shader";
-import RenderFlow from "./RenderFlow";
-import ThreeDLightTest from "./core/renderer/3d/ThreeDLightTest3";
+import ThreeDLightTest from "./core/renderer/3d/ThreeDLightTest";
+import SpotLightTest from "./core/renderer/3d/SpotLightTest";
 
 
 
@@ -42,7 +42,8 @@ G_ShaderFactory.init(Device.Instance.gl);
 // SpeedTest.run();
 //  HaiTwn1.run();
 
-ThreeDLightTest.run();
+// ThreeDLightTest.run();
+SpotLightTest.run();
 
 
 LoaderManager.instance.loadData(arr,null,function(){
