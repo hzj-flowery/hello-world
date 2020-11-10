@@ -1,7 +1,7 @@
 
 import Device from "../../../Device";
+import { MathUtils } from "../../utils/MathUtils";
 import Camera from "./Camera";
-import CameraView from "./CameraView";
 import enums from "./enums";
 import OrthoCamera from "./OrthoCamera";
 import PerspectiveCamera from "./PerspectiveCamera";
@@ -26,6 +26,8 @@ export default class GameMainCamera {
         this._cameraType = type;
         if (type == enums.PROJ_PERSPECTIVE) {
             this._3dCamera = new PerspectiveCamera(angle * Math.PI / 180, aspect, near, far);
+            // this.createUI();
+            // this._3dCamera.showFrustum();
             return this._3dCamera;
         }
         else if (type == enums.PROJ_ORTHO) {
@@ -45,6 +47,13 @@ export default class GameMainCamera {
     }
     
     //ui部分----------------------------------------------------------------------------
+    private zNear = 10;//相机最近能看到的距离
+    private zFar = 50;//相机最远能看到的距离
+    private fieldOfView = 30;//相机张开的角度
+    private zPosition = -25;//场景的位置
+    private eyePosition = new Float32Array([31, 17, 15]);//相机的位置
+    private eyeRotation = new Float32Array([0, 0, 0]);//相机的旋转
+
     public updateFieldOfView(event, ui) {
         this.fieldOfView = ui.value;
       }
@@ -67,13 +76,13 @@ export default class GameMainCamera {
         this.eyePosition[2] = ui.value;
       }
       public updateCamearXRotation(event, ui) {
-        this.eyeRotation[0] = degToRad(ui.value);
+        this.eyeRotation[0] = MathUtils.degToRad(ui.value);
       }
       public updateCamearYRotation(event, ui) {
-        this.eyeRotation[1] = degToRad(ui.value);
+        this.eyeRotation[1] = MathUtils.degToRad(ui.value);
       }
       public updateCamearZRotation(event, ui) {
-        this.eyeRotation[2] = degToRad(ui.value);
+        this.eyeRotation[2] = MathUtils.degToRad(ui.value);
       }
     //创建相机UI
     private createUI():void{

@@ -1,4 +1,7 @@
+import Device from "../../../Device";
+import { glMatrix } from "../../Matrix";
 import Camera from "./Camera";
+import { CameraFrustum } from "./CameraFrustum";
 import enums from "./enums";
 
 export default class PerspectiveCamera extends Camera {
@@ -9,6 +12,21 @@ export default class PerspectiveCamera extends Camera {
 
     private test(): void {
         this.setRect(0, 0, 1, 1);
+    }
+    public _frustum:CameraFrustum;
+    //显示棱台
+    public showFrustum():void{
+        // this._frustum = CameraFrustum.create();
+    }
+    public testDraw(vp:Float32Array,aspect:number,zNear:number,zFar:number,fieldOfView:number) {
+        this._frustum.testDraw(vp,aspect,zNear,zFar,fieldOfView)
+    }
+
+    public readyDraw(time:number):void{
+           super.readyDraw(time);
+        //    let vp = glMatrix.mat4.identity(null);
+        //    glMatrix.mat4.multiply(vp,this._projectionMatrix,this._modelMatrix);
+        //    this._frustum.testDraw(vp,this._aspect,this._near,this._far,this._fovy);
     }
 
     /**

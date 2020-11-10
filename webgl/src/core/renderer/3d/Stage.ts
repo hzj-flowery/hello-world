@@ -24,7 +24,8 @@
  */
 import Device from "../../../Device";
 import { glMatrix } from "../../Matrix";
-import CameraFrustum from "../camera/CameraFrustum";
+import { MathUtils } from "../../utils/MathUtils";
+import { CameraFrustum } from "../camera/CameraFrustum";
 import { syPrimitives } from "../shader/Primitives";
 import { BufferAttribsData, G_ShaderFactory, ShaderData } from "../shader/Shader";
 
@@ -99,33 +100,12 @@ for (var f = 0; f < 6; ++f) {
   }
 }
 
-var darkColors = {
-  lines: [1, 1, 1, 1],
-};
-var lightColors = {
-  lines: [0, 0, 0, 1],
-};
-
-
-
-
-
-
-
 
 // globals
 var pixelRatio = window.devicePixelRatio || 1;
-function px(v) {
-  return `${v | 0}px`;
-}
 
-function degToRad(deg) {
-  return deg * Math.PI / 180;
-}
 
-function lerp(a, b, l) {
-  return a + (b - a) * l;
-}
+
 
 
 
@@ -176,13 +156,13 @@ export default class Stage {
     this.eyePosition[2] = ui.value;
   }
   public updateCamearXRotation(event, ui) {
-    this.eyeRotation[0] = degToRad(ui.value);
+    this.eyeRotation[0] = MathUtils.degToRad(ui.value);
   }
   public updateCamearYRotation(event, ui) {
-    this.eyeRotation[1] = degToRad(ui.value);
+    this.eyeRotation[1] =MathUtils. degToRad(ui.value);
   }
   public updateCamearZRotation(event, ui) {
-    this.eyeRotation[2] = degToRad(ui.value);
+    this.eyeRotation[2] = MathUtils.degToRad(ui.value);
   }
   private gl: WebGLRenderingContext;
   private colorProgramInfo: ShaderData;
@@ -210,7 +190,7 @@ export default class Stage {
 
     this.drawScene(time, this.viewProjection, new Float32Array(16), this.colorProgramInfo, this.cubeBufferInfo);
     //----------------------------------------
-    this._frustum.testDraw(this.viewProjection,this.aspect,this.zFar,this.zNear,this.fieldOfView);
+    this._frustum.testDraw(this.viewProjection,this.aspect,this.zNear,this.zFar,this.fieldOfView);
     this.draw3DView(time);
     requestAnimationFrame(this.render.bind(this));
   }
@@ -254,7 +234,7 @@ export default class Stage {
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
     glMatrix.mat4.perspective(proj,
-      degToRad(60),
+      MathUtils.degToRad(60),
       this.aspect,
       1,
       5000);
@@ -316,7 +296,7 @@ export default class Stage {
     let proj = glMatrix.mat4.create();
     glMatrix.mat4.perspective(
       proj,
-      degToRad(this.fieldOfView),
+      MathUtils.degToRad(this.fieldOfView),
       this.aspect,
       this.zNear,
       this.zFar);

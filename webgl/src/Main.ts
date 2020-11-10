@@ -1,13 +1,9 @@
 //第1步 - 准备Canvas和获取WebGL的渲染上下文
 
 import Device from "./Device";
-import ImageTestExample from "./RenderFlow";
 import LoaderManager from "./LoaderManager";
 import { G_ShaderFactory } from "./core/renderer/shader/Shader";
-import HaiTwn1 from "./core/renderer/3d/HaiTwn1";
-import Stream from "./tool/Stream";
-import ShaderShadowTest from "./core/renderer/3d/ShaderShadowTest";
-import Stage from "./core/renderer/3d/Stage";
+import RenderFlow from "./RenderFlow";
 
 
 
@@ -48,6 +44,6 @@ G_ShaderFactory.init(Device.Instance.gl);
 
 LoaderManager.instance.loadData(arr,null,function(){
     // debugger;
-    new ImageTestExample().startup();
+    new RenderFlow().startup();
     
 })

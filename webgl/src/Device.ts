@@ -92,7 +92,7 @@ export default class Device {
     }
     //创建webgl画笔
     private createGLContext(canvas):WebGL2RenderingContext {
-        var names = ["webgl", "webgl2", "experimental-webgl"];
+        var names = ["webgl2", "webgl", "experimental-webgl"];
         var context = null;
         for (var i = 0; i < names.length; i++) {
             try {

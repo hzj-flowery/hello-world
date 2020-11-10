@@ -97,8 +97,7 @@ export default class Scene3D extends Scene {
         this.addChild(this._cameraView);
         
        
-      
-        // this.addChild(this._3dCamera);
+        this._3dCamera.lookAt([0,0,-80]);
         this.setPosition(0,0,-20)
         setTimeout(this.rotateCenterNode.bind(this),20);
     }

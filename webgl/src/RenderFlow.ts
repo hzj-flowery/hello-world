@@ -7,7 +7,7 @@ import GameMainCamera from "./core/renderer/camera/GameMainCamera";
 
 
 
-export default class ImageTestExample {
+export default class RenderFlow {
 
     private gl:WebGLRenderingContext;
     private canvas: any;

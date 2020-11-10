@@ -126,8 +126,8 @@ export default class Camera extends Node {
      */
     constructor(fovy, aspect, near, far, type: number) {
         super();
-        this.fovy = fovy;
-        this.aspect = aspect;
+        this._fovy = fovy;
+        this._aspect = aspect;
         this._near = near;
         this._far = far;
         //创建透视矩阵
@@ -135,30 +135,42 @@ export default class Camera extends Node {
         this._type = type;
         this._center = [0, 0, 0];//看向原点
         this._up = [0, 1, 0];//向上看
-        this._eye = [0,0,0];//默认看向原点
+        this._eye = [0, 0, 0];//默认看向原点
         this.updateCameraMatrix();
     }
-    
-     /**
-     * 也可以理解为他是一个齐次裁切空间
-     * 因为一个视口坐标系下的点左乘以这个矩阵就可以转换为齐次裁切空间坐标系下的点了
-     * 这个矩阵有两个类型
-     * 透视投影：会有近大远小的作用
-     * 正交投影：目视前方，把所有的能看到的物体都放到同一个z值处，呈像
-     * 这里的投影指的是：我们屏幕作为一个平面，眼睛也构造一个平面出来，眼睛平面在屏幕平面上的投影
-     */
+
+    /**
+    * 也可以理解为他是一个齐次裁切空间
+    * 因为一个视口坐标系下的点左乘以这个矩阵就可以转换为齐次裁切空间坐标系下的点了
+    * 这个矩阵有两个类型
+    * 透视投影：会有近大远小的作用
+    * 正交投影：目视前方，把所有的能看到的物体都放到同一个z值处，呈像
+    * 这里的投影指的是：我们屏幕作为一个平面，眼睛也构造一个平面出来，眼睛平面在屏幕平面上的投影
+    */
     protected _projectionMatrix: any;//透视矩阵
 
-    private fovy: number;//相机张开的角度
-    private aspect: number;//相机的横纵比(width/height)
-    private _near: number;//相机最近能看到的位置
-    private _far: number;//相机最远能看到的位置
+    protected _fovy: number;//相机张开的角度
+    protected _aspect: number;//相机的横纵比(width/height)
+    protected _near: number;//相机最近能看到的位置
+    protected _far: number;//相机最远能看到的位置
     private _center: Array<number>;//相机正在看向的位置
     private _up: Array<number>;//相机的摆放
-    private _eye:Array<number>;
+    private _eye: Array<number>;
     private _targetTexture: RenderTexture;//目标渲染纹理
-
     private _framebuffer: FrameBuffer;//渲染buffer
+
+    public set Fovy(fov: number) {
+        this._fovy = fov;
+    }
+    public set Aspect(aspect: number) {
+        this._aspect = aspect;
+    }
+    public set Near(near: number) {
+        this._near = near;
+    }
+    public set Far(far) {
+        this._far = far;
+    }
 
     /**
      * 清除标志
@@ -175,7 +187,7 @@ export default class Camera extends Node {
      * 当我们把帧缓冲的附件置空的时候，那么就会出现黑屏，原因是GPU从帧缓冲取不到颜色数据用于渲染
      * 这个时候需要我们指定一种颜色来更换帧缓冲的颜色附件中的像素信息
      */
-    _clearColor:Array<number> = [];
+    _clearColor: Array<number> = [];
 
     // ortho properties
     /**
@@ -255,7 +267,7 @@ export default class Camera extends Node {
     private updateCameraMatrix(): void {
 
         if (this._type == enums.PROJ_PERSPECTIVE) {
-            this._glMatrix.mat4.perspective(this._projectionMatrix, this.fovy, this.aspect, this._near, this._far);
+            this._glMatrix.mat4.perspective(this._projectionMatrix, this._fovy, this._aspect, this._near, this._far);
         }
         else {
             let x = this._orthoWidth;
@@ -287,25 +299,23 @@ export default class Camera extends Node {
         // 初始化模型视图矩阵
         this._glMatrix.mat4.identity(m);
         // //摄像机的位置
-        this._glMatrix.mat4.lookAt(m,this._eye, this._center, this._up);
-        
+        this._glMatrix.mat4.lookAt(m, this._eye, this._center, this._up);
+
 
         //有肯能相机被放在了某个物上
-        if(this.parent)
-        {
-            this._glMatrix.mat4.mul(this._worldMatrix,this._worldMatrix,m);
+        if (this.parent) {
+            this._glMatrix.mat4.mul(this._worldMatrix, this._worldMatrix, m);
         }
-        else
-        {
-            this._glMatrix.mat4.copy(this._worldMatrix,m);
+        else {
+            this._glMatrix.mat4.copy(this._worldMatrix, m);
         }
 
         this.updateMatrixData();
     }
 
-    public getInversModelViewMatrix():any{
+    public getInversModelViewMatrix(): any {
         var invers = this._glMatrix.mat4.create();
-        this._glMatrix.mat4.invert(invers,this._modelMatrix)
+        this._glMatrix.mat4.invert(invers, this._modelMatrix)
         return invers;
     }
     /**

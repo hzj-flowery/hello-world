@@ -1,6 +1,6 @@
 import Device from "../../../Device";
-import { sy } from "../../Director";
 import { glMatrix } from "../../Matrix";
+import { MathUtils } from "../../utils/MathUtils";
 import { SY } from "../base/Sprite";
 import { syPrimitives } from "../shader/Primitives";
 import { BufferAttribsData, G_ShaderFactory, ShaderData } from "../shader/Shader";
@@ -124,24 +124,10 @@ var eyeElem: any = document.querySelector("#eye");
   }
 
   
-
-
-
 // globals
 var pixelRatio = window.devicePixelRatio || 1;
-function px(v) {
-    return `${v | 0}px`;
-}
 
-function degToRad(deg) {
-    return deg * Math.PI / 180;
-}
-
-function lerp(a, b, l) {
-    return a + (b - a) * l;
-}
-
-export default class CameraFrustum extends SY.Sprite {
+export  class CameraFrustum extends SY.Sprite {
 
     private zNear = 10;//相机最近能看到的距离
     private zFar = 50;//相机最远能看到的距离
@@ -171,7 +157,9 @@ export default class CameraFrustum extends SY.Sprite {
     private cubeBufferInfo: BufferAttribsData;
     constructor(gl) {
         super(gl);
-        
+    }
+    public static create(){
+           return new CameraFrustum(Device.Instance.gl);
     }
     protected onInit(){
         this.vertexColorProgramInfo = G_ShaderFactory.createProgramInfo(vertexColorVertexShader, vertexColorFragmentShader);
@@ -189,7 +177,7 @@ export default class CameraFrustum extends SY.Sprite {
         this.zNear = 10;
         this.fieldOfView = 30;
     }
-    public testDraw(vp:Float32Array,aspect:number,zFar:number,zNear:number,fieldOfView:number) {
+    public testDraw(vp:Float32Array,aspect:number,zNear:number,zFar:number,fieldOfView:number) {
         this.aspect = aspect;
         this.zNear = zNear;
         this.zFar = zFar;
@@ -210,7 +198,7 @@ export default class CameraFrustum extends SY.Sprite {
         let worldTemp = glMatrix.mat4.create();
         glMatrix.mat4.perspective(
             proj,
-            degToRad(this.fieldOfView),
+            MathUtils.degToRad(this.fieldOfView),
             this.aspect,
             1,
             5000);
@@ -227,8 +215,8 @@ export default class CameraFrustum extends SY.Sprite {
         const eyePosition = glMatrix.mat4.transformPoint(null, this.cubeRaysUniforms.u_worldViewProjection, [0, 0, 0]);
         const ex = (eyePosition[0] * .5 + .5) * width / pixelRatio;
         const ey = (eyePosition[1] * -.5 + .5) * halfHeight / pixelRatio;
-        eyeElem.style.left = px(ex - eyeElem.width / 2);
-        eyeElem.style.top = px(ey - eyeElem.height / 2);
+        eyeElem.style.left = MathUtils.px(ex - eyeElem.width / 2);
+        eyeElem.style.top = MathUtils.px(ey - eyeElem.height / 2);
     }
     // Draw Frustum Wire
     //绘制齐次裁切空间远近平面的边缘线
@@ -237,7 +225,7 @@ export default class CameraFrustum extends SY.Sprite {
         let proj = glMatrix.mat4.create();
         glMatrix.mat4.perspective(
             proj,
-            degToRad(this.fieldOfView),
+            MathUtils.degToRad(this.fieldOfView),
             this.aspect,
             this.zNear,
             this.zFar);
@@ -261,7 +249,7 @@ export default class CameraFrustum extends SY.Sprite {
         G_ShaderFactory.setBuffersAndAttributes(shaderD.attrSetters, buffAttData);
         glMatrix.mat4.perspective(
             tempProj,
-            degToRad(this.fieldOfView),
+            MathUtils.degToRad(this.fieldOfView),
             this.aspect,
             this.zNear,
             this.zFar);
