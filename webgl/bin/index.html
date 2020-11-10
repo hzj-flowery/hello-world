@@ -1,0 +1,71 @@
+<html>
+
+<head>
+  <title>www.caoyaohero.com</title>
+  <meta charset='utf-8' />
+  <meta name='renderer' content='webkit' />
+  <meta name='viewport'
+    content='width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no' />
+  <meta name='apple-mobile-web-app-capable' content='yes' />
+  <meta name='full-screen' content='true' />
+  <meta name='x5-fullscreen' content='true' />
+  <meta name='360-fullscreen' content='true' />
+  <meta name='laya' screenorientation='landscape' />
+  <meta http-equiv='expires' content='0' />
+  <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1' />
+  <meta http-equiv='expires' content='0' />
+  <meta http-equiv='Cache-Control' content='no-siteapp' />
+</head>
+
+<body>
+
+  <div class="description" style="position: absolute;left: 750px; top:10px;color:crimson">
+    Drag sliders to change the frustum.
+  </div>
+  <div style="position:absolute;">
+    <img id="eye" src="resources/eye-icon.png"
+      style="position: absolute; z-index:2; left: 10px; top: 275px; width: 32px; height: auto;" />
+  </div>
+  <div id="uiContainer" style="position: absolute;left: 750px; top:30px;color: blue;">
+    <div id="ui">
+      <div id="cameraPosX"></div>
+      <div id="cameraPosY"></div>
+      <div id="cameraPosZ"></div>
+      <div id="cameraRotateX"></div>
+      <div id="cameraRotateY"></div>
+      <div id="cameraRotateZ"></div>
+      <div id="fieldOfView"></div>
+      <div id="zNear"></div>
+      <div id="zFar"></div>
+      <div id="zPosition"></div>
+    </div>
+  </div>
+
+
+
+  <canvas id="myCanvas" width="720" height="1080" style="border: 1px solid red"></canvas>
+
+  <script type="text/javascript">
+
+    var canvas = document.getElementById('myCanvas');
+    window.canvas = canvas;
+    window.document = document;
+    window.requestAnimFrame = (function () {
+      return (
+        window.requestAnimationFrame ||
+        function (callback, element) {
+          setTimeout(callback, 1000 / 60);
+        }
+      )
+    })
+    function loadLib(url) {
+      var script = document.createElement("script");
+      script.async = false;
+      script.src = url;
+      document.body.appendChild(script);
+    }
+  </script>
+  <script type="text/javascript" src="index.js"></script>
+</body>
+
+</html>

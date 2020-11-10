@@ -1,0 +1,17 @@
+
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es5",
+    "noEmitHelpers": true,
+    // "noImplicitAny": true,
+    "outDir": "./dist", //生成的js和js.map的目录
+    "sourceMap": true
+  },
+  "exclude": [
+    "node_modules"
+  ],
+    "include": [
+    "./src/**/*.ts", "src/core/platform/id-generater.js", "src/core/platform/js.js"
+  ]
+}
