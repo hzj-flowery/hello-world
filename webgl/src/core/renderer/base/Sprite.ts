@@ -45,7 +45,6 @@ console.log(z);
   */
 import { Shader } from "../shader/Shader";
 import GameMainCamera from "../camera/GameMainCamera";
-import { GLapi } from "../gfx/GLapi";
 import { glprimitive_type } from "../gfx/GLEnums";
 import { Node } from "./Node";
 import { Texture } from "./Texture";

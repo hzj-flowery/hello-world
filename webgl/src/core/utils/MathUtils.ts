@@ -12,4 +12,8 @@ export namespace MathUtils{
     export function px(v) {
         return `${v | 0}px`;
     }
+    export  function radToDeg(r) {
+        return r * 180 / Math.PI;
+      }
+    
 }

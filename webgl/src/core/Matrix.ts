@@ -4429,6 +4429,7 @@ export namespace glMatrix {
      */
 
     function normalize(out, a) {
+        out = out || new Float32Array(3);
         var x = a[0];
         var y = a[1];
         var z = a[2];
