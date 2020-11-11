@@ -16,6 +16,9 @@ import OrthoCamera from "../camera/OrthoCamera";
 import PerspectiveCamera from "../camera/PerspectiveCamera";
 import Sphere from "../3d/Sphere";
 import Spine from "../3d/Spine";
+import { CameraFrustum } from "../camera/CameraFrustum";
+import { glMatrix } from "../../Matrix";
+import { MathUtils } from "../../utils/MathUtils";
 
 export default class Scene3D extends Scene {
 
@@ -29,6 +32,7 @@ export default class Scene3D extends Scene {
     private _cameraView:CameraView;
     private _centerNode:Node;
     private _3dCamera:PerspectiveCamera;
+    private _cameraFrustum:CameraFrustum;
     private _sphere:Sphere;
     constructor() {
         super();
@@ -95,10 +99,15 @@ export default class Scene3D extends Scene {
         
         this._cameraView = new CameraView(gl);
         this.addChild(this._cameraView);
+
+        this._cameraFrustum = new CameraFrustum(gl);
+
+        this._3dCamera.rotate(0,90,0);
+        this._3dCamera.lookAt([0,0,-50]);
+        this.setPosition(10,0,0);
+
         
-       
-        this._3dCamera.lookAt([0,0,-80]);
-        this.setPosition(0,0,-20)
+
         setTimeout(this.rotateCenterNode.bind(this),20);
     }
     public rotateCenterNode(){
@@ -121,13 +130,14 @@ export default class Scene3D extends Scene {
         }, 7000)
     }
     
-    private _addX = 0;
     public readyDraw(time): void {
-        this._addX = this._addX +0.01;
-        // this._3dCamera.setPosition(this._addX,0,0);
-        this._3dCamera.rotate(0,1,0);
-        // this._3dCamera.lookAt([0,0,-20]);
+        this._3dCamera.rotate(0,0,1);
         this._3dCamera.readyDraw(time);
+        
+        var vp = this._3dCamera.getVP();
+        this._cameraFrustum.testDraw(vp,this._3dCamera.Aspect,this._3dCamera.Near,this._3dCamera.Far/10,MathUtils.radToDeg(this._3dCamera.Fovy));
+
+        
         super.readyDraw(time);
     }
 }

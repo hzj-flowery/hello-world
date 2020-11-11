@@ -141,7 +141,7 @@ export default class Device {
         this.gl.bindFramebuffer(this.gl.FRAMEBUFFER,null);
         this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
         scene3D.readyDraw(time);
-        scene2D.readyDraw(time);
+        // scene2D.readyDraw(time);
     }
 
 

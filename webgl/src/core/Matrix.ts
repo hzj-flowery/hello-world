@@ -4013,6 +4013,7 @@ export namespace glMatrix {
 
      /**
      * Makes a translation matrix
+     * 将单位矩阵移动到指定位置
      * @param {number} tx x translation.
      * @param {number} ty y translation.
      * @param {number} tz z translation.

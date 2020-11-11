@@ -241,6 +241,7 @@ export default class Stage {
     let f = 1;
     glMatrix.vec3.scale(this.v3t0, this.targetToEye, f);
     glMatrix.vec3.add(this.v3t0, this.target, this.v3t0);
+    
     glMatrix.mat4.lookAt(view,
       this.v3t0, //eyePosition,
       this.target,

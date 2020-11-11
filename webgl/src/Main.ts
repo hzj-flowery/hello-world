@@ -34,7 +34,7 @@ G_ShaderFactory.init(Device.Instance.gl);
 // LabelTest.run();
 // ShaderShadowTest.run();
 
-Stage.run();
+// Stage.run();
 
 // CameraTest.run();
 
@@ -50,6 +50,6 @@ Stage.run();
 
 LoaderManager.instance.loadData(arr,null,function(){
     // debugger;
-    // new RenderFlow().startup();
+    new RenderFlow().startup();
     
 })

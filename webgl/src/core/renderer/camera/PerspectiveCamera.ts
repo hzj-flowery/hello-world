@@ -17,6 +17,10 @@ export default class PerspectiveCamera extends Camera {
            super.readyDraw(time);
     }
 
+    public getVP():Float32Array{
+        return glMatrix.mat4.multiply(null,this._projectionMatrix,this._modelMatrix);
+    }
+
     /**
      * @param time in seconds
      */
