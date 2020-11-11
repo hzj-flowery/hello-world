@@ -172,6 +172,20 @@ export default class Camera extends Node {
         this._far = far;
     }
 
+    public get Fovy():number {
+        return this._fovy;
+    }
+    public get Aspect():number {
+        return this._aspect;
+    }
+    public get Near():number{
+        return this._near;
+    }
+    public get Far():number {
+        return this._far;
+    }
+
+
     /**
      * 清除标志
      * 在GPU的一次绘制过程中，会在在帧缓冲区产生三个附件
