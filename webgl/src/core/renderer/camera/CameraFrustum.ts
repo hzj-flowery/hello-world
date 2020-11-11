@@ -71,10 +71,10 @@ var worldCoordinateArrays = {
     0,0,1    //z
     ],
     color:[
-    1,0,0,1,       //原点
-    1,1,0,0,       //x
-    0,0,1,1,       //y
-    0,1,1,0        //z
+    0,0,0,1,       //原点
+    1,0,0,1,       //x
+    0,1,0,1,       //y
+    0,0,1,1        //z
     ],
     indices:[
     0,1,0,2,0,3
@@ -304,8 +304,11 @@ export class CameraFrustum extends SY.Sprite {
       this.gl.useProgram(this.vertexColorProgramInfo.spGlID);
       G_ShaderFactory.setBuffersAndAttributes(this.vertexColorProgramInfo.attrSetters,this.coordinateBufferInfo);
       G_ShaderFactory.setUniforms(this.vertexColorProgramInfo.uniSetters,{u_worldViewProjection:vp});
-      G_ShaderFactory.setUniforms(this.vertexColorProgramInfo.uniSetters,{u_color:[1,0,0,1]});
+      G_ShaderFactory.setUniforms(this.vertexColorProgramInfo.uniSetters,{u_color:[1,1,1,1]});
+      G_ShaderFactory.drawBufferInfo(this.coordinateBufferInfo,this.gl.LINES);
 
+      G_ShaderFactory.setUniforms(this.vertexColorProgramInfo.uniSetters,{u_worldViewProjection:this._localProj});
+      G_ShaderFactory.setUniforms(this.vertexColorProgramInfo.uniSetters,{u_color:[1,1,1,1]});
       G_ShaderFactory.drawBufferInfo(this.coordinateBufferInfo,this.gl.LINES);
   }
 }

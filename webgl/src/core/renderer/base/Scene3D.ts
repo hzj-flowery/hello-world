@@ -103,7 +103,7 @@ export default class Scene3D extends Scene {
         this._cameraFrustum = new CameraFrustum(gl);
 
         this._3dCamera.rotate(0,90,0);
-        this._3dCamera.lookAt([0,0,-50]);
+        this._3dCamera.lookAt([0,0,-20]);
         this.setPosition(10,0,0);
 
         
@@ -131,7 +131,7 @@ export default class Scene3D extends Scene {
     }
     
     public readyDraw(time): void {
-        this._3dCamera.rotate(0,0,1);
+        // this._3dCamera.rotate(0,0,1);
         this._3dCamera.readyDraw(time);
         
         var vp = this._3dCamera.getVP();
