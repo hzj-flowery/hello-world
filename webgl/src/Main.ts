@@ -3,8 +3,7 @@
 import Device from "./Device";
 import LoaderManager from "./LoaderManager";
 import { G_ShaderFactory } from "./core/renderer/shader/Shader";
-import ThreeDLightTest from "./core/renderer/3d/ThreeDLightTest";
-import SpotLightTest from "./core/renderer/3d/SpotLightTest";
+import PointLightTest from "./core/renderer/light/PointLightTest";
 
 
 
@@ -43,7 +42,8 @@ G_ShaderFactory.init(Device.Instance.gl);
 //  HaiTwn1.run();
 
 // ThreeDLightTest.run();
-SpotLightTest.run();
+// SpotLightTest.run();
+PointLightTest.run();
 
 
 LoaderManager.instance.loadData(arr,null,function(){
