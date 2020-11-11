@@ -192,6 +192,77 @@ export class CameraFrustum extends SY.Sprite {
   public static create() {
     return new CameraFrustum(Device.Instance.gl);
   }
+
+  private zPosition:number=-25;
+  private yPosition:number = 0;
+  private xPosition:number = 0;
+  private eyePosition;//相机的位置
+  private eyeRotation;//相机的旋转
+  // Setup a ui.
+  public updateFieldOfView(event, ui) {
+    this.fieldOfView = ui.value;
+  }
+  public updateZNear(event, ui) {
+    this.zNear = ui.value;
+  }
+  public updateZFar(event, ui) {
+    this.zFar = ui.value;
+  }
+  public updateZPosition(event, ui) {
+    this.zPosition = ui.value;
+  }
+  public updateYPosition(event, ui) {
+    this.yPosition = ui.value;
+  }
+  public updateXPosition(event, ui) {
+    this.xPosition = ui.value;
+  }
+  public updateCamearXPos(event, ui) {
+    this.eyePosition[0] = ui.value;
+  }
+  public updateCamearYPos(event, ui) {
+    this.eyePosition[1] = ui.value;
+  }
+  public updateCamearZPos(event, ui) {
+    this.eyePosition[2] = ui.value;
+  }
+  public updateCamearXRotation(event, ui) {
+    this.eyeRotation[0] = MathUtils.degToRad(ui.value);
+  }
+  public updateCamearYRotation(event, ui) {
+    this.eyeRotation[1] =MathUtils. degToRad(ui.value);
+  }
+  public updateCamearZRotation(event, ui) {
+    this.eyeRotation[2] = MathUtils.degToRad(ui.value);
+  }
+  public getUIData(){
+    return {
+      fieldOfView:this.fieldOfView,
+      zNear:this.zNear,
+      zFar:this.zFar,
+      zPosition:this.zPosition,
+      yPosition:this.yPosition,
+      xPosition:this.xPosition,
+      eyePosition:this.eyePosition,
+      eyeRotation:this.eyeRotation
+    }
+  }
+  private setUI(): void {
+    var webglLessonsUI = window["webglLessonsUI"];
+    webglLessonsUI.setupSlider("#fieldOfView", { value: this.fieldOfView, slide: this.updateFieldOfView.bind(this), max: 179 });
+    webglLessonsUI.setupSlider("#zNear", { value: this.zNear, slide: this.updateZNear.bind(this), min: 1, max: 50 });
+    webglLessonsUI.setupSlider("#zFar", { value: this.zFar, slide: this.updateZFar.bind(this), min: 1, max: 50 });
+    webglLessonsUI.setupSlider("#zPosition", { value: this.zPosition, slide: this.updateZPosition.bind(this), min: -100, max: 100 });
+    webglLessonsUI.setupSlider("#yPosition", { value: this.yPosition, slide: this.updateYPosition.bind(this), min: -100, max: 100 });
+    webglLessonsUI.setupSlider("#xPosition", { value: this.xPosition, slide: this.updateXPosition.bind(this), min: -100, max: 100 });
+    webglLessonsUI.setupSlider("#cameraPosX", { value: this.eyePosition[0], slide: this.updateCamearXPos.bind(this), min: 0, max: 50 });//31
+    webglLessonsUI.setupSlider("#cameraPosY", { value: this.eyePosition[1], slide: this.updateCamearYPos.bind(this), min: 0, max: 50 });//17
+    webglLessonsUI.setupSlider("#cameraPosZ", { value: this.eyePosition[2], slide: this.updateCamearZPos.bind(this), min: 0, max: 50 });//15
+    webglLessonsUI.setupSlider("#cameraRotateX", { value: this.eyeRotation[0], slide: this.updateCamearXRotation.bind(this), min: 0, max: 360 });//31
+    webglLessonsUI.setupSlider("#cameraRotateY", { value: this.eyeRotation[1], slide: this.updateCamearYRotation.bind(this), min: 0, max: 360 });//17
+    webglLessonsUI.setupSlider("#cameraRotateZ", { value: this.eyeRotation[2], slide: this.updateCamearZRotation.bind(this), min: 0, max: 360 });//15
+  }
+
   protected onInit() {
     this.vertexColorProgramInfo = G_ShaderFactory.createProgramInfo(vertexColorVertexShader, vertexColorFragmentShader);
     this.colorProgramInfo = G_ShaderFactory.createProgramInfo(baseVertexShader, colorFragmentShader);
@@ -215,6 +286,20 @@ export class CameraFrustum extends SY.Sprite {
     this._loacalRayInvertProj = glMatrix.mat4.identity(null);
     this._worldTemp = glMatrix.mat4.identity(null);
     this._originPos = [0,0,0];
+    this.eyePosition = new Float32Array([31, 17, 15]);
+    this.eyeRotation = new Float32Array([0,0,0]);
+    this.setUI();
+  }
+  //设置UI初始数据
+  public setUIInitData(eyePosition,eyeRotation,zNear,zFar,fieldOfView,zPosition,yPosition,xPosition):void{
+    this.zFar = zFar;
+    this.zNear = zNear;
+    this.fieldOfView = fieldOfView;
+    this.eyePosition = eyePosition;
+    this.eyeRotation = eyeRotation;
+    this.zPosition = zPosition;
+    this.yPosition = yPosition;
+    this.xPosition = xPosition;
   }
 
   //更新本地投影矩阵

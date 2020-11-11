@@ -27,28 +27,28 @@ export default class Scene3D extends Scene {
     private _floorNode: Ground;
     private _cubeNode: Cube;
     private _tableNode: Cube;
-    private _spineNode:Spine;
+    private _spineNode: Spine;
     private _customTexture: CustomTextureCube;
-    private _cameraView:CameraView;
-    private _centerNode:Node;
-    private _3dCamera:PerspectiveCamera;
-    private _cameraFrustum:CameraFrustum;
-    private _sphere:Sphere;
+    private _cameraView: CameraView;
+    private _centerNode: Node;
+    private _3dCamera: PerspectiveCamera;
+    private _cameraFrustum: CameraFrustum;
+    private _sphere: Sphere;
     constructor() {
         super();
     }
     public init(): void {
-        
+
         var gl = Device.Instance.gl;
-        this._3dCamera = GameMainCamera.instance.setCamera(enums.PROJ_PERSPECTIVE,gl.canvas.width/gl.canvas.height) as PerspectiveCamera;
-        
+        this._3dCamera = GameMainCamera.instance.setCamera(enums.PROJ_PERSPECTIVE, gl.canvas.width / gl.canvas.height) as PerspectiveCamera;
+
         this._centerNode = new Node();
         this._centerNode.setPosition(0, 1.1, 0);
         this.addChild(this._centerNode);
-        
+
         var spNode = new Node();
         this._sphere = new Sphere(gl);
-        spNode.setPosition(0,5,0);
+        spNode.setPosition(0, 5, 0);
         spNode.addChild(this._sphere);
         this._centerNode.addChild(spNode);
 
@@ -96,25 +96,32 @@ export default class Scene3D extends Scene {
         this._skybox = new SkyBox(gl);
         this._skybox.setDefaultUrl();
         this.addChild(this._skybox);
-        
+
         this._cameraView = new CameraView(gl);
         this.addChild(this._cameraView);
 
         this._cameraFrustum = new CameraFrustum(gl);
 
-        this._3dCamera.rotate(0,90,0);
-        this._3dCamera.lookAt([0,0,-20]);
-        this.setPosition(10,0,0);
+        this._3dCamera.rotate(0, 90, 0);
+        this._3dCamera.lookAt([0, 0, -20]);
+        this.setPosition(-30, 0, 0);
 
-        
-
-        setTimeout(this.rotateCenterNode.bind(this),20);
+        this._cameraFrustum.setUIInitData(
+            [0, 0, -20],
+            [0, 90, 0],
+            this._3dCamera.Near,
+            this._3dCamera.Far,
+            this._3dCamera.Fovy,
+            this.z,
+            this.y,
+            this.x);
+        setTimeout(this.rotateCenterNode.bind(this), 20);
     }
-    public rotateCenterNode(){
-        this._centerNode.rotate(0,1,0);
-        setTimeout(this.rotateCenterNode.bind(this),20);
+    public rotateCenterNode() {
+        this._centerNode.rotate(0, 1, 0);
+        setTimeout(this.rotateCenterNode.bind(this), 20);
     }
-    private readyRenderDraw():void{
+    private readyRenderDraw(): void {
 
     }
     private deleteGPUTexture(): void {
@@ -129,15 +136,32 @@ export default class Scene3D extends Scene {
             this._tableNode.url = "res/wood.jpg";
         }, 7000)
     }
-    
+
+    private updateUIData() {
+        var uiData = this._cameraFrustum.getUIData();
+        // this._3dCamera.Fovy = MathUtils.radToDeg(uiData.fieldOfView);
+        // this._3dCamera.Near = uiData.zNear;
+        // this._3dCamera.Far = uiData.zFar;
+        this.z = uiData.zPosition;
+        this.x = uiData.xPosition;
+        this.y = uiData.yPosition;
+        this._3dCamera.setRotation(
+            MathUtils.radToDeg(uiData.eyeRotation[0]),
+            MathUtils.radToDeg(uiData.eyeRotation[1]),
+            MathUtils.radToDeg(uiData.eyeRotation[2]));
+        this._3dCamera.lookAt(uiData.eyePosition);
+    }
+
     public readyDraw(time): void {
+
+        this.updateUIData();
         // this._3dCamera.rotate(0,0,1);
         this._3dCamera.readyDraw(time);
-        
-        var vp = this._3dCamera.getVP();
-        this._cameraFrustum.testDraw(vp,this._3dCamera.Aspect,this._3dCamera.Near,this._3dCamera.Far/10,MathUtils.radToDeg(this._3dCamera.Fovy));
 
-        
+        var vp = this._3dCamera.getVP();
+        this._cameraFrustum.testDraw(vp, this._3dCamera.Aspect, this._3dCamera.Near, this._3dCamera.Far / 10, MathUtils.radToDeg(this._3dCamera.Fovy));
+
+
         super.readyDraw(time);
     }
 }
