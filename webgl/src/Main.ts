@@ -4,6 +4,8 @@ import Device from "./Device";
 import LoaderManager from "./LoaderManager";
 import { G_ShaderFactory } from "./core/renderer/shader/Shader";
 import PointLightTest from "./core/renderer/light/PointLightTest";
+import RenderFlow from "./RenderFlow";
+import Stage from "./core/renderer/3d/Stage";
 
 
 
@@ -43,11 +45,11 @@ G_ShaderFactory.init(Device.Instance.gl);
 
 // ThreeDLightTest.run();
 // SpotLightTest.run();
-PointLightTest.run();
+// PointLightTest.run();
 
 
 LoaderManager.instance.loadData(arr,null,function(){
     // debugger;
-    // new RenderFlow().startup();
+    new RenderFlow().startup();
     
 })

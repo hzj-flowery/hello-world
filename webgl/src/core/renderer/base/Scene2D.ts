@@ -30,7 +30,7 @@ export default class Scene2D extends Scene {
         var gl = Device.Instance.gl;
         this._2dCamera  = GameMainCamera.instance.setCamera(enums.PROJ_ORTHO,gl.canvas.width/gl.canvas.height);
         this._2dCamera.lookAt([0, 0, 0]);
-        this.setMatrix(this._2dCamera.getModelViewMatrix());
+        this.setFatherMatrix(this._2dCamera.getModelViewMatrix());
 
         this._rectangle = new Rectangle(gl);
         this._rectangle.setPosition(0.5, 0, 0);

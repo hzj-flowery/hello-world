@@ -604,7 +604,7 @@ export default class Spine extends SY.Sprite {
 
         var newMV = this._glMatrix.mat4.create();
         var newSpM = this._glMatrix.mat4.create();
-        var v = GameMainCamera.instance.getCamera(this._cameraType).getInversModelViewMatrix();
+        var v = GameMainCamera.instance.getCamera(this._cameraType).getModelViewMatrix();
         this._glMatrix.mat4.mul(newSpM,this._modelMatrix,this.spineMatrix);
         var m = newSpM;
         this._glMatrix.mat4.mul(newMV, v, m);

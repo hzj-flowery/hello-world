@@ -313,7 +313,7 @@ export namespace SY {
                 this._shader.setUseSkyBox(resu);
             }
             var newMV = this._glMatrix.mat4.create();
-            var v = GameMainCamera.instance.getCamera(this._cameraType).getInversModelViewMatrix();
+            var v = GameMainCamera.instance.getCamera(this._cameraType).getModelViewMatrix();
             var m = this._modelMatrix;
             this._glMatrix.mat4.mul(newMV, v, m)
             this._shader.setUseModelViewMatrix(newMV);

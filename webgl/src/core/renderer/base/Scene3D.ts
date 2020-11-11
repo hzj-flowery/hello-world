@@ -125,7 +125,7 @@ export default class Scene3D extends Scene {
     public readyDraw(time): void {
         this._addX = this._addX +0.01;
         // this._3dCamera.setPosition(this._addX,0,0);
-        // this._3dCamera.rotate(0,0.01,0);
+        this._3dCamera.rotate(0,1,0);
         // this._3dCamera.lookAt([0,0,-20]);
         this._3dCamera.readyDraw(time);
         super.readyDraw(time);

@@ -318,6 +318,7 @@ export default class Camera extends Node {
         this._glMatrix.mat4.invert(invers, this._modelMatrix)
         return invers;
     }
+
     /**
      * 此函数务必调用
      * @param eye  相机的位置
