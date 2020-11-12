@@ -66,7 +66,7 @@ var eyeElem: any = document.querySelector("#eye");
 
 var worldCoordinateArrays = {
     position:[
-    0,0,0,         //原点0
+    0,0,0,         //原点0   //0
     1,0,0,   //x   //1
     0,1,0,   //y   //2
     0,0,1,    //z  //3
@@ -77,7 +77,9 @@ var worldCoordinateArrays = {
     1.2,0,0,   //x轴延申    //7
     0,1.2,0,   //y轴延申    //8
     0,0,1.2,    //z轴延申   //9
-
+    
+    0,0,0,0,
+    0,1,1,0
     ],
     color:[
     0,0,0,1,       //原点
@@ -89,10 +91,12 @@ var worldCoordinateArrays = {
     0,0,1,1,        //原点z     blue
     0,0,0,1,
     0,0,0,1,
-    0,0,0,1
+    0,0,0,1,
+    1,1,0,0,        //12
+    1,1,0,0         //13
     ],
     indices:[
-    4,1,5,2,6,3,1,7,2,8,3,9
+    4,1,5,2,6,3,1,7,2,8,3,9,10,11 //11 12 13
     ]
 }
 //要绘制的点的信息
@@ -476,7 +480,7 @@ export class CameraFrustum extends SY.Sprite {
     glMatrix.mat4.scale(world,world,[0.1,0.1,0.1]);
     this.gl.useProgram(this.vertexColorProgramInfo.spGlID);
     G_ShaderFactory.setBuffersAndAttributes(this.vertexColorProgramInfo.attrSetters,this.pointArrays);
-    G_ShaderFactory.setUniforms(this.vertexColorProgramInfo.uniSetters,{u_worldViewProjection:vp});
+    G_ShaderFactory.setUniforms(this.vertexColorProgramInfo.uniSetters,{u_worldViewProjection:world});
     G_ShaderFactory.setUniforms(this.vertexColorProgramInfo.uniSetters,{u_color:[1,1,1,1]});
     G_ShaderFactory.drawBufferInfo(this.pointArrays,this.gl.POINTS);
 

@@ -155,7 +155,6 @@ function main() {
   image.src = "resources/f-texture.png";
   image.addEventListener('load', function () {
     // Now that the image has loaded make copy it to the texture.
-    console.log("texture--------",texture);
     gl.bindTexture(gl.TEXTURE_2D, texture);
     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
@@ -170,7 +169,6 @@ function main() {
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
     }
-    console.log("jiaz---------------success",image);
   });
 
 

@@ -19,19 +19,23 @@
 
 <body>
 
-  <div class="description" style="position: absolute;left: 750px; top:10px;color:crimson">
+  <div class="description" style="position: absolute;left: 1130px; top:10px;color:crimson">
     Drag sliders to change the frustum.
   </div>
   <div style="position:absolute;">
     <img id="eye" src="resources/eye-icon.png"
       style="position: absolute; z-index:2; left: 10px; top: 275px; width: 32px; height: auto;" />
   </div>
-  <div id="uiContainer" style="position: absolute;left: 750px; top:30px;color: blue;">
+  <div id="uiContainer" style="position: absolute;left: 1130px; top:30px;color: blue;">
     <div id="ui">
       <div id="lightRotationX"></div>
       <div id="lightRotationY"></div>
       <div id="innerLimit"></div>
       <div id="outerLimit"></div>
+
+      <div id="zPosition"></div>
+      <div id="yPosition"></div>
+      <div id="xPosition"></div>
       
       <div id="cameraPosX"></div>
       <div id="cameraPosY"></div>
@@ -47,15 +51,13 @@
       <div id="fieldOfView"></div>
       <div id="zNear"></div>
       <div id="zFar"></div>
-      <div id="zPosition"></div>
-      <div id="yPosition"></div>
-      <div id="xPosition"></div>
+      
     </div>
   </div>
 
 
 
-  <canvas id="myCanvas" width="720" height="1080" style="border: 1px solid red"></canvas>
+  <canvas id="myCanvas" width="1080" height="1080" style="border: 1px solid red"></canvas>
 
   <script type="text/javascript">
 

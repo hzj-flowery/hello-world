@@ -102,8 +102,8 @@ export default class Stage {
   private targetToEye: Float32Array = new Float32Array(3);
   private eyePosition = new Float32Array([31, 17, 15]);//相机的位置
   private eyeRotation = new Float32Array([0, 0, 0]);//相机的旋转
-  // private target = new Float32Array([23, 16, 0]);
-  private target = new Float32Array([0,0,0]);
+  private target = new Float32Array([23, 16, 0]);
+  // private target = new Float32Array([0,0,0]);
   private up = new Float32Array([0, 1, 0]);
   private gl: WebGLRenderingContext;
   private colorProgramInfo: ShaderData;
@@ -177,7 +177,7 @@ export default class Stage {
     glMatrix.vec3.scale(this.v3t0, this.targetToEye, f);
     glMatrix.vec3.add(this.v3t0, this.target, this.v3t0);
     
-    glMatrix.mat4.lookAt2(view,
+    glMatrix.mat4.lookAt(view,
       this.v3t0, //eyePosition,
       this.target,
       this.up);
@@ -186,7 +186,7 @@ export default class Stage {
     glMatrix.mat4.rotateY(view, view, this.eyeRotation[1]);
     glMatrix.mat4.rotateZ(view, view, this.eyeRotation[2]);
 
-    glMatrix.mat4.invert(view, view);
+    // glMatrix.mat4.invert(view, view);
 
 
     //算出视图投影矩阵
