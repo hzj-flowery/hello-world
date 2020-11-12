@@ -6,6 +6,7 @@ import { G_ShaderFactory } from "./core/renderer/shader/Shader";
 import PointLightTest from "./core/renderer/light/PointLightTest";
 import RenderFlow from "./RenderFlow";
 import Stage from "./core/renderer/3d/Stage";
+import FogTest from "./core/renderer/3d/FogTest";
 
 
 
@@ -47,9 +48,11 @@ G_ShaderFactory.init(Device.Instance.gl);
 // SpotLightTest.run();
 // PointLightTest.run();
 
+FogTest.run();
+
 
 LoaderManager.instance.loadData(arr,null,function(){
     // debugger;
-    new RenderFlow().startup();
+    // new RenderFlow().startup();
     
 })

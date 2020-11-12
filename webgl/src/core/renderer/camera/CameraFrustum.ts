@@ -13,6 +13,7 @@ var vertexColorVertexShader =
   'varying vec4 v_color;' +
   'void main() {' +
   'gl_Position = u_worldViewProjection * a_position;' +
+  'gl_PointSize = 10.0;'+
   'v_color = a_color;' +
   '}'
 
@@ -65,25 +66,48 @@ var eyeElem: any = document.querySelector("#eye");
 
 var worldCoordinateArrays = {
     position:[
-    0,0,0,         //原点
-    1,0,0,   //x
-    0,1,0,   //y
-    0,0,1    //z
+    0,0,0,         //原点0
+    1,0,0,   //x   //1
+    0,1,0,   //y   //2
+    0,0,1,    //z  //3
+    0,0,0,         //原点1  //4
+    0,0,0,         //原点2  //5
+    0,0,0,         //原点3  //6
+
+    1.2,0,0,   //x轴延申    //7
+    0,1.2,0,   //y轴延申    //8
+    0,0,1.2,    //z轴延申   //9
+
     ],
     color:[
     0,0,0,1,       //原点
-    1,0,0,1,       //x
-    0,1,0,1,       //y
-    0,0,1,1        //z
+    1,0,0,1,       //x     red
+    0,1,0,1,       //y     green
+    0,0,1,1,       //z     blue
+    1,0,0,1,       //原点x     red
+    0,1,0,1,       //原点y     green
+    0,0,1,1,        //原点z     blue
+    0,0,0,1,
+    0,0,0,1,
+    0,0,0,1
     ],
     indices:[
-    0,1,0,2,0,3
+    4,1,5,2,6,3,1,7,2,8,3,9
     ]
+}
+//要绘制的点的信息
+var pointArrays = {
+   position:[
+     0,0,0,
+   ],
+   color:[
+     0,0,0,1
+   ]
 }
 
 for(var j = 0;j<worldCoordinateArrays.position.length;j++)
 {
-  worldCoordinateArrays.position[j] = worldCoordinateArrays.position[j]*3;
+  worldCoordinateArrays.position[j] = worldCoordinateArrays.position[j]*6;
 }
 
 var wireCubeArrays = {
@@ -186,6 +210,7 @@ export class CameraFrustum extends SY.Sprite {
   private wireCubeBufferInfo: BufferAttribsData;
   private cubeBufferInfo: BufferAttribsData;
   private coordinateBufferInfo:BufferAttribsData; //世界坐标系
+  private pointArrays:BufferAttribsData;//绘制点的数组
   constructor(gl) {
     super(gl);
   }
@@ -197,6 +222,7 @@ export class CameraFrustum extends SY.Sprite {
   private yPosition:number = 0;
   private xPosition:number = 0;
   private eyePosition;//相机的位置
+  private targetPosition;//目标位置
   private eyeRotation;//相机的旋转
   // Setup a ui.
   public updateFieldOfView(event, ui) {
@@ -226,11 +252,22 @@ export class CameraFrustum extends SY.Sprite {
   public updateCamearZPos(event, ui) {
     this.eyePosition[2] = ui.value;
   }
+
+  public updateTargetXPos(event, ui) {
+    this.targetPosition[0] = ui.value;
+  }
+  public updateTargetYPos(event, ui) {
+    this.targetPosition[1] = ui.value;
+  }
+  public updateTargetZPos(event, ui) {
+    this.targetPosition[2] = ui.value;
+  }
+
   public updateCamearXRotation(event, ui) {
     this.eyeRotation[0] = MathUtils.degToRad(ui.value);
   }
   public updateCamearYRotation(event, ui) {
-    this.eyeRotation[1] =MathUtils. degToRad(ui.value);
+    this.eyeRotation[1] =MathUtils.degToRad(ui.value);
   }
   public updateCamearZRotation(event, ui) {
     this.eyeRotation[2] = MathUtils.degToRad(ui.value);
@@ -243,6 +280,7 @@ export class CameraFrustum extends SY.Sprite {
       zPosition:this.zPosition,
       yPosition:this.yPosition,
       xPosition:this.xPosition,
+      target:this.targetPosition,
       eyePosition:this.eyePosition,
       eyeRotation:this.eyeRotation
     }
@@ -255,9 +293,15 @@ export class CameraFrustum extends SY.Sprite {
     webglLessonsUI.setupSlider("#zPosition", { value: this.zPosition, slide: this.updateZPosition.bind(this), min: -100, max: 100 });
     webglLessonsUI.setupSlider("#yPosition", { value: this.yPosition, slide: this.updateYPosition.bind(this), min: -100, max: 100 });
     webglLessonsUI.setupSlider("#xPosition", { value: this.xPosition, slide: this.updateXPosition.bind(this), min: -100, max: 100 });
-    webglLessonsUI.setupSlider("#cameraPosX", { value: this.eyePosition[0], slide: this.updateCamearXPos.bind(this), min: 0, max: 50 });//31
-    webglLessonsUI.setupSlider("#cameraPosY", { value: this.eyePosition[1], slide: this.updateCamearYPos.bind(this), min: 0, max: 50 });//17
-    webglLessonsUI.setupSlider("#cameraPosZ", { value: this.eyePosition[2], slide: this.updateCamearZPos.bind(this), min: 0, max: 50 });//15
+
+    webglLessonsUI.setupSlider("#cameraPosX", { value: this.eyePosition[0], slide: this.updateCamearXPos.bind(this), min: -50, max: 50 });//31
+    webglLessonsUI.setupSlider("#cameraPosY", { value: this.eyePosition[1], slide: this.updateCamearYPos.bind(this), min: -50, max: 50 });//17
+    webglLessonsUI.setupSlider("#cameraPosZ", { value: this.eyePosition[2], slide: this.updateCamearZPos.bind(this), min: -50, max: 50 });//15
+
+    webglLessonsUI.setupSlider("#targetX", { value: this.targetPosition[0], slide: this.updateTargetXPos.bind(this), min: -50, max: 50 });//31
+    webglLessonsUI.setupSlider("#targetY", { value: this.targetPosition[1], slide: this.updateTargetYPos.bind(this), min: -50, max: 50 });//17
+    webglLessonsUI.setupSlider("#targetZ", { value: this.targetPosition[2], slide: this.updateTargetZPos.bind(this), min: -50, max: 50 });//15
+
     webglLessonsUI.setupSlider("#cameraRotateX", { value: this.eyeRotation[0], slide: this.updateCamearXRotation.bind(this), min: 0, max: 360 });//31
     webglLessonsUI.setupSlider("#cameraRotateY", { value: this.eyeRotation[1], slide: this.updateCamearYRotation.bind(this), min: 0, max: 360 });//17
     webglLessonsUI.setupSlider("#cameraRotateZ", { value: this.eyeRotation[2], slide: this.updateCamearZRotation.bind(this), min: 0, max: 360 });//15
@@ -269,6 +313,7 @@ export class CameraFrustum extends SY.Sprite {
     this.cubeRaysBufferInfo = G_ShaderFactory.createBufferInfoFromArrays(cubeRaysArrays);
     this.wireCubeBufferInfo = G_ShaderFactory.createBufferInfoFromArrays(wireCubeArrays);
     this.coordinateBufferInfo = G_ShaderFactory.createBufferInfoFromArrays(worldCoordinateArrays);
+    this.pointArrays = G_ShaderFactory.createBufferInfoFromArrays(pointArrays);
     var cubeArrays: any = syPrimitives.createCubeVertices(2);
     delete cubeArrays.normal;
     delete cubeArrays.texcoord;
@@ -288,6 +333,7 @@ export class CameraFrustum extends SY.Sprite {
     this._originPos = [0,0,0];
     this.eyePosition = new Float32Array([31, 17, 15]);
     this.eyeRotation = new Float32Array([0,0,0]);
+    this.targetPosition = new Float32Array([0,0,0]);
     this.setUI();
   }
   //设置UI初始数据
@@ -327,6 +373,22 @@ export class CameraFrustum extends SY.Sprite {
     this.zNear = zNear;
     this.zFar = zFar;
     this.fieldOfView = fieldOfView;
+    
+    pointArrays.position[3] = this.eyePosition[0];//眼睛的位置
+    pointArrays.position[4] = this.eyePosition[1];//眼睛的位置
+    pointArrays.position[5] = this.eyePosition[2];//眼睛的位置
+    pointArrays.color[5] = 1;
+    pointArrays.color[6] = 0;
+    pointArrays.color[7] = 0;
+    pointArrays.color[8] = 1;
+    pointArrays.position[6] = this.targetPosition[0];//看向的位置
+    pointArrays.position[7] = this.targetPosition[1];//看向的位置
+    pointArrays.position[8] = this.targetPosition[2];//看向的位置
+    pointArrays.color[9] = 0;
+    pointArrays.color[10] = 0;
+    pointArrays.color[11] = 1;
+    pointArrays.color[12] = 1;
+    this.pointArrays = G_ShaderFactory.createBufferInfoFromArrays(pointArrays);
 
     this.updateLocalProj();
     //绘制齐次裁切空间 六个面
@@ -337,6 +399,8 @@ export class CameraFrustum extends SY.Sprite {
     this.drawFrustumWire(vp, this.vertexColorProgramInfo, this.wireCubeBufferInfo);
 
     this.drawWorldCoordinateSystem(vp);
+
+    this.drawPoint(vp);
   }
   // Draw view cone.
   //绘制齐次裁切空间的四条射线
@@ -384,7 +448,7 @@ export class CameraFrustum extends SY.Sprite {
     Device.Instance.closeCullFace();
   }
   
-  //世界坐标系
+  //绘制相机坐标系
   private drawWorldCoordinateSystem(vp: Float32Array):void{
       this.gl.useProgram(this.vertexColorProgramInfo.spGlID);
       G_ShaderFactory.setBuffersAndAttributes(this.vertexColorProgramInfo.attrSetters,this.coordinateBufferInfo);
@@ -392,8 +456,29 @@ export class CameraFrustum extends SY.Sprite {
       G_ShaderFactory.setUniforms(this.vertexColorProgramInfo.uniSetters,{u_color:[1,1,1,1]});
       G_ShaderFactory.drawBufferInfo(this.coordinateBufferInfo,this.gl.LINES);
 
-      G_ShaderFactory.setUniforms(this.vertexColorProgramInfo.uniSetters,{u_worldViewProjection:this._localProj});
+     this.drawWorld();
+  }
+  
+  //绘制世界坐标系
+  private drawWorld():void{
+      var world =  glMatrix.mat4.identity(null);
+      glMatrix.mat4.scale(world,world,[0.1,0.1,0.1]);
+      this.gl.useProgram(this.vertexColorProgramInfo.spGlID);
+      G_ShaderFactory.setBuffersAndAttributes(this.vertexColorProgramInfo.attrSetters,this.coordinateBufferInfo);
+      G_ShaderFactory.setUniforms(this.vertexColorProgramInfo.uniSetters,{u_worldViewProjection:world});
       G_ShaderFactory.setUniforms(this.vertexColorProgramInfo.uniSetters,{u_color:[1,1,1,1]});
       G_ShaderFactory.drawBufferInfo(this.coordinateBufferInfo,this.gl.LINES);
+  }
+
+  private drawPoint(vp:Float32Array):void{
+
+    var world =  glMatrix.mat4.identity(null);
+    glMatrix.mat4.scale(world,world,[0.1,0.1,0.1]);
+    this.gl.useProgram(this.vertexColorProgramInfo.spGlID);
+    G_ShaderFactory.setBuffersAndAttributes(this.vertexColorProgramInfo.attrSetters,this.pointArrays);
+    G_ShaderFactory.setUniforms(this.vertexColorProgramInfo.uniSetters,{u_worldViewProjection:vp});
+    G_ShaderFactory.setUniforms(this.vertexColorProgramInfo.uniSetters,{u_color:[1,1,1,1]});
+    G_ShaderFactory.drawBufferInfo(this.pointArrays,this.gl.POINTS);
+
   }
 }

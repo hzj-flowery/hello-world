@@ -2554,6 +2554,7 @@ export namespace glMatrix {
      */
 
     function translate$2(out, a, v:Array<number>) {
+        out = out || new MatType(16);
         var x = v[0],
             y = v[1],
             z = v[2];

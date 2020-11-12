@@ -149,7 +149,7 @@ export default class Camera extends Node {
     */
     protected _projectionMatrix: any;//透视矩阵
 
-    protected _fovy: number;//相机张开的角度
+    protected _fovy: number;//相机张开的弧度
     protected _aspect: number;//相机的横纵比(width/height)
     protected _near: number;//相机最近能看到的位置
     protected _far: number;//相机最远能看到的位置
@@ -158,7 +158,10 @@ export default class Camera extends Node {
     private _eye: Array<number>;
     private _targetTexture: RenderTexture;//目标渲染纹理
     private _framebuffer: FrameBuffer;//渲染buffer
-
+    
+    /**
+     * 弧度
+     */
     public set Fovy(fov: number) {
         this._fovy = fov;
     }
@@ -171,7 +174,10 @@ export default class Camera extends Node {
     public set Far(far) {
         this._far = far;
     }
-
+    
+    /**
+     * 弧度
+     */
     public get Fovy():number {
         return this._fovy;
     }

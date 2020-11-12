@@ -55,36 +55,6 @@ var colorFragmentShader =
   'gl_FragColor = v_color * u_color * blendColor;' +
   '}'
 
-var wireCubeArrays = {
-  position: [
-    -1, 1, -1,
-    1, 1, -1,
-    1, -1, -1,
-    -1, -1, -1,
-
-    -1, 1, 1,
-    1, 1, 1,
-    1, -1, 1,
-    -1, -1, 1,
-  ],
-  color: [
-    1, 1, 1, 1,
-    1, 1, 1, 1,
-    1, 1, 1, 1,
-    1, 1, 1, 1,
-
-    1, 1, 1, 1,
-    1, 1, 1, 1,
-    1, 1, 1, 1,
-    1, 1, 1, 1,
-  ],
-  indices: [
-    0, 1, 1, 2, 2, 3, 3, 0,
-    4, 5, 5, 6, 6, 7, 7, 4,
-    0, 4, 1, 5, 2, 6, 3, 7,
-  ],
-};
-
 var faceColors = [
   [1, 0, 0, 1,],
   [0, 1, 0, 1,],
@@ -125,12 +95,15 @@ export default class Stage {
   private zFar = 50;//相机最远能看到的距离
   private fieldOfView = 30;//相机张开的角度
   private zPosition = -25;//场景的位置
+  private yPosition = 0;//场景的位置
+  private xPosition = 0;//场景的位置
   private aspect: number;
   private v3t0 = new Float32Array(3);
   private targetToEye: Float32Array = new Float32Array(3);
   private eyePosition = new Float32Array([31, 17, 15]);//相机的位置
   private eyeRotation = new Float32Array([0, 0, 0]);//相机的旋转
-  private target = new Float32Array([23, 16, 0]);
+  // private target = new Float32Array([23, 16, 0]);
+  private target = new Float32Array([0,0,0]);
   private up = new Float32Array([0, 1, 0]);
   private gl: WebGLRenderingContext;
   private colorProgramInfo: ShaderData;
@@ -157,8 +130,12 @@ export default class Stage {
     this.zNear = uiData.zNear;
     this.zFar = uiData.zFar;
     this.zPosition = uiData.zPosition;
+    this.yPosition = uiData.yPosition;
+    this.xPosition = uiData.xPosition;
     this.eyeRotation = uiData.eyeRotation;
     this.eyePosition = uiData.eyePosition;
+    this.target = uiData.target;
+
 
     time *= 0.001;
     this.adjustCamera();
@@ -184,7 +161,7 @@ export default class Stage {
     // clear the screen.
     gl.disable(gl.SCISSOR_TEST);
     gl.colorMask(true, true, true, true);
-    gl.clearColor(0, 0, 0, 0);
+    gl.clearColor(0.9, 0.9, 0.9, 1);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     gl.viewport(0, halfHeight, width, halfHeight);
     gl.enable(gl.DEPTH_TEST);
@@ -200,7 +177,7 @@ export default class Stage {
     glMatrix.vec3.scale(this.v3t0, this.targetToEye, f);
     glMatrix.vec3.add(this.v3t0, this.target, this.v3t0);
     
-    glMatrix.mat4.lookAt(view,
+    glMatrix.mat4.lookAt2(view,
       this.v3t0, //eyePosition,
       this.target,
       this.up);
@@ -209,7 +186,7 @@ export default class Stage {
     glMatrix.mat4.rotateY(view, view, this.eyeRotation[1]);
     glMatrix.mat4.rotateZ(view, view, this.eyeRotation[2]);
 
-    // glMatrix.mat4.invert(view, view);
+    glMatrix.mat4.invert(view, view);
 
 
     //算出视图投影矩阵
@@ -227,7 +204,7 @@ export default class Stage {
     G_ShaderFactory.setBuffersAndAttributes(shaderD.attrSetters, buffAttData);
     var cubeScale = 3;
     for (var ii = -1; ii <= 1; ++ii) {
-      glMatrix.mat4.translation(worldTemp, ii * 10, 0, this.zPosition);
+      glMatrix.mat4.translation(worldTemp, ii * 10,this.yPosition, this.zPosition);
       // glMatrix.mat4.rotateY(worldTemp, worldTemp, time + ii * Math.PI / 6);
       // glMatrix.mat4.rotateX(worldTemp, worldTemp, Math.PI / 4);
       // glMatrix.mat4.rotateZ(worldTemp, worldTemp, Math.PI / 4);
@@ -259,8 +236,8 @@ export default class Stage {
       this.aspect,
       this.zNear,
       this.zFar);
-    // this.drawScene(time, proj as Float32Array, new Float32Array(16), this.colorProgramInfo, this.cubeBufferInfo);
-    this.drawScene(time, this.viewProjection, new Float32Array(16), this.colorProgramInfo, this.cubeBufferInfo);
+    this.drawScene(time, proj as Float32Array, new Float32Array(16), this.colorProgramInfo, this.cubeBufferInfo);
+    // this.drawScene(time, this.viewProjection, new Float32Array(16), this.colorProgramInfo, this.cubeBufferInfo);
   }
 
 
