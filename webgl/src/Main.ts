@@ -38,9 +38,9 @@ G_ShaderFactory.init(Device.Instance.gl);
 // LabelTest.run();
 // ShaderShadowTest.run();
 
-// Stage.run();
+Stage.run();
 
-EarthSunTest.run();
+// EarthSunTest.run();
 
 // RobartTest.run();
 // CaptureTest.run();

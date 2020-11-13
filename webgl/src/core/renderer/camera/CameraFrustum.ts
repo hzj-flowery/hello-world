@@ -371,7 +371,7 @@ export class CameraFrustum extends SY.Sprite {
 
     glMatrix.mat4.invert(this._loacalRayInvertProj, this._localRayProj);
   }
-  public testDraw(vp: Float32Array, aspect: number, zNear: number, zFar: number, fieldOfView: number) {
+  public testDraw(vp1: Float32Array, aspect: number, zNear: number, zFar: number, fieldOfView: number) {
 
     this.aspect = aspect;
     this.zNear = zNear;
@@ -394,11 +394,39 @@ export class CameraFrustum extends SY.Sprite {
     pointArrays.color[12] = 1;
     this.pointArrays = G_ShaderFactory.createBufferInfoFromArrays(pointArrays);
 
+   
+
     this.updateLocalProj();
+
+    
+    var vp = new Float32Array([
+      0.37,
+      -0.7,
+      -0.8,
+      -0.8,
+
+      0,//4
+      1.55,
+      -0.44,
+      -0.44,
+
+      -0.77,//8
+      -0.33,
+      -0.39,
+      -0.39,
+
+      -1.53,//12
+      2.3,
+      36,
+      38,
+
+    ])
+
+    // var vp = this._localProj;
     //绘制齐次裁切空间 六个面
-    this.drawFrustumCube(vp, this.colorProgramInfo, this.cubeBufferInfo);
+    // this.drawFrustumCube(vp, this.colorProgramInfo, this.cubeBufferInfo);
     //绘制四条射线
-    this.drawViewCone(vp, this.vertexColorProgramInfo, this.cubeRaysBufferInfo);
+    // this.drawViewCone(vp, this.vertexColorProgramInfo, this.cubeRaysBufferInfo);
     //绘制四个金属线
     this.drawFrustumWire(vp, this.vertexColorProgramInfo, this.wireCubeBufferInfo);
 
@@ -429,6 +457,7 @@ export class CameraFrustum extends SY.Sprite {
   // Draw Frustum Wire
   //绘制齐次裁切空间远近平面的边缘线
   private drawFrustumWire(vp: Float32Array, sdData: ShaderData, buffAttrData: BufferAttribsData) {
+    this.gl.useProgram(sdData.spGlID);
     glMatrix.mat4.translation(this._worldTemp, this._originPos[0],this._originPos[1],this._originPos[2]);
     glMatrix.mat4.multiply(this._worldTemp, this._worldTemp, this._loacalInvertProj);
     glMatrix.mat4.multiply(this.wireFrustumUniforms.u_worldViewProjection, vp, this._worldTemp);//pvm

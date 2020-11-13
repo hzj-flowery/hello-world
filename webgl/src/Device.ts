@@ -65,10 +65,10 @@ export default class Device {
         this._height = canvas.clientHeight;
         console.log("画布的尺寸----", this._width, this._height);
 
-        
+
         this.initExt();
     }
-    public getWebglContext():WebGLRenderingContext{
+    public getWebglContext(): WebGLRenderingContext {
         return (this.canvas as any).getContext("webgl")
     }
 
@@ -78,20 +78,18 @@ export default class Device {
     public get Height(): number {
         return this._height;
     }
-    
+
     //获取webgl画笔的类型
-    public getContextType():string{
-        if(this.gl instanceof WebGL2RenderingContext)
-        {
+    public getContextType(): string {
+        if (this.gl instanceof WebGL2RenderingContext) {
             return "webgl2"
         }
-        else if((this.gl as any) instanceof WebGLRenderingContext)
-        {
+        else if ((this.gl as any) instanceof WebGLRenderingContext) {
             return "webgl";
         }
     }
     //创建webgl画笔
-    private createGLContext(canvas):WebGL2RenderingContext {
+    private createGLContext(canvas): WebGL2RenderingContext {
         var names = ["webgl2", "webgl", "experimental-webgl"];
         var context = null;
         for (var i = 0; i < names.length; i++) {
@@ -114,34 +112,40 @@ export default class Device {
         return context;
     }
 
+    private _isCapture: boolean = false;
     private onMouseDown(ev): void {
-        this.readP();
+        this._isCapture = true;
+
     }
     private onMouseMove(ev): void {
-        
+
     }
     private onMouseUp(ev): void {
-        
+        this._isCapture = false;
     }
 
     /**
      * 将结果绘制到UI上
      */
-    public drawToUI(time:number,scene2D:Scene2D,scene3D:Scene3D):void{
-        this.gl.clearColor(0.50,0.50,0.50,1.0);
-        this.gl.bindFramebuffer(this.gl.FRAMEBUFFER,scene2D.getFrameBuffer());
+    public drawToUI(time: number, scene2D: Scene2D, scene3D: Scene3D): void {
+        this.gl.clearColor(0.50, 0.50, 0.50, 1.0);
+        this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, scene2D.getFrameBuffer());
         this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
         scene3D.readyDraw(time);
         scene2D.readyDraw(time);
-       
+
     }
     //将结果绘制到窗口
-    public draw2screen(time:number,scene2D:Scene2D,scene3D:Scene3D):void{
-        this.gl.clearColor(0.8,0.8,0.8,1.0);
-        this.gl.bindFramebuffer(this.gl.FRAMEBUFFER,null);
+    public draw2screen(time: number, scene2D: Scene2D, scene3D: Scene3D): void {
+        this.gl.clearColor(0.8, 0.8, 0.8, 1.0);
+        this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, null);
         this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
         scene3D.readyDraw(time);
         // scene2D.readyDraw(time);
+        if (this._isCapture) {
+            this._isCapture = false;
+            this.capture();
+        }
     }
 
 
@@ -242,48 +246,49 @@ export default class Device {
 
     //copy-------------------------------------------------------------------------------------------------
     private _caps = {
-        maxVertexStreams:4,
-        maxVertexTextures:0, 
-        maxFragUniforms:0,  //片段着色器最大可以用的uniform变量
-        maxTextureUnits:0, //最大使用的纹理单元数
-        maxVertexAttribs:0,//shader中最大允许设置的顶点属性变量数目
-        maxTextureSize:0,//在显存中最大存取纹理的尺寸16384kb,也就是16m,[4096,4096]
-        maxDrawBuffers:0,
-        maxColorAttachments:0};
-    private _extensions:Array<any> = [];
-    private _stats:any;
-    private initExt(){
+        maxVertexStreams: 4,
+        maxVertexTextures: 0,
+        maxFragUniforms: 0,  //片段着色器最大可以用的uniform变量
+        maxTextureUnits: 0, //最大使用的纹理单元数
+        maxVertexAttribs: 0,//shader中最大允许设置的顶点属性变量数目
+        maxTextureSize: 0,//在显存中最大存取纹理的尺寸16384kb,也就是16m,[4096,4096]
+        maxDrawBuffers: 0,
+        maxColorAttachments: 0
+    };
+    private _extensions: Array<any> = [];
+    private _stats: any;
+    private initExt() {
         this._stats = {
-          texture: 0,
-          vb: 0,
-          ib: 0,
-          drawcalls: 0,
+            texture: 0,
+            vb: 0,
+            ib: 0,
+            drawcalls: 0,
         };
-    
+
         // https://developer.mozilla.org/zh-CN/docs/Web/API/WebGL_API/Using_Extensions
         this._initExtensions([
-          'EXT_texture_filter_anisotropic',
-          'EXT_shader_texture_lod',
-          'OES_standard_derivatives',
-          'OES_texture_float',
-          'OES_texture_float_linear',
-          'OES_texture_half_float',
-          'OES_texture_half_float_linear',
-          'OES_vertex_array_object',
-          'WEBGL_compressed_texture_atc',
-          'WEBGL_compressed_texture_etc',
-          'WEBGL_compressed_texture_etc1',
-          'WEBGL_compressed_texture_pvrtc',
-          'WEBGL_compressed_texture_s3tc',
-          'WEBGL_depth_texture',
-          'WEBGL_draw_buffers',
+            'EXT_texture_filter_anisotropic',
+            'EXT_shader_texture_lod',
+            'OES_standard_derivatives',
+            'OES_texture_float',
+            'OES_texture_float_linear',
+            'OES_texture_half_float',
+            'OES_texture_half_float_linear',
+            'OES_vertex_array_object',
+            'WEBGL_compressed_texture_atc',
+            'WEBGL_compressed_texture_etc',
+            'WEBGL_compressed_texture_etc1',
+            'WEBGL_compressed_texture_pvrtc',
+            'WEBGL_compressed_texture_s3tc',
+            'WEBGL_depth_texture',
+            'WEBGL_draw_buffers',
         ]);
         this._initCaps();
         // this._initStates();
 
         this.handlePrecision();
 
-        console.log("拓展-----",this.gl.getSupportedExtensions());
+        console.log("拓展-----", this.gl.getSupportedExtensions());
         /**
          * 'EXT_color_buffer_float', 
          * 'EXT_disjoint_timer_query_webgl2',
@@ -304,7 +309,7 @@ export default class Device {
     }
 
 
-    private handlePrecision():void{
+    private handlePrecision(): void {
         var gl = this.gl;
         console.log("处理精度");
         var data1 = gl.getShaderPrecisionFormat(gl.VERTEX_SHADER, gl.LOW_FLOAT);
@@ -313,7 +318,7 @@ export default class Device {
         var data4 = gl.getShaderPrecisionFormat(gl.VERTEX_SHADER, gl.LOW_INT);
         var data5 = gl.getShaderPrecisionFormat(gl.VERTEX_SHADER, gl.MEDIUM_INT);
         var data6 = gl.getShaderPrecisionFormat(gl.VERTEX_SHADER, gl.HIGH_INT);
-        console.log("vertex 精度值---",data1,data2,data3,data4,data5,data6);
+        console.log("vertex 精度值---", data1, data2, data3, data4, data5, data6);
 
         var data1 = gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.LOW_FLOAT);
         var data2 = gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.MEDIUM_FLOAT);
@@ -321,7 +326,7 @@ export default class Device {
         var data4 = gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.LOW_INT);
         var data5 = gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.MEDIUM_INT);
         var data6 = gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.HIGH_INT);
-        console.log("fragment 精度值---",data1,data2,data3,data4,data5,data6);
+        console.log("fragment 精度值---", data1, data2, data3, data4, data5, data6);
     }
 
     /**
@@ -402,59 +407,59 @@ export default class Device {
         this._caps.maxDrawBuffers = extDrawBuffers ? gl.getParameter(extDrawBuffers.MAX_DRAW_BUFFERS_WEBGL) : 1;
         this._caps.maxColorAttachments = extDrawBuffers ? gl.getParameter(extDrawBuffers.MAX_COLOR_ATTACHMENTS_WEBGL) : 1;
 
-        console.log("this._caps---",this._caps);
+        console.log("this._caps---", this._caps);
 
-        localStorage.setItem("zm","nihaoa");
-    }
-
-    private readP():void{
-        var data = window["canvas"].toDataURL('image/png');
-        console.log(data);
-        var dataImg = new Image();
-        dataImg.src = data;
-        
-
-       console.log("fs-------",localStorage.getItem("zm"));
-       var fso = new ActiveXObject("Scripting.FileSystemObject"); 
-       var f1 = fso.createtextfile("c:\\myjstest.txt",true);
-       console.log(fso,f1);
-      
-
-        // let gl = this.gl;
-        // var pixels = new Uint8Array(gl.drawingBufferWidth * gl.drawingBufferHeight * 4);
-        // gl.readPixels(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
-        // console.log("gl.drawingBufferWidth",gl.drawingBufferWidth,gl.drawingBufferHeight,pixels); // Uint8Array
+        localStorage.setItem("zm", "nihaoa");
     }
     
+    /**
+     * 截图
+     */
+    private capture(): void {
+        const saveBlob = (function () {
+            const a = document.createElement('a');
+            document.body.appendChild(a);
+            a.style.display = 'none';
+            return function saveData(blob, fileName) {
+                const url = window.URL.createObjectURL(blob);
+                a.href = url;
+                a.download = fileName;
+                a.click();
+            };
+        }());
+        var gl = this.gl;
+        (gl.canvas as any).toBlob((blob) => {
+            saveBlob(blob, `screencapture-${gl.canvas.width}x${gl.canvas.height}.png`);
+        });
+
+    }
+
     //剔除某一个面
     /**
      * 
      * @param back true 代表剔除背面 false 代表剔除前面
      * @param both 表示前后面都剔除
      */
-    public cullFace(back:boolean = true,both?):void{
+    public cullFace(back: boolean = true, both?): void {
         var gl = this.gl;
         gl.enable(gl.CULL_FACE);//开启面剔除功能
         gl.frontFace(gl.CW);//逆时针绘制的代表正面 正常理解，看到的面是正面gl.FRONT，看不到的面是背面gl.BACK
         // gl.frontFace(gl.CCW);//顺时针绘制的代表正面  需要反过来理解，即我们看到的面是背面，看不到的面是正面
-        if(both)
-        {
+        if (both) {
             gl.cullFace(gl.FRONT_AND_BACK); //前后两个面都剔除
         }
-        else if(back)
-        {
+        else if (back) {
             gl.cullFace(gl.BACK);//只剔除背面
-            
+
         }
-        else
-        {
-           gl.cullFace(gl.FRONT);//只剔除前面
+        else {
+            gl.cullFace(gl.FRONT);//只剔除前面
         }
     }
     /**
      * 关闭面剔除功能
      */
-    public closeCullFace():void{
+    public closeCullFace(): void {
         var gl = this.gl;
         gl.disable(gl.CULL_FACE);
         gl.enable(gl.CULL_FACE);

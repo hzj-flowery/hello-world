@@ -11,7 +11,7 @@ var vertexshader3d =
     'varying vec4 v_color;' +
     'void main() {' +
     'gl_Position = u_matrix * a_position;' +
-    'v_color = a_color;' +
+    'v_color = normalize(a_color);' +
     '}'
 
 var fragmentshader3d =
@@ -291,7 +291,6 @@ function main() {
     // setup GLSL program
     var programShader = G_ShaderFactory.createProgramInfo(vertexshader3d, fragmentshader3d);
     var cubeBufferInfor = G_ShaderFactory.createBufferInfoFromArrays(modelData);
-    console.log("cubeBufferInfor-----",cubeBufferInfor);
     var uniforms = {
         u_matrix: {}
     }
@@ -350,15 +349,14 @@ function main() {
 
         // Compute the matrices
         var aspect = gl.canvas.width / gl.canvas.height;
-        var matrix = glMatrix.mat4.perspective(null, fieldOfViewRadians, aspect, 1, 2000);
-        glMatrix.mat4.translate(matrix, matrix, translation);
-        glMatrix.mat4.rotateX(matrix, matrix, rotation[0]);
-        glMatrix.mat4.rotateY(matrix, matrix, rotation[1]);
-        glMatrix.mat4.rotateZ(matrix, matrix, rotation[2]);
-        glMatrix.mat4.scale(matrix, matrix, scale);
+        var projectionMatrix = glMatrix.mat4.perspective(null, fieldOfViewRadians, aspect, 1, 2000);
+        glMatrix.mat4.translate(projectionMatrix, projectionMatrix, translation);
+        glMatrix.mat4.rotateX(projectionMatrix, projectionMatrix, rotation[0]);
+        glMatrix.mat4.rotateY(projectionMatrix, projectionMatrix, rotation[1]);
+        glMatrix.mat4.rotateZ(projectionMatrix, projectionMatrix, rotation[2]);
+        glMatrix.mat4.scale(projectionMatrix, projectionMatrix, scale);
 
-
-        uniforms.u_matrix = matrix;
+        uniforms.u_matrix = projectionMatrix;
         G_ShaderFactory.setUniforms(programShader.uniSetters, uniforms)
 
         G_ShaderFactory.drawBufferInfo(cubeBufferInfor, gl.TRIANGLES)

@@ -157,7 +157,7 @@ export default class Stage {
     const halfHeight = gl.canvas.height / 2;
     const width = gl.canvas.width;
     let proj = glMatrix.mat4.create();
-    let view = new Float32Array(16);
+    let view = glMatrix.mat4.identity(null);
     // clear the screen.
     gl.disable(gl.SCISSOR_TEST);
     gl.colorMask(true, true, true, true);
@@ -168,29 +168,22 @@ export default class Stage {
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
-    glMatrix.mat4.perspective(proj,
-      MathUtils.degToRad(60),
-      this.aspect,
-      1,
-      5000);
+    glMatrix.mat4.perspective(proj,MathUtils.degToRad(60),this.aspect,1,5000);
     let f = 1;
     glMatrix.vec3.scale(this.v3t0, this.targetToEye, f);
     glMatrix.vec3.add(this.v3t0, this.target, this.v3t0);
     
-    glMatrix.mat4.lookAt(view,
-      this.v3t0, //eyePosition,
-      this.target,
-      this.up);
+    glMatrix.mat4.lookAt(view,this.v3t0, this.target,this.up);
 
     glMatrix.mat4.rotateX(view, view, this.eyeRotation[0]);
     glMatrix.mat4.rotateY(view, view, this.eyeRotation[1]);
     glMatrix.mat4.rotateZ(view, view, this.eyeRotation[2]);
 
     // glMatrix.mat4.invert(view, view);
-
-
     //算出视图投影矩阵
     glMatrix.mat4.multiply(this.viewProjection, proj, view);
+
+    console.log("view-----",view,proj);
   }
 
   
