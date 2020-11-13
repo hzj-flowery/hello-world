@@ -194,7 +194,7 @@ export namespace syPrimitives {
      *         created plane vertices.
      * @memberOf module:primitives
      */
-    export function createSphereVertices(radius,subdivisionsAxis,subdivisionsHeight,opt_startLatitudeInRadians,opt_endLatitudeInRadians,opt_startLongitudeInRadians,opt_endLongitudeInRadians) {
+    export function createSphereVertices(radius,subdivisionsAxis,subdivisionsHeight,opt_startLatitudeInRadians?,opt_endLatitudeInRadians?,opt_startLongitudeInRadians?,opt_endLongitudeInRadians?) {
         if (subdivisionsAxis <= 0 || subdivisionsHeight <= 0) {
             throw Error('subdivisionAxis and subdivisionHeight must be > 0');
         }

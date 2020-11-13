@@ -2600,6 +2600,39 @@ export namespace glMatrix {
 
         return out;
     }
+
+    /**
+     * Makes a scale matrix
+     * @param {number} sx x scale.
+     * @param {number} sy y scale.
+     * @param {number} sz z scale.
+     * @param {Matrix4} [dst] optional matrix to store result
+     * @return {Matrix4} dst or a new matrix if none provided
+     * @memberOf module:webgl-3d-math
+     */
+    function scaling(dst,sx, sy, sz) {
+        dst = dst || new MatType(16);
+    
+        dst[ 0] = sx;
+        dst[ 1] = 0;
+        dst[ 2] = 0;
+        dst[ 3] = 0;
+        dst[ 4] = 0;
+        dst[ 5] = sy;
+        dst[ 6] = 0;
+        dst[ 7] = 0;
+        dst[ 8] = 0;
+        dst[ 9] = 0;
+        dst[10] = sz;
+        dst[11] = 0;
+        dst[12] = 0;
+        dst[13] = 0;
+        dst[14] = 0;
+        dst[15] = 1;
+    
+        return dst;
+      }
+
     /**
      * Scales the mat4 by the dimensions in the given vec3 not using vectorization
      *
@@ -2765,6 +2798,7 @@ export namespace glMatrix {
      */
 
     function rotateY(out, a, rad) {
+        out = out || new MatType(16);
         var s = Math.sin(rad);
         var c = Math.cos(rad);
         var a00 = a[0];
@@ -3972,6 +4006,7 @@ export namespace glMatrix {
         multiply: multiply$3,
         translate: translate$2,
         scale: scale$3,
+        scaling:scaling,
         rotate: rotate$3,
         rotateX: rotateX,
         rotateY: rotateY,

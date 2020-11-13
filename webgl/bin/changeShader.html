@@ -24,26 +24,12 @@
     <script id="glsl" type="notjs">
         precision mediump float;
 
-// Passed in from the vertex shader.
-varying vec2 v_texcoord;
-varying vec3 v_position;
-
-// The texture.
-uniform sampler2D u_texture;
-uniform vec4 u_fogColor;
-uniform float u_fogDensity;
-
-void main() {
-  vec4 color = texture2D(u_texture, v_texcoord);
-
-  #define LOG2 1.442695
-
-  float fogDistance = length(v_position);
-  float fogAmount = 1. - exp2(-u_fogDensity * u_fogDensity * fogDistance * fogDistance * LOG2);
-  fogAmount = clamp(fogAmount, 0., 1.);
-
-  gl_FragColor = mix(color, u_fogColor, fogAmount);  
-}
+        // Passed in from the vertex shader.
+        varying vec4 v_color;
+        
+        void main() {
+           gl_FragColor = v_color;
+        }
     </script>
 
 

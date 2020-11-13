@@ -434,6 +434,10 @@ class ShaderFactory {
             if (setter) {
                 setter(attribs[name]);
             }
+            else
+            {
+                console.log("error  绑定attribute变量失败-----",name);
+            }
         });
 
         if (buffers.indices) {
@@ -448,6 +452,10 @@ class ShaderFactory {
                 const setter = setters[name];
                 if (setter) {
                     setter(uniforms[name]);
+                }
+                else
+                {
+                    console.log("error  绑定uniform变量失败------",name);
                 }
             });
         }

@@ -7,6 +7,9 @@ import PointLightTest from "./core/renderer/light/PointLightTest";
 import RenderFlow from "./RenderFlow";
 import Stage from "./core/renderer/3d/Stage";
 import FogTest from "./core/renderer/3d/FogTest";
+import EarthSunTest from "./core/renderer/3d/EarthSunTest";
+import RobartTest from "./core/renderer/3d/RobartTest";
+import CaptureTest from "./core/renderer/3d/CaptureTest";
 
 
 
@@ -35,7 +38,12 @@ G_ShaderFactory.init(Device.Instance.gl);
 // LabelTest.run();
 // ShaderShadowTest.run();
 
-Stage.run();
+// Stage.run();
+
+EarthSunTest.run();
+
+// RobartTest.run();
+// CaptureTest.run();
 
 // CameraTest.run();
 
