@@ -1,6 +1,7 @@
 'use strict';
 
 import Device from "../../../Device";
+import { G_ShaderFactory } from "../shader/Shader";
 var  vertexshader3d = 
 'attribute vec4 a_position;'+
 'attribute vec4 a_color;'+
@@ -33,9 +34,7 @@ var solidcolorfragmentshader =
 '}'
 
 function main() {
-  // Get A WebGL context
-  /** @type {HTMLCanvasElement} */
-  var webglUtils = window["webglUtils"];
+  
   var m4 = window["m4"];
   var gl = Device.Instance.gl;
   var primitives = window["primitives"];
@@ -46,8 +45,8 @@ function main() {
 
   // setup GLSL programs
   // compiles shaders, links program, looks up locations
-  const vertexColorProgramInfo = webglUtils.createProgramInfo(gl, [vertexshader3d, fragmentshader3d]);
-  const solidColorProgramInfo = webglUtils.createProgramInfo(gl, [solidcolorvertexshader, solidcolorfragmentshader]);
+  const vertexColorProgramInfo = G_ShaderFactory.createProgramInfo(vertexshader3d, fragmentshader3d);
+  const solidColorProgramInfo = G_ShaderFactory.createProgramInfo(solidcolorvertexshader, solidcolorfragmentshader);
 
   // create buffers and fill with data for a 3D 'F'
   const fBufferInfo = primitives.create3DFBufferInfo(gl);
@@ -73,7 +72,7 @@ function main() {
       4, 5, 5, 7, 7, 6, 6, 4,
       0, 4, 1, 5, 3, 7, 2, 6,
     ];
-    return webglUtils.createBufferInfoFromArrays(gl, {
+    return G_ShaderFactory.createBufferInfoFromArrays({
       position: positions,
       indices,
     });
@@ -120,7 +119,7 @@ function main() {
     positions.forEach((v, ndx) => {
       positions[ndx] *= scale;
     });
-    return webglUtils.createBufferInfoFromArrays(gl, {
+    return G_ShaderFactory.createBufferInfoFromArrays({
       position: positions,
       indices,
     });
@@ -168,23 +167,23 @@ function main() {
     let mat = m4.multiply(projectionMatrix, viewMatrix);
     mat = m4.multiply(mat, worldMatrix);
 
-    gl.useProgram(vertexColorProgramInfo.program);
+    gl.useProgram(vertexColorProgramInfo.spGlID);
 
     // ------ Draw the F --------
 
     // Setup all the needed attributes.
-    webglUtils.setBuffersAndAttributes(gl, vertexColorProgramInfo, fBufferInfo);
+    G_ShaderFactory.setBuffersAndAttributes(vertexColorProgramInfo.attrSetters, fBufferInfo);
 
     // Set the uniforms
-    webglUtils.setUniforms(vertexColorProgramInfo, {
+    G_ShaderFactory.setUniforms(vertexColorProgramInfo.uniSetters, {
       u_matrix: mat,
     });
 
-    webglUtils.drawBufferInfo(gl, fBufferInfo);
+    G_ShaderFactory.drawBufferInfo(fBufferInfo);
   }
 
   function render() {
-    webglUtils.resizeCanvasToDisplaySize(gl.canvas);
+    Device.Instance.resizeCanvasToDisplaySize(gl.canvas);
 
     gl.enable(gl.CULL_FACE);
     gl.enable(gl.DEPTH_TEST);
@@ -264,35 +263,35 @@ function main() {
       // the camera's representative in the scene
       mat = m4.multiply(mat, cameraMatrix);
 
-      gl.useProgram(solidColorProgramInfo.program);
+      gl.useProgram(solidColorProgramInfo.spGlID);
 
       // ------ Draw the Camera Representation --------绘制相机模型
 
       // Setup all the needed attributes.
-      webglUtils.setBuffersAndAttributes(gl, solidColorProgramInfo, cameraBufferInfo);
+      G_ShaderFactory.setBuffersAndAttributes(solidColorProgramInfo.attrSetters, cameraBufferInfo);
 
       // Set the uniforms
-      webglUtils.setUniforms(solidColorProgramInfo, {
+      G_ShaderFactory.setUniforms(solidColorProgramInfo.uniSetters, {
         u_matrix: mat,
         u_color: [1, 0, 0, 1],
       });
 
-      webglUtils.drawBufferInfo(gl, cameraBufferInfo, gl.LINES);
+      G_ShaderFactory.drawBufferInfo(cameraBufferInfo, gl.LINES);
 
       // ----- Draw the frustum ------- 绘制齐次裁切空间坐标系
 
       mat = m4.multiply(mat, m4.inverse(perspectiveProjectionMatrix));
 
       // Setup all the needed attributes.
-      webglUtils.setBuffersAndAttributes(gl, solidColorProgramInfo, clipspaceCubeBufferInfo);
+      G_ShaderFactory.setBuffersAndAttributes(solidColorProgramInfo.attrSetters, clipspaceCubeBufferInfo);
 
       // Set the uniforms
-      webglUtils.setUniforms(solidColorProgramInfo, {
+      G_ShaderFactory.setUniforms(solidColorProgramInfo.uniSetters, {
         u_matrix: mat,
         u_color: [0, 1, 0, 1],
       });
 
-      webglUtils.drawBufferInfo(gl, clipspaceCubeBufferInfo, gl.LINES);
+      G_ShaderFactory.drawBufferInfo(clipspaceCubeBufferInfo, gl.LINES);
     }
   }
   render();

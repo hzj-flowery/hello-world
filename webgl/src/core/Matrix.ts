@@ -2110,6 +2110,7 @@ export namespace glMatrix {
      */
 
     function transpose$2(out, a) {
+        out = out || new MatType(16);
         // If we are transposing ourselves we can skip a few steps but have to cache some values
         if (out === a) {
             var a01 = a[1],

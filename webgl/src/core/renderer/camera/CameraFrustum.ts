@@ -155,7 +155,7 @@ var cubeRaysArrays = {
   position: wireCubeArrays.position,
   color: tempColor,
   indices: [
-    0, 4, 1, 5, 2, 6, 3, 7,
+    0, 4, 1, 5, 2,6,3,7,7,3
   ],
 };
 
@@ -400,7 +400,7 @@ export class CameraFrustum extends SY.Sprite {
       MathUtils.degToRad(this.fieldOfView),
       this.aspect,
       1,
-      5000);
+      50);
 
     glMatrix.mat4.invert(this._loacalRayInvertProj, this._localRayProj);
   }

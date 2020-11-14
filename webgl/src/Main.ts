@@ -10,6 +10,8 @@ import FogTest from "./core/renderer/3d/FogTest";
 import EarthSunTest from "./core/renderer/3d/EarthSunTest";
 import RobartTest from "./core/renderer/3d/RobartTest";
 import CaptureTest from "./core/renderer/3d/CaptureTest";
+import RampTextureTest from "./core/renderer/3d/RampTextureTest";
+import CameraTest from "./core/renderer/3d/CameraTest";
 
 
 
@@ -27,6 +29,7 @@ G_ShaderFactory.init(Device.Instance.gl);
  var arr = [
     "res/models/killer_whale/whale.CYCLES.bin",
     "res/models/killer_whale/whale.CYCLES.gltf",
+    "res/models/HeadData/head.json",
     "res/8x8-font.png",
     "res/wood.jpg",
     "res/tree.jpg",
@@ -38,7 +41,7 @@ G_ShaderFactory.init(Device.Instance.gl);
 // LabelTest.run();
 // ShaderShadowTest.run();
 
-Stage.run();
+// Stage.run();
 
 // EarthSunTest.run();
 
@@ -62,5 +65,7 @@ Stage.run();
 LoaderManager.instance.loadData(arr,null,function(){
     // debugger;
     // new RenderFlow().startup();
+    // RampTextureTest.run();
+    CameraTest.run();
     
 })

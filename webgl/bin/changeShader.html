@@ -24,12 +24,40 @@
     <script id="glsl" type="notjs">
         precision mediump float;
 
-        // Passed in from the vertex shader.
-        varying vec4 v_color;
-        
-        void main() {
-           gl_FragColor = v_color;
-        }
+// Passed in from the vertex shader.
+varying vec3 v_normal;
+
+uniform vec3 u_reverseLightDirection;
+uniform vec4 u_color;
+uniform sampler2D u_ramp;
+uniform vec2 u_rampSize;
+uniform float u_linearAdjust; // 1.0 if linear, 0.0 if nearest
+
+void main() {
+  // because v_normal is a varying it's interpolated
+  // so it will not be a unit vector. Normalizing it
+  // will make it a unit vector again
+  vec3 normal = normalize(v_normal);
+
+  float cosAngle = dot(normal, u_reverseLightDirection);
+
+  // convert from -1 <-> 1 to 0 <-> 1
+  float u = cosAngle * 0.5 + 0.5;
+
+  // make a texture coordinate
+  vec2 uv = vec2(u, 0.5);
+
+  // scale to size of ramp
+  vec2 texelRange = uv * (u_rampSize - u_linearAdjust);
+
+  // offset by half a texel and convert to texture coordinate
+  vec2 rampUV = (texelRange + u_linearAdjust * 0.5) / u_rampSize;
+
+  // lookup a value from a 1d texture
+  vec4 rampColor = texture2D(u_ramp, rampUV);
+
+  gl_FragColor = u_color * rampColor;
+}
     </script>
 
 

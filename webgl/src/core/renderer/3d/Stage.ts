@@ -122,8 +122,7 @@ export default class Stage {
     
     this._triggerRenderType = TriggerRenderType.Normal;
     this._frustum.setTriggerRenderCallBack((type:TriggerRenderType)=>{
-      this._triggerRenderType = type;
-           this.render();
+      // this._triggerRenderType = type;
     })
 
     requestAnimationFrame(this.render.bind(this));
@@ -131,8 +130,8 @@ export default class Stage {
 
   private _triggerRenderType:TriggerRenderType;
 
-  private render(): void {
-    
+  private render(time): void {
+    time = time *0.001;
     var uiData = this._frustum.getUIData();
     this.fieldOfView = uiData.fieldOfView;
     this.zNear = uiData.zNear;
@@ -147,11 +146,11 @@ export default class Stage {
 
     this.adjustCamera();
 
-    this.drawScene(this.viewProjection, new Float32Array(16), this.colorProgramInfo, this.cubeBufferInfo);
+    this.drawScene(time,this.viewProjection, new Float32Array(16), this.colorProgramInfo, this.cubeBufferInfo);
     //----------------------------------------
     this._frustum.testDraw(this.viewProjection,this.aspect,this.zNear,this.zFar,this.fieldOfView);
-    this.draw3DView();
-    // requestAnimationFrame(this.render.bind(this));
+    this.draw3DView(time);
+    requestAnimationFrame(this.render.bind(this));
   }
 
 
@@ -180,28 +179,45 @@ export default class Stage {
     glMatrix.vec3.scale(this.v3t0, this.targetToEye, f);
     glMatrix.vec3.add(this.v3t0, this.target, this.v3t0);
     
-    if(this._triggerRenderType==TriggerRenderType.Rotate)
-    {
-      glMatrix.mat4.lookAt(view,this.v3t0, this.target,this.up);
+    // if(this._triggerRenderType==TriggerRenderType.Rotate)
+    // {
+    //   glMatrix.mat4.lookAt(view,this.v3t0, this.target,this.up);
+    //   glMatrix.mat4.rotateX(view, view, this.eyeRotation[0]);
+    //   glMatrix.mat4.rotateY(view, view, this.eyeRotation[1]);
+    //   glMatrix.mat4.rotateZ(view, view, this.eyeRotation[2]);
+    //   glMatrix.mat4.multiply(this.viewProjection, proj, view);
+    //   glMatrix.mat4.invert(view, view);
+    //   
+    // }
+    // else
+      var worldMat = glMatrix.mat4.identity(null);
+      glMatrix.mat4.translation(worldMat,this.eyePosition[0],this.eyePosition[1],this.eyePosition[2]);
+      // glMatrix.mat4.invert(worldMat, worldMat);
+      var pv = glMatrix.mat4.create();
+      glMatrix.mat4.multiply(pv,proj,worldMat);//pv
+
       glMatrix.mat4.rotateX(view, view, this.eyeRotation[0]);
       glMatrix.mat4.rotateY(view, view, this.eyeRotation[1]);
       glMatrix.mat4.rotateZ(view, view, this.eyeRotation[2]);
-    }
-    else
-    {
-      glMatrix.mat4.translation(view,this.eyePosition[0],this.eyePosition[1],this.eyePosition[2]);
       glMatrix.mat4.invert(view, view);
+
+      glMatrix.mat4.multiply(this.viewProjection,pv, view);
       // console.log("平移------");
-    }
+    
     //算出视图投影矩阵
-    glMatrix.mat4.multiply(this.viewProjection, proj, view);
+    // 
+
+   
+   
+
+    
 
   }
 
   
   
   // Draw scene
-  private drawScene(vp: Float32Array, exProjection: Float32Array, shaderD: ShaderData, buffAttData: BufferAttribsData) {
+  private drawScene(time,vp: Float32Array, exProjection: Float32Array, shaderD: ShaderData, buffAttData: BufferAttribsData) {
 
     Device.Instance.cullFace(false);
     let worldTemp = glMatrix.mat4.create();
@@ -210,9 +226,9 @@ export default class Stage {
     var cubeScale = 3;
     for (var ii = -1; ii <= 1; ++ii) {
       glMatrix.mat4.translation(worldTemp, ii * 10,this.yPosition, this.zPosition);
-      // glMatrix.mat4.rotateY(worldTemp, worldTemp, time + ii * Math.PI / 6);
-      // glMatrix.mat4.rotateX(worldTemp, worldTemp, Math.PI / 4);
-      // glMatrix.mat4.rotateZ(worldTemp, worldTemp, Math.PI / 4);
+      glMatrix.mat4.rotateY(worldTemp, worldTemp, ii * Math.PI / 6);
+      glMatrix.mat4.rotateX(worldTemp, worldTemp, Math.PI / 4);
+      glMatrix.mat4.rotateZ(worldTemp, worldTemp, time+Math.PI / 4);
       glMatrix.mat4.scale(worldTemp, worldTemp, [cubeScale, cubeScale, cubeScale]);
       glMatrix.mat4.multiply(this.sceneCubeUniforms.u_worldViewProjection, vp, worldTemp);
       glMatrix.mat4.multiply(this.sceneCubeUniforms.u_exampleWorldViewProjection, exProjection, worldTemp);
@@ -223,7 +239,7 @@ export default class Stage {
   }
   
   // Draw 3D view
-  private draw3DView() {
+  private draw3DView(time) {
 
     const halfHeight = this.gl.canvas.height / 2;
     const width = this.gl.canvas.width;
@@ -241,7 +257,7 @@ export default class Stage {
       this.aspect,
       this.zNear,
       this.zFar);
-    this.drawScene(proj as Float32Array, new Float32Array(16), this.colorProgramInfo, this.cubeBufferInfo);
+    this.drawScene(time,proj as Float32Array, new Float32Array(16), this.colorProgramInfo, this.cubeBufferInfo);
     // this.drawScene(time, this.viewProjection, new Float32Array(16), this.colorProgramInfo, this.cubeBufferInfo);
   }
 
