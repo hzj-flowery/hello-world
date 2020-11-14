@@ -178,6 +178,13 @@ for (var f = 0; f < 6; ++f) {
 // globals
 var pixelRatio = window.devicePixelRatio || 1;
 
+export enum TriggerRenderType{
+     Normal,
+     Trisform,
+     Rotate,
+     Scale
+}
+
 export class CameraFrustum extends SY.Sprite {
 
   private zNear = 10;//相机最近能看到的距离
@@ -231,50 +238,67 @@ export class CameraFrustum extends SY.Sprite {
   // Setup a ui.
   public updateFieldOfView(event, ui) {
     this.fieldOfView = ui.value;
+    this.trigerRender(TriggerRenderType.Normal);
   }
   public updateZNear(event, ui) {
     this.zNear = ui.value;
+    this.trigerRender(TriggerRenderType.Normal);
   }
   public updateZFar(event, ui) {
     this.zFar = ui.value;
+    this.trigerRender(TriggerRenderType.Normal);
   }
   public updateZPosition(event, ui) {
     this.zPosition = ui.value;
+    this.trigerRender(TriggerRenderType.Normal);
   }
   public updateYPosition(event, ui) {
     this.yPosition = ui.value;
+    this.trigerRender(TriggerRenderType.Normal);
   }
   public updateXPosition(event, ui) {
     this.xPosition = ui.value;
+    this.trigerRender(TriggerRenderType.Normal);
   }
   public updateCamearXPos(event, ui) {
     this.eyePosition[0] = ui.value;
+    this.trigerRender(TriggerRenderType.Trisform);
   }
   public updateCamearYPos(event, ui) {
     this.eyePosition[1] = ui.value;
+    this.trigerRender(TriggerRenderType.Trisform);
   }
   public updateCamearZPos(event, ui) {
     this.eyePosition[2] = ui.value;
+    this.trigerRender(TriggerRenderType.Trisform);
   }
-
   public updateTargetXPos(event, ui) {
     this.targetPosition[0] = ui.value;
+    this.trigerRender(TriggerRenderType.Normal);
   }
   public updateTargetYPos(event, ui) {
     this.targetPosition[1] = ui.value;
+    this.trigerRender(TriggerRenderType.Normal);
   }
   public updateTargetZPos(event, ui) {
     this.targetPosition[2] = ui.value;
+    this.trigerRender(TriggerRenderType.Normal);
   }
-
   public updateCamearXRotation(event, ui) {
     this.eyeRotation[0] = MathUtils.degToRad(ui.value);
+    this.trigerRender(TriggerRenderType.Rotate);
   }
   public updateCamearYRotation(event, ui) {
     this.eyeRotation[1] =MathUtils.degToRad(ui.value);
+    this.trigerRender(TriggerRenderType.Rotate);
   }
   public updateCamearZRotation(event, ui) {
     this.eyeRotation[2] = MathUtils.degToRad(ui.value);
+    this.trigerRender(TriggerRenderType.Rotate);
+  }
+  //触发渲染
+  private trigerRender(type:TriggerRenderType):void{
+       this._triggerCB&&this._triggerCB(type);
   }
   public getUIData(){
     return {
@@ -288,6 +312,15 @@ export class CameraFrustum extends SY.Sprite {
       eyePosition:this.eyePosition,
       eyeRotation:this.eyeRotation
     }
+  }
+  
+  /**
+   * 设置触发渲染的回调
+   * @param renderCB 
+   */
+  private _triggerCB:Function
+  public setTriggerRenderCallBack(cb:Function):void{
+        this._triggerCB = cb;
   }
   private setUI(): void {
     var webglLessonsUI = window["webglLessonsUI"];
@@ -371,7 +404,7 @@ export class CameraFrustum extends SY.Sprite {
 
     glMatrix.mat4.invert(this._loacalRayInvertProj, this._localRayProj);
   }
-  public testDraw(vp1: Float32Array, aspect: number, zNear: number, zFar: number, fieldOfView: number) {
+  public testDraw(vp: Float32Array, aspect: number, zNear: number, zFar: number, fieldOfView: number) {
 
     this.aspect = aspect;
     this.zNear = zNear;
@@ -398,35 +431,10 @@ export class CameraFrustum extends SY.Sprite {
 
     this.updateLocalProj();
 
-    
-    var vp = new Float32Array([
-      0.37,
-      -0.7,
-      -0.8,
-      -0.8,
-
-      0,//4
-      1.55,
-      -0.44,
-      -0.44,
-
-      -0.77,//8
-      -0.33,
-      -0.39,
-      -0.39,
-
-      -1.53,//12
-      2.3,
-      36,
-      38,
-
-    ])
-
-    // var vp = this._localProj;
     //绘制齐次裁切空间 六个面
-    // this.drawFrustumCube(vp, this.colorProgramInfo, this.cubeBufferInfo);
+    this.drawFrustumCube(vp, this.colorProgramInfo, this.cubeBufferInfo);
     //绘制四条射线
-    // this.drawViewCone(vp, this.vertexColorProgramInfo, this.cubeRaysBufferInfo);
+    this.drawViewCone(vp, this.vertexColorProgramInfo, this.cubeRaysBufferInfo);
     //绘制四个金属线
     this.drawFrustumWire(vp, this.vertexColorProgramInfo, this.wireCubeBufferInfo);
 

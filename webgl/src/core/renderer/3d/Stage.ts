@@ -25,7 +25,7 @@
 import Device from "../../../Device";
 import { glMatrix } from "../../Matrix";
 import { MathUtils } from "../../utils/MathUtils";
-import { CameraFrustum } from "../camera/CameraFrustum";
+import { CameraFrustum, TriggerRenderType } from "../camera/CameraFrustum";
 import { syPrimitives } from "../shader/Primitives";
 import { BufferAttribsData, G_ShaderFactory, ShaderData } from "../shader/Shader";
 
@@ -119,11 +119,19 @@ export default class Stage {
     this.cubeBufferInfo = G_ShaderFactory.createBufferInfoFromArrays(cubeArrays);
     this.aspect = this.gl.canvas.width / (this.gl.canvas.width / 2);
     this._frustum = new CameraFrustum(this.gl);
+    
+    this._triggerRenderType = TriggerRenderType.Normal;
+    this._frustum.setTriggerRenderCallBack((type:TriggerRenderType)=>{
+      this._triggerRenderType = type;
+           this.render();
+    })
 
     requestAnimationFrame(this.render.bind(this));
   }
 
-  private render(time): void {
+  private _triggerRenderType:TriggerRenderType;
+
+  private render(): void {
     
     var uiData = this._frustum.getUIData();
     this.fieldOfView = uiData.fieldOfView;
@@ -137,14 +145,13 @@ export default class Stage {
     this.target = uiData.target;
 
 
-    time *= 0.001;
     this.adjustCamera();
 
-    this.drawScene(time, this.viewProjection, new Float32Array(16), this.colorProgramInfo, this.cubeBufferInfo);
+    this.drawScene(this.viewProjection, new Float32Array(16), this.colorProgramInfo, this.cubeBufferInfo);
     //----------------------------------------
     this._frustum.testDraw(this.viewProjection,this.aspect,this.zNear,this.zFar,this.fieldOfView);
-    this.draw3DView(time);
-    requestAnimationFrame(this.render.bind(this));
+    this.draw3DView();
+    // requestAnimationFrame(this.render.bind(this));
   }
 
 
@@ -173,23 +180,28 @@ export default class Stage {
     glMatrix.vec3.scale(this.v3t0, this.targetToEye, f);
     glMatrix.vec3.add(this.v3t0, this.target, this.v3t0);
     
-    glMatrix.mat4.lookAt(view,this.v3t0, this.target,this.up);
-
-    glMatrix.mat4.rotateX(view, view, this.eyeRotation[0]);
-    glMatrix.mat4.rotateY(view, view, this.eyeRotation[1]);
-    glMatrix.mat4.rotateZ(view, view, this.eyeRotation[2]);
-
-    // glMatrix.mat4.invert(view, view);
+    if(this._triggerRenderType==TriggerRenderType.Rotate)
+    {
+      glMatrix.mat4.lookAt(view,this.v3t0, this.target,this.up);
+      glMatrix.mat4.rotateX(view, view, this.eyeRotation[0]);
+      glMatrix.mat4.rotateY(view, view, this.eyeRotation[1]);
+      glMatrix.mat4.rotateZ(view, view, this.eyeRotation[2]);
+    }
+    else
+    {
+      glMatrix.mat4.translation(view,this.eyePosition[0],this.eyePosition[1],this.eyePosition[2]);
+      glMatrix.mat4.invert(view, view);
+      // console.log("平移------");
+    }
     //算出视图投影矩阵
     glMatrix.mat4.multiply(this.viewProjection, proj, view);
 
-    console.log("view-----",view,proj);
   }
 
   
   
   // Draw scene
-  private drawScene(time: number, vp: Float32Array, exProjection: Float32Array, shaderD: ShaderData, buffAttData: BufferAttribsData) {
+  private drawScene(vp: Float32Array, exProjection: Float32Array, shaderD: ShaderData, buffAttData: BufferAttribsData) {
 
     Device.Instance.cullFace(false);
     let worldTemp = glMatrix.mat4.create();
@@ -211,7 +223,7 @@ export default class Stage {
   }
   
   // Draw 3D view
-  private draw3DView(time) {
+  private draw3DView() {
 
     const halfHeight = this.gl.canvas.height / 2;
     const width = this.gl.canvas.width;
@@ -229,7 +241,7 @@ export default class Stage {
       this.aspect,
       this.zNear,
       this.zFar);
-    this.drawScene(time, proj as Float32Array, new Float32Array(16), this.colorProgramInfo, this.cubeBufferInfo);
+    this.drawScene(proj as Float32Array, new Float32Array(16), this.colorProgramInfo, this.cubeBufferInfo);
     // this.drawScene(time, this.viewProjection, new Float32Array(16), this.colorProgramInfo, this.cubeBufferInfo);
   }
 
