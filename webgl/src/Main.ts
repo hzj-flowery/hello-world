@@ -67,10 +67,9 @@ G_ShaderFactory.init(Device.Instance.gl);
 
 
 LoaderManager.instance.loadData(arr,null,function(){
-    debugger;
-    new RenderFlow().startup();
+    // new RenderFlow().startup();
     // RampTextureTest.run();
-    // CameraTest.run();
+    CameraTest.run();
     // RobartTest.run();
     
 })
