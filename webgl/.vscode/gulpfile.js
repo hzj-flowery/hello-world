@@ -24,20 +24,20 @@ gulp.task("compile", function () {
 		.bundle()
 		//使用source把输出文件命名为bundle.js
 		.pipe(source('bundle.js'))
-		//给头文件加上这些代码可以实现继承
-		.pipe(header(`var __extends = (this && this.__extends) || (function () {
-			var extendStatics = function (d, b) {
-				extendStatics = Object.setPrototypeOf ||
-					({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-					function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-				return extendStatics(d, b);
-			};
-			return function (d, b) {
-				extendStatics(d, b);
-				function __() { this.constructor = d; }
-				d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-			};
-		})();\n`))
+		// //给头文件加上这些代码可以实现继承
+		// .pipe(header(`var __extends = (this && this.__extends) || (function () {
+		// 	var extendStatics = function (d, b) {
+		// 		extendStatics = Object.setPrototypeOf ||
+		// 			({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+		// 			function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+		// 		return extendStatics(d, b);
+		// 	};
+		// 	return function (d, b) {
+		// 		extendStatics(d, b);
+		// 		function __() { this.constructor = d; }
+		// 		d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+		// 	};
+		// })();\n`))
 		//把bundle.js复制到bin/js目录
 		.pipe(gulp.dest(workSpaceDir + "/bin/js"));
 });

@@ -1,4 +1,5 @@
 import Device from "../../../Device";
+import LoaderManager from "../../../LoaderManager";
 import { glMatrix } from "../../Matrix";
 import { MathUtils } from "../../utils/MathUtils";
 import { syPrimitives } from "../shader/Primitives";
@@ -140,100 +141,9 @@ function main() {
     var nodeInfosByName = {};
 
     // Let's make all the nodes
-    var blockGuyNodeDescriptions =
-    {
-        name: "point between feet",
-        draw: false,
-        children: [
-            {
-                name: "waist",
-                translation: [0, 3, 0],
-                children: [
-                    {
-                        name: "torso",
-                        translation: [0, 2, 0],
-                        children: [
-                            {
-                                name: "neck",
-                                translation: [0, 1, 0],
-                                children: [
-                                    {
-                                        name: "head",
-                                        translation: [0, 1, 0],
-                                    },
-                                ],
-                            },
-                            {
-                                name: "left-arm",
-                                translation: [-1, 0, 0],
-                                children: [
-                                    {
-                                        name: "left-forearm",
-                                        translation: [-1, 0, 0],
-                                        children: [
-                                            {
-                                                name: "left-hand",
-                                                translation: [-1, 0, 0],
-                                            },
-                                        ],
-                                    },
-                                ],
-                            },
-                            {
-                                name: "right-arm",
-                                translation: [1, 0, 0],
-                                children: [
-                                    {
-                                        name: "right-forearm",
-                                        translation: [1, 0, 0],
-                                        children: [
-                                            {
-                                                name: "right-hand",
-                                                translation: [1, 0, 0],
-                                            },
-                                        ],
-                                    },
-                                ],
-                            },
-                        ],
-                    },
-                    {
-                        name: "left-leg",
-                        translation: [-1, -1, 0],
-                        children: [
-                            {
-                                name: "left-calf",
-                                translation: [0, -1, 0],
-                                children: [
-                                    {
-                                        name: "left-foot",
-                                        translation: [0, -1, 0],
-                                    },
-                                ],
-                            }
-                        ],
-                    },
-                    {
-                        name: "right-leg",
-                        translation: [1, -1, 0],
-                        children: [
-                            {
-                                name: "right-calf",
-                                translation: [0, -1, 0],
-                                children: [
-                                    {
-                                        name: "right-foot",
-                                        translation: [0, -1, 0],
-                                    },
-                                ],
-                            }
-                        ],
-                    },
-                ],
-            },
-        ],
-    };
-
+    var blockGuyNodeDescriptions = LoaderManager.instance.getCacheData("res/models/Robart/blockGuyNodeDescriptions.json");
+    
+    
     function makeNode(nodeDescription) {
         var trs = new TRS();
         var node = new Node(trs);

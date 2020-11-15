@@ -1,6 +1,8 @@
 'use strict';
 
 import Device from "../../../Device";
+import { glMatrix } from "../../Matrix";
+import { syPrimitives } from "../shader/Primitives";
 import { G_ShaderFactory } from "../shader/Shader";
 var  vertexshader3d = 
 'attribute vec4 a_position;'+
@@ -35,9 +37,7 @@ var solidcolorfragmentshader =
 
 function main() {
   
-  var m4 = window["m4"];
   var gl = Device.Instance.gl;
-  var primitives = window["primitives"];
   var webglLessonsUI = window["webglLessonsUI"]
   if (!gl) {
     return;
@@ -49,9 +49,9 @@ function main() {
   const solidColorProgramInfo = G_ShaderFactory.createProgramInfo(solidcolorvertexshader, solidcolorfragmentshader);
 
   // create buffers and fill with data for a 3D 'F'
-  const fBufferInfo = primitives.create3DFBufferInfo(gl);
+  const fBufferInfo = syPrimitives.create3DFBufferInfo();
 
-  function createClipspaceCubeBufferInfo(gl) {
+  function createClipspaceCubeBufferInfo() {
     // first let's add a cube. It goes from 1 to 3
     // because cameras look down -Z so we want
     // the camera to start at Z = 0. We'll put a
@@ -74,12 +74,12 @@ function main() {
     ];
     return G_ShaderFactory.createBufferInfoFromArrays({
       position: positions,
-      indices,
+      indices:indices,
     });
   }
 
   // create geometry for a camera
-  function createCameraBufferInfo(gl, scale = 1) {
+  function createCameraBufferInfo(scale = 20) {
     // first let's add a cube. It goes from 1 to 3
     // because cameras look down -Z so we want
     // the camera to start at Z = 0.
@@ -121,14 +121,12 @@ function main() {
     });
     return G_ShaderFactory.createBufferInfoFromArrays({
       position: positions,
-      indices,
+      indices:indices,
     });
   }
+  const cameraBufferInfo = createCameraBufferInfo();
 
-  const cameraScale = 20;
-  const cameraBufferInfo = createCameraBufferInfo(gl, cameraScale);
-
-  const clipspaceCubeBufferInfo = createClipspaceCubeBufferInfo(gl);
+  const clipspaceCubeBufferInfo = createClipspaceCubeBufferInfo();
 
   function degToRad(d) {
     return d * Math.PI / 180;
@@ -158,14 +156,14 @@ function main() {
   ]);
 
   function drawScene(projectionMatrix, cameraMatrix, worldMatrix) {
-    // Clear the canvas AND the depth buffer.
+    // 清除颜色缓冲和深度缓存
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     // Make a view matrix from the camera matrix.
-    const viewMatrix = m4.inverse(cameraMatrix);
+    const viewMatrix = glMatrix.mat4.invert(null,cameraMatrix);
 
-    let mat = m4.multiply(projectionMatrix, viewMatrix);
-    mat = m4.multiply(mat, worldMatrix);
+    let mat = glMatrix.mat4.multiply(null,projectionMatrix, viewMatrix);
+    glMatrix.mat4.multiply(mat,mat, worldMatrix);
 
     gl.useProgram(vertexColorProgramInfo.spGlID);
 
@@ -196,16 +194,15 @@ function main() {
     const far = 2000;
 
     // Compute a projection matrix
-    const halfHeightUnits = 120;
     const perspectiveProjectionMatrix = settings.cam1Ortho
-        ? m4.orthographic(
+        ? glMatrix.mat4.ortho(null,
             -settings.cam1OrthoUnits * aspect,  // left
              settings.cam1OrthoUnits * aspect,  // right
             -settings.cam1OrthoUnits,           // bottom
              settings.cam1OrthoUnits,           // top
              settings.cam1Near,
              settings.cam1Far)
-        : m4.perspective(degToRad(settings.cam1FieldOfView),
+        : glMatrix.mat4.perspective(null,degToRad(settings.cam1FieldOfView),
             aspect,
             settings.cam1Near,
             settings.cam1Far);
@@ -218,12 +215,13 @@ function main() {
     ];
     const target = [0, 0, 0];
     const up = [0, 1, 0];
-    const cameraMatrix = m4.lookAt(cameraPosition, target, up);
+    const cameraMatrix = glMatrix.mat4.lookAt2(null,cameraPosition, target, up);
 
-    let worldMatrix = m4.yRotation(degToRad(settings.rotation));
-    worldMatrix = m4.xRotate(worldMatrix, degToRad(settings.rotation));
+    let worldMatrix = glMatrix.mat4.identity(null);
+    glMatrix.mat4.rotateY(null,worldMatrix,degToRad(settings.rotation));
+    glMatrix.mat4.rotateX(worldMatrix,worldMatrix, degToRad(settings.rotation));
     // center the 'F' around its origin
-    worldMatrix = m4.translate(worldMatrix, -35, -75, -5);
+    glMatrix.mat4.translate(worldMatrix,worldMatrix,[-35, -75, -5]);
 
     const {width, height} = gl.canvas;
     const leftWidth = width / 2 | 0;
@@ -242,58 +240,52 @@ function main() {
     gl.scissor(leftWidth, 0, rightWidth, height);
     gl.clearColor(0.8, 0.8, 1, 1);
 
-    const perspectiveProjectionMatrix2 =
-        m4.perspective(degToRad(60), aspect, near, far);
-
+    const perspectiveProjectionMatrix2 = glMatrix.mat4.perspective(null,degToRad(60), aspect, near, far);
     // Compute the camera's matrix using look at.
     const cameraPosition2 = [-600, 400, -400];
     const target2 = [0, 0, 0];
-    const cameraMatrix2 = m4.lookAt(cameraPosition2, target2, up);
-    
+    const cameraMatrix2 = glMatrix.mat4.lookAt2(null,cameraPosition2, target2, up);
     //绘制相机中的物体
     drawScene(perspectiveProjectionMatrix2, cameraMatrix2, worldMatrix);
 
+    function drawCameraModel()
     // draw object to represent first camera
     {
       // Make a view matrix from the camera matrix.
-      const viewMatrix = m4.inverse(cameraMatrix2);
-
-      let mat = m4.multiply(perspectiveProjectionMatrix2, viewMatrix);
+      const viewMatrix = glMatrix.mat4.invert(null,cameraMatrix2);
+      let mat = glMatrix.mat4.identity(null);
+      glMatrix.mat4.multiply(mat,perspectiveProjectionMatrix2, viewMatrix);
       // use the first's camera's matrix as the matrix to position
       // the camera's representative in the scene
-      mat = m4.multiply(mat, cameraMatrix);
+      glMatrix.mat4.multiply(mat,mat, cameraMatrix);
 
       gl.useProgram(solidColorProgramInfo.spGlID);
 
       // ------ Draw the Camera Representation --------绘制相机模型
-
       // Setup all the needed attributes.
       G_ShaderFactory.setBuffersAndAttributes(solidColorProgramInfo.attrSetters, cameraBufferInfo);
-
       // Set the uniforms
       G_ShaderFactory.setUniforms(solidColorProgramInfo.uniSetters, {
         u_matrix: mat,
         u_color: [1, 0, 0, 1],
       });
-
       G_ShaderFactory.drawBufferInfo(cameraBufferInfo, gl.LINES);
 
       // ----- Draw the frustum ------- 绘制齐次裁切空间坐标系
-
-      mat = m4.multiply(mat, m4.inverse(perspectiveProjectionMatrix));
-
+      glMatrix.mat4.multiply(mat,mat, glMatrix.mat4.invert(null,perspectiveProjectionMatrix));
       // Setup all the needed attributes.
       G_ShaderFactory.setBuffersAndAttributes(solidColorProgramInfo.attrSetters, clipspaceCubeBufferInfo);
-
       // Set the uniforms
       G_ShaderFactory.setUniforms(solidColorProgramInfo.uniSetters, {
         u_matrix: mat,
         u_color: [0, 1, 0, 1],
       });
-
       G_ShaderFactory.drawBufferInfo(clipspaceCubeBufferInfo, gl.LINES);
     }
+
+    drawCameraModel();
   }
+  
   render();
 }
 

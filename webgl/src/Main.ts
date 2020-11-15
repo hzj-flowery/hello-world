@@ -1,5 +1,8 @@
 //第1步 - 准备Canvas和获取WebGL的渲染上下文
 
+
+
+
 import Device from "./Device";
 import LoaderManager from "./LoaderManager";
 import { G_ShaderFactory } from "./core/renderer/shader/Shader";
@@ -30,6 +33,7 @@ G_ShaderFactory.init(Device.Instance.gl);
     "res/models/killer_whale/whale.CYCLES.bin",
     "res/models/killer_whale/whale.CYCLES.gltf",
     "res/models/HeadData/head.json",
+    "res/models/Robart/blockGuyNodeDescriptions.json",
     "res/8x8-font.png",
     "res/wood.jpg",
     "res/tree.jpg",
@@ -63,9 +67,10 @@ G_ShaderFactory.init(Device.Instance.gl);
 
 
 LoaderManager.instance.loadData(arr,null,function(){
-    // debugger;
-    // new RenderFlow().startup();
+    debugger;
+    new RenderFlow().startup();
     // RampTextureTest.run();
-    CameraTest.run();
+    // CameraTest.run();
+    // RobartTest.run();
     
 })

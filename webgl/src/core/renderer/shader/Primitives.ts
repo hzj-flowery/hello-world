@@ -343,6 +343,403 @@ export namespace syPrimitives {
         };
     }
 
+     /**
+     * Expands RLE data
+     * @param {number[]} rleData data in format of run-length, x, y, z, run-length, x, y, z
+     * @param {number[]} [padding] value to add each entry with.
+     * @return {number[]} the expanded rleData
+     */
+    export function expandRLEData(rleData, padding?) {
+        padding = padding || [];
+        const data = [];
+        for (let ii = 0; ii < rleData.length; ii += 4) {
+          const runLength = rleData[ii];
+          const element = rleData.slice(ii + 1, ii + 4);
+          element.push.apply(element, padding);
+          for (let jj = 0; jj < runLength; ++jj) {
+            data.push.apply(data, element);
+          }
+        }
+        return data;
+      }
+
+    /**
+    * Creates 3D 'F' vertices.
+    * An 'F' is useful because you can easily tell which way it is oriented.
+    * The created 'F' has position, normal and uv streams.
+    *
+    * @return {Object.<string, TypedArray>} The
+    *         created plane vertices.
+    * @memberOf module:primitives
+    */
+   export function create3DFVertices() {
+ 
+     const positions = [
+       // left column front
+       0,   0,  0,
+       0, 150,  0,
+       30,   0,  0,
+       0, 150,  0,
+       30, 150,  0,
+       30,   0,  0,
+ 
+       // top rung front
+       30,   0,  0,
+       30,  30,  0,
+       100,   0,  0,
+       30,  30,  0,
+       100,  30,  0,
+       100,   0,  0,
+ 
+       // middle rung front
+       30,  60,  0,
+       30,  90,  0,
+       67,  60,  0,
+       30,  90,  0,
+       67,  90,  0,
+       67,  60,  0,
+ 
+       // left column back
+         0,   0,  30,
+        30,   0,  30,
+         0, 150,  30,
+         0, 150,  30,
+        30,   0,  30,
+        30, 150,  30,
+ 
+       // top rung back
+        30,   0,  30,
+       100,   0,  30,
+        30,  30,  30,
+        30,  30,  30,
+       100,   0,  30,
+       100,  30,  30,
+ 
+       // middle rung back
+        30,  60,  30,
+        67,  60,  30,
+        30,  90,  30,
+        30,  90,  30,
+        67,  60,  30,
+        67,  90,  30,
+ 
+       // top
+         0,   0,   0,
+       100,   0,   0,
+       100,   0,  30,
+         0,   0,   0,
+       100,   0,  30,
+         0,   0,  30,
+ 
+       // top rung right
+       100,   0,   0,
+       100,  30,   0,
+       100,  30,  30,
+       100,   0,   0,
+       100,  30,  30,
+       100,   0,  30,
+ 
+       // under top rung
+       30,   30,   0,
+       30,   30,  30,
+       100,  30,  30,
+       30,   30,   0,
+       100,  30,  30,
+       100,  30,   0,
+ 
+       // between top rung and middle
+       30,   30,   0,
+       30,   60,  30,
+       30,   30,  30,
+       30,   30,   0,
+       30,   60,   0,
+       30,   60,  30,
+ 
+       // top of middle rung
+       30,   60,   0,
+       67,   60,  30,
+       30,   60,  30,
+       30,   60,   0,
+       67,   60,   0,
+       67,   60,  30,
+ 
+       // right of middle rung
+       67,   60,   0,
+       67,   90,  30,
+       67,   60,  30,
+       67,   60,   0,
+       67,   90,   0,
+       67,   90,  30,
+ 
+       // bottom of middle rung.
+       30,   90,   0,
+       30,   90,  30,
+       67,   90,  30,
+       30,   90,   0,
+       67,   90,  30,
+       67,   90,   0,
+ 
+       // right of bottom
+       30,   90,   0,
+       30,  150,  30,
+       30,   90,  30,
+       30,   90,   0,
+       30,  150,   0,
+       30,  150,  30,
+ 
+       // bottom
+       0,   150,   0,
+       0,   150,  30,
+       30,  150,  30,
+       0,   150,   0,
+       30,  150,  30,
+       30,  150,   0,
+ 
+       // left side
+       0,   0,   0,
+       0,   0,  30,
+       0, 150,  30,
+       0,   0,   0,
+       0, 150,  30,
+       0, 150,   0,
+     ];
+ 
+     const texcoords = [
+       // left column front
+       0.22, 0.19,
+       0.22, 0.79,
+       0.34, 0.19,
+       0.22, 0.79,
+       0.34, 0.79,
+       0.34, 0.19,
+ 
+       // top rung front
+       0.34, 0.19,
+       0.34, 0.31,
+       0.62, 0.19,
+       0.34, 0.31,
+       0.62, 0.31,
+       0.62, 0.19,
+ 
+       // middle rung front
+       0.34, 0.43,
+       0.34, 0.55,
+       0.49, 0.43,
+       0.34, 0.55,
+       0.49, 0.55,
+       0.49, 0.43,
+ 
+       // left column back
+       0, 0,
+       1, 0,
+       0, 1,
+       0, 1,
+       1, 0,
+       1, 1,
+ 
+       // top rung back
+       0, 0,
+       1, 0,
+       0, 1,
+       0, 1,
+       1, 0,
+       1, 1,
+ 
+       // middle rung back
+       0, 0,
+       1, 0,
+       0, 1,
+       0, 1,
+       1, 0,
+       1, 1,
+ 
+       // top
+       0, 0,
+       1, 0,
+       1, 1,
+       0, 0,
+       1, 1,
+       0, 1,
+ 
+       // top rung right
+       0, 0,
+       1, 0,
+       1, 1,
+       0, 0,
+       1, 1,
+       0, 1,
+ 
+       // under top rung
+       0, 0,
+       0, 1,
+       1, 1,
+       0, 0,
+       1, 1,
+       1, 0,
+ 
+       // between top rung and middle
+       0, 0,
+       1, 1,
+       0, 1,
+       0, 0,
+       1, 0,
+       1, 1,
+ 
+       // top of middle rung
+       0, 0,
+       1, 1,
+       0, 1,
+       0, 0,
+       1, 0,
+       1, 1,
+ 
+       // right of middle rung
+       0, 0,
+       1, 1,
+       0, 1,
+       0, 0,
+       1, 0,
+       1, 1,
+ 
+       // bottom of middle rung.
+       0, 0,
+       0, 1,
+       1, 1,
+       0, 0,
+       1, 1,
+       1, 0,
+ 
+       // right of bottom
+       0, 0,
+       1, 1,
+       0, 1,
+       0, 0,
+       1, 0,
+       1, 1,
+ 
+       // bottom
+       0, 0,
+       0, 1,
+       1, 1,
+       0, 0,
+       1, 1,
+       1, 0,
+ 
+       // left side
+       0, 0,
+       0, 1,
+       1, 1,
+       0, 0,
+       1, 1,
+       1, 0,
+     ];
+ 
+     const normals = expandRLEData([
+       // left column front
+       // top rung front
+       // middle rung front
+       18, 0, 0, 1,
+ 
+       // left column back
+       // top rung back
+       // middle rung back
+       18, 0, 0, -1,
+ 
+       // top
+       6, 0, 1, 0,
+ 
+       // top rung right
+       6, 1, 0, 0,
+ 
+       // under top rung
+       6, 0, -1, 0,
+ 
+       // between top rung and middle
+       6, 1, 0, 0,
+ 
+       // top of middle rung
+       6, 0, 1, 0,
+ 
+       // right of middle rung
+       6, 1, 0, 0,
+ 
+       // bottom of middle rung.
+       6, 0, -1, 0,
+ 
+       // right of bottom
+       6, 1, 0, 0,
+ 
+       // bottom
+       6, 0, -1, 0,
+ 
+       // left side
+       6, -1, 0, 0,
+     ]);
+ 
+     const colors = expandRLEData([
+           // left column front
+           // top rung front
+           // middle rung front
+         18, 200,  70, 120,
+ 
+           // left column back
+           // top rung back
+           // middle rung back
+         18, 80, 70, 200,
+ 
+           // top
+         6, 70, 200, 210,
+ 
+           // top rung right
+         6, 200, 200, 70,
+ 
+           // under top rung
+         6, 210, 100, 70,
+ 
+           // between top rung and middle
+         6, 210, 160, 70,
+ 
+           // top of middle rung
+         6, 70, 180, 210,
+ 
+           // right of middle rung
+         6, 100, 70, 210,
+ 
+           // bottom of middle rung.
+         6, 76, 210, 100,
+ 
+           // right of bottom
+         6, 140, 210, 80,
+ 
+           // bottom
+         6, 90, 130, 110,
+ 
+           // left side
+         6, 160, 160, 220,
+     ], [255]);
+ 
+     const numVerts = positions.length / 3;
+ 
+     const arrays = {
+       position: G_ShaderFactory.createAugmentedTypedArray(3, numVerts),
+       texcoord: G_ShaderFactory.createAugmentedTypedArray(2,  numVerts),
+       normal: G_ShaderFactory.createAugmentedTypedArray(3, numVerts),
+       color: G_ShaderFactory.createAugmentedTypedArray(4, numVerts, Uint8Array),
+       indices: G_ShaderFactory.createAugmentedTypedArray(3, numVerts / 3, Uint16Array),
+     };
+ 
+     arrays.position.push(positions);
+     arrays.texcoord.push(texcoords);
+     arrays.normal.push(normals);
+     arrays.color.push(colors);
+ 
+     for (let ii = 0; ii < numVerts; ++ii) {
+       arrays.indices.push(ii);
+     }
+ 
+     return arrays;
+   }
+
     /**
      * creates a function that calls fn to create vertices and then
      * creates a bufferInfo object for them
@@ -365,6 +762,12 @@ export namespace syPrimitives {
     export function createCubeBufferInfo(size) {
         const arrays = createCubeVertices.apply(null, Array.prototype.slice.call(arguments, 0));
         return G_ShaderFactory.createBufferInfoFromArrays(arrays);
+    }
+
+    export function create3DFBufferInfo(){
+            const arrays = create3DFVertices.apply(null, Array.prototype.slice.call(arguments, 0));
+            return G_ShaderFactory.createBufferInfoFromArrays(arrays);
+    
     }
     /**
      * return {
