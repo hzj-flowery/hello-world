@@ -496,7 +496,6 @@ export class CameraFrustum extends SY.Sprite {
       G_ShaderFactory.setUniforms(this.vertexColorProgramInfo.uniSetters,{u_worldViewProjection:vp});
       G_ShaderFactory.setUniforms(this.vertexColorProgramInfo.uniSetters,{u_color:[1,1,1,1]});
       G_ShaderFactory.drawBufferInfo(this.coordinateBufferInfo,this.gl.LINES);
-
      this.drawWorld();
   }
   

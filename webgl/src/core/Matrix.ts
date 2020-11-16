@@ -3499,17 +3499,22 @@ export namespace glMatrix {
         out = out || new MatType(16);
         var f = 1.0 / Math.tan(fovy / 2),
             nf;
+
         out[0] = f / aspect;
         out[1] = 0;
-        out[2] = 0;
+        out[2] = 0;      //x轴
         out[3] = 0;
+
         out[4] = 0;
-        out[5] = f;
+        out[5] = f;     //y轴
         out[6] = 0;
         out[7] = 0;
+
         out[8] = 0;
-        out[9] = 0;
+        out[9] = 0;     //z轴
+        
         out[11] = -1;
+
         out[12] = 0;
         out[13] = 0;
         out[15] = 0;
