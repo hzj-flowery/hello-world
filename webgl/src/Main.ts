@@ -15,6 +15,7 @@ import RobartTest from "./core/renderer/3d/RobartTest";
 import CaptureTest from "./core/renderer/3d/CaptureTest";
 import RampTextureTest from "./core/renderer/3d/RampTextureTest";
 import CameraTest from "./core/renderer/3d/CameraTest";
+import ObjTest from "./core/renderer/3d/ObjTest";
 
 
 
@@ -65,11 +66,25 @@ G_ShaderFactory.init(Device.Instance.gl);
 
 // FogTest.run();
 
+var myHeaders = new Headers();
+var myInit:any = { method: 'GET',
+               headers: myHeaders,
+               mode: 'cors',
+               cache: 'default' };
+var myRequest = new Request('http:localhost:3000//res/models/windmill/windmill.obj', myInit);
+
+fetch(myRequest).then(function(response) {
+    return response.text();
+  }).then(function(myBlob) {
+    console.log("myBlob-------",myBlob);
+  });
+
 
 LoaderManager.instance.loadData(arr,null,function(){
     // new RenderFlow().startup();
     // RampTextureTest.run();
-    CameraTest.run();
+    // CameraTest.run();
     // RobartTest.run();
+    // ObjTest.run();
     
 })

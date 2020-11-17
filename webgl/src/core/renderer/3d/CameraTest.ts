@@ -25,7 +25,7 @@ var fragmentshader3d =
 /**
  * 
  */
-class GraphicLine {
+class Graphic {
   constructor(gl) {
     this.gl = gl;
     this.init();
@@ -38,7 +38,7 @@ class GraphicLine {
     'varying vec4 v_color;' +
     'void main() {' +
     'gl_Position = u_worldViewProjection * a_position;' +
-    'gl_PointSize = 10.0;' +
+    'gl_PointSize = 5.0;' +
     'v_color = a_color;' +
     '}'
 
@@ -136,9 +136,10 @@ class GraphicLine {
   }
 
   private updatePoint():void{
-    this._pointArrays.position[3]++;//眼睛的位置
-    this._pointArrays.position[7]++;
-    this._pointArrays.position[11]++;
+    var change = 0.1;
+    this._pointArrays.position[3] = this._pointArrays.position[3]+change;//眼睛的位置
+    this._pointArrays.position[7] = this._pointArrays.position[7]+change;
+    this._pointArrays.position[11] = this._pointArrays.position[11]+change;
     this._pointBufferInfor = G_ShaderFactory.createBufferInfoFromArrays(this._pointArrays);
   }
 
@@ -167,7 +168,7 @@ class CameraModel {
   private _programInfor: ShaderData;
   private _modelBuffer: BufferAttribsData;
   private _clipSpaceBuffer: BufferAttribsData;
-  private _coordinate: GraphicLine;
+  private _coordinate: Graphic;
   private solidcolorvertexshader =
     'attribute vec4 a_position;' +
     'uniform mat4 u_matrix;' +
@@ -187,7 +188,7 @@ class CameraModel {
     this._modelBuffer = this.createCameraBufferInfo();
     this._clipSpaceBuffer = this.createClipspaceCubeBufferInfo();
     
-    this._coordinate = new GraphicLine(this.gl);//绘制线
+    this._coordinate = new Graphic(this.gl);//绘制线
   }
   private createClipspaceCubeBufferInfo() {
     // first let's add a cube. It goes from 1 to 3
@@ -318,6 +319,7 @@ class CameraModel {
     this._coordinate.drawLine(projMatrix, cameraMatrix);
 
     this._coordinate.drawPoint(projMatrix, cameraMatrix,mat1);
+    this._coordinate.drawPoint(projMatrix, cameraMatrix);
   }
 
 
@@ -331,6 +333,9 @@ function main() {
   if (!gl) {
     return;
   }
+
+
+
 
   // setup GLSL programs
   // compiles shaders, links program, looks up locations
@@ -366,8 +371,8 @@ function main() {
     { type: 'slider', key: 'cam1PosX', min: -200, max: 200, change: render, },
     { type: 'slider', key: 'cam1PosY', min: -200, max: 200, change: render, },
     { type: 'slider', key: 'cam1PosZ', min: -2000, max: 2000, change: render, },
-    { type: 'slider', key: 'cam1Near', min: 1, max: 500, change: render, },
-    { type: 'slider', key: 'cam1Far', min: 1, max: 500, change: render, },
+    { type: 'slider', key: 'cam1Near', min: 1, max: 3000, change: render, },
+    { type: 'slider', key: 'cam1Far', min: 1, max: 3000, change: render, },
     { type: 'checkbox', key: 'cam1Ortho', change: render, },
     { type: 'slider', key: 'cam1OrthoUnits', min: 1, max: 150, change: render, },
   ]);

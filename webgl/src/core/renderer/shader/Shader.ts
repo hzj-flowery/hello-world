@@ -455,7 +455,7 @@ class ShaderFactory {
                 }
                 else
                 {
-                    console.log("error  绑定uniform变量失败------",name);
+                    // console.log("error  绑定uniform变量失败------",name);
                 }
             });
         }
