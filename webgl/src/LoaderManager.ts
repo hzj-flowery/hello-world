@@ -2,6 +2,21 @@
  * 加载管理员
  */
 
+ /**
+  var myHeaders = new Headers();
+var myInit:any = { method: 'GET',
+               headers: myHeaders,
+               mode: 'cors',
+               cache: 'default' };
+var myRequest = new Request('http:localhost:3000//res/models/windmill/windmill.obj', myInit);
+
+fetch(myRequest).then(function(response) {
+    return response.text();
+  }).then(function(myBlob) {
+    console.log("myBlob-------",myBlob);
+  });
+  */
+
 class CacheImageData {
     constructor(url,img){
         this.url = url;
@@ -26,6 +41,9 @@ async function loadBinary(url) {
 async function loadJSON(url) {
     return loadFile(url, 'json');
 }
+async function loadText(url) {
+    return loadFile(url, 'text');
+}
 
 export default class LoaderManager{
     private _cacheImage:Array<CacheImageData> = [];
@@ -47,8 +65,6 @@ export default class LoaderManager{
         const gltf = await loadJSON(path);
         // load all the referenced files relative to the gltf file
         const baseURL = new URL(path, location.href);
-        
-
         gltf.buffers = await Promise.all(gltf.buffers.map((buffer) => {
             const url = new URL(buffer.uri, baseURL.href);
             return loadBinary(url.href);
@@ -84,6 +100,13 @@ export default class LoaderManager{
                 }
             }
         }
+    }
+    
+    /**
+     * 加载obj
+     */
+    public loadObjData(path:string,callBackProgress?,callBackFinish?):void{
+
     }
 
     
@@ -202,7 +225,7 @@ export default class LoaderManager{
                case "jpg":return this.loadImageData;
                case "png":return this.loadImageData;
                case "bin":return this.loadBlobData;
-            //   case "bin":return this.loadJsonBlobData;
+               case "obj":return this.loadObjData;
                case "json":return this.loadJsonData;
                case "gltf":return this.loadJsonStringData;
                case "skel":return this.loadSkelData;

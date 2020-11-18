@@ -100,21 +100,21 @@ export default class Scene3D extends Scene {
         this._cameraView = new CameraView(gl);
         this.addChild(this._cameraView);
 
-        this._cameraFrustum = new CameraFrustum(gl);
+        // this._cameraFrustum = new CameraFrustum(gl);
 
         this._3dCamera.rotate(0, 90, 0);
         this._3dCamera.lookAt([0, 0, -20]);
         this.setPosition(-30, 0, 0);
 
-        this._cameraFrustum.setUIInitData(
-            [0, 0, -20],
-            [0, 90, 0],
-            this._3dCamera.Near,
-            this._3dCamera.Far,
-            this._3dCamera.Fovy,
-            this.z,
-            this.y,
-            this.x);
+        // this._cameraFrustum.setUIInitData(
+        //     [0, 0, -20],
+        //     [0, 90, 0],
+        //     this._3dCamera.Near,
+        //     this._3dCamera.Far,
+        //     this._3dCamera.Fovy,
+        //     this.z,
+        //     this.y,
+        //     this.x);
         setTimeout(this.rotateCenterNode.bind(this), 20);
     }
     public rotateCenterNode() {
@@ -154,12 +154,12 @@ export default class Scene3D extends Scene {
 
     public readyDraw(time): void {
 
-        this.updateUIData();
+        // this.updateUIData();
         // this._3dCamera.rotate(0,0,1);
         this._3dCamera.readyDraw(time);
 
         var vp = this._3dCamera.getVP();
-        this._cameraFrustum.testDraw(vp, this._3dCamera.Aspect, this._3dCamera.Near, this._3dCamera.Far / 10, MathUtils.radToDeg(this._3dCamera.Fovy));
+        // this._cameraFrustum.testDraw(vp, this._3dCamera.Aspect, this._3dCamera.Near, this._3dCamera.Far / 10, MathUtils.radToDeg(this._3dCamera.Fovy));
 
 
         super.readyDraw(time);

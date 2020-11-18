@@ -199,7 +199,7 @@ export namespace glMatrix {
      * @return {Vector3} dst or new Vector3 if not provided
      * @memberOf module:webgl-3d-math
      */
-    function addVectors(dst,a, b) {
+    function addVectors(dst,a, b):Float32Array {
         dst = dst || new MatType(3);
         dst[0] = a[0] + b[0];
         dst[1] = a[1] + b[1];
@@ -215,7 +215,7 @@ export namespace glMatrix {
        * @return {Vector3} dst or new Vector3 if not provided
        * @memberOf module:webgl-3d-math
        */
-      function subtractVectors(dst,a, b) {
+      function subtractVectors(dst,a, b):Float32Array {
         dst = dst || new MatType(3);
         dst[0] = a[0] - b[0];
         dst[1] = a[1] - b[1];
@@ -2554,7 +2554,7 @@ export namespace glMatrix {
      * @returns {mat4} out
      */
 
-    function translate$2(out, a, v:Array<number>) {
+    function translate$2(out, a, v:any[]) {
         out = out || new MatType(16);
         var x = v[0],
             y = v[1],
@@ -4000,6 +4000,9 @@ export namespace glMatrix {
         create: create$3,
         clone: clone$3,
         copy: copy$3,
+        addVectors: addVectors,
+        subtractVectors: subtractVectors,
+        scaleVector: scaleVector,
         compose:compose,
         decompose:decompose,
         fromValues: fromValues$3,

@@ -2,6 +2,7 @@
 
 import Device from "../../../Device";
 import { glMatrix } from "../../Matrix";
+import { MathUtils } from "../../utils/MathUtils";
 import { syPrimitives } from "../shader/Primitives";
 import { BufferAttribsData, G_ShaderFactory, ShaderData } from "../shader/Shader";
 var vertexshader3d =
@@ -25,7 +26,7 @@ var fragmentshader3d =
 /**
  * 
  */
-class GraphicLine {
+class Graphic {
   constructor(gl) {
     this.gl = gl;
     this.init();
@@ -38,7 +39,7 @@ class GraphicLine {
     'varying vec4 v_color;' +
     'void main() {' +
     'gl_Position = u_worldViewProjection * a_position;' +
-    'gl_PointSize = 10.0;' +
+    'gl_PointSize = 5.0;' +
     'v_color = a_color;' +
     '}'
 
@@ -88,9 +89,9 @@ class GraphicLine {
   private _pointArrays = {
     position: [
       0, 0, 0,
-      1,0,0,   //3
-      0,1,0,   //7  
-      0,0,1    //11
+      1, 0, 0,   //3
+      0, 1, 0,   //7  
+      0, 0, 1    //11
     ],
     color: [
       0, 0, 0, 1,
@@ -115,7 +116,7 @@ class GraphicLine {
   }
   private _programInfor: ShaderData;
   private _coordinateBufferInfo: BufferAttribsData;
-  private _pointBufferInfor:BufferAttribsData;
+  private _pointBufferInfor: BufferAttribsData;
   /**
    * 绘制世界坐标系
    * 你想在上面位置来观察世界坐标系
@@ -135,24 +136,25 @@ class GraphicLine {
     G_ShaderFactory.drawBufferInfo(this._coordinateBufferInfo, this.gl.LINES);
   }
 
-  private updatePoint():void{
-    this._pointArrays.position[3]++;//眼睛的位置
-    this._pointArrays.position[7]++;
-    this._pointArrays.position[11]++;
+  private updatePoint(): void {
+    var change = 0.1;
+    this._pointArrays.position[3] = this._pointArrays.position[3] + change;//眼睛的位置
+    this._pointArrays.position[7] = this._pointArrays.position[7] + change;
+    this._pointArrays.position[11] = this._pointArrays.position[11] + change;
     this._pointBufferInfor = G_ShaderFactory.createBufferInfoFromArrays(this._pointArrays);
   }
 
-  public drawPoint(proj: Float32Array, camera: Float32Array, world = glMatrix.mat4.identity(null)):void{
+  public drawPoint(proj: Float32Array, camera: Float32Array, world = glMatrix.mat4.identity(null)): void {
     this.updatePoint();
     var view = glMatrix.mat4.invert(null, camera)
-    let vp = glMatrix.mat4.multiply(null,proj,view);
-    glMatrix.mat4.multiply(vp,vp,world);
+    let vp = glMatrix.mat4.multiply(null, proj, view);
+    glMatrix.mat4.multiply(vp, vp, world);
 
     this.gl.useProgram(this._programInfor.spGlID);
-    G_ShaderFactory.setBuffersAndAttributes(this._programInfor.attrSetters,this._pointBufferInfor);
-    G_ShaderFactory.setUniforms(this._programInfor.uniSetters,{u_worldViewProjection:vp});
-    G_ShaderFactory.setUniforms(this._programInfor.uniSetters,{u_color:[1,1,1,1]});
-    G_ShaderFactory.drawBufferInfo(this._pointBufferInfor,this.gl.POINTS);
+    G_ShaderFactory.setBuffersAndAttributes(this._programInfor.attrSetters, this._pointBufferInfor);
+    G_ShaderFactory.setUniforms(this._programInfor.uniSetters, { u_worldViewProjection: vp });
+    G_ShaderFactory.setUniforms(this._programInfor.uniSetters, { u_color: [1, 1, 1, 1] });
+    G_ShaderFactory.drawBufferInfo(this._pointBufferInfor, this.gl.POINTS);
 
   }
 
@@ -167,7 +169,7 @@ class CameraModel {
   private _programInfor: ShaderData;
   private _modelBuffer: BufferAttribsData;
   private _clipSpaceBuffer: BufferAttribsData;
-  private _coordinate: GraphicLine;
+  private _coordinate: Graphic;
   private solidcolorvertexshader =
     'attribute vec4 a_position;' +
     'uniform mat4 u_matrix;' +
@@ -186,8 +188,8 @@ class CameraModel {
     this._programInfor = G_ShaderFactory.createProgramInfo(this.solidcolorvertexshader, this.solidcolorfragmentshader);
     this._modelBuffer = this.createCameraBufferInfo();
     this._clipSpaceBuffer = this.createClipspaceCubeBufferInfo();
-    
-    this._coordinate = new GraphicLine(this.gl);//绘制线
+
+    this._coordinate = new Graphic(this.gl);//绘制线
   }
   private createClipspaceCubeBufferInfo() {
     // first let's add a cube. It goes from 1 to 3
@@ -317,60 +319,83 @@ class CameraModel {
     this._coordinate.drawLine(projMatrix, cameraMatrix, mat1);
     this._coordinate.drawLine(projMatrix, cameraMatrix);
 
-    this._coordinate.drawPoint(projMatrix, cameraMatrix,mat1);
+    this._coordinate.drawPoint(projMatrix, cameraMatrix, mat1);
+    this._coordinate.drawPoint(projMatrix, cameraMatrix);
   }
 
 
 
 }
-
-function main() {
-
-  var gl = Device.Instance.gl;
-  var webglLessonsUI = window["webglLessonsUI"]
-  if (!gl) {
-    return;
+class SceneStage {
+  private gl: WebGLRenderingContext;
+  private settings: any;
+  private cameraModel: CameraModel;
+  private vertexColorProgramInfo: ShaderData;
+  private fBufferInfo: BufferAttribsData;
+  constructor(gl: WebGLRenderingContext) {
+    this.gl = gl;
+    this.init();
   }
 
-  // setup GLSL programs
-  // compiles shaders, links program, looks up locations
-  const vertexColorProgramInfo = G_ShaderFactory.createProgramInfo(vertexshader3d, fragmentshader3d);
-  const cameraModel = new CameraModel(gl);
-  // create buffers and fill with data for a 3D 'F'
-  const fBufferInfo = syPrimitives.create3DFBufferInfo();
+  private init(): void {
+    // setup GLSL programs
+    // compiles shaders, links program, looks up locations
+    this.vertexColorProgramInfo = G_ShaderFactory.createProgramInfo(vertexshader3d, fragmentshader3d);
+    this.cameraModel = new CameraModel(this.gl);
+    // create buffers and fill with data for a 3D 'F'
+    this.fBufferInfo = syPrimitives.create3DFBufferInfo();
 
-  function degToRad(d) {
-    return d * Math.PI / 180;
+    this._camera1Matrix = glMatrix.mat4.identity(null);
+    this._camera1Project = glMatrix.mat4.identity(null);
+
+    this.initUI();
+  }
+  
+  //初始化UI
+  private initUI() {
+    this.settings = {
+      posX: -15,
+      posY: -35,
+      posZ: -5,
+      rotation: 150,  // in degrees
+      cam1FieldOfView: 60,  // in degrees
+      cam1PosX: 0,
+      cam1PosY: 0,
+      cam1PosZ: -200,
+      cam1RotX: 0,
+      cam1RotY: 0,
+      cam1RotZ: 0,
+      cam1Near: 30,
+      cam1Far: 500,
+      cam1Ortho: false,
+      cam1OrthoUnits: 120,
+    };
+
+    var render = this.render.bind(this);
+
+    var webglLessonsUI = window["webglLessonsUI"]
+    webglLessonsUI.setupUI(document.querySelector('#ui'), this.settings, [
+      { type: 'slider', key: 'rotation', min: 0, max: 360, change: render, precision: 2, step: 0.001, },
+      { type: 'slider', key: 'posX', min: -200, max: 200, change: render, },
+      { type: 'slider', key: 'posY', min: -200, max: 200, change: render, },
+      { type: 'slider', key: 'posZ', min: -2000, max: 2000, change: render, },
+      { type: 'slider', key: 'cam1FieldOfView', min: 1, max: 170, change: render, },
+      { type: 'slider', key: 'cam1PosX', min: -200, max: 200, change: render, },
+      { type: 'slider', key: 'cam1PosY', min: -200, max: 200, change: render, },
+      { type: 'slider', key: 'cam1PosZ', min: -2000, max: 2000, change: render, },
+
+      { type: 'slider', key: 'cam1RotX', min: 0, max: 360, change: render, },
+      { type: 'slider', key: 'cam1RotY', min: 0, max: 360, change: render, },
+      { type: 'slider', key: 'cam1RotZ', min: 0, max: 360, change: render, },
+
+      { type: 'slider', key: 'cam1Near', min: 1, max: 3000, change: render, },
+      { type: 'slider', key: 'cam1Far', min: 1, max: 3000, change: render, },
+      { type: 'checkbox', key: 'cam1Ortho', change: render, },
+      { type: 'slider', key: 'cam1OrthoUnits', min: 1, max: 150, change: render, },
+    ]);
+
   }
 
-  const settings = {
-    posX: -15,
-    posY: -35,
-    posZ: -5,
-    rotation: 150,  // in degrees
-    cam1FieldOfView: 60,  // in degrees
-    cam1PosX: 0,
-    cam1PosY: 0,
-    cam1PosZ: -200,
-    cam1Near: 30,
-    cam1Far: 500,
-    cam1Ortho: true,
-    cam1OrthoUnits: 120,
-  };
-  webglLessonsUI.setupUI(document.querySelector('#ui'), settings, [
-    { type: 'slider', key: 'rotation', min: 0, max: 360, change: render, precision: 2, step: 0.001, },
-    { type: 'slider', key: 'posX', min: -200, max: 200, change: render, },
-    { type: 'slider', key: 'posY', min: -200, max: 200, change: render, },
-    { type: 'slider', key: 'posZ', min: -2000, max: 2000, change: render, },
-    { type: 'slider', key: 'cam1FieldOfView', min: 1, max: 170, change: render, },
-    { type: 'slider', key: 'cam1PosX', min: -200, max: 200, change: render, },
-    { type: 'slider', key: 'cam1PosY', min: -200, max: 200, change: render, },
-    { type: 'slider', key: 'cam1PosZ', min: -2000, max: 2000, change: render, },
-    { type: 'slider', key: 'cam1Near', min: 1, max: 500, change: render, },
-    { type: 'slider', key: 'cam1Far', min: 1, max: 500, change: render, },
-    { type: 'checkbox', key: 'cam1Ortho', change: render, },
-    { type: 'slider', key: 'cam1OrthoUnits', min: 1, max: 150, change: render, },
-  ]);
 
   /**
    * 绘制场景
@@ -378,7 +403,10 @@ function main() {
    * @param cameraMatrix  相机矩阵
    * @param worldMatrix 世界矩阵
    */
-  function drawScene(projectionMatrix, cameraMatrix, worldMatrix) {
+  private drawScene(projectionMatrix, cameraMatrix, worldMatrix) {
+    var gl = this.gl;
+    var vertexColorProgramInfo = this.vertexColorProgramInfo;
+    var fBufferInfo = this.fBufferInfo;
     // 清除颜色缓冲和深度缓存
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
@@ -389,47 +417,41 @@ function main() {
     glMatrix.mat4.multiply(mat, mat, worldMatrix);
 
     gl.useProgram(vertexColorProgramInfo.spGlID);
-
     // ------ Draw the F --------
-
     // Setup all the needed attributes.
     G_ShaderFactory.setBuffersAndAttributes(vertexColorProgramInfo.attrSetters, fBufferInfo);
-
     // Set the uniforms
     G_ShaderFactory.setUniforms(vertexColorProgramInfo.uniSetters, {
       u_matrix: mat,
     });
-
     G_ShaderFactory.drawBufferInfo(fBufferInfo);
   }
-
-  function render() {
-    Device.Instance.resizeCanvasToDisplaySize(gl.canvas);
-
-    gl.enable(gl.CULL_FACE);
-    gl.enable(gl.DEPTH_TEST);
-    gl.enable(gl.SCISSOR_TEST);
-
-    // we're going to split the view in 2
+   
+  private _camera1Matrix:Float32Array;
+  private _camera1Project:Float32Array;
+  
+  //设置目标相机
+  private setTargetCameara(){
+    var settings = this.settings;
+    var gl = this.gl;
+          // we're going to split the view in 2
     const effectiveWidth = gl.canvas.width / 2;
     const aspect = effectiveWidth / gl.canvas.height;
     const near = 1;
     const far = 2000;
-
     // Compute a projection matrix
-    const perspectiveProjectionMatrix = settings.cam1Ortho
-      ? glMatrix.mat4.ortho(null,
+     settings.cam1Ortho
+      ? glMatrix.mat4.ortho(this._camera1Project,
         -settings.cam1OrthoUnits * aspect,  // left
         settings.cam1OrthoUnits * aspect,  // right
         -settings.cam1OrthoUnits,           // bottom
         settings.cam1OrthoUnits,           // top
         settings.cam1Near,
         settings.cam1Far)
-      : glMatrix.mat4.perspective(null, degToRad(settings.cam1FieldOfView),
+      : glMatrix.mat4.perspective(this._camera1Project, MathUtils.degToRad(settings.cam1FieldOfView),
         aspect,
         settings.cam1Near,
         settings.cam1Far);
-
     // Compute the camera's matrix using look at.
     //创建一个相机坐标系，默认情况下，相机坐标系父级节点是世界
     //所以相机中的点乘以相机坐标系，就可以将该点的坐标转换到世界坐标系下
@@ -441,12 +463,32 @@ function main() {
     ];
     const target = [0, 0, 0];
     const up = [0, 1, 0];
-    const cameraMatrix = glMatrix.mat4.lookAt2(null, cameraPosition, target, up);
+    // const cameraMatrix = glMatrix.mat4.lookAt2(null, cameraPosition, target, up);
+    const cameraMatrixFather = glMatrix.mat4.identity(null);
+    let cameraMatrix = this._camera1Matrix;
+    glMatrix.mat4.identity(cameraMatrix);
+    glMatrix.mat4.rotateX(cameraMatrix, cameraMatrix, MathUtils.degToRad(settings.cam1RotX));
+    glMatrix.mat4.rotateY(cameraMatrix, cameraMatrix, MathUtils.degToRad(settings.cam1RotY));
+    glMatrix.mat4.rotateZ(cameraMatrix, cameraMatrix, MathUtils.degToRad(settings.cam1RotZ));
+    glMatrix.mat4.translate(cameraMatrixFather, cameraMatrixFather, cameraPosition);
+    glMatrix.mat4.multiply(cameraMatrix, cameraMatrixFather, cameraMatrix);
+  }
+
+  public render() {
+    var gl = this.gl;
+    var settings = this.settings;
+    Device.Instance.resizeCanvasToDisplaySize(gl.canvas);
+
+    gl.enable(gl.CULL_FACE);
+    gl.enable(gl.DEPTH_TEST);
+    gl.enable(gl.SCISSOR_TEST);
+
+    this.setTargetCameara();
 
     let fatherMatrix = glMatrix.mat4.identity(null);
     let worldMatrix = glMatrix.mat4.identity(null);
-    glMatrix.mat4.rotateY(null, worldMatrix, degToRad(settings.rotation));
-    glMatrix.mat4.rotateX(worldMatrix, worldMatrix, degToRad(settings.rotation));
+    glMatrix.mat4.rotateY(null, worldMatrix, MathUtils.degToRad(settings.rotation));
+    glMatrix.mat4.rotateX(worldMatrix, worldMatrix, MathUtils.degToRad(settings.rotation));
     // center the 'F' around its origin
     glMatrix.mat4.translate(fatherMatrix, fatherMatrix, [settings.posX, settings.posY, settings.posZ]);
     glMatrix.mat4.multiply(worldMatrix, fatherMatrix, worldMatrix);
@@ -461,7 +503,7 @@ function main() {
 
     //将相机中的物体单独拿出来绘制
     //左侧将呈现一个单独的F模型
-    drawScene(perspectiveProjectionMatrix, cameraMatrix, worldMatrix);
+    this.drawScene(this._camera1Project, this._camera1Matrix, worldMatrix);
 
     // draw on right with perspective camera
     const rightWidth = width - leftWidth;
@@ -471,25 +513,26 @@ function main() {
 
     //这是一个右侧相机
     //此处的相机不做任何的改变
-    const perspectiveProjectionMatrix2 = glMatrix.mat4.perspective(null, degToRad(60), aspect, near, far);
+    const effectiveWidth = gl.canvas.width / 2;
+    const aspect = effectiveWidth / gl.canvas.height;
+    const near = 1;
+    const far = 2000;
+    const perspectiveProjectionMatrix2 = glMatrix.mat4.perspective(null, MathUtils.degToRad(60), aspect, near, far);
     // Compute the camera's matrix using look at.
     const cameraPosition2 = [-600, 400, -400];
     const target2 = [0, 0, 0];
-    const cameraMatrix2 = glMatrix.mat4.lookAt2(null, cameraPosition2, target2, up);
+    const up2 = [0, 1, 0];
+    const cameraMatrix2 = glMatrix.mat4.lookAt2(null, cameraPosition2, target2, up2);
     //绘制相机中的物体
-    drawScene(perspectiveProjectionMatrix2, cameraMatrix2, worldMatrix);
+    this.drawScene(perspectiveProjectionMatrix2, cameraMatrix2, worldMatrix);
 
-    cameraModel.drawCameraModel(perspectiveProjectionMatrix2, cameraMatrix2, perspectiveProjectionMatrix, cameraMatrix);
-
-
-
+    this.cameraModel.drawCameraModel(perspectiveProjectionMatrix2, cameraMatrix2, this._camera1Project, this._camera1Matrix);
   }
-
-  render();
 }
 
 export default class CameraTest {
   static run() {
-    main();
+
+    new SceneStage(Device.Instance.gl).render();
   }
 }
