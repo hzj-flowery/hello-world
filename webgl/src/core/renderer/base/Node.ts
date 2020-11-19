@@ -7,9 +7,11 @@ export class Node extends Ref {
         super();
         this.initBaseNode();
     }
+
     public x: number = 0;
     public y: number = 0;
     public z: number = 0;
+
     public scaleX: number = 1;
     public scaleY: number = 1;
     public scaleZ: number = 1;
@@ -41,10 +43,8 @@ export class Node extends Ref {
     private initBaseNode(): void {
         this.name = "defaultName";
         this._children = [];
-        this._modelMatrix = this._glMatrix.mat4.create();
-        this._worldMatrix = this._glMatrix.mat4.create();
-        this._glMatrix.mat4.identity(this._worldMatrix);
-        this._glMatrix.mat4.identity(this._modelMatrix);
+        this._worldMatrix = this._glMatrix.mat4.identity(null);
+        this._modelMatrix = this._glMatrix.mat4.identity(null);
     }
     public set parent(node: Node) {
         this._parent = node;
@@ -61,13 +61,14 @@ export class Node extends Ref {
         node.parent = this;
     }
     /**
-     * 
+     * 移除孩子节点
      * @param node 
      */
     public removeChild(node: Node): void {
         var index = this._children.indexOf(node);
         if (index >= 0) {
             this._children.splice(index, 1);
+            node.parent = null;
         }
     }
     //更新世界矩阵
@@ -87,7 +88,6 @@ export class Node extends Ref {
 
     }
     private drawBefore(): void {
-
         //更新矩阵数据
 
     }
@@ -121,15 +121,24 @@ export class Node extends Ref {
     /**
     * 更新2D矩阵
     * 将此节点的数据更新到这个矩阵中
+    * 
+    * 世界坐标变换要先缩放、后旋转、再平移的原因
+    * 
+    * 缩放变换不改变坐标轴的走向，也不改变原点的位置，所以两个坐标系仍然重合。 
+      旋转变换改变坐标轴的走向，但不改变原点的位置，所以两个坐标系坐标轴不再处于相同走向。 
+      平移变换不改变坐标轴走向，但改变原点位置，两个坐标系原点不再重合
     */
     protected updateMatrixData(): void {
-        //旋转
-        this.matrix4RotateX(this._modelMatrix, this._worldMatrix, this.rotateX * (Math.PI / 180));
+
+         //先缩放
+         this.mat4Scale$3(this._modelMatrix, this._worldMatrix, [this.scaleX, this.scaleY, this.scaleZ]);
+
+        //再旋转
+        this.matrix4RotateX(this._modelMatrix, this._modelMatrix, this.rotateX * (Math.PI / 180));
         this.matrix4RotateY(this._modelMatrix, this._modelMatrix, this.rotateY * (Math.PI / 180));
         this.matrix4RotateZ(this._modelMatrix, this._modelMatrix, this.rotateZ * (Math.PI / 180));
-        //处理旋转
-        this.mat4Scale$3(this._modelMatrix, this._modelMatrix, [this.scaleX, this.scaleY, this.scaleZ]);
-        //平移
+       
+        //最后平移
         this.mat4Translate$2(this._modelMatrix, this._modelMatrix, [this.x, this.y, this.z]);
 
     }

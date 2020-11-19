@@ -2,6 +2,21 @@
  * 加载管理员
  */
 
+ /**
+  var myHeaders = new Headers();
+var myInit:any = { method: 'GET',
+               headers: myHeaders,
+               mode: 'cors',
+               cache: 'default' };
+var myRequest = new Request('http:localhost:3000//res/models/windmill/windmill.obj', myInit);
+
+fetch(myRequest).then(function(response) {
+    return response.text();
+  }).then(function(myBlob) {
+    console.log("myBlob-------",myBlob);
+  });
+  */
+
 class CacheImageData {
     constructor(url,img){
         this.url = url;

@@ -322,13 +322,11 @@ export namespace SY {
             this._shader.setUseVertexAttribPointerForVertex(this.getGLID(SY.GLID_TYPE.VERTEX), this.getBufferItemSize(SY.GLID_TYPE.VERTEX));
             this._shader.setUseVertexAttribPointerForUV(this.getGLID(SY.GLID_TYPE.UV), this.getBufferItemSize(SY.GLID_TYPE.UV));
             this._shader.setUseVertexAttriPointerForNormal(this.getGLID(SY.GLID_TYPE.NORMAL), this.getBufferItemSize(SY.GLID_TYPE.NORMAL));
-
             if (this._texture && this._texture._glID && !this._shader.USE_SKYBOX) {
                 this._shader.setUseTexture(this.getGLID(SY.GLID_TYPE.TEXTURE_2D));
             }
             this.startVertexShader();
-
-
+            
             //解除缓冲区对于目标纹理的绑定
             this.gl.bindTexture(this.gl.TEXTURE_2D, null);
             this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, null);

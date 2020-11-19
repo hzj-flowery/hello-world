@@ -7,6 +7,7 @@ var path = require('path');//引入path模块
 // req : 从浏览器带来的请求信息
 // res : 从服务器返回给浏览器的信息
 var server = http.createServer(function(req,res){
+  console.log(req);
   var pathname = url.parse(req.url).pathname;;
    //客户端输入的url，例如如果输入localhost:8888/index.html，那么这里的url == /index.html
    //url.parse()方法将一个URL字符串转换成对象并返回，通过pathname来访问此url的地址。
