@@ -191,7 +191,7 @@ class Graphic {
 
 }
 
-class CameraModel {
+export class CameraModel {
   constructor(gl) {
     this.gl = gl;
     this.init();
@@ -446,10 +446,11 @@ class SceneStage {
     // create buffers and fill with data for a 3D 'F'
     this.fBufferInfo = syPrimitives.create3DFBufferInfo();
 
-    this._camera1Matrix = glMatrix.mat4.identity(null);
-    this._camera1FatherMatrix = glMatrix.mat4.identity(null);
-    this._camera1Project = glMatrix.mat4.identity(null);
-
+    this._gameCamearMatrix = glMatrix.mat4.identity(null);
+    this._gameCameraFatherMatrix = glMatrix.mat4.identity(null);
+    this._gameCameraProjectMatrix = glMatrix.mat4.identity(null);
+    this._sceneCameraMatrix = glMatrix.mat4.identity(null);
+    this._sceneCameraProjectMatrix = glMatrix.mat4.identity(null);
     this.initUI();
   }
   
@@ -529,12 +530,14 @@ class SceneStage {
     G_ShaderFactory.drawBufferInfo(fBufferInfo);
   }
    
-  private _camera1Matrix:Float32Array;
-  private _camera1FatherMatrix:Float32Array;
-  private _camera1Project:Float32Array;
+  private _gameCamearMatrix:Float32Array;
+  private _gameCameraFatherMatrix:Float32Array;
+  private _gameCameraProjectMatrix:Float32Array;
+  private _sceneCameraMatrix:Float32Array;
+  private _sceneCameraProjectMatrix:Float32Array;
   
   //设置目标相机
-  private setTargetCameara(){
+  private setGameCamera(){
 
     let lookType = 1;
     var settings = this.settings;
@@ -546,14 +549,14 @@ class SceneStage {
     const far = 2000;
     // Compute a projection matrix
      settings.cam1Ortho
-      ? glMatrix.mat4.ortho(this._camera1Project,
+      ? glMatrix.mat4.ortho(this._gameCameraProjectMatrix,
         -settings.cam1OrthoUnits * aspect,  // left
         settings.cam1OrthoUnits * aspect,  // right
         -settings.cam1OrthoUnits,           // bottom
         settings.cam1OrthoUnits,           // top
         settings.cam1Near,
         settings.cam1Far)
-      : glMatrix.mat4.perspective(this._camera1Project, MathUtils.degToRad(settings.cam1FieldOfView),
+      : glMatrix.mat4.perspective(this._gameCameraProjectMatrix, MathUtils.degToRad(settings.cam1FieldOfView),
         aspect,
         settings.cam1Near,
         settings.cam1Far);
@@ -570,19 +573,34 @@ class SceneStage {
     {
       const target = [0, 0, 0];
       const up = [0, 1, 0];
-      this._camera1Matrix = glMatrix.mat4.lookAt2(null, cameraPosition, target, up);
+      this._gameCamearMatrix = glMatrix.mat4.lookAt2(null, cameraPosition, target, up);
     }
     else if(lookType==2)
     {
-      glMatrix.mat4.identity(this._camera1FatherMatrix);
-      let cameraMatrix = this._camera1Matrix;
+      glMatrix.mat4.identity(this._gameCameraFatherMatrix);
+      let cameraMatrix = this._gameCamearMatrix;
       glMatrix.mat4.identity(cameraMatrix);
       glMatrix.mat4.rotateX(cameraMatrix, cameraMatrix, MathUtils.degToRad(settings.cam1RotX));
       glMatrix.mat4.rotateY(cameraMatrix, cameraMatrix, MathUtils.degToRad(settings.cam1RotY));
       glMatrix.mat4.rotateZ(cameraMatrix, cameraMatrix, MathUtils.degToRad(settings.cam1RotZ));
-      glMatrix.mat4.translate(this._camera1FatherMatrix, this._camera1FatherMatrix, cameraPosition);
-      glMatrix.mat4.multiply(cameraMatrix, this._camera1FatherMatrix, cameraMatrix);
+      glMatrix.mat4.translate(this._gameCameraFatherMatrix, this._gameCameraFatherMatrix, cameraPosition);
+      glMatrix.mat4.multiply(cameraMatrix, this._gameCameraFatherMatrix, cameraMatrix);
     }
+  }
+  
+  //设置场景相机
+  private setSceneCamera():void{
+    var gl = this.gl;
+    const effectiveWidth = gl.canvas.width / 2;
+    const aspect = effectiveWidth / gl.canvas.height;
+    const near = 1;
+    const far = 2000;
+    glMatrix.mat4.perspective(this._sceneCameraProjectMatrix, MathUtils.degToRad(60), aspect, near, far);
+    // Compute the camera's matrix using look at.
+    const cameraPosition2 = [-600, 100, -400];
+    const target2 = [0, 0, 0];
+    const up2 = [0, 1, 0];
+    glMatrix.mat4.lookAt2(this._sceneCameraMatrix, cameraPosition2, target2, up2);
   }
 
   public render() {
@@ -594,7 +612,7 @@ class SceneStage {
     gl.enable(gl.DEPTH_TEST);
     gl.enable(gl.SCISSOR_TEST);
 
-    this.setTargetCameara();
+    this.setGameCamera();
 
     let fatherMatrix = glMatrix.mat4.identity(null);
     let worldMatrix = glMatrix.mat4.identity(null);
@@ -611,10 +629,9 @@ class SceneStage {
     gl.viewport(0, 0, leftWidth, height);
     gl.scissor(0, 0, leftWidth, height);
     gl.clearColor(1, 0.8, 0.8, 1);
-
     //将相机中的物体单独拿出来绘制
     //左侧将呈现一个单独的F模型
-    this.drawScene(this._camera1Project, this._camera1Matrix, worldMatrix);
+    this.drawScene(this._gameCameraProjectMatrix, this._gameCamearMatrix, worldMatrix);
 
     // draw on right with perspective camera
     const rightWidth = width - leftWidth;
@@ -624,24 +641,14 @@ class SceneStage {
 
     //这是一个右侧相机
     //此处的相机不做任何的改变
-    const effectiveWidth = gl.canvas.width / 2;
-    const aspect = effectiveWidth / gl.canvas.height;
-    const near = 1;
-    const far = 2000;
-    const perspectiveProjectionMatrix2 = glMatrix.mat4.perspective(null, MathUtils.degToRad(60), aspect, near, far);
-    // Compute the camera's matrix using look at.
-    const cameraPosition2 = [-600, 400, -400];
-    const target2 = [0, 0, 0];
-    const up2 = [0, 1, 0];
-    const cameraMatrix2 = glMatrix.mat4.lookAt2(null, cameraPosition2, target2, up2);
+    this.setSceneCamera();
     //绘制相机中的物体
-    this.drawScene(perspectiveProjectionMatrix2, cameraMatrix2, worldMatrix);
-
-    this.cameraModel.draw(perspectiveProjectionMatrix2, cameraMatrix2, this._camera1Project, this._camera1Matrix);
+    this.drawScene(this._sceneCameraProjectMatrix, this._sceneCameraMatrix, worldMatrix);
+    this.cameraModel.draw(this._sceneCameraProjectMatrix, this._sceneCameraMatrix, this._gameCameraProjectMatrix, this._gameCamearMatrix);
   }
 }
 
-export default class CameraTest {
+export  class CameraTest {
   static run() {
 
     new SceneStage(Device.Instance.gl).render();

@@ -44,7 +44,6 @@ console.log(z);
   * 现阶段 核心渲染计算都要放在此类中
   */
 import { Shader } from "../shader/Shader";
-import GameMainCamera from "../camera/GameMainCamera";
 import { glprimitive_type } from "../gfx/GLEnums";
 import { Node } from "./Node";
 import { Texture } from "./Texture";
@@ -181,6 +180,8 @@ export namespace SY {
 
         protected _shader: Shader;
 
+        private _renderData:RenderData;
+
         //参考glprimitive_type
         protected _glPrimitiveType: glprimitive_type;//绘制的类型
 
@@ -191,6 +192,7 @@ export namespace SY {
             super();
             this.gl = gl;
             this._glPrimitiveType = glprimitive_type.TRIANGLE_FAN;
+            this._renderData = new RenderData();
             this.init();
         }
 
@@ -295,7 +297,7 @@ export namespace SY {
         protected updateCamera(time: number): any {
 
         }
-
+       
         /**
          * 
          * @param texture 纹理的GLID
@@ -304,34 +306,33 @@ export namespace SY {
             if (this._texture && this._texture.loaded == false) {
                 return;
             }
-            var rData = new RenderData();
-            rData._cameraType = this._cameraType;//默认情况下是透视投影
-            rData._shader = this._shader;
-            rData._vertGLID = this.getGLID(SY.GLID_TYPE.VERTEX);
-            rData._vertItemSize = this.getBufferItemSize(SY.GLID_TYPE.VERTEX);
-            rData._vertItemNums = this.getBuffer(SY.GLID_TYPE.VERTEX).itemNums;
-            rData._indexGLID = this.getGLID(SY.GLID_TYPE.INDEX);
-            if(rData._indexGLID!=-1)
+            this._renderData._cameraType = this._cameraType;//默认情况下是透视投影
+            this._renderData._shader = this._shader;
+            this._renderData._vertGLID = this.getGLID(SY.GLID_TYPE.VERTEX);
+            this._renderData._vertItemSize = this.getBufferItemSize(SY.GLID_TYPE.VERTEX);
+            this._renderData._vertItemNums = this.getBuffer(SY.GLID_TYPE.VERTEX).itemNums;
+            this._renderData._indexGLID = this.getGLID(SY.GLID_TYPE.INDEX);
+            if(this._renderData._indexGLID!=-1)
             {
-                rData._indexItemSize = this.getBuffer(SY.GLID_TYPE.INDEX).itemSize;
-                rData._indexItemNums = this.getBuffer(SY.GLID_TYPE.INDEX).itemNums;
+                this._renderData._indexItemSize = this.getBuffer(SY.GLID_TYPE.INDEX).itemSize;
+                this._renderData._indexItemNums = this.getBuffer(SY.GLID_TYPE.INDEX).itemNums;
             }
-            rData._uvGLID = this.getGLID(SY.GLID_TYPE.UV);
-            rData._uvItemSize = this.getBufferItemSize(SY.GLID_TYPE.UV);
-            rData._normalGLID = this.getGLID(SY.GLID_TYPE.NORMAL);
-            rData._normalItemSize = this.getBufferItemSize(SY.GLID_TYPE.NORMAL);
-            rData._lightColor = [0.0, 1, 1.0, 1];
-            rData._modelMatrix = this._modelMatrix;
-            rData._time = time;
-            rData._lightDirection = this._glMatrix.vec3.normalize(null, [8, 5, -10]);
+            this._renderData._uvGLID = this.getGLID(SY.GLID_TYPE.UV);
+            this._renderData._uvItemSize = this.getBufferItemSize(SY.GLID_TYPE.UV);
+            this._renderData._normalGLID = this.getGLID(SY.GLID_TYPE.NORMAL);
+            this._renderData._normalItemSize = this.getBufferItemSize(SY.GLID_TYPE.NORMAL);
+            this._renderData._lightColor = [0.0, 1, 1.0, 1];
+            this._renderData._modelMatrix = this._modelMatrix;
+            this._renderData._time = time;
+            this._renderData._lightDirection = this._glMatrix.vec3.normalize(null, [8, 5, -10]);
             if (this._shader.USE_SKYBOX) {
-                rData._u_pvm_matrix_inverse = (this).updateCamera(time);
+                this._renderData._u_pvm_matrix_inverse = (this).updateCamera(time);
             }
             if (this._texture && this._texture._glID && !this._shader.USE_SKYBOX) {
-                rData._textureGLIDArray.push(this.getGLID(SY.GLID_TYPE.TEXTURE_2D));
+                this._renderData._textureGLIDArray.push(this.getGLID(SY.GLID_TYPE.TEXTURE_2D));
             }
-            rData._glPrimitiveType = this._glPrimitiveType;
-            Device.Instance.drawSY(rData);
+            this._renderData._glPrimitiveType = this._glPrimitiveType;
+            Device.Instance.drawSY(this._renderData);
         }
         public get texture():Texture{
             return this._texture;

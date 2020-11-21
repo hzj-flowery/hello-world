@@ -129,18 +129,17 @@ export class Node extends Ref {
       平移变换不改变坐标轴走向，但改变原点位置，两个坐标系原点不再重合
     */
     protected updateMatrixData(): void {
-
-         //先缩放
-         this.mat4Scale$3(this._modelMatrix, this._worldMatrix, [this.scaleX, this.scaleY, this.scaleZ]);
-
+        //初始化模型矩阵
+        glMatrix.mat4.identity(this._modelMatrix);
+        //先缩放
+        this.mat4Scale$3(this._modelMatrix, this._modelMatrix, [this.scaleX, this.scaleY, this.scaleZ]);
         //再旋转
         this.matrix4RotateX(this._modelMatrix, this._modelMatrix, this.rotateX * (Math.PI / 180));
         this.matrix4RotateY(this._modelMatrix, this._modelMatrix, this.rotateY * (Math.PI / 180));
         this.matrix4RotateZ(this._modelMatrix, this._modelMatrix, this.rotateZ * (Math.PI / 180));
-       
         //最后平移
         this.mat4Translate$2(this._modelMatrix, this._modelMatrix, [this.x, this.y, this.z]);
-
+        glMatrix.mat4.multiply(this._modelMatrix,this._worldMatrix,this._modelMatrix);
     }
     /**
      * 模型世界矩阵

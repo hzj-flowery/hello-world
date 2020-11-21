@@ -9,7 +9,6 @@ import FirstSprite from "../2d/FirstSprite";
 import TwoSprite from "../2d/TwoSprite";
 import GameMainCamera from "../camera/GameMainCamera";
 import enums from "../camera/enums";
-import { SYMacro } from "../../platform/SYMacro";
 import { RenderTexture } from "../assets/RenderTexture";
 
 export default class Scene2D extends Scene {
