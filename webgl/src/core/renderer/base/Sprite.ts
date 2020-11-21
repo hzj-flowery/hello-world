@@ -52,6 +52,7 @@ import { Texture2D } from "./Texture2D";
 import TextureCube from "./TextureCube";
 import TextureCustom from "./TextureCustom";
 import Device from "../../../Device";
+import RenderData from "./RenderData";
 
 /**
  * 缓冲区中的数据就是一个二进制流，一般我们会按照字节处理，八个二进制为一个字节，又称字节流
@@ -64,7 +65,7 @@ import Device from "../../../Device";
  * Float32Array：每个数据占4个字节
  */
 abstract class glBaseBuffer {
-    constructor(gl, data: Array<number>, itemSize: number) {
+    constructor(gl:WebGLRenderingContext, data: Array<number>, itemSize: number) {
         this._glID = gl.createBuffer();
         this.sourceData = data;
         this.itemSize = itemSize;
@@ -75,7 +76,7 @@ abstract class glBaseBuffer {
     itemSize: number = 0;     //在缓冲区中，一个单位数据有几个数据组成
     itemNums: number = 0;     //在缓冲区中，单位数据的数目
     itemBytes: number = 2;    //每个数据的存储字节数
-    _glID: any;//显存存储数据的地址
+    _glID: WebGLBuffer;//显存存储数据的地址
     protected gl: WebGLRenderingContext;
     
     //上传数据到GPU显存
@@ -303,53 +304,35 @@ export namespace SY {
             if (this._texture && this._texture.loaded == false) {
                 return;
             }
-            //激活shader
-            this._shader.active();
-            var out = this._glMatrix.vec3.create();
-            //给shader中的变量赋值
-            this._shader.setUseLight([0.0, 1, 1.0, 1], this._glMatrix.vec3.normalize(out, [8, 5, -10]));
+            var rData = new RenderData();
+            rData._cameraType = this._cameraType;//默认情况下是透视投影
+            rData._shader = this._shader;
+            rData._vertGLID = this.getGLID(SY.GLID_TYPE.VERTEX);
+            rData._vertItemSize = this.getBufferItemSize(SY.GLID_TYPE.VERTEX);
+            rData._vertItemNums = this.getBuffer(SY.GLID_TYPE.VERTEX).itemNums;
+            rData._indexGLID = this.getGLID(SY.GLID_TYPE.INDEX);
+            if(rData._indexGLID!=-1)
+            {
+                rData._indexItemSize = this.getBuffer(SY.GLID_TYPE.INDEX).itemSize;
+                rData._indexItemNums = this.getBuffer(SY.GLID_TYPE.INDEX).itemNums;
+            }
+            rData._uvGLID = this.getGLID(SY.GLID_TYPE.UV);
+            rData._uvItemSize = this.getBufferItemSize(SY.GLID_TYPE.UV);
+            rData._normalGLID = this.getGLID(SY.GLID_TYPE.NORMAL);
+            rData._normalItemSize = this.getBufferItemSize(SY.GLID_TYPE.NORMAL);
+            rData._lightColor = [0.0, 1, 1.0, 1];
+            rData._modelMatrix = this._modelMatrix;
+            rData._time = time;
+            rData._lightDirection = this._glMatrix.vec3.normalize(null, [8, 5, -10]);
             if (this._shader.USE_SKYBOX) {
-                var resu = (this).updateCamera(time)
-                this._shader.setUseSkyBox(resu);
+                rData._u_pvm_matrix_inverse = (this).updateCamera(time);
             }
-            var newMV = this._glMatrix.mat4.create();
-            var v = GameMainCamera.instance.getCamera(this._cameraType).getModelViewMatrix();
-            var m = this._modelMatrix;
-            this._glMatrix.mat4.mul(newMV, v, m)
-            this._shader.setUseModelViewMatrix(newMV);
-            var pMatix = GameMainCamera.instance.getCamera(this._cameraType).getProjectionMatrix();
-            this._shader.setUseProjectionMatrix(pMatix);
-            this._shader.setUseVertexAttribPointerForVertex(this.getGLID(SY.GLID_TYPE.VERTEX), this.getBufferItemSize(SY.GLID_TYPE.VERTEX));
-            this._shader.setUseVertexAttribPointerForUV(this.getGLID(SY.GLID_TYPE.UV), this.getBufferItemSize(SY.GLID_TYPE.UV));
-            this._shader.setUseVertexAttriPointerForNormal(this.getGLID(SY.GLID_TYPE.NORMAL), this.getBufferItemSize(SY.GLID_TYPE.NORMAL));
-
             if (this._texture && this._texture._glID && !this._shader.USE_SKYBOX) {
-                this._shader.setUseTexture(this.getGLID(SY.GLID_TYPE.TEXTURE_2D));
+                rData._textureGLIDArray.push(this.getGLID(SY.GLID_TYPE.TEXTURE_2D));
             }
-            this.startVertexShader();
-
-
-            //解除缓冲区对于目标纹理的绑定
-            this.gl.bindTexture(this.gl.TEXTURE_2D, null);
-            this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, null);
-            this.gl.bindBuffer(this.gl.ARRAY_BUFFER, null);
-            this._shader.disableVertexAttribArray();
+            rData._glPrimitiveType = this._glPrimitiveType;
+            Device.Instance.drawSY(rData);
         }
-
-        //启动顶点着色器
-        protected startVertexShader(): void {
-            var indexglID = this.getGLID(SY.GLID_TYPE.INDEX);
-            if (indexglID != -1) {
-                this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, indexglID);
-                this.gl.drawElements(this._glPrimitiveType, this.getBuffer(SY.GLID_TYPE.INDEX).itemNums, this.gl.UNSIGNED_SHORT, 0);
-            }
-            else {
-                var points = this.getBuffer(SY.GLID_TYPE.VERTEX);
-                this.gl.drawArrays(this._glPrimitiveType, 0, points.itemNums);
-            }
-
-        }
-        
         public get texture():Texture{
             return this._texture;
         }

@@ -29,8 +29,8 @@ export  class Texture {
     /**
      * @param {WebGLContext}
      */
-    protected _gl: any;
-    public _glID: any;
+    protected _gl: WebGLRenderingContext;
+    public _glID: WebGLTexture;
 
     protected _width: number;
     protected _height: number;

@@ -1,8 +1,11 @@
 
 import browserify = require("browserify");
 import { updateSourceFileNode } from "typescript";
+import { glMatrix } from "./core/Matrix";
+import RenderData from "./core/renderer/base/RenderData";
 import Scene2D from "./core/renderer/base/Scene2D";
 import Scene3D from "./core/renderer/base/Scene3D";
+import GameMainCamera from "./core/renderer/camera/GameMainCamera";
 import FrameBuffer from "./core/renderer/gfx/FrameBuffer";
 import { GLapi } from "./core/renderer/gfx/GLapi";
 
@@ -67,6 +70,12 @@ export default class Device {
 
 
         this.initExt();
+        this.initMatrix();
+    }
+    
+    //初始化矩阵
+    private initMatrix():void{
+        this._temp_model_view_matrix = glMatrix.mat4.identity(null);
     }
     public getWebglContext(): WebGLRenderingContext {
         return (this.canvas as any).getContext("webgl")
@@ -141,11 +150,47 @@ export default class Device {
         this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, null);
         this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
         scene3D.readyDraw(time);
-        // scene2D.readyDraw(time);
+        scene2D.readyDraw(time);
         if (this._isCapture) {
             this._isCapture = false;
             this.capture();
         }
+    }
+    
+    private _temp_model_view_matrix;//视口模型矩阵
+    public drawSY(rData:RenderData):void{
+          //激活shader
+          rData._shader.active();
+          //给shader中的变量赋值
+          rData._shader.setUseLight(rData._lightColor,rData._lightDirection);
+          if (rData._u_pvm_matrix_inverse) {
+              rData._shader.setUseSkyBox(rData._u_pvm_matrix_inverse);
+          }
+          var v = GameMainCamera.instance.getCamera(rData._cameraType).getModelViewMatrix();
+          var m = rData._modelMatrix; 
+          glMatrix.mat4.mul(this._temp_model_view_matrix,v, m)
+          rData._shader.setUseModelViewMatrix(this._temp_model_view_matrix);
+          var pMatix = GameMainCamera.instance.getCamera(rData._cameraType).getProjectionMatrix();
+          rData._shader.setUseProjectionMatrix(pMatix);
+          rData._shader.setUseVertexAttribPointerForVertex(rData._vertGLID, rData._vertItemSize);
+          rData._shader.setUseVertexAttribPointerForUV(rData._uvGLID,rData._uvItemSize);
+          rData._shader.setUseVertexAttriPointerForNormal(rData._normalGLID,rData._normalItemSize);
+          if (rData._textureGLIDArray.length>0) {
+              rData._shader.setUseTexture(rData._textureGLIDArray[0]);
+          }
+          var indexglID = rData._indexGLID;
+            if (indexglID != -1) {
+                this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, indexglID);
+                this.gl.drawElements(rData._glPrimitiveType, rData._indexItemNums, this.gl.UNSIGNED_SHORT, 0);
+            }
+            else {
+                this.gl.drawArrays(rData._glPrimitiveType, 0, rData._vertItemNums);
+            }
+             //解除缓冲区对于目标纹理的绑定
+             this.gl.bindTexture(this.gl.TEXTURE_2D, null);
+             this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, null);
+             this.gl.bindBuffer(this.gl.ARRAY_BUFFER, null);
+             rData._shader.disableVertexAttribArray();
     }
 
 

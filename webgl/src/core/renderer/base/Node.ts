@@ -35,8 +35,8 @@ export class Node extends Ref {
      * worldMatrix是父节点传过来的矩阵，它是一个衔接矩阵，真正起作用的modelMatrix矩阵
      * 当前节点各种旋转平移缩放都只记录在modelMatrix中，最后modelMatrix和worldMatrix相乘,就可以得到一个模型世界矩阵，再赋给modelMatrix
      */
-    protected _modelMatrix: any[]|Float32Array; //模型世界矩阵
-    protected _worldMatrix: any[]|Float32Array;//父节点矩阵
+    protected _modelMatrix: Float32Array; //模型世界矩阵
+    protected _worldMatrix: Float32Array;//父节点矩阵
     private _parent: Node;//父亲
     private _children: Array<Node>;//孩子节点
 

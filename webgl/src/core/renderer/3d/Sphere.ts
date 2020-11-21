@@ -93,11 +93,9 @@ export default class Sphere extends SY.Sprite {
 
 
         var data = this.drawQiu02(1, 18);
-        console.log("gagag-----",data);
         this.createVertexsBuffer(data,3);
         this.setShader(vertextBaseCode, fragBaseCode);
         this._glPrimitiveType = this.gl.LINE_STRIP;
-        console.log("this._glPrimitiveType------",this._glPrimitiveType);
     }
 
     public readyDraw(time){
@@ -105,18 +103,4 @@ export default class Sphere extends SY.Sprite {
         super.readyDraw(time);
     }
 
-    
-    //启动顶点着色器
-    protected startVertexShader(): void {
-        var indexglID = this.getGLID(SY.GLID_TYPE.INDEX);
-        if (indexglID != -1) {
-            this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, indexglID);
-            this.gl.drawElements(this._glPrimitiveType, this.getBuffer(SY.GLID_TYPE.INDEX).itemNums, this.gl.UNSIGNED_SHORT, 0);
-        }
-        else {
-            var points = this.getBuffer(SY.GLID_TYPE.VERTEX);
-            this.gl.drawArrays(this._glPrimitiveType, 0, points.itemNums);
-        }
-
-    }
 }

@@ -75,5 +75,6 @@ LoaderManager.instance.loadData(arr,null,function(){
     CameraTest.run();
     // RobartTest.run();
     // ObjTest.run();
+    // Stage.run();
     
 })
