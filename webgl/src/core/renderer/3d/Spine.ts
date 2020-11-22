@@ -303,11 +303,9 @@ class skeleton_MeshRenderer {
         this.gl.useProgram(this.meshProgramInfo.spGlID);
         for (const primitive of this.mesh.primitives) {
             G_ShaderFactory.setBuffersAndAttributes(this.meshProgramInfo.attrSetters, primitive.bufferInfo);
-            G_ShaderFactory.setUniforms(this.meshProgramInfo.uniSetters, {
-                u_projection: projection,
-                u_view: view,
-                u_world: node.worldMatrix,
-            });
+            G_ShaderFactory.setUniforms(this.meshProgramInfo.uniSetters,{u_projection: projection});
+            G_ShaderFactory.setUniforms(this.meshProgramInfo.uniSetters,{u_view: view});
+            G_ShaderFactory.setUniforms(this.meshProgramInfo.uniSetters,{u_world: node.worldMatrix});
             G_ShaderFactory.setUniforms(this.meshProgramInfo.uniSetters, primitive.material.uniforms);
             G_ShaderFactory.setUniforms(this.meshProgramInfo.uniSetters, sharedUniforms);
             G_ShaderFactory.drawBufferInfo(primitive.bufferInfo);
@@ -599,17 +597,14 @@ export default class Spine extends SY.Sprite {
         this._glMatrix.mat4.mul(this._modelMatrix,this._modelMatrix,this.spineMatrix);
     }
     private renderDrawables(node: skeleton_Node) {
-
-      
-
         var newMV = this._glMatrix.mat4.create();
         var newSpM = this._glMatrix.mat4.create();
         var v = GameMainCamera.instance.getCamera(this._cameraType).getModelViewMatrix();
+        var viewMatrix = glMatrix.mat4.invert(null,v);
         this._glMatrix.mat4.mul(newSpM,this._modelMatrix,this.spineMatrix);
         var m = newSpM;
-        this._glMatrix.mat4.mul(newMV, v, m);
+        this._glMatrix.mat4.mul(newMV,viewMatrix, m);
         var pMatix = GameMainCamera.instance.getCamera(this._cameraType).getProjectionMatrix();
-
         var projection = pMatix;
         var view = newMV;
         //渲染网格

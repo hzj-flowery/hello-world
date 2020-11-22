@@ -44,7 +44,6 @@ console.log(z);
   * 现阶段 核心渲染计算都要放在此类中
   */
 import { Shader } from "../shader/Shader";
-import GameMainCamera from "../camera/GameMainCamera";
 import { glprimitive_type } from "../gfx/GLEnums";
 import { Node } from "./Node";
 import { Texture } from "./Texture";
@@ -52,6 +51,7 @@ import { Texture2D } from "./Texture2D";
 import TextureCube from "./TextureCube";
 import TextureCustom from "./TextureCustom";
 import Device from "../../../Device";
+import { RenderData } from "./RenderData";
 
 /**
  * 缓冲区中的数据就是一个二进制流，一般我们会按照字节处理，八个二进制为一个字节，又称字节流
@@ -64,7 +64,7 @@ import Device from "../../../Device";
  * Float32Array：每个数据占4个字节
  */
 abstract class glBaseBuffer {
-    constructor(gl, data: Array<number>, itemSize: number) {
+    constructor(gl:WebGLRenderingContext, data: Array<number>, itemSize: number) {
         this._glID = gl.createBuffer();
         this.sourceData = data;
         this.itemSize = itemSize;
@@ -75,7 +75,7 @@ abstract class glBaseBuffer {
     itemSize: number = 0;     //在缓冲区中，一个单位数据有几个数据组成
     itemNums: number = 0;     //在缓冲区中，单位数据的数目
     itemBytes: number = 2;    //每个数据的存储字节数
-    _glID: any;//显存存储数据的地址
+    _glID: WebGLBuffer;//显存存储数据的地址
     protected gl: WebGLRenderingContext;
     
     //上传数据到GPU显存
@@ -180,6 +180,8 @@ export namespace SY {
 
         protected _shader: Shader;
 
+        private _renderData:RenderData;
+
         //参考glprimitive_type
         protected _glPrimitiveType: glprimitive_type;//绘制的类型
 
@@ -190,6 +192,7 @@ export namespace SY {
             super();
             this.gl = gl;
             this._glPrimitiveType = glprimitive_type.TRIANGLE_FAN;
+            this._renderData = new RenderData();
             this.init();
         }
 
@@ -294,7 +297,7 @@ export namespace SY {
         protected updateCamera(time: number): any {
 
         }
-
+       
         /**
          * 
          * @param texture 纹理的GLID
@@ -303,51 +306,34 @@ export namespace SY {
             if (this._texture && this._texture.loaded == false) {
                 return;
             }
-            //激活shader
-            this._shader.active();
-            var out = this._glMatrix.vec3.create();
-            //给shader中的变量赋值
-            this._shader.setUseLight([0.0, 1, 1.0, 1], this._glMatrix.vec3.normalize(out, [8, 5, -10]));
+            this._renderData._cameraType = this._cameraType;//默认情况下是透视投影
+            this._renderData._shader = this._shader;
+            this._renderData._vertGLID = this.getGLID(SY.GLID_TYPE.VERTEX);
+            this._renderData._vertItemSize = this.getBufferItemSize(SY.GLID_TYPE.VERTEX);
+            this._renderData._vertItemNums = this.getBuffer(SY.GLID_TYPE.VERTEX).itemNums;
+            this._renderData._indexGLID = this.getGLID(SY.GLID_TYPE.INDEX);
+            if(this._renderData._indexGLID!=-1)
+            {
+                this._renderData._indexItemSize = this.getBuffer(SY.GLID_TYPE.INDEX).itemSize;
+                this._renderData._indexItemNums = this.getBuffer(SY.GLID_TYPE.INDEX).itemNums;
+            }
+            this._renderData._uvGLID = this.getGLID(SY.GLID_TYPE.UV);
+            this._renderData._uvItemSize = this.getBufferItemSize(SY.GLID_TYPE.UV);
+            this._renderData._normalGLID = this.getGLID(SY.GLID_TYPE.NORMAL);
+            this._renderData._normalItemSize = this.getBufferItemSize(SY.GLID_TYPE.NORMAL);
+            this._renderData._lightColor = [0.0, 1, 1.0, 1];
+            this._renderData._modelMatrix = this._modelMatrix;
+            this._renderData._time = time;
+            this._renderData._lightDirection = this._glMatrix.vec3.normalize(null, [8, 5, -10]);
             if (this._shader.USE_SKYBOX) {
-                var resu = (this).updateCamera(time)
-                this._shader.setUseSkyBox(resu);
+                this._renderData._u_pvm_matrix_inverse = (this).updateCamera(time);
             }
-            var newMV = this._glMatrix.mat4.create();
-            var v = GameMainCamera.instance.getCamera(this._cameraType).getModelViewMatrix();
-            var m = this._modelMatrix;
-            this._glMatrix.mat4.mul(newMV, v, m)
-            this._shader.setUseModelViewMatrix(newMV);
-            var pMatix = GameMainCamera.instance.getCamera(this._cameraType).getProjectionMatrix();
-            this._shader.setUseProjectionMatrix(pMatix);
-            this._shader.setUseVertexAttribPointerForVertex(this.getGLID(SY.GLID_TYPE.VERTEX), this.getBufferItemSize(SY.GLID_TYPE.VERTEX));
-            this._shader.setUseVertexAttribPointerForUV(this.getGLID(SY.GLID_TYPE.UV), this.getBufferItemSize(SY.GLID_TYPE.UV));
-            this._shader.setUseVertexAttriPointerForNormal(this.getGLID(SY.GLID_TYPE.NORMAL), this.getBufferItemSize(SY.GLID_TYPE.NORMAL));
             if (this._texture && this._texture._glID && !this._shader.USE_SKYBOX) {
-                this._shader.setUseTexture(this.getGLID(SY.GLID_TYPE.TEXTURE_2D));
+                this._renderData._textureGLIDArray.push(this.getGLID(SY.GLID_TYPE.TEXTURE_2D));
             }
-            this.startVertexShader();
-            
-            //解除缓冲区对于目标纹理的绑定
-            this.gl.bindTexture(this.gl.TEXTURE_2D, null);
-            this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, null);
-            this.gl.bindBuffer(this.gl.ARRAY_BUFFER, null);
-            this._shader.disableVertexAttribArray();
+            this._renderData._glPrimitiveType = this._glPrimitiveType;
+            Device.Instance.drawSY(this._renderData);
         }
-
-        //启动顶点着色器
-        protected startVertexShader(): void {
-            var indexglID = this.getGLID(SY.GLID_TYPE.INDEX);
-            if (indexglID != -1) {
-                this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, indexglID);
-                this.gl.drawElements(this._glPrimitiveType, this.getBuffer(SY.GLID_TYPE.INDEX).itemNums, this.gl.UNSIGNED_SHORT, 0);
-            }
-            else {
-                var points = this.getBuffer(SY.GLID_TYPE.VERTEX);
-                this.gl.drawArrays(this._glPrimitiveType, 0, points.itemNums);
-            }
-
-        }
-        
         public get texture():Texture{
             return this._texture;
         }

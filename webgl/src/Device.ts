@@ -1,10 +1,12 @@
 
-import browserify = require("browserify");
-import { updateSourceFileNode } from "typescript";
+import { glMatrix } from "./core/Matrix";
+import { RenderData } from "./core/renderer/base/RenderData";
 import Scene2D from "./core/renderer/base/Scene2D";
 import Scene3D from "./core/renderer/base/Scene3D";
+import GameMainCamera from "./core/renderer/camera/GameMainCamera";
 import FrameBuffer from "./core/renderer/gfx/FrameBuffer";
 import { GLapi } from "./core/renderer/gfx/GLapi";
+import { MathUtils } from "./core/utils/MathUtils";
 
 /**
 * _attach
@@ -67,6 +69,14 @@ export default class Device {
 
 
         this.initExt();
+        this.initMatrix();
+    }
+
+    //初始化矩阵
+    private initMatrix(): void {
+        this._temp_model_view_matrix = glMatrix.mat4.identity(null);
+        this._sceneCameraMatrix = glMatrix.mat4.identity(null);
+        this._sceneCameraProjectMatrix = glMatrix.mat4.identity(null);
     }
     public getWebglContext(): WebGLRenderingContext {
         return (this.canvas as any).getContext("webgl")
@@ -132,20 +142,88 @@ export default class Device {
         this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, scene2D.getFrameBuffer());
         this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
         scene3D.readyDraw(time);
-        scene2D.readyDraw(time);
+        // scene2D.readyDraw(time);
 
     }
     //将结果绘制到窗口
     public draw2screen(time: number, scene2D: Scene2D, scene3D: Scene3D): void {
+        this._renderData = [];
+        this.setViewPort({ x: 0, y: 0, w: 0.5, h: 1 });
         this.gl.clearColor(0.8, 0.8, 0.8, 1.0);
         this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, null);
         this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
         scene3D.readyDraw(time);
         // scene2D.readyDraw(time);
+        //提交数据给GPU 立即绘制
+        for(var j = 0;j<this._renderData.length;j++)
+        {
+            this._drawSY(this._renderData[j]);
+        }
         if (this._isCapture) {
             this._isCapture = false;
             this.capture();
         }
+    }
+
+    private _temp_model_view_matrix;//视口模型矩阵
+    private _draw(rData: RenderData,projMatix,cameraMatrix):void{
+          //激活shader
+        rData._shader.active();
+        //给shader中的变量赋值
+        rData._shader.setUseLight(rData._lightColor, rData._lightDirection);
+        if (rData._u_pvm_matrix_inverse) {
+            rData._shader.setUseSkyBox(rData._u_pvm_matrix_inverse);
+        }
+        
+        let viewMatrix = glMatrix.mat4.invert(null,cameraMatrix);
+        glMatrix.mat4.mul(this._temp_model_view_matrix, viewMatrix, rData._modelMatrix)
+        rData._shader.setUseModelViewMatrix(this._temp_model_view_matrix);
+       
+        rData._shader.setUseProjectionMatrix(projMatix);
+        rData._shader.setUseVertexAttribPointerForVertex(rData._vertGLID, rData._vertItemSize);
+        rData._shader.setUseVertexAttribPointerForUV(rData._uvGLID, rData._uvItemSize);
+        rData._shader.setUseVertexAttriPointerForNormal(rData._normalGLID, rData._normalItemSize);
+        if (rData._textureGLIDArray.length > 0) {
+            rData._shader.setUseTexture(rData._textureGLIDArray[0]);
+        }
+        var indexglID = rData._indexGLID;
+        if (indexglID != -1) {
+            this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, indexglID);
+            this.gl.drawElements(rData._glPrimitiveType, rData._indexItemNums, this.gl.UNSIGNED_SHORT, 0);
+        }
+        else {
+            this.gl.drawArrays(rData._glPrimitiveType, 0, rData._vertItemNums);
+        }
+        //解除缓冲区对于目标纹理的绑定
+        this.gl.bindTexture(this.gl.TEXTURE_2D, null);
+        this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, null);
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, null);
+        rData._shader.disableVertexAttribArray();
+    }
+    private _drawSY(rData: RenderData):void{
+        var cameraMatrix = GameMainCamera.instance.getCamera(rData._cameraType).getModelViewMatrix();
+        var projMatix = GameMainCamera.instance.getCamera(rData._cameraType).getProjectionMatrix();
+        this._draw(rData,projMatix,cameraMatrix);
+    }
+    private _renderData:Array<RenderData> = [];//绘制的数据
+    public drawSY(rData: RenderData): void {
+         this._renderData.push(rData);
+    }
+    private _sceneCameraMatrix:Float32Array;
+    private _sceneCameraProjectMatrix:Float32Array;
+     //设置场景相机
+    private setSceneCamera():void{
+        var gl = this.gl;
+        const effectiveWidth = gl.canvas.width / 2;
+        const aspect = effectiveWidth / gl.canvas.height;
+        const near = 1;
+        const far = 2000;
+        glMatrix.mat4.perspective(this._sceneCameraProjectMatrix, MathUtils.degToRad(60), aspect, near, far);
+        // Compute the camera's matrix using look at.
+        const cameraPosition2 = [-600, 100, -400];
+        const target2 = [0, 0, 0];
+        const up2 = [0, 1, 0];
+        glMatrix.mat4.lookAt2(this._sceneCameraMatrix, cameraPosition2, target2, up2);
     }
 
 
@@ -220,7 +298,7 @@ export default class Device {
      * }
      */
     public setViewPort(object: any): void {
-        this.gl.viewport(object.x, object.y, object.w * this.gl.canvas.width, object.h * this.gl.canvas.height);
+        this.gl.viewport(object.x * this.gl.canvas.width, object.y * this.gl.canvas.height, object.w * this.gl.canvas.width, object.h * this.gl.canvas.height);
     }
 
 
@@ -411,7 +489,7 @@ export default class Device {
 
         localStorage.setItem("zm", "nihaoa");
     }
-    
+
     /**
      * 截图
      */

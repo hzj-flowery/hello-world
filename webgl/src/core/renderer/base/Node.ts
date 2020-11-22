@@ -35,8 +35,8 @@ export class Node extends Ref {
      * worldMatrix是父节点传过来的矩阵，它是一个衔接矩阵，真正起作用的modelMatrix矩阵
      * 当前节点各种旋转平移缩放都只记录在modelMatrix中，最后modelMatrix和worldMatrix相乘,就可以得到一个模型世界矩阵，再赋给modelMatrix
      */
-    protected _modelMatrix: any[]|Float32Array; //模型世界矩阵
-    protected _worldMatrix: any[]|Float32Array;//父节点矩阵
+    protected _modelMatrix: Float32Array; //模型世界矩阵
+    protected _worldMatrix: Float32Array;//父节点矩阵
     private _parent: Node;//父亲
     private _children: Array<Node>;//孩子节点
 
@@ -129,18 +129,17 @@ export class Node extends Ref {
       平移变换不改变坐标轴走向，但改变原点位置，两个坐标系原点不再重合
     */
     protected updateMatrixData(): void {
-
-         //先缩放
-         this.mat4Scale$3(this._modelMatrix, this._worldMatrix, [this.scaleX, this.scaleY, this.scaleZ]);
-
+        //初始化模型矩阵
+        glMatrix.mat4.identity(this._modelMatrix);
+        //先缩放
+        this.mat4Scale$3(this._modelMatrix, this._modelMatrix, [this.scaleX, this.scaleY, this.scaleZ]);
         //再旋转
         this.matrix4RotateX(this._modelMatrix, this._modelMatrix, this.rotateX * (Math.PI / 180));
         this.matrix4RotateY(this._modelMatrix, this._modelMatrix, this.rotateY * (Math.PI / 180));
         this.matrix4RotateZ(this._modelMatrix, this._modelMatrix, this.rotateZ * (Math.PI / 180));
-       
         //最后平移
         this.mat4Translate$2(this._modelMatrix, this._modelMatrix, [this.x, this.y, this.z]);
-
+        glMatrix.mat4.multiply(this._modelMatrix,this._worldMatrix,this._modelMatrix);
     }
     /**
      * 模型世界矩阵

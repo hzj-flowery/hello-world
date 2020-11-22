@@ -3704,7 +3704,7 @@ export namespace glMatrix {
      * @return {Matrix4} dst or a new matrix if none provided
      * @memberOf module:webgl-3d-math
      */
-    function lookAt2(dst:Float32Array,cameraPosition, target, up) {
+    function lookAt2(dst,cameraPosition, target, up) {
         dst = dst || new MatType(16);
         var zAxis = [];
         var subR = [];

@@ -60,8 +60,8 @@ export class RenderTexture extends Texture2D {
          * 将窗口的宽高赋值给当前的渲染缓冲区
          * 因为如果我们不设置帧缓冲的话，屏幕就是帧缓冲的指向
          */
-        this.gl_width = gl.viewportWidth;
-        this.gl_height = gl.viewportHeight;
+        this.gl_width = gl.canvas.width;
+        this.gl_height =gl.canvas.height;
         //创建帧缓冲并绑定
         this._frameBuffer = gl.createFramebuffer();
         gl.bindFramebuffer(gl.FRAMEBUFFER, this._frameBuffer);

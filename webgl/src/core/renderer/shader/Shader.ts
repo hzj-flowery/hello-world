@@ -436,7 +436,7 @@ class ShaderFactory {
             }
             else
             {
-                console.log("error  绑定attribute变量失败-----",name);
+                // console.log("error  绑定attribute变量失败-----",name);
             }
         });
 

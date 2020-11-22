@@ -3,6 +3,7 @@ import enums from "./enums";
 import { RenderTexture } from "../assets/RenderTexture";
 import FrameBuffer from "../gfx/FrameBuffer";
 import { Node } from "../base/Node";
+import { glMatrix } from "../../Matrix";
 
 /**
  * 
@@ -136,6 +137,7 @@ export default class Camera extends Node {
         this._center = [0, 0, 0];//看向原点
         this._up = [0, 1, 0];//向上看
         this._eye = [0, 0, 0];//默认看向原点
+        this._footMatrix = glMatrix.mat4.identity(null);
         this.updateCameraMatrix();
     }
 
@@ -158,6 +160,8 @@ export default class Camera extends Node {
     private _eye: Array<number>;
     private _targetTexture: RenderTexture;//目标渲染纹理
     private _framebuffer: FrameBuffer;//渲染buffer
+
+    private _footMatrix:Float32Array;//脚矩阵
     
     /**
      * 弧度
@@ -315,23 +319,27 @@ export default class Camera extends Node {
                 -x, x, -y, y, this._near, this._far
             );
         }
-        var m = this._glMatrix.mat4.create();
-        // 初始化模型视图矩阵
-        this._glMatrix.mat4.identity(m);
-        // //摄像机的位置
-        this._glMatrix.mat4.lookAt(m, this._eye, this._center, this._up);
-
-
-        //有肯能相机被放在了某个物上
-        if (this.parent) {
-            this._glMatrix.mat4.mul(this._worldMatrix, this._worldMatrix, m);
-        }
-        else {
-            this._glMatrix.mat4.copy(this._worldMatrix, m);
-        }
-
         this.updateMatrixData();
     }
+
+    protected updateMatrixData(){
+         //初始化模型矩阵
+         glMatrix.mat4.identity(this._modelMatrix);
+         glMatrix.mat4.identity(this._footMatrix);
+         //先缩放
+         this.mat4Scale$3(this._modelMatrix, this._modelMatrix, [this.scaleX, this.scaleY, this.scaleZ]);
+         //再旋转
+         this.matrix4RotateX(this._modelMatrix, this._modelMatrix, this.rotateX * (Math.PI / 180));
+         this.matrix4RotateY(this._modelMatrix, this._modelMatrix, this.rotateY * (Math.PI / 180));
+         this.matrix4RotateZ(this._modelMatrix, this._modelMatrix, this.rotateZ * (Math.PI / 180));
+         //最后平移
+         this.mat4Translate$2(this._footMatrix, this._footMatrix, [this.x, this.y, this.z]);
+         //
+         glMatrix.mat4.multiply(this._modelMatrix,this._footMatrix,this._modelMatrix);
+         glMatrix.mat4.multiply(this._modelMatrix,this._worldMatrix,this._modelMatrix);
+    }
+
+    
 
     public getInversModelViewMatrix(): any {
         var invers = this._glMatrix.mat4.create();
@@ -354,22 +362,9 @@ export default class Camera extends Node {
         this._eye = eye;
         this._center = center;
         this._up = up;
-        this.updateCameraMatrix();
+        // //摄像机的位置
+        this._glMatrix.mat4.lookAt(this._modelMatrix, this._eye, this._center, this._up);
     }
-    public setUp(x, y, z): void {
-        this._up = [];
-        this._up.push(x);
-        this._up.push(y);
-        this._up.push(z);
-    }
-    public setCenter(x, y, z): void {
-        this._center = [];
-        this._center.push(x);
-        this._center.push(y);
-        this._center.push(z);
-    }
-
-
     /**
      * !#en
      * Destination render texture.

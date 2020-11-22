@@ -14,7 +14,6 @@ import EarthSunTest from "./core/renderer/3d/EarthSunTest";
 import RobartTest from "./core/renderer/3d/RobartTest";
 import CaptureTest from "./core/renderer/3d/CaptureTest";
 import RampTextureTest from "./core/renderer/3d/RampTextureTest";
-import CameraTest from "./core/renderer/3d/CameraTest";
 import ObjTest from "./core/renderer/3d/ObjTest";
 
 
@@ -70,10 +69,11 @@ G_ShaderFactory.init(Device.Instance.gl);
 
 
 LoaderManager.instance.loadData(arr,null,function(){
-    // new RenderFlow().startup();
+    new RenderFlow().startup();
     // RampTextureTest.run();
-    CameraTest.run();
+    // CameraTest.run();
     // RobartTest.run();
     // ObjTest.run();
+    // Stage.run();
     
 })
