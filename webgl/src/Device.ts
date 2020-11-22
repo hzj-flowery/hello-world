@@ -1,8 +1,6 @@
 
-import browserify = require("browserify");
-import { updateSourceFileNode } from "typescript";
 import { glMatrix } from "./core/Matrix";
-import RenderData from "./core/renderer/base/RenderData";
+import { RenderData } from "./core/renderer/base/RenderData";
 import Scene2D from "./core/renderer/base/Scene2D";
 import Scene3D from "./core/renderer/base/Scene3D";
 import GameMainCamera from "./core/renderer/camera/GameMainCamera";
@@ -149,12 +147,18 @@ export default class Device {
     }
     //将结果绘制到窗口
     public draw2screen(time: number, scene2D: Scene2D, scene3D: Scene3D): void {
+        this._renderData = [];
         this.setViewPort({ x: 0, y: 0, w: 0.5, h: 1 });
         this.gl.clearColor(0.8, 0.8, 0.8, 1.0);
         this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, null);
         this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
         scene3D.readyDraw(time);
         // scene2D.readyDraw(time);
+        //提交数据给GPU 立即绘制
+        for(var j = 0;j<this._renderData.length;j++)
+        {
+            this._drawSY(this._renderData[j]);
+        }
         if (this._isCapture) {
             this._isCapture = false;
             this.capture();
@@ -162,20 +166,20 @@ export default class Device {
     }
 
     private _temp_model_view_matrix;//视口模型矩阵
-    public drawSY(rData: RenderData): void {
-        //激活shader
+    private _draw(rData: RenderData,projMatix,cameraMatrix):void{
+          //激活shader
         rData._shader.active();
         //给shader中的变量赋值
         rData._shader.setUseLight(rData._lightColor, rData._lightDirection);
         if (rData._u_pvm_matrix_inverse) {
             rData._shader.setUseSkyBox(rData._u_pvm_matrix_inverse);
         }
-        var cameraMatrix = GameMainCamera.instance.getCamera(rData._cameraType).getModelViewMatrix();
+        
         let viewMatrix = glMatrix.mat4.invert(null,cameraMatrix);
         glMatrix.mat4.mul(this._temp_model_view_matrix, viewMatrix, rData._modelMatrix)
         rData._shader.setUseModelViewMatrix(this._temp_model_view_matrix);
-        var pMatix = GameMainCamera.instance.getCamera(rData._cameraType).getProjectionMatrix();
-        rData._shader.setUseProjectionMatrix(pMatix);
+       
+        rData._shader.setUseProjectionMatrix(projMatix);
         rData._shader.setUseVertexAttribPointerForVertex(rData._vertGLID, rData._vertItemSize);
         rData._shader.setUseVertexAttribPointerForUV(rData._uvGLID, rData._uvItemSize);
         rData._shader.setUseVertexAttriPointerForNormal(rData._normalGLID, rData._normalItemSize);
@@ -196,10 +200,17 @@ export default class Device {
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, null);
         rData._shader.disableVertexAttribArray();
     }
-
+    private _drawSY(rData: RenderData):void{
+        var cameraMatrix = GameMainCamera.instance.getCamera(rData._cameraType).getModelViewMatrix();
+        var projMatix = GameMainCamera.instance.getCamera(rData._cameraType).getProjectionMatrix();
+        this._draw(rData,projMatix,cameraMatrix);
+    }
+    private _renderData:Array<RenderData> = [];//绘制的数据
+    public drawSY(rData: RenderData): void {
+         this._renderData.push(rData);
+    }
     private _sceneCameraMatrix:Float32Array;
     private _sceneCameraProjectMatrix:Float32Array;
-
      //设置场景相机
     private setSceneCamera():void{
         var gl = this.gl;

@@ -51,7 +51,7 @@ import { Texture2D } from "./Texture2D";
 import TextureCube from "./TextureCube";
 import TextureCustom from "./TextureCustom";
 import Device from "../../../Device";
-import RenderData from "./RenderData";
+import { RenderData } from "./RenderData";
 
 /**
  * 缓冲区中的数据就是一个二进制流，一般我们会按照字节处理，八个二进制为一个字节，又称字节流

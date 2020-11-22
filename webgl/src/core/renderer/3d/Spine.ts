@@ -303,11 +303,9 @@ class skeleton_MeshRenderer {
         this.gl.useProgram(this.meshProgramInfo.spGlID);
         for (const primitive of this.mesh.primitives) {
             G_ShaderFactory.setBuffersAndAttributes(this.meshProgramInfo.attrSetters, primitive.bufferInfo);
-            G_ShaderFactory.setUniforms(this.meshProgramInfo.uniSetters, {
-                u_projection: projection,
-                u_view: view,
-                u_world: node.worldMatrix,
-            });
+            G_ShaderFactory.setUniforms(this.meshProgramInfo.uniSetters,{u_projection: projection});
+            G_ShaderFactory.setUniforms(this.meshProgramInfo.uniSetters,{u_view: view});
+            G_ShaderFactory.setUniforms(this.meshProgramInfo.uniSetters,{u_world: node.worldMatrix});
             G_ShaderFactory.setUniforms(this.meshProgramInfo.uniSetters, primitive.material.uniforms);
             G_ShaderFactory.setUniforms(this.meshProgramInfo.uniSetters, sharedUniforms);
             G_ShaderFactory.drawBufferInfo(primitive.bufferInfo);

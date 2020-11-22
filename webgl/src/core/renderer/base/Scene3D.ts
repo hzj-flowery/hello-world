@@ -20,6 +20,7 @@ import { CameraFrustum } from "../camera/CameraFrustum";
 import { glMatrix } from "../../Matrix";
 import { MathUtils } from "../../utils/MathUtils";
 import { CameraModel } from "../3d/CameraTest";
+import Camera from "../camera/Camera";
 
 export default class Scene3D extends Scene {
 
@@ -38,10 +39,8 @@ export default class Scene3D extends Scene {
         super();
     }
     public init(): void {
-
         var gl = Device.Instance.gl;
         this._3dCamera = GameMainCamera.instance.setCamera(enums.PROJ_PERSPECTIVE, gl.canvas.width / gl.canvas.height) as PerspectiveCamera;
-
         this._centerNode = new Node();
         this._centerNode.setPosition(0, 1.1, 0);
         this.addChild(this._centerNode);
@@ -122,6 +121,11 @@ export default class Scene3D extends Scene {
             this._cubeNode.url = "res/wicker.jpg";
             this._tableNode.url = "res/wood.jpg";
         }, 7000)
+    }
+    
+    //获取摄像机
+    public getCamera():Camera{
+        return this._3dCamera;
     }
 
     public readyDraw(time): void {

@@ -4,10 +4,11 @@ import { Shader } from "../shader/Shader";
 /**
  * 定义渲染数据
  */
-export default class RenderData{
+export  class RenderData{
     constructor(){
         this.reset();
     }
+    public _type:number = 1;
     public _cameraType:number;//相机的类型
     public _shader:Shader;//着色器
     public _vertGLID:WebGLBuffer;//顶点buffer的显存地址
@@ -46,4 +47,24 @@ export default class RenderData{
         this._time = 0;
         this._glPrimitiveType = glprimitive_type.TRIANGLE_FAN;
     }
+}
+
+export class SpineData extends RenderData{
+    constructor(){
+        super();
+        this.reset();
+        this._uniformSetters = null;
+        this._attrbufferInfo = null;
+        this._uniformInfors = [];
+        this._projKey = "";
+        this._viewKey = "";
+    }
+
+    public _uniformSetters: { [index: string]: Function };
+    public _attribSetters: { [index: string]: Function };
+    public _attrbufferInfo:any;
+    public _uniformInfors:Array<any>;
+    public _projKey:string;
+    public _viewKey:string;
+
 }
