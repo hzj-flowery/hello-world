@@ -1,5 +1,6 @@
+import { glMatrix } from "../../Matrix";
 import { glprimitive_type } from "../gfx/GLEnums";
-import { Shader } from "../shader/Shader";
+import { Shader, ShaderData } from "../shader/Shader";
 
 /**
  * 定义渲染数据
@@ -49,22 +50,32 @@ export  class RenderData{
     }
 }
 
-export class SpineData extends RenderData{
+export class SpineRenderData extends RenderData{
     constructor(){
         super();
+        this._extraViewLeftMatrix = glMatrix.mat4.identity(null);
+        this._tempMatrix1 = glMatrix.mat4.identity(null);
         this.reset();
-        this._uniformSetters = null;
-        this._attrbufferInfo = null;
+    }
+    public reset(){
+        super.reset();
         this._uniformInfors = [];
+        this._shaderData = null;
+        this._attrbufferInfo = null;
         this._projKey = "";
         this._viewKey = "";
+        this._type = 2;
+        this._glPrimitiveType = glprimitive_type.TRIANGLES;
+        glMatrix.mat4.identity(this._extraViewLeftMatrix);
+        glMatrix.mat4.identity(this._tempMatrix1);
     }
-
-    public _uniformSetters: { [index: string]: Function };
-    public _attribSetters: { [index: string]: Function };
+    public _shaderData:ShaderData;
     public _attrbufferInfo:any;
     public _uniformInfors:Array<any>;
+    public _extraViewLeftMatrix:Float32Array;
+    public _tempMatrix1:Float32Array;
     public _projKey:string;
     public _viewKey:string;
+
 
 }

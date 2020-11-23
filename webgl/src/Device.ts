@@ -1,11 +1,12 @@
 
 import { glMatrix } from "./core/Matrix";
-import { RenderData } from "./core/renderer/base/RenderData";
+import { RenderData, SpineRenderData } from "./core/renderer/base/RenderData";
 import Scene2D from "./core/renderer/base/Scene2D";
 import Scene3D from "./core/renderer/base/Scene3D";
 import GameMainCamera from "./core/renderer/camera/GameMainCamera";
 import FrameBuffer from "./core/renderer/gfx/FrameBuffer";
 import { GLapi } from "./core/renderer/gfx/GLapi";
+import { G_ShaderFactory } from "./core/renderer/shader/Shader";
 import { MathUtils } from "./core/utils/MathUtils";
 
 /**
@@ -157,7 +158,14 @@ export default class Device {
         //提交数据给GPU 立即绘制
         for(var j = 0;j<this._renderData.length;j++)
         {
-            this._drawSY(this._renderData[j]);
+            if(this._renderData[j]._type==1)
+            {
+                this._drawSY(this._renderData[j]);
+            }
+            else if(this._renderData[j]._type==2)
+            {
+                this._drawSpine(this._renderData[j] as SpineRenderData);
+            }
         }
         if (this._isCapture) {
             this._isCapture = false;
@@ -204,6 +212,31 @@ export default class Device {
         var cameraMatrix = GameMainCamera.instance.getCamera(rData._cameraType).getModelViewMatrix();
         var projMatix = GameMainCamera.instance.getCamera(rData._cameraType).getProjectionMatrix();
         this._draw(rData,projMatix,cameraMatrix);
+    }
+
+    private _curGLID = -1;
+    private _drawSpine(sData:SpineRenderData):void{
+        if(this._curGLID != sData._shaderData.spGlID)
+        {
+            this.gl.useProgram(sData._shaderData.spGlID);
+            this._curGLID == sData._shaderData.spGlID;
+        }
+        G_ShaderFactory.setBuffersAndAttributes(sData._shaderData.attrSetters, sData._attrbufferInfo);
+        for(let j = 0;j<sData._uniformInfors.length;j++)
+        {
+            G_ShaderFactory.setUniforms(sData._shaderData.uniSetters,sData._uniformInfors[j]);
+        }
+        var cameraMatrix = GameMainCamera.instance.getCamera(sData._cameraType).getModelViewMatrix();
+        var projMatix = GameMainCamera.instance.getCamera(sData._cameraType).getProjectionMatrix();
+        let viewMatrix = glMatrix.mat4.invert(null,cameraMatrix);
+        let vleft = glMatrix.mat4.multiply(null,viewMatrix,sData._extraViewLeftMatrix)
+        let projData = {};
+        projData[sData._projKey] = projMatix;
+        G_ShaderFactory.setUniforms(sData._shaderData.uniSetters,projData);
+        let viewData = {};
+        viewData[sData._viewKey] =vleft;
+        G_ShaderFactory.setUniforms(sData._shaderData.uniSetters,viewData);
+        G_ShaderFactory.drawBufferInfo(sData._attrbufferInfo,sData._glPrimitiveType);
     }
     private _renderData:Array<RenderData> = [];//绘制的数据
     public drawSY(rData: RenderData): void {
@@ -281,10 +314,6 @@ export default class Device {
         // if (fb._depthStencil) {
         //     _attach(gl, gl.DEPTH_STENCIL_ATTACHMENT, fb._depthStencil);
         // }
-    }
-
-    public draw(sceneData): void {
-
     }
 
     /**
@@ -410,7 +439,7 @@ export default class Device {
     /**
      * 初始化渲染状态
      */
-    _initStates() {
+    private _initStates() {
         const gl = this.gl;
 
         // gl.frontFace(gl.CCW);这一句代码是多余的，webgl默认的就是逆时针为正面
@@ -443,7 +472,7 @@ export default class Device {
         gl.disable(gl.SCISSOR_TEST);
     }
 
-    _initExtensions(extensions) {
+    private _initExtensions(extensions) {
         const gl = this.gl;
         for (let i = 0; i < extensions.length; ++i) {
             let name = extensions[i];

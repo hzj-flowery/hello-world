@@ -1,5 +1,5 @@
 
-import { glvert_attr_semantic, glTEXTURE_UNIT_VALID } from "../gfx/GLEnums";
+import { glvert_attr_semantic, glTEXTURE_UNIT_VALID, glprimitive_type } from "../gfx/GLEnums";
 import { GLapi } from "../gfx/GLapi";
 
 enum ShaderType {
@@ -461,7 +461,7 @@ class ShaderFactory {
         }
     }
     //启动顶点着色器绘制
-    public drawBufferInfo(bufferInfo, primitiveType?, count?, offset?) {
+    public drawBufferInfo(bufferInfo, primitiveType?:glprimitive_type, count?:number, offset?:number) {
         var gl = this._gl;
         const indices = bufferInfo.indices;
         primitiveType = primitiveType === undefined ? gl.TRIANGLES : primitiveType;

@@ -8,6 +8,7 @@ import { SY } from "../base/Sprite";
 import GameMainCamera from "../camera/GameMainCamera";
 import { G_ShaderFactory, ShaderData } from "../shader/Shader";
 import Device from "../../../Device";
+import { SpineRenderData } from "../base/RenderData";
 
 var skinVS =
     'attribute vec4 a_POSITION;' +  //顶点位置
@@ -268,23 +269,24 @@ class skeleton_SkinRenderer {
         this.gl = gl;
         this.skinProgramInfo = G_ShaderFactory.createProgramInfo(skinVS, fs);
     }
-    render(node: skeleton_Node, projection: Float32Array | any[], view: Float32Array | any[], sharedUniforms) {
+    render(node: skeleton_Node,extViewLeftMatrix,sharedUniforms) {
         this.skin.update(node);
-        this.gl.useProgram(this.skinProgramInfo.spGlID);
         for (const primitive of this.mesh.primitives) {
-            G_ShaderFactory.setBuffersAndAttributes(this.skinProgramInfo.attrSetters, primitive.bufferInfo);
-            G_ShaderFactory.setUniforms(this.skinProgramInfo.uniSetters, {
-                u_projection: projection,
-                u_view: view,
+            var renderData = new SpineRenderData();
+            renderData._shaderData = this.skinProgramInfo;
+            renderData._uniformInfors.push({ 
                 u_world: node.worldMatrix,
                 u_texCoord: this.skin._texture._glID,
                 u_jointTexture: this.skin.jointTexture,
                 u_numJoints: this.skin.joints.length,
             });
-
-            G_ShaderFactory.setUniforms(this.skinProgramInfo.uniSetters, primitive.material.uniforms);
-            G_ShaderFactory.setUniforms(this.skinProgramInfo.uniSetters, sharedUniforms);
-            G_ShaderFactory.drawBufferInfo(primitive.bufferInfo);
+            renderData._extraViewLeftMatrix = extViewLeftMatrix;
+            renderData._projKey = "u_projection";
+            renderData._viewKey = "u_view";
+            renderData._uniformInfors.push(primitive.material.uniforms);
+            renderData._uniformInfors.push(sharedUniforms);
+            renderData._attrbufferInfo = primitive.bufferInfo;
+            Device.Instance.drawSY(renderData);
         }
     }
 }
@@ -299,16 +301,18 @@ class skeleton_MeshRenderer {
         this.gl = gl;
         this.meshProgramInfo = G_ShaderFactory.createProgramInfo(meshVS, fs);
     }
-    public render(node: skeleton_Node, projection, view, sharedUniforms) {
-        this.gl.useProgram(this.meshProgramInfo.spGlID);
+    public render(node: skeleton_Node, ext,sharedUniforms) {
         for (const primitive of this.mesh.primitives) {
-            G_ShaderFactory.setBuffersAndAttributes(this.meshProgramInfo.attrSetters, primitive.bufferInfo);
-            G_ShaderFactory.setUniforms(this.meshProgramInfo.uniSetters,{u_projection: projection});
-            G_ShaderFactory.setUniforms(this.meshProgramInfo.uniSetters,{u_view: view});
-            G_ShaderFactory.setUniforms(this.meshProgramInfo.uniSetters,{u_world: node.worldMatrix});
-            G_ShaderFactory.setUniforms(this.meshProgramInfo.uniSetters, primitive.material.uniforms);
-            G_ShaderFactory.setUniforms(this.meshProgramInfo.uniSetters, sharedUniforms);
-            G_ShaderFactory.drawBufferInfo(primitive.bufferInfo);
+            var renderData = new SpineRenderData();
+            renderData._extraViewLeftMatrix = ext;
+            renderData._projKey = "u_projection";
+            renderData._viewKey = "u_view";
+            renderData._shaderData = this.meshProgramInfo;
+            renderData._attrbufferInfo = primitive.bufferInfo;
+            renderData._uniformInfors.push({u_world: node.worldMatrix});
+            renderData._uniformInfors.push(primitive.material.uniforms);
+            renderData._uniformInfors.push(sharedUniforms);
+            Device.Instance.drawSY(renderData);
         }
     }
 }
@@ -597,23 +601,14 @@ export default class Spine extends SY.Sprite {
         this._glMatrix.mat4.mul(this._modelMatrix,this._modelMatrix,this.spineMatrix);
     }
     private renderDrawables(node: skeleton_Node) {
-        var newMV = this._glMatrix.mat4.create();
-        var newSpM = this._glMatrix.mat4.create();
-        var v = GameMainCamera.instance.getCamera(this._cameraType).getModelViewMatrix();
-        var viewMatrix = glMatrix.mat4.invert(null,v);
-        this._glMatrix.mat4.mul(newSpM,this._modelMatrix,this.spineMatrix);
-        var m = newSpM;
-        this._glMatrix.mat4.mul(newMV,viewMatrix, m);
-        var pMatix = GameMainCamera.instance.getCamera(this._cameraType).getProjectionMatrix();
-        var projection = pMatix;
-        var view = newMV;
+        let msMatrix = this._glMatrix.mat4.multiply(null,this._modelMatrix,this.spineMatrix);
         //渲染网格
         for (const drawable of node.mesh_Drawables) {
-            drawable.render(node, projection, view,this.sharedUniforms);
+            drawable.render(node,msMatrix,this.sharedUniforms);
         }
         //渲染皮肤
         for (const drawable of node.skin_Drawables) {
-            drawable.render(node, projection, view, this.sharedUniforms);
+            drawable.render(node,msMatrix,this.sharedUniforms);
         }
     }
 
