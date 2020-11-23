@@ -76,6 +76,4 @@ export class SpineRenderData extends RenderData{
     public _tempMatrix1:Float32Array;
     public _projKey:string;
     public _viewKey:string;
-
-
 }

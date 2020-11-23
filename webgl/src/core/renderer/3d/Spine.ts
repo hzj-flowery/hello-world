@@ -286,7 +286,7 @@ class skeleton_SkinRenderer {
             renderData._uniformInfors.push(primitive.material.uniforms);
             renderData._uniformInfors.push(sharedUniforms);
             renderData._attrbufferInfo = primitive.bufferInfo;
-            Device.Instance.drawSY(renderData);
+            Device.Instance.collectData(renderData);
         }
     }
 }
@@ -312,7 +312,7 @@ class skeleton_MeshRenderer {
             renderData._uniformInfors.push({u_world: node.worldMatrix});
             renderData._uniformInfors.push(primitive.material.uniforms);
             renderData._uniformInfors.push(sharedUniforms);
-            Device.Instance.drawSY(renderData);
+            Device.Instance.collectData(renderData);
         }
     }
 }

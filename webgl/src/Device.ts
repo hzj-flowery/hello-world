@@ -1,5 +1,6 @@
 
 import { glMatrix } from "./core/Matrix";
+import { CameraModel } from "./core/renderer/3d/CameraTest";
 import { RenderData, SpineRenderData } from "./core/renderer/base/RenderData";
 import Scene2D from "./core/renderer/base/Scene2D";
 import Scene3D from "./core/renderer/base/Scene3D";
@@ -67,6 +68,8 @@ export default class Device {
         this._width = canvas.clientWidth;
         this._height = canvas.clientHeight;
         console.log("画布的尺寸----", this._width, this._height);
+
+        this._cameraModel = new CameraModel(this.gl);
 
 
         this.initExt();
@@ -155,26 +158,32 @@ export default class Device {
         this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
         scene3D.readyDraw(time);
         // scene2D.readyDraw(time);
-        //提交数据给GPU 立即绘制
-        for(var j = 0;j<this._renderData.length;j++)
-        {
-            if(this._renderData[j]._type==1)
-            {
-                this._drawSY(this._renderData[j]);
-            }
-            else if(this._renderData[j]._type==2)
-            {
-                this._drawSpine(this._renderData[j] as SpineRenderData);
-            }
-        }
+        this.triggerRender();
+
+        this.setViewPort({ x: 0.5, y: 0, w: 0.5, h: 1 });
+        this.triggerRender(true);
+       
         if (this._isCapture) {
             this._isCapture = false;
             this.capture();
         }
     }
+    private _cameraModel:CameraModel;
+    private triggerRender(isScene:boolean = false){
+
+        if(isScene)
+        {
+            this.setSceneCamera();
+        }
+         //提交数据给GPU 立即绘制
+         for(var j = 0;j<this._renderData.length;j++)
+         {
+            this.draw(this._renderData[j],isScene);
+         }
+    }
 
     private _temp_model_view_matrix;//视口模型矩阵
-    private _draw(rData: RenderData,projMatix,cameraMatrix):void{
+    private _drawSY(rData: RenderData,projMatix:Float32Array,viewMatrix:Float32Array):void{
           //激活shader
         rData._shader.active();
         //给shader中的变量赋值
@@ -182,8 +191,6 @@ export default class Device {
         if (rData._u_pvm_matrix_inverse) {
             rData._shader.setUseSkyBox(rData._u_pvm_matrix_inverse);
         }
-        
-        let viewMatrix = glMatrix.mat4.invert(null,cameraMatrix);
         glMatrix.mat4.mul(this._temp_model_view_matrix, viewMatrix, rData._modelMatrix)
         rData._shader.setUseModelViewMatrix(this._temp_model_view_matrix);
        
@@ -208,14 +215,48 @@ export default class Device {
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, null);
         rData._shader.disableVertexAttribArray();
     }
-    private _drawSY(rData: RenderData):void{
+    private draw(rData: RenderData,isUseScene:boolean=false):void{
+
         var cameraMatrix = GameMainCamera.instance.getCamera(rData._cameraType).getModelViewMatrix();
         var projMatix = GameMainCamera.instance.getCamera(rData._cameraType).getProjectionMatrix();
-        this._draw(rData,projMatix,cameraMatrix);
+        
+
+        
+        if(rData._type==1)
+        {
+            if(isUseScene)
+            {
+                projMatix = this._sceneCameraProjectMatrix;
+                let viewMatrix = glMatrix.mat4.invert(null,this._sceneCameraMatrix);
+                glMatrix.mat4.multiply(viewMatrix,viewMatrix,cameraMatrix);
+                this._drawSY(rData,projMatix,viewMatrix);
+            }
+            else
+            {
+                let viewMatrix = glMatrix.mat4.invert(null,cameraMatrix);
+                this._drawSY(rData,projMatix,viewMatrix);
+            }
+            
+        }
+        else if(rData._type==2)
+        {
+            if(isUseScene)
+            {
+                projMatix = this._sceneCameraProjectMatrix;
+                let viewMatrix = glMatrix.mat4.invert(null,this._sceneCameraMatrix);
+                glMatrix.mat4.multiply(viewMatrix,viewMatrix,cameraMatrix);
+                this._drawSpine(rData as SpineRenderData,projMatix,viewMatrix);
+            }
+            else
+            {
+                let viewMatrix = glMatrix.mat4.invert(null,cameraMatrix);
+                this._drawSpine(rData as SpineRenderData,projMatix,viewMatrix);
+            }
+        }
     }
 
     private _curGLID = -1;
-    private _drawSpine(sData:SpineRenderData):void{
+    private _drawSpine(sData:SpineRenderData,projMatix:Float32Array,viewMatrix:Float32Array):void{
         if(this._curGLID != sData._shaderData.spGlID)
         {
             this.gl.useProgram(sData._shaderData.spGlID);
@@ -226,9 +267,6 @@ export default class Device {
         {
             G_ShaderFactory.setUniforms(sData._shaderData.uniSetters,sData._uniformInfors[j]);
         }
-        var cameraMatrix = GameMainCamera.instance.getCamera(sData._cameraType).getModelViewMatrix();
-        var projMatix = GameMainCamera.instance.getCamera(sData._cameraType).getProjectionMatrix();
-        let viewMatrix = glMatrix.mat4.invert(null,cameraMatrix);
         let vleft = glMatrix.mat4.multiply(null,viewMatrix,sData._extraViewLeftMatrix)
         let projData = {};
         projData[sData._projKey] = projMatix;
@@ -239,7 +277,7 @@ export default class Device {
         G_ShaderFactory.drawBufferInfo(sData._attrbufferInfo,sData._glPrimitiveType);
     }
     private _renderData:Array<RenderData> = [];//绘制的数据
-    public drawSY(rData: RenderData): void {
+    public collectData(rData: RenderData): void {
          this._renderData.push(rData);
     }
     private _sceneCameraMatrix:Float32Array;
@@ -253,7 +291,7 @@ export default class Device {
         const far = 2000;
         glMatrix.mat4.perspective(this._sceneCameraProjectMatrix, MathUtils.degToRad(60), aspect, near, far);
         // Compute the camera's matrix using look at.
-        const cameraPosition2 = [-600, 100, -400];
+        const cameraPosition2 = [-50, 10, 10];
         const target2 = [0, 0, 0];
         const up2 = [0, 1, 0];
         glMatrix.mat4.lookAt2(this._sceneCameraMatrix, cameraPosition2, target2, up2);

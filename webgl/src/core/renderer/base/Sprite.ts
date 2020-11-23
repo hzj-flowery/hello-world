@@ -332,7 +332,7 @@ export namespace SY {
                 this._renderData._textureGLIDArray.push(this.getGLID(SY.GLID_TYPE.TEXTURE_2D));
             }
             this._renderData._glPrimitiveType = this._glPrimitiveType;
-            Device.Instance.drawSY(this._renderData);
+            Device.Instance.collectData(this._renderData);
         }
         public get texture():Texture{
             return this._texture;
