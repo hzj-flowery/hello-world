@@ -22,7 +22,7 @@ export default class GameMainCamera {
     private _2dCamera: OrthoCamera;
     private _3dCamera: PerspectiveCamera;
     private _cameraType: number;
-    public setCamera(type: number, aspect: number, angle: number = 60, near: number = 0.1, far: number = 200): Camera {
+    public setCamera(type: number, aspect: number, angle: number = 60, near: number = 0.1, far: number = 50): Camera {
         this._cameraType = type;
         if (type == enums.PROJ_PERSPECTIVE) {
             this._3dCamera = new PerspectiveCamera(angle * Math.PI / 180, aspect, near, far);

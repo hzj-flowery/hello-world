@@ -35,12 +35,33 @@ export default class Scene3D extends Scene {
     private _3dCamera: PerspectiveCamera;
     private _cameraModel: CameraModel;
     private _sphere: Sphere;
+
+    private settings = {
+        posX: 0,
+        posY: 0,
+        posZ: 0,
+        rotation: 150,  // in degrees
+        cam1FieldOfView: 60,  // in degrees
+        cam1PosX: 0,
+        cam1PosY: 0,
+        cam1PosZ: 20,
+        cam1RotX: 0,
+        cam1RotY: 0,
+        cam1RotZ: 0,
+        cam1Near: 30,
+        cam1Far: 500,
+        cam1Ortho: false,
+        cam1OrthoUnits: 120,
+      };
+
+      
     constructor() {
         super();
     }
     public init(): void {
+        this.setUI();
         var gl = Device.Instance.gl;
-        this._3dCamera = GameMainCamera.instance.setCamera(enums.PROJ_PERSPECTIVE, gl.canvas.width / gl.canvas.height) as PerspectiveCamera;
+        
         this._centerNode = new Node();
         this._centerNode.setPosition(0, 1.1, 0);
         this.addChild(this._centerNode);
@@ -97,11 +118,46 @@ export default class Scene3D extends Scene {
         this.addChild(this._skybox);
 
 
-        this._3dCamera.setPosition(0,0,20);
+        
         this.setPosition(0, 0, 0);
 
         this._cameraModel = new CameraModel(gl);
         setTimeout(this.rotateCenterNode.bind(this), 20);
+    }
+    
+    // //初始化UI
+    private setUI():void{
+        var render = this.render.bind(this);
+        var webglLessonsUI = window["webglLessonsUI"]
+        webglLessonsUI.setupUI(document.querySelector('#ui'), this.settings, [
+        { type: 'slider', key: 'rotation', min: 0, max: 360, change: render, precision: 2, step: 0.001, },
+        { type: 'slider', key: 'posX', min: -200, max: 200, change: render, },
+        { type: 'slider', key: 'posY', min: -200, max: 200, change: render, },
+        { type: 'slider', key: 'posZ', min: -200, max: 200, change: render, },
+        { type: 'slider', key: 'cam1FieldOfView', min: 1, max: 170, change: render, },
+        { type: 'slider', key: 'cam1PosX', min: -50, max: 50, change: render, },
+        { type: 'slider', key: 'cam1PosY', min: -50, max: 50, change: render, },
+        { type: 'slider', key: 'cam1PosZ', min: -50, max: 50, change: render, },
+
+        { type: 'slider', key: 'cam1RotX', min: 0, max: 360, change: render, },
+        { type: 'slider', key: 'cam1RotY', min: 0, max: 360, change: render, },
+        { type: 'slider', key: 'cam1RotZ', min: 0, max: 360, change: render, },
+
+        { type: 'slider', key: 'cam1Near', min: 1, max: 3000, change: render, },
+        { type: 'slider', key: 'cam1Far', min: 1, max: 3000, change: render, },
+        { type: 'checkbox', key: 'cam1Ortho', change: render, },
+        { type: 'slider', key: 'cam1OrthoUnits', min: 1, max: 150, change: render, },
+        ]);
+        this.render();
+    }
+    private render():void{
+        let gl = Device.Instance.gl;
+        this._3dCamera = GameMainCamera.instance.setCamera(enums.PROJ_PERSPECTIVE, gl.canvas.width / gl.canvas.height) as PerspectiveCamera;
+        this._3dCamera.setPosition(this.settings.cam1PosX,this.settings.cam1PosY,this.settings.cam1PosZ);
+        this._3dCamera.setRotation(this.settings.cam1RotX,this.settings.cam1RotY,this.settings.cam1RotZ);
+        this.setPosition(this.settings.posX,this.settings.posY,this.settings.posZ);
+        // this._3dCamera.setPosition(0,0,20);
+        // this._3dCamera.setRotation(0,0,0);
     }
     public rotateCenterNode() {
         this._centerNode.rotate(0, 1, 0);

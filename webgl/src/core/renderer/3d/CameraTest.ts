@@ -133,7 +133,7 @@ class Graphic {
   }
 
   private init(): void {
-    let scale = 60;
+    let scale = 6;
     for (var j = 0; j < this._coordinateArrays.position.length; j++) {
       this._coordinateArrays.position[j] = this._coordinateArrays.position[j] * scale;
     }
@@ -300,7 +300,7 @@ export class CameraModel {
   }
 
   // create geometry for a camera
-  private createCameraBufferInfo(scale = 20) {
+  private createCameraBufferInfo(scale = 1) {
     // first let's add a cube. It goes from 1 to 3
     // because cameras look down -Z so we want
     // the camera to start at Z = 0.
