@@ -68,7 +68,7 @@ export default class LightCube extends SY.Sprite {
         this._shader.USE_LIGHT = true;
 
     }
-    public readyDraw(time):void{
-           super.readyDraw(time);
+    public visit(time):void{
+           super.visit(time);
     }
 }

@@ -5,7 +5,7 @@ import { syPrimitives } from "../shader/Primitives";
 import { BufferAttribsData, G_ShaderFactory, ShaderData } from "../shader/Shader";
 
 
-  var baseVertexShader =
+var baseVertexShader =
   'attribute vec4 a_position;' +
   'attribute vec4 a_color;' +
   'uniform mat4 u_worldViewProjection;' +
@@ -59,7 +59,7 @@ class Graphic {
     'gl_FragColor = u_color * v_color;' +
     '}'
 
- 
+
 
 
   private _coordinateArrays = {
@@ -177,19 +177,19 @@ export class CameraModel {
     this.init();
   }
   private gl: WebGLRenderingContext;
-  private _frustumCube:ShaderData;
+  private _frustumCube: ShaderData;
   private _programInfor: ShaderData;
   private _modelBuffer: BufferAttribsData;
   private _clipSpaceBuffer: BufferAttribsData;
-  private _cubeBufferInfo:BufferAttribsData;
+  private _cubeBufferInfo: BufferAttribsData;
   private _coordinate: Graphic;
-  private _worldTemp:Float32Array;
-  private _worldTemp1:Float32Array;
-  private _worldTemp2:Float32Array;
-  private _pvTemp1:Float32Array;
-  private _loacalInvertProj:Float32Array;
-  private _viewMatrix:Float32Array;
-  private _originPos:Array<number>;
+  private _worldTemp: Float32Array;
+  private _worldTemp1: Float32Array;
+  private _worldTemp2: Float32Array;
+  private _pvTemp1: Float32Array;
+  private _loacalInvertProj: Float32Array;
+  private _viewMatrix: Float32Array;
+  private _originPos: Array<number>;
   // uniforms.
   private sharedUniforms = {
   };
@@ -220,7 +220,7 @@ export class CameraModel {
     this._clipSpaceBuffer = this.createClipspaceCubeBufferInfo();
 
     this._coordinate = new Graphic(this.gl);//绘制线
-    
+
     this._worldTemp = glMatrix.mat4.identity(null);
     this._worldTemp1 = glMatrix.mat4.identity(null);
     this._worldTemp2 = glMatrix.mat4.identity(null);
@@ -230,7 +230,7 @@ export class CameraModel {
 
     this._sceneCameraMatrix = glMatrix.mat4.identity(null);
     this._sceneCameraProjectMatrix = glMatrix.mat4.identity(null);
-    this._originPos = [0,0,0];
+    this._originPos = [0, 0, 0];
     var faceColors = [
       [1, 0, 0, 1,],
       [0, 1, 0, 1,],
@@ -333,12 +333,15 @@ export class CameraModel {
   /**
   * 这个函数的目的就是用一个相机去看目标相机
   * 目标相机有两个东西要绘制 一个是相机模型 一个是齐次裁切空间
-  * @param projMatrix 当前摄像机的投影矩阵
-  * @param cameraMatrix 当前摄像机的相机矩阵
   * @param targetProjMatrix 目标摄像机的投影矩阵
   * @param targetCameraMatrix 目标摄像机的相机矩阵
   */
-  public draw(projMatrix, cameraMatrix, targetProjMatrix, targetCameraMatrix) {
+  public draw(targetProjMatrix, targetCameraMatrix) {
+    /**
+     * 本地相机的投影矩阵和节点矩阵
+     */
+    let projMatrix = this._sceneCameraProjectMatrix;
+    let cameraMatrix = this._sceneCameraMatrix;
     var gl = this.gl;
     // draw object to represent first camera
     // Make a view matrix from the camera matrix.
@@ -390,17 +393,17 @@ export class CameraModel {
   // Draw Frustum Cube behind
   private drawFrustumCube(projMatrix, cameraMatrix, targetProjMatrix, targetCameraMatrix) {
 
-     //绘制齐次裁切空间 六个面
-     glMatrix.mat4.invert(this._viewMatrix, cameraMatrix);
-     glMatrix.mat4.multiply(this._pvTemp1,projMatrix,this._viewMatrix);
-     glMatrix.mat4.multiply(this._pvTemp1,this._pvTemp1,targetCameraMatrix);
-     glMatrix.mat4.invert(this._loacalInvertProj,targetProjMatrix);
+    //绘制齐次裁切空间 六个面
+    glMatrix.mat4.invert(this._viewMatrix, cameraMatrix);
+    glMatrix.mat4.multiply(this._pvTemp1, projMatrix, this._viewMatrix);
+    glMatrix.mat4.multiply(this._pvTemp1, this._pvTemp1, targetCameraMatrix);
+    glMatrix.mat4.invert(this._loacalInvertProj, targetProjMatrix);
 
     var gl = this.gl;
     Device.Instance.cullFace(false);
     gl.useProgram(this._frustumCube.spGlID);
     G_ShaderFactory.setBuffersAndAttributes(this._frustumCube.attrSetters, this._cubeBufferInfo);
-    glMatrix.mat4.translation(this._worldTemp, this._originPos[0],this._originPos[1],this._originPos[2]);
+    glMatrix.mat4.translation(this._worldTemp, this._originPos[0], this._originPos[1], this._originPos[2]);
     glMatrix.mat4.multiply(this._worldTemp, this._loacalInvertProj, this._worldTemp);
     glMatrix.mat4.multiply(this._frustumCubeUniforms.u_worldViewProjection, this._pvTemp1, this._worldTemp); //pvm
     G_ShaderFactory.setUniforms(this._frustumCube.uniSetters, this.sharedUniforms);
@@ -409,27 +412,30 @@ export class CameraModel {
     Device.Instance.closeCullFace();
   }
 
-  private _sceneCameraMatrix:Float32Array;
-    private _sceneCameraProjectMatrix:Float32Array;
-     //设置场景相机
-    private setSceneCamera():void{
-        var gl = this.gl;
-        const effectiveWidth = gl.canvas.width / 2;
-        const aspect = effectiveWidth / gl.canvas.height;
-        const near = 1;
-        const far = 2000;
-        glMatrix.mat4.perspective(this._sceneCameraProjectMatrix, MathUtils.degToRad(60), aspect, near, far);
-        // Compute the camera's matrix using look at.
-        const cameraPosition2 = [-70, 10, 10];
-        const target2 = [0, 0, 0];
-        const up2 = [0, 1, 0];
-        glMatrix.mat4.lookAt2(this._sceneCameraMatrix, cameraPosition2, target2, up2);
-    }
-
-    public getSceneCameraMatrix():Float32Array{
-      return this._sceneCameraMatrix;
-    }
-    public getSceneProjectMatrix():Float32Array{
-      return this._sceneCameraProjectMatrix;
-    }
+  private _sceneCameraMatrix: Float32Array;
+  private _sceneCameraProjectMatrix: Float32Array;
+  private _sceneCameraPosition:Array<number> = [-70, 10, 10];
+  public setSceneCameraPosition(pos:Array<number>):void{
+        this._sceneCameraPosition = pos;
+  }
+  //设置场景相机
+  private setSceneCamera(): void {
+    var gl = this.gl;
+    const effectiveWidth = gl.canvas.width / 2;
+    const aspect = effectiveWidth / gl.canvas.height;
+    const near = 1;
+    const far = 2000;
+    glMatrix.mat4.perspective(this._sceneCameraProjectMatrix, MathUtils.degToRad(60), aspect, near, far);
+    // Compute the camera's matrix using look at.
+    const cameraPosition2 = this._sceneCameraPosition;
+    const target2 = [0, 0, 0];
+    const up2 = [0, 1, 0];
+    glMatrix.mat4.lookAt2(this._sceneCameraMatrix, cameraPosition2, target2, up2);
+  }
+  public getSceneCameraMatrix(): Float32Array {
+    return this._sceneCameraMatrix;
+  }
+  public getSceneProjectMatrix(): Float32Array {
+    return this._sceneCameraProjectMatrix;
+  }
 }

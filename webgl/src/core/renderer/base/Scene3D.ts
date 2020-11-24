@@ -182,9 +182,9 @@ export default class Scene3D extends Scene {
         return this._3dCamera;
     }
 
-    public readyDraw(time): void {
+    public visit(time): void {
         // this._3dCamera.rotate(0,0,1);
-        this._3dCamera.readyDraw(time);
-        super.readyDraw(time);
+        this._3dCamera.visit(time);
+        super.visit(time);
     }
 }

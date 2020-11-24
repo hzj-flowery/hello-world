@@ -13,8 +13,8 @@ export default class PerspectiveCamera extends Camera {
         this.setRect(0, 0, 1, 1);
     }
 
-    public readyDraw(time:number):void{
-           super.readyDraw(time);
+    public visit(time:number):void{
+           super.visit(time);
     }
 
     public getVP():Float32Array{

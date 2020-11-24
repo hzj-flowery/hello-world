@@ -38,14 +38,13 @@ class SceneStage {
     // compiles shaders, links program, looks up locations
     this.vertexColorProgramInfo = G_ShaderFactory.createProgramInfo(vertexshader3d, fragmentshader3d);
     this.cameraModel = new CameraModel(this.gl);
+    this.cameraModel.setSceneCameraPosition([-600, 100, -400]);
     // create buffers and fill with data for a 3D 'F'
     this.fBufferInfo = syPrimitives.create3DFBufferInfo();
 
     this._gameCamearMatrix = glMatrix.mat4.identity(null);
     this._gameCameraFatherMatrix = glMatrix.mat4.identity(null);
     this._gameCameraProjectMatrix = glMatrix.mat4.identity(null);
-    this._sceneCameraMatrix = glMatrix.mat4.identity(null);
-    this._sceneCameraProjectMatrix = glMatrix.mat4.identity(null);
     this.initUI();
   }
   
@@ -128,9 +127,6 @@ class SceneStage {
   private _gameCamearMatrix:Float32Array;
   private _gameCameraFatherMatrix:Float32Array;
   private _gameCameraProjectMatrix:Float32Array;
-  private _sceneCameraMatrix:Float32Array;
-  private _sceneCameraProjectMatrix:Float32Array;
-  
   //设置目标相机
   private setGameCamera(){
 
@@ -182,21 +178,6 @@ class SceneStage {
       glMatrix.mat4.multiply(cameraMatrix, this._gameCameraFatherMatrix, cameraMatrix);
     }
   }
-  
-  //设置场景相机
-  private setSceneCamera():void{
-    var gl = this.gl;
-    const effectiveWidth = gl.canvas.width / 2;
-    const aspect = effectiveWidth / gl.canvas.height;
-    const near = 1;
-    const far = 2000;
-    glMatrix.mat4.perspective(this._sceneCameraProjectMatrix, MathUtils.degToRad(60), aspect, near, far);
-    // Compute the camera's matrix using look at.
-    const cameraPosition2 = [-600, 100, -400];
-    const target2 = [0, 0, 0];
-    const up2 = [0, 1, 0];
-    glMatrix.mat4.lookAt2(this._sceneCameraMatrix, cameraPosition2, target2, up2);
-  }
 
   public render() {
     var gl = this.gl;
@@ -234,12 +215,9 @@ class SceneStage {
     gl.scissor(leftWidth, 0, rightWidth, height);
     gl.clearColor(0.8, 0.8, 1, 1);
 
-    //这是一个右侧相机
-    //此处的相机不做任何的改变
-    this.setSceneCamera();
     //绘制相机中的物体
-    this.drawScene(this._sceneCameraProjectMatrix, this._sceneCameraMatrix, worldMatrix);
-    this.cameraModel.draw(this._sceneCameraProjectMatrix, this._sceneCameraMatrix, this._gameCameraProjectMatrix, this._gameCamearMatrix);
+    this.drawScene(this.cameraModel.getSceneProjectMatrix(), this.cameraModel.getSceneCameraMatrix(), worldMatrix);
+    this.cameraModel.draw(this._gameCameraProjectMatrix, this._gameCamearMatrix);
   }
 }
 

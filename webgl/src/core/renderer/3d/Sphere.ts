@@ -98,9 +98,9 @@ export default class Sphere extends SY.Sprite {
         this._glPrimitiveType = this.gl.LINE_STRIP;
     }
 
-    public readyDraw(time){
+    public visit(time){
         // this.rotate(0.5,0.5,0.5);
-        super.readyDraw(time);
+        super.visit(time);
     }
 
 }

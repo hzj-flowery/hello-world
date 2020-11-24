@@ -142,56 +142,60 @@ export default class Device {
      * 将结果绘制到UI上
      */
     public drawToUI(time: number, scene2D: Scene2D, scene3D: Scene3D): void {
-        this.gl.clearColor(0.50, 0.50, 0.50, 1.0);
-        this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, scene2D.getFrameBuffer());
-        this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
-        scene3D.readyDraw(time);
-        // scene2D.readyDraw(time);
-
+        this.onBeforeRender();
+        this._commitRenderState([0.5,0.5,0.5,1.0],scene2D.getFrameBuffer());
+        scene3D.visit(time);
+        scene2D.visit(time);
+        this.triggerRender();
+        this.onAfterRender();
     }
     //将结果绘制到窗口
     public draw2screen(time: number, scene2D: Scene2D, scene3D: Scene3D): void {
-        
-       
-        this._renderData = [];
-
-        let gl = this.gl;
-        gl.enable(gl.CULL_FACE);
-        gl.enable(gl.DEPTH_TEST);
-        gl.enable(gl.SCISSOR_TEST);
-
-        this.setViewPort({ x: 0, y: 0, w: 0.5, h: 1 });
-        gl.clearColor(0.8, 0.8, 0.8, 1.0);
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-        scene3D.readyDraw(time);
-        // scene2D.readyDraw(time);
+        this.onBeforeRender();
+        this._commitRenderState([0.5,0.5,0.5,1.0],null);
+        scene3D.visit(time);
+        scene2D.visit(time);
         this.triggerRender();
 
-        this.setViewPort({ x: 0.5, y: 0, w: 0.5, h: 1 });
-        this.triggerRender(true);
+        // this.setViewPort({ x: 0.5, y: 0, w: 0.5, h: 1 });
+        // this.triggerRender(true);
        
         if (this._isCapture) {
             this._isCapture = false;
             this.capture();
         }
+        this.onAfterRender();
+        
+    }
+    //渲染前
+    private onBeforeRender(){
+        this._renderData = [];
+        
+    }
+    //提交渲染状态
+    private _commitRenderState(clearColor:Array<number>,frameBuffer:WebGLFramebuffer,viewPort:Object = { x: 0, y: 0, w:1, h: 1 }):void{
+        let gl = this.gl;
+        gl.enable(gl.CULL_FACE);
+        gl.enable(gl.DEPTH_TEST);
+        gl.enable(gl.SCISSOR_TEST);
+        this.setViewPort(viewPort);
+        gl.clearColor(clearColor[0],clearColor[1],clearColor[2],clearColor[3]);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuffer);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    }
+    //渲染后
+    private onAfterRender(){
         RenderDataPool.return(this._renderData);
     }
     private _cameraModel:CameraModel;
     private triggerRender(isScene:boolean = false){
-         
-
          if(isScene)
          {
             var cameraMatrix = GameMainCamera.instance.getCamera(this._renderData[0]._cameraType).getModelViewMatrix();
             var projMatix = GameMainCamera.instance.getCamera(this._renderData[0]._cameraType).getProjectionMatrix(); 
             if(!this._cameraModel)
             this._cameraModel = new CameraModel(this.gl);
-            this._cameraModel.draw(
-                this._cameraModel.getSceneProjectMatrix(),
-                this._cameraModel.getSceneCameraMatrix(),
-                projMatix,
-                cameraMatrix);
+            this._cameraModel.draw(projMatix,cameraMatrix);
          }
          //提交数据给GPU 立即绘制
          for(var j = 0;j<this._renderData.length;j++)

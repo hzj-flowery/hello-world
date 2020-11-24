@@ -96,7 +96,7 @@ export class Node extends Ref {
     }
 
     //开启绘制
-    public readyDraw(time: number): void {
+    public visit(time: number): void {
         //更新世界节点
         this.updateWorldMatrix();
         //更新当前节点的矩阵数据
@@ -104,7 +104,7 @@ export class Node extends Ref {
         //开始绘制
         this.draw(time);
         for (var j = 0; j < this._children.length; j++) {
-            this._children[j].readyDraw(time);
+            this._children[j].visit(time);
         }
 
     }
