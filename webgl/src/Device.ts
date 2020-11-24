@@ -81,8 +81,6 @@ export default class Device {
     //初始化矩阵
     private initMatrix(): void {
         this._temp_model_view_matrix = glMatrix.mat4.identity(null);
-        this._sceneCameraMatrix = glMatrix.mat4.identity(null);
-        this._sceneCameraProjectMatrix = glMatrix.mat4.identity(null);
     }
     public getWebglContext(): WebGLRenderingContext {
         return (this.canvas as any).getContext("webgl")
@@ -181,16 +179,7 @@ export default class Device {
     }
     private _cameraModel:CameraModel;
     private triggerRender(isScene:boolean = false){
-
-        if(isScene)
-        {
-            this.setSceneCamera();
-        }
-         //提交数据给GPU 立即绘制
-         for(var j = 0;j<this._renderData.length;j++)
-         {
-            this.draw(this._renderData[j],isScene);
-         }
+         
 
          if(isScene)
          {
@@ -198,8 +187,16 @@ export default class Device {
             var projMatix = GameMainCamera.instance.getCamera(this._renderData[0]._cameraType).getProjectionMatrix(); 
             if(!this._cameraModel)
             this._cameraModel = new CameraModel(this.gl);
-            this._cameraModel.draw(this._sceneCameraProjectMatrix,
-                this._sceneCameraMatrix,projMatix,cameraMatrix);
+            this._cameraModel.draw(
+                this._cameraModel.getSceneProjectMatrix(),
+                this._cameraModel.getSceneCameraMatrix(),
+                projMatix,
+                cameraMatrix);
+         }
+         //提交数据给GPU 立即绘制
+         for(var j = 0;j<this._renderData.length;j++)
+         {
+            this.draw(this._renderData[j],isScene);
          }
     }
 
@@ -254,8 +251,8 @@ export default class Device {
         {
             if(isUseScene)
             {
-                projMatix = this._sceneCameraProjectMatrix;
-                glMatrix.mat4.invert(this._temp1Matrix,this._sceneCameraMatrix);
+                projMatix = this._cameraModel.getSceneProjectMatrix();
+                glMatrix.mat4.invert(this._temp1Matrix,this._cameraModel.getSceneCameraMatrix());
                 this._drawSY(rData,projMatix,this._temp1Matrix);
             }
             else
@@ -269,8 +266,8 @@ export default class Device {
         {
             if(isUseScene)
             {
-                projMatix = this._sceneCameraProjectMatrix;
-                glMatrix.mat4.invert(this._temp1Matrix,this._sceneCameraMatrix);
+                projMatix = this._cameraModel.getSceneProjectMatrix();
+                glMatrix.mat4.invert(this._temp1Matrix,this._cameraModel.getSceneCameraMatrix());
                 this._drawSpine(rData as SpineRenderData,projMatix,this._temp1Matrix);
             }
             else
@@ -305,22 +302,7 @@ export default class Device {
     public collectData(rData: RenderData): void {
          this._renderData.push(rData);
     }
-    private _sceneCameraMatrix:Float32Array;
-    private _sceneCameraProjectMatrix:Float32Array;
-     //设置场景相机
-    private setSceneCamera():void{
-        var gl = this.gl;
-        const effectiveWidth = gl.canvas.width / 2;
-        const aspect = effectiveWidth / gl.canvas.height;
-        const near = 1;
-        const far = 2000;
-        glMatrix.mat4.perspective(this._sceneCameraProjectMatrix, MathUtils.degToRad(60), aspect, near, far);
-        // Compute the camera's matrix using look at.
-        const cameraPosition2 = [-70, 10, 10];
-        const target2 = [0, 0, 0];
-        const up2 = [0, 1, 0];
-        glMatrix.mat4.lookAt2(this._sceneCameraMatrix, cameraPosition2, target2, up2);
-    }
+    
 
 
 

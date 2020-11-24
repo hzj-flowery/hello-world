@@ -1,5 +1,6 @@
 import Device from "../../../Device";
 import { glMatrix } from "../../Matrix";
+import { MathUtils } from "../../utils/MathUtils";
 import { syPrimitives } from "../shader/Primitives";
 import { BufferAttribsData, G_ShaderFactory, ShaderData } from "../shader/Shader";
 
@@ -226,6 +227,9 @@ export class CameraModel {
     this._loacalInvertProj = glMatrix.mat4.identity(null);
     this._pvTemp1 = glMatrix.mat4.identity(null);
     this._viewMatrix = glMatrix.mat4.identity(null);
+
+    this._sceneCameraMatrix = glMatrix.mat4.identity(null);
+    this._sceneCameraProjectMatrix = glMatrix.mat4.identity(null);
     this._originPos = [0,0,0];
     var faceColors = [
       [1, 0, 0, 1,],
@@ -246,6 +250,8 @@ export class CameraModel {
     delete cubeArrays.texcoord;
     cubeArrays.color = colorVerts;
     this._cubeBufferInfo = G_ShaderFactory.createBufferInfoFromArrays(cubeArrays);
+
+    this.setSceneCamera();
 
   }
   private createClipspaceCubeBufferInfo() {
@@ -402,4 +408,28 @@ export class CameraModel {
     G_ShaderFactory.drawBufferInfo(this._cubeBufferInfo);
     Device.Instance.closeCullFace();
   }
+
+  private _sceneCameraMatrix:Float32Array;
+    private _sceneCameraProjectMatrix:Float32Array;
+     //设置场景相机
+    private setSceneCamera():void{
+        var gl = this.gl;
+        const effectiveWidth = gl.canvas.width / 2;
+        const aspect = effectiveWidth / gl.canvas.height;
+        const near = 1;
+        const far = 2000;
+        glMatrix.mat4.perspective(this._sceneCameraProjectMatrix, MathUtils.degToRad(60), aspect, near, far);
+        // Compute the camera's matrix using look at.
+        const cameraPosition2 = [-70, 10, 10];
+        const target2 = [0, 0, 0];
+        const up2 = [0, 1, 0];
+        glMatrix.mat4.lookAt2(this._sceneCameraMatrix, cameraPosition2, target2, up2);
+    }
+
+    public getSceneCameraMatrix():Float32Array{
+      return this._sceneCameraMatrix;
+    }
+    public getSceneProjectMatrix():Float32Array{
+      return this._sceneCameraProjectMatrix;
+    }
 }
