@@ -203,6 +203,12 @@ export default class Device {
     }
 
     private _temp_model_view_matrix;//视口模型矩阵
+    /**
+     * 
+     * @param rData 
+     * @param projMatix 投影矩阵
+     * @param viewMatrix 视口矩阵
+     */
     private _drawSY(rData: RenderData,projMatix:Float32Array,viewMatrix:Float32Array):void{
           //激活shader
         rData._shader.active();
@@ -249,7 +255,6 @@ export default class Device {
             {
                 projMatix = this._sceneCameraProjectMatrix;
                 glMatrix.mat4.invert(this._temp1Matrix,this._sceneCameraMatrix);
-                glMatrix.mat4.multiply(this._temp1Matrix,this._temp1Matrix,cameraMatrix);
                 this._drawSY(rData,projMatix,this._temp1Matrix);
             }
             else
@@ -265,7 +270,6 @@ export default class Device {
             {
                 projMatix = this._sceneCameraProjectMatrix;
                 glMatrix.mat4.invert(this._temp1Matrix,this._sceneCameraMatrix);
-                glMatrix.mat4.multiply(this._temp1Matrix,this._temp1Matrix,cameraMatrix);
                 this._drawSpine(rData as SpineRenderData,projMatix,this._temp1Matrix);
             }
             else
@@ -275,7 +279,6 @@ export default class Device {
             }
         }
     }
-
     private _curGLID = -1;
     private _drawSpine(sData:SpineRenderData,projMatix:Float32Array,viewMatrix:Float32Array):void{
         if(this._curGLID != sData._shaderData.spGlID)
