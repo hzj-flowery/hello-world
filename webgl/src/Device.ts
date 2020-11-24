@@ -1,9 +1,9 @@
 
 import { glMatrix } from "./core/Matrix";
-import { CameraModel } from "./core/renderer/3d/CameraTest";
-import { RenderData, SpineRenderData } from "./core/renderer/base/RenderData";
+import { RenderData, RenderDataPool, RenderDataType, SpineRenderData } from "./core/renderer/base/RenderData";
 import Scene2D from "./core/renderer/base/Scene2D";
 import Scene3D from "./core/renderer/base/Scene3D";
+import { CameraModel } from "./core/renderer/camera/CameraModel";
 import GameMainCamera from "./core/renderer/camera/GameMainCamera";
 import FrameBuffer from "./core/renderer/gfx/FrameBuffer";
 import { GLapi } from "./core/renderer/gfx/GLapi";
@@ -177,6 +177,7 @@ export default class Device {
             this._isCapture = false;
             this.capture();
         }
+        RenderDataPool.return(this._renderData);
     }
     private _cameraModel:CameraModel;
     private triggerRender(isScene:boolean = false){
@@ -198,7 +199,7 @@ export default class Device {
             if(!this._cameraModel)
             this._cameraModel = new CameraModel(this.gl);
             this._cameraModel.draw(this._sceneCameraProjectMatrix,
-                this._sceneCameraMatrix,projMatix,cameraMatrix)
+                this._sceneCameraMatrix,projMatix,cameraMatrix);
          }
     }
 

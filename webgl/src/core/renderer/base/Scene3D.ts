@@ -19,7 +19,6 @@ import Spine from "../3d/Spine";
 import { CameraFrustum } from "../camera/CameraFrustum";
 import { glMatrix } from "../../Matrix";
 import { MathUtils } from "../../utils/MathUtils";
-import { CameraModel } from "../3d/CameraTest";
 import Camera from "../camera/Camera";
 
 export default class Scene3D extends Scene {
@@ -33,7 +32,6 @@ export default class Scene3D extends Scene {
     private _customTexture: CustomTextureCube;
     private _centerNode: Node;
     private _3dCamera: PerspectiveCamera;
-    private _cameraModel: CameraModel;
     private _sphere: Sphere;
 
     private settings = {
@@ -121,7 +119,6 @@ export default class Scene3D extends Scene {
         
         this.setPosition(0, 0, 0);
 
-        this._cameraModel = new CameraModel(gl);
         setTimeout(this.rotateCenterNode.bind(this), 20);
     }
     

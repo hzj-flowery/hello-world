@@ -1,15 +1,24 @@
+import { VoidExpression } from "typescript";
 import { glMatrix } from "../../Matrix";
 import { glprimitive_type } from "../gfx/GLEnums";
 import { Shader, ShaderData } from "../shader/Shader";
 
+
+let renderDataId:number = 0;
+export enum RenderDataType{
+    Base = 1,
+    Spine
+}
 /**
  * 定义渲染数据
  */
 export  class RenderData{
     constructor(){
+        this.id = renderDataId++;
         this.reset();
     }
-    public _type:number = 1;
+    public _type:RenderDataType = RenderDataType.Base;
+    public id:number;//每一个渲染数据都一个唯一的id
     public _cameraType:number;//相机的类型
     public _shader:Shader;//着色器
     public _vertGLID:WebGLBuffer;//顶点buffer的显存地址
@@ -29,6 +38,7 @@ export  class RenderData{
     public _modelMatrix:Float32Array;//模型矩阵
     public _u_pvm_matrix_inverse:Float32Array;//
     public _time:number;
+    public _isUse:boolean = false;//使用状态
     public reset():void{
         this._cameraType = 0;//默认情况下是透视投影
         this._shader = null;
@@ -47,6 +57,7 @@ export  class RenderData{
         this._u_pvm_matrix_inverse = null;
         this._time = 0;
         this._glPrimitiveType = glprimitive_type.TRIANGLE_FAN;
+        this._isUse = false;
     }
 }
 
@@ -64,7 +75,7 @@ export class SpineRenderData extends RenderData{
         this._attrbufferInfo = null;
         this._projKey = "";
         this._viewKey = "";
-        this._type = 2;
+        this._type = RenderDataType.Spine;
         this._glPrimitiveType = glprimitive_type.TRIANGLES;
         glMatrix.mat4.identity(this._extraViewLeftMatrix);
         glMatrix.mat4.identity(this._tempMatrix1);
@@ -76,4 +87,46 @@ export class SpineRenderData extends RenderData{
     public _tempMatrix1:Float32Array;
     public _projKey:string;
     public _viewKey:string;
+}
+
+/**
+ * 渲染数据缓存池
+ */
+export class RenderDataPool{
+     private static _pool:Array<RenderData> = [];
+     static get(type:RenderDataType):RenderData{
+            let pool = RenderDataPool._pool;
+            let retItem:RenderData;
+            for(var j = 0;j<pool.length;j++)
+            {
+                let item = pool[j];
+                if(item._type==type&&item._isUse==false)
+                {
+                    retItem =  item;
+                    break;
+                }
+            }
+            
+            switch(type)
+            {
+                case RenderDataType.Base:retItem = new RenderData();pool.push(retItem);break;
+                case RenderDataType.Spine:retItem = new SpineRenderData();pool.push(retItem);break;
+            }
+            retItem._isUse = true;
+            return retItem;
+     }
+     static return(retData:RenderData|Array<RenderData>):void{
+          if(retData instanceof Array)
+          {
+              let arr = retData as Array<RenderData>;
+              for(let j = 0;j<arr.length;j++)
+              {
+                  arr[j].reset();
+              }
+          }
+          else
+          {
+              (retData as RenderData).reset();
+          }
+     }
 }

@@ -8,7 +8,7 @@ import { SY } from "../base/Sprite";
 import GameMainCamera from "../camera/GameMainCamera";
 import { G_ShaderFactory, ShaderData } from "../shader/Shader";
 import Device from "../../../Device";
-import { SpineRenderData } from "../base/RenderData";
+import { RenderDataPool, RenderDataType, SpineRenderData } from "../base/RenderData";
 
 var skinVS =
     'attribute vec4 a_POSITION;' +  //顶点位置
@@ -272,7 +272,7 @@ class skeleton_SkinRenderer {
     render(node: skeleton_Node,extViewLeftMatrix,sharedUniforms) {
         this.skin.update(node);
         for (const primitive of this.mesh.primitives) {
-            var renderData = new SpineRenderData();
+            var renderData = RenderDataPool.get(RenderDataType.Spine) as SpineRenderData;
             renderData._shaderData = this.skinProgramInfo;
             renderData._uniformInfors.push({ 
                 u_world: node.worldMatrix,
@@ -303,7 +303,7 @@ class skeleton_MeshRenderer {
     }
     public render(node: skeleton_Node, ext,sharedUniforms) {
         for (const primitive of this.mesh.primitives) {
-            var renderData = new SpineRenderData();
+            var renderData = RenderDataPool.get(RenderDataType.Spine) as SpineRenderData;
             renderData._extraViewLeftMatrix = ext;
             renderData._projKey = "u_projection";
             renderData._viewKey = "u_view";
