@@ -43,7 +43,7 @@ console.log(z);
  /**
   * 现阶段 核心渲染计算都要放在此类中
   */
-import { Shader } from "../shader/Shader";
+import { BufferAttribsData, G_ShaderFactory, Shader, ShaderData } from "../shader/Shader";
 import { glprimitive_type } from "../gfx/GLEnums";
 import { Node } from "./Node";
 import { Texture } from "./Texture";
@@ -347,7 +347,33 @@ export namespace SY {
     }
 
     export class Sprite extends Node{
-        
+        constructor(){
+            super();
+            
+        }
+        private _attrData:BufferAttribsData;
+        private _uniformsData:Array<any>;
+        private _shaderData:ShaderData;
+        private _renderData:RenderData;
+        protected _cameraType: number = 0;//相机的类型(0表示透视1表示正交)
+        private url:string;//资源路径
+        //参考glprimitive_type
+        protected _glPrimitiveType: glprimitive_type;//绘制的类型
+        private init(): void {
+            this._glPrimitiveType = glprimitive_type.TRIANGLES;
+            this._renderData = RenderDataPool.get(RenderDataType.Normal);
+            this.onInit();
+        }
+        protected onInit(): void {
+
+        }
+        protected draw(time: number): void {
+
+        }
+        //设置shader
+        protected setShader(vert: string, frag: string):void{
+            this._shaderData = G_ShaderFactory.createProgramInfo(vert, frag);
+        }
     }
     
     //2d显示节点

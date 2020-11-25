@@ -108,6 +108,31 @@ function main() {
     drawScene();
   }
 
+  function setCamera(){
+        // Compute the projection matrix
+    var aspect = gl.canvas.width / gl.canvas.height;
+    var zNear = 1;
+    var zFar = 2000;
+    var projectionMatrix = glMatrix.mat4.perspective(null, fieldOfViewRadians, aspect, zNear, zFar);
+
+    // Compute the camera's matrix
+    var cameraPos = [100, 150, 200];
+    var target = [0, 35, 0];
+    var up = [0, 1, 0];
+    var cameraMatrix = glMatrix.mat4.lookAt2(null, cameraPos, target, up);
+
+    // Make a view matrix from the camera matrix.
+    var viewMatrix = glMatrix.mat4.invert(null, cameraMatrix);
+
+    // Compute a view projection matrix
+    var viewProjectionMatrix = glMatrix.mat4.multiply(null, projectionMatrix, viewMatrix);  //pv投影视口矩阵
+    
+    return {
+      viewProjectionMatrix:viewProjectionMatrix,
+      cameraPosition:cameraPos
+    }
+  }
+
   // Draw the scene.
   function drawScene() {
     Device.Instance.resizeCanvasToDisplaySize(gl.canvas);
@@ -123,30 +148,13 @@ function main() {
     // Tell it to use our program (pair of shaders)
     gl.useProgram(programShader.spGlID);
 
-    // Compute the projection matrix
-    var aspect = gl.canvas.width / gl.canvas.height;
-    var zNear = 1;
-    var zFar = 2000;
-    var projectionMatrix = glMatrix.mat4.perspective(null, fieldOfViewRadians, aspect, zNear, zFar);
-
-    // Compute the camera's matrix
-    var camera = [100, 150, 200];
-    var target = [0, 35, 0];
-    var up = [0, 1, 0];
-    var cameraMatrix = glMatrix.mat4.lookAt2(null, camera, target, up);
-
-    // Make a view matrix from the camera matrix.
-    var viewMatrix = glMatrix.mat4.invert(null, cameraMatrix);
-
-    // Compute a view projection matrix
-    var viewProjectionMatrix = glMatrix.mat4.multiply(null, projectionMatrix, viewMatrix);  //pv投影视口矩阵
-
+    let cameraData = setCamera();
     // Draw a F at the origin
     var worldMatrix = glMatrix.mat4.identity(null);
     glMatrix.mat4.rotateY(worldMatrix, worldMatrix, fRotationRadians);
 
     // Multiply the matrices.
-    var worldViewProjectionMatrix = glMatrix.mat4.multiply(null, viewProjectionMatrix, worldMatrix);
+    var worldViewProjectionMatrix = glMatrix.mat4.multiply(null, cameraData.viewProjectionMatrix, worldMatrix);
     var worldInverseMatrix = glMatrix.mat4.invert(null, worldMatrix);
     var worldInverseTransposeMatrix = glMatrix.mat4.identity(null);
     glMatrix.mat4.transpose(worldInverseTransposeMatrix, worldInverseMatrix);
@@ -157,7 +165,7 @@ function main() {
     uniformDatas.u_world = worldMatrix;
     uniformDatas.u_color = [0.2, 1, 0.2, 1];
     uniformDatas.u_lightWorldPosition = [20, 30, 60];
-    uniformDatas.u_viewWorldPosition = camera;
+    uniformDatas.u_viewWorldPosition = cameraData.cameraPosition;
     uniformDatas.u_shininess = shininess;
 
     G_ShaderFactory.setBuffersAndAttributes(programShader.attrSetters, attrBufferData);
