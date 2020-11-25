@@ -51,7 +51,8 @@ import { Texture2D } from "./Texture2D";
 import TextureCube from "./TextureCube";
 import TextureCustom from "./TextureCustom";
 import Device from "../../../Device";
-import { RenderData, RenderDataPool, RenderDataType } from "./RenderData";
+import { NormalRenderData, RenderData, RenderDataPool, RenderDataType } from "./RenderData";
+import LoaderManager from "../../../LoaderManager";
 
 /**
  * 缓冲区中的数据就是一个二进制流，一般我们会按照字节处理，八个二进制为一个字节，又称字节流
@@ -351,24 +352,42 @@ export namespace SY {
             super();
             
         }
-        private _attrData:BufferAttribsData;
-        private _uniformsData:Array<any>;
+        protected _attrData:BufferAttribsData;
+        protected _uniformsData:any;
         private _shaderData:ShaderData;
-        private _renderData:RenderData;
+        private _renderData:NormalRenderData;
         protected _cameraType: number = 0;//相机的类型(0表示透视1表示正交)
-        private url:string;//资源路径
+        private _url:string;//资源路径
         //参考glprimitive_type
         protected _glPrimitiveType: glprimitive_type;//绘制的类型
         private init(): void {
             this._glPrimitiveType = glprimitive_type.TRIANGLES;
-            this._renderData = RenderDataPool.get(RenderDataType.Normal);
+            this._renderData = RenderDataPool.get(RenderDataType.Normal) as NormalRenderData;
             this.onInit();
         }
         protected onInit(): void {
 
         }
-        protected draw(time: number): void {
 
+        public set Url(url){
+              this._url = url;
+              let datas = LoaderManager.instance.getCacheData(url);
+              this.onLoadFinish(datas);
+        }
+        protected onLoadFinish(data:any):void{
+
+        }
+        protected draw(time: number): void {
+            this._renderData._shaderData = this._shaderData;
+            this._renderData._uniformInfors = [];
+            for(let k in this._uniformsData)
+            {
+                this._renderData._uniformInfors.push(this._uniformsData[k]);
+            }
+            this._renderData._projKey = "u_projection";
+            this._renderData._viewKey = "u_view";
+            this._renderData._attrbufferInfo = this._attrData;
+            Device.Instance.collectData(this._renderData);
         }
         //设置shader
         protected setShader(vert: string, frag: string):void{

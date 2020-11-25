@@ -160,12 +160,12 @@ function main() {
     glMatrix.mat4.transpose(worldInverseTransposeMatrix, worldInverseMatrix);
 
 
-    uniformDatas.u_worldViewProjection = worldViewProjectionMatrix;
-    uniformDatas.u_worldInverseTranspose = worldInverseTransposeMatrix;
-    uniformDatas.u_world = worldMatrix;
-    uniformDatas.u_color = [0.2, 1, 0.2, 1];
-    uniformDatas.u_lightWorldPosition = [20, 30, 60];
-    uniformDatas.u_viewWorldPosition = cameraData.cameraPosition;
+    uniformDatas.u_worldViewProjection = worldViewProjectionMatrix;  //投影矩阵 x 视口矩阵 x 世界矩阵
+    uniformDatas.u_worldInverseTranspose = worldInverseTransposeMatrix;//世界矩阵逆矩阵的转置矩阵
+    uniformDatas.u_world = worldMatrix;//世界矩阵
+    uniformDatas.u_color = [0.2, 1, 0.2, 1];//光的颜色
+    uniformDatas.u_lightWorldPosition = [20, 30, 60];//光的位置
+    uniformDatas.u_viewWorldPosition = cameraData.cameraPosition;//摄像机的位置
     uniformDatas.u_shininess = shininess;
 
     G_ShaderFactory.setBuffersAndAttributes(programShader.attrSetters, attrBufferData);

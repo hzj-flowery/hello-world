@@ -1,6 +1,6 @@
 
 import { glMatrix } from "./core/Matrix";
-import { RenderData, RenderDataPool, RenderDataType, SpineRenderData } from "./core/renderer/base/RenderData";
+import { NormalRenderData, RenderData, RenderDataPool, RenderDataType, SpineRenderData } from "./core/renderer/base/RenderData";
 import Scene2D from "./core/renderer/base/Scene2D";
 import Scene3D from "./core/renderer/base/Scene3D";
 import { CameraModel, G_CameraModel } from "./core/renderer/camera/CameraModel";
@@ -207,7 +207,7 @@ export default class Device {
      * @param projMatix 投影矩阵
      * @param viewMatrix 视口矩阵
      */
-    private _drawSY(rData: RenderData,projMatix:Float32Array,viewMatrix:Float32Array):void{
+    private _drawBase(rData: RenderData,projMatix:Float32Array,viewMatrix:Float32Array):void{
           //激活shader
         rData._shader.active();
         //给shader中的变量赋值
@@ -253,14 +253,19 @@ export default class Device {
             {
                 projMatix = G_CameraModel.getSceneProjectMatrix();
                 glMatrix.mat4.invert(this._temp1Matrix,G_CameraModel.getSceneCameraMatrix());
-                this._drawSY(rData,projMatix,this._temp1Matrix);
+                this._drawBase(rData,projMatix,this._temp1Matrix);
             }
             else
             {
                 glMatrix.mat4.invert(this._temp1Matrix,cameraMatrix);
-                this._drawSY(rData,projMatix,this._temp1Matrix);
+                this._drawBase(rData,projMatix,this._temp1Matrix);
             }
             
+        }
+        else if(rData._type==RenderDataType.Normal)
+        {
+            glMatrix.mat4.invert(this._temp1Matrix,cameraMatrix);
+            this._drawNormal(rData as NormalRenderData,projMatix,this._temp1Matrix);
         }
         else if(rData._type==RenderDataType.Spine)
         {
@@ -296,6 +301,12 @@ export default class Device {
         let viewData = {};
         viewData[sData._viewKey] =vleft;
         G_ShaderFactory.setUniforms(sData._shaderData.uniSetters,viewData);
+        G_ShaderFactory.drawBufferInfo(sData._attrbufferInfo,sData._glPrimitiveType);
+    }
+
+    private _drawNormal(sData:NormalRenderData,projMatix:Float32Array,viewMatrix:Float32Array):void{
+        G_ShaderFactory.setBuffersAndAttributes(sData._shaderData.attrSetters, sData._attrbufferInfo);
+        G_ShaderFactory.setUniforms(sData._shaderData.uniSetters, sData._uniformInfors);
         G_ShaderFactory.drawBufferInfo(sData._attrbufferInfo,sData._glPrimitiveType);
     }
     private _renderData:Array<RenderData> = [];//绘制的数据
