@@ -88,7 +88,7 @@ var vs2 =
 
 
 
-export default class SkinMesh extends SY.Sprite{
+export default class SkinMesh extends SY.SpriteBase{
       constructor(gl){
            super(gl);
       }

@@ -538,7 +538,7 @@ class skeleton_Parse{
 }
 
 //骨骼节点
-class Spine extends SY.Sprite {
+class Spine extends SY.SpriteBase {
 
     constructor(gl) {
         super(gl);

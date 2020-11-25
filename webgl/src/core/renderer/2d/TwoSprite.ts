@@ -23,7 +23,7 @@ var fragmentshader3d =
     'gl_FragColor = v_color;' +
     '}'
 
-export default class TwoSprite extends SY.Sprite {
+export default class TwoSprite extends SY.SpriteBase {
     constructor(gl) {
         super(gl);
         this._cameraType = 1;//正交投影

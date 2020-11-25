@@ -164,7 +164,11 @@ export namespace SY {
         TEXTURE_2D, //2D纹理
         TEXTURE_CUBE //立方体纹理
     }
-    export class Sprite extends Node {
+    /**
+     * 这个渲染类可以用于基础研究
+     * 数据生成 绑定  
+     */
+    export class SpriteBase extends Node {
         //节点buffer
         private _vertexsBuffer: VertexsBuffer;
         //索引buffer
@@ -341,9 +345,13 @@ export namespace SY {
             this._texture.destroy();
         }
     }
+
+    export class Sprite extends Node{
+        
+    }
     
     //2d显示节点
-    export class Sprite2D extends SY.Sprite {
+    export class Sprite2D extends SY.SpriteBase {
 
         private _lt: Array<number> = [];//左上
         private _lb: Array<number> = [];//左下

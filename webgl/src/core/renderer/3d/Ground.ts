@@ -24,7 +24,7 @@ var fragBaseCode =
     'gl_FragColor = texture2D(u_texCoord, vTextureCoordinates);' +
     '}'
 
-export default class Ground extends SY.Sprite {
+export default class Ground extends SY.SpriteBase {
     constructor(gl) {
         super(gl);
     }

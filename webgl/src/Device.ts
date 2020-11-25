@@ -3,7 +3,7 @@ import { glMatrix } from "./core/Matrix";
 import { RenderData, RenderDataPool, RenderDataType, SpineRenderData } from "./core/renderer/base/RenderData";
 import Scene2D from "./core/renderer/base/Scene2D";
 import Scene3D from "./core/renderer/base/Scene3D";
-import { CameraModel } from "./core/renderer/camera/CameraModel";
+import { CameraModel, G_CameraModel } from "./core/renderer/camera/CameraModel";
 import GameMainCamera from "./core/renderer/camera/GameMainCamera";
 import FrameBuffer from "./core/renderer/gfx/FrameBuffer";
 import { GLapi } from "./core/renderer/gfx/GLapi";
@@ -152,14 +152,12 @@ export default class Device {
     //将结果绘制到窗口
     public draw2screen(time: number, scene2D: Scene2D, scene3D: Scene3D): void {
         this.onBeforeRender();
-        this._commitRenderState([0.5,0.5,0.5,1.0],null);
+        this._commitRenderState([0.5,0.5,0.5,1.0],null,{ x: 0, y: 0, w:0.5, h: 1 });
         scene3D.visit(time);
         scene2D.visit(time);
         this.triggerRender();
-
-        // this.setViewPort({ x: 0.5, y: 0, w: 0.5, h: 1 });
-        // this.triggerRender(true);
-       
+        this.setViewPort({ x: 0.5, y: 0, w: 0.5, h: 1 });
+        this.triggerRender(true);
         if (this._isCapture) {
             this._isCapture = false;
             this.capture();
@@ -187,15 +185,13 @@ export default class Device {
     private onAfterRender(){
         RenderDataPool.return(this._renderData);
     }
-    private _cameraModel:CameraModel;
     private triggerRender(isScene:boolean = false){
          if(isScene)
          {
             var cameraMatrix = GameMainCamera.instance.getCamera(this._renderData[0]._cameraType).getModelViewMatrix();
             var projMatix = GameMainCamera.instance.getCamera(this._renderData[0]._cameraType).getProjectionMatrix(); 
-            if(!this._cameraModel)
-            this._cameraModel = new CameraModel(this.gl);
-            this._cameraModel.draw(projMatix,cameraMatrix);
+          
+            G_CameraModel.draw(projMatix,cameraMatrix);
          }
          //提交数据给GPU 立即绘制
          for(var j = 0;j<this._renderData.length;j++)
@@ -251,12 +247,12 @@ export default class Device {
         var projMatix = GameMainCamera.instance.getCamera(rData._cameraType).getProjectionMatrix();
 
         glMatrix.mat4.identity(this._temp1Matrix);
-        if(rData._type==1)
+        if(rData._type==RenderDataType.Base)
         {
             if(isUseScene)
             {
-                projMatix = this._cameraModel.getSceneProjectMatrix();
-                glMatrix.mat4.invert(this._temp1Matrix,this._cameraModel.getSceneCameraMatrix());
+                projMatix = G_CameraModel.getSceneProjectMatrix();
+                glMatrix.mat4.invert(this._temp1Matrix,G_CameraModel.getSceneCameraMatrix());
                 this._drawSY(rData,projMatix,this._temp1Matrix);
             }
             else
@@ -266,12 +262,12 @@ export default class Device {
             }
             
         }
-        else if(rData._type==2)
+        else if(rData._type==RenderDataType.Spine)
         {
             if(isUseScene)
             {
-                projMatix = this._cameraModel.getSceneProjectMatrix();
-                glMatrix.mat4.invert(this._temp1Matrix,this._cameraModel.getSceneCameraMatrix());
+                projMatix = G_CameraModel.getSceneProjectMatrix();
+                glMatrix.mat4.invert(this._temp1Matrix,G_CameraModel.getSceneCameraMatrix());
                 this._drawSpine(rData as SpineRenderData,projMatix,this._temp1Matrix);
             }
             else

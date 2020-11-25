@@ -20,7 +20,7 @@ var fragBaseCode =
     '}'
 
 
-export default class Sphere extends SY.Sprite {
+export default class Sphere extends SY.SpriteBase {
 
     private drawQiu02(r, m) {
         var arr = new Array();

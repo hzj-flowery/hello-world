@@ -53,7 +53,7 @@ var solidcolorfragmentshader =
     'gl_FragColor = u_color;' +
     '}'
 
-export default class CameraView extends SY.Sprite {
+export default class CameraView extends SY.SpriteBase {
     constructor(gl) {
         super(gl);
     }

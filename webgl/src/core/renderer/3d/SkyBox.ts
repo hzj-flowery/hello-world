@@ -26,7 +26,7 @@ var fragmentshader3d =
      'gl_FragColor = color;' +
      '}'
 
-export default class SkyBox extends SY.Sprite {
+export default class SkyBox extends SY.SpriteBase {
      constructor(gl) {
           super(gl);
      }

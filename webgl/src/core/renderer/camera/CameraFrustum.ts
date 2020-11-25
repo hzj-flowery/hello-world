@@ -185,7 +185,7 @@ export enum TriggerRenderType{
      Scale
 }
 
-export class CameraFrustum extends SY.Sprite {
+export class CameraFrustum extends SY.SpriteBase {
 
   private zNear = 10;//相机最近能看到的距离
   private zFar = 50;//相机最远能看到的距离

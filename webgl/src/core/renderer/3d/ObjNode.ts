@@ -83,7 +83,7 @@ const fs = `
         effectiveOpacity);
   }
 `
-export default class ObjNode extends SY.Sprite{
+export default class ObjNode extends SY.SpriteBase{
      constructor(gl){
          super(gl);
      }

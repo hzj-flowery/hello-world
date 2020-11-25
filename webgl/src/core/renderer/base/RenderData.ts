@@ -7,6 +7,7 @@ import { Shader, ShaderData } from "../shader/Shader";
 let renderDataId:number = 0;
 export enum RenderDataType{
     Base = 1,
+    Normal,
     Spine
 }
 /**
@@ -15,9 +16,10 @@ export enum RenderDataType{
 export  class RenderData{
     constructor(){
         this.id = renderDataId++;
+        this._type = RenderDataType.Base;
         this.reset();
     }
-    public _type:RenderDataType = RenderDataType.Base;
+    public _type:RenderDataType;
     public id:number;//每一个渲染数据都一个唯一的id
     public _cameraType:number;//相机的类型
     public _shader:Shader;//着色器
@@ -61,12 +63,12 @@ export  class RenderData{
     }
 }
 
-export class SpineRenderData extends RenderData{
+export class NormalRenderData extends RenderData{
     constructor(){
         super();
         this._extraViewLeftMatrix = glMatrix.mat4.identity(null);
         this._tempMatrix1 = glMatrix.mat4.identity(null);
-        this.reset();
+        this._type = RenderDataType.Normal;
     }
     public reset(){
         super.reset();
@@ -75,7 +77,6 @@ export class SpineRenderData extends RenderData{
         this._attrbufferInfo = null;
         this._projKey = "";
         this._viewKey = "";
-        this._type = RenderDataType.Spine;
         this._glPrimitiveType = glprimitive_type.TRIANGLES;
         glMatrix.mat4.identity(this._extraViewLeftMatrix);
         glMatrix.mat4.identity(this._tempMatrix1);
@@ -87,6 +88,13 @@ export class SpineRenderData extends RenderData{
     public _tempMatrix1:Float32Array;
     public _projKey:string;
     public _viewKey:string;
+}
+
+export class SpineRenderData extends NormalRenderData{
+    constructor(){
+        super();
+        this._type = RenderDataType.Spine;
+    }
 }
 
 /**

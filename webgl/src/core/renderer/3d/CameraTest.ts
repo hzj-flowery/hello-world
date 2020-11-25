@@ -3,7 +3,7 @@
 import Device from "../../../Device";
 import { glMatrix } from "../../Matrix";
 import { MathUtils } from "../../utils/MathUtils";
-import { CameraModel } from "../camera/CameraModel";
+import { CameraModel, G_CameraModel } from "../camera/CameraModel";
 import { syPrimitives } from "../shader/Primitives";
 import { BufferAttribsData, G_ShaderFactory, ShaderData } from "../shader/Shader";
 var vertexshader3d =
@@ -25,7 +25,6 @@ var fragmentshader3d =
 class SceneStage {
   private gl: WebGLRenderingContext;
   private settings: any;
-  private cameraModel: CameraModel;
   private vertexColorProgramInfo: ShaderData;
   private fBufferInfo: BufferAttribsData;
   constructor(gl: WebGLRenderingContext) {
@@ -37,8 +36,7 @@ class SceneStage {
     // setup GLSL programs
     // compiles shaders, links program, looks up locations
     this.vertexColorProgramInfo = G_ShaderFactory.createProgramInfo(vertexshader3d, fragmentshader3d);
-    this.cameraModel = new CameraModel(this.gl);
-    this.cameraModel.setSceneCameraPosition([-600, 100, -400]);
+    G_CameraModel.setSceneCameraPosition([-600, 100, -400]);
     // create buffers and fill with data for a 3D 'F'
     this.fBufferInfo = syPrimitives.create3DFBufferInfo();
 
@@ -216,8 +214,8 @@ class SceneStage {
     gl.clearColor(0.8, 0.8, 1, 1);
 
     //绘制相机中的物体
-    this.drawScene(this.cameraModel.getSceneProjectMatrix(), this.cameraModel.getSceneCameraMatrix(), worldMatrix);
-    this.cameraModel.draw(this._gameCameraProjectMatrix, this._gameCamearMatrix);
+    this.drawScene(G_CameraModel.getSceneProjectMatrix(), G_CameraModel.getSceneCameraMatrix(), worldMatrix);
+    G_CameraModel.draw(this._gameCameraProjectMatrix, this._gameCamearMatrix);
   }
 }
 

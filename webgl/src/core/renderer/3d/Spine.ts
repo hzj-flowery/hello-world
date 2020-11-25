@@ -555,7 +555,7 @@ class skeleton_Parse {
 }
 
 //骨骼节点
-export default class Spine extends SY.Sprite {
+export default class Spine extends SY.SpriteBase {
 
     constructor(gl) {
         super(gl);

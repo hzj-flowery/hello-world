@@ -14,7 +14,7 @@ var fragmentshader3d =
     'gl_FragColor = u_color;' +
     '}'
 
-export default class FirstSprite extends SY.Sprite {
+export default class FirstSprite extends SY.SpriteBase {
     constructor(gl) {
         super(gl);
         this._cameraType = 1;
