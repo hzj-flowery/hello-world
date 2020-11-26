@@ -89,6 +89,9 @@ function main() {
 
   var fieldOfViewRadians = MathUtils.degToRad(60);
   var fRotationRadians = 0;
+  var cameraPoX:number = 100;
+  var cameraPoY:number = 150;
+  var cameraPoZ:number = 200;
   var shininess = 150;
 
   drawScene();
@@ -96,11 +99,26 @@ function main() {
   // Setup a ui.
   var webglLessonsUI = window["webglLessonsUI"];
   webglLessonsUI.setupSlider("#fRotation", { value: MathUtils.radToDeg(fRotationRadians), slide: updateRotation, min: -360, max: 360 });
+  webglLessonsUI.setupSlider("#cameraPosX", { value: cameraPoX, slide: upateCamPosX, min: -360, max: 360 });
+  webglLessonsUI.setupSlider("#cameraPosY", { value: cameraPoY, slide: upateCamPosY, min: -360, max: 360 });
+  webglLessonsUI.setupSlider("#cameraPosZ", { value: cameraPoZ, slide: upateCamPosZ, min: -360, max: 360 });
   webglLessonsUI.setupSlider("#shininess", { value: shininess, slide: updateShininess, min: 1, max: 300 });
 
   function updateRotation(event, ui) {
     fRotationRadians = MathUtils.degToRad(ui.value);
     drawScene();
+  }
+  function upateCamPosX(event, ui){
+       cameraPoX = ui.value;
+       drawScene();
+  }
+  function upateCamPosY(event, ui){
+      cameraPoY = ui.value;
+      drawScene();
+  }
+  function upateCamPosZ(event, ui){
+      cameraPoZ = ui.value;
+      drawScene();
   }
 
   function updateShininess(event, ui) {
@@ -116,8 +134,8 @@ function main() {
     var projectionMatrix = glMatrix.mat4.perspective(null, fieldOfViewRadians, aspect, zNear, zFar);
 
     // Compute the camera's matrix
-    var cameraPos = [100, 150, 200];
-    var target = [0, 35, 0];
+    var cameraPos = [cameraPoX,cameraPoY,cameraPoZ];
+    var target = [0, 0, 0];
     var up = [0, 1, 0];
     var cameraMatrix = glMatrix.mat4.lookAt2(null, cameraPos, target, up);
 

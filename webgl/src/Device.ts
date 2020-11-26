@@ -153,7 +153,7 @@ export default class Device {
     //将结果绘制到窗口
     public draw2screen(time: number, scene2D: Scene2D, scene3D: Scene3D): void {
         this.onBeforeRender();
-        this._commitRenderState([0.5, 0.5, 0.5, 1.0], null, { x: 0, y: 0, w: 0.5, h: 1 });
+        this._commitRenderState([0.5, 0.5, 0.5, 1.0], null,{ x: 0, y: 0, w: 0.5, h: 1 });
         scene3D.visit(time);
         scene2D.visit(time);
         this.triggerRender();
@@ -169,7 +169,6 @@ export default class Device {
     //渲染前
     private onBeforeRender() {
         this._renderData = [];
-
     }
     //提交渲染状态
     private _commitRenderState(clearColor: Array<number>, frameBuffer: WebGLFramebuffer, viewPort: Object = { x: 0, y: 0, w: 1, h: 1 }): void {
@@ -240,7 +239,7 @@ export default class Device {
     private _temp2Matrix: Float32Array = glMatrix.mat4.identity(null);
     private _temp3Matrix: Float32Array = glMatrix.mat4.identity(null);
     private draw(rData: RenderData, isUseScene: boolean = false): void {
-        var cameraData = GameMainCamera.instance.getCamera(this._renderData[0]._cameraType).getCameraData();
+        var cameraData = GameMainCamera.instance.getCamera(rData._cameraType).getCameraData();
         glMatrix.mat4.identity(this._temp1Matrix);
         switch (rData._type) {
             case RenderDataType.Base:

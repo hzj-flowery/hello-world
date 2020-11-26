@@ -24,7 +24,7 @@ import { G_CameraModel } from "./core/renderer/camera/CameraModel";
 
 Device.Instance.init();
 G_ShaderFactory.init(Device.Instance.gl);
-G_CameraModel.init(Device.Instance.gl);
+// G_CameraModel.init(Device.Instance.gl);
 //testWebl_Label.run();
 
 //LightTest.run();

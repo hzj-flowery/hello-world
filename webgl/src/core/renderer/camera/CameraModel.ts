@@ -386,8 +386,8 @@ export class CameraModel {
 
         this._coordinate.drawPoint(projMatrix, cameraMatrix, this._worldTemp2);
         this._coordinate.drawPoint(projMatrix, cameraMatrix);
-
-        this.drawFrustumCube(projMatrix, cameraMatrix, targetProjMatrix, targetCameraMatrix);
+        //绘制棱台
+        // this.drawFrustumCube(projMatrix, cameraMatrix, targetProjMatrix, targetCameraMatrix);
     }
 
     // Draw Frustum Cube behind
