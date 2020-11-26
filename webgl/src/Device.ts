@@ -1,6 +1,6 @@
 
 import { glMatrix } from "./core/Matrix";
-import { NormalRenderData, RenderData, RenderDataPool, RenderDataType, SpineRenderData } from "./core/renderer/base/RenderData";
+import { NormalRenderData, RenderData, RenderDataPool, RenderDataType, SpineRenderData } from "./core/renderer/data/RenderData";
 import Scene2D from "./core/renderer/base/Scene2D";
 import Scene3D from "./core/renderer/base/Scene3D";
 import { CameraModel, G_CameraModel } from "./core/renderer/camera/CameraModel";
@@ -9,6 +9,7 @@ import FrameBuffer from "./core/renderer/gfx/FrameBuffer";
 import { GLapi } from "./core/renderer/gfx/GLapi";
 import { G_ShaderFactory } from "./core/renderer/shader/Shader";
 import { MathUtils } from "./core/utils/MathUtils";
+import { CameraData } from "./core/renderer/data/CameraData";
 
 /**
 * _attach
@@ -69,13 +70,13 @@ export default class Device {
         this._height = canvas.clientHeight;
         console.log("画布的尺寸----", this._width, this._height);
 
-       
+
 
 
         this.initExt();
         this.initMatrix();
 
-        
+
     }
 
     //初始化矩阵
@@ -143,7 +144,7 @@ export default class Device {
      */
     public drawToUI(time: number, scene2D: Scene2D, scene3D: Scene3D): void {
         this.onBeforeRender();
-        this._commitRenderState([0.5,0.5,0.5,1.0],scene2D.getFrameBuffer());
+        this._commitRenderState([0.5, 0.5, 0.5, 1.0], scene2D.getFrameBuffer());
         scene3D.visit(time);
         scene2D.visit(time);
         this.triggerRender();
@@ -152,7 +153,7 @@ export default class Device {
     //将结果绘制到窗口
     public draw2screen(time: number, scene2D: Scene2D, scene3D: Scene3D): void {
         this.onBeforeRender();
-        this._commitRenderState([0.5,0.5,0.5,1.0],null,{ x: 0, y: 0, w:0.5, h: 1 });
+        this._commitRenderState([0.5, 0.5, 0.5, 1.0], null, { x: 0, y: 0, w: 0.5, h: 1 });
         scene3D.visit(time);
         scene2D.visit(time);
         this.triggerRender();
@@ -163,41 +164,37 @@ export default class Device {
             this.capture();
         }
         this.onAfterRender();
-        
+
     }
     //渲染前
-    private onBeforeRender(){
+    private onBeforeRender() {
         this._renderData = [];
-        
+
     }
     //提交渲染状态
-    private _commitRenderState(clearColor:Array<number>,frameBuffer:WebGLFramebuffer,viewPort:Object = { x: 0, y: 0, w:1, h: 1 }):void{
+    private _commitRenderState(clearColor: Array<number>, frameBuffer: WebGLFramebuffer, viewPort: Object = { x: 0, y: 0, w: 1, h: 1 }): void {
         let gl = this.gl;
         gl.enable(gl.CULL_FACE);
         gl.enable(gl.DEPTH_TEST);
         gl.enable(gl.SCISSOR_TEST);
         this.setViewPort(viewPort);
-        gl.clearColor(clearColor[0],clearColor[1],clearColor[2],clearColor[3]);
+        gl.clearColor(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
         gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuffer);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     }
     //渲染后
-    private onAfterRender(){
+    private onAfterRender() {
         RenderDataPool.return(this._renderData);
     }
-    private triggerRender(isScene:boolean = false){
-         if(isScene)
-         {
-            var cameraMatrix = GameMainCamera.instance.getCamera(this._renderData[0]._cameraType).getModelViewMatrix();
-            var projMatix = GameMainCamera.instance.getCamera(this._renderData[0]._cameraType).getProjectionMatrix(); 
-          
-            G_CameraModel.draw(projMatix,cameraMatrix);
-         }
-         //提交数据给GPU 立即绘制
-         for(var j = 0;j<this._renderData.length;j++)
-         {
-            this.draw(this._renderData[j],isScene);
-         }
+    private triggerRender(isScene: boolean = false) {
+        if (isScene) {
+            var cameraData = GameMainCamera.instance.getCamera(this._renderData[0]._cameraType).getCameraData();
+            G_CameraModel.draw(cameraData.projectMat, cameraData.modelMat);
+        }
+        //提交数据给GPU 立即绘制
+        for (var j = 0; j < this._renderData.length; j++) {
+            this.draw(this._renderData[j], isScene);
+        }
     }
 
     private _temp_model_view_matrix;//视口模型矩阵
@@ -207,8 +204,8 @@ export default class Device {
      * @param projMatix 投影矩阵
      * @param viewMatrix 视口矩阵
      */
-    private _drawBase(rData: RenderData,projMatix:Float32Array,viewMatrix:Float32Array):void{
-          //激活shader
+    private _drawBase(rData: RenderData, projMatix: Float32Array, viewMatrix: Float32Array): void {
+        //激活shader
         rData._shader.active();
         //给shader中的变量赋值
         rData._shader.setUseLight(rData._lightColor, rData._lightDirection);
@@ -217,7 +214,7 @@ export default class Device {
         }
         glMatrix.mat4.mul(this._temp_model_view_matrix, viewMatrix, rData._modelMatrix)
         rData._shader.setUseModelViewMatrix(this._temp_model_view_matrix);
-       
+
         rData._shader.setUseProjectionMatrix(projMatix);
         rData._shader.setUseVertexAttribPointerForVertex(rData._vertGLID, rData._vertItemSize);
         rData._shader.setUseVertexAttribPointerForUV(rData._uvGLID, rData._uvItemSize);
@@ -239,81 +236,75 @@ export default class Device {
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, null);
         rData._shader.disableVertexAttribArray();
     }
-    private _temp1Matrix:Float32Array = glMatrix.mat4.identity(null);
-    private _temp2Matrix:Float32Array = glMatrix.mat4.identity(null);
-    private _temp3Matrix:Float32Array = glMatrix.mat4.identity(null);
-    private draw(rData: RenderData,isUseScene:boolean=false):void{
-        var cameraMatrix = GameMainCamera.instance.getCamera(rData._cameraType).getModelViewMatrix();
-        var projMatix = GameMainCamera.instance.getCamera(rData._cameraType).getProjectionMatrix();
-
+    private _temp1Matrix: Float32Array = glMatrix.mat4.identity(null);
+    private _temp2Matrix: Float32Array = glMatrix.mat4.identity(null);
+    private _temp3Matrix: Float32Array = glMatrix.mat4.identity(null);
+    private draw(rData: RenderData, isUseScene: boolean = false): void {
+        var cameraData = GameMainCamera.instance.getCamera(this._renderData[0]._cameraType).getCameraData();
         glMatrix.mat4.identity(this._temp1Matrix);
-        if(rData._type==RenderDataType.Base)
-        {
-            if(isUseScene)
-            {
-                projMatix = G_CameraModel.getSceneProjectMatrix();
-                glMatrix.mat4.invert(this._temp1Matrix,G_CameraModel.getSceneCameraMatrix());
-                this._drawBase(rData,projMatix,this._temp1Matrix);
-            }
-            else
-            {
-                glMatrix.mat4.invert(this._temp1Matrix,cameraMatrix);
-                this._drawBase(rData,projMatix,this._temp1Matrix);
-            }
-            
+        switch (rData._type) {
+            case RenderDataType.Base:
+                if (isUseScene) {
+                    let projMatix = G_CameraModel.getSceneProjectMatrix();
+                    glMatrix.mat4.invert(this._temp1Matrix, G_CameraModel.getSceneCameraMatrix());
+                    this._drawBase(rData, projMatix, this._temp1Matrix);
+                }
+                else {
+                    glMatrix.mat4.invert(this._temp1Matrix, cameraData.modelMat);
+                    this._drawBase(rData, cameraData.projectMat, this._temp1Matrix);
+                }; 
+                break;
+            case RenderDataType.Normal:
+                if(isUseScene)
+                this._drawNormal(rData as NormalRenderData,cameraData);
+                break;
+            case RenderDataType.Spine:
+                if (isUseScene) {
+                    let projMatix = G_CameraModel.getSceneProjectMatrix();
+                    glMatrix.mat4.invert(this._temp1Matrix, G_CameraModel.getSceneCameraMatrix());
+                    this._drawSpine(rData as SpineRenderData, projMatix, this._temp1Matrix);
+                }
+                else {
+                    glMatrix.mat4.invert(this._temp1Matrix, cameraData.modelMat);
+                    this._drawSpine(rData as SpineRenderData, cameraData.projectMat, this._temp1Matrix);
+                };
+                break
+
         }
-        else if(rData._type==RenderDataType.Normal)
-        {
-            glMatrix.mat4.invert(this._temp1Matrix,cameraMatrix);
-            this._drawNormal(rData as NormalRenderData,projMatix,this._temp1Matrix);
-        }
-        else if(rData._type==RenderDataType.Spine)
-        {
-            if(isUseScene)
-            {
-                projMatix = G_CameraModel.getSceneProjectMatrix();
-                glMatrix.mat4.invert(this._temp1Matrix,G_CameraModel.getSceneCameraMatrix());
-                this._drawSpine(rData as SpineRenderData,projMatix,this._temp1Matrix);
-            }
-            else
-            {
-                glMatrix.mat4.invert(this._temp1Matrix,cameraMatrix);
-                this._drawSpine(rData as SpineRenderData,projMatix,this._temp1Matrix);
-            }
-        }
+
     }
     private _curGLID = -1;
-    private _drawSpine(sData:SpineRenderData,projMatix:Float32Array,viewMatrix:Float32Array):void{
-        if(this._curGLID != sData._shaderData.spGlID)
-        {
+    private _drawSpine(sData: SpineRenderData, projMatix: Float32Array, viewMatrix: Float32Array): void {
+        if (this._curGLID != sData._shaderData.spGlID) {
             this.gl.useProgram(sData._shaderData.spGlID);
             this._curGLID == sData._shaderData.spGlID;
         }
         G_ShaderFactory.setBuffersAndAttributes(sData._shaderData.attrSetters, sData._attrbufferInfo);
-        for(let j = 0;j<sData._uniformInfors.length;j++)
-        {
-            G_ShaderFactory.setUniforms(sData._shaderData.uniSetters,sData._uniformInfors[j]);
+        for (let j = 0; j < sData._uniformInfors.length; j++) {
+            G_ShaderFactory.setUniforms(sData._shaderData.uniSetters, sData._uniformInfors[j]);
         }
-        let vleft = glMatrix.mat4.multiply(null,viewMatrix,sData._extraViewLeftMatrix)
+        let vleft = glMatrix.mat4.multiply(null, viewMatrix, sData._extraViewLeftMatrix)
         let projData = {};
         projData[sData._projKey] = projMatix;
-        G_ShaderFactory.setUniforms(sData._shaderData.uniSetters,projData);
+        G_ShaderFactory.setUniforms(sData._shaderData.uniSetters, projData);
         let viewData = {};
-        viewData[sData._viewKey] =vleft;
-        G_ShaderFactory.setUniforms(sData._shaderData.uniSetters,viewData);
-        G_ShaderFactory.drawBufferInfo(sData._attrbufferInfo,sData._glPrimitiveType);
+        viewData[sData._viewKey] = vleft;
+        G_ShaderFactory.setUniforms(sData._shaderData.uniSetters, viewData);
+        G_ShaderFactory.drawBufferInfo(sData._attrbufferInfo, sData._glPrimitiveType);
     }
 
-    private _drawNormal(sData:NormalRenderData,projMatix:Float32Array,viewMatrix:Float32Array):void{
+    private _drawNormal(sData: NormalRenderData, cameraData:CameraData): void {
+        this.gl.useProgram(sData._shaderData.spGlID);
+        sData._node.updateUniformsData(cameraData);
         G_ShaderFactory.setBuffersAndAttributes(sData._shaderData.attrSetters, sData._attrbufferInfo);
         G_ShaderFactory.setUniforms(sData._shaderData.uniSetters, sData._uniformInfors);
-        G_ShaderFactory.drawBufferInfo(sData._attrbufferInfo,sData._glPrimitiveType);
+        G_ShaderFactory.drawBufferInfo(sData._attrbufferInfo, sData._glPrimitiveType);
     }
-    private _renderData:Array<RenderData> = [];//绘制的数据
+    private _renderData: Array<RenderData> = [];//绘制的数据
     public collectData(rData: RenderData): void {
-         this._renderData.push(rData);
+        this._renderData.push(rData);
     }
-    
+
 
 
 
@@ -387,8 +378,8 @@ export default class Device {
         let y = object.y * this.gl.canvas.height;
         let width = object.w * this.gl.canvas.width;
         let height = object.h * this.gl.canvas.height;
-        this.gl.viewport(x,y ,width,height);
-        this.gl.scissor(x,y ,width,height);
+        this.gl.viewport(x, y, width, height);
+        this.gl.scissor(x, y, width, height);
     }
 
 

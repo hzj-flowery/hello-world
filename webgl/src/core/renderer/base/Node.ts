@@ -1,7 +1,6 @@
 import Ref from "../../../Ref";
 import { glMatrix } from "../../Matrix";
 
-
 export class Node extends Ref {
     constructor() {
         super();
@@ -491,9 +490,4 @@ export class Node extends Ref {
         return out;
     }
 
-
-
-
-
 }
-

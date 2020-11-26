@@ -45,14 +45,15 @@ console.log(z);
   */
 import { BufferAttribsData, G_ShaderFactory, Shader, ShaderData } from "../shader/Shader";
 import { glprimitive_type } from "../gfx/GLEnums";
-import { Node } from "./Node";
 import { Texture } from "./Texture";
 import { Texture2D } from "./Texture2D";
 import TextureCube from "./TextureCube";
 import TextureCustom from "./TextureCustom";
 import Device from "../../../Device";
-import { NormalRenderData, RenderData, RenderDataPool, RenderDataType } from "./RenderData";
+import { NormalRenderData, RenderData, RenderDataPool, RenderDataType } from "../data/RenderData";
 import LoaderManager from "../../../LoaderManager";
+import { CameraData } from "../data/CameraData";
+import { Node } from "./Node";
 
 /**
  * 缓冲区中的数据就是一个二进制流，一般我们会按照字节处理，八个二进制为一个字节，又称字节流
@@ -350,7 +351,7 @@ export namespace SY {
     export class Sprite extends Node{
         constructor(){
             super();
-            
+            this.init();
         }
         protected _attrData:BufferAttribsData;
         protected _uniformsData:any;
@@ -384,14 +385,20 @@ export namespace SY {
             {
                 this._renderData._uniformInfors.push(this._uniformsData[k]);
             }
-            this._renderData._projKey = "u_projection";
-            this._renderData._viewKey = "u_view";
-            this._renderData._attrbufferInfo = this._attrData;
+            this._renderData._projKey = "u_projection";//投影矩阵的key
+            this._renderData._viewKey = "u_view";//视口矩阵的key
+            this._renderData._worldKey = "u_world";//世界坐标系的key
+            this._renderData._attrbufferInfo = this._attrData;//顶点着色器的顶点相关属性
+            this._renderData._node = this;//渲染的节点
             Device.Instance.collectData(this._renderData);
         }
         //设置shader
         protected setShader(vert: string, frag: string):void{
             this._shaderData = G_ShaderFactory.createProgramInfo(vert, frag);
+        }
+        //更新unifoms变量
+        public updateUniformsData(cameraData:CameraData):void{
+      
         }
     }
     

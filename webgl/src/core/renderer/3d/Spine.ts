@@ -8,7 +8,7 @@ import { SY } from "../base/Sprite";
 import GameMainCamera from "../camera/GameMainCamera";
 import { G_ShaderFactory, ShaderData } from "../shader/Shader";
 import Device from "../../../Device";
-import { RenderDataPool, RenderDataType, SpineRenderData } from "../base/RenderData";
+import { RenderDataPool, RenderDataType, SpineRenderData } from "../data/RenderData";
 
 var skinVS =
     'attribute vec4 a_POSITION;' +  //顶点位置

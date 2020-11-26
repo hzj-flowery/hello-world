@@ -1,5 +1,6 @@
 import { VoidExpression } from "typescript";
 import { glMatrix } from "../../Matrix";
+import { SY } from "../base/Sprite";
 import { glprimitive_type } from "../gfx/GLEnums";
 import { Shader, ShaderData } from "../shader/Shader";
 
@@ -41,6 +42,7 @@ export  class RenderData{
     public _u_pvm_matrix_inverse:Float32Array;//
     public _time:number;
     public _isUse:boolean = false;//使用状态
+
     public reset():void{
         this._cameraType = 0;//默认情况下是透视投影
         this._shader = null;
@@ -86,8 +88,10 @@ export class NormalRenderData extends RenderData{
     public _uniformInfors:Array<any>;
     public _extraViewLeftMatrix:Float32Array;
     public _tempMatrix1:Float32Array;
-    public _projKey:string;
-    public _viewKey:string;
+    public _projKey:string;//投影矩阵的key
+    public _viewKey:string;//视口矩阵key
+    public _worldKey:string;//世界矩阵key
+    public _node:SY.Sprite;//渲染的节点
 }
 
 export class SpineRenderData extends NormalRenderData{
@@ -118,6 +122,7 @@ export class RenderDataPool{
             switch(type)
             {
                 case RenderDataType.Base:retItem = new RenderData();pool.push(retItem);break;
+                case RenderDataType.Normal:retItem = new NormalRenderData();pool.push(retItem);break;
                 case RenderDataType.Spine:retItem = new SpineRenderData();pool.push(retItem);break;
             }
             retItem._isUse = true;

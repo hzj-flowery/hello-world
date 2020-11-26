@@ -213,21 +213,17 @@ export class CameraModel {
 
     public init(gl:WebGLRenderingContext): void {
         this.gl = gl;
-
         this._programInfor = G_ShaderFactory.createProgramInfo(this.solidcolorvertexshader, this.solidcolorfragmentshader);
         this._frustumCube = G_ShaderFactory.createProgramInfo(baseVertexShader, colorFragmentShader);
         this._modelBuffer = this.createCameraBufferInfo();
         this._clipSpaceBuffer = this.createClipspaceCubeBufferInfo();
-
         this._coordinate = new Graphic(this.gl);//绘制线
-
         this._worldTemp = glMatrix.mat4.identity(null);
         this._worldTemp1 = glMatrix.mat4.identity(null);
         this._worldTemp2 = glMatrix.mat4.identity(null);
         this._loacalInvertProj = glMatrix.mat4.identity(null);
         this._pvTemp1 = glMatrix.mat4.identity(null);
         this._viewMatrix = glMatrix.mat4.identity(null);
-
         this._sceneCameraMatrix = glMatrix.mat4.identity(null);
         this._sceneCameraProjectMatrix = glMatrix.mat4.identity(null);
         this._originPos = [0, 0, 0];

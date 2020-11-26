@@ -21,6 +21,7 @@ import { glMatrix } from "../../Matrix";
 import { MathUtils } from "../../utils/MathUtils";
 import Camera from "../camera/Camera";
 import { G_CameraModel } from "../camera/CameraModel";
+import { PointLight } from "../light/PointLight";
 
 export default class Scene3D extends Scene {
 
@@ -33,6 +34,7 @@ export default class Scene3D extends Scene {
     private _customTexture: CustomTextureCube;
     private _centerNode: Node;
     private _3dCamera: PerspectiveCamera;
+    private _FLight:PointLight;
     private _sphere: Sphere;
 
       
@@ -42,8 +44,16 @@ export default class Scene3D extends Scene {
     public init(): void {
         
         G_CameraModel.setRenderCallBack(this.renderCallBack.bind(this));
+        
+       
+
+        this._FLight = new PointLight();
+        this._FLight.setScale(0.2,0.2,0.2);
+        this.addChild(this._FLight);
+        this._FLight.Url = "res/models/char/F.json";
 
         this.renderCallBack(G_CameraModel.getSettings());
+
 
         var gl = Device.Instance.gl;
         this._centerNode = new Node();
@@ -102,7 +112,9 @@ export default class Scene3D extends Scene {
         this.addChild(this._skybox);
 
 
-        
+       
+
+
         this.setPosition(0, 0, 0);
 
 
@@ -118,7 +130,8 @@ export default class Scene3D extends Scene {
             settings.cam1FieldOfView,settings.cam1Near,settings.cam1Far) as PerspectiveCamera;
         this._3dCamera.setPosition(settings.cam1PosX,settings.cam1PosY,settings.cam1PosZ);
         this._3dCamera.setRotation(settings.cam1RotX,settings.cam1RotY,settings.cam1RotZ);
-        this.setPosition(settings.posX,settings.posY,settings.posZ);
+        this._FLight.setPosition(settings.posX,settings.posY,settings.posZ);
+        // this.setPosition(settings.posX,settings.posY,settings.posZ);
     }
     public rotateCenterNode() {
         this._centerNode.rotate(0, 1, 0);

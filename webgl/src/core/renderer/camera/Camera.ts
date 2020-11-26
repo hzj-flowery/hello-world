@@ -4,6 +4,7 @@ import { RenderTexture } from "../assets/RenderTexture";
 import FrameBuffer from "../gfx/FrameBuffer";
 import { Node } from "../base/Node";
 import { glMatrix } from "../../Matrix";
+import { CameraData } from "../data/CameraData";
 
 /**
  * 
@@ -398,6 +399,19 @@ export default class Camera extends Node {
      */
     setFrameBuffer(framebuffer) {
         this._framebuffer = framebuffer;
+    }
+   
+    /**
+     * 获取相机数据
+     */
+    public getCameraData():CameraData{
+         let data = new CameraData();
+         data.modelMat = this._modelMatrix;
+         data.projectMat = this._projectionMatrix;
+         data.viewMat = glMatrix.mat4.invert(null,this._modelMatrix);
+         data.position = [this.x,this.y,this.z];
+         data.viewProjectionMat = glMatrix.mat4.multiply(null,data.projectMat,data.viewMat);
+         return data;
     }
 
 
