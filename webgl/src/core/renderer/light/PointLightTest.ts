@@ -15,7 +15,6 @@ function main() {
 
   let FModel = new PointLight();
   FModel.Url = "res/models/char/F.json";
-  var fieldOfViewRadians = MathUtils.degToRad(60);
   var fRotationRadians = 0;
   var cameraPoX:number = 100;
   var cameraPoY:number = 150;
@@ -60,7 +59,7 @@ function main() {
     var aspect = gl.canvas.width / gl.canvas.height;
     var zNear = 1;
     var zFar = 2000;
-    var projectionMatrix = glMatrix.mat4.perspective(null, fieldOfViewRadians, aspect, zNear, zFar);
+    var projectionMatrix = glMatrix.mat4.perspective(null, MathUtils.degToRad(60), aspect, zNear, zFar);
     
     cameraPoX = 0;
     cameraPoY = 0;
@@ -105,6 +104,8 @@ function main() {
     gl.useProgram(FModel._shaderData.spGlID);
 
     let cameraData = setCamera();
+    FModel.rotate(0,fRotationRadians,0);
+    FModel.visit(0);
     FModel.updateUniformsData(cameraData);
 
    FModel.testDraw();
