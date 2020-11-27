@@ -2,96 +2,19 @@ import Device from "../../../Device";
 import LoaderManager from "../../../LoaderManager";
 import { glMatrix } from "../../Matrix";
 import { MathUtils } from "../../utils/MathUtils";
+import { CameraData } from "../data/CameraData";
 import { G_ShaderFactory } from "../shader/Shader";
-
-var vertexshader3d =
-  'attribute vec4 a_position;' +
-  'attribute vec3 a_normal;' +
-  'uniform vec3 u_lightWorldPosition;' +
-  'uniform vec3 u_viewWorldPosition;' +
-  'uniform mat4 u_world;' +
-  'uniform mat4 u_worldViewProjection;' +
-  'uniform mat4 u_worldInverseTranspose;' +
-  'varying vec3 v_normal;' +
-  'varying vec3 v_surfaceToLight;' +
-  'varying vec3 v_surfaceToView;' +
-  'void main() {' +
-  'gl_Position = u_worldViewProjection * a_position;' +
-  'v_normal = mat3(u_worldInverseTranspose) * a_normal;' +
-  'vec3 surfaceWorldPosition = (u_world * a_position).xyz;' +
-  'v_surfaceToLight = u_lightWorldPosition - surfaceWorldPosition;' +
-  'v_surfaceToView = u_viewWorldPosition - surfaceWorldPosition;' +
-  '}'
-var fragmentshader3d =
-  'precision mediump float;' +
-  'varying vec3 v_normal;' +
-  'varying vec3 v_surfaceToLight;' +
-  'varying vec3 v_surfaceToView;' +
-  'uniform vec4 u_color;' +
-  'uniform float u_shininess;' +
-  'void main() {' +
-  'vec3 normal = normalize(v_normal);' +
-  'vec3 surfaceToLightDirection = normalize(v_surfaceToLight);' +
-  'vec3 surfaceToViewDirection = normalize(v_surfaceToView);' +
-  'vec3 halfVector = normalize(surfaceToLightDirection + surfaceToViewDirection);' +
-  'float light = dot(normal, surfaceToLightDirection);' +
-  'float specular = 0.0;' +
-  'if (light > 0.0) {' +
-  'specular = pow(dot(normal, halfVector), u_shininess);' +
-  '}' +
-  'gl_FragColor = u_color;' +
-  'gl_FragColor.rgb *= light;' +
-  'gl_FragColor.rgb += specular;' +
-  '}'
-
-"use strict";
-
-
-
+import { PointLight } from "./PointLight";
 
 function main() {
   var gl = Device.Instance.gl;
   if (!gl) {
     return;
   }
+  
 
-  // setup GLSL program
-  var programShader = G_ShaderFactory.createProgramInfo(vertexshader3d, fragmentshader3d);
-  var matrix = glMatrix.mat4.identity(null);
-  glMatrix.mat4.rotateX(matrix, matrix, Math.PI);
-  glMatrix.mat4.translate(matrix, matrix, [-50, -75, -15]);
-
-  let datas = LoaderManager.instance.getCacheData("res/models/char/F.json");
-  let cubeDatas:any = {};
-  cubeDatas.position = new Float32Array(datas.position);
-  cubeDatas.normal = new Float32Array(datas.normal);
-
-  for(let j = 0;j<cubeDatas.position.length;j++)
-  {
-    cubeDatas.position[j] = cubeDatas.position[j];
-  }
-
-  for (var ii = 0; ii < cubeDatas.position.length; ii += 3) {
-    var vector = glMatrix.mat4.transformPoint(null, matrix, [cubeDatas.position[ii + 0], cubeDatas.position[ii + 1], cubeDatas.position[ii + 2], 1]);
-    cubeDatas.position[ii + 0] = vector[0];
-    cubeDatas.position[ii + 1] = vector[1];
-    cubeDatas.position[ii + 2] = vector[2];
-  }
-
-  var attrBufferData = G_ShaderFactory.createBufferInfoFromArrays(cubeDatas);
-
-
-  var uniformDatas = {
-    u_worldViewProjection: {},
-    u_worldInverseTranspose: {},
-    u_color: {},
-    u_shininess: {},
-    u_lightWorldPosition: {},
-    u_viewWorldPosition: {},
-    u_world: {}
-  }
-
-
+  let FModel = new PointLight();
+  FModel.Url = "res/models/char/F.json";
   var fieldOfViewRadians = MathUtils.degToRad(60);
   var fRotationRadians = 0;
   var cameraPoX:number = 100;
@@ -132,7 +55,7 @@ function main() {
   }
   
   //设置相机
-  function setCamera(){
+  function setCamera():CameraData{
         // Compute the projection matrix
     var aspect = gl.canvas.width / gl.canvas.height;
     var zNear = 1;
@@ -141,7 +64,7 @@ function main() {
     
     cameraPoX = 0;
     cameraPoY = 0;
-    cameraPoZ = 100;
+    // cameraPoZ = 100;
     // Compute the camera's matrix
     var cameraPos = [cameraPoX,cameraPoY,cameraPoZ];
     var target = [0, 0, 0];
@@ -155,37 +78,17 @@ function main() {
 
     // Compute a view projection matrix
     var viewProjectionMatrix = glMatrix.mat4.multiply(null, projectionMatrix, viewMatrix);  //pv投影视口矩阵
-    
-    return {
-      viewProjectionMatrix:viewProjectionMatrix,
-      cameraPosition:cameraPos
-    }
-  }
-  
-  //设置unifroms
-  function setUniformsData(cameraData:any):void{
 
-    console.log("gagga---",cameraData);
-         // Draw a F at the origin
     var worldMatrix = glMatrix.mat4.identity(null);
     glMatrix.mat4.rotateY(worldMatrix, worldMatrix, fRotationRadians);
 
-    // Multiply the matrices.
-    var worldViewProjectionMatrix = glMatrix.mat4.multiply(null, cameraData.viewProjectionMatrix, worldMatrix);
-    var worldInverseMatrix = glMatrix.mat4.invert(null, worldMatrix);
-    var worldInverseTransposeMatrix = glMatrix.mat4.identity(null);
-    glMatrix.mat4.transpose(worldInverseTransposeMatrix, worldInverseMatrix);
-
-
-    uniformDatas.u_worldViewProjection = worldViewProjectionMatrix;  //投影矩阵 x 视口矩阵 x 世界矩阵
-    uniformDatas.u_worldInverseTranspose = worldInverseTransposeMatrix;//世界矩阵逆矩阵的转置矩阵
-    uniformDatas.u_world = worldMatrix;//世界矩阵
-    uniformDatas.u_color = [0.2, 1, 0.2, 1];//光的颜色
-    uniformDatas.u_lightWorldPosition = [20, 30, 60];//光的位置
-    uniformDatas.u_viewWorldPosition = cameraData.cameraPosition;//摄像机的位置
-    uniformDatas.u_shininess = shininess;
+    let ret = new CameraData();
+    ret.viewProjectionMat = viewProjectionMatrix;
+    ret.position = cameraPos;
+    ret.modelMat = worldMatrix;//模型世界矩阵
+    
+    return ret;
   }
-
   // Draw the scene.
   function drawScene() {
     Device.Instance.resizeCanvasToDisplaySize(gl.canvas);
@@ -199,15 +102,12 @@ function main() {
     // Enable the depth buffer
     gl.enable(gl.DEPTH_TEST);
     // Tell it to use our program (pair of shaders)
-    gl.useProgram(programShader.spGlID);
+    gl.useProgram(FModel._shaderData.spGlID);
 
     let cameraData = setCamera();
+    FModel.updateUniformsData(cameraData);
 
-    setUniformsData(cameraData);
-
-    G_ShaderFactory.setBuffersAndAttributes(programShader.attrSetters, attrBufferData);
-    G_ShaderFactory.setUniforms(programShader.uniSetters, uniformDatas);
-    G_ShaderFactory.drawBufferInfo(attrBufferData, gl.TRIANGLES);
+   FModel.testDraw();
 
   }
 }

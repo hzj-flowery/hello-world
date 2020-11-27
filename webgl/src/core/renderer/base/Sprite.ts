@@ -353,9 +353,9 @@ export namespace SY {
             super();
             this.init();
         }
-        protected _attrData:BufferAttribsData;
-        protected _uniformsData:any;
-        private _shaderData:ShaderData;
+        public _attrData:BufferAttribsData;
+        public _uniformsData:any;
+        public _shaderData:ShaderData;
         private _renderData:NormalRenderData;
         protected _cameraType: number = 0;//相机的类型(0表示透视1表示正交)
         private _url:string;//资源路径
@@ -400,6 +400,14 @@ export namespace SY {
         //更新unifoms变量
         public updateUniformsData(cameraData:CameraData):void{
       
+        }
+        /**
+         * 此接口用于测试使用 日后删除
+         */
+        public testDraw():void{
+            G_ShaderFactory.setBuffersAndAttributes(this._shaderData.attrSetters, this._attrData);
+            G_ShaderFactory.setUniforms(this._shaderData.uniSetters, this._uniformsData);
+            G_ShaderFactory.drawBufferInfo(this._attrData, glprimitive_type.TRIANGLES);
         }
     }
     

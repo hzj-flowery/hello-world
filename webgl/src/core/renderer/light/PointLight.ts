@@ -100,19 +100,18 @@ export class PointLight extends SY.Sprite {
     // this._uniformsData.u_shininess = this.shininess;
 
      // Draw a F at the origin
-     var worldMatrix = glMatrix.mat4.identity(null);
-     glMatrix.mat4.rotateY(worldMatrix, worldMatrix, 1);
+     
  
      // Multiply the matrices.
-     var worldViewProjectionMatrix = glMatrix.mat4.multiply(null, cameraData.viewProjectionMat, worldMatrix);
-     var worldInverseMatrix = glMatrix.mat4.invert(null, worldMatrix);
+     var worldViewProjectionMatrix = glMatrix.mat4.multiply(null, cameraData.viewProjectionMat, cameraData.modelMat);
+     var worldInverseMatrix = glMatrix.mat4.invert(null, cameraData.modelMat);
      var worldInverseTransposeMatrix = glMatrix.mat4.identity(null);
      glMatrix.mat4.transpose(worldInverseTransposeMatrix, worldInverseMatrix);
  
  
      this._uniformsData.u_worldViewProjection = worldViewProjectionMatrix;  //投影矩阵 x 视口矩阵 x 世界矩阵
      this._uniformsData.u_worldInverseTranspose = worldInverseTransposeMatrix;//世界矩阵逆矩阵的转置矩阵
-     this._uniformsData.u_world = worldMatrix;//世界矩阵
+     this._uniformsData.u_world = cameraData.modelMat;//世界矩阵
      this._uniformsData.u_color = [0.2, 1, 0.2, 1];//光的颜色
      this._uniformsData.u_lightWorldPosition = [20, 30, 60];//光的位置
      this._uniformsData.u_viewWorldPosition = cameraData.position;//摄像机的位置

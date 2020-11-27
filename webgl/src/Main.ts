@@ -74,7 +74,7 @@ G_CameraModel.init(Device.Instance.gl);
 
 
 LoaderManager.instance.loadData(arr,null,function(){
-    new RenderFlow().startup();
+    // new RenderFlow().startup();
     // RampTextureTest.run();
     // CameraTest.run();
     // RobartTest.run();
@@ -83,7 +83,7 @@ LoaderManager.instance.loadData(arr,null,function(){
 
     // SpotLightTest.run();
 
-    // PointLightTest.run();
+    PointLightTest.run();
     // ThreeDLightTest.run();
     
 })
