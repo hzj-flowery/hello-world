@@ -138,24 +138,33 @@ export default class Device {
     private onMouseUp(ev): void {
         this._isCapture = false;
     }
-
+    public startDraw(time: number, scene2D: Scene2D, scene3D: Scene3D):void{
+         this.onBeforeRender();
+         this.visitRenderTree(time,scene2D,scene3D);
+        //  this.drawToUI(scene2D.getFrameBuffer());
+         this.draw2screen();
+         this.onAfterRender();
+    }
+    /**
+     * 遍历渲染树
+     * @param time 
+     * @param scene2D 
+     * @param scene3D 
+     */
+    private visitRenderTree(time: number, scene2D: Scene2D, scene3D: Scene3D):void{
+        scene3D.visit(time);
+        scene2D.visit(time);
+    }
     /**
      * 将结果绘制到UI上
      */
-    public drawToUI(time: number, scene2D: Scene2D, scene3D: Scene3D): void {
-        this.onBeforeRender();
-        this._commitRenderState([0.5, 0.5, 0.5, 1.0], scene2D.getFrameBuffer());
-        scene3D.visit(time);
-        scene2D.visit(time);
+    private drawToUI(frameBuffer:WebGLFramebuffer): void {
+        this._commitRenderState([0.5, 0.5, 0.5, 1.0],frameBuffer);
         this.triggerRender();
-        this.onAfterRender();
     }
     //将结果绘制到窗口
-    public draw2screen(time: number, scene2D: Scene2D, scene3D: Scene3D): void {
-        this.onBeforeRender();
+    private draw2screen(): void {
         this._commitRenderState([0.5, 0.5, 0.5, 1.0], null,{ x: 0, y: 0, w: 0.5, h: 1 });
-        scene3D.visit(time);
-        scene2D.visit(time);
         this.triggerRender();
         this.setViewPort({ x: 0.5, y: 0, w: 0.5, h: 1 });
         this.triggerRender(true);
@@ -163,8 +172,6 @@ export default class Device {
             this._isCapture = false;
             this.capture();
         }
-        this.onAfterRender();
-
     }
     //渲染前
     private onBeforeRender() {
@@ -254,7 +261,7 @@ export default class Device {
                 }; 
                 break;
             case RenderDataType.Normal:
-                if(isUseScene)
+                // if(!isUseScene)
                 this._drawNormal(rData as NormalRenderData,cameraData);
                 break;
             case RenderDataType.Spine:
@@ -363,13 +370,13 @@ export default class Device {
     }
 
     /**
-     * 
+     * 设置视口
      * @param object 
      * {
-     * x:
-     * y:
-     * w:
-     * h:
+     * x:【0,1】
+     * y:【0,1】
+     * w:【0,1】
+     * h:【0,1】
      * }
      */
     public setViewPort(object: any): void {

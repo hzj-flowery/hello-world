@@ -390,6 +390,7 @@ export namespace SY {
             this._renderData._worldKey = "u_world";//世界坐标系的key
             this._renderData._attrbufferInfo = this._attrData;//顶点着色器的顶点相关属性
             this._renderData._node = this;//渲染的节点
+            this._renderData._glPrimitiveType = glprimitive_type.TRIANGLES;//三角形
             Device.Instance.collectData(this._renderData);
         }
         //设置shader

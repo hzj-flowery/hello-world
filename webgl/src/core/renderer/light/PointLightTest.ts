@@ -66,6 +66,11 @@ function main() {
   cubeDatas.position = new Float32Array(datas.position);
   cubeDatas.normal = new Float32Array(datas.normal);
 
+  for(let j = 0;j<cubeDatas.position.length;j++)
+  {
+    cubeDatas.position[j] = cubeDatas.position[j];
+  }
+
   for (var ii = 0; ii < cubeDatas.position.length; ii += 3) {
     var vector = glMatrix.mat4.transformPoint(null, matrix, [cubeDatas.position[ii + 0], cubeDatas.position[ii + 1], cubeDatas.position[ii + 2], 1]);
     cubeDatas.position[ii + 0] = vector[0];
@@ -125,19 +130,25 @@ function main() {
     shininess = ui.value;
     drawScene();
   }
-
+  
+  //设置相机
   function setCamera(){
         // Compute the projection matrix
     var aspect = gl.canvas.width / gl.canvas.height;
     var zNear = 1;
     var zFar = 2000;
     var projectionMatrix = glMatrix.mat4.perspective(null, fieldOfViewRadians, aspect, zNear, zFar);
-
+    
+    cameraPoX = 0;
+    cameraPoY = 0;
+    cameraPoZ = 100;
     // Compute the camera's matrix
     var cameraPos = [cameraPoX,cameraPoY,cameraPoZ];
     var target = [0, 0, 0];
     var up = [0, 1, 0];
-    var cameraMatrix = glMatrix.mat4.lookAt2(null, cameraPos, target, up);
+    // var cameraMatrix = glMatrix.mat4.lookAt2(null, cameraPos, target, up);
+    let cameraMatrix = glMatrix.mat4.identity(null);
+    glMatrix.mat4.translate(cameraMatrix,cameraMatrix,cameraPos);
 
     // Make a view matrix from the camera matrix.
     var viewMatrix = glMatrix.mat4.invert(null, cameraMatrix);
@@ -149,6 +160,30 @@ function main() {
       viewProjectionMatrix:viewProjectionMatrix,
       cameraPosition:cameraPos
     }
+  }
+  
+  //设置unifroms
+  function setUniformsData(cameraData:any):void{
+
+    console.log("gagga---",cameraData);
+         // Draw a F at the origin
+    var worldMatrix = glMatrix.mat4.identity(null);
+    glMatrix.mat4.rotateY(worldMatrix, worldMatrix, fRotationRadians);
+
+    // Multiply the matrices.
+    var worldViewProjectionMatrix = glMatrix.mat4.multiply(null, cameraData.viewProjectionMatrix, worldMatrix);
+    var worldInverseMatrix = glMatrix.mat4.invert(null, worldMatrix);
+    var worldInverseTransposeMatrix = glMatrix.mat4.identity(null);
+    glMatrix.mat4.transpose(worldInverseTransposeMatrix, worldInverseMatrix);
+
+
+    uniformDatas.u_worldViewProjection = worldViewProjectionMatrix;  //投影矩阵 x 视口矩阵 x 世界矩阵
+    uniformDatas.u_worldInverseTranspose = worldInverseTransposeMatrix;//世界矩阵逆矩阵的转置矩阵
+    uniformDatas.u_world = worldMatrix;//世界矩阵
+    uniformDatas.u_color = [0.2, 1, 0.2, 1];//光的颜色
+    uniformDatas.u_lightWorldPosition = [20, 30, 60];//光的位置
+    uniformDatas.u_viewWorldPosition = cameraData.cameraPosition;//摄像机的位置
+    uniformDatas.u_shininess = shininess;
   }
 
   // Draw the scene.
@@ -167,24 +202,8 @@ function main() {
     gl.useProgram(programShader.spGlID);
 
     let cameraData = setCamera();
-    // Draw a F at the origin
-    var worldMatrix = glMatrix.mat4.identity(null);
-    glMatrix.mat4.rotateY(worldMatrix, worldMatrix, fRotationRadians);
 
-    // Multiply the matrices.
-    var worldViewProjectionMatrix = glMatrix.mat4.multiply(null, cameraData.viewProjectionMatrix, worldMatrix);
-    var worldInverseMatrix = glMatrix.mat4.invert(null, worldMatrix);
-    var worldInverseTransposeMatrix = glMatrix.mat4.identity(null);
-    glMatrix.mat4.transpose(worldInverseTransposeMatrix, worldInverseMatrix);
-
-
-    uniformDatas.u_worldViewProjection = worldViewProjectionMatrix;  //投影矩阵 x 视口矩阵 x 世界矩阵
-    uniformDatas.u_worldInverseTranspose = worldInverseTransposeMatrix;//世界矩阵逆矩阵的转置矩阵
-    uniformDatas.u_world = worldMatrix;//世界矩阵
-    uniformDatas.u_color = [0.2, 1, 0.2, 1];//光的颜色
-    uniformDatas.u_lightWorldPosition = [20, 30, 60];//光的位置
-    uniformDatas.u_viewWorldPosition = cameraData.cameraPosition;//摄像机的位置
-    uniformDatas.u_shininess = shininess;
+    setUniformsData(cameraData);
 
     G_ShaderFactory.setBuffersAndAttributes(programShader.attrSetters, attrBufferData);
     G_ShaderFactory.setUniforms(programShader.uniSetters, uniformDatas);

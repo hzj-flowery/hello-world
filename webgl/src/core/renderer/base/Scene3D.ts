@@ -49,7 +49,7 @@ export default class Scene3D extends Scene {
 
         this._FLight = new PointLight();
         // this._FLight.setScale(0.2,0.2,0.2);
-        this._FLight.setPosition(0,0,300);
+        // this._FLight.setPosition(0,0,300);
         this.addChild(this._FLight);
         this._FLight.Url = "res/models/char/F.json";
 

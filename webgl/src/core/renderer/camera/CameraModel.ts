@@ -468,9 +468,9 @@ export class CameraModel {
             { type: 'slider', key: 'posY', min: -200, max: 200, change: render, },
             { type: 'slider', key: 'posZ', min: -200, max: 200, change: render, },
             { type: 'slider', key: 'cam1FieldOfView', min: 0, max: 180, change: render, },
-            { type: 'slider', key: 'cam1PosX', min: -50, max: 50, change: render, },
-            { type: 'slider', key: 'cam1PosY', min: -50, max: 50, change: render, },
-            { type: 'slider', key: 'cam1PosZ', min: -50, max: 50, change: render, },
+            { type: 'slider', key: 'cam1PosX', min: -100, max: 100, change: render, },
+            { type: 'slider', key: 'cam1PosY', min: -100, max: 100, change: render, },
+            { type: 'slider', key: 'cam1PosZ', min: -100, max: 100, change: render, },
 
             { type: 'slider', key: 'cam1RotX', min: 0, max: 360, change: render, },
             { type: 'slider', key: 'cam1RotY', min: 0, max: 360, change: render, },

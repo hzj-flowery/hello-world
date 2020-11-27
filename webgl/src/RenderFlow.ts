@@ -29,8 +29,7 @@ export default class RenderFlow {
     private loopScale():void{
         this._add = 0.01;
         var loop = function(time){
-            Device.Instance.drawToUI(time,this._2dScene,this._3dScene);
-            Device.Instance.draw2screen(time,this._2dScene,this._3dScene);
+            Device.Instance.startDraw(time,this._2dScene,this._3dScene);
             requestAnimationFrame(loop);
         }.bind(this);
         loop(0);
