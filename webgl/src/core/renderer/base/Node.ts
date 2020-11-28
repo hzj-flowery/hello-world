@@ -14,9 +14,12 @@ export class Node extends Ref {
     public scaleX: number = 1;
     public scaleY: number = 1;
     public scaleZ: number = 1;
-
+    
+    //x轴旋转的角度
     public rotateX: number = 0;
+    //y轴旋转的角度
     public rotateY: number = 0;
+    //z轴旋转的角度
     public rotateZ: number = 0;
 
     public width: number = 0;//宽度
@@ -156,6 +159,12 @@ export class Node extends Ref {
         this.scaleY = y;
         this.scaleZ = z;
     }
+    /**
+     * 
+     * @param x angle
+     * @param y angle
+     * @param z angle
+     */
     public setRotation(x, y, z): void {
         this.rotateX = x;
         this.rotateY = y;

@@ -1,6 +1,7 @@
 import { glMatrix } from "../../Matrix";
 import { SY } from "../base/Sprite";
 import { CameraData } from "../data/CameraData";
+import { NormalRenderData } from "../data/RenderData";
 import { G_ShaderFactory } from "../shader/Shader";
 
 
@@ -51,7 +52,7 @@ export class PointLight extends SY.Sprite {
   }
   private shininess:number = 150;
   protected onInit(): void {
-    this._uniformsData = {
+    this._uniformData = {
       u_worldViewProjection: {},
       u_worldInverseTranspose: {},
       u_color: {},
@@ -82,7 +83,7 @@ export class PointLight extends SY.Sprite {
     this._attrData = G_ShaderFactory.createBufferInfoFromArrays(cubeDatas);
   }
   //更新unifoms变量
-  public updateUniformsData(cameraData:CameraData):void{
+  public updateUniformsData(cameraData:CameraData):any{
     // Multiply the matrices.
     var worldViewProjectionMatrix = glMatrix.mat4.multiply(null, cameraData.viewProjectionMat,  this._modelMatrix);
     var worldInverseMatrix = glMatrix.mat4.invert(null,  this._modelMatrix);
@@ -90,29 +91,14 @@ export class PointLight extends SY.Sprite {
     glMatrix.mat4.transpose(worldInverseTransposeMatrix, worldInverseMatrix);
 
 
-    this._uniformsData.u_worldViewProjection = worldViewProjectionMatrix;  //投影矩阵 x 视口矩阵 x 世界矩阵
-    this._uniformsData.u_worldInverseTranspose = worldInverseTransposeMatrix;//世界矩阵逆矩阵的转置矩阵
-    this._uniformsData.u_world =  this._modelMatrix;//世界矩阵
-    this._uniformsData.u_color = [0.2, 1, 0.2, 1];//光的颜色
-    this._uniformsData.u_lightWorldPosition = [20, 30, 60];//光的位置
-    this._uniformsData.u_viewWorldPosition = cameraData.position;//摄像机的位置
-    this._uniformsData.u_shininess = this.shininess;
-
-     // Draw a F at the origin
-     // Multiply the matrices.
-    //  var worldViewProjectionMatrix = glMatrix.mat4.multiply(null, cameraData.viewProjectionMat, cameraData.modelMat);
-    //  var worldInverseMatrix = glMatrix.mat4.invert(null, cameraData.modelMat);
-    //  var worldInverseTransposeMatrix = glMatrix.mat4.identity(null);
-    //  glMatrix.mat4.transpose(worldInverseTransposeMatrix, worldInverseMatrix);
- 
- 
-    //  this._uniformsData.u_worldViewProjection = worldViewProjectionMatrix;  //投影矩阵 x 视口矩阵 x 世界矩阵
-    //  this._uniformsData.u_worldInverseTranspose = worldInverseTransposeMatrix;//世界矩阵逆矩阵的转置矩阵
-    //  this._uniformsData.u_world = cameraData.modelMat;//世界矩阵
-    //  this._uniformsData.u_color = [0.2, 1, 0.2, 1];//光的颜色
-    //  this._uniformsData.u_lightWorldPosition = [20, 30, 60];//光的位置
-    //  this._uniformsData.u_viewWorldPosition = cameraData.position;//摄像机的位置
-    //  this._uniformsData.u_shininess = this.shininess;
-
+    this._uniformData.u_worldViewProjection = worldViewProjectionMatrix;  //投影矩阵 x 视口矩阵 x 世界矩阵
+    this._uniformData.u_worldInverseTranspose = worldInverseTransposeMatrix;//世界矩阵逆矩阵的转置矩阵
+    this._uniformData.u_world =  this._modelMatrix;//世界矩阵
+    this._uniformData.u_color = [0.2, 1, 0.2, 1];//光的颜色
+    this._uniformData.u_lightWorldPosition = [20, 30, 60];//光的位置
+    this._uniformData.u_viewWorldPosition = cameraData.position;//摄像机的位置
+    this._uniformData.u_shininess = this.shininess;
+    super.updateRenderData();
+    return this._uniformData;
   }
 }

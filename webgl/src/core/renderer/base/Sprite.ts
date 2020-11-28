@@ -354,7 +354,7 @@ export namespace SY {
             this.init();
         }
         public _attrData:BufferAttribsData;
-        public _uniformsData:any;
+        public _uniformData:any;
         public _shaderData:ShaderData;
         private _renderData:NormalRenderData;
         protected _cameraType: number = 0;//相机的类型(0表示透视1表示正交)
@@ -379,34 +379,36 @@ export namespace SY {
 
         }
         protected draw(time: number): void {
+            this.updateRenderData();
+            Device.Instance.collectData(this._renderData);
+        }
+        //更新渲染数据
+        protected updateRenderData():void{
             this._renderData._shaderData = this._shaderData;
-            this._renderData._uniformInfors = [];
-            for(let k in this._uniformsData)
-            {
-                this._renderData._uniformInfors.push(this._uniformsData[k]);
-            }
+            this._renderData._uniformData = [];
+            this._renderData._uniformData.push(this._uniformData);
+
             this._renderData._projKey = "u_projection";//投影矩阵的key
             this._renderData._viewKey = "u_view";//视口矩阵的key
             this._renderData._worldKey = "u_world";//世界坐标系的key
-            this._renderData._attrbufferInfo = this._attrData;//顶点着色器的顶点相关属性
+            this._renderData._attrbufferData = this._attrData;//顶点着色器的顶点相关属性
             this._renderData._node = this;//渲染的节点
             this._renderData._glPrimitiveType = glprimitive_type.TRIANGLES;//三角形
-            Device.Instance.collectData(this._renderData);
         }
         //设置shader
         protected setShader(vert: string, frag: string):void{
             this._shaderData = G_ShaderFactory.createProgramInfo(vert, frag);
         }
         //更新unifoms变量
-        public updateUniformsData(cameraData:CameraData):void{
-      
+        public updateUniformsData(cameraData:CameraData):any{
+             
         }
         /**
          * 此接口用于测试使用 日后删除
          */
         public testDraw():void{
             G_ShaderFactory.setBuffersAndAttributes(this._shaderData.attrSetters, this._attrData);
-            G_ShaderFactory.setUniforms(this._shaderData.uniSetters, this._uniformsData);
+            G_ShaderFactory.setUniforms(this._shaderData.uniSetters, this._uniformData);
             G_ShaderFactory.drawBufferInfo(this._attrData, glprimitive_type.TRIANGLES);
         }
     }

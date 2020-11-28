@@ -32,7 +32,7 @@ function main() {
   webglLessonsUI.setupSlider("#shininess", { value: shininess, slide: updateShininess, min: 1, max: 300 });
 
   function updateRotation(event, ui) {
-    fRotationRadians = MathUtils.degToRad(ui.value);
+    fRotationRadians = ui.value;
     drawScene();
   }
   function upateCamPosX(event, ui){
@@ -84,8 +84,6 @@ function main() {
     let ret = new CameraData();
     ret.viewProjectionMat = viewProjectionMatrix;
     ret.position = cameraPos;
-    ret.modelMat = worldMatrix;//模型世界矩阵
-    
     return ret;
   }
   // Draw the scene.
@@ -104,11 +102,11 @@ function main() {
     gl.useProgram(FModel._shaderData.spGlID);
 
     let cameraData = setCamera();
-    FModel.rotate(0,fRotationRadians,0);
+    FModel.setRotation(0,fRotationRadians,0);
     FModel.visit(0);
+    console.log("cameraData-----",cameraData);
     FModel.updateUniformsData(cameraData);
-
-   FModel.testDraw();
+    FModel.testDraw();
 
   }
 }

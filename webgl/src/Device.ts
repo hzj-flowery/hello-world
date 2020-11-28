@@ -10,6 +10,7 @@ import { GLapi } from "./core/renderer/gfx/GLapi";
 import { G_ShaderFactory } from "./core/renderer/shader/Shader";
 import { MathUtils } from "./core/utils/MathUtils";
 import { CameraData } from "./core/renderer/data/CameraData";
+import { glprimitive_type } from "./core/renderer/gfx/GLEnums";
 
 /**
 * _attach
@@ -164,10 +165,19 @@ export default class Device {
     }
     //将结果绘制到窗口
     private draw2screen(): void {
-        this._commitRenderState([0.5, 0.5, 0.5, 1.0], null,{ x: 0, y: 0, w: 0.5, h: 1 });
+        let isShowCamera:boolean = false;
+        if(isShowCamera)
+        {
+            this._commitRenderState([0.5, 0.5, 0.5, 1.0], null,{ x: 0, y: 0, w: 0.5, h: 1 });
         this.triggerRender();
         this.setViewPort({ x: 0.5, y: 0, w: 0.5, h: 1 });
         this.triggerRender(true);
+        }
+        else
+        {
+            this._commitRenderState([0.5, 0.5, 0.5, 1.0], null);
+            this.triggerRender();
+        }
         if (this._isCapture) {
             this._isCapture = false;
             this.capture();
@@ -285,9 +295,9 @@ export default class Device {
             this.gl.useProgram(sData._shaderData.spGlID);
             this._curGLID == sData._shaderData.spGlID;
         }
-        G_ShaderFactory.setBuffersAndAttributes(sData._shaderData.attrSetters, sData._attrbufferInfo);
-        for (let j = 0; j < sData._uniformInfors.length; j++) {
-            G_ShaderFactory.setUniforms(sData._shaderData.uniSetters, sData._uniformInfors[j]);
+        G_ShaderFactory.setBuffersAndAttributes(sData._shaderData.attrSetters, sData._attrbufferData);
+        for (let j = 0; j < sData._uniformData.length; j++) {
+            G_ShaderFactory.setUniforms(sData._shaderData.uniSetters, sData._uniformData[j]);
         }
         let vleft = glMatrix.mat4.multiply(null, viewMatrix, sData._extraViewLeftMatrix)
         let projData = {};
@@ -296,15 +306,18 @@ export default class Device {
         let viewData = {};
         viewData[sData._viewKey] = vleft;
         G_ShaderFactory.setUniforms(sData._shaderData.uniSetters, viewData);
-        G_ShaderFactory.drawBufferInfo(sData._attrbufferInfo, sData._glPrimitiveType);
+        G_ShaderFactory.drawBufferInfo(sData._attrbufferData, sData._glPrimitiveType);
     }
 
     private _drawNormal(sData: NormalRenderData, cameraData:CameraData): void {
         this.gl.useProgram(sData._shaderData.spGlID);
         sData._node.updateUniformsData(cameraData);
-        G_ShaderFactory.setBuffersAndAttributes(sData._shaderData.attrSetters, sData._attrbufferInfo);
-        G_ShaderFactory.setUniforms(sData._shaderData.uniSetters, sData._uniformInfors);
-        G_ShaderFactory.drawBufferInfo(sData._attrbufferInfo, sData._glPrimitiveType);
+        G_ShaderFactory.setBuffersAndAttributes(sData._shaderData.attrSetters, sData._attrbufferData);
+        for(let j in sData._uniformData)
+        {
+            G_ShaderFactory.setUniforms(sData._shaderData.uniSetters,sData._uniformData[j]);
+        }
+        G_ShaderFactory.drawBufferInfo(sData._attrbufferData, sData._glPrimitiveType);
     }
     private _renderData: Array<RenderData> = [];//绘制的数据
     public collectData(rData: RenderData): void {

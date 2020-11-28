@@ -274,7 +274,7 @@ class skeleton_SkinRenderer {
         for (const primitive of this.mesh.primitives) {
             var renderData = RenderDataPool.get(RenderDataType.Spine) as SpineRenderData;
             renderData._shaderData = this.skinProgramInfo;
-            renderData._uniformInfors.push({ 
+            renderData._uniformData.push({ 
                 u_world: node.worldMatrix,
                 u_texCoord: this.skin._texture._glID,
                 u_jointTexture: this.skin.jointTexture,
@@ -283,9 +283,9 @@ class skeleton_SkinRenderer {
             renderData._extraViewLeftMatrix = extViewLeftMatrix;
             renderData._projKey = "u_projection";
             renderData._viewKey = "u_view";
-            renderData._uniformInfors.push(primitive.material.uniforms);
-            renderData._uniformInfors.push(sharedUniforms);
-            renderData._attrbufferInfo = primitive.bufferInfo;
+            renderData._uniformData.push(primitive.material.uniforms);
+            renderData._uniformData.push(sharedUniforms);
+            renderData._attrbufferData = primitive.bufferInfo;
             Device.Instance.collectData(renderData);
         }
     }
@@ -308,10 +308,10 @@ class skeleton_MeshRenderer {
             renderData._projKey = "u_projection";
             renderData._viewKey = "u_view";
             renderData._shaderData = this.meshProgramInfo;
-            renderData._attrbufferInfo = primitive.bufferInfo;
-            renderData._uniformInfors.push({u_world: node.worldMatrix});
-            renderData._uniformInfors.push(primitive.material.uniforms);
-            renderData._uniformInfors.push(sharedUniforms);
+            renderData._attrbufferData = primitive.bufferInfo;
+            renderData._uniformData.push({u_world: node.worldMatrix});
+            renderData._uniformData.push(primitive.material.uniforms);
+            renderData._uniformData.push(sharedUniforms);
             Device.Instance.collectData(renderData);
         }
     }

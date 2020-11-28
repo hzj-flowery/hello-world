@@ -2,7 +2,7 @@ import { VoidExpression } from "typescript";
 import { glMatrix } from "../../Matrix";
 import { SY } from "../base/Sprite";
 import { glprimitive_type } from "../gfx/GLEnums";
-import { Shader, ShaderData } from "../shader/Shader";
+import { BufferAttribsData, Shader, ShaderData } from "../shader/Shader";
 
 
 let renderDataId:number = 0;
@@ -74,9 +74,9 @@ export class NormalRenderData extends RenderData{
     }
     public reset(){
         super.reset();
-        this._uniformInfors = [];
+        this._uniformData = [];
         this._shaderData = null;
-        this._attrbufferInfo = null;
+        this._attrbufferData = null;
         this._projKey = "";
         this._viewKey = "";
         this._glPrimitiveType = glprimitive_type.TRIANGLES;
@@ -84,8 +84,10 @@ export class NormalRenderData extends RenderData{
         glMatrix.mat4.identity(this._tempMatrix1);
     }
     public _shaderData:ShaderData;
-    public _attrbufferInfo:any;
-    public _uniformInfors:Array<any>;
+    //顶点着色器属性数据
+    public _attrbufferData:BufferAttribsData;
+    //uniform变量的数据
+    public _uniformData:Array<any>;
     public _extraViewLeftMatrix:Float32Array;
     public _tempMatrix1:Float32Array;
     public _projKey:string;//投影矩阵的key
