@@ -13,7 +13,7 @@ var vertexshader3d =
     'varying vec3 v_normal;' +
     'void main() {' +
     'gl_Position = u_worldViewProjection * a_position;' +
-    'v_normal = mat3(u_worldInverseTranspose) * a_normal;' +
+    'v_normal = mat3(u_worldInverseTranspose) * a_normal;' + //法线*世界矩阵的逆矩阵的转置矩阵 将法线转换到世界坐标系下
     '}'
 
 
@@ -23,10 +23,10 @@ var fragmentshader3d =
     'uniform vec3 u_reverseLightDirection;' +
     'uniform vec4 u_color;' +
     'void main() {' +
-    'vec3 normal = normalize(v_normal);' +
-    'float light = dot(normal, u_reverseLightDirection);' +
+    'vec3 normal = normalize(v_normal);' +                 //归一化法线
+    'float light = dot(normal, u_reverseLightDirection);' + //法线*光的方向 算出光的反射方向
     'gl_FragColor = u_color;' +
-    'gl_FragColor.rgb *= light;' +
+    'gl_FragColor.rgb *= light;' +                          //
     '}'
 
 export class ThreeDLight extends SY.Sprite {

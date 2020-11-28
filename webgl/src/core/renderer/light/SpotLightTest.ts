@@ -55,8 +55,7 @@ var fragmentshader3d =
     'vec3 surfaceToLightDirection = normalize(v_surfaceToLight);' +
     'vec3 surfaceToViewDirection = normalize(v_surfaceToView);' +
     'vec3 halfVector = normalize(surfaceToLightDirection + surfaceToViewDirection);' +
-    'float dotFromDirection = dot(surfaceToLightDirection,' +
-    '-u_lightDirection);' +
+    'float dotFromDirection = dot(surfaceToLightDirection,-u_lightDirection);' +
     'float limitRange = u_innerLimit - u_outerLimit;' +
     'float inLight = clamp((dotFromDirection - u_outerLimit) / limitRange, 0.0, 1.0);' +
     'float light = inLight * dot(normal, surfaceToLightDirection);' +
@@ -82,9 +81,9 @@ function main() {
     glMatrix.mat4.translate(matrix, matrix, [-50, -75, -15]);
 
     let datas = LoaderManager.instance.getCacheData("res/models/char/F.json");
-  let cubeData:any = {};
-  cubeData.position = new Float32Array(datas.position);
-  cubeData.normal = new Float32Array(datas.normal);
+    let cubeData:any = {};
+    cubeData.position = new Float32Array(datas.position);
+    cubeData.normal = new Float32Array(datas.normal);
 
 
     for (var ii = 0; ii < cubeData.position.length; ii += 3) {
@@ -211,8 +210,8 @@ function main() {
         uniformData.u_color = [0.2, 1, 0.2, 1];
          // set the light position
          const lightPosition = [40, 60, 120];
-        uniformData.u_lightWorldPosition = lightPosition;
-        uniformData.u_viewWorldPosition = camera;
+        uniformData.u_lightWorldPosition = lightPosition;//光在世界中的位置
+        uniformData.u_viewWorldPosition = camera;//相机在世界中的位置
         uniformData.u_shininess = shininess;
 
         // since we don't have a plane like most spotlight examples

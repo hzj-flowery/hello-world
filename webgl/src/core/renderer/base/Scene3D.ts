@@ -61,10 +61,10 @@ export default class Scene3D extends Scene {
         // this.addChild(this._FLightSpot);
         // this._FLightSpot.Url = "res/models/char/F.json";
 
-        this._FLightThreeD = new ThreeDLight();
-        this._FLightThreeD.setPosition(0,20,-100);
-        this.addChild(this._FLightThreeD);
-        this._FLightThreeD.Url = "res/models/char/F.json";
+        // this._FLightThreeD = new ThreeDLight();
+        // this._FLightThreeD.setPosition(0,20,-100);
+        // this.addChild(this._FLightThreeD);
+        // this._FLightThreeD.Url = "res/models/char/F.json";
 
 
 

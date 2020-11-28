@@ -24,7 +24,7 @@ import { G_CameraModel } from "./core/renderer/camera/CameraModel";
 
 Device.Instance.init();
 G_ShaderFactory.init(Device.Instance.gl);
-G_CameraModel.init(Device.Instance.gl);
+// G_CameraModel.init(Device.Instance.gl);
 //testWebl_Label.run();
 
 //LightTest.run();
@@ -74,14 +74,14 @@ G_CameraModel.init(Device.Instance.gl);
 
 
 LoaderManager.instance.loadData(arr,null,function(){
-    new RenderFlow().startup();
+    // new RenderFlow().startup();
     // RampTextureTest.run();
     // CameraTest.run();
     // RobartTest.run();
     // ObjTest.run();
     // Stage.run();
 
-    // SpotLightTest.run();
+    SpotLightTest.run();
 
     // PointLightTest.run();
     // ThreeDLightTest.run();
