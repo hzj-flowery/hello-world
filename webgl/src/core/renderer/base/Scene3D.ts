@@ -22,6 +22,8 @@ import { MathUtils } from "../../utils/MathUtils";
 import Camera from "../camera/Camera";
 import { G_CameraModel } from "../camera/CameraModel";
 import { PointLight } from "../light/PointLight";
+import { SpotLight } from "../light/SpotLight";
+import { ThreeDLight } from "../light/ThreeDLight";
 
 export default class Scene3D extends Scene {
 
@@ -34,7 +36,9 @@ export default class Scene3D extends Scene {
     private _customTexture: CustomTextureCube;
     private _centerNode: Node;
     private _3dCamera: PerspectiveCamera;
-    private _FLight:PointLight;
+    private _FLightPoint:PointLight;
+    private _FLightSpot:SpotLight;
+    private _FLightThreeD:ThreeDLight;
     private _sphere: Sphere;
 
       
@@ -47,14 +51,25 @@ export default class Scene3D extends Scene {
         
        
 
-        this._FLight = new PointLight();
-        // this._FLight.setScale(0.2,0.2,0.2);
-        // this._FLight.setPosition(0,0,300);
-        this.addChild(this._FLight);
-        this._FLight.Url = "res/models/char/F.json";
+        // this._FLightPoint = new PointLight();
+        // this._FLightPoint.setPosition(0,20,-100);
+        // this.addChild(this._FLightPoint);
+        // this._FLightPoint.Url = "res/models/char/F.json";
+
+        // this._FLightSpot = new SpotLight();
+        // this._FLightSpot.setPosition(0,-20,-100);
+        // this.addChild(this._FLightSpot);
+        // this._FLightSpot.Url = "res/models/char/F.json";
+
+        this._FLightThreeD = new ThreeDLight();
+        this._FLightThreeD.setPosition(0,20,-100);
+        this.addChild(this._FLightThreeD);
+        this._FLightThreeD.Url = "res/models/char/F.json";
+
+
+
 
         this.renderCallBack(G_CameraModel.getSettings());
-
 
         var gl = Device.Instance.gl;
         this._centerNode = new Node();
@@ -131,8 +146,8 @@ export default class Scene3D extends Scene {
             settings.cam1FieldOfView,settings.cam1Near,settings.cam1Far) as PerspectiveCamera;
         this._3dCamera.setPosition(settings.cam1PosX,settings.cam1PosY,settings.cam1PosZ);
         this._3dCamera.setRotation(settings.cam1RotX,settings.cam1RotY,settings.cam1RotZ);
-        this._FLight.setPosition(settings.posX,settings.posY,settings.posZ);
-        // this.setPosition(settings.posX,settings.posY,settings.posZ);
+        // this._FLight.setPosition(settings.posX,settings.posY,settings.posZ);
+        this.setPosition(settings.posX,settings.posY,settings.posZ);
     }
     public rotateCenterNode() {
         this._centerNode.rotate(0, 1, 0);

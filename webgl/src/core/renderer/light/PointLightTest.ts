@@ -104,7 +104,6 @@ function main() {
     let cameraData = setCamera();
     FModel.setRotation(0,fRotationRadians,0);
     FModel.visit(0);
-    console.log("cameraData-----",cameraData);
     FModel.updateUniformsData(cameraData);
     FModel.testDraw();
 

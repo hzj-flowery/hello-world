@@ -6,7 +6,9 @@ export class CameraData{
      constructor(){
          this.reset();
      } 
-     //相机的位置
+     /*
+     相机的位置
+     */
      public position:Array<number>;
      //相机的投影矩阵
      public projectMat:Float32Array;
