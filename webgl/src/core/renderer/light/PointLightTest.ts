@@ -82,7 +82,6 @@ function main() {
     glMatrix.mat4.rotateY(worldMatrix, worldMatrix, fRotationRadians);
 
     let ret = new CameraData();
-    ret.viewProjectionMat = viewProjectionMatrix;
     ret.position = cameraPos;
     return ret;
   }

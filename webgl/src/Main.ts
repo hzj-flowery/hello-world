@@ -16,9 +16,9 @@ import CaptureTest from "./core/renderer/3d/CaptureTest";
 import RampTextureTest from "./core/renderer/3d/RampTextureTest";
 import ObjTest from "./core/renderer/3d/ObjTest";
 import { CameraTest } from "./core/renderer/3d/CameraTest";
-import SpotLightTest from "./core/renderer/3d/SpotLightTest";
 import ThreeDLightTest from "./core/renderer/light/ThreeDLightTest";
 import { G_CameraModel } from "./core/renderer/camera/CameraModel";
+import ShaderShadowTest from "./core/renderer/3d/ShaderShadowTest";
 
 
 
@@ -81,9 +81,11 @@ LoaderManager.instance.loadData(arr,null,function(){
     // ObjTest.run();
     // Stage.run();
 
-    SpotLightTest.run();
+    // SpotLightTest.run();
 
     // PointLightTest.run();
     // ThreeDLightTest.run();
+
+    ShaderShadowTest.run();
     
 })

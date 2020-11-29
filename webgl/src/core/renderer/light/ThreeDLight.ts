@@ -24,7 +24,7 @@ var fragmentshader3d =
     'uniform vec4 u_color;' +
     'void main() {' +
     'vec3 normal = normalize(v_normal);' +                 //归一化法线
-    'float light = dot(normal, u_reverseLightDirection);' + //法线*光的方向 算出光的反射方向
+    'float light = dot(normal, u_reverseLightDirection);' + //法线*光的方向 算出光的强度
     'gl_FragColor = u_color;' +
     'gl_FragColor.rgb *= light;' +                          //
     '}'

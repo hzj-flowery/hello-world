@@ -139,12 +139,12 @@ export default class Device {
     private onMouseUp(ev): void {
         this._isCapture = false;
     }
-    public startDraw(time: number, scene2D: Scene2D, scene3D: Scene3D):void{
-         this.onBeforeRender();
-         this.visitRenderTree(time,scene2D,scene3D);
-        //  this.drawToUI(scene2D.getFrameBuffer());
-         this.draw2screen();
-         this.onAfterRender();
+    public startDraw(time: number, scene2D: Scene2D, scene3D: Scene3D): void {
+        this.onBeforeRender();
+        this.visitRenderTree(time, scene2D, scene3D);
+         this.drawToUI(scene2D.getFrameBuffer());
+        this.draw2screen();
+        this.onAfterRender();
     }
     /**
      * 遍历渲染树
@@ -152,29 +152,27 @@ export default class Device {
      * @param scene2D 
      * @param scene3D 
      */
-    private visitRenderTree(time: number, scene2D: Scene2D, scene3D: Scene3D):void{
+    private visitRenderTree(time: number, scene2D: Scene2D, scene3D: Scene3D): void {
         scene3D.visit(time);
         scene2D.visit(time);
     }
     /**
      * 将结果绘制到UI上
      */
-    private drawToUI(frameBuffer:WebGLFramebuffer): void {
-        this._commitRenderState([0.5, 0.5, 0.5, 1.0],frameBuffer);
+    private drawToUI(frameBuffer: WebGLFramebuffer): void {
+        this._commitRenderState([0.5, 0.5, 0.5, 1.0], frameBuffer);
         this.triggerRender();
     }
     //将结果绘制到窗口
     private draw2screen(): void {
-        let isShowCamera:boolean = false;
-        if(isShowCamera)
-        {
-            this._commitRenderState([0.5, 0.5, 0.5, 1.0], null,{ x: 0, y: 0, w: 0.5, h: 1 });
-        this.triggerRender();
-        this.setViewPort({ x: 0.5, y: 0, w: 0.5, h: 1 });
-        this.triggerRender(true);
+        let isShowCamera: boolean = true;
+        if (isShowCamera) {
+            this._commitRenderState([0.5, 0.5, 0.5, 1.0], null, { x: 0, y: 0, w: 0.5, h: 1 });
+            this.triggerRender();
+            this.setViewPort({ x: 0.5, y: 0, w: 0.5, h: 1 });
+            this.triggerRender(true);
         }
-        else
-        {
+        else {
             this._commitRenderState([0.5, 0.5, 0.5, 1.0], null);
             this.triggerRender();
         }
@@ -268,11 +266,21 @@ export default class Device {
                 else {
                     glMatrix.mat4.invert(this._temp1Matrix, cameraData.modelMat);
                     this._drawBase(rData, cameraData.projectMat, this._temp1Matrix);
-                }; 
+                };
                 break;
             case RenderDataType.Normal:
-                // if(!isUseScene)
-                this._drawNormal(rData as NormalRenderData,cameraData);
+                if(isUseScene)
+                {
+                    let projMatix = G_CameraModel.getSceneProjectMatrix();
+                    glMatrix.mat4.invert(this._temp1Matrix, G_CameraModel.getSceneCameraMatrix());
+                    cameraData.projectMat = projMatix;
+                    cameraData.modelMat = this._temp1Matrix;
+                    this._drawNormal(rData as NormalRenderData, cameraData);
+                }
+                else
+                {
+                    this._drawNormal(rData as NormalRenderData, cameraData);
+                }
                 break;
             case RenderDataType.Spine:
                 if (isUseScene) {
@@ -309,24 +317,20 @@ export default class Device {
         G_ShaderFactory.drawBufferInfo(sData._attrbufferData, sData._glPrimitiveType);
     }
 
-    private _drawNormal(sData: NormalRenderData, cameraData:CameraData): void {
+    private _drawNormal(sData: NormalRenderData, cameraData: CameraData): void {
         this.gl.useProgram(sData._shaderData.spGlID);
         sData._node.updateUniformsData(cameraData);
         G_ShaderFactory.setBuffersAndAttributes(sData._shaderData.attrSetters, sData._attrbufferData);
-        for(let j in sData._uniformData)
-        {
-            G_ShaderFactory.setUniforms(sData._shaderData.uniSetters,sData._uniformData[j]);
+        for (let j in sData._uniformData) {
+            G_ShaderFactory.setUniforms(sData._shaderData.uniSetters, sData._uniformData[j]);
         }
         G_ShaderFactory.drawBufferInfo(sData._attrbufferData, sData._glPrimitiveType);
     }
+
     private _renderData: Array<RenderData> = [];//绘制的数据
     public collectData(rData: RenderData): void {
         this._renderData.push(rData);
     }
-
-
-
-
 
     private _framebuffer: FrameBuffer;//帧缓存
     /**

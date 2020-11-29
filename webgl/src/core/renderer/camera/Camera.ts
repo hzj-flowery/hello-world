@@ -139,6 +139,7 @@ export default class Camera extends Node {
         this._up = [0, 1, 0];//向上看
         this._eye = [0, 0, 0];//默认看向原点
         this._footMatrix = glMatrix.mat4.identity(null);
+        this._cameraData = new CameraData();
         this.updateCameraMatrix();
     }
 
@@ -404,14 +405,13 @@ export default class Camera extends Node {
     /**
      * 获取相机数据
      */
+    private _cameraData:CameraData;//相机数据
     public getCameraData():CameraData{
-         let data = new CameraData();
-         data.modelMat = this._modelMatrix;
-         data.projectMat = this._projectionMatrix;
-         data.viewMat = glMatrix.mat4.invert(null,this._modelMatrix);
-         data.position = [this.x,this.y,this.z];
-         data.viewProjectionMat = glMatrix.mat4.multiply(null,data.projectMat,data.viewMat);
-         return data;
+         this._cameraData.modelMat = this._modelMatrix;
+         this._cameraData.projectMat = this._projectionMatrix;
+         this._cameraData.position = [this.x,this.y,this.z];
+         this._cameraData.lightData.setData([20, 30, 60],[1,1,1],[1,1,1]);
+         return this._cameraData;
     }
 
 

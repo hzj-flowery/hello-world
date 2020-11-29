@@ -45,7 +45,7 @@ export class RenderTexture extends Texture2D {
     constructor(gl) {
         super(gl);
 
-        this.intFBRuffers();
+        this.intFrameBuffers();
     }
 
     public _frameBuffer: any;//帧缓冲的glID
@@ -53,7 +53,7 @@ export class RenderTexture extends Texture2D {
     public gl_width: number;
     public gl_height: number;
 
-    public intFBRuffers() {
+    public intFrameBuffers() {
         var gl = this._gl;
 
         /**

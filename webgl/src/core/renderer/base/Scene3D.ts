@@ -51,10 +51,10 @@ export default class Scene3D extends Scene {
         
        
 
-        // this._FLightPoint = new PointLight();
-        // this._FLightPoint.setPosition(0,20,-100);
-        // this.addChild(this._FLightPoint);
-        // this._FLightPoint.Url = "res/models/char/F.json";
+        this._FLightPoint = new PointLight();
+        this._FLightPoint.setPosition(0,20,-100);
+        this.addChild(this._FLightPoint);
+        this._FLightPoint.Url = "res/models/char/F.json";
 
         // this._FLightSpot = new SpotLight();
         // this._FLightSpot.setPosition(0,-20,-100);
@@ -146,6 +146,7 @@ export default class Scene3D extends Scene {
             settings.cam1FieldOfView,settings.cam1Near,settings.cam1Far) as PerspectiveCamera;
         this._3dCamera.setPosition(settings.cam1PosX,settings.cam1PosY,settings.cam1PosZ);
         this._3dCamera.setRotation(settings.cam1RotX,settings.cam1RotY,settings.cam1RotZ);
+        
         // this._FLight.setPosition(settings.posX,settings.posY,settings.posZ);
         this.setPosition(settings.posX,settings.posY,settings.posZ);
     }

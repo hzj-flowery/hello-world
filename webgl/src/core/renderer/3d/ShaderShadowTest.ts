@@ -453,11 +453,11 @@ class ShadowLight {
     const cameraMatrix = glMatrix.mat4.lookAt2(null, cameraPosition, target, up);
     this.drawScene(projectionMatrix, cameraMatrix, textureMatrix, lightReverseDir, this.textureProgramInfo);
     // ------ Draw the frustum ------
-    // let matMatrix = glMatrix.mat4.multiply(null, lightWorldMatrix, glMatrix.mat4.invert(null, lightProjectionMatrix));
-    // this.drawFrustum(projectionMatrix,cameraMatrix, matMatrix);
+    let matMatrix = glMatrix.mat4.multiply(null, lightWorldMatrix, glMatrix.mat4.invert(null, lightProjectionMatrix));
+    this.drawFrustum(projectionMatrix,cameraMatrix, matMatrix);
     
     let wm = glMatrix.mat4.invert(null,cameraMatrix);
-    // glMatrix.mat4.translate(wm,wm,cameraPosition);
+    glMatrix.mat4.translate(wm,wm,cameraPosition);
     glMatrix.mat4.scale(wm,wm,[0.9,0.9,0.9])
     let matMatrix1 = glMatrix.mat4.multiply(null, wm, glMatrix.mat4.invert(null, projectionMatrix));
     this.drawFrustum(projectionMatrix,cameraMatrix,matMatrix1);

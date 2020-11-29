@@ -26,23 +26,31 @@ var vertexshader3d =
 var fragmentshader3d =
   'precision mediump float;' +
   'varying vec3 v_normal;' +
-  'varying vec3 v_surfaceToLight;' +
-  'varying vec3 v_surfaceToView;' +
-  'uniform vec4 u_color;' +
-  'uniform float u_shininess;' +
+  'varying vec3 v_surfaceToLight;' +   //物体表面到光位置的方向
+  'varying vec3 v_surfaceToView;' +    //物体表面到摄像机位置的方向
+  'uniform vec4 u_color;' +            //物体表面的颜色
+  'uniform float u_shininess;' +       //高光的指数
+  'uniform vec3 u_lightColor;'+        //光的颜色
+  'uniform vec3 u_specularColor;'+     //高光的颜色
   'void main() {' +
-  'vec3 normal = normalize(v_normal);' +
+  'vec3 normal = normalize(v_normal);' +  //法线
   'vec3 surfaceToLightDirection = normalize(v_surfaceToLight);' +
   'vec3 surfaceToViewDirection = normalize(v_surfaceToView);' +
-  'vec3 halfVector = normalize(surfaceToLightDirection + surfaceToViewDirection);' +
-  'float light = dot(normal, surfaceToLightDirection);' +
+  'vec3 halfVector = normalize(surfaceToLightDirection + surfaceToViewDirection);' + //高光的方向
+  'float light = dot(normal, surfaceToLightDirection);' + //法线*光的方向 算出光的反射强度
   'float specular = 0.0;' +
-  'if (light > 0.0) {' +
-  'specular = pow(dot(normal, halfVector), u_shininess);' +
-  '}' +
-  'gl_FragColor = u_color;' +
-  'gl_FragColor.rgb *= light;' +
-  'gl_FragColor.rgb += specular;' +
+  'if (light > 0.0) {specular = pow(dot(normal, halfVector), u_shininess);}' +//法线*高光方向 算出高光的反射强度
+  'gl_FragColor = u_color;' +        //顶点颜色
+  // 'gl_FragColor.rgb *= light;' +     //反射的颜色
+  // 'gl_FragColor.rgb += specular;' +  //加上高光
+
+  // Lets multiply just the color portion (not the alpha)
+  // by the light
+  'vec3 lightColor = light * u_lightColor;'+   //光的强度*光的颜色
+  'gl_FragColor.rgb *= lightColor;'+           //光的颜色和点的颜色混合
+  // Just add in the specular
+  'gl_FragColor.rgb += specular * u_specularColor;'+ //加上高光的颜色
+
   '}'
 
 
@@ -50,13 +58,14 @@ export class PointLight extends SY.Sprite {
   constructor() {
     super();
   }
-  private shininess:number = 150;
   protected onInit(): void {
     this._uniformData = {
       u_worldViewProjection: {},
       u_worldInverseTranspose: {},
       u_color: {},
       u_shininess: {},
+      u_lightColor:{},
+      u_specularColor:{},
       u_lightWorldPosition: {},
       u_viewWorldPosition: {},
       u_world: {}
@@ -83,9 +92,9 @@ export class PointLight extends SY.Sprite {
     this._attrData = G_ShaderFactory.createBufferInfoFromArrays(cubeDatas);
   }
   //更新unifoms变量
-  public updateUniformsData(cameraData:CameraData):any{
+  public updateUniformsData(cData:CameraData):any{
     // Multiply the matrices.
-    var worldViewProjectionMatrix = glMatrix.mat4.multiply(null, cameraData.viewProjectionMat,  this._modelMatrix);
+    var worldViewProjectionMatrix = glMatrix.mat4.multiply(null, cData.viewProjectionMat,  this._modelMatrix);
     var worldInverseMatrix = glMatrix.mat4.invert(null,  this._modelMatrix);
     var worldInverseTransposeMatrix = glMatrix.mat4.identity(null);
     glMatrix.mat4.transpose(worldInverseTransposeMatrix, worldInverseMatrix);
@@ -94,10 +103,12 @@ export class PointLight extends SY.Sprite {
     this._uniformData.u_worldViewProjection = worldViewProjectionMatrix;  //投影矩阵 x 视口矩阵 x 世界矩阵
     this._uniformData.u_worldInverseTranspose = worldInverseTransposeMatrix;//世界矩阵逆矩阵的转置矩阵
     this._uniformData.u_world =  this._modelMatrix;//世界矩阵
-    this._uniformData.u_color = [0.2, 1, 0.2, 1];//光的颜色
-    this._uniformData.u_lightWorldPosition = [20, 30, 60];//光的位置
-    this._uniformData.u_viewWorldPosition = cameraData.position;//摄像机的位置
-    this._uniformData.u_shininess = this.shininess;
+    this._uniformData.u_color = [0.2, 1, 0.2, 1];//点的颜色
+    this._uniformData.u_lightWorldPosition = cData.lightData.position;//光的位置
+    this._uniformData.u_viewWorldPosition = cData.position;//摄像机的位置
+    this._uniformData.u_shininess = cData.lightData.specularShininess;//高光的指数
+    this._uniformData.u_lightColor = cData.lightData.color;
+    this._uniformData.u_specularColor = cData.lightData.specularColor;
     super.updateRenderData();
     return this._uniformData;
   }
