@@ -118,62 +118,58 @@ export namespace syPrimitives {
      *         created plane vertices.
      * @memberOf module:primitives
      */
-    export function createPlaneVertices(width,depth,subdivisionsWidth,subdivisionsDepth,matrix) {
-        if(!matrix)
-        {
-            matrix = glMatrix.mat4.create();
-            glMatrix.mat4.identity(matrix);
+    export function createPlaneVertices(width,depth,subdivisionsWidth,subdivisionsDepth,matrix?) {
+      width = width || 1;
+      depth = depth || 1;
+      subdivisionsWidth = subdivisionsWidth || 1;
+      subdivisionsDepth = subdivisionsDepth || 1;
+      matrix = matrix || glMatrix.mat4.identity(null);
+  
+      const numVertices = (subdivisionsWidth + 1) * (subdivisionsDepth + 1);
+      const positions = G_ShaderFactory.createAugmentedTypedArray(3, numVertices);
+      const normals = G_ShaderFactory.createAugmentedTypedArray(3, numVertices);
+      const texcoords = G_ShaderFactory.createAugmentedTypedArray(2, numVertices);
+  
+      for (let z = 0; z <= subdivisionsDepth; z++) {
+        for (let x = 0; x <= subdivisionsWidth; x++) {
+          const u = x / subdivisionsWidth;
+          const v = z / subdivisionsDepth;
+          positions.push(
+              width * u - width * 0.5,
+              0,
+              depth * v - depth * 0.5);
+          normals.push(0, 1, 0);
+          texcoords.push(u, v);
         }
-        width = width || 1;
-        depth = depth || 1;
-        subdivisionsWidth = subdivisionsWidth || 1;
-        subdivisionsDepth = subdivisionsDepth || 1;
-
-        const numVertices = (subdivisionsWidth + 1) * (subdivisionsDepth + 1);
-        const positions = G_ShaderFactory.createAugmentedTypedArray(3, numVertices);
-        const normals = G_ShaderFactory.createAugmentedTypedArray(3, numVertices);
-        const texcoords = G_ShaderFactory.createAugmentedTypedArray(2, numVertices);
-
-        for (let z = 0; z <= subdivisionsDepth; z++) {
-            for (let x = 0; x <= subdivisionsWidth; x++) {
-                const u = x / subdivisionsWidth;
-                const v = z / subdivisionsDepth;
-                positions.push(
-                    width * u - width * 0.5,
-                    0,
-                    depth * v - depth * 0.5);
-                normals.push(0, 1, 0);
-                texcoords.push(u, v);
-            }
+      }
+  
+      const numVertsAcross = subdivisionsWidth + 1;
+      const indices = G_ShaderFactory.createAugmentedTypedArray(
+          3, subdivisionsWidth * subdivisionsDepth * 2, Uint16Array);
+  
+      for (let z = 0; z < subdivisionsDepth; z++) {
+        for (let x = 0; x < subdivisionsWidth; x++) {
+          // Make triangle 1 of quad.
+          indices.push(
+              (z + 0) * numVertsAcross + x,
+              (z + 1) * numVertsAcross + x,
+              (z + 0) * numVertsAcross + x + 1);
+  
+          // Make triangle 2 of quad.
+          indices.push(
+              (z + 1) * numVertsAcross + x,
+              (z + 1) * numVertsAcross + x + 1,
+              (z + 0) * numVertsAcross + x + 1);
         }
-
-        const numVertsAcross = subdivisionsWidth + 1;
-        const indices = G_ShaderFactory.createAugmentedTypedArray(
-            3, subdivisionsWidth * subdivisionsDepth * 2, Uint16Array);
-
-        for (let z = 0; z < subdivisionsDepth; z++) {
-            for (let x = 0; x < subdivisionsWidth; x++) {
-                // Make triangle 1 of quad.
-                indices.push(
-                    (z + 0) * numVertsAcross + x,
-                    (z + 1) * numVertsAcross + x,
-                    (z + 0) * numVertsAcross + x + 1);
-
-                // Make triangle 2 of quad.
-                indices.push(
-                    (z + 1) * numVertsAcross + x,
-                    (z + 1) * numVertsAcross + x + 1,
-                    (z + 0) * numVertsAcross + x + 1);
-            }
-        }
-
-        const arrays = reorientVertices({
-            position: positions,
-            normal: normals,
-            texcoord: texcoords,
-            indices: indices,
-        }, matrix);
-        return arrays;
+      }
+  
+      const arrays = reorientVertices({
+        position: positions,
+        normal: normals,
+        texcoord: texcoords,
+        indices: indices,
+      }, matrix);
+      return arrays;
     }
 
     /**

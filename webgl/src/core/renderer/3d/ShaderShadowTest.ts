@@ -109,6 +109,16 @@ class ShadowLight {
       1,   // subdivisions across
       1,   // subdivisions down
     );
+     console.log("this.planeBufferInfo------",this.planeBufferInfo);
+    let ppp1 =window["primitives"].createPlaneBufferInfo(
+      this.gl,
+      20,  // width
+      20,  // height
+      1,   // subdivisions across
+      1,   // subdivisions down
+  );
+  console.log("jjjfjj-----",ppp1);
+
     this.cubeBufferInfo = syPrimitives.createCubeBufferInfo(
       2,  // size
     );
@@ -456,11 +466,11 @@ class ShadowLight {
     let matMatrix = glMatrix.mat4.multiply(null, lightWorldMatrix, glMatrix.mat4.invert(null, lightProjectionMatrix));
     this.drawFrustum(projectionMatrix,cameraMatrix, matMatrix);
     
-    let wm = glMatrix.mat4.invert(null,cameraMatrix);
-    glMatrix.mat4.translate(wm,wm,cameraPosition);
-    glMatrix.mat4.scale(wm,wm,[0.9,0.9,0.9])
-    let matMatrix1 = glMatrix.mat4.multiply(null, wm, glMatrix.mat4.invert(null, projectionMatrix));
-    this.drawFrustum(projectionMatrix,cameraMatrix,matMatrix1);
+    // let wm = glMatrix.mat4.invert(null,cameraMatrix);
+    // // glMatrix.mat4.translate(wm,wm,cameraPosition);
+    // // glMatrix.mat4.scale(wm,wm,[0.9,0.9,0.9])
+    // let matMatrix1 = glMatrix.mat4.multiply(null, wm, glMatrix.mat4.invert(null, projectionMatrix));
+    // this.drawFrustum(projectionMatrix,cameraMatrix,matMatrix1);
   }
 }
 
