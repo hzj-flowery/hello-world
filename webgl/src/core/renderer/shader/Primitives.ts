@@ -11,14 +11,14 @@ export namespace syPrimitives {
         const len = array.length;
         const tmp = new Float32Array(3);
         for (let ii = 0; ii < len; ii += 3) {
-            fn(matrix, [array[ii], array[ii + 1], array[ii + 2]], tmp);
+            fn(tmp,matrix, [array[ii], array[ii + 1], array[ii + 2]]);
             array[ii] = tmp[0];
             array[ii + 1] = tmp[1];
             array[ii + 2] = tmp[2];
         }
     }
 
-    function transformNormal(mi, v, dst) {
+    function transformNormal(dst:Float32Array,mi, v) {
         dst = dst || new Float32Array(3);
         const v0 = v[0];
         const v1 = v[1];
@@ -55,6 +55,7 @@ export namespace syPrimitives {
         let invertM = glMatrix.mat4.create();
         glMatrix.mat4.invert(invertM,matrix);
         applyFuncToV3Array(array, invertM, transformNormal);
+
         return array;
     }
 
@@ -123,12 +124,16 @@ export namespace syPrimitives {
       depth = depth || 1;
       subdivisionsWidth = subdivisionsWidth || 1;
       subdivisionsDepth = subdivisionsDepth || 1;
-      matrix = matrix || glMatrix.mat4.identity(null);
+      matrix = matrix|| glMatrix.mat4.identity(null);
+      
+
+
   
       const numVertices = (subdivisionsWidth + 1) * (subdivisionsDepth + 1);
       const positions = G_ShaderFactory.createAugmentedTypedArray(3, numVertices);
       const normals = G_ShaderFactory.createAugmentedTypedArray(3, numVertices);
       const texcoords = G_ShaderFactory.createAugmentedTypedArray(2, numVertices);
+
   
       for (let z = 0; z <= subdivisionsDepth; z++) {
         for (let x = 0; x <= subdivisionsWidth; x++) {
@@ -162,7 +167,7 @@ export namespace syPrimitives {
               (z + 0) * numVertsAcross + x + 1);
         }
       }
-  
+      
       const arrays = reorientVertices({
         position: positions,
         normal: normals,

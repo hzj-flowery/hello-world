@@ -199,7 +199,7 @@ export namespace glMatrix {
      * @return {Vector3} dst or new Vector3 if not provided
      * @memberOf module:webgl-3d-math
      */
-    function addVectors(dst,a, b):Float32Array {
+    function addVectors(dst:Float32Array,a, b):Float32Array {
         dst = dst || new MatType(3);
         dst[0] = a[0] + b[0];
         dst[1] = a[1] + b[1];
@@ -2160,7 +2160,7 @@ export namespace glMatrix {
      * @param {Matrix4} [dst] optional matrix to store result
      * @return {Matrix4} dst or a new matrix if none provided
      */
-    function compose(translation, quaternion, scale, dst) {
+    function compose(dst:Float32Array,translation, quaternion, scale) {
         dst = dst || new Float32Array(16);
     
         const x = quaternion[0];
@@ -2246,7 +2246,7 @@ export namespace glMatrix {
         matrix[9] *= invSZ;
         matrix[10] *= invSZ;
     
-        quatFromRotationMatrix(matrix, quaternion);
+        quatFromRotationMatrix(quaternion,matrix);
     
         scale[0] = sx;
         scale[1] = sy;
@@ -2294,7 +2294,7 @@ export namespace glMatrix {
     
         return 1.0 / (m00 * t0 + m10 * t1 + m20 * t2 + m30 * t3);
       }
-      function quatFromRotationMatrix(m, dst) {
+      function quatFromRotationMatrix(dst,m) {
         // http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/index.htm
     
         // assumes the upper 3x3 of m is a pure rotation matrix (i.e, unscaled)
@@ -2611,7 +2611,7 @@ export namespace glMatrix {
      * @return {Matrix4} dst or a new matrix if none provided
      * @memberOf module:webgl-3d-math
      */
-    function scaling(dst,sx, sy, sz) {
+    function scaling(dst:Float32Array,sx, sy, sz) {
         dst = dst || new MatType(16);
     
         dst[ 0] = sx;
@@ -3704,7 +3704,7 @@ export namespace glMatrix {
      * @return {Matrix4} dst or a new matrix if none provided
      * @memberOf module:webgl-3d-math
      */
-    function lookAt2(dst,cameraPosition, target, up) {
+    function lookAt2(dst:Float32Array,cameraPosition, target, up) {
         dst = dst || new MatType(16);
         var zAxis = [];
         var subR = [];
@@ -4098,7 +4098,7 @@ export namespace glMatrix {
      * @return {Vector4} dst or new Vector4 if not provided
      * @memberOf module:webgl-3d-math
      */
-    function transformPoint(dst,m, v) {
+    function transformPoint(dst:Float32Array,m:Float32Array, v:Array<number>) {
         dst = dst||new MatType(3);
         var v0 = v[0];
         var v1 = v[1];

@@ -167,7 +167,7 @@ class skeleton_Transform {
     }
     public getMatrix(dst?) {
         dst = dst || new Float32Array(16);
-        glMatrix.mat4.compose(this.position, this.rotation, this.scale, dst);
+        glMatrix.mat4.compose(dst,this.position, this.rotation, this.scale);
         return dst;
     }
 }

@@ -109,15 +109,6 @@ class ShadowLight {
       1,   // subdivisions across
       1,   // subdivisions down
     );
-     console.log("this.planeBufferInfo------",this.planeBufferInfo);
-    let ppp1 =window["primitives"].createPlaneBufferInfo(
-      this.gl,
-      20,  // width
-      20,  // height
-      1,   // subdivisions across
-      1,   // subdivisions down
-  );
-  console.log("jjjfjj-----",ppp1);
 
     this.cubeBufferInfo = syPrimitives.createCubeBufferInfo(
       2,  // size
