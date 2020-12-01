@@ -299,7 +299,7 @@ class skeleton_MeshRenderer {
             });
             G_ShaderFactory.setUniforms(this.meshProgramInfo.uniSetters, primitive.material.uniforms);
             G_ShaderFactory.setUniforms(this.meshProgramInfo.uniSetters, sharedUniforms);
-            G_ShaderFactory.drawBufferInfo(this.gl, primitive.bufferInfo);
+            G_ShaderFactory.drawBufferInfo(primitive.bufferInfo);
         }
     }
 }

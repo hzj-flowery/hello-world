@@ -425,7 +425,7 @@ class ShaderFactory {
         return this.getShareDataByIndex(index).spGlID;
     }
     //设置attribute变量
-    public setBuffersAndAttributes(attribSetters: { [index: string]: Function }, buffers) {
+    public setBuffersAndAttributes(attribSetters: { [index: string]: Function }, buffers:BufferAttribsData) {
         var gl = this._gl;
         var attribs = buffers.attribs;
         var setters = attribSetters;
@@ -461,7 +461,7 @@ class ShaderFactory {
         }
     }
     //启动顶点着色器绘制
-    public drawBufferInfo(bufferInfo, primitiveType?:glprimitive_type, count?:number, offset?:number) {
+    public drawBufferInfo(bufferInfo:BufferAttribsData, primitiveType?:glprimitive_type, count?:number, offset?:number) {
         var gl = this._gl;
         const indices = bufferInfo.indices;
         primitiveType = primitiveType === undefined ? gl.TRIANGLES : primitiveType;

@@ -1972,6 +1972,7 @@ export namespace glMatrix {
      */
 
     function copy$3(out, a) {
+        out = out || new MatType(16);
         out[0] = a[0];
         out[1] = a[1];
         out[2] = a[2];
@@ -2485,11 +2486,17 @@ export namespace glMatrix {
     }
     /**
      * Multiplies two mat4s
-     *
+     * a * b  b左乘a
      * @param {mat4} out the receiving matrix
      * @param {mat4} a the first operand
      * @param {mat4} b the second operand
      * @returns {mat4} out
+     *      A               B
+     *a00a10a20a30 
+       0  4  8  12     0  4  8  12  
+     * 1  5  9  13     1  5  9  13
+     * 2  6  10 14     2  6  10 14
+     * 3  7  11 15     3  7  11 15      
      */
 
     function multiply$3(out, a, b) {
@@ -2497,52 +2504,55 @@ export namespace glMatrix {
         var a00 = a[0],
             a01 = a[1],
             a02 = a[2],
-            a03 = a[3];
+            a03 = a[3];  //a矩阵第一列
+
         var a10 = a[4],
             a11 = a[5],
             a12 = a[6],
-            a13 = a[7];
+            a13 = a[7];  //a矩阵第二列
+             
         var a20 = a[8],
             a21 = a[9],
             a22 = a[10],
-            a23 = a[11];
+            a23 = a[11];  //a矩阵第三列
+
         var a30 = a[12],
             a31 = a[13],
             a32 = a[14],
-            a33 = a[15]; // Cache only the current line of the second matrix
+            a33 = a[15]; //a矩阵第四列
 
         var b0 = b[0],
             b1 = b[1],
             b2 = b[2],
             b3 = b[3];
-        out[0] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
-        out[1] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
-        out[2] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;
-        out[3] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;
+        out[0] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;//OUT11 a矩阵第一行*b矩阵第一列
+        out[1] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;//OUT21 a矩阵第二行*b矩阵第一列
+        out[2] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;//OUT31 a矩阵第三行*b矩阵第一列
+        out[3] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;//OUT41 a矩阵第四行*b矩阵第一列
         b0 = b[4];
         b1 = b[5];
         b2 = b[6];
         b3 = b[7];
-        out[4] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
-        out[5] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
-        out[6] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;
-        out[7] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;
+        out[4] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;//OUT12 a矩阵第一行*b矩阵第二列
+        out[5] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;//OUT22 a矩阵第二行*b矩阵第二列
+        out[6] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;//OUT32 a矩阵第三行*b矩阵第二列
+        out[7] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;//OUT42 a矩阵第四行*b矩阵第二列
         b0 = b[8];
         b1 = b[9];
         b2 = b[10];
         b3 = b[11];
-        out[8] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
-        out[9] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
-        out[10] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;
-        out[11] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;
+        out[8] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;//OUT13 a矩阵第一行*b矩阵第三列
+        out[9] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;//OUT23 a矩阵第二行*b矩阵第三列
+        out[10] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;//OUT33 a矩阵第三行*b矩阵第三列
+        out[11] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;//OUT43 a矩阵第四行*b矩阵第三列
         b0 = b[12];
         b1 = b[13];
         b2 = b[14];
         b3 = b[15];
-        out[12] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
-        out[13] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
-        out[14] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;
-        out[15] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;
+        out[12] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;//OUT14 a矩阵第一行*b矩阵第四列
+        out[13] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;//OUT24 a矩阵第二行*b矩阵第四列
+        out[14] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;//OUT34 a矩阵第三行*b矩阵第四列
+        out[15] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;//OUT44 a矩阵第四行*b矩阵第四列
         return out;
     }
     /**
