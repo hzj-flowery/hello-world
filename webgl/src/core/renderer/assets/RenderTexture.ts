@@ -48,8 +48,8 @@ export class RenderTexture extends Texture2D {
         this.intFrameBuffers();
     }
 
-    public _frameBuffer: any;//帧缓冲的glID
-    public _renderBuffer: any;//渲染缓冲的glID
+    public _frameBuffer: WebGLFramebuffer;//帧缓冲的glID
+    public _renderBuffer: WebGLRenderbuffer;//渲染缓冲的glID
     public gl_width: number;
     public gl_height: number;
 
@@ -78,9 +78,6 @@ export class RenderTexture extends Texture2D {
 
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-
-
-
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
 
