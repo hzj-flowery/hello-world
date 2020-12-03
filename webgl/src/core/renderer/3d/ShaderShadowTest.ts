@@ -581,7 +581,7 @@ class ShadowLight_WebGl2 {
     //创建渲染缓冲并绑定以及初始化存储
     this._renderBuffer = gl.createRenderbuffer();
     gl.bindRenderbuffer(gl.RENDERBUFFER, this._renderBuffer);
-    gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, this.depthTextureSize, this.depthTextureSize);
+    gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT24, this.depthTextureSize, this.depthTextureSize);
     // //深度纹理附件
     this.depthTexture = gl.createTexture();
     this.depthTextureSize = 512;//设置这张纹理的尺寸512*512
@@ -608,6 +608,10 @@ class ShadowLight_WebGl2 {
       0);                   // mip level
     //设置渲染缓冲对象作为深度附件
     gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, this._renderBuffer);
+
+
+    gl.bindTexture(gl.TEXTURE_2D, null);
+    gl.bindRenderbuffer(gl.RENDERBUFFER, null);
 
     
     let renderBuffer1 = gl.createRenderbuffer();
@@ -643,7 +647,7 @@ class ShadowLight_WebGl2 {
       0);                    // mip level
 
       //设置渲染缓冲对象作为深度附件
-      gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, renderBuffer1);
+      // gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, renderBuffer1);
 
        // 检测帧缓冲区对象的配置状态是否成功
        var e = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
@@ -655,6 +659,10 @@ class ShadowLight_WebGl2 {
        {
            console.log("创建帧缓存成功----------");
        }
+
+       gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+       gl.bindTexture(gl.TEXTURE_2D, null);
+       gl.bindRenderbuffer(gl.RENDERBUFFER, null);
   }
 
   private setUI(): void {
@@ -881,7 +889,12 @@ class ShadowLight_WebGl2 {
 export default class ShaderShadowTest {
   static run() {
     // main();
+    let gl = Device.Instance.gl;
+    if(gl instanceof WebGLRenderingContext)
+    new ShadowLight_WebGl1(Device.Instance.gl).run();
+    else if(gl instanceof WebGL2RenderingContext)
     new ShadowLight_WebGl2(Device.Instance.gl).run();
+
   }
 
 }

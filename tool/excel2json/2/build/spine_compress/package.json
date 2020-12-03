@@ -1,0 +1,23 @@
+{
+  "name": "mjz-compress",
+  "version": "1.0.0",
+  "bin": "mjz-compress",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ansi-colors": "^4.1.1",
+    "commander": "^3.0.1",
+    "fancy-log": "^1.3.3",
+    "filesize": "^4.2.0",
+    "gulp": "^4.0.2",
+    "gulp-image": "^5.1.0",
+    "gulp-rename": "^1.4.0",
+    "pako": "^1.0.10",
+    "through2-concurrent": "^2.0.0"
+  }
+}

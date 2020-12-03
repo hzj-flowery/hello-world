@@ -173,6 +173,7 @@ class Graphic {
 
 export class CameraModel {
     constructor() {
+        this._isInit = false;
     }
     private gl: WebGLRenderingContext;
     private _frustumCube: ShaderData;
@@ -188,6 +189,7 @@ export class CameraModel {
     private _loacalInvertProj: Float32Array;
     private _viewMatrix: Float32Array;
     private _originPos: Array<number>;
+    private _isInit:boolean = false;
     // uniforms.
     private sharedUniforms = {
     };
@@ -212,6 +214,11 @@ export class CameraModel {
         '}'
 
     public init(gl:WebGLRenderingContext): void {
+        if(this._isInit)
+        {
+            return;
+        }
+        this._isInit = true;
         this.gl = gl;
         this._programInfor = G_ShaderFactory.createProgramInfo(this.solidcolorvertexshader, this.solidcolorfragmentshader);
         this._frustumCube = G_ShaderFactory.createProgramInfo(baseVertexShader, colorFragmentShader);
@@ -337,6 +344,7 @@ export class CameraModel {
     * @param targetCameraMatrix 目标摄像机的相机矩阵
     */
     public draw(targetProjMatrix, targetCameraMatrix) {
+        this.init(Device.Instance.gl);
         /**
          * 本地相机的投影矩阵和节点矩阵
          */
