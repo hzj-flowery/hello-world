@@ -45,59 +45,82 @@ import { BufferAttribsData, G_ShaderFactory, ShaderData } from "../shader/Shader
 class ShadowLight {
 
   private vertBase =
-    'attribute vec4 a_position;' +
-    'uniform mat4 u_projection;' +
-    'uniform mat4 u_view;' +
-    'uniform mat4 u_world;' +
-    'void main() {' +
-    'gl_Position = u_projection * u_view * u_world * a_position;' +
-    '}'
+    `attribute vec4 a_position;
+    uniform mat4 u_projection;
+    uniform mat4 u_view;
+    uniform mat4 u_world;
+    void main() {
+    gl_Position = u_projection * u_view * u_world * a_position;
+    }`
   private fragBase =
-    'precision mediump float;' +
-    'uniform vec4 u_color;' +
-    'void main() {' +
-    'gl_FragColor = vec4(gl_FragCoord.z,0.0, 0.0, 1.0);' +  //将深度值存在帧缓冲的颜色缓冲中 如果帧缓冲和窗口绑定 那么就显示出来 如果帧缓冲和纹理绑定就存储在纹理中
-    '}'
+    `precision mediump float;
+    uniform vec4 u_color;
+    void main() {
+    gl_FragColor = vec4(gl_FragCoord.z,0.0, 0.0, 1.0);  //将深度值存在帧缓冲的颜色缓冲中 如果帧缓冲和窗口绑定 那么就显示出来 如果帧缓冲和纹理绑定就存储在纹理中
+    }`
   private vertexshader3d =
-    'attribute vec4 a_position;' +
-    'attribute vec2 a_texcoord;' +
-    'attribute vec3 a_normal;' +
-    'uniform mat4 u_projection;' +
-    'uniform mat4 u_view;' +
-    'uniform mat4 u_world;' +
-    'uniform mat4 u_textureMatrix;' +                         //纹理矩阵 主要作用就是去算出投影的uv坐标 上一次光照的投影矩阵*视口矩阵
-    'varying vec2 v_texcoord;' +                              //当前顶点的uv坐标
-    'varying vec4 v_projectedTexcoord;' +
-    'varying vec3 v_normal;' +
-    'void main() {' +
-    'vec4 worldPosition = u_world * a_position;' +            //将当前顶点的坐标转换到世界空间坐标系中
-    'gl_Position = u_projection * u_view * worldPosition;' +  //将顶点转换到其次裁切空间下
-    'v_texcoord = a_texcoord;' +
-    'v_projectedTexcoord = u_textureMatrix * worldPosition;' + //算出投影纹理的uv
-    'v_normal = mat3(u_world) * a_normal;' +
-    '}'
+    `attribute vec4 a_position;
+    attribute vec2 a_texcoord;
+    attribute vec3 a_normal;
+    uniform mat4 u_projection;
+    uniform mat4 u_view;
+    uniform mat4 u_world;
+    uniform mat4 u_textureMatrix;                         //纹理矩阵 主要作用就是去算出投影的uv坐标 上一次光照的投影矩阵*视口矩阵
+    varying vec2 v_texcoord;                              //当前顶点的uv坐标
+    varying vec4 v_projectedTexcoord;
+    varying vec3 v_normal;
+    void main() {
+    vec4 worldPosition = u_world * a_position;            //将当前顶点的坐标转换到世界空间坐标系中
+    gl_Position = u_projection * u_view * worldPosition;  //将顶点转换到其次裁切空间下
+    v_texcoord = a_texcoord;
+    v_projectedTexcoord = u_textureMatrix * worldPosition; //算出投影纹理的uv
+    v_normal = mat3(u_world) * a_normal;
+    }`
   private fragmentshader3d =
-    'precision mediump float;' +
-    'varying vec2 v_texcoord;' +
-    'varying vec4 v_projectedTexcoord;' +
-    'varying vec3 v_normal;' +
-    'uniform vec4 u_colorMult;' +
-    'uniform sampler2D u_texture;' +
-    'uniform sampler2D u_projectedTexture;' + //投影纹理，第一次站在光的位置进行绘制，将结果存在这里，这个纹理只用于存储深度
-    'uniform float u_bias;' +
-    'uniform vec3 u_reverseLightDirection;' +          //光的反方向
-    'void main() {' +
-    'vec3 normal = normalize(v_normal);' +             //归一化法线
-    'float light = dot(normal, u_reverseLightDirection);' +
-    'vec3 projectedTexcoord = v_projectedTexcoord.xyz / v_projectedTexcoord.w;' +   //手动进行齐次除法
-    'projectedTexcoord = v_projectedTexcoord.xyz / 2.0 + 0.5;' +                     //转为屏幕坐标
-    'float currentDepth = projectedTexcoord.z + u_bias;' +                          //Z2  当前顶点的深度值                  
-    'bool inRange = projectedTexcoord.x >= 0.0 && projectedTexcoord.x <= 1.0 && projectedTexcoord.y >= 0.0 && projectedTexcoord.y <= 1.0;' + //uv纹理坐标必须处于【0，1】
-    'float projectedDepth = texture2D(u_projectedTexture, projectedTexcoord.xy).r;' + //取出深度z值 Z1
-    'float shadowLight = (inRange && projectedDepth <= currentDepth) ? 0.0 : 1.0;' +//小于说明光看不见，则处于阴影中，否则正常显示
-    'vec4 texColor = texture2D(u_texture, v_texcoord) * u_colorMult;' +
-    'gl_FragColor = vec4(texColor.rgb * light * shadowLight,texColor.a);' +
-    '}'
+    `precision mediump float;
+    varying vec2 v_texcoord;
+    varying vec4 v_projectedTexcoord;
+    varying vec3 v_normal;
+    uniform vec4 u_colorMult;
+    uniform sampler2D u_texture;
+    uniform sampler2D u_projectedTexture; //投影纹理，第一次站在光的位置进行绘制，将结果存在这里，这个纹理只用于存储深度
+    uniform float u_bias;
+    uniform vec3 u_reverseLightDirection;          //光的反方向
+    bool inRange(vec3 coordP){
+       return coordP.x >= 0.0 && coordP.x <= 1.0 && coordP.y >= 0.0 && coordP.y <= 1.0; //uv纹理坐标必须处于【0，1】
+    }
+    float getShadowLight(vec3 coordP){
+      float currentDepth = coordP.z + u_bias;                          //Z2  当前顶点的深度值                  
+      float projectedDepth = texture2D(u_projectedTexture, coordP.xy).r; //取出深度z值 Z1
+      float shadowLight = (inRange(coordP) && projectedDepth <= currentDepth) ? 0.0 : 1.0;//小于说明光看不见，则处于阴影中，否则正常显示
+      return shadowLight;
+    }
+    float getShadowLightRYY(vec3 coordP){
+      float shadows =0.0;
+      float opacity=0.6;// 阴影alpha值, 值越小暗度越深
+      float texelSize=1.0/1024.0;// 阴影像素尺寸,值越小阴影越逼真
+      vec4 rgbaDepth;
+      //  消除阴影边缘的锯齿
+      for(float y=-1.5; y <= 1.5; y += 1.0){
+          for(float x=-1.5; x <=1.5; x += 1.0){
+              rgbaDepth = texture2D(u_projectedTexture, coordP.xy+vec2(x,y)*texelSize);
+              shadows += (inRange(coordP) &&coordP.z-u_bias > rgbaDepth.r) ? 1.0 : 0.0;
+          }
+      }
+      shadows/=16.0;// 4*4的样本
+      float visibility=min(opacity+(1.0-shadows),1.0);
+
+      return visibility;
+    }
+    void main() {
+    vec3 normal = normalize(v_normal);             //归一化法线
+    float light = dot(normal, u_reverseLightDirection);
+    vec3 projectedTexcoord = v_projectedTexcoord.xyz / v_projectedTexcoord.w;   //手动进行齐次除法
+    projectedTexcoord = v_projectedTexcoord.xyz / 2.0 + 0.5;                     //转为屏幕坐标
+    float shadowLight = getShadowLightRYY(projectedTexcoord);
+    vec4 texColor = texture2D(u_texture, v_texcoord) * u_colorMult;
+    gl_FragColor = vec4(texColor.rgb * light * shadowLight,texColor.a);
+    }`
   private gl: WebGLRenderingContext
   constructor(gl: WebGLRenderingContext) {
     this.gl = gl;
@@ -296,7 +319,7 @@ class ShadowLight {
     // 检测帧缓冲区对象的配置状态是否成功
     var e = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
     if (gl.FRAMEBUFFER_COMPLETE !== e) {
-      console.log('Frame buffer object is incomplete: ' + e.toString(16));
+      console.log('Frame buffer object is incomplete:  e.toString(16)');
       return;
     }
     else {

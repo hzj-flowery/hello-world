@@ -72,14 +72,20 @@ export default class Device {
         console.log("画布的尺寸----", this._width, this._height);
 
 
-
-
         this.initExt();
         this.initMatrix();
 
-
+        //添加事件监听
+        canvas.addEventListener("webglcontextlost", this.contextLost.bind(this));
+        canvas.addEventListener("webglcontextrestored",this.resume.bind(this));
     }
 
+    private contextLost():void{
+        console.log("丢失上下文----");
+    }
+    private resume():void{
+        console.log("回来-----");
+    }
     //初始化矩阵
     private initMatrix(): void {
         this._temp_model_view_matrix = glMatrix.mat4.identity(null);
