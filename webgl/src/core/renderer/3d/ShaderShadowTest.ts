@@ -55,8 +55,6 @@ var vertexshader3d =
   'gl_Position = u_projection * u_view * worldPosition;' +  //将顶点转换到其次裁切空间下
   'v_texcoord = a_texcoord;' +
   'v_projectedTexcoord = u_textureMatrix * worldPosition;' + //算出投影纹理的uv
-  // 'v_projectedTexcoord =  v_projectedTexcoord.xyz / v_projectedTexcoord.w;' +
-  // 'v_projectedTexcoord = v_projectedTexcoord.xyz / 2.0 + 0.5;'+
   'v_normal = mat3(u_world) * a_normal;' +
   '}'
 var fragmentshader3d =
@@ -473,6 +471,61 @@ class ShadowLight_WebGl1 {
 }
 
 class ShadowLight_WebGl2 {
+
+  private vertBase =
+  'attribute vec4 a_position;' +
+  'uniform mat4 u_projection;' +
+  'uniform mat4 u_view;' +
+  'uniform mat4 u_world;' +
+  'void main() {' +
+  'gl_Position = u_projection * u_view * u_world * a_position;' +
+  '}'
+  private fragBase =
+  'precision mediump float;' +
+  'uniform vec4 u_color;' +
+  'void main() {' +
+  'gl_FragColor = vec4(0.0, 0.0, 0.0,gl_FragCoord.z);' +
+  '}'
+  private vertexshader3d =
+  'attribute vec4 a_position;' +
+  'attribute vec2 a_texcoord;' +
+  'attribute vec3 a_normal;' +
+  'uniform mat4 u_projection;' +
+  'uniform mat4 u_view;' +
+  'uniform mat4 u_world;' +
+  'uniform mat4 u_textureMatrix;' +                         //纹理矩阵 主要作用就是去算出投影的uv坐标
+  'varying vec2 v_texcoord;' +                              //当前顶点的uv坐标
+  'varying vec4 v_projectedTexcoord;' +
+  'varying vec3 v_normal;' +
+  'void main() {' +
+  'vec4 worldPosition = u_world * a_position;' +            //将当前顶点的坐标转换到世界空间坐标系中
+  'gl_Position = u_projection * u_view * worldPosition;' +  //将顶点转换到其次裁切空间下
+  'v_texcoord = a_texcoord;' +
+  'v_projectedTexcoord = u_textureMatrix * worldPosition;' + //算出投影纹理的uv
+  'v_normal = mat3(u_world) * a_normal;' +
+  '}'
+private fragmentshader3d =
+  'precision mediump float;' +
+  'varying vec2 v_texcoord;' +
+  'varying vec4 v_projectedTexcoord;' +
+  'varying vec3 v_normal;' +
+  'uniform vec4 u_colorMult;' +
+  'uniform sampler2D u_texture;' +
+  'uniform sampler2D u_projectedTexture;' + //投影纹理，第一次站在光的位置进行绘制，将结果存在这里，这个纹理只用于存储深度
+  'uniform float u_bias;' +
+  'uniform vec3 u_reverseLightDirection;' +          //光的反方向
+  'void main() {' +
+  'vec3 normal = normalize(v_normal);' +             //归一化法线
+  'float light = dot(normal, u_reverseLightDirection);' +
+  'vec3 projectedTexcoord = v_projectedTexcoord.xyz / v_projectedTexcoord.w;' +   //手动进行齐次除法
+  'projectedTexcoord = v_projectedTexcoord.xyz / 2.0 + 0.5;'+                     //转为屏幕坐标
+  'float currentDepth = projectedTexcoord.z + u_bias;' +                          //Z2  当前顶点的深度值                  
+  'bool inRange = projectedTexcoord.x >= 0.0 && projectedTexcoord.x <= 1.0 && projectedTexcoord.y >= 0.0 && projectedTexcoord.y <= 1.0;' + //uv纹理坐标必须处于【0，1】
+  'float projectedDepth = texture2D(u_projectedTexture, projectedTexcoord.xy).a;' + //取出深度z值 Z1
+  'float shadowLight = (inRange && projectedDepth <= currentDepth) ? 0.0 : 1.0;' +//小于说明光看不见，则处于阴影中，否则正常显示
+  'vec4 texColor = texture2D(u_texture, v_texcoord) * u_colorMult;' +
+  'gl_FragColor = vec4(texColor.rgb * light * shadowLight,texColor.a);' +
+  '}'
   private gl: WebGLRenderingContext
   constructor(gl: WebGLRenderingContext) {
     this.gl = gl;
@@ -487,8 +540,8 @@ class ShadowLight_WebGl2 {
   private settings: any;
   public run(): void {
     // setup GLSL programs
-    this.textureProgramInfo = G_ShaderFactory.createProgramInfo(vertexshader3d, fragmentshader3d);
-    this.colorProgramInfo = G_ShaderFactory.createProgramInfo(vertBase, fragBase);
+    this.textureProgramInfo = G_ShaderFactory.createProgramInfo(this.vertexshader3d,this.fragmentshader3d);
+    this.colorProgramInfo = G_ShaderFactory.createProgramInfo(this.vertBase,this.fragBase);
     this.sphereBufferInfo = syPrimitives.createSphereBufferInfo(
       1,  // radius
       32, // subdivisions around
@@ -582,46 +635,12 @@ class ShadowLight_WebGl2 {
     this._renderBuffer = gl.createRenderbuffer();
     gl.bindRenderbuffer(gl.RENDERBUFFER, this._renderBuffer);
     gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT24, this.depthTextureSize, this.depthTextureSize);
-    // //深度纹理附件
-    this.depthTexture = gl.createTexture();
-    this.depthTextureSize = 512;//设置这张纹理的尺寸512*512
-    gl.bindTexture(gl.TEXTURE_2D, this.depthTexture);
-    gl.texImage2D(
-      gl.TEXTURE_2D,      // target
-      0,                  // mip level
-      gl.RGB8UI, // internal format
-      this.depthTextureSize,   // width
-      this.depthTextureSize,   // height
-      0,                  // border
-      gl.RGB_INTEGER, // format
-      gl.UNSIGNED_BYTE,    // type  //通道数是4 每一位大小是1个字节
-      null);              // data
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    gl.framebufferTexture2D(
-      gl.DRAW_FRAMEBUFFER,       // target
-      gl.DEPTH_ATTACHMENT,  // attachment point 将指定的纹理绑定到帧缓冲的深度附件中
-      gl.TEXTURE_2D,        // texture target
-      this.depthTexture,    // texture
-      0);                   // mip level
-    //设置渲染缓冲对象作为深度附件
-    gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, this._renderBuffer);
-
-
-    gl.bindTexture(gl.TEXTURE_2D, null);
-    gl.bindRenderbuffer(gl.RENDERBUFFER, null);
-
     
-    let renderBuffer1 = gl.createRenderbuffer();
-    gl.bindRenderbuffer(gl.RENDERBUFFER, renderBuffer1);
-    gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, this.depthTextureSize, this.depthTextureSize);
     //颜色纹理附件
     // create a color texture of the same size as the depth texture
     // see article why this is needed_
-    var unusedTexture = gl.createTexture();
-    gl.bindTexture(gl.TEXTURE_2D, unusedTexture);
+    this.depthTexture = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, this.depthTexture);
     gl.texImage2D(
       gl.TEXTURE_2D,
       0,
@@ -643,11 +662,11 @@ class ShadowLight_WebGl2 {
       gl.FRAMEBUFFER,        // target
       gl.COLOR_ATTACHMENT0,  // attachment point 将指定的纹理绑定到帧缓冲的颜色附件中
       gl.TEXTURE_2D,         // texture target
-      unusedTexture,         // texture
+      this.depthTexture,         // texture
       0);                    // mip level
 
-      //设置渲染缓冲对象作为深度附件
-      // gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, renderBuffer1);
+    //设置渲染缓冲对象作为深度附件
+    gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, this._renderBuffer);
 
        // 检测帧缓冲区对象的配置状态是否成功
        var e = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
