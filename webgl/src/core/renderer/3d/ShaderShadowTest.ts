@@ -68,7 +68,13 @@ class ShadowLight {
     `attribute vec4 a_position;
     attribute vec2 a_texcoord;
     attribute vec3 a_normal;
-    uniform mat4 u_projection;
+
+    uniform vec3 u_lightWorldPosition; //光的位置
+    uniform vec3 u_viewWorldPosition;  //相机的位置
+    varying vec3 v_surfaceToLight;     //表面到光的方向
+    varying vec3 v_surfaceToView;      //表面到相机的方向
+
+    uniform mat4 u_projection;           
     uniform mat4 u_view;
     uniform mat4 u_world;
     uniform mat4 u_textureMatrix;                         //纹理矩阵 主要作用就是去算出投影的uv坐标 上一次光照的投影矩阵*视口矩阵
@@ -81,9 +87,16 @@ class ShadowLight {
     v_texcoord = a_texcoord;
     v_projectedTexcoord = u_textureMatrix * worldPosition; //算出投影纹理的uv
     v_normal = mat3(u_world) * a_normal;
+    v_surfaceToLight = u_lightWorldPosition - worldPosition.rgb;  
+    v_surfaceToView = u_viewWorldPosition - worldPosition.rgb;
     }`
   private fragmentshader3d =
     `precision mediump float;
+
+    varying vec3 v_surfaceToLight;
+    varying vec3 v_surfaceToView;
+    uniform float u_shininess;//光照因子
+
     varying vec2 v_texcoord;
     varying vec4 v_projectedTexcoord;
     varying vec3 v_normal;
@@ -126,6 +139,22 @@ class ShadowLight {
       float visibility=min(opacity+(1.0-shadows),1.0);
       return visibility;
     }
+    //处理高光
+    //normal法线
+    vec3 getSpecular(vec3 normal){
+
+      // 计算法向量和光线的点积
+      float cosTheta = max(dot(normal,-u_reverseLightDirection), 0.0);
+
+      vec3 surfaceToLightDirection = normalize(v_surfaceToLight);
+      vec3 surfaceToViewDirection = normalize(v_surfaceToView);
+      vec3 specularColor =vec3(1.0,1.0,1.0);
+      vec3 halfVector = normalize(surfaceToLightDirection + surfaceToViewDirection); //算出高光的方向
+      float specularWeighting = pow(dot(normal, halfVector), u_shininess);
+      vec3 specular = specularColor.rgb * specularWeighting * step(cosTheta,0.0);
+
+      return specular;
+    }
     void main() {
     vec3 normal = normalize(v_normal);             //归一化法线
     float light = clamp(dot(normal, u_reverseLightDirection),0.0,1.0);    //算出光照强度
@@ -138,7 +167,8 @@ class ShadowLight {
     //环境光的照亮范围是全部 他是要和其余光照结果进行叠加的，将会让光线更加强亮
     vec4 ambientLight = vec4(0.1,0.1,0.1,1.0);   
     vec4 ambient = vec4(texColor.rgb *ambientLight.rgb,1.0); //环境光的颜色需要和漫反射颜色融合
-    gl_FragColor = vec4(diffuse+ambient.rgb,texColor.a);
+    vec3 specular = getSpecular(normal);
+    gl_FragColor = vec4(diffuse+ambient.rgb+specular,texColor.a);
     }`
   private gl: WebGLRenderingContext
   constructor(gl: WebGLRenderingContext) {
@@ -395,7 +425,12 @@ class ShadowLight {
    * @param lightReverseDir 光的反射反向
    * @param programInfo 
    */
-  drawScene(pMatrix, vMatrix, texMatrix, lightReverseDir, programInfo: ShaderData) {
+  drawScene(pMatrix,
+    vMatrix,
+    texMatrix,
+    lightReverseDir,
+    programInfo: ShaderData,
+    lightPos: Array<number> = [0, 0, 0], cameraPos: Array<number> = [0, 0, 0]) {
     // Make a view matrix from the camera matrix.
     var gl = this.gl;
     const viewMatrix = glMatrix.mat4.invert(null, vMatrix);
@@ -411,6 +446,9 @@ class ShadowLight {
       u_bias: this.settings.bias,
       u_textureMatrix: texMatrix,
       u_shadowMap: this.depthTexture,
+      u_lightWorldPosition:lightPos,
+      u_viewWorldPosition: cameraPos,
+      u_shininess:150,
       u_reverseLightDirection: lightReverseDir,
     });
 
@@ -488,8 +526,8 @@ class ShadowLight {
   }
 
 
-  private getLightData(){
-       // first draw from the POV of the light
+  private getLightData() {
+    // first draw from the POV of the light
     /**
      * lightWorldMatrix是光照摄像机的视野坐标系
      * x轴：0 1 2 3
@@ -503,7 +541,7 @@ class ShadowLight {
       [0, 1, 0],                                              // up
     )
     let lightReverseDir = lightWorldMatrix.slice(8, 11);
-    console.log(lightWorldMatrix,lightReverseDir);
+    console.log(lightWorldMatrix, lightReverseDir);
     const lightProjectionMatrix = this.settings.perspective ? glMatrix.mat4.perspective(null,
       MathUtils.degToRad(this.settings.fieldOfView),
       this.settings.projWidth / this.settings.projHeight,
@@ -517,9 +555,26 @@ class ShadowLight {
         0.5,                      // near
         100);                      // far
     return {
-        mat:lightWorldMatrix,
-        reverseDir:lightReverseDir,
-        project:lightProjectionMatrix
+      mat: lightWorldMatrix,
+      reverseDir: lightReverseDir,
+      project: lightProjectionMatrix,
+      pos: [this.settings.posX, this.settings.posY, this.settings.posZ]
+    }
+  }
+  private getCameraData() {
+    var gl = this.gl;
+    // Compute the projection matrix
+    const aspect = gl.canvas.width / gl.canvas.height;
+    const projectionMatrix = glMatrix.mat4.perspective(null, this.fieldOfViewRadians, aspect, 1, 200);
+    // Compute the camera's matrix using look at.
+    const cameraPosition = [this.settings.cameraX, this.settings.cameraY, this.settings.cameraZ];
+    const target = [0, 0, 0];
+    const up = [0, 1, 0];
+    const cameraMatrix = glMatrix.mat4.lookAt2(null, cameraPosition, target, up);
+    return {
+      mat: cameraMatrix,
+      project: projectionMatrix,
+      pos: cameraPosition
     }
   }
 
@@ -530,7 +585,7 @@ class ShadowLight {
     Device.Instance.resizeCanvasToDisplaySize(gl.canvas);
     gl.enable(gl.CULL_FACE);
     gl.enable(gl.DEPTH_TEST);
-   
+
     let lightData = this.getLightData();
     // draw to the depth texture
     gl.bindFramebuffer(gl.FRAMEBUFFER, this._frameBuffer);//将结果绘制到深度纹理中
@@ -562,18 +617,11 @@ class ShadowLight {
     glMatrix.mat4.multiply(textureMatrix, textureMatrix, lightData.project);
     glMatrix.mat4.multiply(textureMatrix, textureMatrix, glMatrix.mat4.invert(null, lightData.mat));
 
-    // Compute the projection matrix
-    const aspect = gl.canvas.width / gl.canvas.height;
-    const projectionMatrix = glMatrix.mat4.perspective(null, this.fieldOfViewRadians, aspect, 1, 200);
-    // Compute the camera's matrix using look at.
-    const cameraPosition = [this.settings.cameraX, this.settings.cameraY, this.settings.cameraZ];
-    const target = [0, 0, 0];
-    const up = [0, 1, 0];
-    const cameraMatrix = glMatrix.mat4.lookAt2(null, cameraPosition, target, up);
-    this.drawScene(projectionMatrix, cameraMatrix, textureMatrix, lightData.reverseDir, this.textureProgramInfo);
+    let cameraData = this.getCameraData();
+    this.drawScene(cameraData.project, cameraData.mat, textureMatrix, lightData.reverseDir, this.textureProgramInfo,lightData.pos,cameraData.pos);
     // ------ Draw the frustum ------
     let matMatrix = glMatrix.mat4.multiply(null, lightData.mat, glMatrix.mat4.invert(null, lightData.project));
-    this.drawFrustum(projectionMatrix, cameraMatrix, matMatrix);
+    this.drawFrustum(cameraData.project, cameraData.mat, matMatrix);
 
   }
 }

@@ -19,6 +19,7 @@ import { CameraTest } from "./core/renderer/3d/CameraTest";
 import ThreeDLightTest from "./core/renderer/light/ThreeDLightTest";
 import { G_CameraModel } from "./core/renderer/camera/CameraModel";
 import ShaderShadowTest from "./core/renderer/3d/ShaderShadowTest";
+import SpotLightTest from "./core/renderer/light/SpotLightTest";
 
 
 
@@ -81,11 +82,11 @@ LoaderManager.instance.loadData(arr,null,function(){
     // ObjTest.run();
     // Stage.run();
 
-    // SpotLightTest.run();
+    SpotLightTest.run();
 
     // PointLightTest.run();
     // ThreeDLightTest.run();
 
-    ShaderShadowTest.run();
+    // ShaderShadowTest.run();
     
 })
