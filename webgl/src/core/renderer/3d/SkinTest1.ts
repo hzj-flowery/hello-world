@@ -1,4 +1,4 @@
-import Device from "../../../Device";
+import Device from "../../Device";
 "use strict";
 
 var vs  = 

@@ -1,4 +1,4 @@
-import LoaderManager from "../../../LoaderManager";
+import LoaderManager from "../../LoaderManager";
 import {gltex_filter, glTextureFmtInfor } from "../gfx/GLEnums";
 import { Texture, TextureUpdateOpts } from "./Texture";
 

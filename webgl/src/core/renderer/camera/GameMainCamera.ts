@@ -1,5 +1,5 @@
 
-import Device from "../../../Device";
+import Device from "../../Device";
 import { MathUtils } from "../../utils/MathUtils";
 import Camera from "./Camera";
 import enums from "./enums";

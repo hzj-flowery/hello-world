@@ -2,7 +2,7 @@ import { Node } from "./Node";
 import Scene from "./Scene";
 import OrthoCamera from "../camera/OrthoCamera";
 import { Rectangle } from "../2d/Rectangle";
-import Device from "../../../Device";
+import Device from "../../Device";
 import { Label } from "../2d/Label";
 import { RenderSprite } from "../2d/RenderSprite";
 import FirstSprite from "../2d/FirstSprite";

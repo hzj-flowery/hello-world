@@ -1,6 +1,6 @@
 import { SY } from "../base/Sprite";
 import { pseudoRandom } from "../../value-types/utils";
-import Device from "../../../Device";
+import Device from "../../Device";
 import GameMainCamera from "../camera/GameMainCamera";
 
 var vertexshader3d =

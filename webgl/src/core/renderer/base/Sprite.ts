@@ -49,9 +49,9 @@ import { Texture } from "./Texture";
 import { Texture2D } from "./Texture2D";
 import TextureCube from "./TextureCube";
 import TextureCustom from "./TextureCustom";
-import Device from "../../../Device";
+import Device from "../../Device";
 import { NormalRenderData, RenderData, RenderDataPool, RenderDataType } from "../data/RenderData";
-import LoaderManager from "../../../LoaderManager";
+import LoaderManager from "../../LoaderManager";
 import { CameraData } from "../data/CameraData";
 import { Node } from "./Node";
 

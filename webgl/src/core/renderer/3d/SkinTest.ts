@@ -1,4 +1,4 @@
-import Device from "../../../Device";
+import Device from "../../Device";
 
 var vs =
     'attribute vec4 a_position;' +

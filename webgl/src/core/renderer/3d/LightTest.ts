@@ -36,7 +36,7 @@ var fragmentshader3d =
   'gl_FragColor.rgb *= light;'+
 '}'
 
-import Device from "../../../Device";
+import Device from "../../Device";
 
 
 var webglUtils = window["webglUtils"];

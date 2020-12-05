@@ -1,6 +1,6 @@
 "use strict";
 
-import Device from "../../../Device";
+import Device from "../../Device";
 import { SY } from "../base/Sprite";
 import { glprimitive_type } from "../gfx/GLEnums";
 

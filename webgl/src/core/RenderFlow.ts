@@ -1,8 +1,8 @@
 
 import Device from "./Device";
-import Scene2D from "./core/renderer/base/Scene2D";
-import Scene3D from "./core/renderer/base/Scene3D";
-import GameMainCamera from "./core/renderer/camera/GameMainCamera";
+import Scene2D from "./renderer/base/Scene2D";
+import Scene3D from "./renderer/base/Scene3D";
+import GameMainCamera from "./renderer/camera/GameMainCamera";
 
 
 

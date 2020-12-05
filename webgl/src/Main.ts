@@ -3,11 +3,11 @@
 
 
 
-import Device from "./Device";
-import LoaderManager from "./LoaderManager";
+import Device from "./core/Device";
+import LoaderManager from "./core/LoaderManager";
 import { G_ShaderFactory } from "./core/renderer/shader/Shader";
 import PointLightTest from "./core/renderer/light/PointLightTest";
-import RenderFlow from "./RenderFlow";
+import RenderFlow from "./core/RenderFlow";
 import Stage from "./core/renderer/3d/Stage";
 import FogTest from "./core/renderer/3d/FogTest";
 import EarthSunTest from "./core/renderer/3d/EarthSunTest";
@@ -82,11 +82,11 @@ LoaderManager.instance.loadData(arr,null,function(){
     // ObjTest.run();
     // Stage.run();
 
-    SpotLightTest.run();
+    // SpotLightTest.run();
 
     // PointLightTest.run();
     // ThreeDLightTest.run();
 
-    // ShaderShadowTest.run();
+    ShaderShadowTest.run();
     
 })

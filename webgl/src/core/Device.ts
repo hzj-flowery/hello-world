@@ -1,16 +1,16 @@
 
-import { glMatrix } from "./core/Matrix";
-import { NormalRenderData, RenderData, RenderDataPool, RenderDataType, SpineRenderData } from "./core/renderer/data/RenderData";
-import Scene2D from "./core/renderer/base/Scene2D";
-import Scene3D from "./core/renderer/base/Scene3D";
-import { CameraModel, G_CameraModel } from "./core/renderer/camera/CameraModel";
-import GameMainCamera from "./core/renderer/camera/GameMainCamera";
-import FrameBuffer from "./core/renderer/gfx/FrameBuffer";
-import { GLapi } from "./core/renderer/gfx/GLapi";
-import { G_ShaderFactory } from "./core/renderer/shader/Shader";
-import { MathUtils } from "./core/utils/MathUtils";
-import { CameraData } from "./core/renderer/data/CameraData";
-import { glprimitive_type } from "./core/renderer/gfx/GLEnums";
+import { glMatrix } from "./Matrix";
+import { NormalRenderData, RenderData, RenderDataPool, RenderDataType, SpineRenderData } from "./renderer/data/RenderData";
+import Scene2D from "./renderer/base/Scene2D";
+import Scene3D from "./renderer/base/Scene3D";
+import { CameraModel, G_CameraModel } from "./renderer/camera/CameraModel";
+import GameMainCamera from "./renderer/camera/GameMainCamera";
+import FrameBuffer from "./renderer/gfx/FrameBuffer";
+import { GLapi } from "./renderer/gfx/GLapi";
+import { G_ShaderFactory } from "./renderer/shader/Shader";
+import { MathUtils } from "./utils/MathUtils";
+import { CameraData } from "./renderer/data/CameraData";
+import { glprimitive_type } from "./renderer/gfx/GLEnums";
 
 /**
 * _attach

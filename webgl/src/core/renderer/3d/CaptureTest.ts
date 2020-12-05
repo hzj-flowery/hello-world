@@ -1,5 +1,5 @@
 import { createNoSubstitutionTemplateLiteral } from "typescript";
-import Device from "../../../Device";
+import Device from "../../Device";
 import { glMatrix } from "../../Matrix";
 import { MathUtils } from "../../utils/MathUtils";
 import { G_ShaderFactory } from "../shader/Shader";

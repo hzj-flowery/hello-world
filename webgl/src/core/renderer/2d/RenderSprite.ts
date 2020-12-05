@@ -1,7 +1,7 @@
 import { SY } from "../base/Sprite";
 import { RenderTexture } from "../assets/RenderTexture";
 import FrameBuffer from "../gfx/FrameBuffer";
-import Device from "../../../Device";
+import Device from "../../Device";
 
 
     var vertextBaseCode =

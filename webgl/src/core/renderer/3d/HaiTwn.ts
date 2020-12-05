@@ -1,4 +1,4 @@
-import Device from "../../../Device";
+import Device from "../../Device";
 
 var shader3d =
     'attribute vec4 a_POSITION;' +

@@ -1,4 +1,4 @@
-import Device from "../../../Device";
+import Device from "../../Device";
 import { glMatrix } from "../../Matrix";
 import Camera from "./Camera";
 import enums from "./enums";

@@ -1,6 +1,6 @@
 "use strict";
 
-import Device from "../../../Device";
+import Device from "../../Device";
 
 var vertexshader3d =
 

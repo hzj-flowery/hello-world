@@ -1,5 +1,5 @@
-import Device from "../../../Device";
-import LoaderManager from "../../../LoaderManager";
+import Device from "../../Device";
+import LoaderManager from "../../LoaderManager";
 import { glMatrix } from "../../Matrix";
 import { MathUtils } from "../../utils/MathUtils";
 import { syPrimitives } from "../shader/Primitives";

@@ -1,10 +1,10 @@
 "use strict";
 
-import Device from "../../../Device";
+import Device from "../../Device";
 import { glMatrix } from "../../Matrix";
 import { Texture, TextureUpdateOpts } from "../base/Texture";
 import { Texture2D } from "../base/Texture2D";
-import LoaderManager from "../../../LoaderManager";
+import LoaderManager from "../../LoaderManager";
 import { glTextureFmtInfor, gltex_filter, gltex_format } from "../gfx/GLEnums";
 import CustomTextureData from "../data/CustomTextureData";
 import TextureCustom from "../base/TextureCustom";

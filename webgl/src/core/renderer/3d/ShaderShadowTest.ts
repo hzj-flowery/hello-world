@@ -1,7 +1,7 @@
 
 'use strict';
 
-import Device from "../../../Device";
+import Device from "../../Device";
 import { glMatrix } from "../../Matrix";
 import { MathUtils } from "../../utils/MathUtils";
 import { syPrimitives } from "../shader/Primitives";
@@ -142,16 +142,12 @@ class ShadowLight {
     //处理高光
     //normal法线
     vec3 getSpecular(vec3 normal){
-
-      // 计算法向量和光线的点积
-      float cosTheta = max(dot(normal,-u_reverseLightDirection), 0.0);
-
       vec3 surfaceToLightDirection = normalize(v_surfaceToLight);
       vec3 surfaceToViewDirection = normalize(v_surfaceToView);
       vec3 specularColor =vec3(1.0,1.0,1.0);
       vec3 halfVector = normalize(surfaceToLightDirection + surfaceToViewDirection); //算出高光的方向
       float specularWeighting = pow(dot(normal, halfVector), u_shininess);
-      vec3 specular = specularColor.rgb * specularWeighting * step(cosTheta,0.0);
+      vec3 specular = specularColor.rgb * specularWeighting;
 
       return specular;
     }
@@ -167,7 +163,7 @@ class ShadowLight {
     //环境光的照亮范围是全部 他是要和其余光照结果进行叠加的，将会让光线更加强亮
     vec4 ambientLight = vec4(0.1,0.1,0.1,1.0);   
     vec4 ambient = vec4(texColor.rgb *ambientLight.rgb,1.0); //环境光的颜色需要和漫反射颜色融合
-    vec3 specular = getSpecular(normal);
+    vec3 specular = shadowLight<1.0?vec3(0.0,0.0,0.0):getSpecular(normal);//阴影处没有高光
     gl_FragColor = vec4(diffuse+ambient.rgb+specular,texColor.a);
     }`
   private gl: WebGLRenderingContext
@@ -607,6 +603,8 @@ class ShadowLight {
     let texMatrix = glMatrix.mat4.identity(null);
     this.drawScene(lightData.project, lightData.mat, texMatrix, lightData.reverseDir, this.colorProgramInfo);
 
+    this.read();
+
     // now draw scene to the canvas projecting the depth texture into the scene
     gl.bindFramebuffer(gl.FRAMEBUFFER, null); //将结果绘制到窗口中
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
@@ -623,6 +621,18 @@ class ShadowLight {
     let matMatrix = glMatrix.mat4.multiply(null, lightData.mat, glMatrix.mat4.invert(null, lightData.project));
     this.drawFrustum(cameraData.project, cameraData.mat, matMatrix);
 
+  }
+
+  private read():void{
+    let gl = this.gl;
+    let height = 512;
+    let width = 512;
+    var pixels = new Uint8Array(width * height * 4);
+    gl.readPixels(0, 0, width, height, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+
+    console.log(pixels); // Uint8Array
+    let img = new ImageBitmap();
+    let img1 = new Image();
   }
 }
 

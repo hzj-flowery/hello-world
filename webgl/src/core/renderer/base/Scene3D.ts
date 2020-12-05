@@ -3,7 +3,7 @@ import Ground from "../3d/Ground";
 import Cube from "../3d/Cube";
 import LightCube from "../3d/LightCube";
 import SkyBox from "../3d/SkyBox";
-import Device from "../../../Device";
+import Device from "../../Device";
 import { Node } from "./Node";
 import CameraView from "../camera/CameraView";
 import CustomTextureCube from "../3d/CustomTextureCube";
