@@ -6,50 +6,49 @@ import { G_ShaderFactory } from "../shader/Shader";
 
 
 var vertexshader3d =
-    'attribute vec4 a_position;' +
-    'attribute vec3 a_normal;' +
-    'uniform vec3 u_lightWorldPosition;' +
-    'uniform vec3 u_viewWorldPosition;' +
-    'uniform mat4 u_world;' +
-    'uniform mat4 u_worldViewProjection;' +
-    'uniform mat4 u_worldInverseTranspose;' +
-    'varying vec3 v_normal;' +
-    'varying vec3 v_surfaceToLight;' +
-    'varying vec3 v_surfaceToView;' +
-    'void main() {' +
-    'gl_Position = u_worldViewProjection * a_position;' +
-    'v_normal = mat3(u_worldInverseTranspose) * a_normal;' +
-    'vec3 surfaceWorldPosition = (u_world * a_position).xyz;' +
-    'v_surfaceToLight = u_lightWorldPosition - surfaceWorldPosition;' +
-    'v_surfaceToView = u_viewWorldPosition - surfaceWorldPosition;' +
-    '}'
+    `attribute vec4 a_position;
+    attribute vec3 a_normal;
+    uniform vec3 u_lightWorldPosition;
+    uniform vec3 u_viewWorldPosition;
+    uniform mat4 u_world;
+    uniform mat4 u_worldViewProjection;
+    uniform mat4 u_worldInverseTranspose;
+    varying vec3 v_normal;
+    varying vec3 v_surfaceToLight;
+    varying vec3 v_surfaceToView;
+    void main() {
+    gl_Position = u_worldViewProjection * a_position;
+    v_normal = mat3(u_worldInverseTranspose) * a_normal;
+    vec3 surfaceWorldPosition = (u_world * a_position).xyz;
+    v_surfaceToLight = u_lightWorldPosition - surfaceWorldPosition;  
+    v_surfaceToView = u_viewWorldPosition - surfaceWorldPosition;
+    }`
 
 var fragmentshader3d =
-    'precision mediump float;' +
-    'varying vec3 v_normal;' +
-    'varying vec3 v_surfaceToLight;' +
-    'varying vec3 v_surfaceToView;' +
-    'uniform vec4 u_color;' +
-    'uniform float u_shininess;' +
-    'uniform vec3 u_lightDirection;' +
-    'uniform float u_innerLimit;' +          // in dot space
-    'uniform float u_outerLimit;' +        // in dot space
+    `precision mediump float;
+    varying vec3 v_normal;
+    varying vec3 v_surfaceToLight;
+    varying vec3 v_surfaceToView;
+    uniform vec4 u_color;
+    uniform float u_shininess;
+    uniform vec3 u_lightDirection;
+    uniform float u_innerLimit;          // in dot space
+    uniform float u_outerLimit;        // in dot space
 
-    'void main() {' +
-    'vec3 normal = normalize(v_normal);' +
-    'vec3 surfaceToLightDirection = normalize(v_surfaceToLight);' +
-    'vec3 surfaceToViewDirection = normalize(v_surfaceToView);' +
-    'vec3 halfVector = normalize(surfaceToLightDirection + surfaceToViewDirection);' +
-    'float dotFromDirection = dot(surfaceToLightDirection,' +
-    '-u_lightDirection);' +
-    'float limitRange = u_innerLimit - u_outerLimit;' +
-    'float inLight = clamp((dotFromDirection - u_outerLimit) / limitRange, 0.0, 1.0);' +
-    'float light = inLight * dot(normal, surfaceToLightDirection);' +
-    'float specular = inLight * pow(dot(normal, halfVector), u_shininess);' +
-    'gl_FragColor = u_color;' +
-    'gl_FragColor.rgb *= light;' +
-    'gl_FragColor.rgb += specular;' +
-    '}'
+    void main() {
+    vec3 normal = normalize(v_normal);
+    vec3 surfaceToLightDirection = normalize(v_surfaceToLight);
+    vec3 surfaceToViewDirection = normalize(v_surfaceToView);
+    vec3 halfVector = normalize(surfaceToLightDirection + surfaceToViewDirection); //算出高光的方向
+    float dotFromDirection = dot(surfaceToLightDirection,-u_lightDirection);
+    float limitRange = u_innerLimit - u_outerLimit;
+    float inLight = clamp((dotFromDirection - u_outerLimit) / limitRange, 0.0, 1.0);
+    float light = inLight * dot(normal, surfaceToLightDirection);
+    float specular = inLight * pow(dot(normal, halfVector), u_shininess);
+    gl_FragColor = u_color;
+    gl_FragColor.rgb *= light;
+    gl_FragColor.rgb += specular;
+    }`
 
 export class SpotLight extends SY.Sprite {
     protected onInit(): void {

@@ -8,6 +8,13 @@ import { syPrimitives } from "../shader/Primitives";
 import { BufferAttribsData, G_ShaderFactory, ShaderData } from "../shader/Shader";
 
 /**
+ * 光照知识1：
+ * 使用环境光源的时候，需要注意颜色的亮度。环境光照的是全部，比如上面的代码中指定的0.1，如果全都换成1.0的话，模型就会变成全白了。和平行光源不一样，所以要注意。
+   环境光的颜色，最好是限制在0.2左右以下
+ * 环境光，模拟了自然界的光的漫反射，弥补了平行光源的缺点。一般，这两种光会同时使用。只使用环境光的话，无法表现出模型的凹凸，只使用平行光源的话，阴影过于严重无法分清模型的轮廓
+ */
+
+/**
  * 可以把相机和光照想象成用眼睛去看两次同样一个东西，只是每次看的时候位置不一样
  * 针对同样一个像素位置，第一次看的的时候，它处于10m远的位置，第二次看的时候它可能处于以下几种距离
  * 小于10m的距离：说明光看的远，也就是说光能够看见，那么就正常显示第二次的结果
@@ -54,7 +61,6 @@ class ShadowLight {
     }`
   private fragBase =
     `precision mediump float;
-    uniform vec4 u_color;
     void main() {
     gl_FragColor = vec4(gl_FragCoord.z,0.0, 0.0, 1.0);  //将深度值存在帧缓冲的颜色缓冲中 如果帧缓冲和窗口绑定 那么就显示出来 如果帧缓冲和纹理绑定就存储在纹理中
     }`
@@ -81,45 +87,58 @@ class ShadowLight {
     varying vec2 v_texcoord;
     varying vec4 v_projectedTexcoord;
     varying vec3 v_normal;
-    uniform vec4 u_colorMult;
+    uniform vec4 u_lightColor;            //光的颜色
     uniform sampler2D u_texture;
-    uniform sampler2D u_projectedTexture; //投影纹理，第一次站在光的位置进行绘制，将结果存在这里，这个纹理只用于存储深度
+    uniform sampler2D u_shadowMap; //投影纹理，第一次站在光的位置进行绘制，将结果存在这里，这个纹理只用于存储深度
     uniform float u_bias;
     uniform vec3 u_reverseLightDirection;          //光的反方向
     bool inRange(vec3 coordP){
        return coordP.x >= 0.0 && coordP.x <= 1.0 && coordP.y >= 0.0 && coordP.y <= 1.0; //uv纹理坐标必须处于【0，1】
     }
-    float getShadowLight(vec3 coordP){
-      float currentDepth = coordP.z + u_bias;                          //Z2  当前顶点的深度值                  
-      float projectedDepth = texture2D(u_projectedTexture, coordP.xy).r; //取出深度z值 Z1
-      float shadowLight = (inRange(coordP) && projectedDepth <= currentDepth) ? 0.0 : 1.0;//小于说明光看不见，则处于阴影中，否则正常显示
+    //普通计算阴影
+    float getShadowLight(vec4 coordP){
+      vec3 projectedTexcoord = coordP.xyz / coordP.w;   //手动进行齐次除法
+      projectedTexcoord = coordP.xyz / 2.0 + 0.5;                     //转为屏幕坐标
+      float currentDepth = projectedTexcoord.z + u_bias;                          //Z2  当前顶点的深度值                  
+      float projectedDepth = texture2D(u_shadowMap, projectedTexcoord.xy).r; //取出深度z值 Z1
+      float shadowLight = (inRange(projectedTexcoord) && projectedDepth <= currentDepth) ? 0.0 : 1.0;//小于说明光看不见，则处于阴影中，否则正常显示
       return shadowLight;
     }
-    float getShadowLightRYY(vec3 coordP){
+    //软阴影
+    //coordP在光照下的顶点坐标
+    float getShadowLightRYY(vec4 coordP){
+      vec3 projectedTexcoord = coordP.xyz / coordP.w;   //手动进行齐次除法
+      projectedTexcoord = coordP.xyz / 2.0 + 0.5;       //转为屏幕坐标
       float shadows =0.0;
-      float opacity=0.6;// 阴影alpha值, 值越小暗度越深
+      float opacity=0.1;// 阴影alpha值, 值越小暗度越深
       float texelSize=1.0/1024.0;// 阴影像素尺寸,值越小阴影越逼真
       vec4 rgbaDepth;
-      //  消除阴影边缘的锯齿
+      bool isInRange = inRange(projectedTexcoord);
+      float curDepth = projectedTexcoord.z+u_bias;
+      //消除阴影边缘的锯齿
       for(float y=-1.5; y <= 1.5; y += 1.0){
           for(float x=-1.5; x <=1.5; x += 1.0){
-              rgbaDepth = texture2D(u_projectedTexture, coordP.xy+vec2(x,y)*texelSize);
-              shadows += (inRange(coordP) &&coordP.z-u_bias > rgbaDepth.r) ? 1.0 : 0.0;
+              rgbaDepth = texture2D(u_shadowMap, projectedTexcoord.xy+vec2(x,y)*texelSize);
+              shadows += (isInRange&&curDepth> rgbaDepth.r) ? 1.0 : 0.0;
           }
       }
       shadows/=16.0;// 4*4的样本
       float visibility=min(opacity+(1.0-shadows),1.0);
-
       return visibility;
     }
     void main() {
     vec3 normal = normalize(v_normal);             //归一化法线
-    float light = dot(normal, u_reverseLightDirection);
-    vec3 projectedTexcoord = v_projectedTexcoord.xyz / v_projectedTexcoord.w;   //手动进行齐次除法
-    projectedTexcoord = v_projectedTexcoord.xyz / 2.0 + 0.5;                     //转为屏幕坐标
-    float shadowLight = getShadowLightRYY(projectedTexcoord);
-    vec4 texColor = texture2D(u_texture, v_texcoord) * u_colorMult;
-    gl_FragColor = vec4(texColor.rgb * light * shadowLight,texColor.a);
+    float light = clamp(dot(normal, u_reverseLightDirection),0.0,1.0);    //算出光照强度
+    float shadowLight = getShadowLightRYY(v_projectedTexcoord);
+    //通过uv贴图找出当前片元的颜色 该颜色常被称为自发光颜色或是当前顶点的颜色
+    vec4 texColor = texture2D(u_texture, v_texcoord) * u_lightColor;
+    //漫反射光  顶点颜色* 光照强度 * 阴影bool值
+    vec3 diffuse = texColor.rgb * light * shadowLight; 
+    //环境光 （它的值rgb最好都限定在0.2以下）
+    //环境光的照亮范围是全部 他是要和其余光照结果进行叠加的，将会让光线更加强亮
+    vec4 ambientLight = vec4(0.1,0.1,0.1,1.0);   
+    vec4 ambient = vec4(texColor.rgb *ambientLight.rgb,1.0); //环境光的颜色需要和漫反射颜色融合
+    gl_FragColor = vec4(diffuse+ambient.rgb,texColor.a);
     }`
   private gl: WebGLRenderingContext
   constructor(gl: WebGLRenderingContext) {
@@ -391,7 +410,7 @@ class ShadowLight {
       u_projection: pMatrix,
       u_bias: this.settings.bias,
       u_textureMatrix: texMatrix,
-      u_projectedTexture: this.depthTexture,
+      u_shadowMap: this.depthTexture,
       u_reverseLightDirection: lightReverseDir,
     });
 
@@ -427,20 +446,17 @@ class ShadowLight {
     this.fieldOfViewRadians = MathUtils.degToRad(60);
     // Uniforms for each object.
     this.planeUniforms = {
-      u_colorMult: [0.5, 0.5, 1, 1],  // lightblue
-      u_color: [1, 0, 0, 1],
+      u_lightColor: [0.5, 0.5, 1, 1],  // lightblue
       u_texture: this.checkerboardTexture,
       u_world: glMatrix.mat4.translation(null, 0, 0, 0),
     };
     this.sphereUniforms = {
-      u_colorMult: [1, 0.5, 0.5, 1],  // pink
-      u_color: [0, 0, 1, 1],
+      u_lightColor: [1, 0.5, 0.5, 1],  // pink
       u_texture: this.checkerboardTexture,
       u_world: glMatrix.mat4.translation(null, 2, 3, 4),
     };
     this.cubeUniforms = {
-      u_colorMult: [0.5, 1, 0.5, 1],  // lightgreen
-      u_color: [0, 0, 1, 1],
+      u_lightColor: [0.5, 1, 0.5, 1],  // lightgreen
       u_texture: this.checkerboardTexture,
       u_world: glMatrix.mat4.translation(null, 3, 1, 0),
     };
@@ -463,7 +479,6 @@ class ShadowLight {
     // infinity
     // Set the uniforms we just computed
     G_ShaderFactory.setUniforms(this.colorProgramInfo.uniSetters, {
-      u_color: [1, 1, 1, 1],
       u_view: viewMatrix,
       u_projection: projectionMatrix,
       u_world: worldMatrix,
@@ -473,13 +488,8 @@ class ShadowLight {
   }
 
 
-  // Draw the scene.
-  public render() {
-    var gl = this.gl;
-    Device.Instance.resizeCanvasToDisplaySize(gl.canvas);
-    gl.enable(gl.CULL_FACE);
-    gl.enable(gl.DEPTH_TEST);
-    // first draw from the POV of the light
+  private getLightData(){
+       // first draw from the POV of the light
     /**
      * lightWorldMatrix是光照摄像机的视野坐标系
      * x轴：0 1 2 3
@@ -493,6 +503,7 @@ class ShadowLight {
       [0, 1, 0],                                              // up
     )
     let lightReverseDir = lightWorldMatrix.slice(8, 11);
+    console.log(lightWorldMatrix,lightReverseDir);
     const lightProjectionMatrix = this.settings.perspective ? glMatrix.mat4.perspective(null,
       MathUtils.degToRad(this.settings.fieldOfView),
       this.settings.projWidth / this.settings.projHeight,
@@ -505,7 +516,22 @@ class ShadowLight {
         this.settings.projHeight / 2,  // top
         0.5,                      // near
         100);                      // far
+    return {
+        mat:lightWorldMatrix,
+        reverseDir:lightReverseDir,
+        project:lightProjectionMatrix
+    }
+  }
 
+
+  // Draw the scene.
+  public render() {
+    var gl = this.gl;
+    Device.Instance.resizeCanvasToDisplaySize(gl.canvas);
+    gl.enable(gl.CULL_FACE);
+    gl.enable(gl.DEPTH_TEST);
+   
+    let lightData = this.getLightData();
     // draw to the depth texture
     gl.bindFramebuffer(gl.FRAMEBUFFER, this._frameBuffer);//将结果绘制到深度纹理中
     gl.viewport(0, 0, this.depthTextureSize, this.depthTextureSize);
@@ -524,7 +550,7 @@ class ShadowLight {
     //因为一个点的位置与这个矩阵相乘，这个点的位置不会发生任何变化
     //它真正发挥作用的是在第二次绘制的时候对他的赋值
     let texMatrix = glMatrix.mat4.identity(null);
-    this.drawScene(lightProjectionMatrix, lightWorldMatrix, texMatrix, lightReverseDir, this.colorProgramInfo);
+    this.drawScene(lightData.project, lightData.mat, texMatrix, lightData.reverseDir, this.colorProgramInfo);
 
     // now draw scene to the canvas projecting the depth texture into the scene
     gl.bindFramebuffer(gl.FRAMEBUFFER, null); //将结果绘制到窗口中
@@ -533,8 +559,8 @@ class ShadowLight {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
 
     let textureMatrix = glMatrix.mat4.identity(null);
-    glMatrix.mat4.multiply(textureMatrix, textureMatrix, lightProjectionMatrix);
-    glMatrix.mat4.multiply(textureMatrix, textureMatrix, glMatrix.mat4.invert(null, lightWorldMatrix));
+    glMatrix.mat4.multiply(textureMatrix, textureMatrix, lightData.project);
+    glMatrix.mat4.multiply(textureMatrix, textureMatrix, glMatrix.mat4.invert(null, lightData.mat));
 
     // Compute the projection matrix
     const aspect = gl.canvas.width / gl.canvas.height;
@@ -544,9 +570,9 @@ class ShadowLight {
     const target = [0, 0, 0];
     const up = [0, 1, 0];
     const cameraMatrix = glMatrix.mat4.lookAt2(null, cameraPosition, target, up);
-    this.drawScene(projectionMatrix, cameraMatrix, textureMatrix, lightReverseDir, this.textureProgramInfo);
+    this.drawScene(projectionMatrix, cameraMatrix, textureMatrix, lightData.reverseDir, this.textureProgramInfo);
     // ------ Draw the frustum ------
-    let matMatrix = glMatrix.mat4.multiply(null, lightWorldMatrix, glMatrix.mat4.invert(null, lightProjectionMatrix));
+    let matMatrix = glMatrix.mat4.multiply(null, lightData.mat, glMatrix.mat4.invert(null, lightData.project));
     this.drawFrustum(projectionMatrix, cameraMatrix, matMatrix);
 
   }
