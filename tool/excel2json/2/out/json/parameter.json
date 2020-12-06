@@ -1,0 +1,3773 @@
+{
+    "key_map": {
+        "id": 0,
+        "key": 1,
+        "content": 2
+    },
+    "data": [
+        [
+            1,
+            "recruiting_gold_cost1",
+            "300"
+        ],
+        [
+            2,
+            "recruiting_gold_cost10",
+            "2800"
+        ],
+        [
+            3,
+            "recruiting_gold_cost20",
+            "5400"
+        ],
+        [
+            4,
+            "role_level_max",
+            "100"
+        ],
+        [
+            5,
+            "pve_money",
+            "16"
+        ],
+        [
+            6,
+            "pve_exp",
+            "2"
+        ],
+        [
+            7,
+            "pvp_win_money",
+            "200"
+        ],
+        [
+            8,
+            "pvp_lose_money",
+            "120"
+        ],
+        [
+            9,
+            "heroexp_silver",
+            "1000"
+        ],
+        [
+            10,
+            "pvp_win_honor",
+            "50"
+        ],
+        [
+            11,
+            "pvp_lose_honor",
+            "30"
+        ],
+        [
+            12,
+            "max_equipment_level",
+            "2000"
+        ],
+        [
+            13,
+            "max_equipmentrefine_level",
+            "250"
+        ],
+        [
+            14,
+            "draw_card_point_1",
+            "5"
+        ],
+        [
+            15,
+            "draw_card_point_2",
+            "10"
+        ],
+        [
+            16,
+            "draw_point_box_1",
+            "400"
+        ],
+        [
+            17,
+            "draw_point_box_2",
+            "800"
+        ],
+        [
+            18,
+            "draw_point_box_3",
+            "1200"
+        ],
+        [
+            19,
+            "draw_limit",
+            "5"
+        ],
+        [
+            20,
+            "draw_interval",
+            "300"
+        ],
+        [
+            21,
+            "draw_point_box_id_1",
+            "201"
+        ],
+        [
+            22,
+            "draw_point_box_id_2",
+            "202"
+        ],
+        [
+            23,
+            "draw_point_box_id_3",
+            "203"
+        ],
+        [
+            24,
+            "initialize_anger",
+            "2"
+        ],
+        [
+            25,
+            "bag_num_safe",
+            "200"
+        ],
+        [
+            26,
+            "bag_num_max",
+            "999"
+        ],
+        [
+            27,
+            "lv_max",
+            "100"
+        ],
+        [
+            28,
+            "equip_story_max_time",
+            "3"
+        ],
+        [
+            29,
+            "max_treasure_level",
+            "500"
+        ],
+        [
+            30,
+            "treasure_silver",
+            "50"
+        ],
+        [
+            31,
+            "max_treasure_refine",
+            "125"
+        ],
+        [
+            32,
+            "rebel_chance",
+            "250"
+        ],
+        [
+            33,
+            "rebel_cd",
+            "4"
+        ],
+        [
+            34,
+            "rebel_normal_feats",
+            "25"
+        ],
+        [
+            35,
+            "rebel_full_feats",
+            "50"
+        ],
+        [
+            36,
+            "rebel_max",
+            "10"
+        ],
+        [
+            37,
+            "rebel_normal_cost",
+            "1"
+        ],
+        [
+            38,
+            "rebel_full_cost",
+            "2"
+        ],
+        [
+            39,
+            "rebel_full_atk",
+            "2500"
+        ],
+        [
+            40,
+            "rename_fee",
+            "500"
+        ],
+        [
+            41,
+            "daily_boss_time",
+            "75000"
+        ],
+        [
+            42,
+            "arena_max_rank",
+            "5000"
+        ],
+        [
+            43,
+            "first_pay_drop_id",
+            "3"
+        ],
+        [
+            44,
+            "guild_creat_cost",
+            "200"
+        ],
+        [
+            45,
+            "guild_impeach_time",
+            "259200"
+        ],
+        [
+            46,
+            "guild_impeach_wait",
+            "86400"
+        ],
+        [
+            47,
+            "guild_inherit_time",
+            "259200"
+        ],
+        [
+            48,
+            "guild_max_lv",
+            "10"
+        ],
+        [
+            49,
+            "guild_deputy_num",
+            "1"
+        ],
+        [
+            50,
+            "guild_elder_num",
+            "4"
+        ],
+        [
+            51,
+            "guild_quit_cd",
+            "120"
+        ],
+        [
+            52,
+            "guild_protect",
+            "2"
+        ],
+        [
+            53,
+            "guild_apply_player",
+            "3"
+        ],
+        [
+            54,
+            "guild_apply_list",
+            "100"
+        ],
+        [
+            55,
+            "guild_shop_unlock",
+            "1"
+        ],
+        [
+            56,
+            "guild_support_unlock",
+            "1"
+        ],
+        [
+            57,
+            "guild_support_cd",
+            "0"
+        ],
+        [
+            58,
+            "guild_stage_openday",
+            "3"
+        ],
+        [
+            59,
+            "guild_stage_unlock",
+            "2"
+        ],
+        [
+            60,
+            "guild_support_cdmax",
+            "3600"
+        ],
+        [
+            61,
+            "guild_team_unlock",
+            "1"
+        ],
+        [
+            62,
+            "explore_exp",
+            "1"
+        ],
+        [
+            63,
+            "explore_money",
+            "20"
+        ],
+        [
+            64,
+            "explore_exp_money_two",
+            "580:1|210:1|140:1|70:1"
+        ],
+        [
+            65,
+            "guild_recourse_times",
+            "3"
+        ],
+        [
+            66,
+            "guild_maxkick_times",
+            "10"
+        ],
+        [
+            67,
+            "guild_recourse_finish",
+            "100"
+        ],
+        [
+            68,
+            "guild_protect_times",
+            "0"
+        ],
+        [
+            69,
+            "guild_recourse_finishtimes",
+            "3"
+        ],
+        [
+            70,
+            "guild_stage_opennum",
+            "0"
+        ],
+        [
+            71,
+            "guild_stage_opentime",
+            "65400|67200"
+        ],
+        [
+            72,
+            "guild_stage_atktime",
+            "3"
+        ],
+        [
+            73,
+            "guild_stage_atkcd",
+            "0"
+        ],
+        [
+            74,
+            "vip_level_max",
+            "16"
+        ],
+        [
+            75,
+            "if_open",
+            "0"
+        ],
+        [
+            76,
+            "number_1",
+            "10"
+        ],
+        [
+            77,
+            "number_2",
+            "30"
+        ],
+        [
+            78,
+            "seven_days_show_hero",
+            "105|205|305|405"
+        ],
+        [
+            79,
+            "silver_1",
+            "1000"
+        ],
+        [
+            80,
+            "silver_2",
+            "2000"
+        ],
+        [
+            81,
+            "continue_time",
+            "600"
+        ],
+        [
+            82,
+            "open_time",
+            "720|1140"
+        ],
+        [
+            83,
+            "challenge_times",
+            "3"
+        ],
+        [
+            84,
+            "challenge_time_interval",
+            "120"
+        ],
+        [
+            85,
+            "rob_times",
+            "3"
+        ],
+        [
+            86,
+            "rob_time_interval",
+            "120"
+        ],
+        [
+            87,
+            "be_robbed_times",
+            "99"
+        ],
+        [
+            88,
+            "be_rob_time_interval",
+            "1"
+        ],
+        [
+            89,
+            "rot_integral_percentage",
+            "250"
+        ],
+        [
+            90,
+            "proportion",
+            "500"
+        ],
+        [
+            91,
+            "bonus",
+            "300"
+        ],
+        [
+            92,
+            "boss_update_time",
+            "5"
+        ],
+        [
+            93,
+            "blood_times",
+            "10000"
+        ],
+        [
+            94,
+            "display_number",
+            "10"
+        ],
+        [
+            95,
+            "red_hero_lv",
+            "30"
+        ],
+        [
+            96,
+            "red_hero_vip",
+            "1"
+        ],
+        [
+            97,
+            "au_update_time",
+            "3"
+        ],
+        [
+            98,
+            "explore_treasure_smallexp",
+            "71"
+        ],
+        [
+            99,
+            "explore_treasure_bigexp",
+            "72"
+        ],
+        [
+            100,
+            "stage_show_hero",
+            "16"
+        ],
+        [
+            101,
+            "boss_max",
+            "5"
+        ],
+        [
+            102,
+            "boss_icon_time",
+            "300"
+        ],
+        [
+            103,
+            "combat_parameter",
+            "8000"
+        ],
+        [
+            104,
+            "combat_rank",
+            "10"
+        ],
+        [
+            105,
+            "explore_roll",
+            "3|5|4|6|2|3|4|5"
+        ],
+        [
+            106,
+            "explore_discover",
+            "0|0|0|1|0|0|0|0|0|0|0|0|0|0|0|0|0|0|5|0|0|0|0|0|1|0|0|0|0|0"
+        ],
+        [
+            107,
+            "guild_mail_cost",
+            "50"
+        ],
+        [
+            108,
+            "guild_pay_square",
+            "100"
+        ],
+        [
+            109,
+            "guild_redpacket_opentimes",
+            "20"
+        ],
+        [
+            110,
+            "guild_redpacket_start",
+            "86400"
+        ],
+        [
+            111,
+            "guild_redpacket_destroy",
+            "172800"
+        ],
+        [
+            112,
+            "guild_pay_elder",
+            "12"
+        ],
+        [
+            113,
+            "guild_pay_menber",
+            "6"
+        ],
+        [
+            114,
+            "boss_people_number",
+            "12"
+        ],
+        [
+            115,
+            "equip_essence_times",
+            "5"
+        ],
+        [
+            116,
+            "boss_paomadeng_interval",
+            "0|3000"
+        ],
+        [
+            117,
+            "boss_speed_section",
+            "12000|15000"
+        ],
+        [
+            118,
+            "boss_white_number",
+            "10"
+        ],
+        [
+            119,
+            "boss_colour_per",
+            "70|10|10|5|4|1"
+        ],
+        [
+            120,
+            "boss_coordinate_1",
+            "1136|550"
+        ],
+        [
+            121,
+            "boss_coordinate_2",
+            "1136|520"
+        ],
+        [
+            122,
+            "boss_coordinate_3",
+            "1136|490"
+        ],
+        [
+            123,
+            "boss_coordinate_4",
+            "1136|460"
+        ],
+        [
+            124,
+            "boss_coordinate_5",
+            "1136|430"
+        ],
+        [
+            125,
+            "boss_coordinate_6",
+            "1136|400"
+        ],
+        [
+            126,
+            "boss_coordinate_baofa",
+            "580,320|580,270|580,220"
+        ],
+        [
+            127,
+            "friend_number",
+            "50"
+        ],
+        [
+            128,
+            "friend_gift",
+            "30"
+        ],
+        [
+            129,
+            "energy_number",
+            "1"
+        ],
+        [
+            130,
+            "boss_barrage_distance",
+            "60"
+        ],
+        [
+            131,
+            "change_level_max",
+            "20"
+        ],
+        [
+            132,
+            "general_daily_time",
+            "5"
+        ],
+        [
+            133,
+            "guild_default_goldwage",
+            "20"
+        ],
+        [
+            134,
+            "guild_default_contributionwage",
+            "200"
+        ],
+        [
+            135,
+            "guild_dissolution_time",
+            "259200"
+        ],
+        [
+            136,
+            "guild_dissolution_number",
+            "27"
+        ],
+        [
+            137,
+            "guild_rename_cost",
+            "2000"
+        ],
+        [
+            138,
+            "recommend_upgrage_close",
+            "50"
+        ],
+        [
+            139,
+            "avatar_hint_close",
+            "10"
+        ],
+        [
+            140,
+            "redpacket_time",
+            "天|时|分|秒"
+        ],
+        [
+            141,
+            "friend_interval",
+            "3"
+        ],
+        [
+            142,
+            "mail_time",
+            "7"
+        ],
+        [
+            143,
+            "answer_start_time",
+            "64800"
+        ],
+        [
+            144,
+            "answer_change_time",
+            "3"
+        ],
+        [
+            145,
+            "answer_time",
+            "30"
+        ],
+        [
+            146,
+            "answer_interval_time",
+            "1"
+        ],
+        [
+            147,
+            "topics_num",
+            "10"
+        ],
+        [
+            148,
+            "right_points",
+            "2"
+        ],
+        [
+            149,
+            "wrong_points",
+            "1"
+        ],
+        [
+            150,
+            "city_day_time",
+            "6|18"
+        ],
+        [
+            151,
+            "auction_num",
+            "9999"
+        ],
+        [
+            152,
+            "rebate_times",
+            "200"
+        ],
+        [
+            153,
+            "reborn_cost",
+            "50"
+        ],
+        [
+            154,
+            "rebate_text",
+            "在本次付费删档测试期间，所有的充值金额均会在公测时返还，规则如下：||1.本次测试期间的充值金额将以元宝200%、VIP经验100%的形式返还至公测服务器;|2.同一平台同一账号下多个服务器的角色的充值金额将累计计算;|3.公测时，限同一账号下的单个角色领取一次。"
+        ],
+        [
+            155,
+            "order_reward",
+            "5|1|588,5|2|588888"
+        ],
+        [
+            156,
+            "order_gift_code",
+            "5|1|588,5|2|588888,6|114|1"
+        ],
+        [
+            157,
+            "order_level",
+            "40"
+        ],
+        [
+            158,
+            "max_output_addup",
+            "86400"
+        ],
+        [
+            159,
+            "min_output_count",
+            "1"
+        ],
+        [
+            160,
+            "troop_max",
+            "100"
+        ],
+        [
+            161,
+            "loss_complete_defeat",
+            "15"
+        ],
+        [
+            162,
+            "loss_common_defeat",
+            "15"
+        ],
+        [
+            163,
+            "loss_complete_win",
+            "2"
+        ],
+        [
+            164,
+            "loss_common_win",
+            "3"
+        ],
+        [
+            165,
+            "loss_nerrow_win",
+            "4"
+        ],
+        [
+            166,
+            "food_max",
+            "100"
+        ],
+        [
+            167,
+            "food_move_consumption",
+            "10"
+        ],
+        [
+            168,
+            "food_recover_time",
+            "60"
+        ],
+        [
+            169,
+            "food_to_force",
+            "1"
+        ],
+        [
+            170,
+            "return_city_force",
+            "1"
+        ],
+        [
+            171,
+            "leave_city_force",
+            "50"
+        ],
+        [
+            172,
+            "output_add_plus",
+            "300"
+        ],
+        [
+            173,
+            "output_add",
+            "200"
+        ],
+        [
+            174,
+            "answer_no_one",
+            "无"
+        ],
+        [
+            175,
+            "displace_proportion",
+            "3"
+        ],
+        [
+            176,
+            "answer_random_reward",
+            "301|302|311|312"
+        ],
+        [
+            177,
+            "fair_open_day",
+            "8"
+        ],
+        [
+            178,
+            "fair_last_day",
+            "14"
+        ],
+        [
+            179,
+            "fair_week_day",
+            "1"
+        ],
+        [
+            180,
+            "fair_audition_match",
+            "3"
+        ],
+        [
+            181,
+            "fair_final_match",
+            "5"
+        ],
+        [
+            182,
+            "fair_win",
+            "3"
+        ],
+        [
+            183,
+            "fair_lose",
+            "1"
+        ],
+        [
+            184,
+            "fair_orange_ban",
+            "10"
+        ],
+        [
+            185,
+            "fair_country_ban",
+            "1"
+        ],
+        [
+            186,
+            "fair_red_ban",
+            "2"
+        ],
+        [
+            187,
+            "fair_match_gap",
+            "300"
+        ],
+        [
+            188,
+            "fair_bet_max",
+            "5"
+        ],
+        [
+            189,
+            "fair_audition_attack",
+            "1"
+        ],
+        [
+            190,
+            "fair_audition_defence",
+            "1"
+        ],
+        [
+            191,
+            "fair_audition_blind",
+            "1"
+        ],
+        [
+            192,
+            "fair_final_attack",
+            "2"
+        ],
+        [
+            193,
+            "fair_final_defence",
+            "2"
+        ],
+        [
+            194,
+            "fair_final_blind",
+            "1"
+        ],
+        [
+            195,
+            "linkage_level",
+            "6|15|30"
+        ],
+        [
+            196,
+            "harvest_time",
+            "300"
+        ],
+        [
+            197,
+            "sell_price_bonus",
+            "500"
+        ],
+        [
+            198,
+            "answer_random_reward_1",
+            "303|304|313|314"
+        ],
+        [
+            199,
+            "checkin_super_day",
+            "8"
+        ],
+        [
+            200,
+            "checkin_super_choose",
+            "3"
+        ],
+        [
+            201,
+            "checkin_super_num",
+            "9"
+        ],
+        [
+            202,
+            "attack_complete_defeat_1",
+            "8"
+        ],
+        [
+            203,
+            "attack_common_defeat_2",
+            "7"
+        ],
+        [
+            204,
+            "attack_nerrow_defeat_3",
+            "6"
+        ],
+        [
+            205,
+            "defend_complete_defeat_1",
+            "10"
+        ],
+        [
+            206,
+            "defend_common_defeat_2",
+            "9"
+        ],
+        [
+            207,
+            "defend_nerrow_defeat_3",
+            "8"
+        ],
+        [
+            208,
+            "gold_to_food",
+            "5"
+        ],
+        [
+            209,
+            "hatred_change_condition_1",
+            "1"
+        ],
+        [
+            210,
+            "hatred_change_condition_2",
+            "2"
+        ],
+        [
+            211,
+            "hatred_change_condition_3",
+            "0"
+        ],
+        [
+            212,
+            "hatred_change_condition_4",
+            "1"
+        ],
+        [
+            213,
+            "hatred_change_condition_5",
+            "1"
+        ],
+        [
+            214,
+            "hatred_change_condition_6",
+            "2"
+        ],
+        [
+            215,
+            "hatred_change_condition_7",
+            "0"
+        ],
+        [
+            216,
+            "hatred_change_condition_8",
+            "1"
+        ],
+        [
+            217,
+            "hatred_change_condition_9",
+            "1"
+        ],
+        [
+            218,
+            "hatred_change_condition_10",
+            "2"
+        ],
+        [
+            219,
+            "hatred_change_condition_11",
+            "0"
+        ],
+        [
+            220,
+            "hatred_change_condition_12",
+            "1"
+        ],
+        [
+            221,
+            "enemy_number_max",
+            "50"
+        ],
+        [
+            222,
+            "revenge_times",
+            "10"
+        ],
+        [
+            223,
+            "be_revenge_times",
+            "99999"
+        ],
+        [
+            224,
+            "hatred_number_max",
+            "99999"
+        ],
+        [
+            225,
+            "grab_energy_number",
+            "2"
+        ],
+        [
+            226,
+            "avatar_activity_1_open",
+            "15"
+        ],
+        [
+            227,
+            "avatar_activity_1_close",
+            "17"
+        ],
+        [
+            228,
+            "avatar_activity_unified",
+            "27"
+        ],
+        [
+            229,
+            "guild_boss_atk_num",
+            "50"
+        ],
+        [
+            230,
+            "guild_boss_atk_value",
+            "10"
+        ],
+        [
+            231,
+            "guild_boss_open_week",
+            "3|5|7"
+        ],
+        [
+            232,
+            "guild_boss_time_1",
+            "540"
+        ],
+        [
+            233,
+            "guild_boss_time_2",
+            "60"
+        ],
+        [
+            234,
+            "guild_boss_time_3",
+            "300"
+        ],
+        [
+            235,
+            "guild_boss_atk_cd_1",
+            "60"
+        ],
+        [
+            236,
+            "guild_boss_atk_cd_3",
+            "60"
+        ],
+        [
+            237,
+            "guild_boss_intercept_cd",
+            "60"
+        ],
+        [
+            238,
+            "guild_boss_intercept_timeup",
+            "30"
+        ],
+        [
+            239,
+            "guild_boss_intercept_protect",
+            "1"
+        ],
+        [
+            240,
+            "guild_boss_intercept_maxnum",
+            "10"
+        ],
+        [
+            241,
+            "guild_boss_standard_killtime",
+            "300"
+        ],
+        [
+            242,
+            "equipment_activity_1_open",
+            "18"
+        ],
+        [
+            243,
+            "equipment_activity_1_close",
+            "20"
+        ],
+        [
+            244,
+            "pet_huyou_percent",
+            "200"
+        ],
+        [
+            245,
+            "minecraft_juntuan_txt",
+            "军团"
+        ],
+        [
+            246,
+            "guild_boss_starttime",
+            "72000"
+        ],
+        [
+            247,
+            "guild_redpacket_vip",
+            "3"
+        ],
+        [
+            248,
+            "guild_redpacket_vip1",
+            "6"
+        ],
+        [
+            310,
+            "guild_boss_stand_people",
+            "10"
+        ],
+        [
+            311,
+            "linkage_time",
+            "3"
+        ],
+        [
+            312,
+            "tree_time_max",
+            "43200"
+        ],
+        [
+            313,
+            "speak_min",
+            "10"
+        ],
+        [
+            314,
+            "speak_max",
+            "30"
+        ],
+        [
+            315,
+            "country_txt",
+            "魏国|蜀国|吴国|群雄"
+        ],
+        [
+            316,
+            "equip_active_red",
+            "48"
+        ],
+        [
+            317,
+            "star_active_red",
+            "3"
+        ],
+        [
+            318,
+            "rebel_essence_chance",
+            "500"
+        ],
+        [
+            319,
+            "rebel_essence_cd",
+            "2"
+        ],
+        [
+            320,
+            "displace_change_camp",
+            "6|42|1"
+        ],
+        [
+            321,
+            "displace_treasure_proportion",
+            "3"
+        ],
+        [
+            322,
+            "guild_creat_daily_max",
+            "1"
+        ],
+        [
+            323,
+            "daily_boss_min",
+            "2"
+        ],
+        [
+            324,
+            "daily_boss_max",
+            "5"
+        ],
+        [
+            325,
+            "guild_war_open_week",
+            "2|6"
+        ],
+        [
+            326,
+            "guild_war_starttime",
+            "72000"
+        ],
+        [
+            327,
+            "guild_war_time_1",
+            "60"
+        ],
+        [
+            328,
+            "guild_war_time_2",
+            "900"
+        ],
+        [
+            329,
+            "guild_war_move_cd",
+            "5"
+        ],
+        [
+            330,
+            "guild_war_atk_cd",
+            "5"
+        ],
+        [
+            331,
+            "guild_war_hp",
+            "10"
+        ],
+        [
+            332,
+            "camp_bonus_1",
+            "300"
+        ],
+        [
+            333,
+            "camp_bonus_2",
+            "500"
+        ],
+        [
+            334,
+            "goldenbox_open",
+            "30"
+        ],
+        [
+            335,
+            "displace_red_across",
+            "6|43|3"
+        ],
+        [
+            336,
+            "displace_red_basis",
+            "3"
+        ],
+        [
+            337,
+            "guild_war_base_birth",
+            "1"
+        ],
+        [
+            338,
+            "guild_declare_lv",
+            "3"
+        ],
+        [
+            339,
+            "guild_war_proclaim_max",
+            "10"
+        ],
+        [
+            340,
+            "guild_war_proclaim_cd",
+            "50"
+        ],
+        [
+            341,
+            "level_max",
+            "1|100,80|120"
+        ],
+        [
+            342,
+            "level_max_show",
+            "30"
+        ],
+        [
+            343,
+            "loss_complete_win_10",
+            "0"
+        ],
+        [
+            344,
+            "loss_common_win_10",
+            "1"
+        ],
+        [
+            345,
+            "loss_nerrow_win_10",
+            "2"
+        ],
+        [
+            346,
+            "loss_level",
+            "10"
+        ],
+        [
+            347,
+            "guild_war_insane_kill",
+            "20"
+        ],
+        [
+            348,
+            "guild_kill_contribution",
+            "30"
+        ],
+        [
+            349,
+            "guild_atk_contribution",
+            "10"
+        ],
+        [
+            350,
+            "guild_atkgate_contribution",
+            "0"
+        ],
+        [
+            351,
+            "guild_atkdragon_contribution",
+            "0"
+        ],
+        [
+            352,
+            "guild_war_atk_cd_max",
+            "4"
+        ],
+        [
+            353,
+            "loss_complete_win_30",
+            "0"
+        ],
+        [
+            354,
+            "loss_common_win_30",
+            "1"
+        ],
+        [
+            355,
+            "loss_nerrow_win_30",
+            "2"
+        ],
+        [
+            356,
+            "loss_level_2",
+            "20"
+        ],
+        [
+            357,
+            "fight_advance",
+            "50"
+        ],
+        [
+            358,
+            "fight_days",
+            "14"
+        ],
+        [
+            359,
+            "fight_start",
+            "1540389600"
+        ],
+        [
+            360,
+            "fight_new_silk",
+            "4"
+        ],
+        [
+            361,
+            "fight_old_silk",
+            "8"
+        ],
+        [
+            362,
+            "fight_max_group",
+            "20"
+        ],
+        [
+            363,
+            "fight_new_group",
+            "1215|1220|1216|1221"
+        ],
+        [
+            364,
+            "fight_old_group",
+            "1215|1216|1217|1218|1219|1220|1221|1222"
+        ],
+        [
+            365,
+            "fight_default_group",
+            "6"
+        ],
+        [
+            366,
+            "guild_war_hp_win",
+            "1"
+        ],
+        [
+            367,
+            "guild_war_hp_lose",
+            "4"
+        ],
+        [
+            368,
+            "guild_war_contribution_1",
+            "5000"
+        ],
+        [
+            369,
+            "guild_war_contribution_2",
+            "7500"
+        ],
+        [
+            370,
+            "guild_war_contribution_3",
+            "10000"
+        ],
+        [
+            371,
+            "guild_war_contribution_4",
+            "3000"
+        ],
+        [
+            372,
+            "fight_group_open",
+            "100"
+        ],
+        [
+            373,
+            "guild_war_reborn",
+            "10"
+        ],
+        [
+            374,
+            "fight_time_start",
+            "11:14|19:22"
+        ],
+        [
+            375,
+            "fight_time_end",
+            "22"
+        ],
+        [
+            376,
+            "fight_new_rank",
+            "8"
+        ],
+        [
+            377,
+            "fight_new_lv",
+            "75"
+        ],
+        [
+            378,
+            "fight_new_instrument",
+            "50"
+        ],
+        [
+            379,
+            "fight_old_rank",
+            "10"
+        ],
+        [
+            380,
+            "fight_old_lv",
+            "95"
+        ],
+        [
+            381,
+            "fight_old_instrument",
+            "75"
+        ],
+        [
+            382,
+            "fight_new_usesilk",
+            "1202|1203|1204|1205|1207|1208|1209|1211|1212|1213|1214|1215|1216|1217|1218|1219|1220|1221|1222|1223|1224|1225|1226|1227|1301|1303|1304|1308|1302|1309|1310|1311|1312|1305|1313|1314|1315|1316|1317"
+        ],
+        [
+            383,
+            "fight_old_usesilk",
+            "1202|1203|1204|1205|1207|1208|1209|1211|1212|1213|1214|1215|1216|1217|1218|1219|1220|1221|1222|1223|1224|1225|1226|1227|1301|1303|1304|1308|1302|1309|1310|1311|1312|1305|1313|1314|1315|1316|1317"
+        ],
+        [
+            384,
+            "fight_punish_time",
+            "1:180|2:300|3:300|4:600|5:600"
+        ],
+        [
+            385,
+            "fight_over_time",
+            "900"
+        ],
+        [
+            386,
+            "fight_rank_num",
+            "50"
+        ],
+        [
+            387,
+            "fight_self_repo",
+            "10"
+        ],
+        [
+            388,
+            "fight_self_repo",
+            "5"
+        ],
+        [
+            389,
+            "guild_war_daily_1",
+            "1000"
+        ],
+        [
+            390,
+            "guild_war_daily_2",
+            "1500"
+        ],
+        [
+            391,
+            "guild_war_daily_3",
+            "2000"
+        ],
+        [
+            392,
+            "fight_red_max",
+            "2"
+        ],
+        [
+            393,
+            "fight_silk_free",
+            "7:4|8:7|9:10|10:13|11:16|12:21|13:26|14:31|15:36|16:41|17:46|18:51|19:56|20:61"
+        ],
+        [
+            394,
+            "fight_daily_num",
+            "1:10|2:20|3:40"
+        ],
+        [
+            395,
+            "fight_daily_win",
+            "1:30"
+        ],
+        [
+            396,
+            "vip_min_charge",
+            "10000"
+        ],
+        [
+            397,
+            "vip_mail_reward",
+            "5|1|3000,6|14|50,6|10|200"
+        ],
+        [
+            398,
+            "fight_season_award",
+            "30"
+        ],
+        [
+            399,
+            "output_up_multiple",
+            "2|3"
+        ],
+        [
+            400,
+            "output_up_refresh",
+            "12|00|00"
+        ],
+        [
+            401,
+            "output_up_num",
+            "1|1|2"
+        ],
+        [
+            402,
+            "fight_match_time",
+            "10"
+        ],
+        [
+            403,
+            "fight_match_star",
+            "20"
+        ],
+        [
+            404,
+            "fight_match_day",
+            "10"
+        ],
+        [
+            405,
+            "fight_match_season",
+            "100"
+        ],
+        [
+            406,
+            "fight_new_equip",
+            "409|410|411|412"
+        ],
+        [
+            407,
+            "fight_old_equip",
+            "409|410|411|412"
+        ],
+        [
+            408,
+            "fight_new_treasure",
+            "301|311"
+        ],
+        [
+            409,
+            "fight_old_treasure",
+            "301|311"
+        ],
+        [
+            410,
+            "fight_new_equip_lv",
+            "150"
+        ],
+        [
+            411,
+            "fight_new_equip_lv2",
+            "18"
+        ],
+        [
+            412,
+            "fight_new_treasure_lv",
+            "37"
+        ],
+        [
+            413,
+            "fight_new_treasure_lv2",
+            "9"
+        ],
+        [
+            414,
+            "fight_old_equip_lv",
+            "190"
+        ],
+        [
+            415,
+            "fight_old_equip_lv2",
+            "23"
+        ],
+        [
+            416,
+            "fight_old_treasure_lv",
+            "47"
+        ],
+        [
+            417,
+            "fight_old_treasure_lv2",
+            "11"
+        ],
+        [
+            419,
+            "fight_punish_star2",
+            "8"
+        ],
+        [
+            421,
+            "pit_type",
+            "【双倍矿】|【三倍矿】"
+        ],
+        [
+            422,
+            "guild_daily_auction_time",
+            "76800"
+        ],
+        [
+            423,
+            "fight_pet_old",
+            "3"
+        ],
+        [
+            424,
+            "fight_pet_new",
+            "2"
+        ],
+        [
+            425,
+            "fight_pet_lv",
+            "100"
+        ],
+        [
+            426,
+            "fight_pet_star_new",
+            "2"
+        ],
+        [
+            427,
+            "fight_punish_star",
+            "5"
+        ],
+        [
+            428,
+            "fight_punish_day",
+            "604800"
+        ],
+        [
+            429,
+            "sgs_linkage_time",
+            "100"
+        ],
+        [
+            430,
+            "suit_pre_time",
+            "2"
+        ],
+        [
+            431,
+            "suit_pos_time",
+            "1"
+        ],
+        [
+            432,
+            "fight_ban_num",
+            "3"
+        ],
+        [
+            433,
+            "fight_ban_time",
+            "25"
+        ],
+        [
+            434,
+            "fight_ban_star",
+            "16"
+        ],
+        [
+            435,
+            "fight_limit_new",
+            "0"
+        ],
+        [
+            436,
+            "fight_limit_old",
+            "3"
+        ],
+        [
+            437,
+            "fight_pet_star_old",
+            "3"
+        ],
+        [
+            438,
+            "sgs_linkage_time2",
+            "100"
+        ],
+        [
+            439,
+            "update_auction_bonus_1",
+            "300"
+        ],
+        [
+            440,
+            "update_auction_bonus_2",
+            "500"
+        ],
+        [
+            441,
+            "fight_second_num",
+            "3"
+        ],
+        [
+            442,
+            "update_auction_safe",
+            "200"
+        ],
+        [
+            443,
+            "update_auction_pmd",
+            "75|0"
+        ],
+        [
+            444,
+            "update_auction_final_rp",
+            "99"
+        ],
+        [
+            445,
+            "redpacket_rain_pmd",
+            "5"
+        ],
+        [
+            447,
+            "crosswar_auction_bonus_1",
+            "300"
+        ],
+        [
+            448,
+            "crosswar_auction_bonus_2",
+            "500"
+        ],
+        [
+            449,
+            "cross_war_start_week",
+            "2"
+        ],
+        [
+            450,
+            "cross_war_start_time",
+            "77400"
+        ],
+        [
+            451,
+            "cross_war_server_num",
+            "4"
+        ],
+        [
+            452,
+            "cross_war_open_week",
+            "6"
+        ],
+        [
+            453,
+            "cross_war_open_time",
+            "75600"
+        ],
+        [
+            454,
+            "cross_war_ready_time",
+            "60"
+        ],
+        [
+            455,
+            "cross_war_last_time",
+            "900"
+        ],
+        [
+            456,
+            "cross_war_kill_guard_point",
+            "200"
+        ],
+        [
+            457,
+            "cross_war_guard_hp_ratio",
+            "5"
+        ],
+        [
+            458,
+            "cross_war_point_produce_time",
+            "10"
+        ],
+        [
+            459,
+            "cross_war_move_time",
+            "5"
+        ],
+        [
+            460,
+            "cross_war_move_cd",
+            "0"
+        ],
+        [
+            461,
+            "cross_war_atk_cd",
+            "5"
+        ],
+        [
+            462,
+            "cross_war_revive_time",
+            "15"
+        ],
+        [
+            463,
+            "cross_war_maxhp",
+            "10"
+        ],
+        [
+            464,
+            "cross_war_win1_hploss",
+            "2"
+        ],
+        [
+            465,
+            "cross_war_win2_hploss",
+            "8"
+        ],
+        [
+            466,
+            "cross_war_win3_hploss",
+            "3"
+        ],
+        [
+            467,
+            "cross_war_fail1_hploss",
+            "7"
+        ],
+        [
+            468,
+            "cross_war_fail2_hploss",
+            "4"
+        ],
+        [
+            469,
+            "cross_war_fail3_hploss",
+            "6"
+        ],
+        [
+            470,
+            "cross_war_move_mintime",
+            "1500"
+        ],
+        [
+            471,
+            "cross_war_move_maxtime",
+            "30000"
+        ],
+        [
+            472,
+            "cross_war_kill_contribution",
+            "30"
+        ],
+        [
+            473,
+            "cross_war_atk_contribution",
+            "10"
+        ],
+        [
+            474,
+            "cross_war_lattice_size",
+            "120"
+        ],
+        [
+            475,
+            "cross_war_guess_start",
+            "14400"
+        ],
+        [
+            476,
+            "cross_war_guess_finish",
+            "75600"
+        ],
+        [
+            477,
+            "cross_war_guess_showend",
+            "76560"
+        ],
+        [
+            478,
+            "cross_war_support_cost",
+            "5000"
+        ],
+        [
+            480,
+            "treasure_limit_levelup_add",
+            "20"
+        ],
+        [
+            481,
+            "treasure_limit_refine_add",
+            "5"
+        ],
+        [
+            482,
+            "title_forever",
+            "永久"
+        ],
+        [
+            483,
+            "title_days",
+            "天"
+        ],
+        [
+            484,
+            "silkbag_start_lv",
+            "58"
+        ],
+        [
+            485,
+            "fight_elite_equip",
+            "501|502|503|504"
+        ],
+        [
+            486,
+            "fight_elite_treasure",
+            "401|411"
+        ],
+        [
+            487,
+            "fight_elite_equip_lv",
+            "230"
+        ],
+        [
+            488,
+            "fight_elite_equip_lv2",
+            "28"
+        ],
+        [
+            489,
+            "fight_elite_treasure_lv",
+            "57"
+        ],
+        [
+            490,
+            "fight_elite_treasure_lv2",
+            "13"
+        ],
+        [
+            491,
+            "fight_pet_elite",
+            "3"
+        ],
+        [
+            492,
+            "fight_pet_star_elite",
+            "3"
+        ],
+        [
+            493,
+            "fight_limit_elite",
+            "3"
+        ],
+        [
+            494,
+            "fight_advance_elite",
+            "90"
+        ],
+        [
+            495,
+            "fight_elite_rank",
+            "12"
+        ],
+        [
+            496,
+            "fight_elite_lv",
+            "115"
+        ],
+        [
+            497,
+            "fight_elite_instrument",
+            "75"
+        ],
+        [
+            498,
+            "fight_elite_silk",
+            "10"
+        ],
+        [
+            500,
+            "cross_war_support_success",
+            "6|85|5,6|94|5,6|95|5,6|159|5"
+        ],
+        [
+            501,
+            "cross_war_coefficient_1",
+            "1500"
+        ],
+        [
+            502,
+            "cross_war_coefficient_2",
+            "1500"
+        ],
+        [
+            503,
+            "cross_war_coefficient_3",
+            "1400"
+        ],
+        [
+            504,
+            "cross_war_coefficient_4",
+            "1400"
+        ],
+        [
+            505,
+            "cross_war_support_fail",
+            "6|85|2,6|94|2,6|95|2,6|159|2"
+        ],
+        [
+            506,
+            "cross_war_guild_loser_success",
+            "5|1|300,6|85|5,6|94|5"
+        ],
+        [
+            507,
+            "cross_war_server_winer_success",
+            "5|1|300,6|85|5,6|159|5"
+        ],
+        [
+            508,
+            "cross_war_server_loser_success",
+            "5|1|300,6|85|5,6|159|5"
+        ],
+        [
+            509,
+            "cross_war_guild_winer_fail",
+            "6|85|2,6|95|2"
+        ],
+        [
+            510,
+            "cross_war_guild_loser_fail",
+            "6|85|2,6|94|2"
+        ],
+        [
+            511,
+            "cross_war_server_winer_fail",
+            "6|85|2,6|159|2"
+        ],
+        [
+            512,
+            "cross_war_server_loser_fail",
+            "6|85|2,6|159|2"
+        ],
+        [
+            513,
+            "crosswar_auction_bonusyubi_1",
+            "300"
+        ],
+        [
+            514,
+            "crosswar_auction_bonusyubi_2",
+            "500"
+        ],
+        [
+            515,
+            "cross_war_coefficient_5",
+            "1300"
+        ],
+        [
+            516,
+            "cross_war_coefficient_6",
+            "1300"
+        ],
+        [
+            517,
+            "cross_war_coefficient_7",
+            "1200"
+        ],
+        [
+            518,
+            "cross_war_coefficient_8",
+            "1200"
+        ],
+        [
+            519,
+            "cross_war_coefficient_9",
+            "1100"
+        ],
+        [
+            520,
+            "cross_war_coefficient_10",
+            "1100"
+        ],
+        [
+            521,
+            "cross_war_coefficient_11",
+            "1000"
+        ],
+        [
+            522,
+            "cross_war_coefficient_12",
+            "1000"
+        ],
+        [
+            523,
+            "cross_war_coefficient_13",
+            "1000"
+        ],
+        [
+            524,
+            "cross_war_coefficient_14",
+            "1000"
+        ],
+        [
+            525,
+            "cross_war_coefficient_15",
+            "1000"
+        ],
+        [
+            526,
+            "cross_war_coefficient_16",
+            "1000"
+        ],
+        [
+            527,
+            "cross_war_show_close_time",
+            "72000"
+        ],
+        [
+            528,
+            "cross_war_chat_begins",
+            "14460"
+        ],
+        [
+            529,
+            "cross_war_chat_end",
+            "86340"
+        ],
+        [
+            550,
+            "army_limit",
+            "2000"
+        ],
+        [
+            560,
+            "equipment_level_critical_limit",
+            "8"
+        ],
+        [
+            600,
+            "training_limit_1",
+            "2"
+        ],
+        [
+            601,
+            "training_limit_2",
+            "2"
+        ],
+        [
+            602,
+            "training_time",
+            "30"
+        ],
+        [
+            603,
+            "horse_active_red",
+            "3"
+        ],
+        [
+            604,
+            "vip_card_day",
+            "1|95,17|85,24|94,47|159"
+        ],
+        [
+            605,
+            "vip_card_drop",
+            "1|450,17|451,24|452,47|453"
+        ],
+        [
+            606,
+            "training_time_gap",
+            "6"
+        ],
+        [
+            607,
+            "new_answer_random_reward",
+            "301|302|311|312"
+        ],
+        [
+            608,
+            "new_answer_random_reward_1",
+            "303|304|313|314"
+        ],
+        [
+            609,
+            "new_answer_rounds",
+            "2"
+        ],
+        [
+            610,
+            "new_answer_ready",
+            "30|15"
+        ],
+        [
+            611,
+            "new_answer_time",
+            "12"
+        ],
+        [
+            612,
+            "new_answer_interval_time",
+            "7"
+        ],
+        [
+            613,
+            "new_answer_question_num",
+            "10"
+        ],
+        [
+            614,
+            "new_answer_right_points",
+            "2"
+        ],
+        [
+            615,
+            "new_answer_right_award",
+            "200"
+        ],
+        [
+            616,
+            "new_answer_open",
+            "1|3|5|7"
+        ],
+        [
+            617,
+            "fight_ban_pet",
+            "1"
+        ],
+        [
+            618,
+            "default_icon",
+            "ui3/common/default_icon"
+        ],
+        [
+            619,
+            "pvpsingle_bonus_1",
+            "300"
+        ],
+        [
+            620,
+            "pvpsingle_bonus_2",
+            "500"
+        ],
+        [
+            621,
+            "mine_renew",
+            "3"
+        ],
+        [
+            622,
+            "mine_attack_enemyloss",
+            "2"
+        ],
+        [
+            623,
+            "mine_attack_ourloss",
+            "1"
+        ],
+        [
+            624,
+            "mine_defense_enemyloss",
+            "2"
+        ],
+        [
+            625,
+            "mine_defense_ourloss",
+            "1"
+        ],
+        [
+            626,
+            "mine_troop_add",
+            "100"
+        ],
+        [
+            627,
+            "mine_vip_level",
+            "5"
+        ],
+        [
+            628,
+            "goldenhero_open",
+            "0"
+        ],
+        [
+            629,
+            "goldenhero_draw_duration",
+            "3000"
+        ],
+        [
+            630,
+            "goldenhero_draw_rest",
+            "600"
+        ],
+        [
+            631,
+            "goldenhero_points",
+            "10"
+        ],
+        [
+            632,
+            "goldenhero_money",
+            "30"
+        ],
+        [
+            633,
+            "goldenhero_win",
+            "99999"
+        ],
+        [
+            634,
+            "goldenhero_bullet_goods",
+            "#server##name#获得了#goods#！"
+        ],
+        [
+            635,
+            "goldenhero_bullet_hero",
+            "#server##name#获得了#hero#！"
+        ],
+        [
+            636,
+            "goldenhero_draw_begin",
+            "8"
+        ],
+        [
+            637,
+            "goldenhero_draw_end",
+            "24"
+        ],
+        [
+            638,
+            "goldenhero_free_CD",
+            "3600"
+        ],
+        [
+            639,
+            "goldenhero_free_times",
+            "5"
+        ],
+        [
+            640,
+            "goldenhero_cross_time",
+            "165600"
+        ],
+        [
+            641,
+            "goldenhero_time_left",
+            "86400"
+        ],
+        [
+            642,
+            "goldenhero_draw_begin_1",
+            "0"
+        ],
+        [
+            643,
+            "goldenhero_draw_end_2",
+            "2"
+        ],
+        [
+            644,
+            "goldenhero_level_min",
+            "75"
+        ],
+        [
+            650,
+            "pet_limit_min",
+            "3"
+        ],
+        [
+            651,
+            "pet_limit_star",
+            "3|1,4|2,5|3"
+        ],
+        [
+            652,
+            "pet_limit_item",
+            "559"
+        ],
+        [
+            653,
+            "pet_limit_coin",
+            "12000000"
+        ],
+        [
+            654,
+            "pet_limit_item_num",
+            "1"
+        ],
+        [
+            680,
+            "cake_local_time",
+            "79200"
+        ],
+        [
+            681,
+            "cake_cross_time",
+            "165600"
+        ],
+        [
+            682,
+            "cake_egg_point",
+            "3|3"
+        ],
+        [
+            683,
+            "cake_cream_point",
+            "10|10"
+        ],
+        [
+            684,
+            "cake_fruit_point",
+            "100|100"
+        ],
+        [
+            685,
+            "cake_fruit_chance",
+            "0"
+        ],
+        [
+            686,
+            "cake_egg_max",
+            "13600"
+        ],
+        [
+            687,
+            "cake_local_best",
+            "3"
+        ],
+        [
+            688,
+            "cake_gift_num",
+            "50"
+        ],
+        [
+            689,
+            "cake_local_rank",
+            "50"
+        ],
+        [
+            690,
+            "cake_cross_rank",
+            "50"
+        ],
+        [
+            691,
+            "cake_egg_id",
+            "570"
+        ],
+        [
+            692,
+            "cake_cream_id",
+            "571"
+        ],
+        [
+            693,
+            "cake_fruit_id",
+            "572"
+        ],
+        [
+            694,
+            "displace_weapon_red",
+            "50"
+        ],
+        [
+            695,
+            "displace_weapon_gold",
+            "12"
+        ],
+        [
+            696,
+            "displace_hero_gold",
+            "2"
+        ],
+        [
+            697,
+            "displace_gold_across",
+            "6|46|3"
+        ],
+        [
+            700,
+            "cake_rank_show",
+            "10"
+        ],
+        [
+            701,
+            "cake_time_gap",
+            "7200"
+        ],
+        [
+            702,
+            "cake_time_left",
+            "93600"
+        ],
+        [
+            703,
+            "cake_day_batch",
+            "8|1,40|2"
+        ],
+        [
+            704,
+            "cake_egg_max2",
+            "40800"
+        ],
+        [
+            705,
+            "cake_server_size",
+            "32"
+        ],
+        [
+            723,
+            "peace_reload",
+            "12|00|30"
+        ],
+        [
+            724,
+            "peace_num",
+            "3"
+        ],
+        [
+            725,
+            "peace_reload_1",
+            "19|00|00"
+        ],
+        [
+            726,
+            "peace_evil",
+            "1"
+        ],
+        [
+            727,
+            "peace_attack_limit",
+            "50"
+        ],
+        [
+            728,
+            "peace_evil_reduce",
+            "3600|1"
+        ],
+        [
+            729,
+            "peace_vipevil_reduce",
+            "1800|1"
+        ],
+        [
+            730,
+            "peace_injured_reduce",
+            "1|1"
+        ],
+        [
+            731,
+            "peace_last_time",
+            "10"
+        ],
+        [
+            732,
+            "peace_week",
+            "1|2|3|4|5"
+        ],
+        [
+            733,
+            "peace_evil_limit",
+            "50"
+        ],
+        [
+            734,
+            "peace_evil_viplimit",
+            "100"
+        ],
+        [
+            735,
+            "peace_begin",
+            "1"
+        ],
+        [
+            736,
+            "fighting_gap",
+            "100"
+        ],
+        [
+            737,
+            "attack_double",
+            "2000"
+        ],
+        [
+            738,
+            "army_double",
+            "2000"
+        ],
+        [
+            750,
+            "fight_golden_use",
+            "3"
+        ],
+        [
+            751,
+            "fight_golden_rank",
+            "5"
+        ],
+        [
+            752,
+            "fight_golden_num",
+            "1"
+        ],
+        [
+            753,
+            "fight_golden_nerf",
+            "7000"
+        ],
+        [
+            754,
+            "fight_red_avatar",
+            "3"
+        ],
+        [
+            418,
+            "fight_match_gap",
+            "1440"
+        ],
+        [
+            760,
+            "fight_match_gap_max",
+            "2820"
+        ],
+        [
+            799,
+            "main_bgm",
+            "19"
+        ],
+        [
+            800,
+            "boss_hero_drop_limit",
+            "150"
+        ],
+        [
+            801,
+            "guild_boss_hero_drop_limit",
+            "100"
+        ],
+        [
+            802,
+            "secret_range",
+            "0123456789abcdefghijklmnopqrstuvwxyz"
+        ],
+        [
+            803,
+            "sign_head",
+            "v26-sign"
+        ],
+        [
+            820,
+            "return_lvup",
+            "50|60"
+        ],
+        [
+            821,
+            "return_vip",
+            "0"
+        ],
+        [
+            822,
+            "return_lv",
+            "70"
+        ],
+        [
+            823,
+            "return_lvup_para",
+            "5"
+        ],
+        [
+            851,
+            "limit_red_show",
+            "130"
+        ],
+        [
+            852,
+            "yubi_bonus_1",
+            "300"
+        ],
+        [
+            853,
+            "yubi_bonus_2",
+            "500"
+        ],
+        [
+            870,
+            "training_invite_time",
+            "1"
+        ],
+        [
+            871,
+            "gold_hero_instrument_achivement_data",
+            "40"
+        ],
+        [
+            880,
+            "back_vip_lv",
+            "1"
+        ],
+        [
+            881,
+            "back_day",
+            "14"
+        ],
+        [
+            882,
+            "back_charge_day",
+            "114"
+        ],
+        [
+            883,
+            "back_jianlong_jadesoul",
+            "250"
+        ],
+        [
+            884,
+            "back_equipment_jadesoul",
+            "150"
+        ],
+        [
+            885,
+            "back_avatar_jadesoul",
+            "75"
+        ],
+        [
+            886,
+            "back_pet_jadesoul",
+            "150"
+        ],
+        [
+            887,
+            "back_horse_jadesoul",
+            "150"
+        ],
+        [
+            888,
+            "back_confirm_lv",
+            "10"
+        ],
+        [
+            889,
+            "back_max_num",
+            "3000"
+        ],
+        [
+            900,
+            "redpet_draw_duration",
+            "172800"
+        ],
+        [
+            901,
+            "redpet_free_times",
+            "1"
+        ],
+        [
+            902,
+            "redpet_draw_rest",
+            "172800"
+        ],
+        [
+            903,
+            "redpet_yubi",
+            "320"
+        ],
+        [
+            904,
+            "redpet_yubi_ten",
+            "1500"
+        ],
+        [
+            905,
+            "redpet_renovate_cost",
+            "200"
+        ],
+        [
+            906,
+            "redpet_mini_times",
+            "3"
+        ],
+        [
+            911,
+            "cross_war_drop_limit",
+            "150"
+        ],
+        [
+            912,
+            "answer_drop_limit",
+            "150"
+        ],
+        [
+            913,
+            "new_answer_drop_limit",
+            "150"
+        ],
+        [
+            920,
+            "special_config_time",
+            "0"
+        ],
+        [
+            921,
+            "tshirt_num",
+            "5000"
+        ],
+        [
+            922,
+            "tshirt_limit",
+            "2000"
+        ],
+        [
+            931,
+            "gold_avatar_duration",
+            "259200"
+        ],
+        [
+            932,
+            "gold_avatar_free_times",
+            "3"
+        ],
+        [
+            933,
+            "gold_avatar_free_cd",
+            "3600"
+        ],
+        [
+            934,
+            "gold_avatar_cost1",
+            "320"
+        ],
+        [
+            935,
+            "gold_avatar_cost5",
+            "1500"
+        ],
+        [
+            936,
+            "gold_avatar_min_times",
+            "3"
+        ],
+        [
+            937,
+            "gold_avatar_range_min",
+            "50"
+        ],
+        [
+            938,
+            "gold_avatar_range_max",
+            "100"
+        ],
+        [
+            1001,
+            "seven_day_money_duration",
+            "7"
+        ],
+        [
+            1002,
+            "seven_day_money_reward_duration",
+            "8"
+        ],
+        [
+            2001,
+            "extra_time",
+            "15"
+        ],
+        [
+            2002,
+            "extra_time_price",
+            "200"
+        ],
+        [
+            2003,
+            "patrol_chunqiuzhanguo_lelve",
+            "80"
+        ],
+        [
+            2004,
+            "patrol_chunqiuzhanguo_id",
+            "92|93"
+        ],
+        [
+            2005,
+            "patrol_chunqiuzhanguo_time4",
+            "0.04"
+        ],
+        [
+            2006,
+            "patrol_chunqiuzhanguo_time8",
+            "0.08"
+        ],
+        [
+            2007,
+            "patrol_chunqiuzhanguo_time12",
+            "0.12"
+        ],
+        [
+            2008,
+            "patrol_chunqiuzhanguo_limit",
+            "2"
+        ],
+        [
+            2009,
+            "patrol_lijizhouyi_lelve",
+            "90"
+        ],
+        [
+            2010,
+            "patrol_lijizhouyi_id",
+            "555|556"
+        ],
+        [
+            2011,
+            "patrol_lijizhouyi_time4",
+            "0.0001"
+        ],
+        [
+            2012,
+            "patrol_lijizhouyi_time8",
+            "0.0002"
+        ],
+        [
+            2013,
+            "patrol_lijizhouyi_time12",
+            "0.0003"
+        ],
+        [
+            2014,
+            "patrol_lijizhouyi_limit",
+            "1"
+        ],
+        [
+            2015,
+            "first_pay_day",
+            "3"
+        ],
+        [
+            2016,
+            "share_number",
+            "5"
+        ],
+        [
+            2017,
+            "share_day",
+            "8"
+        ],
+        [
+            2018,
+            "share_day_extra",
+            "3"
+        ]
+    ],
+    "indexes": {
+        "1": 0,
+        "2": 1,
+        "3": 2,
+        "4": 3,
+        "5": 4,
+        "6": 5,
+        "7": 6,
+        "8": 7,
+        "9": 8,
+        "10": 9,
+        "11": 10,
+        "12": 11,
+        "13": 12,
+        "14": 13,
+        "15": 14,
+        "16": 15,
+        "17": 16,
+        "18": 17,
+        "19": 18,
+        "20": 19,
+        "21": 20,
+        "22": 21,
+        "23": 22,
+        "24": 23,
+        "25": 24,
+        "26": 25,
+        "27": 26,
+        "28": 27,
+        "29": 28,
+        "30": 29,
+        "31": 30,
+        "32": 31,
+        "33": 32,
+        "34": 33,
+        "35": 34,
+        "36": 35,
+        "37": 36,
+        "38": 37,
+        "39": 38,
+        "40": 39,
+        "41": 40,
+        "42": 41,
+        "43": 42,
+        "44": 43,
+        "45": 44,
+        "46": 45,
+        "47": 46,
+        "48": 47,
+        "49": 48,
+        "50": 49,
+        "51": 50,
+        "52": 51,
+        "53": 52,
+        "54": 53,
+        "55": 54,
+        "56": 55,
+        "57": 56,
+        "58": 57,
+        "59": 58,
+        "60": 59,
+        "61": 60,
+        "62": 61,
+        "63": 62,
+        "64": 63,
+        "65": 64,
+        "66": 65,
+        "67": 66,
+        "68": 67,
+        "69": 68,
+        "70": 69,
+        "71": 70,
+        "72": 71,
+        "73": 72,
+        "74": 73,
+        "75": 74,
+        "76": 75,
+        "77": 76,
+        "78": 77,
+        "79": 78,
+        "80": 79,
+        "81": 80,
+        "82": 81,
+        "83": 82,
+        "84": 83,
+        "85": 84,
+        "86": 85,
+        "87": 86,
+        "88": 87,
+        "89": 88,
+        "90": 89,
+        "91": 90,
+        "92": 91,
+        "93": 92,
+        "94": 93,
+        "95": 94,
+        "96": 95,
+        "97": 96,
+        "98": 97,
+        "99": 98,
+        "100": 99,
+        "101": 100,
+        "102": 101,
+        "103": 102,
+        "104": 103,
+        "105": 104,
+        "106": 105,
+        "107": 106,
+        "108": 107,
+        "109": 108,
+        "110": 109,
+        "111": 110,
+        "112": 111,
+        "113": 112,
+        "114": 113,
+        "115": 114,
+        "116": 115,
+        "117": 116,
+        "118": 117,
+        "119": 118,
+        "120": 119,
+        "121": 120,
+        "122": 121,
+        "123": 122,
+        "124": 123,
+        "125": 124,
+        "126": 125,
+        "127": 126,
+        "128": 127,
+        "129": 128,
+        "130": 129,
+        "131": 130,
+        "132": 131,
+        "133": 132,
+        "134": 133,
+        "135": 134,
+        "136": 135,
+        "137": 136,
+        "138": 137,
+        "139": 138,
+        "140": 139,
+        "141": 140,
+        "142": 141,
+        "143": 142,
+        "144": 143,
+        "145": 144,
+        "146": 145,
+        "147": 146,
+        "148": 147,
+        "149": 148,
+        "150": 149,
+        "151": 150,
+        "152": 151,
+        "153": 152,
+        "154": 153,
+        "155": 154,
+        "156": 155,
+        "157": 156,
+        "158": 157,
+        "159": 158,
+        "160": 159,
+        "161": 160,
+        "162": 161,
+        "163": 162,
+        "164": 163,
+        "165": 164,
+        "166": 165,
+        "167": 166,
+        "168": 167,
+        "169": 168,
+        "170": 169,
+        "171": 170,
+        "172": 171,
+        "173": 172,
+        "174": 173,
+        "175": 174,
+        "176": 175,
+        "177": 176,
+        "178": 177,
+        "179": 178,
+        "180": 179,
+        "181": 180,
+        "182": 181,
+        "183": 182,
+        "184": 183,
+        "185": 184,
+        "186": 185,
+        "187": 186,
+        "188": 187,
+        "189": 188,
+        "190": 189,
+        "191": 190,
+        "192": 191,
+        "193": 192,
+        "194": 193,
+        "195": 194,
+        "196": 195,
+        "197": 196,
+        "198": 197,
+        "199": 198,
+        "200": 199,
+        "201": 200,
+        "202": 201,
+        "203": 202,
+        "204": 203,
+        "205": 204,
+        "206": 205,
+        "207": 206,
+        "208": 207,
+        "209": 208,
+        "210": 209,
+        "211": 210,
+        "212": 211,
+        "213": 212,
+        "214": 213,
+        "215": 214,
+        "216": 215,
+        "217": 216,
+        "218": 217,
+        "219": 218,
+        "220": 219,
+        "221": 220,
+        "222": 221,
+        "223": 222,
+        "224": 223,
+        "225": 224,
+        "226": 225,
+        "227": 226,
+        "228": 227,
+        "229": 228,
+        "230": 229,
+        "231": 230,
+        "232": 231,
+        "233": 232,
+        "234": 233,
+        "235": 234,
+        "236": 235,
+        "237": 236,
+        "238": 237,
+        "239": 238,
+        "240": 239,
+        "241": 240,
+        "242": 241,
+        "243": 242,
+        "244": 243,
+        "245": 244,
+        "246": 245,
+        "247": 246,
+        "248": 247,
+        "310": 248,
+        "311": 249,
+        "312": 250,
+        "313": 251,
+        "314": 252,
+        "315": 253,
+        "316": 254,
+        "317": 255,
+        "318": 256,
+        "319": 257,
+        "320": 258,
+        "321": 259,
+        "322": 260,
+        "323": 261,
+        "324": 262,
+        "325": 263,
+        "326": 264,
+        "327": 265,
+        "328": 266,
+        "329": 267,
+        "330": 268,
+        "331": 269,
+        "332": 270,
+        "333": 271,
+        "334": 272,
+        "335": 273,
+        "336": 274,
+        "337": 275,
+        "338": 276,
+        "339": 277,
+        "340": 278,
+        "341": 279,
+        "342": 280,
+        "343": 281,
+        "344": 282,
+        "345": 283,
+        "346": 284,
+        "347": 285,
+        "348": 286,
+        "349": 287,
+        "350": 288,
+        "351": 289,
+        "352": 290,
+        "353": 291,
+        "354": 292,
+        "355": 293,
+        "356": 294,
+        "357": 295,
+        "358": 296,
+        "359": 297,
+        "360": 298,
+        "361": 299,
+        "362": 300,
+        "363": 301,
+        "364": 302,
+        "365": 303,
+        "366": 304,
+        "367": 305,
+        "368": 306,
+        "369": 307,
+        "370": 308,
+        "371": 309,
+        "372": 310,
+        "373": 311,
+        "374": 312,
+        "375": 313,
+        "376": 314,
+        "377": 315,
+        "378": 316,
+        "379": 317,
+        "380": 318,
+        "381": 319,
+        "382": 320,
+        "383": 321,
+        "384": 322,
+        "385": 323,
+        "386": 324,
+        "387": 325,
+        "388": 326,
+        "389": 327,
+        "390": 328,
+        "391": 329,
+        "392": 330,
+        "393": 331,
+        "394": 332,
+        "395": 333,
+        "396": 334,
+        "397": 335,
+        "398": 336,
+        "399": 337,
+        "400": 338,
+        "401": 339,
+        "402": 340,
+        "403": 341,
+        "404": 342,
+        "405": 343,
+        "406": 344,
+        "407": 345,
+        "408": 346,
+        "409": 347,
+        "410": 348,
+        "411": 349,
+        "412": 350,
+        "413": 351,
+        "414": 352,
+        "415": 353,
+        "416": 354,
+        "417": 355,
+        "418": 560,
+        "419": 356,
+        "421": 357,
+        "422": 358,
+        "423": 359,
+        "424": 360,
+        "425": 361,
+        "426": 362,
+        "427": 363,
+        "428": 364,
+        "429": 365,
+        "430": 366,
+        "431": 367,
+        "432": 368,
+        "433": 369,
+        "434": 370,
+        "435": 371,
+        "436": 372,
+        "437": 373,
+        "438": 374,
+        "439": 375,
+        "440": 376,
+        "441": 377,
+        "442": 378,
+        "443": 379,
+        "444": 380,
+        "445": 381,
+        "447": 382,
+        "448": 383,
+        "449": 384,
+        "450": 385,
+        "451": 386,
+        "452": 387,
+        "453": 388,
+        "454": 389,
+        "455": 390,
+        "456": 391,
+        "457": 392,
+        "458": 393,
+        "459": 394,
+        "460": 395,
+        "461": 396,
+        "462": 397,
+        "463": 398,
+        "464": 399,
+        "465": 400,
+        "466": 401,
+        "467": 402,
+        "468": 403,
+        "469": 404,
+        "470": 405,
+        "471": 406,
+        "472": 407,
+        "473": 408,
+        "474": 409,
+        "475": 410,
+        "476": 411,
+        "477": 412,
+        "478": 413,
+        "480": 414,
+        "481": 415,
+        "482": 416,
+        "483": 417,
+        "484": 418,
+        "485": 419,
+        "486": 420,
+        "487": 421,
+        "488": 422,
+        "489": 423,
+        "490": 424,
+        "491": 425,
+        "492": 426,
+        "493": 427,
+        "494": 428,
+        "495": 429,
+        "496": 430,
+        "497": 431,
+        "498": 432,
+        "500": 433,
+        "501": 434,
+        "502": 435,
+        "503": 436,
+        "504": 437,
+        "505": 438,
+        "506": 439,
+        "507": 440,
+        "508": 441,
+        "509": 442,
+        "510": 443,
+        "511": 444,
+        "512": 445,
+        "513": 446,
+        "514": 447,
+        "515": 448,
+        "516": 449,
+        "517": 450,
+        "518": 451,
+        "519": 452,
+        "520": 453,
+        "521": 454,
+        "522": 455,
+        "523": 456,
+        "524": 457,
+        "525": 458,
+        "526": 459,
+        "527": 460,
+        "528": 461,
+        "529": 462,
+        "550": 463,
+        "560": 464,
+        "600": 465,
+        "601": 466,
+        "602": 467,
+        "603": 468,
+        "604": 469,
+        "605": 470,
+        "606": 471,
+        "607": 472,
+        "608": 473,
+        "609": 474,
+        "610": 475,
+        "611": 476,
+        "612": 477,
+        "613": 478,
+        "614": 479,
+        "615": 480,
+        "616": 481,
+        "617": 482,
+        "618": 483,
+        "619": 484,
+        "620": 485,
+        "621": 486,
+        "622": 487,
+        "623": 488,
+        "624": 489,
+        "625": 490,
+        "626": 491,
+        "627": 492,
+        "628": 493,
+        "629": 494,
+        "630": 495,
+        "631": 496,
+        "632": 497,
+        "633": 498,
+        "634": 499,
+        "635": 500,
+        "636": 501,
+        "637": 502,
+        "638": 503,
+        "639": 504,
+        "640": 505,
+        "641": 506,
+        "642": 507,
+        "643": 508,
+        "644": 509,
+        "650": 510,
+        "651": 511,
+        "652": 512,
+        "653": 513,
+        "654": 514,
+        "680": 515,
+        "681": 516,
+        "682": 517,
+        "683": 518,
+        "684": 519,
+        "685": 520,
+        "686": 521,
+        "687": 522,
+        "688": 523,
+        "689": 524,
+        "690": 525,
+        "691": 526,
+        "692": 527,
+        "693": 528,
+        "694": 529,
+        "695": 530,
+        "696": 531,
+        "697": 532,
+        "700": 533,
+        "701": 534,
+        "702": 535,
+        "703": 536,
+        "704": 537,
+        "705": 538,
+        "723": 539,
+        "724": 540,
+        "725": 541,
+        "726": 542,
+        "727": 543,
+        "728": 544,
+        "729": 545,
+        "730": 546,
+        "731": 547,
+        "732": 548,
+        "733": 549,
+        "734": 550,
+        "735": 551,
+        "736": 552,
+        "737": 553,
+        "738": 554,
+        "750": 555,
+        "751": 556,
+        "752": 557,
+        "753": 558,
+        "754": 559,
+        "760": 561,
+        "799": 562,
+        "800": 563,
+        "801": 564,
+        "802": 565,
+        "803": 566,
+        "820": 567,
+        "821": 568,
+        "822": 569,
+        "823": 570,
+        "851": 571,
+        "852": 572,
+        "853": 573,
+        "870": 574,
+        "871": 575,
+        "880": 576,
+        "881": 577,
+        "882": 578,
+        "883": 579,
+        "884": 580,
+        "885": 581,
+        "886": 582,
+        "887": 583,
+        "888": 584,
+        "889": 585,
+        "900": 586,
+        "901": 587,
+        "902": 588,
+        "903": 589,
+        "904": 590,
+        "905": 591,
+        "906": 592,
+        "911": 593,
+        "912": 594,
+        "913": 595,
+        "920": 596,
+        "921": 597,
+        "922": 598,
+        "931": 599,
+        "932": 600,
+        "933": 601,
+        "934": 602,
+        "935": 603,
+        "936": 604,
+        "937": 605,
+        "938": 606,
+        "1001": 607,
+        "1002": 608,
+        "2001": 609,
+        "2002": 610,
+        "2003": 611,
+        "2004": 612,
+        "2005": 613,
+        "2006": 614,
+        "2007": 615,
+        "2008": 616,
+        "2009": 617,
+        "2010": 618,
+        "2011": 619,
+        "2012": 620,
+        "2013": 621,
+        "2014": 622,
+        "2015": 623,
+        "2016": 624,
+        "2017": 625,
+        "2018": 626
+    }
+}

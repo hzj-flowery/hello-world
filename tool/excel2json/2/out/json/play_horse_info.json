@@ -1,0 +1,41 @@
+{
+    "key_map": {
+        "id": 0,
+        "open_time": 1,
+        "bet_time": 2,
+        "ready_time": 3,
+        "show_time": 4,
+        "show_time_1": 5,
+        "match_time_min": 6,
+        "match_time_max": 7,
+        "type": 8,
+        "value": 9,
+        "size": 10,
+        "support_max": 11,
+        "people_max": 12,
+        "pixel_number": 13,
+        "part_number": 14
+    },
+    "data": [
+        [
+            1,
+            "600|608|840|848|960|968|1320|1328",
+            180,
+            4,
+            3,
+            0,
+            800,
+            900,
+            6,
+            33,
+            1,
+            5,
+            2,
+            "9204",
+            "920|920|920|920|920|920|920|920|920|924"
+        ]
+    ],
+    "indexes": {
+        "1": 0
+    }
+}

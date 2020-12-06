@@ -1,0 +1,35 @@
+{
+    "key_map": {
+        "id": 0,
+        "right_type1": 1,
+        "right_resource1": 2,
+        "right_size1": 3,
+        "right_type2": 4,
+        "right_resource2": 5,
+        "right_size2": 6
+    },
+    "data": [
+        [
+            1,
+            5,
+            13,
+            200,
+            5,
+            18,
+            20
+        ],
+        [
+            2,
+            5,
+            13,
+            100,
+            5,
+            18,
+            10
+        ]
+    ],
+    "indexes": {
+        "1": 0,
+        "2": 1
+    }
+}

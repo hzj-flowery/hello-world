@@ -3,7 +3,7 @@
 import Device from "../../Device";
 import { glMatrix } from "../../Matrix";
 import { MathUtils } from "../../utils/MathUtils";
-import { CameraModel, G_CameraModel } from "../camera/CameraModel";
+import {G_CameraModel } from "../camera/CameraModel";
 import { syPrimitives } from "../shader/Primitives";
 import { BufferAttribsData, G_ShaderFactory, ShaderData } from "../shader/Shader";
 var vertexshader3d =

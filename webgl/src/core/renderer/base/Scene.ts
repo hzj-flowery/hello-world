@@ -1,4 +1,4 @@
-import { SY } from "./Sprite";
+
 import { Node } from "./Node";
 
 /**

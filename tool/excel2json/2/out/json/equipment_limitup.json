@@ -1,0 +1,56 @@
+{
+    "key_map": {
+        "limitup_templet_id": 0,
+        "consume_refinestone": 1,
+        "cost_equipment": 2,
+        "consume_equipment": 3,
+        "resource_name_1": 4,
+        "resource_type_1": 5,
+        "resource_id_1": 6,
+        "resource_size_1": 7,
+        "resource_consume_1": 8,
+        "resource_name_2": 9,
+        "resource_type_2": 10,
+        "resource_id_2": 11,
+        "resource_size_2": 12,
+        "resource_consume_2": 13
+    },
+    "data": [
+        [
+            1,
+            5,
+            2,
+            1,
+            "春秋",
+            6,
+            92,
+            12,
+            1,
+            "战国",
+            6,
+            93,
+            12,
+            1
+        ],
+        [
+            2,
+            5,
+            1,
+            1,
+            "礼记",
+            6,
+            555,
+            12,
+            1,
+            "周易",
+            6,
+            556,
+            12,
+            1
+        ]
+    ],
+    "indexes": {
+        "1": 0,
+        "2": 1
+    }
+}

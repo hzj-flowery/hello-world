@@ -1,0 +1,278 @@
+{
+    "key_map": {
+        "id": 0,
+        "channel": 1,
+        "package": 2,
+        "QR_code": 3
+    },
+    "data": [
+        [
+            1,
+            "游卡",
+            "default",
+            "qr_yoka_default"
+        ],
+        [
+            2,
+            "黑马101",
+            "default",
+            "qr_101_default"
+        ],
+        [
+            3,
+            "黑马101",
+            "com.tencent.tmgp.gzyx.tdsg",
+            "qr_101_guozi"
+        ],
+        [
+            4,
+            "黑马101",
+            "com.tencent.tmgp.yueke.tdsg",
+            "qr_101_guozi"
+        ],
+        [
+            5,
+            "黑马101",
+            "com.tencent.tmgp.tdsghhflb",
+            "qr_101_guozi"
+        ],
+        [
+            6,
+            "黑马101",
+            "com.tencent.tmgp.tdsgssj",
+            "qr_101_guozi"
+        ],
+        [
+            7,
+            "黑马101",
+            "com.guoziyx.zhsg",
+            "qr_101_guozi"
+        ],
+        [
+            8,
+            "黑马101",
+            "com.guoziyx.jssg",
+            "qr_101_guozi"
+        ],
+        [
+            9,
+            "黑马101",
+            "com.guoziyx.sgmjz",
+            "qr_101_guozi"
+        ],
+        [
+            10,
+            "黑马101",
+            "com.guoziyx.htjw",
+            "qr_101_guozi"
+        ],
+        [
+            11,
+            "黑马101",
+            "com.guoziyx.mjtx",
+            "qr_101_guozi"
+        ],
+        [
+            12,
+            "黑马101",
+            "com.guoziyx.kpsgz",
+            "qr_101_guozi"
+        ],
+        [
+            13,
+            "黑马101",
+            "com.guoziyx.tdsg",
+            "qr_101_guozi"
+        ],
+        [
+            14,
+            "黑马101",
+            "com.guoziyx.htbyw",
+            "qr_101_guozi"
+        ],
+        [
+            15,
+            "黑马101",
+            "com.guoziyx.gssg",
+            "qr_101_guozi"
+        ],
+        [
+            16,
+            "黑马101",
+            "com.guoziyx.lhj",
+            "qr_101_guozi"
+        ],
+        [
+            17,
+            "黑马101",
+            "com.guoziyx.sgsww",
+            "qr_101_guozi"
+        ],
+        [
+            18,
+            "黑马101",
+            "com.tencent.tmgp.yjsg2",
+            "qr_101_bawuhou"
+        ],
+        [
+            19,
+            "黑马101",
+            "com.sgs.sgnxjqb",
+            "qr_101_bawuhou"
+        ],
+        [
+            20,
+            "黑马101",
+            "com.bw.bjtx.xiwan",
+            "qr_101_bawuhou"
+        ],
+        [
+            21,
+            "黑马101",
+            "com.bw.yjsglg.xiwan",
+            "qr_101_bawuhou"
+        ],
+        [
+            22,
+            "黑马101",
+            "com.bw.yjsgvc.xiwan",
+            "qr_101_bawuhou"
+        ],
+        [
+            23,
+            "黑马101",
+            "com.bw.jjsgz.xiwan",
+            "qr_101_bawuhou"
+        ],
+        [
+            24,
+            "黑马101",
+            "com.bw.lssgz.xiwan",
+            "qr_101_bawuhou"
+        ],
+        [
+            25,
+            "黑马101",
+            "com.tencent.tmgp.bwahjy2",
+            "qr_101_bawuhou"
+        ],
+        [
+            26,
+            "黑马101",
+            "com.tencent.tmgp.bwmjsgxw2",
+            "qr_101_bawuhou"
+        ],
+        [
+            27,
+            "黑马101",
+            "com.bw.mjsgz.xiwan",
+            "qr_101_bawuhou"
+        ],
+        [
+            28,
+            "黑马101",
+            "com.tencent.tmgp.xwyjssj",
+            "qr_101_bawuhou"
+        ],
+        [
+            29,
+            "黑马101",
+            "com.tencent.tmgp.yjmj",
+            "qr_101_bawuhou"
+        ],
+        [
+            30,
+            "黑马101",
+            "com.tencent.tmgp.yjsgxxz",
+            "qr_101_bawuhou"
+        ],
+        [
+            31,
+            "黑马101",
+            "com.tencent.tmgp.yjsgsjz",
+            "qr_101_bawuhou"
+        ],
+        [
+            32,
+            "黑马101",
+            "com.tencent.tmgp.yjsg4",
+            "qr_101_bawuhou"
+        ],
+        [
+            33,
+            "黑马101",
+            "com.tencent.tmgp.yjsgsnsj",
+            "qr_101_bawuhou"
+        ],
+        [
+            34,
+            "黑马101",
+            "com.tencent.tmgp.yjsgjpmj",
+            "qr_101_bawuhou"
+        ],
+        [
+            35,
+            "黑马101",
+            "com.tencent.tmgp.yjsgqyz",
+            "qr_101_bawuhou"
+        ],
+        [
+            36,
+            "黑马103",
+            "default",
+            "qr_103_default"
+        ],
+        [
+            37,
+            "黑马105",
+            "default",
+            "qr_105_default"
+        ],
+        [
+            38,
+            "6kw",
+            "default",
+            "qr_6kw_default"
+        ]
+    ],
+    "indexes": {
+        "1": 0,
+        "2": 1,
+        "3": 2,
+        "4": 3,
+        "5": 4,
+        "6": 5,
+        "7": 6,
+        "8": 7,
+        "9": 8,
+        "10": 9,
+        "11": 10,
+        "12": 11,
+        "13": 12,
+        "14": 13,
+        "15": 14,
+        "16": 15,
+        "17": 16,
+        "18": 17,
+        "19": 18,
+        "20": 19,
+        "21": 20,
+        "22": 21,
+        "23": 22,
+        "24": 23,
+        "25": 24,
+        "26": 25,
+        "27": 26,
+        "28": 27,
+        "29": 28,
+        "30": 29,
+        "31": 30,
+        "32": 31,
+        "33": 32,
+        "34": 33,
+        "35": 34,
+        "36": 35,
+        "37": 36,
+        "38": 37
+    }
+}

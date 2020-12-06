@@ -1,0 +1,43 @@
+{
+    "key_map": {
+        "id": 0,
+        "open_time": 1,
+        "close_time": 2,
+        "stay_time": 3,
+        "stay_time_max": 4,
+        "help_time": 5,
+        "help_time_max": 6,
+        "one_small_time": 7,
+        "one_big_time": 8,
+        "refresh_time": 9,
+        "pk_time": 10,
+        "revive_time": 11,
+        "tombstone_time": 12,
+        "speed": 13,
+        "error_time": 14,
+        "min_time": 15
+    },
+    "data": [
+        [
+            1,
+            36000,
+            79200,
+            600,
+            4200,
+            600,
+            4200,
+            150,
+            450,
+            5,
+            0,
+            20,
+            180,
+            170,
+            3000,
+            60
+        ]
+    ],
+    "indexes": {
+        "1": 0
+    }
+}

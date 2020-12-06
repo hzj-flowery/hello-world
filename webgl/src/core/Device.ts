@@ -1,16 +1,14 @@
 
 import { glMatrix } from "./Matrix";
-import { NormalRenderData, RenderData, RenderDataPool, RenderDataType, SpineRenderData } from "./renderer/data/RenderData";
 import Scene2D from "./renderer/base/Scene2D";
 import Scene3D from "./renderer/base/Scene3D";
 import { CameraModel, G_CameraModel } from "./renderer/camera/CameraModel";
 import GameMainCamera from "./renderer/camera/GameMainCamera";
-import FrameBuffer from "./renderer/gfx/FrameBuffer";
 import { GLapi } from "./renderer/gfx/GLapi";
+import FrameBuffer from "./renderer/gfx/FrameBuffer";
 import { G_ShaderFactory } from "./renderer/shader/Shader";
-import { MathUtils } from "./utils/MathUtils";
 import { CameraData } from "./renderer/data/CameraData";
-import { glprimitive_type } from "./renderer/gfx/GLEnums";
+import { NormalRenderData, RenderData, RenderDataPool, RenderDataType, SpineRenderData } from "./renderer/data/RenderData";
 
 /**
 * _attach
@@ -49,7 +47,7 @@ export default class Device {
     private _gl2d;
     private _width: number = 0;
     private _height: number = 0;
-    public canvas: HTMLElement;
+    public canvas: HTMLCanvasElement;
     private static _instance: Device;
     public static get Instance(): Device {
         if (!this._instance) {
@@ -59,7 +57,7 @@ export default class Device {
     }
     public init(): void {
 
-        var canvas: HTMLElement = window["canvas"];
+        var canvas: HTMLCanvasElement = window["canvas"];
         var gl = this.createGLContext(canvas);
         this.gl = gl;
         this.canvas = canvas;
@@ -70,20 +68,43 @@ export default class Device {
         this._width = canvas.clientWidth;
         this._height = canvas.clientHeight;
         console.log("画布的尺寸----", this._width, this._height);
-
-
         this.initExt();
         this.initMatrix();
 
         //添加事件监听
         canvas.addEventListener("webglcontextlost", this.contextLost.bind(this));
-        canvas.addEventListener("webglcontextrestored",this.resume.bind(this));
-    }
+        canvas.addEventListener("webglcontextrestored", this.resume.bind(this));
 
-    private contextLost():void{
+    }
+    /**
+     * 启动子线程
+     */
+    private _worker: Worker;
+    private startSonWorker(): void {
+        let canvasBitmap: any = window["canvas2d"];
+        let ctxBitmap = canvasBitmap.getContext('2d');
+        if (!this._worker) {
+            this._worker = new Worker('./bitmap_worker.js');
+            this._worker.postMessage({ msg: 'init' });
+            this._worker.onmessage = function (e) {
+                console.log("收到来自子线程的数据------", e.data.imageBitmap);
+                ctxBitmap.drawImage(e.data.imageBitmap, 0, 0);
+            }
+        }
+        ctxBitmap.clearRect(0, 0, canvasBitmap.width, canvasBitmap.height);
+        this._worker.postMessage({ msg: 'draw' });
+    }
+    private getCanvas2D(): CanvasRenderingContext2D {
+        let result = window["canvas2d"].getContext("2d");
+        if (!result) {
+            console.log("没有canvas 2d画笔--------------");
+        }
+        return result;
+    }
+    private contextLost(): void {
         console.log("丢失上下文----");
     }
-    private resume():void{
+    private resume(): void {
         console.log("回来-----");
     }
     //初始化矩阵
@@ -148,7 +169,7 @@ export default class Device {
     public startDraw(time: number, scene2D: Scene2D, scene3D: Scene3D): void {
         this.onBeforeRender();
         this.visitRenderTree(time, scene2D, scene3D);
-         this.drawToUI(scene2D.getFrameBuffer());
+        this.drawToUI(scene2D.getFrameBuffer());
         this.draw2screen();
         this.onAfterRender();
     }
@@ -275,16 +296,14 @@ export default class Device {
                 };
                 break;
             case RenderDataType.Normal:
-                if(isUseScene)
-                {
+                if (isUseScene) {
                     let projMatix = G_CameraModel.getSceneProjectMatrix();
                     glMatrix.mat4.invert(this._temp1Matrix, G_CameraModel.getSceneCameraMatrix());
                     cameraData.projectMat = projMatix;
                     cameraData.modelMat = this._temp1Matrix;
                     this._drawNormal(rData as NormalRenderData, cameraData);
                 }
-                else
-                {
+                else {
                     this._drawNormal(rData as NormalRenderData, cameraData);
                 }
                 break;
@@ -601,9 +620,27 @@ export default class Device {
     }
 
     /**
+     * 显示当前帧缓存中的图像数据
+     * @param width 
+     * @param height 
+     */
+    public showCurFramerBufferOnCanvas(width?: number, height?: number): void {
+        let gl = this.gl;
+        height = height || 512;
+        width = width || 512;
+        var pixels = new Uint8Array(width * height * 4);
+        gl.readPixels(0, 0, width, height, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+        let imageData = new ImageData(new Uint8ClampedArray(pixels), width, height);
+        let ctx = Device.Instance.getCanvas2D();
+        ctx.putImageData(imageData, 0, 0);
+        //截图保存下来
+        // this.capture(window["canvas2d"]);
+    }
+
+    /**
      * 截图
      */
-    private capture(): void {
+    private capture(canvas?: HTMLCanvasElement): void {
         const saveBlob = (function () {
             const a = document.createElement('a');
             document.body.appendChild(a);
@@ -616,12 +653,13 @@ export default class Device {
             };
         }());
         var gl = this.gl;
-        (gl.canvas as any).toBlob((blob) => {
+        if (!canvas) {
+            canvas = this.gl.canvas as HTMLCanvasElement;
+        }
+        canvas.toBlob((blob) => {
             saveBlob(blob, `screencapture-${gl.canvas.width}x${gl.canvas.height}.png`);
         });
-
     }
-
     //剔除某一个面
     /**
      * 

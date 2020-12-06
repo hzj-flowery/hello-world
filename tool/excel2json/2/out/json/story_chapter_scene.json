@@ -1,0 +1,149 @@
+{
+    "key_map": {
+        "id": 0,
+        "background": 1,
+        "front_front": 2,
+        "front_back": 3,
+        "mid_front": 4,
+        "mid_back": 5,
+        "back_front": 6,
+        "differ_front_value": 7,
+        "differ_value": 8
+    },
+    "data": [
+        [
+            1,
+            "wall",
+            "moving_scene01_front",
+            "",
+            "moving_scene01_qizi",
+            "moving_scene01_middle",
+            "moving_scene01_back",
+            0,
+            400
+        ],
+        [
+            2,
+            "yellow",
+            "moving_scene02_front",
+            "",
+            "moving_scene02_middle",
+            "",
+            "moving_scene02_back",
+            400,
+            400
+        ],
+        [
+            3,
+            "palace",
+            "",
+            "",
+            "moving_huanggong_middle",
+            "",
+            "",
+            0,
+            400
+        ],
+        [
+            4,
+            "pavilion",
+            "moving_fengyiting_front",
+            "",
+            "moving_fengyiting_middle",
+            "",
+            "moving_fengyiting_back",
+            0,
+            0
+        ],
+        [
+            5,
+            "gate",
+            "moving_gongchengmenguanqia_front",
+            "",
+            "moving_gongchengmenguanqia_middle",
+            "",
+            "",
+            0,
+            400
+        ],
+        [
+            6,
+            "hulao",
+            "moving_hulaoguan_front",
+            "",
+            "moving_hulaoguan_middle",
+            "",
+            "moving_hulaoguan_back",
+            0,
+            400
+        ],
+        [
+            7,
+            "luoyang",
+            "",
+            "",
+            "moving_luoyang_middle",
+            "",
+            "moving_luoyang_back",
+            0,
+            0
+        ],
+        [
+            8,
+            "nanman",
+            "moving_nanman_front",
+            "",
+            "moving_nanman_middle",
+            "",
+            "moving_nanman_back",
+            0,
+            400
+        ],
+        [
+            9,
+            "taoyuan",
+            "moving_taoyuanguanqia_front",
+            "",
+            "moving_taoyuanguanqia_middle",
+            "",
+            "moving_taoyuanguanqia_back",
+            0,
+            0
+        ],
+        [
+            10,
+            "xuchang",
+            "moving_xuchangguanqia_front",
+            "",
+            "moving_xuchangguanqia_middle",
+            "",
+            "",
+            0,
+            0
+        ],
+        [
+            11,
+            "xiangyang",
+            "moving_xiangyangguanqia_front",
+            "",
+            "moving_xiangyangguanqia_middle",
+            "",
+            "moving_xiangyangguanqia_back",
+            0,
+            0
+        ]
+    ],
+    "indexes": {
+        "1": 0,
+        "2": 1,
+        "3": 2,
+        "4": 3,
+        "5": 4,
+        "6": 5,
+        "7": 6,
+        "8": 7,
+        "9": 8,
+        "10": 9,
+        "11": 10
+    }
+}

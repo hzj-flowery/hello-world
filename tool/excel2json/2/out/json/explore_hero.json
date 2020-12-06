@@ -1,0 +1,53 @@
+{
+    "key_map": {
+        "id": 0,
+        "level_min": 1,
+        "level_max": 2,
+        "hero1_color": 3,
+        "hero1_chance": 4,
+        "hero1_type": 5,
+        "hero1_resource": 6,
+        "hero1_size": 7,
+        "hero2_color": 8,
+        "hero2_chance": 9,
+        "hero2_type": 10,
+        "hero2_resource": 11,
+        "hero2_size": 12
+    },
+    "data": [
+        [
+            1,
+            1,
+            43,
+            4,
+            1000,
+            5,
+            1,
+            800,
+            5,
+            200,
+            5,
+            1,
+            4000
+        ],
+        [
+            2,
+            44,
+            120,
+            4,
+            1000,
+            5,
+            1,
+            800,
+            5,
+            200,
+            5,
+            1,
+            4000
+        ]
+    ],
+    "indexes": {
+        "1": 0,
+        "2": 1
+    }
+}

@@ -1,0 +1,1097 @@
+{
+    "key_map": {
+        "id": 0,
+        "file_name": 1,
+        "run_type": 2,
+        "time": 3
+    },
+    "data": [
+        [
+            1,
+            "audio/BGM_city4.mp3",
+            2,
+            181
+        ],
+        [
+            2,
+            "audio/BGM_pve.mp3",
+            2,
+            0
+        ],
+        [
+            3,
+            "audio/BGM_pvp.mp3",
+            2,
+            0
+        ],
+        [
+            4,
+            "audio/BGM_fight.mp3",
+            2,
+            0
+        ],
+        [
+            5,
+            "audio/BGM_boss.mp3",
+            2,
+            0
+        ],
+        [
+            6,
+            "audio/BGM_outgame.mp3",
+            2,
+            0
+        ],
+        [
+            7,
+            "audio/BGM_horsejump.mp3",
+            2,
+            0
+        ],
+        [
+            8,
+            "audio/BGM_arena.mp3",
+            2,
+            0
+        ],
+        [
+            9,
+            "audio/BGM_login.mp3",
+            2,
+            0
+        ],
+        [
+            10,
+            "audio/BGM_newcity.mp3",
+            2,
+            154
+        ],
+        [
+            11,
+            "audio/ui/30clickpzh1.mp3",
+            1,
+            0
+        ],
+        [
+            12,
+            "audio/ui/Passbutton.mp3",
+            1,
+            0
+        ],
+        [
+            13,
+            "audio/BGM_huangling.mp3",
+            2,
+            0
+        ],
+        [
+            14,
+            "audio/BGM_huangchengfight.mp3",
+            2,
+            0
+        ],
+        [
+            15,
+            "audio/BGM_chengshifight.mp3",
+            2,
+            0
+        ],
+        [
+            16,
+            "audio/BGM_jiangbianfight.mp3",
+            2,
+            0
+        ],
+        [
+            17,
+            "audio/BGM_jiaowaifight.mp3",
+            2,
+            0
+        ],
+        [
+            18,
+            "audio/BGM_yingzhaifight.mp3",
+            2,
+            0
+        ],
+        [
+            19,
+            "audio/BGM_city3.mp3",
+            2,
+            176
+        ],
+        [
+            101,
+            "audio/fight/Sha.mp3",
+            1,
+            0
+        ],
+        [
+            102,
+            "audio/fight/Fail.mp3",
+            1,
+            0
+        ],
+        [
+            103,
+            "audio/fight/Win.mp3",
+            1,
+            0
+        ],
+        [
+            201,
+            "audio/ui/1nvzhuruchang.mp3",
+            1,
+            0
+        ],
+        [
+            202,
+            "audio/ui/2nanzhuruchang.mp3",
+            1,
+            0
+        ],
+        [
+            203,
+            "audio/ui/3herolv.mp3",
+            1,
+            0
+        ],
+        [
+            204,
+            "audio/ui/4herotp.mp3",
+            1,
+            0
+        ],
+        [
+            205,
+            "audio/ui/5gongxi1.mp3",
+            1,
+            0
+        ],
+        [
+            206,
+            "audio/ui/5gongxi2.mp3",
+            1,
+            0
+        ],
+        [
+            207,
+            "audio/ui/6jiangli.mp3",
+            1,
+            0
+        ],
+        [
+            208,
+            "audio/ui/7shenbinjj.mp3",
+            1,
+            0
+        ],
+        [
+            209,
+            "audio/ui/8equiplv.mp3",
+            1,
+            0
+        ],
+        [
+            210,
+            "audio/ui/9num.mp3",
+            1,
+            0
+        ],
+        [
+            211,
+            "audio/ui/10equipmaster.mp3",
+            1,
+            0
+        ],
+        [
+            212,
+            "audio/ui/11herobook.mp3",
+            1,
+            0
+        ],
+        [
+            213,
+            "audio/ui/12herohs.mp3",
+            1,
+            0
+        ],
+        [
+            214,
+            "audio/ui/13herocs.mp3",
+            1,
+            0
+        ],
+        [
+            215,
+            "audio/ui/14gacha1.mp3",
+            1,
+            0
+        ],
+        [
+            216,
+            "audio/ui/15gacha101.mp3",
+            1,
+            0
+        ],
+        [
+            217,
+            "audio/ui/15gacha102.mp3",
+            1,
+            0
+        ],
+        [
+            218,
+            "audio/ui/16youliz1.mp3",
+            1,
+            0
+        ],
+        [
+            219,
+            "audio/ui/16youliz2.mp3",
+            1,
+            0
+        ],
+        [
+            220,
+            "audio/ui/17youliqy.mp3",
+            1,
+            0
+        ],
+        [
+            223,
+            "audio/ui/20pvps.mp3",
+            1,
+            0
+        ],
+        [
+            224,
+            "audio/ui/21pvpwin.mp3",
+            1,
+            0
+        ],
+        [
+            225,
+            "audio/ui/22pvpnum.mp3",
+            1,
+            0
+        ],
+        [
+            226,
+            "audio/ui/23richangnew.mp3",
+            1,
+            0
+        ],
+        [
+            228,
+            "audio/ui/25jubao.mp3",
+            1,
+            0
+        ],
+        [
+            229,
+            "audio/ui/26saodang.mp3",
+            1,
+            0
+        ],
+        [
+            230,
+            "audio/ui/27nanman.mp3",
+            1,
+            0
+        ],
+        [
+            231,
+            "audio/ui/28zhujuelv.mp3",
+            1,
+            0
+        ],
+        [
+            232,
+            "audio/ui/29guanxianlv.mp3",
+            1,
+            0
+        ],
+        [
+            233,
+            "audio/ui/4lvburuc.mp3",
+            1,
+            0
+        ],
+        [
+            234,
+            "audio/ui/10uiduijue.mp3",
+            1,
+            0
+        ],
+        [
+            235,
+            "audio/ui/11fudaokaiqi.mp3",
+            1,
+            0
+        ],
+        [
+            236,
+            "audio/ui/12shengfuyijue.mp3",
+            1,
+            0
+        ],
+        [
+            237,
+            "audio/ui/13xingongneng.mp3",
+            1,
+            0
+        ],
+        [
+            238,
+            "audio/ui/238zhuanpanhuode.mp3",
+            1,
+            0
+        ],
+        [
+            239,
+            "audio/ui/239zhuanpanyixia.mp3",
+            1,
+            0
+        ],
+        [
+            240,
+            "audio/ui/240hongbaohuode.mp3",
+            1,
+            0
+        ],
+        [
+            241,
+            "audio/ui/241hongbaokaiqi.mp3",
+            1,
+            0
+        ],
+        [
+            242,
+            "audio/ui/242gxqpmati.mp3",
+            2,
+            0
+        ],
+        [
+            243,
+            "audio/ui/243gxqpsheji.mp3",
+            1,
+            0
+        ],
+        [
+            244,
+            "audio/ui/244shenshouzhaomu.mp3",
+            1,
+            0
+        ],
+        [
+            245,
+            "audio/ui/245gaojishi.mp3",
+            1,
+            0
+        ],
+        [
+            246,
+            "audio/ui/246zhuangxian.mp3",
+            1,
+            0
+        ],
+        [
+            247,
+            "audio/ui/247caozaoyin.mp3",
+            2,
+            0
+        ],
+        [
+            248,
+            "audio/ui/248paobu.mp3",
+            2,
+            0
+        ],
+        [
+            249,
+            "audio/ui/249yusaiwin.mp3",
+            1,
+            0
+        ],
+        [
+            250,
+            "audio/ui/250yusailost.mp3",
+            1,
+            0
+        ],
+        [
+            251,
+            "audio/ui/251daojishi.mp3",
+            1,
+            0
+        ],
+        [
+            252,
+            "audio/ui/252matisheng.mp3",
+            2,
+            0
+        ],
+        [
+            253,
+            "audio/ui/253jinbi.mp3",
+            1,
+            0
+        ],
+        [
+            254,
+            "audio/ui/254tiaoyue.mp3",
+            1,
+            0
+        ],
+        [
+            255,
+            "audio/ui/255siwang.mp3",
+            1,
+            0
+        ],
+        [
+            256,
+            "audio/ui/256win.mp3",
+            1,
+            0
+        ],
+        [
+            257,
+            "audio/ui/257jiesuanjiemian.mp3",
+            1,
+            0
+        ],
+        [
+            258,
+            "audio/ui/258shengxing.mp3",
+            1,
+            0
+        ],
+        [
+            259,
+            "audio/ui/259jiangxing.mp3",
+            1,
+            0
+        ],
+        [
+            260,
+            "audio/ui/260duanweiup.mp3",
+            1,
+            0
+        ],
+        [
+            261,
+            "audio/ui/261duanweidowm.mp3",
+            1,
+            0
+        ],
+        [
+            262,
+            "audio/ui/262xiangma.mp3",
+            1,
+            0
+        ],
+        [
+            263,
+            "audio/ui/263login.mp3",
+            1,
+            0
+        ],
+        [
+            264,
+            "audio/ui/264tianchong.mp3",
+            1,
+            0
+        ],
+        [
+            265,
+            "audio/ui/265yingman.mp3",
+            1,
+            0
+        ],
+        [
+            266,
+            "audio/ui/266tupo.mp3",
+            1,
+            0
+        ],
+        [
+            267,
+            "audio/ui/267shibai.mp3",
+            1,
+            0
+        ],
+        [
+            268,
+            "audio/ui/268good.mp3",
+            1,
+            0
+        ],
+        [
+            269,
+            "audio/ui/269chenggong.mp3",
+            1,
+            0
+        ],
+        [
+            270,
+            "audio/BGM_pvpsingle32.mp3",
+            2,
+            0
+        ],
+        [
+            271,
+            "audio/BGM_pvpsinglewinner.mp3",
+            1,
+            0
+        ],
+        [
+            272,
+            "audio/BGM_allanswer.mp3",
+            2,
+            0
+        ],
+        [
+            273,
+            "audio/ui/30right.mp3",
+            1,
+            0
+        ],
+        [
+            274,
+            "audio/ui/31wrong.mp3",
+            1,
+            0
+        ],
+        [
+            275,
+            "audio/fight/fy_1_at_2.mp3",
+            1,
+            0
+        ],
+        [
+            276,
+            "audio/fight/fy_106_at_1.mp3",
+            1,
+            0
+        ],
+        [
+            277,
+            "audio/fight/fy_205_at_1.mp3",
+            1,
+            0
+        ],
+        [
+            278,
+            "audio/ui/32ganning.mp3",
+            1,
+            0
+        ],
+        [
+            279,
+            "audio/ui/33huangyueyin.mp3",
+            1,
+            0
+        ],
+        [
+            280,
+            "audio/ui/34lvbu.mp3",
+            1,
+            0
+        ],
+        [
+            290,
+            "audio/ui/290qinglong.mp3",
+            1,
+            0
+        ],
+        [
+            291,
+            "audio/ui/291xuanwu.mp3",
+            1,
+            0
+        ],
+        [
+            292,
+            "audio/ui/292baihu.mp3",
+            1,
+            0
+        ],
+        [
+            293,
+            "audio/ui/293zhuque.mp3",
+            1,
+            0
+        ],
+        [
+            294,
+            "audio/ui/294golden_open.mp3",
+            1,
+            0
+        ],
+        [
+            295,
+            "audio/ui/295golden_recruit.mp3",
+            1,
+            0
+        ],
+        [
+            296,
+            "audio/BGM_golden_hero.mp3",
+            2,
+            0
+        ],
+        [
+            297,
+            "audio/BGM_cake_main.mp3",
+            2,
+            0
+        ],
+        [
+            298,
+            "audio/ui/cake_egg.mp3",
+            1,
+            0
+        ],
+        [
+            299,
+            "audio/ui/cake_cream.mp3",
+            1,
+            0
+        ],
+        [
+            300,
+            "audio/ui/cake_fruit.mp3",
+            1,
+            0
+        ],
+        [
+            301,
+            "audio/ui/cake_lvup.mp3",
+            1,
+            0
+        ],
+        [
+            302,
+            "audio/ui/golden_win.mp3",
+            1,
+            0
+        ],
+        [
+            303,
+            "audio/ui/synthesis.mp3",
+            1,
+            0
+        ],
+        [
+            304,
+            "audio/BGM_guildcrosswar.mp3",
+            2,
+            0
+        ],
+        [
+            305,
+            "audio/ui/wei1.mp3",
+            1,
+            0
+        ],
+        [
+            306,
+            "audio/ui/wei2.mp3",
+            1,
+            0
+        ],
+        [
+            307,
+            "audio/ui/shu1.mp3",
+            1,
+            0
+        ],
+        [
+            308,
+            "audio/ui/shu2.mp3",
+            1,
+            0
+        ],
+        [
+            309,
+            "audio/ui/wu1.mp3",
+            1,
+            0
+        ],
+        [
+            310,
+            "audio/ui/wu2.mp3",
+            1,
+            0
+        ],
+        [
+            311,
+            "audio/ui/qun1.mp3",
+            1,
+            0
+        ],
+        [
+            312,
+            "audio/ui/qun2.mp3",
+            1,
+            0
+        ],
+        [
+            313,
+            "audio/ui/313qifu.mp3",
+            1,
+            0
+        ],
+        [
+            314,
+            "audio/ui/314jieqian.mp3",
+            1,
+            0
+        ],
+        [
+            315,
+            "audio/ui/historical_hero_open.mp3",
+            1,
+            0
+        ],
+        [
+            316,
+            "audio/fight/purple_historical_hero_fight.mp3",
+            1,
+            0
+        ],
+        [
+            317,
+            "audio/BGM_guildcrosswar2.mp3",
+            2,
+            0
+        ],
+        [
+            318,
+            "audio/ui/294golden_open_1.mp3",
+            1,
+            0
+        ],
+        [
+            319,
+            "audio/ui/319zhulong.mp3",
+            1,
+            0
+        ],
+        [
+            320,
+            "audio/ui/320jingwei.mp3",
+            1,
+            0
+        ],
+        [
+            321,
+            "audio/BGM_graincar.mp3",
+            2,
+            0
+        ],
+        [
+            322,
+            "audio/BGM_crossboss1.mp3",
+            1,
+            0
+        ],
+        [
+            323,
+            "audio/BGM_crossboss2.mp3",
+            2,
+            0
+        ],
+        [
+            324,
+            "audio/ui/324hudunidle.mp3",
+            1,
+            0
+        ],
+        [
+            325,
+            "audio/ui/325hudunshouji.mp3",
+            1,
+            0
+        ],
+        [
+            326,
+            "audio/ui/326hudunfantan.mp3",
+            1,
+            0
+        ],
+        [
+            327,
+            "audio/ui/327hudunposui.mp3",
+            1,
+            0
+        ],
+        [
+            328,
+            "audio/ui/328hudunbaozha.mp3",
+            1,
+            0
+        ],
+        [
+            329,
+            "audio/ui/329xuli.mp3",
+            1,
+            0
+        ],
+        [
+            330,
+            "audio/ui/330chenggong.mp3",
+            1,
+            0
+        ],
+        [
+            331,
+            "audio/ui/331shibai.mp3",
+            1,
+            0
+        ],
+        [
+            332,
+            "audio/BGM_pvpuniverse.mp3",
+            2,
+            0
+        ],
+        [
+            333,
+            "audio/BGM_universewinner.mp3",
+            1,
+            0
+        ],
+        [
+            334,
+            "audio/BGM_ten_jade_auction.mp3",
+            2,
+            0
+        ],
+        [
+            335,
+            "audio/ui/335zhanfawei.mp3",
+            1,
+            0
+        ],
+        [
+            336,
+            "audio/ui/336zhanfa.mp3",
+            1,
+            0
+        ],
+        [
+            337,
+            "audio/ui/337yanxi.mp3",
+            1,
+            0
+        ],
+        [
+            338,
+            "audio/ui/338shuliandu.mp3",
+            1,
+            0
+        ],
+        [
+            339,
+            "audio/BGM_pet_red_activity.mp3",
+            2,
+            0
+        ],
+        [
+            340,
+            "audio/ui/340pet_red_fly.mp3",
+            1,
+            0
+        ],
+        [
+            341,
+            "audio/ui/341pet_red_hit.mp3",
+            1,
+            0
+        ],
+        [
+            342,
+            "audio/ui/342pet_red_renovate.mp3",
+            1,
+            0
+        ],
+        [
+            343,
+            "audio/ui/343pet_red_xuli.mp3",
+            2,
+            0
+        ],
+        [
+            344,
+            "audio/ui/344bout_jihuo.mp3",
+            1,
+            0
+        ],
+        [
+            345,
+            "audio/ui/345bout_feixing.mp3",
+            1,
+            0
+        ]
+    ],
+    "indexes": {
+        "1": 0,
+        "2": 1,
+        "3": 2,
+        "4": 3,
+        "5": 4,
+        "6": 5,
+        "7": 6,
+        "8": 7,
+        "9": 8,
+        "10": 9,
+        "11": 10,
+        "12": 11,
+        "13": 12,
+        "14": 13,
+        "15": 14,
+        "16": 15,
+        "17": 16,
+        "18": 17,
+        "19": 18,
+        "101": 19,
+        "102": 20,
+        "103": 21,
+        "201": 22,
+        "202": 23,
+        "203": 24,
+        "204": 25,
+        "205": 26,
+        "206": 27,
+        "207": 28,
+        "208": 29,
+        "209": 30,
+        "210": 31,
+        "211": 32,
+        "212": 33,
+        "213": 34,
+        "214": 35,
+        "215": 36,
+        "216": 37,
+        "217": 38,
+        "218": 39,
+        "219": 40,
+        "220": 41,
+        "223": 42,
+        "224": 43,
+        "225": 44,
+        "226": 45,
+        "228": 46,
+        "229": 47,
+        "230": 48,
+        "231": 49,
+        "232": 50,
+        "233": 51,
+        "234": 52,
+        "235": 53,
+        "236": 54,
+        "237": 55,
+        "238": 56,
+        "239": 57,
+        "240": 58,
+        "241": 59,
+        "242": 60,
+        "243": 61,
+        "244": 62,
+        "245": 63,
+        "246": 64,
+        "247": 65,
+        "248": 66,
+        "249": 67,
+        "250": 68,
+        "251": 69,
+        "252": 70,
+        "253": 71,
+        "254": 72,
+        "255": 73,
+        "256": 74,
+        "257": 75,
+        "258": 76,
+        "259": 77,
+        "260": 78,
+        "261": 79,
+        "262": 80,
+        "263": 81,
+        "264": 82,
+        "265": 83,
+        "266": 84,
+        "267": 85,
+        "268": 86,
+        "269": 87,
+        "270": 88,
+        "271": 89,
+        "272": 90,
+        "273": 91,
+        "274": 92,
+        "275": 93,
+        "276": 94,
+        "277": 95,
+        "278": 96,
+        "279": 97,
+        "280": 98,
+        "290": 99,
+        "291": 100,
+        "292": 101,
+        "293": 102,
+        "294": 103,
+        "295": 104,
+        "296": 105,
+        "297": 106,
+        "298": 107,
+        "299": 108,
+        "300": 109,
+        "301": 110,
+        "302": 111,
+        "303": 112,
+        "304": 113,
+        "305": 114,
+        "306": 115,
+        "307": 116,
+        "308": 117,
+        "309": 118,
+        "310": 119,
+        "311": 120,
+        "312": 121,
+        "313": 122,
+        "314": 123,
+        "315": 124,
+        "316": 125,
+        "317": 126,
+        "318": 127,
+        "319": 128,
+        "320": 129,
+        "321": 130,
+        "322": 131,
+        "323": 132,
+        "324": 133,
+        "325": 134,
+        "326": 135,
+        "327": 136,
+        "328": 137,
+        "329": 138,
+        "330": 139,
+        "331": 140,
+        "332": 141,
+        "333": 142,
+        "334": 143,
+        "335": 144,
+        "336": 145,
+        "337": 146,
+        "338": 147,
+        "339": 148,
+        "340": 149,
+        "341": 150,
+        "342": 151,
+        "343": 152,
+        "344": 153,
+        "345": 154
+    }
+}

@@ -1,6 +1,4 @@
-import { Node } from "./Node";
-import Scene from "./Scene";
-import OrthoCamera from "../camera/OrthoCamera";
+
 import { Rectangle } from "../2d/Rectangle";
 import Device from "../../Device";
 import { Label } from "../2d/Label";
@@ -8,8 +6,10 @@ import { RenderSprite } from "../2d/RenderSprite";
 import FirstSprite from "../2d/FirstSprite";
 import TwoSprite from "../2d/TwoSprite";
 import GameMainCamera from "../camera/GameMainCamera";
-import enums from "../camera/enums";
 import { RenderTexture } from "../assets/RenderTexture";
+import Scene from "./Scene";
+import OrthoCamera from "../camera/OrthoCamera";
+import enums from "../camera/enums";
 
 export default class Scene2D extends Scene {
     

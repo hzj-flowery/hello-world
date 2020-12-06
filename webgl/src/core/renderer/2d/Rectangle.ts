@@ -1,6 +1,5 @@
 
 import { SY } from "../base/Sprite";
-import Device from "../../Device";
 
 
 //屏幕中間位置為（0.0,0.0）

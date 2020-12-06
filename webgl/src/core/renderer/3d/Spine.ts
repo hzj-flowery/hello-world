@@ -5,7 +5,6 @@ import { Texture } from "../base/Texture";
 import { Texture2D } from "../base/Texture2D";
 import LoaderManager from "../../LoaderManager";
 import { SY } from "../base/Sprite";
-import GameMainCamera from "../camera/GameMainCamera";
 import { G_ShaderFactory, ShaderData } from "../shader/Shader";
 import Device from "../../Device";
 import { RenderDataPool, RenderDataType, SpineRenderData } from "../data/RenderData";

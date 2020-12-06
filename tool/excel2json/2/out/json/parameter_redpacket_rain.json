@@ -1,0 +1,53 @@
+{
+    "key_map": {
+        "id": 0,
+        "key": 1,
+        "content": 2
+    },
+    "data": [
+        [
+            1,
+            "entrance_show_time",
+            "1200"
+        ],
+        [
+            2,
+            "open_countdown",
+            "3"
+        ],
+        [
+            3,
+            "open_continue",
+            "30"
+        ],
+        [
+            4,
+            "close_countdown",
+            "0"
+        ],
+        [
+            5,
+            "redpacket_disappear",
+            "0.01"
+        ],
+        [
+            6,
+            "type_propotion_big",
+            "1000|0|0"
+        ],
+        [
+            7,
+            "type_propotion_small",
+            "1000|0|0"
+        ]
+    ],
+    "indexes": {
+        "1": 0,
+        "2": 1,
+        "3": 2,
+        "4": 3,
+        "5": 4,
+        "6": 5,
+        "7": 6
+    }
+}

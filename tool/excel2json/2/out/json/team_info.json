@@ -1,0 +1,23 @@
+{
+    "key_map": {
+        "id": 0,
+        "function_id": 1,
+        "target": 2,
+        "refuse_time": 3,
+        "agree_time": 4,
+        "refuse_join_time": 5
+    },
+    "data": [
+        [
+            1,
+            860,
+            "1|2|3",
+            10,
+            10,
+            60
+        ]
+    ],
+    "indexes": {
+        "1": 0
+    }
+}

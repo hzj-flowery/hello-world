@@ -39,21 +39,23 @@ console.log(z);
 
  */
 
-
- /**
-  * 现阶段 核心渲染计算都要放在此类中
-  */
-import { BufferAttribsData, G_ShaderFactory, Shader, ShaderData } from "../shader/Shader";
+import Device from "../../Device";
+import LoaderManager from "../../LoaderManager";
+import { CameraData } from "../data/CameraData";
+import { NormalRenderData, RenderData, RenderDataPool, RenderDataType } from "../data/RenderData";
 import { glprimitive_type } from "../gfx/GLEnums";
+import { BufferAttribsData, G_ShaderFactory, Shader, ShaderData } from "../shader/Shader";
+import { Node } from "./Node";
 import { Texture } from "./Texture";
 import { Texture2D } from "./Texture2D";
 import TextureCube from "./TextureCube";
 import TextureCustom from "./TextureCustom";
-import Device from "../../Device";
-import { NormalRenderData, RenderData, RenderDataPool, RenderDataType } from "../data/RenderData";
-import LoaderManager from "../../LoaderManager";
-import { CameraData } from "../data/CameraData";
-import { Node } from "./Node";
+
+
+ /**
+  * 现阶段 核心渲染计算都要放在此类中
+  */
+
 
 /**
  * 缓冲区中的数据就是一个二进制流，一般我们会按照字节处理，八个二进制为一个字节，又称字节流

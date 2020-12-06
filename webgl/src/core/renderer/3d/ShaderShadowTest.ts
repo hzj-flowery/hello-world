@@ -4,6 +4,7 @@
 import Device from "../../Device";
 import { glMatrix } from "../../Matrix";
 import { MathUtils } from "../../utils/MathUtils";
+import { RenderTexture } from "../assets/RenderTexture";
 import { syPrimitives } from "../shader/Primitives";
 import { BufferAttribsData, G_ShaderFactory, ShaderData } from "../shader/Shader";
 
@@ -148,7 +149,30 @@ class ShadowLight {
       vec3 halfVector = normalize(surfaceToLightDirection + surfaceToViewDirection); //算出高光的方向
       float specularWeighting = pow(dot(normal, halfVector), u_shininess);
       vec3 specular = specularColor.rgb * specularWeighting;
-
+      return specular;
+    }
+    //宾式模型高光
+    vec3 getSpecularBingShi(vec3 normal){
+      // 计算法向量和光线的点积
+      float cosTheta = max(dot(normal,-u_reverseLightDirection), 0.0);
+      vec3 surfaceToLightDirection = normalize(v_surfaceToLight);
+      vec3 surfaceToViewDirection = normalize(v_surfaceToView);
+      vec3 specularColor =vec3(1.0,1.0,1.0);
+      vec3 halfVector = normalize(surfaceToLightDirection + surfaceToViewDirection); //算出高光的方向
+      float specularWeighting = pow(dot(normal, halfVector), u_shininess);
+      vec3 specular = specularColor.rgb * specularWeighting * step(cosTheta,0.0);
+      return specular;
+    }
+    //冯氏模型高光
+    vec3 getSpecularFengShi(vec3 normal){
+      vec3 surfaceToLightDirection = normalize(v_surfaceToLight);
+      vec3 surfaceToViewDirection = normalize(v_surfaceToView);
+      vec3 specularColor =vec3(1.0,1.0,1.0);  
+      // 计算法向量和光线的点积
+      float cosTheta = max(dot(normal,-u_reverseLightDirection), 0.0);
+      vec3 reflectionDirection = reflect(-surfaceToLightDirection, normal);
+      float specularWeighting = pow(max(dot(reflectionDirection, surfaceToViewDirection), 0.0), u_shininess);
+      vec3 specular = specularColor.rgb * specularWeighting * step(cosTheta,0.0);
       return specular;
     }
     void main() {
@@ -163,7 +187,7 @@ class ShadowLight {
     //环境光的照亮范围是全部 他是要和其余光照结果进行叠加的，将会让光线更加强亮
     vec4 ambientLight = vec4(0.1,0.1,0.1,1.0);   
     vec4 ambient = vec4(texColor.rgb *ambientLight.rgb,1.0); //环境光的颜色需要和漫反射颜色融合
-    vec3 specular = shadowLight<1.0?vec3(0.0,0.0,0.0):getSpecular(normal);//阴影处没有高光
+    vec3 specular = shadowLight<1.0?vec3(0.0,0.0,0.0):getSpecularFengShi(normal);//阴影处没有高光
     gl_FragColor = vec4(diffuse+ambient.rgb+specular,texColor.a);
     }`
   private gl: WebGLRenderingContext
@@ -229,11 +253,13 @@ class ShadowLight {
     this.createUniform();
     this.render();
   }
-  private depthTexture: WebGLTexture;
+  // private depthTexture: WebGLTexture;
   private checkerboardTexture: WebGLTexture;
-  private _frameBuffer: WebGLFramebuffer;//帧缓冲的glID
-  private depthTextureSize: number
-  public _renderBuffer: WebGLRenderbuffer;//渲染缓冲的glID
+  // private _frameBuffer: WebGLFramebuffer;//帧缓冲的glID
+  private depthTextureSize: number = 512;
+  // public _renderBuffer: WebGLRenderbuffer;//渲染缓冲的glID
+
+  private renderTexture:RenderTexture;
   private createTexture(isWebgl1: boolean = true): void {
     var gl = this.gl;
     // make a 8x8 checkerboard texture
@@ -260,121 +286,124 @@ class ShadowLight {
       ]));
     gl.generateMipmap(gl.TEXTURE_2D);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-    isWebgl1 ? this.createTextureWebGL1() : this.createTextureWebGL2();
-  }
-  private createTextureWebGL1(): void {
-    var gl = this.gl;
-    //创建帧缓冲
-    this._frameBuffer = gl.createFramebuffer();
-    gl.bindFramebuffer(gl.FRAMEBUFFER, this._frameBuffer);
-    //深度纹理附件
-    this.depthTexture = gl.createTexture();
-    this.depthTextureSize = 512;//设置这张纹理的尺寸512*512
-    gl.bindTexture(gl.TEXTURE_2D, this.depthTexture);
-    gl.texImage2D(
-      gl.TEXTURE_2D,      // target
-      0,                  // mip level
-      gl.DEPTH_COMPONENT, // internal format
-      this.depthTextureSize,   // width
-      this.depthTextureSize,   // height
-      0,                  // border
-      gl.DEPTH_COMPONENT, // format
-      gl.UNSIGNED_INT,    // type  //通道数是4 每一位大小是1个字节
-      null);              // data
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    gl.framebufferTexture2D(
-      gl.FRAMEBUFFER,       // target
-      gl.DEPTH_ATTACHMENT,  // attachment point 将指定的纹理绑定到帧缓冲的深度附件中
-      gl.TEXTURE_2D,        // texture target
-      this.depthTexture,    // texture
-      0);                   // mip level
+    // isWebgl1 ? this.createTextureWebGL1() : this.createTextureWebGL2();
 
-    //颜色纹理附件
-    // create a color texture of the same size as the depth texture
-    // see article why this is needed_
-    var unusedTexture = gl.createTexture();
-    gl.bindTexture(gl.TEXTURE_2D, unusedTexture);
-    gl.texImage2D(
-      gl.TEXTURE_2D,
-      0,
-      gl.RGBA,
-      this.depthTextureSize,
-      this.depthTextureSize,
-      0,
-      gl.RGBA,
-      gl.UNSIGNED_BYTE,
-      null,
-    );
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    // attach it to the framebuffer
-    //将颜色纹理附件附加到帧缓存
-    gl.framebufferTexture2D(
-      gl.FRAMEBUFFER,        // target
-      gl.COLOR_ATTACHMENT0,  // attachment point 将指定的纹理绑定到帧缓冲的颜色附件中
-      gl.TEXTURE_2D,         // texture target
-      unusedTexture,         // texture
-      0);                    // mip level
+    this.renderTexture = new RenderTexture(gl);
+    this.renderTexture.attach("depth",this.depthTextureSize,this.depthTextureSize)
   }
-  private createTextureWebGL2(): void {
-    var gl = (this.gl) as WebGL2RenderingContext;
-    this.depthTextureSize = 512;//设置这张纹理的尺寸512*512
-    //创建帧缓冲
-    this._frameBuffer = gl.createFramebuffer();
-    gl.bindFramebuffer(gl.FRAMEBUFFER, this._frameBuffer);
-    //创建渲染缓冲并绑定以及初始化存储
-    this._renderBuffer = gl.createRenderbuffer();
-    gl.bindRenderbuffer(gl.RENDERBUFFER, this._renderBuffer);
-    gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT24, this.depthTextureSize, this.depthTextureSize);
-    //颜色纹理附件
-    // create a color texture of the same size as the depth texture
-    // see article why this is needed_
-    this.depthTexture = gl.createTexture();
-    gl.bindTexture(gl.TEXTURE_2D, this.depthTexture);
-    gl.texImage2D(
-      gl.TEXTURE_2D,
-      0,
-      gl.RGBA,
-      this.depthTextureSize,
-      this.depthTextureSize,
-      0,
-      gl.RGBA,
-      gl.UNSIGNED_BYTE,
-      null,
-    );
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    // attach it to the framebuffer
-    //将颜色纹理附件附加到帧缓存
-    gl.framebufferTexture2D(
-      gl.FRAMEBUFFER,        // target
-      gl.COLOR_ATTACHMENT0,  // attachment point 将指定的纹理绑定到帧缓冲的颜色附件中
-      gl.TEXTURE_2D,         // texture target
-      this.depthTexture,         // texture
-      0);                    // mip level
-    //设置渲染缓冲对象作为深度附件
-    gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, this._renderBuffer);
-    // 检测帧缓冲区对象的配置状态是否成功
-    var e = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
-    if (gl.FRAMEBUFFER_COMPLETE !== e) {
-      console.log('Frame buffer object is incomplete:  e.toString(16)');
-      return;
-    }
-    else {
-      console.log("创建帧缓存成功----------");
-    }
+  // private createTextureWebGL1(): void {
+  //   var gl = this.gl;
+  //   //创建帧缓冲
+  //   this._frameBuffer = gl.createFramebuffer();
+  //   gl.bindFramebuffer(gl.FRAMEBUFFER, this._frameBuffer);
+  //   //深度纹理附件
+  //   this.depthTexture = gl.createTexture();
+  //   this.depthTextureSize = 512;//设置这张纹理的尺寸512*512
+  //   gl.bindTexture(gl.TEXTURE_2D, this.depthTexture);
+  //   gl.texImage2D(
+  //     gl.TEXTURE_2D,      // target
+  //     0,                  // mip level
+  //     gl.DEPTH_COMPONENT, // internal format
+  //     this.depthTextureSize,   // width
+  //     this.depthTextureSize,   // height
+  //     0,                  // border
+  //     gl.DEPTH_COMPONENT, // format
+  //     gl.UNSIGNED_INT,    // type  //通道数是4 每一位大小是1个字节
+  //     null);              // data
+  //   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+  //   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+  //   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  //   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  //   gl.framebufferTexture2D(
+  //     gl.FRAMEBUFFER,       // target
+  //     gl.DEPTH_ATTACHMENT,  // attachment point 将指定的纹理绑定到帧缓冲的深度附件中
+  //     gl.TEXTURE_2D,        // texture target
+  //     this.depthTexture,    // texture
+  //     0);                   // mip level
 
-    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-    gl.bindTexture(gl.TEXTURE_2D, null);
-    gl.bindRenderbuffer(gl.RENDERBUFFER, null);
-  }
+  //   //颜色纹理附件
+  //   // create a color texture of the same size as the depth texture
+  //   // see article why this is needed_
+  //   var unusedTexture = gl.createTexture();
+  //   gl.bindTexture(gl.TEXTURE_2D, unusedTexture);
+  //   gl.texImage2D(
+  //     gl.TEXTURE_2D,
+  //     0,
+  //     gl.RGBA,
+  //     this.depthTextureSize,
+  //     this.depthTextureSize,
+  //     0,
+  //     gl.RGBA,
+  //     gl.UNSIGNED_BYTE,
+  //     null,
+  //   );
+  //   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+  //   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+  //   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  //   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  //   // attach it to the framebuffer
+  //   //将颜色纹理附件附加到帧缓存
+  //   gl.framebufferTexture2D(
+  //     gl.FRAMEBUFFER,        // target
+  //     gl.COLOR_ATTACHMENT0,  // attachment point 将指定的纹理绑定到帧缓冲的颜色附件中
+  //     gl.TEXTURE_2D,         // texture target
+  //     unusedTexture,         // texture
+  //     0);                    // mip level
+  // }
+  // private createTextureWebGL2(): void {
+  //   var gl = (this.gl) as WebGL2RenderingContext;
+  //   this.depthTextureSize = 512;//设置这张纹理的尺寸512*512
+  //   //创建帧缓冲
+  //   this._frameBuffer = gl.createFramebuffer();
+  //   gl.bindFramebuffer(gl.FRAMEBUFFER, this._frameBuffer);
+  //   //创建渲染缓冲并绑定以及初始化存储
+  //   this._renderBuffer = gl.createRenderbuffer();
+  //   gl.bindRenderbuffer(gl.RENDERBUFFER, this._renderBuffer);
+  //   gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT24, this.depthTextureSize, this.depthTextureSize);
+  //   //颜色纹理附件
+  //   // create a color texture of the same size as the depth texture
+  //   // see article why this is needed_
+  //   this.depthTexture = gl.createTexture();
+  //   gl.bindTexture(gl.TEXTURE_2D, this.depthTexture);
+  //   gl.texImage2D(
+  //     gl.TEXTURE_2D,
+  //     0,
+  //     gl.RGBA,
+  //     this.depthTextureSize,
+  //     this.depthTextureSize,
+  //     0,
+  //     gl.RGBA,
+  //     gl.UNSIGNED_BYTE,
+  //     null,
+  //   );
+  //   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+  //   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+  //   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  //   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  //   // attach it to the framebuffer
+  //   //将颜色纹理附件附加到帧缓存
+  //   gl.framebufferTexture2D(
+  //     gl.FRAMEBUFFER,        // target
+  //     gl.COLOR_ATTACHMENT0,  // attachment point 将指定的纹理绑定到帧缓冲的颜色附件中
+  //     gl.TEXTURE_2D,         // texture target
+  //     this.depthTexture,         // texture
+  //     0);                    // mip level
+  //   //设置渲染缓冲对象作为深度附件
+  //   gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, this._renderBuffer);
+  //   // 检测帧缓冲区对象的配置状态是否成功
+  //   var e = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
+  //   if (gl.FRAMEBUFFER_COMPLETE !== e) {
+  //     console.log('Frame buffer object is incomplete:  e.toString(16)');
+  //     return;
+  //   }
+  //   else {
+  //     console.log("创建帧缓存成功----------");
+  //   }
+
+  //   gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+  //   gl.bindTexture(gl.TEXTURE_2D, null);
+  //   gl.bindRenderbuffer(gl.RENDERBUFFER, null);
+  // }
 
 
   private setUI(): void {
@@ -441,7 +470,7 @@ class ShadowLight {
       u_projection: pMatrix,
       u_bias: this.settings.bias,
       u_textureMatrix: texMatrix,
-      u_shadowMap: this.depthTexture,
+      u_shadowMap: this.renderTexture.depthTexture,
       u_lightWorldPosition:lightPos,
       u_viewWorldPosition: cameraPos,
       u_shininess:150,
@@ -537,7 +566,6 @@ class ShadowLight {
       [0, 1, 0],                                              // up
     )
     let lightReverseDir = lightWorldMatrix.slice(8, 11);
-    console.log(lightWorldMatrix, lightReverseDir);
     const lightProjectionMatrix = this.settings.perspective ? glMatrix.mat4.perspective(null,
       MathUtils.degToRad(this.settings.fieldOfView),
       this.settings.projWidth / this.settings.projHeight,
@@ -584,7 +612,7 @@ class ShadowLight {
 
     let lightData = this.getLightData();
     // draw to the depth texture
-    gl.bindFramebuffer(gl.FRAMEBUFFER, this._frameBuffer);//将结果绘制到深度纹理中
+    gl.bindFramebuffer(gl.FRAMEBUFFER, this.renderTexture.frameBuffer);//将结果绘制到深度纹理中
     gl.viewport(0, 0, this.depthTextureSize, this.depthTextureSize);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
     /**
@@ -603,7 +631,7 @@ class ShadowLight {
     let texMatrix = glMatrix.mat4.identity(null);
     this.drawScene(lightData.project, lightData.mat, texMatrix, lightData.reverseDir, this.colorProgramInfo);
 
-    this.read();
+    Device.Instance.showCurFramerBufferOnCanvas(this.depthTextureSize,this.depthTextureSize);
 
     // now draw scene to the canvas projecting the depth texture into the scene
     gl.bindFramebuffer(gl.FRAMEBUFFER, null); //将结果绘制到窗口中
@@ -623,17 +651,7 @@ class ShadowLight {
 
   }
 
-  private read():void{
-    let gl = this.gl;
-    let height = 512;
-    let width = 512;
-    var pixels = new Uint8Array(width * height * 4);
-    gl.readPixels(0, 0, width, height, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
-
-    console.log(pixels); // Uint8Array
-    let img = new ImageBitmap();
-    let img1 = new Image();
-  }
+ 
 }
 
 

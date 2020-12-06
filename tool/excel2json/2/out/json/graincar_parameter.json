@@ -1,0 +1,167 @@
+{
+    "key_map": {
+        "id": 0,
+        "key": 1,
+        "content": 2
+    },
+    "data": [
+        [
+            1,
+            "graincar_week",
+            "3|5|7"
+        ],
+        [
+            2,
+            "graincar_open",
+            "22|00"
+        ],
+        [
+            3,
+            "graincar_close",
+            "22|30"
+        ],
+        [
+            4,
+            "graincar_route",
+            "4|00"
+        ],
+        [
+            5,
+            "graincar_copper_stop",
+            "24"
+        ],
+        [
+            6,
+            "graincar_silver_stop",
+            "36"
+        ],
+        [
+            7,
+            "graincar_gold_stop",
+            "48"
+        ],
+        [
+            8,
+            "graincar_moving_time",
+            "20"
+        ],
+        [
+            9,
+            "graincar_donate_cost",
+            "5|13|2000"
+        ],
+        [
+            10,
+            "graincar_donate_exp",
+            "2000"
+        ],
+        [
+            11,
+            "graincar_attack_times",
+            "3"
+        ],
+        [
+            12,
+            "graincar_attack_bonus",
+            "6|175|1"
+        ],
+        [
+            13,
+            "graincar_attack_CD",
+            "5"
+        ],
+        [
+            14,
+            "graincar_attack_hurt",
+            "10"
+        ],
+        [
+            15,
+            "graincar_damage_bonus",
+            "50"
+        ],
+        [
+            16,
+            "graincar_protect_1",
+            "10|20"
+        ],
+        [
+            17,
+            "graincar_protect_2",
+            "20|40"
+        ],
+        [
+            18,
+            "graincar_protect_3",
+            "30|60"
+        ],
+        [
+            19,
+            "graincar_max_num",
+            "100"
+        ],
+        [
+            20,
+            "graincar_show",
+            "660"
+        ],
+        [
+            21,
+            "graincar_attack_lose",
+            "2"
+        ],
+        [
+            22,
+            "graincar_show_hero",
+            "1|11|101|102|109|110|201|202|204|205|206|211|301|303|304|308|403|402|404|407|410|412|91102|91109|91110|91112|91202|91204|91205|91206|91211|91302|91304|91308|91309|91402|91404|91407|91410|91412"
+        ],
+        [
+            23,
+            "graincar_shame",
+            "52200"
+        ],
+        [
+            24,
+            "graincar_days",
+            "21"
+        ],
+        [
+            25,
+            "graincar_attack_bonus_new",
+            "6|175|1"
+        ],
+        [
+            26,
+            "graincar_level_up",
+            "5"
+        ]
+    ],
+    "indexes": {
+        "1": 0,
+        "2": 1,
+        "3": 2,
+        "4": 3,
+        "5": 4,
+        "6": 5,
+        "7": 6,
+        "8": 7,
+        "9": 8,
+        "10": 9,
+        "11": 10,
+        "12": 11,
+        "13": 12,
+        "14": 13,
+        "15": 14,
+        "16": 15,
+        "17": 16,
+        "18": 17,
+        "19": 18,
+        "20": 19,
+        "21": 20,
+        "22": 21,
+        "23": 22,
+        "24": 23,
+        "25": 24,
+        "26": 25
+    }
+}

@@ -1,0 +1,23 @@
+{
+    "key_map": {
+        "key": 0,
+        "offset": 1,
+        "mask": 2
+    },
+    "data": [
+        [
+            "iPhone10,3",
+            50,
+            "iphonex.png"
+        ],
+        [
+            "iPhone10,6",
+            50,
+            "iphonex.png"
+        ]
+    ],
+    "indexes": {
+        "iPhone10,3": 0,
+        "iPhone10,6": 1
+    }
+}

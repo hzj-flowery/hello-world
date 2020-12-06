@@ -52,7 +52,7 @@
       <div id="zNear"></div>
       <div id="zFar"></div>
 
-      <button id="screenshot" type="button">Save...</button>
+      <!-- <button id="screenshot" type="button">Save...</button> -->
       
     </div>
   </div>
@@ -60,11 +60,13 @@
 
 
   <canvas id="myCanvas" width="960" height="640" style="border: 1px solid red"></canvas>
-
+  <canvas id="2dCanvas" width="512" height="512" style="border: 1px solid red"></canvas>
   <script type="text/javascript">
 
     var canvas = document.getElementById('myCanvas');
+    var canvas2d = document.getElementById('2dCanvas');
     window.canvas = canvas;
+    window.canvas2d = canvas2d;
     window.document = document;
     window.requestAnimFrame = (function () {
       return (

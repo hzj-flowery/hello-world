@@ -385,7 +385,7 @@ export default class Camera extends Node {
     }
     private _updateTargetTexture() {
         let texture = this._targetTexture;
-        this.setFrameBuffer(texture ? texture._frameBuffer : null);
+        this.setFrameBuffer(texture ? texture.frameBuffer : null);
     }
     /**
     * Get the framebuffer of the camera

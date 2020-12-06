@@ -1,0 +1,148 @@
+{
+    "key_map": {
+        "district_id": 0,
+        "district_name": 1,
+        "district_type": 2,
+        "unlock_event": 3,
+        "occupy_pit": 4,
+        "district_bg": 5,
+        "district_name_txt": 6,
+        "district_icon": 7,
+        "x": 8,
+        "y": 9
+    },
+    "data": [
+        [
+            1,
+            "中原矿区",
+            1,
+            3,
+            4,
+            "img_mine_district01",
+            "txt_mine_qu01",
+            "img_mine_icon01",
+            568,
+            320
+        ],
+        [
+            2,
+            "河东矿区",
+            2,
+            2,
+            3,
+            "img_mine_district02",
+            "txt_mine_qu02",
+            "img_mine_icon02",
+            568,
+            200
+        ],
+        [
+            3,
+            "淮南矿区",
+            2,
+            2,
+            3,
+            "img_mine_district03",
+            "txt_mine_qu03",
+            "img_mine_icon03",
+            757,
+            427
+        ],
+        [
+            4,
+            "汉中矿区",
+            2,
+            2,
+            3,
+            "img_mine_district04",
+            "txt_mine_qu04",
+            "img_mine_icon04",
+            379,
+            427
+        ],
+        [
+            5,
+            "朔方矿区",
+            3,
+            1,
+            5,
+            "img_mine_district05",
+            "txt_mine_qu05",
+            "img_mine_icon05",
+            868,
+            100
+        ],
+        [
+            6,
+            "幽燕矿区",
+            3,
+            1,
+            5,
+            "img_mine_district06",
+            "txt_mine_qu06",
+            "img_mine_icon05",
+            1168,
+            100
+        ],
+        [
+            7,
+            "江东矿区",
+            3,
+            1,
+            5,
+            "img_mine_district07",
+            "txt_mine_qu07",
+            "img_mine_icon06",
+            900,
+            327
+        ],
+        [
+            8,
+            "南越矿区",
+            3,
+            1,
+            5,
+            "img_mine_district08",
+            "txt_mine_qu08",
+            "img_mine_icon06",
+            900,
+            527
+        ],
+        [
+            9,
+            "巴蜀矿区",
+            3,
+            1,
+            5,
+            "img_mine_district09",
+            "txt_mine_qu09",
+            "img_mine_icon07",
+            150,
+            327
+        ],
+        [
+            10,
+            "西凉矿区",
+            3,
+            1,
+            5,
+            "img_mine_district10",
+            "txt_mine_qu10",
+            "img_mine_icon07",
+            150,
+            527
+        ]
+    ],
+    "indexes": {
+        "1": 0,
+        "2": 1,
+        "3": 2,
+        "4": 3,
+        "5": 4,
+        "6": 5,
+        "7": 6,
+        "8": 7,
+        "9": 8,
+        "10": 9
+    }
+}

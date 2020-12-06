@@ -1,0 +1,74 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ThreeDLight = void 0;
+var Matrix_1 = require("../../Matrix");
+var Sprite_1 = require("../base/Sprite");
+var Shader_1 = require("../shader/Shader");
+//三维光源
+var vertexshader3d = 'attribute vec4 a_position;' +
+    'attribute vec3 a_normal;' +
+    'uniform mat4 u_worldViewProjection;' +
+    'uniform mat4 u_worldInverseTranspose;' +
+    'varying vec3 v_normal;' +
+    'void main() {' +
+    'gl_Position = u_worldViewProjection * a_position;' +
+    'v_normal = mat3(u_worldInverseTranspose) * a_normal;' + //法线*世界矩阵的逆矩阵的转置矩阵 将法线转换到世界坐标系下
+    '}';
+var fragmentshader3d = 'precision mediump float;' +
+    'varying vec3 v_normal;' +
+    'uniform vec3 u_reverseLightDirection;' +
+    'uniform vec4 u_color;' +
+    'void main() {' +
+    'vec3 normal = normalize(v_normal);' + //归一化法线
+    'float light = dot(normal, u_reverseLightDirection);' + //法线*光的方向 算出光的强度
+    'gl_FragColor = u_color;' +
+    'gl_FragColor.rgb *= light;' + //
+    '}';
+var ThreeDLight = /** @class */ (function (_super) {
+    __extends(ThreeDLight, _super);
+    function ThreeDLight() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    ThreeDLight.prototype.onInit = function () {
+        this._uniformData = {
+            u_worldViewProjection: {},
+            u_worldInverseTranspose: {},
+            u_color: [0.2, 1, 0.2, 1],
+            u_reverseLightDirection: Matrix_1.glMatrix.vec3.normalize(null, [0.5, 0.7, 1])
+        };
+        this.setShader(vertexshader3d, fragmentshader3d);
+    };
+    //加载数据完成
+    ThreeDLight.prototype.onLoadFinish = function (datas) {
+        var cubeDatas = {};
+        cubeDatas.position = new Float32Array(datas.position);
+        cubeDatas.normal = new Float32Array(datas.normal);
+        var matrix = Matrix_1.glMatrix.mat4.identity(null);
+        Matrix_1.glMatrix.mat4.rotateX(matrix, matrix, Math.PI);
+        Matrix_1.glMatrix.mat4.translate(matrix, matrix, [-50, -75, -15]);
+        for (var ii = 0; ii < cubeDatas.position.length; ii += 3) {
+            var vector = Matrix_1.glMatrix.mat4.transformPoint(null, matrix, [cubeDatas.position[ii + 0], cubeDatas.position[ii + 1], cubeDatas.position[ii + 2], 1]);
+            cubeDatas.position[ii + 0] = vector[0];
+            cubeDatas.position[ii + 1] = vector[1];
+            cubeDatas.position[ii + 2] = vector[2];
+        }
+        this._attrData = Shader_1.G_ShaderFactory.createBufferInfoFromArrays(cubeDatas);
+    };
+    //更新unifoms变量
+    ThreeDLight.prototype.updateUniformsData = function (cameraData) {
+        var worldViewProjectionMatrix = Matrix_1.glMatrix.mat4.multiply(null, cameraData.viewProjectionMat, this._modelMatrix); //pvm
+        var worldInverseMatrix = Matrix_1.glMatrix.mat4.invert(null, this._modelMatrix);
+        var worldInverseTransposeMatrix = Matrix_1.glMatrix.mat4.identity(null);
+        Matrix_1.glMatrix.mat4.transpose(worldInverseTransposeMatrix, worldInverseMatrix);
+        this._uniformData = {
+            u_worldViewProjection: worldViewProjectionMatrix,
+            u_worldInverseTranspose: worldInverseTransposeMatrix,
+            u_color: [0.2, 1, 0.2, 1],
+            u_reverseLightDirection: Matrix_1.glMatrix.vec3.normalize(null, [0.5, 0.7, 1])
+        };
+        _super.prototype.updateRenderData.call(this);
+    };
+    return ThreeDLight;
+}(Sprite_1.SY.Sprite));
+exports.ThreeDLight = ThreeDLight;
+//# sourceMappingURL=ThreeDLight.js.map

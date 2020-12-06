@@ -3,7 +3,6 @@ import LoaderManager from "../../LoaderManager";
 import { glMatrix } from "../../Matrix";
 import { MathUtils } from "../../utils/MathUtils";
 import { CameraData } from "../data/CameraData";
-import { G_ShaderFactory } from "../shader/Shader";
 import { PointLight } from "./PointLight";
 
 function main() {

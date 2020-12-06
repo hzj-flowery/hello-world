@@ -1,0 +1,23 @@
+{
+    "key_map": {
+        "id": 0,
+        "key": 1,
+        "content": 2
+    },
+    "data": [
+        [
+            1,
+            "tactics_2_unlock",
+            "6|2|500"
+        ],
+        [
+            2,
+            "tactics_3_unlock",
+            "7|2|1000"
+        ]
+    ],
+    "indexes": {
+        "1": 0,
+        "2": 1
+    }
+}

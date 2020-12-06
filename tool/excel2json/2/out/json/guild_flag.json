@@ -1,0 +1,60 @@
+{
+    "key_map": {
+        "id": 0,
+        "color": 1
+    },
+    "data": [
+        [
+            1,
+            "img_guild_huoyue_b02"
+        ],
+        [
+            2,
+            "img_guild_huoyue_b03"
+        ],
+        [
+            3,
+            "img_guild_huoyue_b04"
+        ],
+        [
+            4,
+            "img_guild_huoyue_b05"
+        ],
+        [
+            5,
+            "img_guild_huoyue_b06"
+        ],
+        [
+            6,
+            "img_guild_huoyue_b02"
+        ],
+        [
+            7,
+            "img_guild_huoyue_b03"
+        ],
+        [
+            8,
+            "img_guild_huoyue_b04"
+        ],
+        [
+            9,
+            "img_guild_huoyue_b05"
+        ],
+        [
+            10,
+            "img_guild_huoyue_b06"
+        ]
+    ],
+    "indexes": {
+        "1": 0,
+        "2": 1,
+        "3": 2,
+        "4": 3,
+        "5": 4,
+        "6": 5,
+        "7": 6,
+        "8": 7,
+        "9": 8,
+        "10": 9
+    }
+}

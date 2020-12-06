@@ -1,0 +1,143 @@
+{
+    "key_map": {
+        "id": 0,
+        "key": 1,
+        "content": 2
+    },
+    "data": [
+        [
+            1,
+            "riot_time_slot",
+            "710|1070"
+        ],
+        [
+            2,
+            "riot_continue_time",
+            "7200"
+        ],
+        [
+            3,
+            "patrol_profit_time",
+            "1800"
+        ],
+        [
+            4,
+            "patrol_choice_time1",
+            "14400|5:3:5"
+        ],
+        [
+            5,
+            "patrol_choice_time2",
+            "28800|5:3:10"
+        ],
+        [
+            6,
+            "patrol_choice_time3",
+            "43200|5:3:15"
+        ],
+        [
+            16,
+            "hero_drop_probability1",
+            "1000|0|0|0|0"
+        ],
+        [
+            17,
+            "hero_drop_probability2",
+            "500|500|0|0|0"
+        ],
+        [
+            18,
+            "hero_drop_probability3",
+            "400|600|0|0|0"
+        ],
+        [
+            19,
+            "hero_drop_probability4",
+            "0|1000|0|0|0"
+        ],
+        [
+            20,
+            "hero_drop_probability5",
+            "0|1000|0|0|0"
+        ],
+        [
+            21,
+            "hero_drop_probability6",
+            "0|1000|0|0|0"
+        ],
+        [
+            22,
+            "hero_drop_probability7",
+            "0|970|30|0|0"
+        ],
+        [
+            23,
+            "hero_drop_probability8",
+            "0|961|39|0|0"
+        ],
+        [
+            24,
+            "hero_drop_probability9",
+            "0|961|39|0|0"
+        ],
+        [
+            25,
+            "hero_drop_probability10",
+            "0|961|39|0|0"
+        ],
+        [
+            26,
+            "hero_drop_probability11",
+            "0|300|685|15|0"
+        ],
+        [
+            27,
+            "hero_drop_probability12",
+            "0|0|985|14|1"
+        ],
+        [
+            31,
+            "help_number",
+            "10"
+        ],
+        [
+            32,
+            "time_display",
+            "每天11：50、17：50发生暴动！"
+        ],
+        [
+            33,
+            "help_bubble",
+            "1301|1302|1303|1304|1305"
+        ],
+        [
+            34,
+            "territory_hero",
+            "4|5|6"
+        ]
+    ],
+    "indexes": {
+        "1": 0,
+        "2": 1,
+        "3": 2,
+        "4": 3,
+        "5": 4,
+        "6": 5,
+        "16": 6,
+        "17": 7,
+        "18": 8,
+        "19": 9,
+        "20": 10,
+        "21": 11,
+        "22": 12,
+        "23": 13,
+        "24": 14,
+        "25": 15,
+        "26": 16,
+        "27": 17,
+        "31": 18,
+        "32": 19,
+        "33": 20,
+        "34": 21
+    }
+}

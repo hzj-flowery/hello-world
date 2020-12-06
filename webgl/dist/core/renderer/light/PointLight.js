@@ -1,0 +1,107 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.PointLight = void 0;
+var Matrix_1 = require("../../Matrix");
+var Sprite_1 = require("../base/Sprite");
+var Shader_1 = require("../shader/Shader");
+var vertexshader3d = 'attribute vec4 a_position;' +
+    'attribute vec3 a_normal;' +
+    'uniform vec3 u_lightWorldPosition;' +
+    'uniform vec3 u_viewWorldPosition;' +
+    'uniform mat4 u_world;' +
+    'uniform mat4 u_worldViewProjection;' +
+    'uniform mat4 u_worldInverseTranspose;' +
+    'varying vec3 v_normal;' +
+    'varying vec3 v_surfaceToLight;' +
+    'varying vec3 v_surfaceToView;' +
+    'void main() {' +
+    'gl_Position = u_worldViewProjection * a_position;' +
+    'v_normal = mat3(u_worldInverseTranspose) * a_normal;' +
+    'vec3 surfaceWorldPosition = (u_world * a_position).xyz;' +
+    'v_surfaceToLight = u_lightWorldPosition - surfaceWorldPosition;' +
+    'v_surfaceToView = u_viewWorldPosition - surfaceWorldPosition;' +
+    '}';
+var fragmentshader3d = 'precision mediump float;' +
+    'varying vec3 v_normal;' +
+    'varying vec3 v_surfaceToLight;' + //物体表面到光位置的方向
+    'varying vec3 v_surfaceToView;' + //物体表面到摄像机位置的方向
+    'uniform vec4 u_color;' + //物体表面的颜色
+    'uniform float u_shininess;' + //高光的指数
+    'uniform vec3 u_lightColor;' + //光的颜色
+    'uniform vec3 u_specularColor;' + //高光的颜色
+    'void main() {' +
+    'vec3 normal = normalize(v_normal);' + //法线
+    'vec3 surfaceToLightDirection = normalize(v_surfaceToLight);' +
+    'vec3 surfaceToViewDirection = normalize(v_surfaceToView);' +
+    'vec3 halfVector = normalize(surfaceToLightDirection + surfaceToViewDirection);' + //高光的方向
+    'float light = dot(normal, surfaceToLightDirection);' + //法线*光的方向 算出光的反射强度
+    'float specular = 0.0;' +
+    'if (light > 0.0) {specular = pow(dot(normal, halfVector), u_shininess);}' + //法线*高光方向 算出高光的反射强度
+    'gl_FragColor = u_color;' + //顶点颜色
+    // 'gl_FragColor.rgb *= light;' +     //反射的颜色
+    // 'gl_FragColor.rgb += specular;' +  //加上高光
+    // Lets multiply just the color portion (not the alpha)
+    // by the light
+    'vec3 lightColor = light * u_lightColor;' + //光的强度*光的颜色
+    'gl_FragColor.rgb *= lightColor;' + //光的颜色和点的颜色混合
+    // Just add in the specular
+    'gl_FragColor.rgb += specular * u_specularColor;' + //加上高光的颜色
+    '}';
+var PointLight = /** @class */ (function (_super) {
+    __extends(PointLight, _super);
+    function PointLight() {
+        return _super.call(this) || this;
+    }
+    PointLight.prototype.onInit = function () {
+        this._uniformData = {
+            u_worldViewProjection: {},
+            u_worldInverseTranspose: {},
+            u_color: {},
+            u_shininess: {},
+            u_lightColor: {},
+            u_specularColor: {},
+            u_lightWorldPosition: {},
+            u_viewWorldPosition: {},
+            u_world: {}
+        };
+        this.setShader(vertexshader3d, fragmentshader3d);
+    };
+    //加载数据完成
+    PointLight.prototype.onLoadFinish = function (datas) {
+        var cubeDatas = {};
+        cubeDatas.position = new Float32Array(datas.position);
+        cubeDatas.normal = new Float32Array(datas.normal);
+        var matrix = Matrix_1.glMatrix.mat4.identity(null);
+        Matrix_1.glMatrix.mat4.rotateX(matrix, matrix, Math.PI);
+        Matrix_1.glMatrix.mat4.translate(matrix, matrix, [-50, -75, -15]);
+        for (var ii = 0; ii < cubeDatas.position.length; ii += 3) {
+            var vector = Matrix_1.glMatrix.mat4.transformPoint(null, matrix, [cubeDatas.position[ii + 0], cubeDatas.position[ii + 1], cubeDatas.position[ii + 2], 1]);
+            cubeDatas.position[ii + 0] = vector[0];
+            cubeDatas.position[ii + 1] = vector[1];
+            cubeDatas.position[ii + 2] = vector[2];
+        }
+        this._attrData = Shader_1.G_ShaderFactory.createBufferInfoFromArrays(cubeDatas);
+    };
+    //更新unifoms变量
+    PointLight.prototype.updateUniformsData = function (cData) {
+        // Multiply the matrices.
+        var worldViewProjectionMatrix = Matrix_1.glMatrix.mat4.multiply(null, cData.viewProjectionMat, this._modelMatrix);
+        var worldInverseMatrix = Matrix_1.glMatrix.mat4.invert(null, this._modelMatrix);
+        var worldInverseTransposeMatrix = Matrix_1.glMatrix.mat4.identity(null);
+        Matrix_1.glMatrix.mat4.transpose(worldInverseTransposeMatrix, worldInverseMatrix);
+        this._uniformData.u_worldViewProjection = worldViewProjectionMatrix; //投影矩阵 x 视口矩阵 x 世界矩阵
+        this._uniformData.u_worldInverseTranspose = worldInverseTransposeMatrix; //世界矩阵逆矩阵的转置矩阵
+        this._uniformData.u_world = this._modelMatrix; //世界矩阵
+        this._uniformData.u_color = [0.2, 1, 0.2, 1]; //点的颜色
+        this._uniformData.u_lightWorldPosition = cData.lightData.position; //光的位置
+        this._uniformData.u_viewWorldPosition = cData.position; //摄像机的位置
+        this._uniformData.u_shininess = cData.lightData.specularShininess; //高光的指数
+        this._uniformData.u_lightColor = cData.lightData.color;
+        this._uniformData.u_specularColor = cData.lightData.specularColor;
+        _super.prototype.updateRenderData.call(this);
+        return this._uniformData;
+    };
+    return PointLight;
+}(Sprite_1.SY.Sprite));
+exports.PointLight = PointLight;
+//# sourceMappingURL=PointLight.js.map

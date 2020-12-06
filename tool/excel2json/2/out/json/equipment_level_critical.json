@@ -1,0 +1,55 @@
+{
+    "key_map": {
+        "templet": 0,
+        "critical1_level": 1,
+        "critical1_chance": 2,
+        "critical2_level": 3,
+        "critical2_chance": 4,
+        "critical3_level": 5,
+        "critical3_chance": 6
+    },
+    "data": [
+        [
+            1,
+            1,
+            65,
+            2,
+            25,
+            3,
+            10
+        ],
+        [
+            2,
+            1,
+            65,
+            2,
+            25,
+            3,
+            10
+        ],
+        [
+            3,
+            1,
+            65,
+            2,
+            25,
+            3,
+            10
+        ],
+        [
+            4,
+            1,
+            65,
+            2,
+            25,
+            3,
+            10
+        ]
+    ],
+    "indexes": {
+        "1": 0,
+        "2": 1,
+        "3": 2,
+        "4": 3
+    }
+}

@@ -1,0 +1,65 @@
+{
+    "key_map": {
+        "id": 0,
+        "type": 1,
+        "value": 2,
+        "mission_description": 3,
+        "reward_name": 4,
+        "reward_num": 5,
+        "reward_icon": 6
+    },
+    "data": [
+        [
+            1,
+            1,
+            20,
+            "主角升到#num#级",
+            "银币",
+            100,
+            "img_linkageactivity_03"
+        ],
+        [
+            2,
+            1,
+            35,
+            "主角升到#num#级",
+            "进阶丹",
+            1,
+            "img_linkageactivity_04"
+        ],
+        [
+            3,
+            1,
+            50,
+            "主角升到#num#级",
+            "雁翎甲",
+            1,
+            "img_linkageactivity_05"
+        ],
+        [
+            4,
+            2,
+            1,
+            "完成首充",
+            "欢乐豆",
+            100,
+            "img_linkageactivity_06"
+        ],
+        [
+            5,
+            2,
+            30,
+            "累充#num#元",
+            "招募令",
+            1,
+            "img_linkageactivity_07"
+        ]
+    ],
+    "indexes": {
+        "1": 0,
+        "2": 1,
+        "3": 2,
+        "4": 3,
+        "5": 4
+    }
+}

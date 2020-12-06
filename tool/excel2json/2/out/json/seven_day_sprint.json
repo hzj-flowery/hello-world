@@ -1,0 +1,31 @@
+{
+    "key_map": {
+        "id": 0,
+        "type": 1,
+        "name": 2,
+        "function_id": 3,
+        "is_work": 4,
+        "open_day": 5,
+        "over_day": 6,
+        "over_view_day": 7,
+        "order": 8,
+        "activity_content_text": 9
+    },
+    "data": [
+        [
+            1,
+            1,
+            "百大军团",
+            5,
+            1,
+            1,
+            9,
+            10,
+            1,
+            "为鼓励各主公征召人马开疆辟土，开服第#num#天将评选出百大军团并发放对应奖励。参与军团活动越多，军团排名越高！"
+        ]
+    ],
+    "indexes": {
+        "1": 0
+    }
+}

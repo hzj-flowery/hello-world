@@ -1,0 +1,32 @@
+{
+    "key_map": {
+        "id": 0,
+        "key": 1,
+        "time": 2,
+        "legion_capital": 3,
+        "contribution": 4,
+        "need_people": 5
+    },
+    "data": [
+        [
+            1,
+            "single_build",
+            1,
+            100,
+            200,
+            1
+        ],
+        [
+            2,
+            "cooperate_build",
+            1,
+            500,
+            1000,
+            5
+        ]
+    ],
+    "indexes": {
+        "1": 0,
+        "2": 1
+    }
+}

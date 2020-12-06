@@ -2,16 +2,12 @@
 
 import Device from "../../Device";
 import { glMatrix } from "../../Matrix";
-import { Texture, TextureUpdateOpts } from "../base/Texture";
 import { Texture2D } from "../base/Texture2D";
 import LoaderManager from "../../LoaderManager";
-import { glTextureFmtInfor, gltex_filter, gltex_format } from "../gfx/GLEnums";
-import CustomTextureData from "../data/CustomTextureData";
-import TextureCustom from "../base/TextureCustom";
-import { couldStartTrivia } from "typescript";
 import { sy } from "../../Director";
 import { SY } from "../base/Sprite";
 import GameMainCamera from "../camera/GameMainCamera";
+import { Texture } from "../base/Texture";
 import { G_ShaderFactory, ShaderData } from "../shader/Shader";
 
 var skinVS =

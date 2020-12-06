@@ -1,0 +1,40 @@
+{
+    "key_map": {
+        "id": 0,
+        "direction": 1,
+        "key": 2,
+        "content": 3
+    },
+    "data": [
+        [
+            1,
+            "ss2mjz",
+            "sgs_linkage_time",
+            100
+        ],
+        [
+            2,
+            "ss2mjz",
+            "sgs_linkage_overtime",
+            8
+        ],
+        [
+            3,
+            "mjz2ss",
+            "sgs_linkage_time",
+            100
+        ],
+        [
+            4,
+            "mjz2ss",
+            "sgs_linkage_overtime",
+            8
+        ]
+    ],
+    "indexes": {
+        "1": 0,
+        "2": 1,
+        "3": 2,
+        "4": 3
+    }
+}

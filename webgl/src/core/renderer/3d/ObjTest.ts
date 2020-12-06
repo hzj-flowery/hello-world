@@ -2,7 +2,6 @@
 
 import Device from "../../Device";
 import { glMatrix } from "../../Matrix";
-import { MathUtils } from "../../utils/MathUtils";
 import { OBJParseHelper } from "../parse/OBJParseHelper";
 import { G_ShaderFactory } from "../shader/Shader";
 

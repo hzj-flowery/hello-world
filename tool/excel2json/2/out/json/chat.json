@@ -1,0 +1,143 @@
+{
+    "key_map": {
+        "id": 0,
+        "key": 1,
+        "content": 2
+    },
+    "data": [
+        [
+            1,
+            "chat_world_accept_level",
+            "1"
+        ],
+        [
+            2,
+            "chat_world_level",
+            "10"
+        ],
+        [
+            3,
+            "chat_world_interval",
+            "10"
+        ],
+        [
+            4,
+            "chat_gang_interval",
+            "1"
+        ],
+        [
+            5,
+            "chat_voice",
+            "30"
+        ],
+        [
+            6,
+            "chat_text",
+            "30"
+        ],
+        [
+            7,
+            "sent_private_chat",
+            "10"
+        ],
+        [
+            8,
+            "system",
+            "50"
+        ],
+        [
+            9,
+            "private_chat_number",
+            "100"
+        ],
+        [
+            10,
+            "chat_voice_min",
+            "1"
+        ],
+        [
+            11,
+            "chat_gang_level",
+            "10"
+        ],
+        [
+            12,
+            "low_vip_number",
+            "20"
+        ],
+        [
+            13,
+            "low_vip",
+            "1"
+        ],
+        [
+            14,
+            "low_level",
+            "30"
+        ],
+        [
+            15,
+            "limite_number",
+            "5"
+        ],
+        [
+            16,
+            "private_chat_level",
+            "18"
+        ],
+        [
+            17,
+            "limite_level",
+            "30"
+        ],
+        [
+            18,
+            "limite_vip",
+            "1"
+        ],
+        [
+            19,
+            "qin_world_cd",
+            "20"
+        ],
+        [
+            20,
+            "qin_guild_cd",
+            "20"
+        ],
+        [
+            21,
+            "pvpsingle_chat_level",
+            "60"
+        ],
+        [
+            22,
+            "private_chat_day",
+            "7"
+        ]
+    ],
+    "indexes": {
+        "1": 0,
+        "2": 1,
+        "3": 2,
+        "4": 3,
+        "5": 4,
+        "6": 5,
+        "7": 6,
+        "8": 7,
+        "9": 8,
+        "10": 9,
+        "11": 10,
+        "12": 11,
+        "13": 12,
+        "14": 13,
+        "15": 14,
+        "16": 15,
+        "17": 16,
+        "18": 17,
+        "19": 18,
+        "20": 19,
+        "21": 20,
+        "22": 21
+    }
+}

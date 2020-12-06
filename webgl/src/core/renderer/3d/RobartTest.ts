@@ -5,6 +5,7 @@ import { MathUtils } from "../../utils/MathUtils";
 import { syPrimitives } from "../shader/Primitives";
 import { BufferAttribsData, G_ShaderFactory, ShaderData } from "../shader/Shader";
 
+
 var vertexshader3d =
     'attribute vec4 a_position;' +
     'attribute vec4 a_color;' +

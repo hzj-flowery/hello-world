@@ -1,0 +1,161 @@
+{
+    "key_map": {
+        "id": 0,
+        "name": 1,
+        "auction_type": 2,
+        "auction_open_time": 3,
+        "auction_continued_time": 4,
+        "touch_time": 5,
+        "extend_time": 6,
+        "end_time": 7,
+        "cfg_name": 8
+    },
+    "data": [
+        [
+            101,
+            "军团BOSS",
+            1,
+            300,
+            600,
+            30,
+            30,
+            0,
+            "boss_auction_content"
+        ],
+        [
+            102,
+            "军团答题",
+            1,
+            300,
+            600,
+            30,
+            30,
+            0,
+            "answer_auction_content"
+        ],
+        [
+            103,
+            "军团试炼",
+            1,
+            300,
+            600,
+            30,
+            30,
+            0,
+            "guild_stage_auction_content"
+        ],
+        [
+            104,
+            "三国战记",
+            1,
+            300,
+            600,
+            30,
+            30,
+            0,
+            "guild_boss_auction_content"
+        ],
+        [
+            105,
+            "军团战",
+            1,
+            300,
+            600,
+            30,
+            30,
+            0,
+            "guild_war_auction_content"
+        ],
+        [
+            201,
+            "全服",
+            2,
+            300,
+            0,
+            30,
+            30,
+            79200,
+            ""
+        ],
+        [
+            301,
+            "阵营竞技",
+            3,
+            300,
+            600,
+            30,
+            30,
+            0,
+            "pvppro_auction_content"
+        ],
+        [
+            401,
+            "城池行商",
+            4,
+            300,
+            600,
+            30,
+            30,
+            0,
+            "guild_war_city_auction_content"
+        ],
+        [
+            501,
+            "神秘行商",
+            5,
+            300,
+            0,
+            30,
+            30,
+            70200,
+            "update_auction_content"
+        ],
+        [
+            601,
+            "跨服个人",
+            6,
+            300,
+            600,
+            30,
+            30,
+            0,
+            "pvpsingle_auction_content"
+        ],
+        [
+            106,
+            "跨服军团战",
+            1,
+            300,
+            600,
+            30,
+            30,
+            0,
+            "guild_cross_war_auction_group"
+        ],
+        [
+            107,
+            "跨服BOSS",
+            1,
+            300,
+            600,
+            30,
+            30,
+            0,
+            "cross_boss_auction_content"
+        ]
+    ],
+    "indexes": {
+        "101": 0,
+        "102": 1,
+        "103": 2,
+        "104": 3,
+        "105": 4,
+        "106": 10,
+        "107": 11,
+        "201": 5,
+        "301": 6,
+        "401": 7,
+        "501": 8,
+        "601": 9
+    }
+}

@@ -1,0 +1,56 @@
+{
+    "key_map": {
+        "id": 0,
+        "game_type": 1,
+        "name": 2,
+        "canal_code": 3,
+        "code_1": 4,
+        "code_2": 5,
+        "code_3": 6,
+        "code_text_1": 7,
+        "code_text_2": 8,
+        "code_text_3": 9,
+        "reward_1": 10,
+        "reward_2": 11,
+        "reward_3": 12,
+        "title": 13
+    },
+    "data": [
+        [
+            1,
+            1,
+            "手机三国杀",
+            "SJSGS",
+            "ios_1",
+            "ios_2",
+            "ios_3",
+            "雁翎甲*1",
+            "进阶丹*2",
+            "招募令*1",
+            "gang_activity_sgs1",
+            "gang_activity_sgs2",
+            "gang_activity_sgs3",
+            "gang_activity_logo_sanguosha"
+        ],
+        [
+            2,
+            2,
+            "三国杀OL",
+            "SGSOL",
+            "ios_1_1",
+            "ios_2_1",
+            "ios_3_1",
+            "时限武将宝箱*1",
+            "皮肤宝箱*1",
+            "银两宝箱*1",
+            "gang_activity_olbaoxiang2",
+            "gang_activity_olbaoxiang1",
+            "gang_activity_olbaoxiang3",
+            "gang_activity_logo_sanguoshaol"
+        ]
+    ],
+    "indexes": {
+        "1": 0,
+        "2": 1
+    }
+}
