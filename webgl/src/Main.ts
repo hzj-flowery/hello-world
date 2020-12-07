@@ -25,6 +25,8 @@ import SpotLightTest from "./core/renderer/light/SpotLightTest";
 
 Device.Instance.init();
 G_ShaderFactory.init(Device.Instance.gl);
+
+
 // G_CameraModel.init(Device.Instance.gl);
 //testWebl_Label.run();
 
