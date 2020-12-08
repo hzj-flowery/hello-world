@@ -628,6 +628,8 @@ class ShadowLight {
 
   // Draw the scene.
   public render() {
+
+    
     var gl = this.gl;
     Device.Instance.resizeCanvasToDisplaySize(gl.canvas);
     gl.enable(gl.CULL_FACE);
