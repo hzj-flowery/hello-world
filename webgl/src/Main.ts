@@ -78,7 +78,7 @@ G_ShaderFactory.init(Device.Instance.gl);
 
 
 LoaderManager.instance.loadData(arr,null,function(){
-    // new RenderFlow().startup();
+    new RenderFlow().startup();
     // RampTextureTest.run();
     // CameraTest.run();
     // RobartTest.run();
@@ -90,6 +90,6 @@ LoaderManager.instance.loadData(arr,null,function(){
     // PointLightTest.run();
     // ThreeDLightTest.run();
 
-    ShaderShadowTest.run();
+    // ShaderShadowTest.run();
     
 })

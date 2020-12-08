@@ -1,20 +1,16 @@
-import { glTextureFmtInfor, gltex_format, glTextureTotalChanels } from "../gfx/GLEnums";
+import { TextureUpdateOpts } from "../base/Texture";
+import { glTextureFmtInfor, gltex_config_format, glTextureTotalChanels } from "../gfx/GLEnums";
 
 export default class CustomTextureData {
-    static getRandomData(width, height, format: gltex_format) {
+    static getRandomData(width, height, format: gltex_config_format) {
 
         var formatInfo = glTextureFmtInfor(format);
         var chanels = glTextureTotalChanels(format);
-        var urlData: any = {
-            level: 0,
-            internalFormat: formatInfo.internalFormat,
-            width: width,
-            height: height,
-            border: 0,
-            format: formatInfo.format,
-            type: formatInfo.pixelType,
-            alignment: 1,
-        }
+        var urlData: TextureUpdateOpts = new TextureUpdateOpts();
+        urlData.level = 0;
+        urlData.width = width;
+        urlData.height = height;
+        urlData.configFormat = format;
         var getRandomColor = function () {
             var ret = [];
             for (let i = 1; i <= chanels; i++) {

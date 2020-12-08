@@ -1,4 +1,4 @@
-import { gltex_filter, gltex_wrap, gltex_format, glTextureChanelTotalBytes } from "../gfx/GLEnums";
+import { gltex_filter, gltex_wrap, gltex_config_format, glTextureChanelTotalBytes, glTextureFmtInfor, glType } from "../gfx/GLEnums";
 
 
 
@@ -6,9 +6,35 @@ import { gltex_filter, gltex_wrap, gltex_format, glTextureChanelTotalBytes } fro
  * 创建一个纹理的一些设置参数
  */
 export class TextureUpdateOpts{
+    constructor(){
+         this.configFormat = gltex_config_format.RGBA8;//纹理的配置格式
+    }
+    public set configFormat(format:gltex_config_format){
+        this._configFormat = format;
+        let infor =  glTextureFmtInfor(format);
+        this._pixelType = infor.pixelType;
+        this._format = infor.format;
+        this._internalFormat = infor.internalFormat;
+    }
+    public get format(){
+        return this._format;
+    }
+    public get internalFormat(){
+        return this._internalFormat;
+    }
+    public get pixelType(){
+         return this._pixelType;
+    }
     image:HTMLImageElement;
-    width:number       = 1;
-    height:number      = 1;
+    data:Uint8Array;
+    _format:number;
+    _internalFormat:number;
+    _pixelType:glType;
+    alignment:number   = 1;
+    level:number       = 0;
+    border:number       = 0;
+    width:number       = 1;    //纹理的宽度
+    height:number      = 1;    //纹理的高度
     genMipmaps:boolean = false;//是否开启mipmap技术
     compressed:boolean = false;//纹理是否是压缩的
     anisotropy:number  = 1;//设置纹理所有方向的最大值
@@ -17,7 +43,7 @@ export class TextureUpdateOpts{
     mipFilter:number   = gltex_filter.LINEAR_MIPMAP_LINEAR; //设置纹理缩小过滤的模式为特殊的线性过滤GL_LINEAR_MIPMAP_NEAREST
     wrapS              = gltex_wrap.MIRROR;//设置s方向上的贴图模式为镜像对称重复
     wrapT              = gltex_wrap.MIRROR;//设置t方向上的贴图模式为镜像对称重复
-    format:gltex_format= gltex_format.RGBA8;//纹理的格式
+    private _configFormat:gltex_config_format;//纹理的配置格式
 }
 
 const _nullWebGLTexture = null;
@@ -42,7 +68,7 @@ export  class Texture {
     protected _mipFilter: number;///设置纹理缩小过滤的模式为特殊的线性过滤
     protected _wrapS;//设置s方向上的贴图模式
     protected _wrapT;//设置t方向上的贴图模式
-    protected _format: gltex_format;//纹理的格式
+    protected _format: gltex_config_format;//纹理的格式
 
     protected _target;//目标缓冲区
     protected _id: number;
@@ -72,14 +98,27 @@ export  class Texture {
         this._wrapT = options.wrapT;
         // wrapR available in webgl2
         // this._wrapR = enums.WRAP_REPEAT;
-        this._format = options.format;
+        this._format = options.configFormat;
 
-        this._format = options.format;
+        this._format = options.configFormat;
         this._compressed = 
-          (this._format >= gltex_format.RGB_DXT1 && this._format <= gltex_format.RGBA_PVRTC_4BPPV1) || 
-          (this._format >= gltex_format.RGB_ETC2 && this._format <= gltex_format.RGBA_ETC2);
+          (this._format >= gltex_config_format.RGB_DXT1 && this._format <= gltex_config_format.RGBA_PVRTC_4BPPV1) || 
+          (this._format >= gltex_config_format.RGB_ETC2 && this._format <= gltex_config_format.RGBA_ETC2);
 
           this.updateNormalBytes();
+    }
+    
+    /**
+     * 设置GPU中纹理操作
+     */
+    protected setTextureOperator():void{
+
+    }
+    /**
+     * 上传纹理到显存中
+     */
+    protected uploadTextureToGPU():void{
+
     }
     
     //更新字节数

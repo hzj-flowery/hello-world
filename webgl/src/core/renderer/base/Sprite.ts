@@ -46,7 +46,7 @@ import { NormalRenderData, RenderData, RenderDataPool, RenderDataType } from "..
 import { glprimitive_type } from "../gfx/GLEnums";
 import { BufferAttribsData, G_ShaderFactory, Shader, ShaderData } from "../shader/Shader";
 import { Node } from "./Node";
-import { Texture } from "./Texture";
+import { Texture, TextureUpdateOpts } from "./Texture";
 import { Texture2D } from "./Texture2D";
 import TextureCube from "./TextureCube";
 import TextureCustom from "./TextureCustom";
@@ -255,13 +255,13 @@ export namespace SY {
             (this._texture as TextureCube).url = arr;
             return this._texture;
         }
-        private createCustomTextureBuffer(data): Texture {
+        private createCustomTextureBuffer(data:TextureUpdateOpts): Texture {
             this._texture = new TextureCustom(this.gl);
             (this._texture as TextureCustom).url = data;
             return this._texture;
         }
 
-        public set url(url: string | Array<string> | object) {
+        public set url(url: string | Array<string> | TextureUpdateOpts) {
             //普通图片
             if (typeof url == "string") {
                 this.createTexture2DBuffer(url);
@@ -271,7 +271,8 @@ export namespace SY {
                 this.createTextureCubeBuffer(url);
             }
             //自定义纹理
-            else if (typeof (url) == "object") {
+            else if (url instanceof TextureUpdateOpts) {
+                console.log("自定义纹理------",url);
                 this.createCustomTextureBuffer(url);
             }
         }

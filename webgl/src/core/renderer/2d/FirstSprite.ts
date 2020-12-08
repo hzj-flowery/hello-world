@@ -68,21 +68,6 @@ export default class FirstSprite extends SY.SpriteBase {
         this._shader.active();
         this._shader.setUseVertexAttribPointerForVertex(this.getGLID(SY.GLID_TYPE.VERTEX), this.getBufferItemSize(SY.GLID_TYPE.VERTEX));
 
-        // matrices.forEach((mat, ndx) => {
-        //     this._glMatrix.mat4.translate(mat, mat, [-0.5 + ndx * 0.25, 0, 0])
-        //     this._glMatrix.mat4.rotateZ(mat, mat, time * (0.1 + 0.1 * ndx))
-
-
-        //     const color = colors[ndx];
-        //     this._shader.setUseColor(color);
-        //     this._shader.setUseProjectViewModelMatrix(mat);
-
-        //     gl.drawArrays(
-        //         gl.TRIANGLES,
-        //         0,             // offset
-        //         12,   // num vertices per instance
-        //     );
-        // });
         matrices.forEach((mat, ndx) => {
             this._glMatrix.mat4.identity(mat);
             if(Math.random()>0.5)

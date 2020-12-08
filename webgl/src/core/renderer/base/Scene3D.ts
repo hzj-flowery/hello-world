@@ -7,7 +7,7 @@ import Device from "../../Device";
 import { Node } from "./Node";
 import CustomTextureCube from "../3d/CustomTextureCube";
 import CustomTextureData from "../data/CustomTextureData";
-import { gltex_format } from "../gfx/GLEnums";
+import { gltex_config_format } from "../gfx/GLEnums";
 import GameMainCamera from "../camera/GameMainCamera";
 import enums from "../camera/enums";
 import OrthoCamera from "../camera/OrthoCamera";
@@ -86,7 +86,7 @@ export default class Scene3D extends Scene {
         this.addChild(this._spineNode);
 
         this._customTexture = new CustomTextureCube(gl);
-        this._customTexture.url = CustomTextureData.getRandomData(3, 5, gltex_format.RGB8);
+        this._customTexture.url = CustomTextureData.getRandomData(3, 5, gltex_config_format.RGB8);
         this._customTexture.setPosition(0, 3.1, 0);
         this._centerNode.addChild(this._customTexture);
 

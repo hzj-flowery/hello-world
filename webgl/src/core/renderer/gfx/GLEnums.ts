@@ -27,32 +27,31 @@ export const enum glType{
     HALF_FLOAT_OES = 36193,          // gl.HALF_FLOAT_OES
 }
 
-//texture normal format
-const enum gltex_nfmt{
+
+const enum gltex_fmt{
+    //texture normal format
     DEPTH_COMPONENT = 6402, // gl.DEPTH_COMPONENT
     ALPHA = 6406,            // gl.ALPHA
     RGB = 6407,              // gl.RGB
     RGBA = 6408,             // gl.RGBA
     LUMINANCE = 6409,        // gl.LUMINANCE
     LUMINANCE_ALPHA = 6410,  // gl.LUMINANCE_ALPHA
-}
-//texture compressed format
-const enum gltex_cfmt{
+    
+    //texture compressed format
     RGB_S3TC_DXT1_EXT = 0x83F0,   // ext.COMPRESSED_RGB_S3TC_DXT1_EXT
     RGBA_S3TC_DXT1_EXT = 0x83F1,  // ext.COMPRESSED_RGBA_S3TC_DXT1_EXT
     RGBA_S3TC_DXT3_EXT = 0x83F2,  // ext.COMPRESSED_RGBA_S3TC_DXT3_EXT
     RGBA_S3TC_DXT5_EXT = 0x83F3,  // ext.COMPRESSED_RGBA_S3TC_DXT5_EXT
-
     RGB_PVRTC_4BPPV1_IMG = 0x8C00,  // ext.COMPRESSED_RGB_PVRTC_4BPPV1_IMG
     RGB_PVRTC_2BPPV1_IMG = 0x8C01,  // ext.COMPRESSED_RGB_PVRTC_2BPPV1_IMG
     RGBA_PVRTC_4BPPV1_IMG = 0x8C02, // ext.COMPRESSED_RGBA_PVRTC_4BPPV1_IMG
     RGBA_PVRTC_2BPPV1_IMG = 0x8C03, // ext.COMPRESSED_RGBA_PVRTC_2BPPV1_IMG
-
     RGB_ETC1_WEBGL = 0x8D64, // ext.COMPRESSED_RGB_ETC1_WEBGL
-
     RGB8_ETC2 = 0x9274,       // ext.COMPRESSED_RGB8_ETC2
     RGBA8_ETC2_EAC = 0x9278,  // ext.COMPRESSED_RGBA8_ETC2_EAC
+
 }
+
 
 const _filterGL = [
     [gltex_filter.NEAREST, gltex_filter.NEAREST_MIPMAP_NEAREST, gltex_filter.NEAREST_MIPMAP_LINEAR],
@@ -62,68 +61,68 @@ const _filterGL = [
 
 const _textureFmtGL = [
     // RGB_DXT1: 0
-    { format: gltex_nfmt.RGB, internalFormat: gltex_cfmt.RGB_S3TC_DXT1_EXT, pixelType: null },
+    { format: gltex_fmt.RGB, internalFormat: gltex_fmt.RGB_S3TC_DXT1_EXT, pixelType: null },
 
     // RGBA_DXT1: 1
-    { format: gltex_nfmt.RGBA, internalFormat: gltex_cfmt.RGBA_S3TC_DXT1_EXT, pixelType: null },
+    { format: gltex_fmt.RGBA, internalFormat: gltex_fmt.RGBA_S3TC_DXT1_EXT, pixelType: null },
 
     // RGBA_DXT3: 2
-    { format: gltex_nfmt.RGBA, internalFormat: gltex_cfmt.RGBA_S3TC_DXT3_EXT, pixelType: null },
+    { format: gltex_fmt.RGBA, internalFormat: gltex_fmt.RGBA_S3TC_DXT3_EXT, pixelType: null },
 
     // RGBA_DXT5: 3
-    { format: gltex_nfmt.RGBA, internalFormat: gltex_cfmt.RGBA_S3TC_DXT5_EXT, pixelType: null },
+    { format: gltex_fmt.RGBA, internalFormat: gltex_fmt.RGBA_S3TC_DXT5_EXT, pixelType: null },
 
     // RGB_ETC1: 4
-    { format: gltex_nfmt.RGB, internalFormat: gltex_cfmt.RGB_ETC1_WEBGL, pixelType: null },
+    { format: gltex_fmt.RGB, internalFormat: gltex_fmt.RGB_ETC1_WEBGL, pixelType: null },
 
     // RGB_PVRTC_2BPPV1: 5
-    { format: gltex_nfmt.RGB, internalFormat: gltex_cfmt.RGB_PVRTC_2BPPV1_IMG, pixelType: null },
+    { format: gltex_fmt.RGB, internalFormat: gltex_fmt.RGB_PVRTC_2BPPV1_IMG, pixelType: null },
 
     // RGBA_PVRTC_2BPPV1: 6
-    { format: gltex_nfmt.RGBA, internalFormat: gltex_cfmt.RGBA_PVRTC_2BPPV1_IMG, pixelType: null },
+    { format: gltex_fmt.RGBA, internalFormat: gltex_fmt.RGBA_PVRTC_2BPPV1_IMG, pixelType: null },
 
     // RGB_PVRTC_4BPPV1: 7
-    { format: gltex_nfmt.RGB, internalFormat: gltex_cfmt.RGB_PVRTC_4BPPV1_IMG, pixelType: null },
+    { format: gltex_fmt.RGB, internalFormat: gltex_fmt.RGB_PVRTC_4BPPV1_IMG, pixelType: null },
 
     // RGBA_PVRTC_4BPPV1: 8
-    { format: gltex_nfmt.RGBA, internalFormat: gltex_cfmt.RGBA_PVRTC_4BPPV1_IMG, pixelType: null },
+    { format: gltex_fmt.RGBA, internalFormat: gltex_fmt.RGBA_PVRTC_4BPPV1_IMG, pixelType: null },
 
 
     // A8: 9
-    { format: gltex_nfmt.ALPHA, internalFormat: gltex_nfmt.ALPHA, pixelType: glType.UNSIGNED_BYTE },
+    { format: gltex_fmt.ALPHA, internalFormat: gltex_fmt.ALPHA, pixelType: glType.UNSIGNED_BYTE },
 
     // L8: 10
-    { format: gltex_nfmt.LUMINANCE, internalFormat: gltex_nfmt.LUMINANCE, pixelType: glType.UNSIGNED_BYTE },
+    { format: gltex_fmt.LUMINANCE, internalFormat: gltex_fmt.LUMINANCE, pixelType: glType.UNSIGNED_BYTE },
 
     // L8_A8: 11
-    { format: gltex_nfmt.LUMINANCE_ALPHA, internalFormat: gltex_nfmt.LUMINANCE_ALPHA, pixelType: glType.UNSIGNED_BYTE },
+    { format: gltex_fmt.LUMINANCE_ALPHA, internalFormat: gltex_fmt.LUMINANCE_ALPHA, pixelType: glType.UNSIGNED_BYTE },
 
     // R5_G6_B5: 12
-    { format: gltex_nfmt.RGB, internalFormat: gltex_nfmt.RGB, pixelType: glType.UNSIGNED_SHORT_5_6_5 },
+    { format: gltex_fmt.RGB, internalFormat: gltex_fmt.RGB, pixelType: glType.UNSIGNED_SHORT_5_6_5 },
 
     // R5_G5_B5_A1: 13
-    { format: gltex_nfmt.RGBA, internalFormat: gltex_nfmt.RGBA, pixelType: glType.UNSIGNED_SHORT_5_5_5_1 },
+    { format: gltex_fmt.RGBA, internalFormat: gltex_fmt.RGBA, pixelType: glType.UNSIGNED_SHORT_5_5_5_1 },
 
     // R4_G4_B4_A4: 14
-    { format: gltex_nfmt.RGBA, internalFormat: gltex_nfmt.RGBA, pixelType: glType.UNSIGNED_SHORT_4_4_4_4 },
+    { format: gltex_fmt.RGBA, internalFormat: gltex_fmt.RGBA, pixelType: glType.UNSIGNED_SHORT_4_4_4_4 },
 
     // RGB8: 15
-    { format: gltex_nfmt.RGB, internalFormat: gltex_nfmt.RGB, pixelType: glType.UNSIGNED_BYTE },
+    { format: gltex_fmt.RGB, internalFormat: gltex_fmt.RGB, pixelType: glType.UNSIGNED_BYTE },
 
     // RGBA8: 16
-    { format: gltex_nfmt.RGBA, internalFormat: gltex_nfmt.RGBA, pixelType: glType.UNSIGNED_BYTE },
+    { format: gltex_fmt.RGBA, internalFormat: gltex_fmt.RGBA, pixelType: glType.UNSIGNED_BYTE },
 
     // RGB16F: 17
-    { format: gltex_nfmt.RGB, internalFormat: gltex_nfmt.RGB, pixelType: glType.HALF_FLOAT_OES },
+    { format: gltex_fmt.RGB, internalFormat: gltex_fmt.RGB, pixelType: glType.HALF_FLOAT_OES },
 
     // RGBA16F: 18
-    { format: gltex_nfmt.RGBA, internalFormat: gltex_nfmt.RGBA, pixelType: glType.HALF_FLOAT_OES },
+    { format: gltex_fmt.RGBA, internalFormat: gltex_fmt.RGBA, pixelType: glType.HALF_FLOAT_OES },
 
     // RGB32F: 19
-    { format: gltex_nfmt.RGB, internalFormat: gltex_nfmt.RGB, pixelType: glType.FLOAT },
+    { format: gltex_fmt.RGB, internalFormat: gltex_fmt.RGB, pixelType: glType.FLOAT },
 
     // RGBA32F: 20
-    { format: gltex_nfmt.RGBA, internalFormat: gltex_nfmt.RGBA, pixelType: glType.FLOAT },
+    { format: gltex_fmt.RGBA, internalFormat: gltex_fmt.RGBA, pixelType: glType.FLOAT },
 
     // R32F: 21
     { format: null, internalFormat: null, pixelType: null },
@@ -138,19 +137,19 @@ const _textureFmtGL = [
     { format: null, internalFormat: null, pixelType: null },
 
     // D16: 25
-    { format: gltex_nfmt.DEPTH_COMPONENT, internalFormat: gltex_nfmt.DEPTH_COMPONENT, pixelType: glType.UNSIGNED_SHORT },
+    { format: gltex_fmt.DEPTH_COMPONENT, internalFormat: gltex_fmt.DEPTH_COMPONENT, pixelType: glType.UNSIGNED_SHORT },
 
     // D32: 26
-    { format: gltex_nfmt.DEPTH_COMPONENT, internalFormat: gltex_nfmt.DEPTH_COMPONENT, pixelType: glType.UNSIGNED_INT },
+    { format: gltex_fmt.DEPTH_COMPONENT, internalFormat: gltex_fmt.DEPTH_COMPONENT, pixelType: glType.UNSIGNED_INT },
 
     // D24S8: 27
-    { format: gltex_nfmt.DEPTH_COMPONENT, internalFormat: gltex_nfmt.DEPTH_COMPONENT, pixelType: glType.UNSIGNED_INT },
+    { format: gltex_fmt.DEPTH_COMPONENT, internalFormat: gltex_fmt.DEPTH_COMPONENT, pixelType: glType.UNSIGNED_INT },
 
     // RGB_ETC2: 28
-    { format: gltex_nfmt.RGB, internalFormat: gltex_cfmt.RGB8_ETC2, pixelType: null },
+    { format: gltex_fmt.RGB, internalFormat: gltex_fmt.RGB8_ETC2, pixelType: null },
 
     // RGBA_ETC2: 29
-    { format: gltex_nfmt.RGBA, internalFormat: gltex_cfmt.RGBA8_ETC2_EAC, pixelType: null },
+    { format: gltex_fmt.RGBA, internalFormat: gltex_fmt.RGBA8_ETC2_EAC, pixelType: null },
 ];
 
 /**
@@ -216,7 +215,7 @@ export const enum gltex_wrap{
 }
 // texture format
 //外部使用
-export const enum gltex_format {
+export const enum gltex_config_format {
 
     // compress formats
     RGB_DXT1 = 0, //0
@@ -379,14 +378,14 @@ export function glFilter(gl, filter, mipFilter = -1) {
 
 /**
  * @method glTextureFmt
- * @param {gltex_format} fmt
+ * @param {gltex_config_format} fmt
  * @return {format,internalFormat,pixelType} result
  */
-export function glTextureFmtInfor(fmt:gltex_format) {
+export function glTextureFmtInfor(fmt:gltex_config_format) {
     let result = _textureFmtGL[fmt];
     if (result === undefined) {
         console.warn(`Unknown TEXTURE_FMT: ${fmt}`);
-        return _textureFmtGL[gltex_format.RGBA8];
+        return _textureFmtGL[gltex_config_format.RGBA8];
     }
 
     return result;
@@ -404,34 +403,34 @@ LUMINANCE   	 UNSIGNED_BYTE      	1	    1
 ALPHA       	 UNSIGNED_BYTE       	1	    1
 */
 const glformat_type_bytes = {};
-glformat_type_bytes[gltex_nfmt.RGBA] = {};
-glformat_type_bytes[gltex_nfmt.RGB] = {};
-glformat_type_bytes[gltex_nfmt.LUMINANCE_ALPHA] = {};
-glformat_type_bytes[gltex_nfmt.LUMINANCE] = {};
-glformat_type_bytes[gltex_nfmt.ALPHA] = {};
-glformat_type_bytes[gltex_nfmt.RGBA][glType.UNSIGNED_BYTE] = 4;
-glformat_type_bytes[gltex_nfmt.RGB][glType.UNSIGNED_BYTE] = 3;
-glformat_type_bytes[gltex_nfmt.RGBA][glType.UNSIGNED_SHORT_4_4_4_4] = 2;
-glformat_type_bytes[gltex_nfmt.RGBA][glType.UNSIGNED_SHORT_5_5_5_1] = 2;
-glformat_type_bytes[gltex_nfmt.RGB][glType.UNSIGNED_SHORT_5_6_5] = 2;
-glformat_type_bytes[gltex_nfmt.LUMINANCE_ALPHA][glType.UNSIGNED_BYTE] = 2;
-glformat_type_bytes[gltex_nfmt.LUMINANCE][glType.UNSIGNED_BYTE] = 1;
-glformat_type_bytes[gltex_nfmt.ALPHA][glType.UNSIGNED_BYTE] = 1;
+glformat_type_bytes[gltex_fmt.RGBA] = {};
+glformat_type_bytes[gltex_fmt.RGB] = {};
+glformat_type_bytes[gltex_fmt.LUMINANCE_ALPHA] = {};
+glformat_type_bytes[gltex_fmt.LUMINANCE] = {};
+glformat_type_bytes[gltex_fmt.ALPHA] = {};
+glformat_type_bytes[gltex_fmt.RGBA][glType.UNSIGNED_BYTE] = 4;
+glformat_type_bytes[gltex_fmt.RGB][glType.UNSIGNED_BYTE] = 3;
+glformat_type_bytes[gltex_fmt.RGBA][glType.UNSIGNED_SHORT_4_4_4_4] = 2;
+glformat_type_bytes[gltex_fmt.RGBA][glType.UNSIGNED_SHORT_5_5_5_1] = 2;
+glformat_type_bytes[gltex_fmt.RGB][glType.UNSIGNED_SHORT_5_6_5] = 2;
+glformat_type_bytes[gltex_fmt.LUMINANCE_ALPHA][glType.UNSIGNED_BYTE] = 2;
+glformat_type_bytes[gltex_fmt.LUMINANCE][glType.UNSIGNED_BYTE] = 1;
+glformat_type_bytes[gltex_fmt.ALPHA][glType.UNSIGNED_BYTE] = 1;
 
 const glformat_type_chanels = {};
-glformat_type_chanels[gltex_nfmt.RGBA] = {};
-glformat_type_chanels[gltex_nfmt.RGB] = {};
-glformat_type_chanels[gltex_nfmt.LUMINANCE_ALPHA] = {};
-glformat_type_chanels[gltex_nfmt.LUMINANCE] = {};
-glformat_type_chanels[gltex_nfmt.ALPHA] = {};
-glformat_type_chanels[gltex_nfmt.RGBA][glType.UNSIGNED_BYTE] = 4;
-glformat_type_chanels[gltex_nfmt.RGB][glType.UNSIGNED_BYTE] = 3;
-glformat_type_chanels[gltex_nfmt.RGBA][glType.UNSIGNED_SHORT_4_4_4_4] = 4;
-glformat_type_chanels[gltex_nfmt.RGBA][glType.UNSIGNED_SHORT_5_5_5_1] = 4;
-glformat_type_chanels[gltex_nfmt.RGB][glType.UNSIGNED_SHORT_5_6_5] = 3;
-glformat_type_chanels[gltex_nfmt.LUMINANCE_ALPHA][glType.UNSIGNED_BYTE] = 2;
-glformat_type_chanels[gltex_nfmt.LUMINANCE][glType.UNSIGNED_BYTE] = 1;
-glformat_type_chanels[gltex_nfmt.ALPHA][glType.UNSIGNED_BYTE] = 1;
+glformat_type_chanels[gltex_fmt.RGBA] = {};
+glformat_type_chanels[gltex_fmt.RGB] = {};
+glformat_type_chanels[gltex_fmt.LUMINANCE_ALPHA] = {};
+glformat_type_chanels[gltex_fmt.LUMINANCE] = {};
+glformat_type_chanels[gltex_fmt.ALPHA] = {};
+glformat_type_chanels[gltex_fmt.RGBA][glType.UNSIGNED_BYTE] = 4;
+glformat_type_chanels[gltex_fmt.RGB][glType.UNSIGNED_BYTE] = 3;
+glformat_type_chanels[gltex_fmt.RGBA][glType.UNSIGNED_SHORT_4_4_4_4] = 4;
+glformat_type_chanels[gltex_fmt.RGBA][glType.UNSIGNED_SHORT_5_5_5_1] = 4;
+glformat_type_chanels[gltex_fmt.RGB][glType.UNSIGNED_SHORT_5_6_5] = 3;
+glformat_type_chanels[gltex_fmt.LUMINANCE_ALPHA][glType.UNSIGNED_BYTE] = 2;
+glformat_type_chanels[gltex_fmt.LUMINANCE][glType.UNSIGNED_BYTE] = 1;
+glformat_type_chanels[gltex_fmt.ALPHA][glType.UNSIGNED_BYTE] = 1;
 
 /**
  * 获取纹理的通道数

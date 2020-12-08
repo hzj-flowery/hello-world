@@ -1,49 +1,58 @@
-import { Texture } from "./Texture";
-import { GLapi } from "../gfx/GLapi";
+import { Texture, TextureUpdateOpts } from "./Texture";
 
 /**
  * 自定义纹理
  */
-export default class TextureCustom extends Texture{
-    constructor(gl){
+export default class TextureCustom extends Texture {
+    constructor(gl) {
         super(gl);
         this._target = gl.TEXTURE_2D;
-        
+
     }
-    /**
-     * @param {level,internalFormat,width,height,border,format,type,data,alignment} urlData
-     */
-    public set url(urlData){
+    public set url(urlData:TextureUpdateOpts) {
         this.initTexture(urlData);
     }
-    private initTexture(urlData:{level,internalFormat,width,height,border,format,type,data,alignment}) {
-
+    private initTexture(urlData: TextureUpdateOpts) {
         this.loaded = true;
-        
         var gl = this._gl;
-        gl.bindTexture(this._target,this._glID);
-
-        // fill texture with 3x2 pixels
-        var level = urlData.level||0;
+        gl.bindTexture(this._target, this._glID);
+        var level = urlData.level || 0;
         var internalFormat = urlData.internalFormat;
         var width = urlData.width;
         var height = urlData.height;
-        var border = urlData.border||0;
+        var border = urlData.border || 0;
         var format = urlData.format;
-        var type = urlData.type||gl.UNSIGNED_BYTE;
+        var type = urlData.pixelType || gl.UNSIGNED_BYTE;
         var data = urlData.data;
-        var alignment = urlData.alignment||1;
+        var alignment = urlData.alignment || 1;
 
+        let minFilter = urlData.minFilter;
+        let magFilter = urlData.magFilter;
+        let wraps = urlData.wrapS;
+        let wrapt = urlData.wrapT;
 
-        GLapi.pixelStorei(gl.UNPACK_ALIGNMENT, alignment);
-        GLapi.texImage2D(this._target, level, internalFormat, width, height, border,
-            format, type, data);
+        this._gl.pixelStorei(gl.UNPACK_ALIGNMENT, alignment);
+        this._gl.texImage2D(
+            this._target,
+            level,
+            internalFormat,
+            width,
+            height,
+            border,
+            format,
+            type,
+            data);
 
+        if(urlData.compressed)
+        {
+            //生成多远渐进纹理
+            gl.generateMipmap(this._target);
+        }
         // set the filtering so we don't need mips and it's not filtered
-        GLapi.texParameteri(this._target, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-        GLapi.texParameteri(this._target, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-        GLapi.texParameteri(this._target, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-        GLapi.texParameteri(this._target, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        this._gl.texParameteri(this._target, gl.TEXTURE_MIN_FILTER, minFilter);
+        this._gl.texParameteri(this._target, gl.TEXTURE_MAG_FILTER, magFilter);
+        this._gl.texParameteri(this._target, gl.TEXTURE_WRAP_S, wraps);
+        this._gl.texParameteri(this._target, gl.TEXTURE_WRAP_T, wrapt);
     }
 
 }

@@ -191,8 +191,6 @@ export class Texture2D extends Texture{
         //垂直方向
         this._gl.texParameteri(this._target, this._gl.TEXTURE_WRAP_T,this._wrapT);
 
-        
-
         // 清除当前操作的贴图
         this._gl.bindTexture(this._target, null);
     }
