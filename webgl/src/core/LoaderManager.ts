@@ -17,15 +17,6 @@ fetch(myRequest).then(function(response) {
   });
   */
 
-class CacheImageData {
-    constructor(url,img){
-        this.url = url;
-        this.img = img;
-    }
-    public url:string = "";
-    public img:HTMLImageElement;
-}
-
 async function loadFile(url, typeFunc) {
     const response = await fetch(url);
     if (!response.ok) {
@@ -46,7 +37,6 @@ async function loadText(url) {
 }
 
 export default class LoaderManager{
-    private _cacheImage:Array<CacheImageData> = [];
     private _cache:Map<string,any>;//资源缓存
     public static _instance:LoaderManager;
     public static get instance():LoaderManager
@@ -95,8 +85,7 @@ export default class LoaderManager{
                     }
                     JSON.parse(str);
                     console.log("result --",str);
-                    _this._cache.set(path,fr.result);
-                    if(callBackFinish)callBackFinish.call(null,fr.result);
+                    if(callBackFinish)callBackFinish.call(null,fr.result,path);
                 }
             }
         }
@@ -111,7 +100,7 @@ export default class LoaderManager{
 
     
     //加载二进制数据
-    public loadBlobData(path:string,callBackProgress?,callBackFinish?):void{
+    private loadBlobData(path:string,callBackProgress?,callBackFinish?):void{
         var _this = this;
         var request = new XMLHttpRequest();
         request.open("get",path);
@@ -123,14 +112,13 @@ export default class LoaderManager{
                 var fr = new FileReader(); //FileReader可以读取Blob内容  
                 fr.readAsArrayBuffer(request.response); //二进制转换成ArrayBuffer
                 fr.onload = function (e) {  //转换完成后，调用onload方法
-                    _this._cache.set(path,fr.result);
-                    if(callBackFinish)callBackFinish.call(null,fr.result);
+                    if(callBackFinish)callBackFinish.call(null,fr.result,path);
                 }
             }
         }
     }
     //加载json数据
-    public loadJsonData(path:string,callBackProgress?,callBackFinish?):void{
+    private loadJsonData(path:string,callBackProgress?,callBackFinish?):void{
         var request = new XMLHttpRequest();
         var _this = this;
         request.open("get",path);
@@ -140,13 +128,12 @@ export default class LoaderManager{
             if(request.status==0)
             {
                 var jsonData = request.response;
-                _this._cache.set(path,jsonData)
-                if(callBackFinish)callBackFinish.call(null,jsonData);
+                if(callBackFinish)callBackFinish.call(null,jsonData,path);
             }
         }
     }
     //加载可以转化为json的数据
-    public loadJsonStringData(path:string,callBackProgress?,callBackFinish?):void{
+    private loadJsonStringData(path:string,callBackProgress?,callBackFinish?):void{
         var request = new XMLHttpRequest();
         var _this = this;
         request.open("get",path);
@@ -156,8 +143,7 @@ export default class LoaderManager{
             if(request.status==0)
             {
                 var jsonData = JSON.parse(request.responseText);
-                _this._cache.set(path,jsonData)
-                if(callBackFinish)callBackFinish.call(null,jsonData);
+                if(callBackFinish)callBackFinish.call(null,jsonData,path);
             }
         }
     }
@@ -176,7 +162,6 @@ export default class LoaderManager{
                 // fr.readAsText(request.response);
                 fr.onload = function (e) {  //转换完成后，调用onload方法
                     // console.log("加载二进制成功---",fr.result);
-                    _this._cache.set(path,fr.result);
                     
                     // var uint8_msg = new Uint8Array(fr.result as ArrayBuffer);
                     // // 解码成字符串
@@ -197,14 +182,14 @@ export default class LoaderManager{
                     // }
 
     
-                    if(callBackFinish)callBackFinish.call(null,fr.result);
+                    if(callBackFinish)callBackFinish.call(null,fr.result,path);
                 }
             }
         }
     }
 
     //加载图片数据
-    public loadImageData(path:string,callBackProgress?,callBackFinish?):void{
+    private loadImageData(path:string,callBackProgress?,callBackFinish?):void{
         var img = new Image();
         img.onload = function(img:HTMLImageElement){
             if(!img)
@@ -212,8 +197,7 @@ export default class LoaderManager{
                 console.log("加载的图片路径不存在---",path);
                 return ;
             }
-            this._cacheImage.push(new CacheImageData(path,img));
-            if(callBackFinish)callBackFinish.call(null,img);
+            if(callBackFinish)callBackFinish.call(null,img,path);
         }.bind(this,img);
         img.src = path;
     }
@@ -233,20 +217,50 @@ export default class LoaderManager{
             }
     }
     //加载数据
-    public async loadData(arr:Array<string>,callBackProgress?,callBackFinish?){
+    public async load(arr:Array<string>|string,callBackProgress?,callBackFinish?){
          
         //test
         // await this.loadGLTF("https://webglfundamentals.org/webgl/resources/models/killer_whale/whale.CYCLES.gltf");
 
+        if(!(arr instanceof Array))
+        {
+           arr = [arr];
+        }
         var count = 0;
-        for(var j =0;j<arr.length;j++)
+        var length = arr.length;
+        var loadResult:Array<any> = [];
+        for(var j =0;j<length;j++)
         {
           let path:string = arr[j];
-          var loadFunc = this.getLoadFunc(path);
-          loadFunc.call(this,path,null,(res)=>{
+          let result = this.getRes(path);
+         
+
+          if(result)
+          {
+              //资源存在 不用重新加载
+              loadResult.push(result);
               count++;
-              this.onLoadProgress(count/arr.length);
-              if(count==arr.length)
+              if(callBackProgress)callBackProgress(count/length);
+              this.onLoadProgress(count/length);
+
+              if(count==length)
+                {
+                    this.onLoadFinish();
+                    if(callBackFinish)callBackFinish();
+                    return;
+                }
+              //继续加载
+              continue;
+          }
+          
+          var loadFunc = this.getLoadFunc(path);
+          loadFunc.call(this,path,null,(res,path)=>{
+              loadResult.push(res);
+              this._cache.set(path,res);
+              if(callBackProgress)callBackProgress(count/length);
+              count++;
+              this.onLoadProgress(count/length);
+              if(count==length)
                  {
                       this.onLoadFinish();
                       if(callBackFinish)callBackFinish();
@@ -255,50 +269,24 @@ export default class LoaderManager{
         }
     }
     //获取缓存中的数据
-    public getCacheData(url:string):any{
-           console.log(url,this._cache.has(url));
+    public getRes(url:string):any{
            return this._cache.get(url);
-    }
-    /**
-     * 获取缓存的纹理数据
-     * @param url 
-     */
-    public getCacheImage(url:string):HTMLImageElement{
-         for(var j = 0;j<this._cacheImage.length;j++)
-         {
-             var data = this._cacheImage[j];
-             if(data.url==url)
-             return data.img;
-         }
-         return null;
     }
     /**
      * 移除CPU端内存中的图片缓存
      * @param url 
      */ 
     public removeImage(url:string):void{
-        
-        var index = -1;
-        var img:HTMLImageElement;
-        for(var j = 0;j<this._cacheImage.length;j++)
-        {
-            var data = this._cacheImage[j];
-            if(data.url==url)
-            {
-               index = j;
-               img = data.img;
-               break;
-            }
-        }
-        if(index>=0)
+        var img:HTMLImageElement = this.getRes(url);
+        if(img)
         {
             console.log("解除引用");
-            this._cacheImage.splice(index,1);
+            this._cache.delete(url);
             this.releaseCPUMemoryForImageCache(img);
         }
         else
         {
-            console.log("没找到----",img,index);
+            console.log("sorry----没找到---无法清理-",url);
         }
     }
     /**

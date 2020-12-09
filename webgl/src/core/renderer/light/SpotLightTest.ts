@@ -80,7 +80,7 @@ function main() {
     glMatrix.mat4.rotateX(matrix, matrix, Math.PI)
     glMatrix.mat4.translate(matrix, matrix, [-50, -75, -15]);
 
-    let datas = LoaderManager.instance.getCacheData("res/models/char/F.json");
+    let datas = LoaderManager.instance.getRes("res/models/char/F.json");
     let cubeData:any = {};
     cubeData.position = new Float32Array(datas.position);
     cubeData.normal = new Float32Array(datas.normal);

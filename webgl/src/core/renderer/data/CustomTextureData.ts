@@ -1,10 +1,10 @@
-import { TextureUpdateOpts } from "../base/Texture";
+import { TextureOpts } from "../base/Texture";
 import { glTextureFmtInfor, gltex_config_format, glTextureTotalChanels, glFilter, gltex_filter } from "../gfx/GLEnums";
 
 export default class CustomTextureData {
-    static getRandomData(width, height, format: gltex_config_format):TextureUpdateOpts {
+    static getRandomData(width, height, format: gltex_config_format):TextureOpts {
         var chanels = glTextureTotalChanels(format);
-        var urlData: TextureUpdateOpts = new TextureUpdateOpts();
+        var urlData: TextureOpts = new TextureOpts();
         urlData.level = 0;
         urlData.width = width;
         urlData.height = height;
@@ -32,13 +32,14 @@ export default class CustomTextureData {
      * @param width 
      * @param height 
      */
-    static getBoardData(width:number,height:number):TextureUpdateOpts{
+    static getBoardData(width:number,height:number):TextureOpts{
          let cformat = gltex_config_format.L8;
-         var urlData: TextureUpdateOpts = new TextureUpdateOpts();
+         var urlData: TextureOpts = new TextureOpts();
          urlData.configFormat = cformat;
          urlData.width = width;
          urlData.height = height;
          urlData.magFilter = gltex_filter.NEAREST;
+         urlData.minFilter = gltex_filter.NEAREST_MIPMAP_NEAREST;
          urlData.genMipmaps = true;
          urlData.data = new Uint8Array([  // data
             0xFF, 0xCC, 0xFF, 0xCC, 0xFF, 0xCC, 0xFF, 0xCC,

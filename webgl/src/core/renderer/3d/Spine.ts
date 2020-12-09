@@ -441,8 +441,8 @@ class skeleton_Parse {
 
     //解析骨骼动画数据
     static parseGLTF(gl: WebGLRenderingContext, gltfPath: string = "res/models/killer_whale/whale.CYCLES.gltf", bufferPath: string = "res/models/killer_whale/whale.CYCLES.bin") {
-        const gltf = LoaderManager.instance.getCacheData(gltfPath);
-        gltf.buffers = [LoaderManager.instance.getCacheData(bufferPath)];
+        const gltf = LoaderManager.instance.getRes(gltfPath);
+        gltf.buffers = [LoaderManager.instance.getRes(bufferPath)];
 
         console.log(gltf);
         //缺省的材质

@@ -142,7 +142,7 @@ function main() {
     var nodeInfosByName = {};
 
     // Let's make all the nodes
-    var blockGuyNodeDescriptions = LoaderManager.instance.getCacheData("res/models/Robart/blockGuyNodeDescriptions.json");
+    var blockGuyNodeDescriptions = LoaderManager.instance.getRes("res/models/Robart/blockGuyNodeDescriptions.json");
     
     
     function makeNode(nodeDescription) {

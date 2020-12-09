@@ -43,7 +43,7 @@ function main() {
         return;
     }
 
-    var HeadData = LoaderManager.instance.getCacheData("res/models/HeadData/head.json");
+    var HeadData = LoaderManager.instance.getRes("res/models/HeadData/head.json");
     // setup GLSL program
     var programShader = G_ShaderFactory.createProgramInfo(vertexshader3d, fragmentshader3d);
 

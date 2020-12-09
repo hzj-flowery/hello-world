@@ -31,18 +31,18 @@ export default class Scene2D extends Scene {
         this._2dCamera.lookAt([0, 0, 0]);
         this.setFatherMatrix(this._2dCamera.getModelViewMatrix());
 
-        // this._rectangle = new Rectangle(gl);
-        // this._rectangle.setPosition(0.5, 0, 0);
-        // this._rectangle.url = "res/tree.jpg";
-        // this.addChild(this._rectangle);
+        this._rectangle = new Rectangle(gl);
+        this._rectangle.setPosition(0.5, 0, 0);
+        this._rectangle.url = "res/tree.jpg";
+        this.addChild(this._rectangle);
 
         // this._firstSprite = new FirstSprite(gl);
         // this._firstSprite.setPosition(0,1,0);
         // this.addChild(this._firstSprite);
 
-        // this._twoSprite = new TwoSprite(gl);
-        // this._twoSprite.setScale(0.2,0.2,0.2);
-        // this.addChild(this._twoSprite);
+        this._twoSprite = new TwoSprite(gl);
+        this._twoSprite.setScale(0.2,0.2,0.2);
+        this.addChild(this._twoSprite);
 
         this._renderSprite = new RenderSprite(gl);
         this._renderSprite.setPosition(0.6,0.8,0);

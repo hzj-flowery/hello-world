@@ -41,7 +41,7 @@ function main() {
   // setup GLSL program
   var programShader = G_ShaderFactory.createProgramInfo(vertexshader3d, fragmentshader3d);
   
-  let datas = LoaderManager.instance.getCacheData("res/models/char/F.json");
+  let datas = LoaderManager.instance.getRes("res/models/char/F.json");
   let cubeData:any = {};
   cubeData.position = new Float32Array(datas.position);
   cubeData.normal = new Float32Array(datas.normal);
