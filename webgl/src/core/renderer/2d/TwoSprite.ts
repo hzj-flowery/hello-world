@@ -132,8 +132,6 @@ export default class TwoSprite extends SY.SpriteBase {
         const numVertices = 12;
         time *= 0.001; // seconds
       
-      
-
         this._shader.active();
         this._shader.setUseVertexAttribPointerForVertex(this.getGLID(SY.GLID_TYPE.VERTEX), this.getBufferItemSize(SY.GLID_TYPE.VERTEX));
 

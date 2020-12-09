@@ -2,32 +2,6 @@
 import { SY } from "../base/Sprite";
 
 
-//屏幕中間位置為（0.0,0.0）
-//屏幕左上角為（-1.0，1.0）
-//屏幕左下角為（-1.0，-1.0）
-//屏幕右上角位（1.0,1.0）
-//屏幕右下角為（1.0，-1.0）
-
-const screenPoint = [
-    { x: 0.0, y: 0.0, z: 0.0 },//屏幕中間 0
-    { x: -1.0, y: 1.0, z: 0.0 },//左上角 1
-    { x: -1.0, y: -1.0, z: 0.0 },//左下角 2
-    { x: 1.0, y: -1.0, z: 0.0 },//右下角 3
-    { x: 1.0, y: 1.0, z: 0.0 },//右上角 4  
-]
-
-var getRandomScaleVert = function () {
-    var newPoint = [];
-    // var scale = Math.random();
-    var scale = 0.5;
-    for (let j = 1; j < screenPoint.length; j++) {
-        newPoint.push(screenPoint[j].x * scale);
-        newPoint.push(screenPoint[j].y * scale);
-        newPoint.push(screenPoint[j].z * scale);
-    }
-    return newPoint;
-}
-
 var vertextBaseCode =
     'attribute vec3 a_position;' +
     'attribute vec2 a_uv;' +
