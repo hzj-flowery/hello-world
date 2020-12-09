@@ -2,20 +2,20 @@
  * 加载管理员
  */
 
- /**
-  var myHeaders = new Headers();
+/**
+ var myHeaders = new Headers();
 var myInit:any = { method: 'GET',
-               headers: myHeaders,
-               mode: 'cors',
-               cache: 'default' };
+              headers: myHeaders,
+              mode: 'cors',
+              cache: 'default' };
 var myRequest = new Request('http:localhost:3000//res/models/windmill/windmill.obj', myInit);
 
 fetch(myRequest).then(function(response) {
-    return response.text();
-  }).then(function(myBlob) {
-    console.log("myBlob-------",myBlob);
-  });
-  */
+   return response.text();
+ }).then(function(myBlob) {
+   console.log("myBlob-------",myBlob);
+ });
+ */
 
 async function loadFile(url, typeFunc) {
     const response = await fetch(url);
@@ -36,22 +36,21 @@ async function loadText(url) {
     return loadFile(url, 'text');
 }
 
-export default class LoaderManager{
-    private _cache:Map<string,any>;//资源缓存
-    public static _instance:LoaderManager;
-    public static get instance():LoaderManager
-    {
-        if(!this._instance)
-        this._instance = new LoaderManager();
+export default class LoaderManager {
+    private _cache: Map<string, any>;//资源缓存
+    public static _instance: LoaderManager;
+    public static get instance(): LoaderManager {
+        if (!this._instance)
+            this._instance = new LoaderManager();
         return this._instance;
     }
 
-    constructor(){
-        this._cache = new Map<string,any>();
+    constructor() {
+        this._cache = new Map<string, any>();
     }
-    
+
     //加载gltf动画文件
-    async loadGLTF(path:string){
+    async loadGLTF(path: string) {
         const gltf = await loadJSON(path);
         // load all the referenced files relative to the gltf file
         const baseURL = new URL(path, location.href);
@@ -59,110 +58,105 @@ export default class LoaderManager{
             const url = new URL(buffer.uri, baseURL.href);
             return loadBinary(url.href);
         }));
-        this._cache.set(path,gltf);
+        this._cache.set(path, gltf);
     }
 
     //加载json格式的二进制
     //就是将json转为二进制 然后以二进制读取再转会json
-    private loadJsonBlobData(path:string,callBackProgress?,callBackFinish?):void{
+    private loadJsonBlobData(path: string, callBackProgress?, callBackFinish?): void {
         var _this = this;
         var request = new XMLHttpRequest();
-        request.open("get",path);
+        request.open("get", path);
         request.send(null);
         //以二进制方式读取数据,读取到的结果将放入Blob的一个对象中存放
         request.responseType = "blob";
         request.onload = function () {
-            if(request.status==0)
-            {
+            if (request.status == 0) {
                 var fr = new FileReader(); //FileReader可以读取Blob内容  
                 fr.readAsArrayBuffer(request.response); //二进制转换成ArrayBuffer
                 fr.onload = function (e) {  //转换完成后，调用onload方法
-                    console.log("bin file---",fr.result);
+                    console.log("bin file---", fr.result);
                     var rawData = new Float32Array(fr.result as ArrayBuffer);
                     var str = "";
                     for (var i = 0; i < rawData.length; i++) {
-                        str = str+String.fromCharCode((rawData[i]));
+                        str = str + String.fromCharCode((rawData[i]));
                     }
                     JSON.parse(str);
-                    console.log("result --",str);
-                    if(callBackFinish)callBackFinish.call(null,fr.result,path);
+                    console.log("result --", str);
+                    if (callBackFinish) callBackFinish.call(null, fr.result, path);
                 }
             }
         }
     }
-    
+
     /**
      * 加载obj
      */
-    public loadObjData(path:string,callBackProgress?,callBackFinish?):void{
+    public loadObjData(path: string, callBackProgress?, callBackFinish?): void {
 
     }
 
-    
+
     //加载二进制数据
-    private loadBlobData(path:string,callBackProgress?,callBackFinish?):void{
+    private loadBlobData(path: string, callBackProgress?, callBackFinish?): void {
         var _this = this;
         var request = new XMLHttpRequest();
-        request.open("get",path);
+        request.open("get", path);
         request.send(null);
         request.responseType = "blob";
         request.onload = function () {
-            if(request.status==0)
-            {
+            if (request.status == 0) {
                 var fr = new FileReader(); //FileReader可以读取Blob内容  
                 fr.readAsArrayBuffer(request.response); //二进制转换成ArrayBuffer
                 fr.onload = function (e) {  //转换完成后，调用onload方法
-                    if(callBackFinish)callBackFinish.call(null,fr.result,path);
+                    if (callBackFinish) callBackFinish.call(null, fr.result, path);
                 }
             }
         }
     }
     //加载json数据
-    private loadJsonData(path:string,callBackProgress?,callBackFinish?):void{
+    private loadJsonData(path: string, callBackProgress?, callBackFinish?): void {
         var request = new XMLHttpRequest();
         var _this = this;
-        request.open("get",path);
+        request.open("get", path);
         request.send(null);
         request.responseType = "json";
         request.onload = function () {
-            if(request.status==0)
-            {
+            if (request.status == 0) {
                 var jsonData = request.response;
-                if(callBackFinish)callBackFinish.call(null,jsonData,path);
+                if (callBackFinish) callBackFinish.call(null, jsonData, path);
             }
         }
     }
     //加载可以转化为json的数据
-    private loadJsonStringData(path:string,callBackProgress?,callBackFinish?):void{
+    private loadJsonStringData(path: string, callBackProgress?, callBackFinish?): void {
         var request = new XMLHttpRequest();
         var _this = this;
-        request.open("get",path);
+        request.open("get", path);
         request.send(null);
         request.responseType = "text";
         request.onload = function () {
-            if(request.status==0)
-            {
+            if (request.status == 0) {
                 var jsonData = JSON.parse(request.responseText);
-                if(callBackFinish)callBackFinish.call(null,jsonData,path);
+                if (callBackFinish) callBackFinish.call(null, jsonData, path);
             }
         }
     }
     //加载骨骼数据
-    private loadSkelData(path:string,callBackProgress?,callBackFinish?):void{
+    private loadSkelData(path: string, callBackProgress?, callBackFinish?): void {
         var _this = this;
         var request = new XMLHttpRequest();
-        request.open("get",path);
+        request.open("get", path);
         request.send(null);
         request.responseType = "blob";
         request.onload = function () {
-            if(request.status==0)
-            {
+            if (request.status == 0) {
                 var fr = new FileReader(); //FileReader可以读取Blob内容  
                 fr.readAsArrayBuffer(request.response); //二进制转换成ArrayBuffer
                 // fr.readAsText(request.response);
                 fr.onload = function (e) {  //转换完成后，调用onload方法
                     // console.log("加载二进制成功---",fr.result);
-                    
+
                     // var uint8_msg = new Uint8Array(fr.result as ArrayBuffer);
                     // // 解码成字符串
                     // var decodedString = String.fromCharCode.apply(null, uint8_msg);
@@ -181,127 +175,116 @@ export default class LoaderManager{
                     //         console.log(res);
                     // }
 
-    
-                    if(callBackFinish)callBackFinish.call(null,fr.result,path);
+
+                    if (callBackFinish) callBackFinish.call(null, fr.result, path);
                 }
             }
         }
     }
 
     //加载图片数据
-    private loadImageData(path:string,callBackProgress?,callBackFinish?):void{
+    private loadImageData(path: string, callBackProgress?, callBackFinish?): void {
         var img = new Image();
-        img.onload = function(img:HTMLImageElement){
-            if(!img)
-            {
-                console.log("加载的图片路径不存在---",path);
-                return ;
+        img.onload = function (img: HTMLImageElement) {
+            if (!img) {
+                console.log("加载的图片路径不存在---", path);
+                return;
             }
-            if(callBackFinish)callBackFinish.call(null,img,path);
-        }.bind(this,img);
+            if (callBackFinish) callBackFinish.call(null, img, path);
+        }.bind(this, img);
         img.src = path;
     }
-    private getLoadFunc(path:string):Function{
-            let strArr = path.split('.');
-            let extName = strArr[strArr.length-1];
-            switch(extName)
-            {
-               case "jpg":return this.loadImageData;
-               case "png":return this.loadImageData;
-               case "bin":return this.loadBlobData;
-               case "obj":return this.loadObjData;
-               case "json":return this.loadJsonData;
-               case "gltf":return this.loadJsonStringData;
-               case "skel":return this.loadSkelData;
-               default:console.log("发现未知后缀名的文件----",path);null;break;
-            }
+    private getLoadFunc(path: string): Function {
+        let strArr = path.split('.');
+        let extName = strArr[strArr.length - 1];
+        switch (extName) {
+            case "jpg": return this.loadImageData;
+            case "png": return this.loadImageData;
+            case "bin": return this.loadBlobData;
+            case "obj": return this.loadObjData;
+            case "json": return this.loadJsonData;
+            case "gltf": return this.loadJsonStringData;
+            case "skel": return this.loadSkelData;
+            default: console.log("发现未知后缀名的文件----", path); null; break;
+        }
     }
     //加载数据
-    public async load(arr:Array<string>|string,callBackProgress?,callBackFinish?){
-         
+    public async load(arr: Array<string> | string, callBackProgress?, callBackFinish?) {
+
         //test
         // await this.loadGLTF("https://webglfundamentals.org/webgl/resources/models/killer_whale/whale.CYCLES.gltf");
 
-        if(!(arr instanceof Array))
-        {
-           arr = [arr];
+        if (!(arr instanceof Array)) {
+            arr = [arr];
         }
         var count = 0;
         var length = arr.length;
-        var loadResult:Array<any> = [];
-        for(var j =0;j<length;j++)
-        {
-          let path:string = arr[j];
-          let result = this.getRes(path);
-         
+        var resRet: Array<any> = [];
+        for (var j = 0; j < length; j++) {
+            let path: string = arr[j];
+            let result = this.getRes(path);
+            if (result) {
+                //资源存在 不用重新加载
+                resRet.push(result);
+                count++;
+                if (callBackProgress) callBackProgress(count / length);
+                this.onLoadProgress(count / length);
 
-          if(result)
-          {
-              //资源存在 不用重新加载
-              loadResult.push(result);
-              count++;
-              if(callBackProgress)callBackProgress(count/length);
-              this.onLoadProgress(count/length);
-
-              if(count==length)
-                {
+                if (count == length) {
                     this.onLoadFinish();
-                    if(callBackFinish)callBackFinish();
+                    if (callBackFinish) callBackFinish(resRet.length == 1 ? resRet[0] : resRet);
                     return;
                 }
-              //继续加载
-              continue;
-          }
-          
-          var loadFunc = this.getLoadFunc(path);
-          loadFunc.call(this,path,null,(res,path)=>{
-              loadResult.push(res);
-              this._cache.set(path,res);
-              if(callBackProgress)callBackProgress(count/length);
-              count++;
-              this.onLoadProgress(count/length);
-              if(count==length)
-                 {
-                      this.onLoadFinish();
-                      if(callBackFinish)callBackFinish();
-                 }
-          });
+                //继续加载
+                continue;
+            }
+
+            var loadFunc = this.getLoadFunc(path);
+            loadFunc.call(this, path, null, (res, path) => {
+                resRet.push(res);
+                this._cache.set(path, res);
+                if (callBackProgress) callBackProgress(count / length);
+                count++;
+                this.onLoadProgress(count / length);
+                if (count == length) {
+                    this.onLoadFinish();
+                    if (callBackFinish) callBackFinish(resRet.length == 1 ? resRet[0] : resRet);
+                }
+            });
         }
     }
     //获取缓存中的数据
-    public getRes(url:string):any{
-           return this._cache.get(url);
+    public getRes(url: string): any {
+        return this._cache.get(url);
     }
     /**
      * 移除CPU端内存中的图片缓存
      * @param url 
-     */ 
-    public removeImage(url:string):void{
-        var img:HTMLImageElement = this.getRes(url);
-        if(img)
-        {
+     */
+    public removeImage(url: string): void {
+        var img: HTMLImageElement = this.getRes(url);
+        if (img) {
             console.log("解除引用");
             this._cache.delete(url);
             this.releaseCPUMemoryForImageCache(img);
         }
-        else
-        {
-            console.log("sorry----没找到---无法清理-",url);
+        else {
+            console.log("sorry----没找到---无法清理-", url);
         }
     }
     /**
      * 
      * @param img 
      * 释放CPU端内存中的图片缓存
-     */ 
-    public releaseCPUMemoryForImageCache(img:HTMLImageElement):void{
+     */
+    public releaseCPUMemoryForImageCache(img: HTMLImageElement): void {
         img.src = "";
         img = null;
     }
-    public onLoadProgress(progress:number):void{
-         console.log("加载进度---------",progress);
+    public onLoadProgress(progress: number): void {
+        console.log("加载进度---------", progress);
     }
-    public onLoadFinish():void{
+    public onLoadFinish(): void {
         console.log("加载完成啦");
     }
 

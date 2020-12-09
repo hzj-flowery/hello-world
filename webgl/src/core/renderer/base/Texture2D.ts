@@ -69,12 +69,12 @@ export class Texture2D extends Texture{
     }
     private _url:string;
     public set url(soucePath){
-        var image = LoaderManager.instance.getRes(soucePath);
-        console.log("soucePath-------",soucePath,image);
         this._url = soucePath;
-        this.onLoadFinish(image);
+        LoaderManager.instance.load(this._url,null,this.onLoadFinish.bind(this));
     }
     private onLoadFinish(image:HTMLImageElement):void{
+
+        console.log("soucePath-------",this._url,image);
         var options = new TextureOpts();
         options.data = image;
         options.width = image.width;
