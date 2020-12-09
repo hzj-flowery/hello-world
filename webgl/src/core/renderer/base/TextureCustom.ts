@@ -42,8 +42,8 @@ export default class TextureCustom extends Texture {
             format,
             type,
             data);
-
-        if(urlData.compressed)
+        console.log("kkkkkkkk----",urlData);
+        if(urlData.genMipmaps)
         {
             //生成多远渐进纹理
             gl.generateMipmap(this._target);

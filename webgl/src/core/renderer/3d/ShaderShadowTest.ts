@@ -5,6 +5,8 @@ import Device from "../../Device";
 import { glMatrix } from "../../Matrix";
 import { MathUtils } from "../../utils/MathUtils";
 import { RenderTexture } from "../assets/RenderTexture";
+import TextureCustom from "../base/TextureCustom";
+import CustomTextureData from "../data/CustomTextureData";
 import { syPrimitives } from "../shader/Primitives";
 import { BufferAttribsData, G_ShaderFactory, ShaderData } from "../shader/Shader";
 
@@ -277,7 +279,7 @@ class ShadowLight {
     this.render();
   }
   // private depthTexture: WebGLTexture;
-  private checkerboardTexture: WebGLTexture;
+  private checkerboardTexture: TextureCustom;
   // private _frameBuffer: WebGLFramebuffer;//帧缓冲的glID
   private depthTextureSize: number = 512;
   // public _renderBuffer: WebGLRenderbuffer;//渲染缓冲的glID
@@ -285,35 +287,12 @@ class ShadowLight {
   private renderTexture:RenderTexture;
   private createTexture(isWebgl1: boolean = true): void {
     var gl = this.gl;
-    // make a 8x8 checkerboard texture
-    this.checkerboardTexture = gl.createTexture();
-    gl.bindTexture(gl.TEXTURE_2D, this.checkerboardTexture);
-    gl.texImage2D(
-      gl.TEXTURE_2D,
-      0,                // mip level
-      gl.LUMINANCE,     // internal format
-      8,                // width
-      8,                // height
-      0,                // border
-      gl.LUMINANCE,     // format
-      gl.UNSIGNED_BYTE, // type
-      new Uint8Array([  // data
-        0xFF, 0xCC, 0xFF, 0xCC, 0xFF, 0xCC, 0xFF, 0xCC,
-        0xCC, 0xFF, 0xCC, 0xFF, 0xCC, 0xFF, 0xCC, 0xFF,
-        0xFF, 0xCC, 0xFF, 0xCC, 0xFF, 0xCC, 0xFF, 0xCC,
-        0xCC, 0xFF, 0xCC, 0xFF, 0xCC, 0xFF, 0xCC, 0xFF,
-        0xFF, 0xCC, 0xFF, 0xCC, 0xFF, 0xCC, 0xFF, 0xCC,
-        0xCC, 0xFF, 0xCC, 0xFF, 0xCC, 0xFF, 0xCC, 0xFF,
-        0xFF, 0xCC, 0xFF, 0xCC, 0xFF, 0xCC, 0xFF, 0xCC,
-        0xCC, 0xFF, 0xCC, 0xFF, 0xCC, 0xFF, 0xCC, 0xFF,
-      ]));
-    gl.generateMipmap(gl.TEXTURE_2D);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-
+    this.checkerboardTexture = new TextureCustom(gl);
+    this.checkerboardTexture.url = CustomTextureData.getBoardData(8,8);
     this.renderTexture = new RenderTexture(gl);
     this.renderTexture.attach("depth",this.depthTextureSize,this.depthTextureSize)
   }
-  
+
   private setUI(): void {
     this.settings = {
       cameraX: 6, //普通摄像机的x轴坐标
@@ -418,17 +397,17 @@ class ShadowLight {
     // Uniforms for each object.
     this.planeUniforms = {
       u_lightColor: [0.5, 0.5, 1, 1],  // lightblue
-      u_texture: this.checkerboardTexture,
+      u_texture: this.checkerboardTexture._glID,
       u_world: glMatrix.mat4.translation(null, 0, 0, 0),
     };
     this.sphereUniforms = {
       u_lightColor: [1, 0.5, 0.5, 1],  // pink
-      u_texture: this.checkerboardTexture,
+      u_texture: this.checkerboardTexture._glID,
       u_world: glMatrix.mat4.translation(null, 2, 3, 4),
     };
     this.cubeUniforms = {
       u_lightColor: [0.5, 1, 0.5, 1],  // lightgreen
-      u_texture: this.checkerboardTexture,
+      u_texture: this.checkerboardTexture._glID,
       u_world: glMatrix.mat4.translation(null, 3, 1, 0),
     };
   }

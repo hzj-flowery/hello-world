@@ -1,10 +1,8 @@
 import { TextureUpdateOpts } from "../base/Texture";
-import { glTextureFmtInfor, gltex_config_format, glTextureTotalChanels } from "../gfx/GLEnums";
+import { glTextureFmtInfor, gltex_config_format, glTextureTotalChanels, glFilter, gltex_filter } from "../gfx/GLEnums";
 
 export default class CustomTextureData {
-    static getRandomData(width, height, format: gltex_config_format) {
-
-        var formatInfo = glTextureFmtInfor(format);
+    static getRandomData(width, height, format: gltex_config_format):TextureUpdateOpts {
         var chanels = glTextureTotalChanels(format);
         var urlData: TextureUpdateOpts = new TextureUpdateOpts();
         urlData.level = 0;
@@ -26,7 +24,32 @@ export default class CustomTextureData {
             }
         }
         urlData.data = new Uint8Array(retData);
-        console.log(urlData);
         return urlData;
+    }
+    
+    /**
+     * 自定义棋盘纹理
+     * @param width 
+     * @param height 
+     */
+    static getBoardData(width:number,height:number):TextureUpdateOpts{
+         let cformat = gltex_config_format.L8;
+         var urlData: TextureUpdateOpts = new TextureUpdateOpts();
+         urlData.configFormat = cformat;
+         urlData.width = width;
+         urlData.height = height;
+         urlData.magFilter = gltex_filter.NEAREST;
+         urlData.genMipmaps = true;
+         urlData.data = new Uint8Array([  // data
+            0xFF, 0xCC, 0xFF, 0xCC, 0xFF, 0xCC, 0xFF, 0xCC,
+            0xCC, 0xFF, 0xCC, 0xFF, 0xCC, 0xFF, 0xCC, 0xFF,
+            0xFF, 0xCC, 0xFF, 0xCC, 0xFF, 0xCC, 0xFF, 0xCC,
+            0xCC, 0xFF, 0xCC, 0xFF, 0xCC, 0xFF, 0xCC, 0xFF,
+            0xFF, 0xCC, 0xFF, 0xCC, 0xFF, 0xCC, 0xFF, 0xCC,
+            0xCC, 0xFF, 0xCC, 0xFF, 0xCC, 0xFF, 0xCC, 0xFF,
+            0xFF, 0xCC, 0xFF, 0xCC, 0xFF, 0xCC, 0xFF, 0xCC,
+            0xCC, 0xFF, 0xCC, 0xFF, 0xCC, 0xFF, 0xCC, 0xFF,
+          ])
+          return urlData;
     }
 }
