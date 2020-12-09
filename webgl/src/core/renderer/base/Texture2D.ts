@@ -57,6 +57,7 @@ gl.LINEAR: 使用距离新像素中心最近的四个像素的颜色值的加权
 
 gl.REPEAT: 平铺式的重复纹理
 
+
 gl.MIRRORED_REPEAT: 镜像对称的重复纹理
 
 gl.CLAMP_TO_EDGE: 使用纹理图像边缘值
