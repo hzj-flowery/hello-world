@@ -1,0 +1,520 @@
+{
+    "type": "Program",
+    "start": 0,
+    "end": 529,
+    "body": [
+        {
+            "type": "VariableDeclaration",
+            "start": 0,
+            "end": 29,
+            "declarations": [
+                {
+                    "type": "VariableDeclarator",
+                    "start": 6,
+                    "end": 28,
+                    "id": {
+                        "type": "Identifier",
+                        "start": 6,
+                        "end": 10,
+                        "name": "i18n"
+                    },
+                    "init": {
+                        "type": "CallExpression",
+                        "start": 13,
+                        "end": 28,
+                        "callee": {
+                            "type": "Identifier",
+                            "start": 13,
+                            "end": 20,
+                            "name": "require"
+                        },
+                        "arguments": [
+                            {
+                                "type": "Literal",
+                                "start": 21,
+                                "end": 27,
+                                "value": "i18n",
+                                "raw": "'i18n'"
+                            }
+                        ]
+                    }
+                }
+            ],
+            "kind": "const"
+        },
+        {
+            "type": "ExpressionStatement",
+            "start": 31,
+            "end": 528,
+            "expression": {
+                "type": "CallExpression",
+                "start": 31,
+                "end": 527,
+                "callee": {
+                    "type": "MemberExpression",
+                    "start": 31,
+                    "end": 39,
+                    "object": {
+                        "type": "Identifier",
+                        "start": 31,
+                        "end": 33,
+                        "name": "cc"
+                    },
+                    "property": {
+                        "type": "Identifier",
+                        "start": 34,
+                        "end": 39,
+                        "name": "Class"
+                    },
+                    "computed": false
+                },
+                "arguments": [
+                    {
+                        "type": "ObjectExpression",
+                        "start": 40,
+                        "end": 526,
+                        "properties": [
+                            {
+                                "type": "Property",
+                                "start": 46,
+                                "end": 67,
+                                "method": false,
+                                "shorthand": false,
+                                "computed": false,
+                                "key": {
+                                    "type": "Identifier",
+                                    "start": 46,
+                                    "end": 53,
+                                    "name": "extends"
+                                },
+                                "value": {
+                                    "type": "MemberExpression",
+                                    "start": 55,
+                                    "end": 67,
+                                    "object": {
+                                        "type": "Identifier",
+                                        "start": 55,
+                                        "end": 57,
+                                        "name": "cc"
+                                    },
+                                    "property": {
+                                        "type": "Identifier",
+                                        "start": 58,
+                                        "end": 67,
+                                        "name": "Component"
+                                    },
+                                    "computed": false
+                                },
+                                "kind": "init"
+                            },
+                            {
+                                "type": "Property",
+                                "start": 74,
+                                "end": 182,
+                                "method": false,
+                                "shorthand": false,
+                                "computed": false,
+                                "key": {
+                                    "type": "Identifier",
+                                    "start": 74,
+                                    "end": 84,
+                                    "name": "properties"
+                                },
+                                "value": {
+                                    "type": "ObjectExpression",
+                                    "start": 86,
+                                    "end": 182,
+                                    "properties": [
+                                        {
+                                            "type": "Property",
+                                            "start": 96,
+                                            "end": 117,
+                                            "method": false,
+                                            "shorthand": false,
+                                            "computed": false,
+                                            "key": {
+                                                "type": "Identifier",
+                                                "start": 96,
+                                                "end": 106,
+                                                "name": "buttonLeft"
+                                            },
+                                            "value": {
+                                                "type": "MemberExpression",
+                                                "start": 108,
+                                                "end": 117,
+                                                "object": {
+                                                    "type": "Identifier",
+                                                    "start": 108,
+                                                    "end": 110,
+                                                    "name": "cc"
+                                                },
+                                                "property": {
+                                                    "type": "Identifier",
+                                                    "start": 111,
+                                                    "end": 117,
+                                                    "name": "Button"
+                                                },
+                                                "computed": false
+                                            },
+                                            "kind": "init"
+                                        },
+                                        {
+                                            "type": "Property",
+                                            "start": 127,
+                                            "end": 149,
+                                            "method": false,
+                                            "shorthand": false,
+                                            "computed": false,
+                                            "key": {
+                                                "type": "Identifier",
+                                                "start": 127,
+                                                "end": 138,
+                                                "name": "buttonRight"
+                                            },
+                                            "value": {
+                                                "type": "MemberExpression",
+                                                "start": 140,
+                                                "end": 149,
+                                                "object": {
+                                                    "type": "Identifier",
+                                                    "start": 140,
+                                                    "end": 142,
+                                                    "name": "cc"
+                                                },
+                                                "property": {
+                                                    "type": "Identifier",
+                                                    "start": 143,
+                                                    "end": 149,
+                                                    "name": "Button"
+                                                },
+                                                "computed": false
+                                            },
+                                            "kind": "init"
+                                        },
+                                        {
+                                            "type": "Property",
+                                            "start": 159,
+                                            "end": 176,
+                                            "method": false,
+                                            "shorthand": false,
+                                            "computed": false,
+                                            "key": {
+                                                "type": "Identifier",
+                                                "start": 159,
+                                                "end": 166,
+                                                "name": "display"
+                                            },
+                                            "value": {
+                                                "type": "MemberExpression",
+                                                "start": 168,
+                                                "end": 176,
+                                                "object": {
+                                                    "type": "Identifier",
+                                                    "start": 168,
+                                                    "end": 170,
+                                                    "name": "cc"
+                                                },
+                                                "property": {
+                                                    "type": "Identifier",
+                                                    "start": 171,
+                                                    "end": 176,
+                                                    "name": "Label"
+                                                },
+                                                "computed": false
+                                            },
+                                            "kind": "init"
+                                        }
+                                    ]
+                                },
+                                "kind": "init"
+                            },
+                            {
+                                "type": "Property",
+                                "start": 189,
+                                "end": 352,
+                                "method": false,
+                                "shorthand": false,
+                                "computed": false,
+                                "key": {
+                                    "type": "Identifier",
+                                    "start": 189,
+                                    "end": 205,
+                                    "name": "onBtnLeftClicked"
+                                },
+                                "value": {
+                                    "type": "FunctionExpression",
+                                    "start": 207,
+                                    "end": 352,
+                                    "id": null,
+                                    "expression": false,
+                                    "generator": false,
+                                    "async": false,
+                                    "params": [],
+                                    "body": {
+                                        "type": "BlockStatement",
+                                        "start": 218,
+                                        "end": 352,
+                                        "body": [
+                                            {
+                                                "type": "ExpressionStatement",
+                                                "start": 228,
+                                                "end": 264,
+                                                "expression": {
+                                                    "type": "CallExpression",
+                                                    "start": 228,
+                                                    "end": 263,
+                                                    "callee": {
+                                                        "type": "MemberExpression",
+                                                        "start": 228,
+                                                        "end": 239,
+                                                        "object": {
+                                                            "type": "Identifier",
+                                                            "start": 228,
+                                                            "end": 235,
+                                                            "name": "console"
+                                                        },
+                                                        "property": {
+                                                            "type": "Identifier",
+                                                            "start": 236,
+                                                            "end": 239,
+                                                            "name": "log"
+                                                        },
+                                                        "computed": false
+                                                    },
+                                                    "arguments": [
+                                                        {
+                                                            "type": "Literal",
+                                                            "start": 240,
+                                                            "end": 262,
+                                                            "value": "Left button clicked!",
+                                                            "raw": "'Left button clicked!'"
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                "type": "ExpressionStatement",
+                                                "start": 273,
+                                                "end": 346,
+                                                "expression": {
+                                                    "type": "AssignmentExpression",
+                                                    "start": 273,
+                                                    "end": 345,
+                                                    "operator": "=",
+                                                    "left": {
+                                                        "type": "MemberExpression",
+                                                        "start": 273,
+                                                        "end": 293,
+                                                        "object": {
+                                                            "type": "MemberExpression",
+                                                            "start": 273,
+                                                            "end": 285,
+                                                            "object": {
+                                                                "type": "ThisExpression",
+                                                                "start": 273,
+                                                                "end": 277
+                                                            },
+                                                            "property": {
+                                                                "type": "Identifier",
+                                                                "start": 278,
+                                                                "end": 285,
+                                                                "name": "display"
+                                                            },
+                                                            "computed": false
+                                                        },
+                                                        "property": {
+                                                            "type": "Identifier",
+                                                            "start": 286,
+                                                            "end": 293,
+                                                            "name": "textKey"
+                                                        },
+                                                        "computed": false
+                                                    },
+                                                    "right": {
+                                                        "type": "CallExpression",
+                                                        "start": 296,
+                                                        "end": 345,
+                                                        "callee": {
+                                                            "type": "MemberExpression",
+                                                            "start": 296,
+                                                            "end": 302,
+                                                            "object": {
+                                                                "type": "Identifier",
+                                                                "start": 296,
+                                                                "end": 300,
+                                                                "name": "i18n"
+                                                            },
+                                                            "property": {
+                                                                "type": "Identifier",
+                                                                "start": 301,
+                                                                "end": 302,
+                                                                "name": "t"
+                                                            },
+                                                            "computed": false
+                                                        },
+                                                        "arguments": [
+                                                            {
+                                                                "type": "Literal",
+                                                                "start": 303,
+                                                                "end": 344,
+                                                                "value": "cases/02_ui/03_button/SimpleButton.js.1",
+                                                                "raw": "\"cases/02_ui/03_button/SimpleButton.js.1\""
+                                                            }
+                                                        ]
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                "kind": "init"
+                            },
+                            {
+                                "type": "Property",
+                                "start": 359,
+                                "end": 524,
+                                "method": false,
+                                "shorthand": false,
+                                "computed": false,
+                                "key": {
+                                    "type": "Identifier",
+                                    "start": 359,
+                                    "end": 376,
+                                    "name": "onBtnRightClicked"
+                                },
+                                "value": {
+                                    "type": "FunctionExpression",
+                                    "start": 378,
+                                    "end": 524,
+                                    "id": null,
+                                    "expression": false,
+                                    "generator": false,
+                                    "async": false,
+                                    "params": [],
+                                    "body": {
+                                        "type": "BlockStatement",
+                                        "start": 389,
+                                        "end": 524,
+                                        "body": [
+                                            {
+                                                "type": "ExpressionStatement",
+                                                "start": 399,
+                                                "end": 436,
+                                                "expression": {
+                                                    "type": "CallExpression",
+                                                    "start": 399,
+                                                    "end": 435,
+                                                    "callee": {
+                                                        "type": "MemberExpression",
+                                                        "start": 399,
+                                                        "end": 410,
+                                                        "object": {
+                                                            "type": "Identifier",
+                                                            "start": 399,
+                                                            "end": 406,
+                                                            "name": "console"
+                                                        },
+                                                        "property": {
+                                                            "type": "Identifier",
+                                                            "start": 407,
+                                                            "end": 410,
+                                                            "name": "log"
+                                                        },
+                                                        "computed": false
+                                                    },
+                                                    "arguments": [
+                                                        {
+                                                            "type": "Literal",
+                                                            "start": 411,
+                                                            "end": 434,
+                                                            "value": "Right button clicked!",
+                                                            "raw": "'Right button clicked!'"
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                "type": "ExpressionStatement",
+                                                "start": 445,
+                                                "end": 518,
+                                                "expression": {
+                                                    "type": "AssignmentExpression",
+                                                    "start": 445,
+                                                    "end": 517,
+                                                    "operator": "=",
+                                                    "left": {
+                                                        "type": "MemberExpression",
+                                                        "start": 445,
+                                                        "end": 465,
+                                                        "object": {
+                                                            "type": "MemberExpression",
+                                                            "start": 445,
+                                                            "end": 457,
+                                                            "object": {
+                                                                "type": "ThisExpression",
+                                                                "start": 445,
+                                                                "end": 449
+                                                            },
+                                                            "property": {
+                                                                "type": "Identifier",
+                                                                "start": 450,
+                                                                "end": 457,
+                                                                "name": "display"
+                                                            },
+                                                            "computed": false
+                                                        },
+                                                        "property": {
+                                                            "type": "Identifier",
+                                                            "start": 458,
+                                                            "end": 465,
+                                                            "name": "textKey"
+                                                        },
+                                                        "computed": false
+                                                    },
+                                                    "right": {
+                                                        "type": "CallExpression",
+                                                        "start": 468,
+                                                        "end": 517,
+                                                        "callee": {
+                                                            "type": "MemberExpression",
+                                                            "start": 468,
+                                                            "end": 474,
+                                                            "object": {
+                                                                "type": "Identifier",
+                                                                "start": 468,
+                                                                "end": 472,
+                                                                "name": "i18n"
+                                                            },
+                                                            "property": {
+                                                                "type": "Identifier",
+                                                                "start": 473,
+                                                                "end": 474,
+                                                                "name": "t"
+                                                            },
+                                                            "computed": false
+                                                        },
+                                                        "arguments": [
+                                                            {
+                                                                "type": "Literal",
+                                                                "start": 475,
+                                                                "end": 516,
+                                                                "value": "cases/02_ui/03_button/SimpleButton.js.2",
+                                                                "raw": "\"cases/02_ui/03_button/SimpleButton.js.2\""
+                                                            }
+                                                        ]
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                "kind": "init"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    ],
+    "sourceType": "script"
+}

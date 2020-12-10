@@ -1,0 +1,1575 @@
+{
+    "type": "Chunk",
+    "body": [
+        {
+            "type": "LocalStatement",
+            "variables": [
+                {
+                    "type": "Identifier",
+                    "name": "Loop"
+                }
+            ],
+            "init": [
+                {
+                    "type": "CallExpression",
+                    "base": {
+                        "type": "Identifier",
+                        "name": "require"
+                    },
+                    "arguments": [
+                        {
+                            "type": "StringLiteral",
+                            "value": "app.fight.loop.Loop",
+                            "raw": "\"app.fight.loop.Loop\""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "LocalStatement",
+            "variables": [
+                {
+                    "type": "Identifier",
+                    "name": "LoopRound"
+                }
+            ],
+            "init": [
+                {
+                    "type": "CallExpression",
+                    "base": {
+                        "type": "Identifier",
+                        "name": "class"
+                    },
+                    "arguments": [
+                        {
+                            "type": "StringLiteral",
+                            "value": "LoopRound",
+                            "raw": "\"LoopRound\""
+                        },
+                        {
+                            "type": "Identifier",
+                            "name": "Loop"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "LocalStatement",
+            "variables": [
+                {
+                    "type": "Identifier",
+                    "name": "FightSignalManager"
+                }
+            ],
+            "init": [
+                {
+                    "type": "CallExpression",
+                    "base": {
+                        "type": "Identifier",
+                        "name": "require"
+                    },
+                    "arguments": [
+                        {
+                            "type": "StringLiteral",
+                            "value": "app.fight.FightSignalManager",
+                            "raw": "\"app.fight.FightSignalManager\""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "LocalStatement",
+            "variables": [
+                {
+                    "type": "Identifier",
+                    "name": "FightSignalConst"
+                }
+            ],
+            "init": [
+                {
+                    "type": "CallExpression",
+                    "base": {
+                        "type": "Identifier",
+                        "name": "require"
+                    },
+                    "arguments": [
+                        {
+                            "type": "StringLiteral",
+                            "value": "app.fight.FightSignalConst",
+                            "raw": "\"app.fight.FightSignalConst\""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "LocalStatement",
+            "variables": [
+                {
+                    "type": "Identifier",
+                    "name": "FightConfig"
+                }
+            ],
+            "init": [
+                {
+                    "type": "CallExpression",
+                    "base": {
+                        "type": "Identifier",
+                        "name": "require"
+                    },
+                    "arguments": [
+                        {
+                            "type": "StringLiteral",
+                            "value": "app.fight.Config",
+                            "raw": "\"app.fight.Config\""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "FunctionDeclaration",
+            "identifier": {
+                "type": "MemberExpression",
+                "indexer": ":",
+                "identifier": {
+                    "type": "Identifier",
+                    "name": "ctor"
+                },
+                "base": {
+                    "type": "Identifier",
+                    "name": "LoopRound"
+                }
+            },
+            "isLocal": false,
+            "parameters": [
+                {
+                    "type": "Identifier",
+                    "name": "data"
+                }
+            ],
+            "body": [
+                {
+                    "type": "CallStatement",
+                    "expression": {
+                        "type": "CallExpression",
+                        "base": {
+                            "type": "MemberExpression",
+                            "indexer": ".",
+                            "identifier": {
+                                "type": "Identifier",
+                                "name": "ctor"
+                            },
+                            "base": {
+                                "type": "MemberExpression",
+                                "indexer": ".",
+                                "identifier": {
+                                    "type": "Identifier",
+                                    "name": "super"
+                                },
+                                "base": {
+                                    "type": "Identifier",
+                                    "name": "LoopRound"
+                                }
+                            }
+                        },
+                        "arguments": [
+                            {
+                                "type": "Identifier",
+                                "name": "self"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "type": "AssignmentStatement",
+                    "variables": [
+                        {
+                            "type": "MemberExpression",
+                            "indexer": ".",
+                            "identifier": {
+                                "type": "Identifier",
+                                "name": "_data"
+                            },
+                            "base": {
+                                "type": "Identifier",
+                                "name": "self"
+                            }
+                        }
+                    ],
+                    "init": [
+                        {
+                            "type": "Identifier",
+                            "name": "data"
+                        }
+                    ]
+                },
+                {
+                    "type": "AssignmentStatement",
+                    "variables": [
+                        {
+                            "type": "MemberExpression",
+                            "indexer": ".",
+                            "identifier": {
+                                "type": "Identifier",
+                                "name": "_index"
+                            },
+                            "base": {
+                                "type": "Identifier",
+                                "name": "self"
+                            }
+                        }
+                    ],
+                    "init": [
+                        {
+                            "type": "NumericLiteral",
+                            "value": 1,
+                            "raw": "1"
+                        }
+                    ]
+                },
+                {
+                    "type": "AssignmentStatement",
+                    "variables": [
+                        {
+                            "type": "MemberExpression",
+                            "indexer": ".",
+                            "identifier": {
+                                "type": "Identifier",
+                                "name": "_attack"
+                            },
+                            "base": {
+                                "type": "Identifier",
+                                "name": "self"
+                            }
+                        }
+                    ],
+                    "init": [
+                        {
+                            "type": "NilLiteral",
+                            "value": null,
+                            "raw": "nil"
+                        }
+                    ]
+                },
+                {
+                    "type": "AssignmentStatement",
+                    "variables": [
+                        {
+                            "type": "MemberExpression",
+                            "indexer": ".",
+                            "identifier": {
+                                "type": "Identifier",
+                                "name": "_buff"
+                            },
+                            "base": {
+                                "type": "Identifier",
+                                "name": "self"
+                            }
+                        }
+                    ],
+                    "init": [
+                        {
+                            "type": "NilLiteral",
+                            "value": null,
+                            "raw": "nil"
+                        }
+                    ]
+                },
+                {
+                    "type": "AssignmentStatement",
+                    "variables": [
+                        {
+                            "type": "MemberExpression",
+                            "indexer": ".",
+                            "identifier": {
+                                "type": "Identifier",
+                                "name": "_attackIndex"
+                            },
+                            "base": {
+                                "type": "Identifier",
+                                "name": "self"
+                            }
+                        }
+                    ],
+                    "init": [
+                        {
+                            "type": "NumericLiteral",
+                            "value": 0,
+                            "raw": "0"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "FunctionDeclaration",
+            "identifier": {
+                "type": "MemberExpression",
+                "indexer": ":",
+                "identifier": {
+                    "type": "Identifier",
+                    "name": "start"
+                },
+                "base": {
+                    "type": "Identifier",
+                    "name": "LoopRound"
+                }
+            },
+            "isLocal": false,
+            "parameters": [],
+            "body": [
+                {
+                    "type": "CallStatement",
+                    "expression": {
+                        "type": "CallExpression",
+                        "base": {
+                            "type": "MemberExpression",
+                            "indexer": ".",
+                            "identifier": {
+                                "type": "Identifier",
+                                "name": "start"
+                            },
+                            "base": {
+                                "type": "MemberExpression",
+                                "indexer": ".",
+                                "identifier": {
+                                    "type": "Identifier",
+                                    "name": "super"
+                                },
+                                "base": {
+                                    "type": "Identifier",
+                                    "name": "LoopRound"
+                                }
+                            }
+                        },
+                        "arguments": [
+                            {
+                                "type": "Identifier",
+                                "name": "self"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "type": "AssignmentStatement",
+                    "variables": [
+                        {
+                            "type": "MemberExpression",
+                            "indexer": ".",
+                            "identifier": {
+                                "type": "Identifier",
+                                "name": "_index"
+                            },
+                            "base": {
+                                "type": "Identifier",
+                                "name": "self"
+                            }
+                        }
+                    ],
+                    "init": [
+                        {
+                            "type": "NumericLiteral",
+                            "value": 1,
+                            "raw": "1"
+                        }
+                    ]
+                },
+                {
+                    "type": "CallStatement",
+                    "expression": {
+                        "type": "CallExpression",
+                        "base": {
+                            "type": "MemberExpression",
+                            "indexer": ":",
+                            "identifier": {
+                                "type": "Identifier",
+                                "name": "dispatchSignal"
+                            },
+                            "base": {
+                                "type": "CallExpression",
+                                "base": {
+                                    "type": "MemberExpression",
+                                    "indexer": ".",
+                                    "identifier": {
+                                        "type": "Identifier",
+                                        "name": "getFightSignalManager"
+                                    },
+                                    "base": {
+                                        "type": "Identifier",
+                                        "name": "FightSignalManager"
+                                    }
+                                },
+                                "arguments": []
+                            }
+                        },
+                        "arguments": [
+                            {
+                                "type": "MemberExpression",
+                                "indexer": ".",
+                                "identifier": {
+                                    "type": "Identifier",
+                                    "name": "SIGNAL_ROUND_START"
+                                },
+                                "base": {
+                                    "type": "Identifier",
+                                    "name": "FightSignalConst"
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "type": "FunctionDeclaration",
+            "identifier": {
+                "type": "MemberExpression",
+                "indexer": ":",
+                "identifier": {
+                    "type": "Identifier",
+                    "name": "checkAttack"
+                },
+                "base": {
+                    "type": "Identifier",
+                    "name": "LoopRound"
+                }
+            },
+            "isLocal": false,
+            "parameters": [],
+            "body": [
+                {
+                    "type": "IfStatement",
+                    "clauses": [
+                        {
+                            "type": "IfClause",
+                            "condition": {
+                                "type": "BinaryExpression",
+                                "operator": "==",
+                                "left": {
+                                    "type": "MemberExpression",
+                                    "indexer": ".",
+                                    "identifier": {
+                                        "type": "Identifier",
+                                        "name": "_attack"
+                                    },
+                                    "base": {
+                                        "type": "Identifier",
+                                        "name": "self"
+                                    }
+                                },
+                                "right": {
+                                    "type": "NilLiteral",
+                                    "value": null,
+                                    "raw": "nil"
+                                }
+                            },
+                            "body": [
+                                {
+                                    "type": "LocalStatement",
+                                    "variables": [
+                                        {
+                                            "type": "Identifier",
+                                            "name": "attackData"
+                                        }
+                                    ],
+                                    "init": [
+                                        {
+                                            "type": "IndexExpression",
+                                            "base": {
+                                                "type": "MemberExpression",
+                                                "indexer": ".",
+                                                "identifier": {
+                                                    "type": "Identifier",
+                                                    "name": "attacks"
+                                                },
+                                                "base": {
+                                                    "type": "MemberExpression",
+                                                    "indexer": ".",
+                                                    "identifier": {
+                                                        "type": "Identifier",
+                                                        "name": "_data"
+                                                    },
+                                                    "base": {
+                                                        "type": "Identifier",
+                                                        "name": "self"
+                                                    }
+                                                }
+                                            },
+                                            "index": {
+                                                "type": "MemberExpression",
+                                                "indexer": ".",
+                                                "identifier": {
+                                                    "type": "Identifier",
+                                                    "name": "_index"
+                                                },
+                                                "base": {
+                                                    "type": "Identifier",
+                                                    "name": "self"
+                                                }
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "IfStatement",
+                                    "clauses": [
+                                        {
+                                            "type": "IfClause",
+                                            "condition": {
+                                                "type": "MemberExpression",
+                                                "indexer": ".",
+                                                "identifier": {
+                                                    "type": "Identifier",
+                                                    "name": "isPet"
+                                                },
+                                                "base": {
+                                                    "type": "Identifier",
+                                                    "name": "attackData"
+                                                }
+                                            },
+                                            "body": [
+                                                {
+                                                    "type": "AssignmentStatement",
+                                                    "variables": [
+                                                        {
+                                                            "type": "MemberExpression",
+                                                            "indexer": ".",
+                                                            "identifier": {
+                                                                "type": "Identifier",
+                                                                "name": "_attack"
+                                                            },
+                                                            "base": {
+                                                                "type": "Identifier",
+                                                                "name": "self"
+                                                            }
+                                                        }
+                                                    ],
+                                                    "init": [
+                                                        {
+                                                            "type": "CallExpression",
+                                                            "base": {
+                                                                "type": "MemberExpression",
+                                                                "indexer": ".",
+                                                                "identifier": {
+                                                                    "type": "Identifier",
+                                                                    "name": "new"
+                                                                },
+                                                                "base": {
+                                                                    "type": "CallExpression",
+                                                                    "base": {
+                                                                        "type": "Identifier",
+                                                                        "name": "require"
+                                                                    },
+                                                                    "arguments": [
+                                                                        {
+                                                                            "type": "StringLiteral",
+                                                                            "value": "app.fight.loop.LoopOneAttackPet",
+                                                                            "raw": "\"app.fight.loop.LoopOneAttackPet\""
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            },
+                                                            "arguments": [
+                                                                {
+                                                                    "type": "Identifier",
+                                                                    "name": "attackData"
+                                                                },
+                                                                {
+                                                                    "type": "MemberExpression",
+                                                                    "indexer": ".",
+                                                                    "identifier": {
+                                                                        "type": "Identifier",
+                                                                        "name": "_index"
+                                                                    },
+                                                                    "base": {
+                                                                        "type": "Identifier",
+                                                                        "name": "self"
+                                                                    }
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "ElseifClause",
+                                            "condition": {
+                                                "type": "MemberExpression",
+                                                "indexer": ".",
+                                                "identifier": {
+                                                    "type": "Identifier",
+                                                    "name": "isHistory"
+                                                },
+                                                "base": {
+                                                    "type": "Identifier",
+                                                    "name": "attackData"
+                                                }
+                                            },
+                                            "body": [
+                                                {
+                                                    "type": "AssignmentStatement",
+                                                    "variables": [
+                                                        {
+                                                            "type": "MemberExpression",
+                                                            "indexer": ".",
+                                                            "identifier": {
+                                                                "type": "Identifier",
+                                                                "name": "_attack"
+                                                            },
+                                                            "base": {
+                                                                "type": "Identifier",
+                                                                "name": "self"
+                                                            }
+                                                        }
+                                                    ],
+                                                    "init": [
+                                                        {
+                                                            "type": "CallExpression",
+                                                            "base": {
+                                                                "type": "MemberExpression",
+                                                                "indexer": ".",
+                                                                "identifier": {
+                                                                    "type": "Identifier",
+                                                                    "name": "new"
+                                                                },
+                                                                "base": {
+                                                                    "type": "CallExpression",
+                                                                    "base": {
+                                                                        "type": "Identifier",
+                                                                        "name": "require"
+                                                                    },
+                                                                    "arguments": [
+                                                                        {
+                                                                            "type": "StringLiteral",
+                                                                            "value": "app.fight.loop.LoopOneAttackHistory",
+                                                                            "raw": "\"app.fight.loop.LoopOneAttackHistory\""
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            },
+                                                            "arguments": [
+                                                                {
+                                                                    "type": "Identifier",
+                                                                    "name": "attackData"
+                                                                },
+                                                                {
+                                                                    "type": "MemberExpression",
+                                                                    "indexer": ".",
+                                                                    "identifier": {
+                                                                        "type": "Identifier",
+                                                                        "name": "_index"
+                                                                    },
+                                                                    "base": {
+                                                                        "type": "Identifier",
+                                                                        "name": "self"
+                                                                    }
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "ElseClause",
+                                            "body": [
+                                                {
+                                                    "type": "AssignmentStatement",
+                                                    "variables": [
+                                                        {
+                                                            "type": "MemberExpression",
+                                                            "indexer": ".",
+                                                            "identifier": {
+                                                                "type": "Identifier",
+                                                                "name": "_attack"
+                                                            },
+                                                            "base": {
+                                                                "type": "Identifier",
+                                                                "name": "self"
+                                                            }
+                                                        }
+                                                    ],
+                                                    "init": [
+                                                        {
+                                                            "type": "CallExpression",
+                                                            "base": {
+                                                                "type": "MemberExpression",
+                                                                "indexer": ".",
+                                                                "identifier": {
+                                                                    "type": "Identifier",
+                                                                    "name": "new"
+                                                                },
+                                                                "base": {
+                                                                    "type": "CallExpression",
+                                                                    "base": {
+                                                                        "type": "Identifier",
+                                                                        "name": "require"
+                                                                    },
+                                                                    "arguments": [
+                                                                        {
+                                                                            "type": "StringLiteral",
+                                                                            "value": "app.fight.loop.LoopOneAttack",
+                                                                            "raw": "\"app.fight.loop.LoopOneAttack\""
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            },
+                                                            "arguments": [
+                                                                {
+                                                                    "type": "Identifier",
+                                                                    "name": "attackData"
+                                                                },
+                                                                {
+                                                                    "type": "MemberExpression",
+                                                                    "indexer": ".",
+                                                                    "identifier": {
+                                                                        "type": "Identifier",
+                                                                        "name": "_index"
+                                                                    },
+                                                                    "base": {
+                                                                        "type": "Identifier",
+                                                                        "name": "self"
+                                                                    }
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "FunctionDeclaration",
+            "identifier": {
+                "type": "MemberExpression",
+                "indexer": ":",
+                "identifier": {
+                    "type": "Identifier",
+                    "name": "update"
+                },
+                "base": {
+                    "type": "Identifier",
+                    "name": "LoopRound"
+                }
+            },
+            "isLocal": false,
+            "parameters": [
+                {
+                    "type": "Identifier",
+                    "name": "f"
+                }
+            ],
+            "body": [
+                {
+                    "type": "IfStatement",
+                    "clauses": [
+                        {
+                            "type": "IfClause",
+                            "condition": {
+                                "type": "BinaryExpression",
+                                "operator": ">",
+                                "left": {
+                                    "type": "MemberExpression",
+                                    "indexer": ".",
+                                    "identifier": {
+                                        "type": "Identifier",
+                                        "name": "_index"
+                                    },
+                                    "base": {
+                                        "type": "Identifier",
+                                        "name": "self"
+                                    }
+                                },
+                                "right": {
+                                    "type": "UnaryExpression",
+                                    "operator": "#",
+                                    "argument": {
+                                        "type": "MemberExpression",
+                                        "indexer": ".",
+                                        "identifier": {
+                                            "type": "Identifier",
+                                            "name": "attacks"
+                                        },
+                                        "base": {
+                                            "type": "MemberExpression",
+                                            "indexer": ".",
+                                            "identifier": {
+                                                "type": "Identifier",
+                                                "name": "_data"
+                                            },
+                                            "base": {
+                                                "type": "Identifier",
+                                                "name": "self"
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "body": [
+                                {
+                                    "type": "AssignmentStatement",
+                                    "variables": [
+                                        {
+                                            "type": "MemberExpression",
+                                            "indexer": ".",
+                                            "identifier": {
+                                                "type": "Identifier",
+                                                "name": "_finish"
+                                            },
+                                            "base": {
+                                                "type": "Identifier",
+                                                "name": "self"
+                                            }
+                                        }
+                                    ],
+                                    "init": [
+                                        {
+                                            "type": "BooleanLiteral",
+                                            "value": true,
+                                            "raw": "true"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "ElseClause",
+                            "body": [
+                                {
+                                    "type": "CallStatement",
+                                    "expression": {
+                                        "type": "CallExpression",
+                                        "base": {
+                                            "type": "MemberExpression",
+                                            "indexer": ":",
+                                            "identifier": {
+                                                "type": "Identifier",
+                                                "name": "checkAttack"
+                                            },
+                                            "base": {
+                                                "type": "Identifier",
+                                                "name": "self"
+                                            }
+                                        },
+                                        "arguments": []
+                                    }
+                                },
+                                {
+                                    "type": "IfStatement",
+                                    "clauses": [
+                                        {
+                                            "type": "IfClause",
+                                            "condition": {
+                                                "type": "MemberExpression",
+                                                "indexer": ".",
+                                                "identifier": {
+                                                    "type": "Identifier",
+                                                    "name": "_attack"
+                                                },
+                                                "base": {
+                                                    "type": "Identifier",
+                                                    "name": "self"
+                                                }
+                                            },
+                                            "body": [
+                                                {
+                                                    "type": "IfStatement",
+                                                    "clauses": [
+                                                        {
+                                                            "type": "IfClause",
+                                                            "condition": {
+                                                                "type": "CallExpression",
+                                                                "base": {
+                                                                    "type": "MemberExpression",
+                                                                    "indexer": ":",
+                                                                    "identifier": {
+                                                                        "type": "Identifier",
+                                                                        "name": "isFinish"
+                                                                    },
+                                                                    "base": {
+                                                                        "type": "MemberExpression",
+                                                                        "indexer": ".",
+                                                                        "identifier": {
+                                                                            "type": "Identifier",
+                                                                            "name": "_attack"
+                                                                        },
+                                                                        "base": {
+                                                                            "type": "Identifier",
+                                                                            "name": "self"
+                                                                        }
+                                                                    }
+                                                                },
+                                                                "arguments": []
+                                                            },
+                                                            "body": [
+                                                                {
+                                                                    "type": "CallStatement",
+                                                                    "expression": {
+                                                                        "type": "CallExpression",
+                                                                        "base": {
+                                                                            "type": "MemberExpression",
+                                                                            "indexer": ":",
+                                                                            "identifier": {
+                                                                                "type": "Identifier",
+                                                                                "name": "clear"
+                                                                            },
+                                                                            "base": {
+                                                                                "type": "MemberExpression",
+                                                                                "indexer": ".",
+                                                                                "identifier": {
+                                                                                    "type": "Identifier",
+                                                                                    "name": "_attack"
+                                                                                },
+                                                                                "base": {
+                                                                                    "type": "Identifier",
+                                                                                    "name": "self"
+                                                                                }
+                                                                            }
+                                                                        },
+                                                                        "arguments": []
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "type": "AssignmentStatement",
+                                                                    "variables": [
+                                                                        {
+                                                                            "type": "MemberExpression",
+                                                                            "indexer": ".",
+                                                                            "identifier": {
+                                                                                "type": "Identifier",
+                                                                                "name": "_attack"
+                                                                            },
+                                                                            "base": {
+                                                                                "type": "Identifier",
+                                                                                "name": "self"
+                                                                            }
+                                                                        }
+                                                                    ],
+                                                                    "init": [
+                                                                        {
+                                                                            "type": "NilLiteral",
+                                                                            "value": null,
+                                                                            "raw": "nil"
+                                                                        }
+                                                                    ]
+                                                                },
+                                                                {
+                                                                    "type": "AssignmentStatement",
+                                                                    "variables": [
+                                                                        {
+                                                                            "type": "MemberExpression",
+                                                                            "indexer": ".",
+                                                                            "identifier": {
+                                                                                "type": "Identifier",
+                                                                                "name": "_index"
+                                                                            },
+                                                                            "base": {
+                                                                                "type": "Identifier",
+                                                                                "name": "self"
+                                                                            }
+                                                                        }
+                                                                    ],
+                                                                    "init": [
+                                                                        {
+                                                                            "type": "BinaryExpression",
+                                                                            "operator": "+",
+                                                                            "left": {
+                                                                                "type": "MemberExpression",
+                                                                                "indexer": ".",
+                                                                                "identifier": {
+                                                                                    "type": "Identifier",
+                                                                                    "name": "_index"
+                                                                                },
+                                                                                "base": {
+                                                                                    "type": "Identifier",
+                                                                                    "name": "self"
+                                                                                }
+                                                                            },
+                                                                            "right": {
+                                                                                "type": "NumericLiteral",
+                                                                                "value": 1,
+                                                                                "raw": "1"
+                                                                            }
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "type": "ElseClause",
+                                                            "body": [
+                                                                {
+                                                                    "type": "IfStatement",
+                                                                    "clauses": [
+                                                                        {
+                                                                            "type": "IfClause",
+                                                                            "condition": {
+                                                                                "type": "CallExpression",
+                                                                                "base": {
+                                                                                    "type": "MemberExpression",
+                                                                                    "indexer": ":",
+                                                                                    "identifier": {
+                                                                                        "type": "Identifier",
+                                                                                        "name": "isExecute"
+                                                                                    },
+                                                                                    "base": {
+                                                                                        "type": "MemberExpression",
+                                                                                        "indexer": ".",
+                                                                                        "identifier": {
+                                                                                            "type": "Identifier",
+                                                                                            "name": "_attack"
+                                                                                        },
+                                                                                        "base": {
+                                                                                            "type": "Identifier",
+                                                                                            "name": "self"
+                                                                                        }
+                                                                                    }
+                                                                                },
+                                                                                "arguments": []
+                                                                            },
+                                                                            "body": [
+                                                                                {
+                                                                                    "type": "CallStatement",
+                                                                                    "expression": {
+                                                                                        "type": "CallExpression",
+                                                                                        "base": {
+                                                                                            "type": "MemberExpression",
+                                                                                            "indexer": ":",
+                                                                                            "identifier": {
+                                                                                                "type": "Identifier",
+                                                                                                "name": "execute"
+                                                                                            },
+                                                                                            "base": {
+                                                                                                "type": "MemberExpression",
+                                                                                                "indexer": ".",
+                                                                                                "identifier": {
+                                                                                                    "type": "Identifier",
+                                                                                                    "name": "_attack"
+                                                                                                },
+                                                                                                "base": {
+                                                                                                    "type": "Identifier",
+                                                                                                    "name": "self"
+                                                                                                }
+                                                                                            }
+                                                                                        },
+                                                                                        "arguments": []
+                                                                                    }
+                                                                                },
+                                                                                {
+                                                                                    "type": "AssignmentStatement",
+                                                                                    "variables": [
+                                                                                        {
+                                                                                            "type": "MemberExpression",
+                                                                                            "indexer": ".",
+                                                                                            "identifier": {
+                                                                                                "type": "Identifier",
+                                                                                                "name": "_attackIndex"
+                                                                                            },
+                                                                                            "base": {
+                                                                                                "type": "Identifier",
+                                                                                                "name": "self"
+                                                                                            }
+                                                                                        }
+                                                                                    ],
+                                                                                    "init": [
+                                                                                        {
+                                                                                            "type": "BinaryExpression",
+                                                                                            "operator": "+",
+                                                                                            "left": {
+                                                                                                "type": "MemberExpression",
+                                                                                                "indexer": ".",
+                                                                                                "identifier": {
+                                                                                                    "type": "Identifier",
+                                                                                                    "name": "_attackIndex"
+                                                                                                },
+                                                                                                "base": {
+                                                                                                    "type": "Identifier",
+                                                                                                    "name": "self"
+                                                                                                }
+                                                                                            },
+                                                                                            "right": {
+                                                                                                "type": "NumericLiteral",
+                                                                                                "value": 1,
+                                                                                                "raw": "1"
+                                                                                            }
+                                                                                        }
+                                                                                    ]
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "FunctionDeclaration",
+            "identifier": {
+                "type": "MemberExpression",
+                "indexer": ":",
+                "identifier": {
+                    "type": "Identifier",
+                    "name": "getLoopAttack"
+                },
+                "base": {
+                    "type": "Identifier",
+                    "name": "LoopRound"
+                }
+            },
+            "isLocal": false,
+            "parameters": [],
+            "body": [
+                {
+                    "type": "IfStatement",
+                    "clauses": [
+                        {
+                            "type": "IfClause",
+                            "condition": {
+                                "type": "UnaryExpression",
+                                "operator": "not",
+                                "argument": {
+                                    "type": "MemberExpression",
+                                    "indexer": ".",
+                                    "identifier": {
+                                        "type": "Identifier",
+                                        "name": "_attack"
+                                    },
+                                    "base": {
+                                        "type": "Identifier",
+                                        "name": "self"
+                                    }
+                                }
+                            },
+                            "body": [
+                                {
+                                    "type": "ReturnStatement",
+                                    "arguments": []
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "LocalStatement",
+                    "variables": [
+                        {
+                            "type": "Identifier",
+                            "name": "type"
+                        }
+                    ],
+                    "init": [
+                        {
+                            "type": "CallExpression",
+                            "base": {
+                                "type": "MemberExpression",
+                                "indexer": ":",
+                                "identifier": {
+                                    "type": "Identifier",
+                                    "name": "getAttackType"
+                                },
+                                "base": {
+                                    "type": "MemberExpression",
+                                    "indexer": ".",
+                                    "identifier": {
+                                        "type": "Identifier",
+                                        "name": "_attack"
+                                    },
+                                    "base": {
+                                        "type": "Identifier",
+                                        "name": "self"
+                                    }
+                                }
+                            },
+                            "arguments": []
+                        }
+                    ]
+                },
+                {
+                    "type": "IfStatement",
+                    "clauses": [
+                        {
+                            "type": "IfClause",
+                            "condition": {
+                                "type": "BinaryExpression",
+                                "operator": "~=",
+                                "left": {
+                                    "type": "Identifier",
+                                    "name": "type"
+                                },
+                                "right": {
+                                    "type": "MemberExpression",
+                                    "indexer": ".",
+                                    "identifier": {
+                                        "type": "Identifier",
+                                        "name": "HISTORY_ATTACK"
+                                    },
+                                    "base": {
+                                        "type": "Identifier",
+                                        "name": "FightConfig"
+                                    }
+                                }
+                            },
+                            "body": [
+                                {
+                                    "type": "ReturnStatement",
+                                    "arguments": [
+                                        {
+                                            "type": "MemberExpression",
+                                            "indexer": ".",
+                                            "identifier": {
+                                                "type": "Identifier",
+                                                "name": "_attack"
+                                            },
+                                            "base": {
+                                                "type": "Identifier",
+                                                "name": "self"
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "FunctionDeclaration",
+            "identifier": {
+                "type": "MemberExpression",
+                "indexer": ":",
+                "identifier": {
+                    "type": "Identifier",
+                    "name": "clear"
+                },
+                "base": {
+                    "type": "Identifier",
+                    "name": "LoopRound"
+                }
+            },
+            "isLocal": false,
+            "parameters": [],
+            "body": [
+                {
+                    "type": "IfStatement",
+                    "clauses": [
+                        {
+                            "type": "IfClause",
+                            "condition": {
+                                "type": "UnaryExpression",
+                                "operator": "not",
+                                "argument": {
+                                    "type": "MemberExpression",
+                                    "indexer": ".",
+                                    "identifier": {
+                                        "type": "Identifier",
+                                        "name": "_attack"
+                                    },
+                                    "base": {
+                                        "type": "Identifier",
+                                        "name": "self"
+                                    }
+                                }
+                            },
+                            "body": [
+                                {
+                                    "type": "ReturnStatement",
+                                    "arguments": []
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "CallStatement",
+                    "expression": {
+                        "type": "CallExpression",
+                        "base": {
+                            "type": "MemberExpression",
+                            "indexer": ":",
+                            "identifier": {
+                                "type": "Identifier",
+                                "name": "clear"
+                            },
+                            "base": {
+                                "type": "MemberExpression",
+                                "indexer": ".",
+                                "identifier": {
+                                    "type": "Identifier",
+                                    "name": "_attack"
+                                },
+                                "base": {
+                                    "type": "Identifier",
+                                    "name": "self"
+                                }
+                            }
+                        },
+                        "arguments": []
+                    }
+                },
+                {
+                    "type": "AssignmentStatement",
+                    "variables": [
+                        {
+                            "type": "MemberExpression",
+                            "indexer": ".",
+                            "identifier": {
+                                "type": "Identifier",
+                                "name": "_attack"
+                            },
+                            "base": {
+                                "type": "Identifier",
+                                "name": "self"
+                            }
+                        }
+                    ],
+                    "init": [
+                        {
+                            "type": "NilLiteral",
+                            "value": null,
+                            "raw": "nil"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "FunctionDeclaration",
+            "identifier": {
+                "type": "MemberExpression",
+                "indexer": ":",
+                "identifier": {
+                    "type": "Identifier",
+                    "name": "onFinish"
+                },
+                "base": {
+                    "type": "Identifier",
+                    "name": "LoopRound"
+                }
+            },
+            "isLocal": false,
+            "parameters": [],
+            "body": [
+                {
+                    "type": "LocalStatement",
+                    "variables": [
+                        {
+                            "type": "Identifier",
+                            "name": "BuffManager"
+                        }
+                    ],
+                    "init": [
+                        {
+                            "type": "CallExpression",
+                            "base": {
+                                "type": "Identifier",
+                                "name": "require"
+                            },
+                            "arguments": [
+                                {
+                                    "type": "StringLiteral",
+                                    "value": "app.fight.BuffManager",
+                                    "raw": "\"app.fight.BuffManager\""
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "CallStatement",
+                    "expression": {
+                        "type": "CallExpression",
+                        "base": {
+                            "type": "MemberExpression",
+                            "indexer": ":",
+                            "identifier": {
+                                "type": "Identifier",
+                                "name": "checkRoundEndAnger"
+                            },
+                            "base": {
+                                "type": "CallExpression",
+                                "base": {
+                                    "type": "MemberExpression",
+                                    "indexer": ".",
+                                    "identifier": {
+                                        "type": "Identifier",
+                                        "name": "getBuffManager"
+                                    },
+                                    "base": {
+                                        "type": "Identifier",
+                                        "name": "BuffManager"
+                                    }
+                                },
+                                "arguments": []
+                            }
+                        },
+                        "arguments": [
+                            {
+                                "type": "MemberExpression",
+                                "indexer": ".",
+                                "identifier": {
+                                    "type": "Identifier",
+                                    "name": "angers"
+                                },
+                                "base": {
+                                    "type": "MemberExpression",
+                                    "indexer": ".",
+                                    "identifier": {
+                                        "type": "Identifier",
+                                        "name": "_data"
+                                    },
+                                    "base": {
+                                        "type": "Identifier",
+                                        "name": "self"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "type": "CallStatement",
+                    "expression": {
+                        "type": "CallExpression",
+                        "base": {
+                            "type": "MemberExpression",
+                            "indexer": ".",
+                            "identifier": {
+                                "type": "Identifier",
+                                "name": "onFinish"
+                            },
+                            "base": {
+                                "type": "MemberExpression",
+                                "indexer": ".",
+                                "identifier": {
+                                    "type": "Identifier",
+                                    "name": "super"
+                                },
+                                "base": {
+                                    "type": "Identifier",
+                                    "name": "LoopRound"
+                                }
+                            }
+                        },
+                        "arguments": [
+                            {
+                                "type": "Identifier",
+                                "name": "self"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "type": "FunctionDeclaration",
+            "identifier": {
+                "type": "MemberExpression",
+                "indexer": ":",
+                "identifier": {
+                    "type": "Identifier",
+                    "name": "getAttackIndex"
+                },
+                "base": {
+                    "type": "Identifier",
+                    "name": "LoopRound"
+                }
+            },
+            "isLocal": false,
+            "parameters": [],
+            "body": [
+                {
+                    "type": "ReturnStatement",
+                    "arguments": [
+                        {
+                            "type": "MemberExpression",
+                            "indexer": ".",
+                            "identifier": {
+                                "type": "Identifier",
+                                "name": "_index"
+                            },
+                            "base": {
+                                "type": "Identifier",
+                                "name": "self"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "ReturnStatement",
+            "arguments": [
+                {
+                    "type": "Identifier",
+                    "name": "LoopRound"
+                }
+            ]
+        }
+    ],
+    "comments": [
+        {
+            "type": "Comment",
+            "value": "",
+            "raw": "--"
+        },
+        {
+            "type": "Comment",
+            "value": "attack序列号",
+            "raw": "--attack序列号"
+        },
+        {
+            "type": "Comment",
+            "value": "execute的attack序列号",
+            "raw": "--execute的attack序列号"
+        },
+        {
+            "type": "Comment",
+            "value": "",
+            "raw": "--"
+        },
+        {
+            "type": "Comment",
+            "value": "",
+            "raw": "--"
+        },
+        {
+            "type": "Comment",
+            "value": "",
+            "raw": "--"
+        },
+        {
+            "type": "Comment",
+            "value": " if self:checkUnitIdle() then",
+            "raw": "-- if self:checkUnitIdle() then"
+        },
+        {
+            "type": "Comment",
+            "value": " end",
+            "raw": "-- end"
+        }
+    ]
+}

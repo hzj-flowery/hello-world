@@ -1,0 +1,453 @@
+{
+    "type": "Chunk",
+    "body": [
+        {
+            "type": "LocalStatement",
+            "variables": [
+                {
+                    "type": "Identifier",
+                    "name": "a"
+                },
+                {
+                    "type": "Identifier",
+                    "name": "b"
+                }
+            ],
+            "init": [
+                {
+                    "type": "NumericLiteral",
+                    "value": 1,
+                    "raw": "1"
+                }
+            ]
+        },
+        {
+            "type": "LocalStatement",
+            "variables": [
+                {
+                    "type": "Identifier",
+                    "name": "a"
+                }
+            ],
+            "init": [
+                {
+                    "type": "TableConstructorExpression",
+                    "fields": [
+                        {
+                            "type": "TableKey",
+                            "key": {
+                                "type": "StringLiteral",
+                                "value": "a",
+                                "raw": "'a'"
+                            },
+                            "value": {
+                                "type": "NumericLiteral",
+                                "value": 1,
+                                "raw": "1"
+                            }
+                        },
+                        {
+                            "type": "TableValue",
+                            "value": {
+                                "type": "NumericLiteral",
+                                "value": 1,
+                                "raw": "1"
+                            }
+                        },
+                        {
+                            "type": "TableValue",
+                            "value": {
+                                "type": "StringLiteral",
+                                "value": "a",
+                                "raw": "'a'"
+                            }
+                        },
+                        {
+                            "type": "TableKeyString",
+                            "key": {
+                                "type": "Identifier",
+                                "name": "b"
+                            },
+                            "value": {
+                                "type": "FunctionDeclaration",
+                                "identifier": null,
+                                "isLocal": false,
+                                "parameters": [],
+                                "body": []
+                            }
+                        },
+                        {
+                            "type": "TableKey",
+                            "key": {
+                                "type": "Identifier",
+                                "name": "b"
+                            },
+                            "value": {
+                                "type": "NumericLiteral",
+                                "value": 2,
+                                "raw": "2"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "LocalStatement",
+            "variables": [
+                {
+                    "type": "Identifier",
+                    "name": "b"
+                }
+            ],
+            "init": [
+                {
+                    "type": "NilLiteral",
+                    "value": null,
+                    "raw": "nil"
+                }
+            ]
+        },
+        {
+            "type": "AssignmentStatement",
+            "variables": [
+                {
+                    "type": "Identifier",
+                    "name": "c"
+                }
+            ],
+            "init": [
+                {
+                    "type": "StringLiteral",
+                    "value": "c",
+                    "raw": "'c'"
+                }
+            ]
+        },
+        {
+            "type": "IfStatement",
+            "clauses": [
+                {
+                    "type": "IfClause",
+                    "condition": {
+                        "type": "BinaryExpression",
+                        "operator": "==",
+                        "left": {
+                            "type": "Identifier",
+                            "name": "b"
+                        },
+                        "right": {
+                            "type": "NumericLiteral",
+                            "value": 2,
+                            "raw": "2"
+                        }
+                    },
+                    "body": [
+                        {
+                            "type": "CallStatement",
+                            "expression": {
+                                "type": "CallExpression",
+                                "base": {
+                                    "type": "Identifier",
+                                    "name": "print"
+                                },
+                                "arguments": [
+                                    {
+                                        "type": "IndexExpression",
+                                        "base": {
+                                            "type": "Identifier",
+                                            "name": "a"
+                                        },
+                                        "index": {
+                                            "type": "StringLiteral",
+                                            "value": "a",
+                                            "raw": "'a'"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "AssignmentStatement",
+            "variables": [
+                {
+                    "type": "MemberExpression",
+                    "indexer": ".",
+                    "identifier": {
+                        "type": "Identifier",
+                        "name": "c"
+                    },
+                    "base": {
+                        "type": "MemberExpression",
+                        "indexer": ".",
+                        "identifier": {
+                            "type": "Identifier",
+                            "name": "b"
+                        },
+                        "base": {
+                            "type": "Identifier",
+                            "name": "a"
+                        }
+                    }
+                }
+            ],
+            "init": [
+                {
+                    "type": "NumericLiteral",
+                    "value": 1,
+                    "raw": "1"
+                }
+            ]
+        },
+        {
+            "type": "FunctionDeclaration",
+            "identifier": {
+                "type": "MemberExpression",
+                "indexer": ":",
+                "identifier": {
+                    "type": "Identifier",
+                    "name": "test"
+                },
+                "base": {
+                    "type": "Identifier",
+                    "name": "a"
+                }
+            },
+            "isLocal": false,
+            "parameters": [],
+            "body": [
+                {
+                    "type": "CallStatement",
+                    "expression": {
+                        "type": "CallExpression",
+                        "base": {
+                            "type": "Identifier",
+                            "name": "print"
+                        },
+                        "arguments": [
+                            {
+                                "type": "Identifier",
+                                "name": "b"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "type": "ReturnStatement",
+                    "arguments": [
+                        {
+                            "type": "MemberExpression",
+                            "indexer": ".",
+                            "identifier": {
+                                "type": "Identifier",
+                                "name": "__index"
+                            },
+                            "base": {
+                                "type": "Identifier",
+                                "name": "self"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "ForNumericStatement",
+            "variable": {
+                "type": "Identifier",
+                "name": "i"
+            },
+            "start": {
+                "type": "NumericLiteral",
+                "value": 1,
+                "raw": "1"
+            },
+            "end": {
+                "type": "NumericLiteral",
+                "value": 10,
+                "raw": "10"
+            },
+            "step": {
+                "type": "NumericLiteral",
+                "value": 2,
+                "raw": "2"
+            },
+            "body": []
+        },
+        {
+            "type": "ForGenericStatement",
+            "variables": [
+                {
+                    "type": "Identifier",
+                    "name": "key"
+                },
+                {
+                    "type": "Identifier",
+                    "name": "value"
+                }
+            ],
+            "iterators": [
+                {
+                    "type": "CallExpression",
+                    "base": {
+                        "type": "Identifier",
+                        "name": "ipairs"
+                    },
+                    "arguments": [
+                        {
+                            "type": "Identifier",
+                            "name": "t"
+                        }
+                    ]
+                },
+                {
+                    "type": "CallExpression",
+                    "base": {
+                        "type": "Identifier",
+                        "name": "pairs"
+                    },
+                    "arguments": [
+                        {
+                            "type": "Identifier",
+                            "name": "b"
+                        }
+                    ]
+                }
+            ],
+            "body": []
+        },
+        {
+            "type": "ForGenericStatement",
+            "variables": [
+                {
+                    "type": "Identifier",
+                    "name": "key"
+                },
+                {
+                    "type": "Identifier",
+                    "name": "value"
+                }
+            ],
+            "iterators": [
+                {
+                    "type": "CallExpression",
+                    "base": {
+                        "type": "Identifier",
+                        "name": "pairs"
+                    },
+                    "arguments": [
+                        {
+                            "type": "Identifier",
+                            "name": "t"
+                        }
+                    ]
+                }
+            ],
+            "body": []
+        },
+        {
+            "type": "IfStatement",
+            "clauses": [
+                {
+                    "type": "IfClause",
+                    "condition": {
+                        "type": "BooleanLiteral",
+                        "value": true,
+                        "raw": "true"
+                    },
+                    "body": [
+                        {
+                            "type": "CallStatement",
+                            "expression": {
+                                "type": "CallExpression",
+                                "base": {
+                                    "type": "Identifier",
+                                    "name": "print"
+                                },
+                                "arguments": [
+                                    {
+                                        "type": "Identifier",
+                                        "name": "a"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "ElseifClause",
+                    "condition": {
+                        "type": "BooleanLiteral",
+                        "value": true,
+                        "raw": "true"
+                    },
+                    "body": [
+                        {
+                            "type": "CallStatement",
+                            "expression": {
+                                "type": "CallExpression",
+                                "base": {
+                                    "type": "Identifier",
+                                    "name": "print"
+                                },
+                                "arguments": [
+                                    {
+                                        "type": "Identifier",
+                                        "name": "b"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "ElseClause",
+                    "body": [
+                        {
+                            "type": "CallStatement",
+                            "expression": {
+                                "type": "CallExpression",
+                                "base": {
+                                    "type": "Identifier",
+                                    "name": "print"
+                                },
+                                "arguments": [
+                                    {
+                                        "type": "Identifier",
+                                        "name": "c"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "comments": [
+        {
+            "type": "Comment",
+            "value": " a.b = 2",
+            "raw": "-- a.b = 2"
+        },
+        {
+            "type": "Comment",
+            "value": " a['c'] = 3",
+            "raw": "-- a['c'] = 3"
+        },
+        {
+            "type": "Comment",
+            "value": " local function c()",
+            "raw": "-- local function c()"
+        },
+        {
+            "type": "Comment",
+            "value": " end",
+            "raw": "-- end"
+        }
+    ]
+}
