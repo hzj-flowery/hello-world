@@ -20,6 +20,7 @@ import ThreeDLightTest from "./core/renderer/light/ThreeDLightTest";
 import { G_CameraModel } from "./core/renderer/camera/CameraModel";
 import ShaderShadowTest from "./core/renderer/3d/ShaderShadowTest";
 import SpotLightTest from "./core/renderer/light/SpotLightTest";
+import { StencilTest } from "./core/renderer/3d/StencilTest";
 
 
 
@@ -78,7 +79,7 @@ G_ShaderFactory.init(Device.Instance.gl);
 
 
 LoaderManager.instance.load(arr,null,function(){
-    new RenderFlow().startup();
+    // new RenderFlow().startup();
     // RampTextureTest.run();
     // CameraTest.run();
     // RobartTest.run();
@@ -91,5 +92,7 @@ LoaderManager.instance.load(arr,null,function(){
     // ThreeDLightTest.run();
 
     // ShaderShadowTest.run();
+
+    StencilTest.run();
     
 })

@@ -75,6 +75,15 @@ export default class Device {
         canvas.addEventListener("webglcontextlost", this.contextLost.bind(this));
         canvas.addEventListener("webglcontextrestored", this.resume.bind(this));
 
+        this.openStats();
+    }
+
+    //
+    private stats: any;
+    private openStats(): void {
+        this.stats = new window["Stats"]();
+        this.stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+        window["document"].body.appendChild(this.stats.dom);
     }
     /**
      * 启动子线程
@@ -132,13 +141,17 @@ export default class Device {
         }
     }
     //创建webgl画笔
-    private createGLContext(canvas): WebGL2RenderingContext {
+    private createGLContext(canvas: HTMLCanvasElement): WebGL2RenderingContext {
+
+        let options = {
+            stencil: true //开启模板功能
+        }
         var names = ["webgl2", "webgl", "experimental-webgl"];
         var context = null;
         for (var i = 0; i < names.length; i++) {
             try {
                 console.log("-names---", names[i]);
-                context = canvas.getContext(names[i]);
+                context = canvas.getContext(names[i], options);
             } catch (e) { }
             if (context) {
                 break;
@@ -210,6 +223,7 @@ export default class Device {
     }
     //渲染前
     private onBeforeRender() {
+        this.stats.begin();
         this._renderData = [];
     }
     //提交渲染状态
@@ -225,6 +239,7 @@ export default class Device {
     }
     //渲染后
     private onAfterRender() {
+        this.stats.end();
         RenderDataPool.return(this._renderData);
     }
     private triggerRender(isScene: boolean = false) {
@@ -660,6 +675,7 @@ export default class Device {
             saveBlob(blob, `screencapture-${gl.canvas.width}x${gl.canvas.height}.png`);
         });
     }
+    //-----------------------------------------------------状态处理-------------------------------------------------------------
     //剔除某一个面
     /**
      * 
@@ -691,5 +707,60 @@ export default class Device {
         gl.enable(gl.CULL_FACE);
         gl.cullFace(gl.FRONT);
         gl.disable(gl.CULL_FACE);
+    }
+    //写入模板值
+    public writeStencil(ref: number = 1, mask: number = 1): void {
+        /**
+         * 可以把模板缓存想象成一个二维数组stencil[width][height]
+         * 清空缓存，就是将这个数组的每一个元素设为0
+         * 开启模板测试，就是当下面进行绘制的时候，每一个片元进行逐片元的操作时，会有模板测试
+         * 对于一个片元而言，它本身会携带位置信息，通过位置我们就能在模板缓冲中对应的模板值
+         * 设置模板测试参数ref，这个其实就是一个全局变量，GPU会拿这个值和模板值进行比较
+         * gl.ALWAYS：这个是比较函数，它的意思是不管最后比较结果如何，都通过模板测试
+         * 设置模板操作，其实就是说如果模板测试通过了，将采取什么操作
+         * gl.REPLACE：表示拿全局测试参数ref，替换掉模板缓冲的值
+         * 综上：其实这个函数的作用就是将接下来绘制的所有片元，以他们的位置为索引，替换掉模板缓冲的值
+         */
+        let gl = this.gl;
+        // 清除模板缓存
+        gl.clear(gl.STENCIL_BUFFER_BIT);
+        // 开启模板测试
+        gl.enable(gl.STENCIL_TEST);
+        // 设置模板测试参数
+        gl.stencilFunc(gl.ALWAYS, ref, mask);
+        // 设置模板值操作
+        gl.stencilOp(gl.KEEP, gl.KEEP, gl.REPLACE);
+
+        gl.colorMask(false, false, false, false);
+    }
+    //比较模板值
+    public compareStencil(ref: number = 1, mask: number = 1): void {
+        /**
+         * 在我们调用了 writeStencil 这个函数以后，然后进行了绘制，那么模板缓冲中已经有了我们设置的值
+         * 接着我们调用了这个函数
+         * 设置模板测试参数ref
+         * gl.EQUAL:意思是在进行模板测试的时候，只有模板值和我们的模板测试参数一样，才可以通过，否则不通过测试，即丢弃
+         * 设置模板操作，注意到这里写的都是gl.keep,它的意思就是无论测试结果如何，都保持模板缓冲现有的值
+         * 
+         * 综上：这个函数的功能就是说，在接下来的绘制中，必须模板缓冲的值必须和我们现在设置的模板参数ref一样，才可以进行绘制
+         */
+        let gl = this.gl;
+        //设置模板测试参数
+        gl.stencilFunc(gl.EQUAL, ref, mask);
+        //设置模板测试后的操作
+        gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
+        // ----- 模板方法 end -----
+        // 关闭深度检测
+        gl.disable(gl.DEPTH_TEST);
+
+        gl.colorMask(true, true,true,true);
+    }
+    //关闭模板测试
+    public closeStencil(): void {
+        let gl = this.gl;
+        // 开启深度检测
+        gl.enable(gl.DEPTH_TEST);
+        // 关闭模板测试
+        gl.disable(gl.STENCIL_TEST);
     }
 }

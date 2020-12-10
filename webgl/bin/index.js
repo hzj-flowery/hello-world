@@ -7,6 +7,7 @@ loadLib("./libs/twgl-full.min.js")
 loadLib("./libs/promise.js")
 loadLib("./libs/binary.js")
 loadLib("./libs/m4.js");
+loadLib("./libs/stats.js");
 loadLib("./libs/webgl-utils.js");
 loadLib("./libs/primitives.js");
 
