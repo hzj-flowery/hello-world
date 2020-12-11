@@ -1,5 +1,16 @@
 // 
+
 `
+流水线：
+CPU准备数据：
+顶点着色器：
+图元装配：
+光栅化：
+深度测试：
+片元着色器：
+逐片元操作：深度测试，模板测试，alpha测试混合
+
+texImage2D参数配置表
 InternalFormat	Format	        Type
 RGB	            RGB	            UNSIGNED_BYTE UNSIGNED_SHORT_5_6_5
 RGBA	        RGBA        	UNSIGNED_BYTE,UNSIGNED_SHORT_4_4_4_4,UNSIGNED_SHORT_5_5_5_1

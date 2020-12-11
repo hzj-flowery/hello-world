@@ -323,7 +323,7 @@ function draw() {
     drawFloor();
 
     // ----- 模板方法 begin -----
-     Device.Instance.writeStencil(1,1);
+     Device.Instance.writeStencil(1,1,false);
     // ----- 模板方法 end -----
 
     // 绘制小盒子 1

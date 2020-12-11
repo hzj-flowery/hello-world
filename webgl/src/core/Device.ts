@@ -709,7 +709,7 @@ export default class Device {
         gl.disable(gl.CULL_FACE);
     }
     //写入模板值
-    public writeStencil(ref: number = 1, mask: number = 1): void {
+    public writeStencil(ref: number = 1, mask: number = 1,isCloseColorWrite:boolean = true): void {
         /**
          * 可以把模板缓存想象成一个二维数组stencil[width][height]
          * 清空缓存，就是将这个数组的每一个元素设为0
@@ -730,8 +730,12 @@ export default class Device {
         gl.stencilFunc(gl.ALWAYS, ref, mask);
         // 设置模板值操作
         gl.stencilOp(gl.KEEP, gl.KEEP, gl.REPLACE);
-
-        gl.colorMask(false, false, false, false);
+        
+        if(isCloseColorWrite)
+        {
+            //关闭向颜色附件中写入颜色值
+            gl.colorMask(false, false, false, false);
+        }
     }
     //比较模板值
     public compareStencil(ref: number = 1, mask: number = 1): void {

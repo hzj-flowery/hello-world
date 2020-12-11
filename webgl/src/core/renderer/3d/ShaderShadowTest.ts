@@ -403,7 +403,7 @@ class ShadowLight {
     this.sphereUniforms = {
       u_lightColor: [1, 0.5, 0.5, 1],  // pink
       u_texture: this.checkerboardTexture._glID,
-      u_world: glMatrix.mat4.translation(null, 2, 3, 4),
+      u_world: glMatrix.mat4.translation(null, 2, 6, 4),
     };
     this.cubeUniforms = {
       u_lightColor: [0.5, 1, 0.5, 1],  // lightgreen

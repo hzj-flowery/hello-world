@@ -91,8 +91,8 @@ LoaderManager.instance.load(arr,null,function(){
     // PointLightTest.run();
     // ThreeDLightTest.run();
 
-    // ShaderShadowTest.run();
+    ShaderShadowTest.run();
 
-    StencilTest.run();
+    // StencilTest.run();
     
 })
