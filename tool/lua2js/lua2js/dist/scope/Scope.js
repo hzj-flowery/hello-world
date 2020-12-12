@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Scope = void 0;
 var Scope = /** @class */ (function () {
     function Scope(type, name) {
         this.type = type;

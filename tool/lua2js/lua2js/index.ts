@@ -3,11 +3,9 @@ import { dirname, join, resolve } from 'path';
 import { getAllFilePathes, getName, initWorkSpace, readDirectory } from './cocostree/FileSystem';
 import { Module } from './cocostree/Module';
 
-initWorkSpace('../mingjiangzhuan/src');
+initWorkSpace('../luaCode/src');
 
 readDirectory('.');
-
-
 function writeJsFile(path: any, name: any, code: any) {
     let dir = dirname(path);
     let base = name + '.js'

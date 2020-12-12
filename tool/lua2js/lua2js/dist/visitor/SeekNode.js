@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.SeekNodeVisitor = void 0;
 var SeekNodeVisitor = /** @class */ (function () {
     function SeekNodeVisitor(nodeMap) {
         this.nodeMap = nodeMap;

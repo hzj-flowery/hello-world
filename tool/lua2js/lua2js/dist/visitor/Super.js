@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.SuperVisitor = void 0;
 var Parser_1 = require("../parsers/Parser");
 var SuperVisitor = /** @class */ (function () {
     function SuperVisitor() {

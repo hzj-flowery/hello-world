@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.DependenceVisitor = void 0;
 var FileSystem_1 = require("../cocostree/FileSystem");
 var DependenceVisitor = /** @class */ (function () {
     function DependenceVisitor(module) {

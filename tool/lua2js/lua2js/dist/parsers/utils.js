@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.getVisitorKeys = void 0;
 var visitorkeys = {
     LabelStatement: ['label'],
     BreakStatement: [],

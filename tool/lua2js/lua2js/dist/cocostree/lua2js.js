@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.toJs = void 0;
 var Parser_1 = require("../parsers/Parser");
 var utils_1 = require("./utils");
 exports.toJs = {

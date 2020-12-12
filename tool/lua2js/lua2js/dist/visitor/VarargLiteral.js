@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.VarargLiteralVisitor = void 0;
 var VarargLiteralVisitor = /** @class */ (function () {
     function VarargLiteralVisitor() {
         this.inThreeDotFunction = false;

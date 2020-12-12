@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.custom2js = void 0;
 var utils_1 = require("./utils");
 var tableapi_1 = require("./tableapi");
 exports.custom2js = [

@@ -4,7 +4,7 @@ var fs_1 = require("fs");
 var path_1 = require("path");
 var FileSystem_1 = require("./cocostree/FileSystem");
 var Module_1 = require("./cocostree/Module");
-FileSystem_1.initWorkSpace('../mingjiangzhuan/src');
+FileSystem_1.initWorkSpace('../luaCode/src');
 FileSystem_1.readDirectory('.');
 function writeJsFile(path, name, code) {
     var dir = path_1.dirname(path);
@@ -17,6 +17,7 @@ function writeJsFile(path, name, code) {
 function toJs() {
     var modules = FileSystem_1.getAllFilePathes();
     modules = modules.filter(function (m) {
+        console.log("m---------", m);
         if (m.startsWith('cocos')
             || m.startsWith('app/lang')
             || m.startsWith('yoka/pbc')) {

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.readFileContent = exports.getAllFilePathes = exports.getModuleName = exports.getName = exports.getFilePath = exports.initWorkSpace = exports.getWorkSpace = exports.readDirectory = void 0;
 var fs_1 = require("fs");
 var path_1 = require("path");
 var workspace;

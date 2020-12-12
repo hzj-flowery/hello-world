@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Parser = void 0;
 var utils_1 = require("./utils");
 var Parser = /** @class */ (function () {
     function Parser(node, parent) {
@@ -109,7 +110,7 @@ var Parser = /** @class */ (function () {
         get: function () {
             return this.node.type;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Parser.prototype.toLuaNode = function () {
