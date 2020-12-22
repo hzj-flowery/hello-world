@@ -1,5 +1,6 @@
 import { SY } from "../base/Sprite";
 import { CubeData } from "../data/CubeData";
+import { ShaderUseMatrixType } from "../data/RenderData";
 import { glprimitive_type } from "../gfx/GLEnums";
 
 /**
@@ -12,16 +13,16 @@ var vertexshader3d =
 'attribute vec2 a_uv;' +
 'uniform mat4 u_MVMatrix;' +
 'uniform mat4 u_PMatrix;' +
-
+'uniform mat4 u_MITMatrix;' +  //模型的世界矩阵
 'varying vec2 v_uv;' +
 'varying vec3 v_normal;'+
 'void main() {'+
   // Multiply the position by the matrix.
   'gl_Position = u_PMatrix *u_MVMatrix* a_position;'+
   // Pass the normal to the fragment shader
-  'v_normal = a_normal;'+
+  'v_normal = mat3(u_MITMatrix)* a_normal;'+
   'v_uv = a_uv;' +
-'}'
+'}' 
 
 var fragmentshader3d = 
 'precision mediump float;'+
@@ -40,13 +41,13 @@ var fragmentshader3d =
   // will make it a unit vector again
   'vec3 normal = normalize(v_normal);'+
 
-  'float light = dot(normal, u_color_dir);'+
+  'float light = dot(normal, -u_color_dir);'+
 
   'gl_FragColor = u_color*colorSource;'+
 
   // Lets multiply just the color portion (not the alpha)
   // by the light
-  'gl_FragColor.rgb *= light;'+
+  'gl_FragColor.rgb += light;'+
 '}'
 
 /**
@@ -66,6 +67,7 @@ export default class LightCube extends SY.SpriteBase {
         
         this.setShader(vertexshader3d,fragmentshader3d);
         this._shader.USE_LIGHT = true;
+        this._renderData.pushMatrix(ShaderUseMatrixType.ModelInverseTransform);
 
     }
     public visit(time):void{

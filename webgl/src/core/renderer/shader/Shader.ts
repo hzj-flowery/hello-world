@@ -699,6 +699,9 @@ export class Shader {
     private u_MVMatrix_loc;//模型视口矩阵属性位置
     private u_PMatrix_loc;//透视投影矩阵属性位置
     private u_MMatrix_loc;//模型矩阵属性位置
+    private u_MIMatrix_loc;//模型矩阵的逆矩阵属性位置
+    private u_MTMatrix_loc;//模型矩阵的转置矩阵属性位置
+    private u_MITMatrix_loc;//模型矩阵的逆矩阵的转置矩阵属性位置
     private u_VMatrix_loc;//视口矩阵属性位置
     private u_texCoord_loc;//纹理属性位置
     private u_skybox_loc;//天空盒属性位置
@@ -744,7 +747,10 @@ export class Shader {
         this.u_pvm_matrix_loc = gl.getUniformLocation(shaderProgramGLID, glvert_attr_semantic.PMV_MATRIX);
         this.u_pvm_matrix_inverse_loc = gl.getUniformLocation(shaderProgramGLID, glvert_attr_semantic.PMV_MATRIX_INVERSE);
         this.u_MMatrix_loc = gl.getUniformLocation(shaderProgramGLID, glvert_attr_semantic.MMatrix);
-        this.u_VMatrix_loc = gl.getUniformLocation(shaderProgramGLID, glvert_attr_semantic.VMatrix)
+        this.u_VMatrix_loc = gl.getUniformLocation(shaderProgramGLID, glvert_attr_semantic.VMatrix);
+        this.u_MIMatrix_loc = gl.getUniformLocation(shaderProgramGLID,glvert_attr_semantic.MIMatrix);
+        this.u_MTMatrix_loc = gl.getUniformLocation(shaderProgramGLID,glvert_attr_semantic.MTMatrix);
+        this.u_MITMatrix_loc = gl.getUniformLocation(shaderProgramGLID,glvert_attr_semantic.MITMatrix);
     }
     public getCustomAttributeLocation(varName: string) {
         return this._gl.getAttribLocation(this._spGLID, varName)
@@ -848,18 +854,46 @@ export class Shader {
             this._gl.uniform4fv(this.u_color_loc, uColor);
         }
     }
+    //设置视口矩阵
+    public setViewMatrix(vMatrix):void{
+        if (this.checklocValid(this.u_VMatrix_loc, "u_VMatrix_loc")) {
+            this._gl.uniform4fv(this.u_VMatrix_loc, vMatrix);
+        }
+    }
     //设置模型视口矩阵
     public setUseModelViewMatrix(mvMatrix): void {
-
         if (this.checklocValid(this.u_MVMatrix_loc, "u_MVMatrix_loc")) {
             this._gl.uniformMatrix4fv(this.u_MVMatrix_loc, false, mvMatrix);
         }
     }
     //设置透视投影矩阵
     public setUseProjectionMatrix(projMatrix): void {
-
         if (this.checklocValid(this.u_PMatrix_loc, "u_PMatrix_loc")) {
             this._gl.uniformMatrix4fv(this.u_PMatrix_loc, false, projMatrix);
+        }
+    }
+    //设置模型世界矩阵
+    public setUseModelWorldMatrix(wMatrix):void{
+        if (this.checklocValid(this.u_MMatrix_loc, "u_MMatrix_loc")) {
+            this._gl.uniformMatrix4fv(this.u_MMatrix_loc, false, wMatrix);
+        }
+    }
+    //设置模型世界矩阵的逆矩阵
+    public setUseModelWorldInverseMatrix(wiMatrix):void{
+        if (this.checklocValid(this.u_MIMatrix_loc, "u_MIMatrix_loc")) {
+            this._gl.uniformMatrix4fv(this.u_MIMatrix_loc, false, wiMatrix);
+        }
+    }
+    //设置模型世界矩阵的转置矩阵
+    public setUseModelTransformWorldMatrix(wtMatrix):void{
+        if (this.checklocValid(this.u_MTMatrix_loc, "u_MTMatrix_loc")) {
+            this._gl.uniformMatrix4fv(this.u_MTMatrix_loc, false, wtMatrix);
+        }
+    }
+    //设置模型世界矩阵的逆矩阵的转置矩阵
+    public setUseModelInverseTransformWorldMatrix(witMatrix):void{
+        if (this.checklocValid(this.u_MITMatrix_loc, "u_MITMatrix_loc")) {
+            this._gl.uniformMatrix4fv(this.u_MITMatrix_loc, false, witMatrix);
         }
     }
     //设置顶点值

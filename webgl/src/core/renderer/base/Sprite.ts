@@ -188,7 +188,7 @@ export namespace SY {
 
         protected _shader: Shader;
 
-        private _renderData:RenderData;
+        protected _renderData:RenderData;
 
         //参考glprimitive_type
         protected _glPrimitiveType: glprimitive_type;//绘制的类型

@@ -46,10 +46,10 @@ export default class Scene3D extends Scene {
         
        
 
-        this._FLightPoint = new PointLight();
-        this._FLightPoint.setPosition(0,20,-100);
-        this.addChild(this._FLightPoint);
-        this._FLightPoint.Url = "res/models/char/F.json";
+        // this._FLightPoint = new PointLight();
+        // this._FLightPoint.setPosition(0,20,-100);
+        // this.addChild(this._FLightPoint);
+        // this._FLightPoint.Url = "res/models/char/F.json";
 
         // this._FLightSpot = new SpotLight();
         // this._FLightSpot.setPosition(0,-20,-100);
@@ -114,7 +114,7 @@ export default class Scene3D extends Scene {
 
         this._lightCube = new LightCube(gl);
         this._lightCube.url = "res/wicker.jpg";
-        this._lightCube.setPosition(1, 2.7, 0);
+        this._lightCube.setPosition(-5, 2.7, 0);
         this._lightCube.setScale(0.5, 0.5, 0.5);
         this._centerNode.addChild(this._lightCube);
 

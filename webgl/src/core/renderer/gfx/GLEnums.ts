@@ -196,13 +196,15 @@ export const enum glvert_attr_semantic{
     TEX_COORD7 = 'u_texCoord7',
     TEX_COORD8 = 'u_texCoord8',
     SKYBOX = "u_skybox",
-    MVMatrix = 'u_MVMatrix',
-    MMatrix = 'u_MMatrix',
-    VMatrix = 'u_VMatrix',
-    PMatrix = 'u_PMatrix',
-    PMV_MATRIX = "u_PVM_Matrix",
-    PMV_MATRIX_INVERSE = "u_PVM_Matrix_Inverse"
-
+    MVMatrix = 'u_MVMatrix',  //视口矩阵*模型世界矩阵
+    MMatrix = 'u_MMatrix',    //模型世界矩阵
+    MTMatrix = 'u_MTMatrix',    //模型世界矩阵的转置矩阵
+    MIMatrix = 'u_MIMatrix',    //模型世界矩阵的逆矩阵
+    MITMatrix = 'u_MITMatrix',    //模型世界矩阵的逆矩阵的转置矩阵
+    VMatrix = 'u_VMatrix',    //视口矩阵
+    PMatrix = 'u_PMatrix',    //投影矩阵
+    PMV_MATRIX = "u_PVM_Matrix",//投影矩阵*视口矩阵*模型世界矩阵
+    PMV_MATRIX_INVERSE = "u_PVM_Matrix_Inverse" //(投影矩阵*视口矩阵*模型世界矩阵)的逆矩阵
 }
 
 

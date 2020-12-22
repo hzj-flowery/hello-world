@@ -69,7 +69,6 @@ export default class Device {
         this._height = canvas.clientHeight;
         console.log("画布的尺寸----", this._width, this._height);
         this.initExt();
-        this.initMatrix();
 
         //添加事件监听
         canvas.addEventListener("webglcontextlost", this.contextLost.bind(this));
@@ -115,10 +114,6 @@ export default class Device {
     }
     private resume(): void {
         console.log("回来-----");
-    }
-    //初始化矩阵
-    private initMatrix(): void {
-        this._temp_model_view_matrix = glMatrix.mat4.identity(null);
     }
     public getWebglContext(): WebGLRenderingContext {
         return (this.canvas as any).getContext("webgl")
@@ -252,8 +247,6 @@ export default class Device {
             this.draw(this._renderData[j], isScene);
         }
     }
-
-    private _temp_model_view_matrix;//视口模型矩阵
     /**
      * 
      * @param rData 
@@ -261,23 +254,9 @@ export default class Device {
      * @param viewMatrix 视口矩阵
      */
     private _drawBase(rData: RenderData, projMatix: Float32Array, viewMatrix: Float32Array): void {
-        //激活shader
-        rData._shader.active();
-        //给shader中的变量赋值
-        rData._shader.setUseLight(rData._lightColor, rData._lightDirection);
-        if (rData._u_pvm_matrix_inverse) {
-            rData._shader.setUseSkyBox(rData._u_pvm_matrix_inverse);
-        }
-        glMatrix.mat4.mul(this._temp_model_view_matrix, viewMatrix, rData._modelMatrix)
-        rData._shader.setUseModelViewMatrix(this._temp_model_view_matrix);
-
-        rData._shader.setUseProjectionMatrix(projMatix);
-        rData._shader.setUseVertexAttribPointerForVertex(rData._vertGLID, rData._vertItemSize);
-        rData._shader.setUseVertexAttribPointerForUV(rData._uvGLID, rData._uvItemSize);
-        rData._shader.setUseVertexAttriPointerForNormal(rData._normalGLID, rData._normalItemSize);
-        if (rData._textureGLIDArray.length > 0) {
-            rData._shader.setUseTexture(rData._textureGLIDArray[0]);
-        }
+        
+        rData.bindBufferDataToGPU(viewMatrix,projMatix);
+        
         var indexglID = rData._indexGLID;
         if (indexglID != -1) {
             this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, indexglID);
