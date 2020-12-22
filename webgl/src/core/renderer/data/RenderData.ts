@@ -129,7 +129,7 @@ export  class RenderData{
      * @param view 
      * @param proj 
      */
-    public updateData(view,proj):void{
+    private bindGPUBufferData(view,proj):void{
 
         //激活shader
         this._shader.active();
@@ -146,6 +146,28 @@ export  class RenderData{
         if (this._textureGLIDArray.length > 0) {
             this._shader.setUseTexture(this._textureGLIDArray[0]);
         }
+    }
+    /**
+     * 启动绘制
+     * @param gl 
+     * @param view 
+     * @param proj 
+     */
+    public startDraw(gl:WebGLRenderingContext,view,proj):void{
+        this.bindGPUBufferData(view,proj);
+        var indexglID = this._indexGLID;
+        if (indexglID != -1) {
+            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexglID);
+            gl.drawElements(this._glPrimitiveType, this._indexItemNums, gl.UNSIGNED_SHORT, 0);
+        }
+        else {
+            gl.drawArrays(this._glPrimitiveType, 0, this._vertItemNums);
+        }
+        //解除缓冲区对于目标纹理的绑定
+        gl.bindTexture(gl.TEXTURE_2D, null);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
+        gl.bindBuffer(gl.ARRAY_BUFFER, null);
+        this._shader.disableVertexAttribArray();
     }
 }
 

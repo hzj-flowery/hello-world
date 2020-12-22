@@ -254,22 +254,7 @@ export default class Device {
      * @param viewMatrix 视口矩阵
      */
     private _drawBase(rData: RenderData, projMatix: Float32Array, viewMatrix: Float32Array): void {
-        
-        rData.bindBufferDataToGPU(viewMatrix,projMatix);
-        
-        var indexglID = rData._indexGLID;
-        if (indexglID != -1) {
-            this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, indexglID);
-            this.gl.drawElements(rData._glPrimitiveType, rData._indexItemNums, this.gl.UNSIGNED_SHORT, 0);
-        }
-        else {
-            this.gl.drawArrays(rData._glPrimitiveType, 0, rData._vertItemNums);
-        }
-        //解除缓冲区对于目标纹理的绑定
-        this.gl.bindTexture(this.gl.TEXTURE_2D, null);
-        this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, null);
-        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, null);
-        rData._shader.disableVertexAttribArray();
+        rData.startDraw(this.gl,viewMatrix,projMatix)
     }
     private _temp1Matrix: Float32Array = glMatrix.mat4.identity(null);
     private _temp2Matrix: Float32Array = glMatrix.mat4.identity(null);
