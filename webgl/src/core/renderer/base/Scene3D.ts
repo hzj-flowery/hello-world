@@ -118,9 +118,9 @@ export default class Scene3D extends Scene {
         this._lightCube.setScale(0.5, 0.5, 0.5);
         this._centerNode.addChild(this._lightCube);
 
-        this._skybox = new SkyBox(gl);
-        this._skybox.setDefaultUrl();
-        this.addChild(this._skybox);
+        // this._skybox = new SkyBox(gl);
+        // this._skybox.setDefaultUrl();
+        // this.addChild(this._skybox);
 
 
        

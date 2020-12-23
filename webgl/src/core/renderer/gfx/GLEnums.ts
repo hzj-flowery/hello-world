@@ -204,7 +204,9 @@ export const enum glvert_attr_semantic{
     VMatrix = 'u_VMatrix',    //视口矩阵
     PMatrix = 'u_PMatrix',    //投影矩阵
     PMV_MATRIX = "u_PVM_Matrix",//投影矩阵*视口矩阵*模型世界矩阵
-    PMV_MATRIX_INVERSE = "u_PVM_Matrix_Inverse" //(投影矩阵*视口矩阵*模型世界矩阵)的逆矩阵
+    PMV_MATRIX_INVERSE = "u_PVM_Matrix_Inverse", //(投影矩阵*视口矩阵*模型世界矩阵)的逆矩阵
+    LightWorldPosition =  "u_lightWorldPosition", //光的位置
+    CameraWorldPosition = "u_cameraWorldPosition" //相机的位置
 }
 
 

@@ -42,6 +42,7 @@ export  class RenderData{
     public _type:RenderDataType;
     public id:number;//每一个渲染数据都一个唯一的id
     public _cameraType:number;//相机的类型
+    public _cameraPosition:Array<number>;//相机的位置
     public _shader:Shader;//着色器
     public _vertGLID:WebGLBuffer;//顶点buffer的显存地址
     public _vertItemSize:number;//一个顶点buffer单元的顶点数目
@@ -55,6 +56,7 @@ export  class RenderData{
     public _normalItemSize:number;//一个法线buffer单元的顶点数目
     public _lightColor:Array<number>;//光的颜色
     public _lightDirection:Array<number>;//光的方向
+    public _lightPosition:Array<number>;//光的位置
     public _textureGLIDArray:Array<WebGLTexture>;
     public _glPrimitiveType: glprimitive_type;//绘制的类型
     public _modelMatrix:Float32Array;//模型矩阵
@@ -69,6 +71,7 @@ export  class RenderData{
     private _temp_model_inverse_transform_matrix;//模型世界矩阵的逆矩阵的转置矩阵
     public reset():void{
         this._cameraType = 0;//默认情况下是透视投影
+        this._cameraPosition = [];
         this._shader = null;
         this._vertGLID = null;
         this._vertItemSize = -1;
@@ -80,6 +83,7 @@ export  class RenderData{
         this._normalItemSize = -1;
         this._lightColor = [];
         this._lightDirection = [];
+        this._lightPosition = [];
         this._textureGLIDArray = [];
         this._modelMatrix =  null;
         this._u_pvm_matrix_inverse = null;
@@ -121,6 +125,8 @@ export  class RenderData{
                         glMatrix.mat4.transpose(this._temp_model_inverse_transform_matrix,this._temp_model_inverse_matrix);
                         this._shader.setUseModelInverseTransformWorldMatrix(this._temp_model_inverse_transform_matrix);
                         break;
+                    default:
+                        console.log("目前还没有处理这个矩阵类型");
                }
         })
     }

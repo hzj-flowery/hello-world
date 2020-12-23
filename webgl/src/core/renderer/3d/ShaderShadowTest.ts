@@ -96,7 +96,7 @@ class ShadowLight {
     attribute vec3 a_normal;
 
     uniform vec3 u_lightWorldPosition; //光的位置
-    uniform vec3 u_viewWorldPosition;  //相机的位置
+    uniform vec3 u_cameraWorldPosition;  //相机的位置
     varying vec3 v_surfaceToLight;     //表面到光的方向
     varying vec3 v_surfaceToView;      //表面到相机的方向
 
@@ -114,7 +114,7 @@ class ShadowLight {
     v_projectedTexcoord = u_textureMatrix * worldPosition; //算出投影纹理的uv
     v_normal = mat3(u_world) * a_normal;
     v_surfaceToLight = u_lightWorldPosition - worldPosition.rgb;  
-    v_surfaceToView = u_viewWorldPosition - worldPosition.rgb;
+    v_surfaceToView = u_cameraWorldPosition - worldPosition.rgb;
     }`
   private fragmentshader3d =
     `precision mediump float;
@@ -359,7 +359,7 @@ class ShadowLight {
       u_textureMatrix: texMatrix,
       u_shadowMap: this.renderTexture.depthTexture,
       u_lightWorldPosition:lightPos,
-      u_viewWorldPosition: cameraPos,
+      u_cameraWorldPosition: cameraPos,
       u_shininess:150,
       u_reverseLightDirection: lightReverseDir,
     });

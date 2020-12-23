@@ -20,6 +20,8 @@ const _default = {
     depthWrite: false,
     depthFunc: glEnums.DS_FUNC_LESS,
 
+
+
     // stencil
     stencilTest: false,
     stencilSep: false,
@@ -38,6 +40,9 @@ const _default = {
     stencilZPassOpBack: glEnums.STENCIL_OP_KEEP,
     stencilWriteMaskBack: 0xff,
 
+    //Scissor
+    ScissorTest:false,
+
     // cull-mode
     cullMode: glEnums.CULL_BACK,
 
@@ -52,6 +57,9 @@ const _default = {
     maxTextureSlot: -1,
     textureUnits: [],
     program: null,
+
+    viewPort:null
+
 };
 
 export default class State {
@@ -92,6 +100,7 @@ export default class State {
     public stencilZFailOpBack;
     public stencilZPassOpBack;
     public stencilWriteMaskBack;
+    public ScissorTest;
 
     // cull-mode
     public cullMode;
@@ -110,19 +119,38 @@ export default class State {
 
     public program;
 
-    constructor(device) {
-        // bindings
-        this.vertexBuffers = new Array(device._caps.maxVertexStreams);
-        this.vertexBufferOffsets = new Array(device._caps.maxVertexStreams);
-        this.textureUnits = new Array(device._caps.maxTextureUnits);
+    public viewPort:any;
+    public isSameViewPort(x,y,width,height):boolean{
+         if(!this.viewPort)
+         {
+             return false;
+         }
+         if(this.viewPort.x==x&&this.viewPort.y == y&&this.viewPort.width == width&&this.viewPort.height == height)
+         {
+             return true;
+         }
+         return false;
+    }
+    public setViewPort(x,y,width,height):void{
+        this.viewPort = {};
+        this.viewPort.x = x;
+        this.viewPort.y = y;
+        this.viewPort.width = width;
+        this.viewPort.height = height;
+    }
+    public getViewPort():any{
+        return this.viewPort;
+    }
 
+    constructor(device) {
+        
         this.set(_default);
     }
 
     static initDefault(device) {
-        _default.vertexBuffers = new Array(device._caps.maxVertexStreams);
-        _default.vertexBufferOffsets = new Array(device._caps.maxVertexStreams);
-        _default.textureUnits = new Array(device._caps.maxTextureUnits);
+        // _default.vertexBuffers = new Array(device._caps.maxVertexStreams);
+        // _default.vertexBufferOffsets = new Array(device._caps.maxVertexStreams);
+        // _default.textureUnits = new Array(device._caps.maxTextureUnits);
     }
 
     reset() {
@@ -164,28 +192,32 @@ export default class State {
         this.stencilZPassOpBack = cpy.stencilZPassOpBack;
         this.stencilWriteMaskBack = cpy.stencilWriteMaskBack;
 
+        this.ScissorTest = cpy.ScissorTest;
+
         // cull-mode
         this.cullMode = cpy.cullMode;
 
         // primitive-type
         this.primitiveType = cpy.primitiveType;
 
-        // buffer bindings
-        this.maxStream = cpy.maxStream;
-        for (let i = 0; i < cpy.vertexBuffers.length; ++i) {
-            this.vertexBuffers[i] = cpy.vertexBuffers[i];
-        }
-        for (let i = 0; i < cpy.vertexBufferOffsets.length; ++i) {
-            this.vertexBufferOffsets[i] = cpy.vertexBufferOffsets[i];
-        }
-        this.indexBuffer = cpy.indexBuffer;
+        // // buffer bindings
+        // this.maxStream = cpy.maxStream;
+        // for (let i = 0; i < cpy.vertexBuffers.length; ++i) {
+        //     this.vertexBuffers[i] = cpy.vertexBuffers[i];
+        // }
+        // for (let i = 0; i < cpy.vertexBufferOffsets.length; ++i) {
+        //     this.vertexBufferOffsets[i] = cpy.vertexBufferOffsets[i];
+        // }
+        // this.indexBuffer = cpy.indexBuffer;
 
-        // texture bindings
-        this.maxTextureSlot = cpy.maxTextureSlot;
-        for (let i = 0; i < cpy.textureUnits.length; ++i) {
-            this.textureUnits[i] = cpy.textureUnits[i];
-        }
+        // // texture bindings
+        // this.maxTextureSlot = cpy.maxTextureSlot;
+        // for (let i = 0; i < cpy.textureUnits.length; ++i) {
+        //     this.textureUnits[i] = cpy.textureUnits[i];
+        // }
 
         this.program = cpy.program;
+
+        this.viewPort = cpy.viewPort;
     }
 }

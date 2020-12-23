@@ -9,6 +9,7 @@ import FrameBuffer from "./renderer/gfx/FrameBuffer";
 import { G_ShaderFactory } from "./renderer/shader/Shader";
 import { CameraData } from "./renderer/data/CameraData";
 import { NormalRenderData, RenderData, RenderDataPool, RenderDataType, SpineRenderData } from "./renderer/data/RenderData";
+import State from "./renderer/gfx/State";
 
 /**
 * _attach
@@ -41,6 +42,16 @@ function _attach(gl, location, attachment, face = 0) {
     // }
 }
 
+function _commitDepthState(gl:WebGLRenderingContext,cur:State,next:State):void{
+    gl.enable(gl.DEPTH_TEST);
+}
+function _commitCullState(gl:WebGLRenderingContext,cur:State,next:State):void{
+    gl.enable(gl.CULL_FACE);
+}
+function _commitScissorState(gl:WebGLRenderingContext,cur:State,next:State):void{
+    gl.enable(gl.SCISSOR_TEST);
+}
+
 export default class Device {
     constructor() { };
     public gl: WebGL2RenderingContext;
@@ -48,6 +59,10 @@ export default class Device {
     private _width: number = 0;
     private _height: number = 0;
     public canvas: HTMLCanvasElement;
+
+    private _curFrameS:State;//这个非常重要
+    private _nextFrameS:State;//这个非常重要
+
     private static _instance: Device;
     public static get Instance(): Device {
         if (!this._instance) {
@@ -62,6 +77,8 @@ export default class Device {
         this.gl = gl;
         this.canvas = canvas;
         GLapi.bindGL(gl);
+        this._nextFrameS = new State(gl);
+        this._curFrameS = new State(gl);
         canvas.onmousedown = this.onMouseDown.bind(this);
         canvas.onmousemove = this.onMouseMove.bind(this);
         canvas.onmouseup = this.onMouseUp.bind(this);
@@ -221,16 +238,32 @@ export default class Device {
         this.stats.begin();
         this._renderData = [];
     }
+   
     //提交渲染状态
-    private _commitRenderState(clearColor: Array<number>, frameBuffer: WebGLFramebuffer, viewPort: Object = { x: 0, y: 0, w: 1, h: 1 }): void {
+    private _commitRenderState(clearColor: Array<number>, frameBuffer: WebGLFramebuffer, viewPort: any = { x: 0, y: 0, w: 1, h: 1 }): void {
         let gl = this.gl;
-        gl.enable(gl.CULL_FACE);
-        gl.enable(gl.DEPTH_TEST);
-        gl.enable(gl.SCISSOR_TEST);
+
+        this._nextFrameS.depthTest = true; //开启深度测试
+        this._nextFrameS.ScissorTest = true;//裁切测试
+        //设置viewport
+        let x = viewPort.x * this.width;
+        let y = viewPort.y * this.height;
+        let width = viewPort.w * this.width;
+        let height = viewPort.h * this.height;
+        this._nextFrameS.setViewPort(x,y,width,height);
+
+        _commitDepthState(gl,this._curFrameS,this._nextFrameS);
+        _commitCullState(gl,this._curFrameS,this._nextFrameS);
+        _commitScissorState(gl,this._curFrameS,this._nextFrameS);
+        
+       
         this.setViewPort(viewPort);
         gl.clearColor(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
         gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuffer);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        
+        //更新状态
+        this._curFrameS.set(this._nextFrameS);
     }
     //渲染后
     private onAfterRender() {
@@ -401,13 +434,24 @@ export default class Device {
      * }
      */
     public setViewPort(object: any): void {
-        let x = object.x * this.gl.canvas.width;
-        let y = object.y * this.gl.canvas.height;
-        let width = object.w * this.gl.canvas.width;
-        let height = object.h * this.gl.canvas.height;
-        this.gl.viewport(x, y, width, height);
-        this.gl.scissor(x, y, width, height);
+        let x = object.x * this.width;
+        let y = object.y * this.height;
+        let width = object.w * this.width;
+        let height = object.h * this.height;
+        if(this._curFrameS.isSameViewPort(x,y,width,height)==false)
+        {
+            this.gl.viewport(x, y, width, height);
+            this.gl.scissor(x, y, width, height);
+        }
+        
     }
+    public get width(){
+        return this._width;
+    }
+    public get height(){
+        return this._height;
+    }
+    
 
 
     /**
