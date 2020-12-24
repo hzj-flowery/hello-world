@@ -191,16 +191,10 @@ export default class Device {
     private onMouseUp(ev): void {
         this._isCapture = false;
     }
-    private _renderTarget:number = 1;
-    public get isRenderToScreen():boolean{
-        return this._renderTarget==1?true:false;
-    }
     public startDraw(time: number, scene2D: Scene2D, scene3D: Scene3D): void {
         this.onBeforeRender();
         this.visitRenderTree(time, scene2D, scene3D);
-        this._renderTarget = 2;
         this.drawToUI(scene2D.getFrameBuffer());
-        this._renderTarget = 1;
         this.draw2screen();
         this.onAfterRender();
     }
