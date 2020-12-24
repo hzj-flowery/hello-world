@@ -30,6 +30,7 @@ export class RenderSprite extends SY.Sprite2D{
     constructor(gl){
         super(gl);
         this._cameraType = 1;
+        this._renderData._isOffline = true;
     }
     protected onInit(): void {
         this.setContentSize(Device.Instance.Width/4,Device.Instance.Height/4);

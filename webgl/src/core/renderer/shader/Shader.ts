@@ -707,6 +707,8 @@ export class Shader {
     private u_skybox_loc;//天空盒属性位置
     private u_pvm_matrix_loc;//投影视口模型矩阵
     private u_pvm_matrix_inverse_loc;//模型视图投影的逆矩阵
+    private u_light_world_position_loc;//光的世界位置
+    private u_camera_world_position_loc;//相机的世界位置
 
     public USE_NORMAL: boolean = false;//法线
     public USE_LIGHT: boolean = false;//光照
@@ -731,6 +733,29 @@ export class Shader {
         var glID = G_ShaderFactory.createShader(vert, frag);
         return new Shader(G_ShaderFactory._gl, glID)
     }
+    private _locSafeArr:Map<string,boolean> = new Map();
+    private _initLockSafeCheck():void{
+        this._locSafeArr.clear();
+        this._locSafeArr.set("a_position_loc",this.a_position_loc>=0);
+        this._locSafeArr.set("a_normal_loc",this.a_normal_loc>=0);
+        this._locSafeArr.set("a_uv_loc",this.a_uv_loc>=0);
+        this._locSafeArr.set("a_tangent_loc",this.a_tangent_loc>=0);
+        this._locSafeArr.set("u_color_loc",this.u_color_loc>=0);
+        this._locSafeArr.set("u_color_dir_loc",this.u_color_dir_loc>=0);
+        this._locSafeArr.set("u_MVMatrix_loc",this.u_MVMatrix_loc>=0);
+        this._locSafeArr.set("u_PMatrix_loc",this.u_PMatrix_loc>=0);
+        this._locSafeArr.set("u_texCoord_loc",this.u_texCoord_loc>=0);
+        this._locSafeArr.set("u_skybox_loc",this.u_skybox_loc>=0);
+        this._locSafeArr.set("u_pvm_matrix_loc",this.u_pvm_matrix_loc>=0);
+        this._locSafeArr.set("u_pvm_matrix_inverse_loc",this.u_pvm_matrix_inverse_loc>=0);
+        this._locSafeArr.set("u_MMatrix_loc",this.u_MMatrix_loc>=0);
+        this._locSafeArr.set("u_VMatrix_loc",this.u_VMatrix_loc>=0);
+        this._locSafeArr.set("u_MIMatrix_loc",this.u_MIMatrix_loc>=0);
+        this._locSafeArr.set("u_MTMatrix_loc",this.u_MTMatrix_loc>=0);
+        this._locSafeArr.set("u_MITMatrix_loc",this.u_MITMatrix_loc>=0);
+        this._locSafeArr.set("u_camera_world_position_loc",this.u_camera_world_position_loc>=0);
+        this._locSafeArr.set("u_light_world_position_loc",this.u_light_world_position_loc>=0); 
+    }
     protected onCreateShader(): void {
         var shaderProgramGLID = this._spGLID;
         var gl = this._gl;
@@ -751,6 +776,9 @@ export class Shader {
         this.u_MIMatrix_loc = gl.getUniformLocation(shaderProgramGLID,glvert_attr_semantic.MIMatrix);
         this.u_MTMatrix_loc = gl.getUniformLocation(shaderProgramGLID,glvert_attr_semantic.MTMatrix);
         this.u_MITMatrix_loc = gl.getUniformLocation(shaderProgramGLID,glvert_attr_semantic.MITMatrix);
+        this.u_camera_world_position_loc = gl.getUniformLocation(shaderProgramGLID,glvert_attr_semantic.CameraWorldPosition);
+        this.u_light_world_position_loc = gl.getUniformLocation(shaderProgramGLID,glvert_attr_semantic.LightWorldPosition);
+        this._initLockSafeCheck();
     }
     public getCustomAttributeLocation(varName: string) {
         return this._gl.getAttribLocation(this._spGLID, varName)
@@ -759,7 +787,6 @@ export class Shader {
     public getGLID() {
         return this._spGLID;
     }
-
     /**
      * 检查shader中变量的位置是否有效
      * @param loc 
@@ -801,7 +828,6 @@ export class Shader {
             const index = gl.getAttribLocation(shaderProgramGLID, attribInfo.name);
         }
     }
-
     //激活shader
     public active(): void {
         this.disableVertexAttribArray();
@@ -824,13 +850,31 @@ export class Shader {
         // set the light direction.
         this._gl.uniform3fv(this.u_color_dir_loc, direction);
     }
+    /**
+     * 设置使用相机的世界位置
+     * @param pos 
+     */
+    public setUseCameraWorldPosition(pos:Array<number>):void{
+         if(this.checklocValid(this.u_camera_world_position_loc,"u_camera_world_position_loc"))
+         {
+            this._gl.uniform3fv(this.u_camera_world_position_loc, pos);
+         }
+    }
+    /**
+     * 设置使用光的世界位置
+     * @param pos 
+     */
+    public setUseLightWorldPosition(pos:Array<number>):void{
+        if(this.checklocValid(this.u_light_world_position_loc,"u_light_world_position_loc"))
+        {
+           this._gl.uniform3fv(this.u_light_world_position_loc, pos);
+        }
+    }
     public setUseSkyBox(u_pvm_matrix_inverse): void {
 
         var gl = this._gl;
-
         gl.enable(gl.CULL_FACE);
         gl.enable(gl.DEPTH_TEST);
-
         // Set the uniforms
         gl.uniformMatrix4fv(
             this.u_pvm_matrix_inverse_loc, false,
@@ -855,7 +899,7 @@ export class Shader {
         }
     }
     //设置视口矩阵
-    public setViewMatrix(vMatrix):void{
+    public setUseViewMatrix(vMatrix):void{
         if (this.checklocValid(this.u_VMatrix_loc, "u_VMatrix_loc")) {
             this._gl.uniform4fv(this.u_VMatrix_loc, vMatrix);
         }

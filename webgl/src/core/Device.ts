@@ -191,10 +191,16 @@ export default class Device {
     private onMouseUp(ev): void {
         this._isCapture = false;
     }
+    private _renderTarget:number = 1;
+    public get isRenderToScreen():boolean{
+        return this._renderTarget==1?true:false;
+    }
     public startDraw(time: number, scene2D: Scene2D, scene3D: Scene3D): void {
         this.onBeforeRender();
         this.visitRenderTree(time, scene2D, scene3D);
+        this._renderTarget = 2;
         this.drawToUI(scene2D.getFrameBuffer());
+        this._renderTarget = 1;
         this.draw2screen();
         this.onAfterRender();
     }
@@ -212,21 +218,21 @@ export default class Device {
      * 将结果绘制到UI上
      */
     private drawToUI(frameBuffer: WebGLFramebuffer): void {
-        this._commitRenderState([0.5, 0.5, 0.5, 1.0], frameBuffer);
-        this.triggerRender();
+        this._commitRenderState([0, 0, 0.5, 1.0], frameBuffer);
+        this.triggerRender(false,false);
     }
     //将结果绘制到窗口
     private draw2screen(): void {
         let isShowCamera: boolean = true;
         if (isShowCamera) {
             this._commitRenderState([0.5, 0.5, 0.5, 1.0], null, { x: 0, y: 0, w: 0.5, h: 1 });
-            this.triggerRender();
+            this.triggerRender(false,true);
             this.setViewPort({ x: 0.5, y: 0, w: 0.5, h: 1 });
-            this.triggerRender(true);
+            this.triggerRender(true,true);
         }
         else {
             this._commitRenderState([0.5, 0.5, 0.5, 1.0], null);
-            this.triggerRender();
+            this.triggerRender(false,true);
         }
         if (this._isCapture) {
             this._isCapture = false;
@@ -256,10 +262,9 @@ export default class Device {
         _commitCullState(gl,this._curFrameS,this._nextFrameS);
         _commitScissorState(gl,this._curFrameS,this._nextFrameS);
         
-       
+        gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuffer);
         this.setViewPort(viewPort);
         gl.clearColor(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
-        gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuffer);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
         
         //更新状态
@@ -270,13 +275,20 @@ export default class Device {
         this.stats.end();
         RenderDataPool.return(this._renderData);
     }
-    private triggerRender(isScene: boolean = false) {
+    private triggerRender(isScene: boolean = false,isRenderToScreen:boolean) {
         if (isScene) {
             var cameraData = GameMainCamera.instance.getCamera(this._renderData[0]._cameraType).getCameraData();
             G_CameraModel.draw(cameraData.projectMat, cameraData.modelMat);
         }
         //提交数据给GPU 立即绘制
         for (var j = 0; j < this._renderData.length; j++) {
+            if(this._renderData[j]._isOffline&&!isRenderToScreen)
+            {
+                //对于离屏渲染的数据 如果当前是离屏渲染的话 则不可以渲染它 否则会报错
+                //你想啊你把一堆显示数据渲染到一张纹理中，这张纹理本身就在这一堆渲染数据中 自然是会冲突的
+                //[.Offscreen-For-WebGL-07E77500]GL ERROR :GL_INVALID_OPERATION : glDrawElements: Source and destination textures of the draw are the same
+                continue;
+            }
             this.draw(this._renderData[j], isScene);
         }
     }

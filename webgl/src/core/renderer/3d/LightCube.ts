@@ -1,6 +1,6 @@
 import { SY } from "../base/Sprite";
 import { CubeData } from "../data/CubeData";
-import { ShaderUseMatrixType } from "../data/RenderData";
+import { ShaderUseVariantType } from "../data/RenderData";
 import { glprimitive_type } from "../gfx/GLEnums";
 
 /**
@@ -67,7 +67,7 @@ export default class LightCube extends SY.SpriteBase {
         
         this.setShader(vertexshader3d,fragmentshader3d);
         this._shader.USE_LIGHT = true;
-        this._renderData.pushMatrix(ShaderUseMatrixType.ModelInverseTransform);
+        this._renderData.pushVariant(ShaderUseVariantType.ModelInverseTransform);
 
     }
     public visit(time):void{

@@ -89,7 +89,7 @@ export default class TextureCube extends Texture {
             }.bind(this));
         });
 
-        //gl.generateMipmap(gl.TEXTURE_CUBE_MAP);
+        gl.generateMipmap(gl.TEXTURE_CUBE_MAP);
 
         //放大
         gl.texParameteri(this._target, gl.TEXTURE_MAG_FILTER, gltex_filter.LINEAR);

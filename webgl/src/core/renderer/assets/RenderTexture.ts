@@ -65,7 +65,6 @@ export class RenderTexture extends Texture2D {
         return this._depthTexture;
     }
     public attach(place:string,width:number,height:number) {
-        var gl = this._gl;
         if(place=="color")
         {
             this.renderTextureToColor(width,height);

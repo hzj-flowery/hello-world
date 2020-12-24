@@ -21,6 +21,7 @@ import { G_CameraModel } from "./core/renderer/camera/CameraModel";
 import ShaderShadowTest from "./core/renderer/3d/ShaderShadowTest";
 import SpotLightTest from "./core/renderer/light/SpotLightTest";
 import { StencilTest } from "./core/renderer/3d/StencilTest";
+import { RenderTargetTexture } from "./core/renderer/3d/RenderTargetTexture";
 
 
 
@@ -94,5 +95,7 @@ LoaderManager.instance.load(arr,null,function(){
     // ShaderShadowTest.run();
 
     // StencilTest.run();
+
+    // RenderTargetTexture.run();
     
 })

@@ -187,10 +187,8 @@ export class Texture {
     private setTextureOperator(): void {
         let gl = this._gl;
         this._gl.pixelStorei(gl.UNPACK_ALIGNMENT,this._alignment);
-
         // Y 轴取反
         this._gl.pixelStorei(this._gl.UNPACK_FLIP_Y_WEBGL, this._unpackFlipY);
-
         if(this._genMipmaps)
         {
             // 生成 MipMap 映射
