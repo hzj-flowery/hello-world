@@ -3,7 +3,8 @@ import { glMatrix } from "../../Matrix";
 import { MathUtils } from "../../utils/MathUtils";
 import { SY } from "../base/Sprite";
 import { syPrimitives } from "../shader/Primitives";
-import { BufferAttribsData, G_ShaderFactory, ShaderData } from "../shader/Shader";
+import { BufferAttribsData, ShaderData } from "../shader/Shader";
+import { G_ShaderFactory } from "../shader/ShaderFactory";
 
 
 var vertexColorVertexShader =

@@ -1,4 +1,4 @@
-import { gltex_filter, gltex_wrap, gltex_config_format, glTextureChanelTotalBytes, glTextureFmtInfor, glType } from "../gfx/GLEnums";
+import { gltex_filter, gltex_wrap, gltex_config_format, glTextureChanelTotalBytes, glTextureFmtInfor, glType } from "../../gfx/GLEnums";
 
 
 

@@ -6,10 +6,10 @@ import { CameraModel, G_CameraModel } from "./renderer/camera/CameraModel";
 import GameMainCamera from "./renderer/camera/GameMainCamera";
 import { GLapi } from "./renderer/gfx/GLapi";
 import FrameBuffer from "./renderer/gfx/FrameBuffer";
-import { G_ShaderFactory } from "./renderer/shader/Shader";
 import { CameraData } from "./renderer/data/CameraData";
 import { NormalRenderData, RenderData, RenderDataPool, RenderDataType, SpineRenderData } from "./renderer/data/RenderData";
 import State from "./renderer/gfx/State";
+import { G_ShaderFactory } from "./renderer/shader/ShaderFactory";
 
 /**
 * _attach
@@ -301,13 +301,14 @@ export default class Device {
     private draw(rData: RenderData, isUseScene: boolean = false): void {
         var cameraData = GameMainCamera.instance.getCamera(rData._cameraType).getCameraData();
         glMatrix.mat4.identity(this._temp1Matrix);
+
+         //补一下光的数据
+         rData._lightColor = cameraData.lightData.color;
+         rData._lightDirection = cameraData.lightData.direction;
+         rData._cameraPosition = cameraData.position;
+         
         switch (rData._type) {
             case RenderDataType.Base:
-
-                //补一下光的数据
-                rData._lightColor = cameraData.lightData.color;
-                rData._lightDirection = cameraData.lightData.direction;
-
                 if (isUseScene) {
                     let projMatix = G_CameraModel.getSceneProjectMatrix();
                     glMatrix.mat4.invert(this._temp1Matrix, G_CameraModel.getSceneCameraMatrix());

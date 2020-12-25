@@ -17,11 +17,11 @@ var fragmentshader3d =
      'precision mediump float;' +
 
      'uniform samplerCube u_skybox;' +
-     'uniform mat4 u_PVMatrix_Inverse;' +
+     'uniform mat4 u_PVInverseMatrix;' +
 
      'varying vec4 v_position;' +
      'void main() {' +
-     'vec4 t = u_PVMatrix_Inverse * v_position;' +
+     'vec4 t = u_PVInverseMatrix * v_position;' +
      'vec3 pos = normalize(t.xyz / t.w);' +
      'vec4 color =  textureCube(u_skybox,pos);' +
      'gl_FragColor = color;' +
@@ -46,12 +46,10 @@ export default class SkyBox extends SY.SpriteBase {
           'res/skybox/2/back-z.png',
           'res/skybox/2/front+z.png'
      ]
-
      public setDefaultUrl(): void {
           this.url = this.defaultPath;
      }
      protected draw(time){
-          // this._renderData._u_pv_matrix_inverse = (GameMainCamera.instance.getCamera(this._cameraType) as PerspectiveCamera).updateLookAt(time) as any;
           super.draw(time);
      }
 

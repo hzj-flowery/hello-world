@@ -1,5 +1,4 @@
 import { SY } from "../base/Sprite";
-import { RenderTexture } from "../assets/RenderTexture";
 import Device from "../../Device";
 
 

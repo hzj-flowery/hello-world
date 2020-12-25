@@ -1,4 +1,4 @@
-import { TextureOpts } from "../base/Texture";
+import { TextureOpts } from "../base/texture/Texture";
 import { glTextureFmtInfor, gltex_config_format, glTextureTotalChanels, glFilter, gltex_filter } from "../gfx/GLEnums";
 
 export default class CustomTextureData {

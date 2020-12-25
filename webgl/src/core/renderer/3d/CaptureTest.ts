@@ -2,7 +2,7 @@ import { createNoSubstitutionTemplateLiteral } from "typescript";
 import Device from "../../Device";
 import { glMatrix } from "../../Matrix";
 import { MathUtils } from "../../utils/MathUtils";
-import { G_ShaderFactory } from "../shader/Shader";
+import { G_ShaderFactory } from "../shader/ShaderFactory";
 
 var vertexshader3d =
     'attribute vec4 a_position;' +

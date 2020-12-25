@@ -2,9 +2,9 @@ import { SY } from "../base/Sprite";
 
 var vertexshader3d =
     'attribute vec4 a_position;' +
-    'uniform mat4 u_PVM_Matrix;' +
+    'uniform mat4 u_PVMMatrix;' +
     'void main() {' +
-    'gl_Position = u_PVM_Matrix * a_position;' +
+    'gl_Position = u_PVMMatrix * a_position;' +
     '}'
 
 var fragmentshader3d =

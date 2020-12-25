@@ -2,7 +2,8 @@ import Device from "../../Device";
 import LoaderManager from "../../LoaderManager";
 import { glMatrix } from "../../Matrix";
 import { MathUtils } from "../../utils/MathUtils";
-import { BufferAttribsData, G_ShaderFactory } from "../shader/Shader";
+import { BufferAttribsData} from "../shader/Shader";
+import { G_ShaderFactory } from "../shader/ShaderFactory";
 
 //三维光源
 var vertexshader3d =

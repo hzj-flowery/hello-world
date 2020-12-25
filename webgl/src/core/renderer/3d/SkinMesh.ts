@@ -23,7 +23,7 @@ var fragBaseCode =
     'varying vec2 v_uv;' +
     'uniform samplerCube u_skybox;'+
     'uniform sampler2D u_texCoord;' +
-    'uniform mat4 u_PVM_Matrix_Inverse;'+
+    'uniform mat4 u_PVMInverseMatrix;'+
     'uniform vec4 u_color;' +
     'uniform vec4 u_color_dir;' +
     

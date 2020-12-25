@@ -1,13 +1,14 @@
 "use strict";
 
 import { glMatrix } from "../../Matrix";
-import { Texture } from "../base/Texture";
-import { Texture2D } from "../base/Texture2D";
+import { Texture } from "../base/texture/Texture";
+import { Texture2D } from "../base/texture/Texture2D";
 import LoaderManager from "../../LoaderManager";
 import { SY } from "../base/Sprite";
-import { G_ShaderFactory, ShaderData } from "../shader/Shader";
+import {ShaderData } from "../shader/Shader";
 import Device from "../../Device";
 import { RenderDataPool, RenderDataType, SpineRenderData } from "../data/RenderData";
+import { G_ShaderFactory } from "../shader/ShaderFactory";
 
 var skinVS =
     'attribute vec4 a_POSITION;' +  //顶点位置

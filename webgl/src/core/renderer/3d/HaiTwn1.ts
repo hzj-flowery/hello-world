@@ -2,13 +2,14 @@
 
 import Device from "../../Device";
 import { glMatrix } from "../../Matrix";
-import { Texture2D } from "../base/Texture2D";
+import { Texture2D } from "../base/texture/Texture2D";
 import LoaderManager from "../../LoaderManager";
 import { sy } from "../../Director";
 import { SY } from "../base/Sprite";
 import GameMainCamera from "../camera/GameMainCamera";
-import { Texture } from "../base/Texture";
-import { G_ShaderFactory, ShaderData } from "../shader/Shader";
+import { Texture } from "../base/texture/Texture";
+import {ShaderData } from "../shader/Shader";
+import { G_ShaderFactory } from "../shader/ShaderFactory";
 
 var skinVS =
     'attribute vec4 a_POSITION;' +  //顶点位置

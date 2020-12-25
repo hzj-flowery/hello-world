@@ -2,7 +2,7 @@ import { glMatrix } from "../../Matrix";
 import { SY } from "../base/Sprite";
 import { CameraData } from "../data/CameraData";
 import { NormalRenderData } from "../data/RenderData";
-import { G_ShaderFactory } from "../shader/Shader";
+import { G_ShaderFactory } from "../shader/ShaderFactory";
 
 
 var vertexshader3d =

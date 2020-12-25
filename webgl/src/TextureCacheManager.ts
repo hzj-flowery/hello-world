@@ -1,4 +1,4 @@
-import { Texture } from "./core/renderer/base/Texture";
+import { Texture } from "./core/renderer/base/texture/Texture";
 
 
 /**

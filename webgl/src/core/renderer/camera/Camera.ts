@@ -1,6 +1,6 @@
 
 import enums from "./enums";
-import { RenderTexture } from "../assets/RenderTexture";
+import { RenderTexture } from "../base/texture/RenderTexture";
 import FrameBuffer from "../gfx/FrameBuffer";
 import { Node } from "../base/Node";
 import { glMatrix } from "../../Matrix";

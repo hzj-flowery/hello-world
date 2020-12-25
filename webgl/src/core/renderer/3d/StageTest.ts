@@ -25,7 +25,8 @@
 import Device from "../../Device";
 import { glMatrix } from "../../Matrix";
 import { syPrimitives } from "../shader/Primitives";
-import { BufferAttribsData, G_ShaderFactory, ShaderData } from "../shader/Shader";
+import { BufferAttribsData, ShaderData } from "../shader/Shader";
+import { G_ShaderFactory } from "../shader/ShaderFactory";
 var vertexColorVertexShader =
   'attribute vec4 a_position;' +
   'attribute vec4 a_color;' +

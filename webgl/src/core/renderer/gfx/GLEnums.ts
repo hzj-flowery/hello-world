@@ -188,6 +188,7 @@ export const enum glvert_attr_semantic{
     UV5 = 'a_uv5',
     UV6 = 'a_uv6',
     UV7 = 'a_uv7',
+    CUBE_COORD = 'u_cubeCoord',//立方体纹理单元
     TEX_COORD = 'u_texCoord',    //使用的纹理单元
     TEX_COORD1 = 'u_texCoord1',
     TEX_COORD2 = 'u_texCoord2',
@@ -198,6 +199,7 @@ export const enum glvert_attr_semantic{
     TEX_COORD7 = 'u_texCoord7',
     TEX_COORD8 = 'u_texCoord8',
     SKYBOX = "u_skybox",
+    
     MVMatrix = 'u_MVMatrix',  //视口矩阵*模型世界矩阵
     MMatrix = 'u_MMatrix',    //模型世界矩阵
     MTMatrix = 'u_MTMatrix',    //模型世界矩阵的转置矩阵
@@ -206,9 +208,9 @@ export const enum glvert_attr_semantic{
     VMatrix = 'u_VMatrix',    //视口矩阵
     PMatrix = 'u_PMatrix',    //投影矩阵
     PVMatrix = 'u_PVMatrix',    //投影*视口矩阵
-    PVMatrix_INVERSE = 'u_PVMatrix_Inverse',    //投影*视口矩阵的逆矩阵
-    PVM_MATRIX = "u_PVM_Matrix",//投影矩阵*视口矩阵*模型世界矩阵
-    PVM_MATRIX_INVERSE = "u_PVM_Matrix_Inverse", //(投影矩阵*视口矩阵*模型世界矩阵)的逆矩阵
+    PVMatrix_INVERSE = 'u_PVInverseMatrix',    //投影*视口矩阵的逆矩阵
+    PVM_MATRIX = "u_PVMMatrix",//投影矩阵*视口矩阵*模型世界矩阵
+    PVM_MATRIX_INVERSE = "u_PVMInverseMatrix", //(投影矩阵*视口矩阵*模型世界矩阵)的逆矩阵
     LightWorldPosition =  "u_lightWorldPosition", //光的位置
     CameraWorldPosition = "u_cameraWorldPosition" //相机的位置
 }

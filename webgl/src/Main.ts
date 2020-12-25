@@ -5,7 +5,6 @@
 
 import Device from "./core/Device";
 import LoaderManager from "./core/LoaderManager";
-import { G_ShaderFactory } from "./core/renderer/shader/Shader";
 import PointLightTest from "./core/renderer/light/PointLightTest";
 import RenderFlow from "./core/RenderFlow";
 import Stage from "./core/renderer/3d/Stage";
@@ -22,6 +21,7 @@ import ShaderShadowTest from "./core/renderer/3d/ShaderShadowTest";
 import SpotLightTest from "./core/renderer/light/SpotLightTest";
 import { StencilTest } from "./core/renderer/3d/StencilTest";
 import { RenderTargetTexture } from "./core/renderer/3d/RenderTargetTexture";
+import { G_ShaderFactory } from "./core/renderer/shader/ShaderFactory";
 
 
 

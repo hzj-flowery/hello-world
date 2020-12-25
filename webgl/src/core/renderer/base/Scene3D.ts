@@ -19,6 +19,7 @@ import { G_CameraModel } from "../camera/CameraModel";
 import { PointLight } from "../light/PointLight";
 import { SpotLight } from "../light/SpotLight";
 import { ThreeDLight } from "../light/ThreeDLight";
+import MirrorCube from "../3d/MirrorCube";
 
 export default class Scene3D extends Scene {
 
@@ -31,6 +32,7 @@ export default class Scene3D extends Scene {
     private _customTexture: CustomTextureCube;
     private _centerNode: Node;
     private _3dCamera: PerspectiveCamera;
+    private _mirrorCube:MirrorCube;
     private _FLightPoint:PointLight;
     private _FLightSpot:SpotLight;
     private _FLightThreeD:ThreeDLight;
@@ -117,22 +119,20 @@ export default class Scene3D extends Scene {
         this._lightCube.setPosition(-5, 2.7, 0);
         this._lightCube.setScale(0.5, 0.5, 0.5);
         this._centerNode.addChild(this._lightCube);
+        
+        let tempNode = new Node();
+        tempNode.setPosition(-10,-3.0,0);
+        this.addChild(tempNode);
+        this._mirrorCube = new MirrorCube(gl);
+        this._mirrorCube.setDefaultUrl();
+        tempNode.addChild(this._mirrorCube);
 
         this._skybox = new SkyBox(gl);
         this._skybox.setDefaultUrl();
         this.addChild(this._skybox);
 
-
-       
-
-
         this.setPosition(0, 0, 0);
-
-
-
         setTimeout(this.rotateCenterNode.bind(this), 20);
-
-        
     }
     
     private renderCallBack(settings:any):void{
@@ -142,11 +142,11 @@ export default class Scene3D extends Scene {
         this._3dCamera.setPosition(settings.cam1PosX,settings.cam1PosY,settings.cam1PosZ);
         this._3dCamera.setRotation(settings.cam1RotX,settings.cam1RotY,settings.cam1RotZ);
         
-        // this._FLight.setPosition(settings.posX,settings.posY,settings.posZ);
         this.setPosition(settings.posX,settings.posY,settings.posZ);
     }
     public rotateCenterNode() {
         this._centerNode.rotate(0, 1, 0);
+        this._mirrorCube.rotate(1,-1,-0.2);
         setTimeout(this.rotateCenterNode.bind(this), 20);
     }
     private readyRenderDraw(): void {

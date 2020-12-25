@@ -1,7 +1,7 @@
 import { glMatrix } from "../../Matrix";
 import { SY } from "../base/Sprite";
 import { CameraData } from "../data/CameraData";
-import { G_ShaderFactory } from "../shader/Shader";
+import { G_ShaderFactory } from "../shader/ShaderFactory";
 
 
 //三维光源

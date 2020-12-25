@@ -1,4 +1,4 @@
-import { gltex_filter } from "../gfx/GLEnums";
+import { gltex_filter } from "../../gfx/GLEnums";
 import { Texture, TextureOpts } from "./Texture";
 
 /**

@@ -1,7 +1,8 @@
 import Device from "../../Device";
 import LoaderManager from "../../LoaderManager";
 import { glMatrix } from "../../Matrix";
-import { G_ShaderFactory, ShaderData } from "../shader/Shader";
+import { ShaderData } from "../shader/Shader";
+import { G_ShaderFactory } from "../shader/ShaderFactory";
 
 var shadervs = 
 `

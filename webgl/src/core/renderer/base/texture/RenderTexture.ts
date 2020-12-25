@@ -1,8 +1,8 @@
-import { glrender_buffer_format } from "../gfx/GLEnums";
-import { Texture2D } from "../base/Texture2D";
-import FrameBuffer from "../gfx/FrameBuffer";
-import RenderBuffer from "../gfx/RenderBuffer";
-import { Color } from "../../value-types/color";
+import { glrender_buffer_format } from "../../gfx/GLEnums";
+import { Texture2D } from "./Texture2D";
+import FrameBuffer from "../../gfx/FrameBuffer";
+import RenderBuffer from "../../gfx/RenderBuffer";
+import { Color } from "../../../value-types/color";
 
 /**
  * !#en The depth buffer and stencil buffer format for RenderTexture.

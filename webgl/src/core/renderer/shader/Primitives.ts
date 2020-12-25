@@ -1,5 +1,5 @@
 import { glMatrix } from "../../Matrix";
-import { G_ShaderFactory } from "./Shader";
+import { G_ShaderFactory } from "./ShaderFactory";
 
 /**
  * 绘制中心

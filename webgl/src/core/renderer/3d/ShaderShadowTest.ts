@@ -4,11 +4,12 @@
 import Device from "../../Device";
 import { glMatrix } from "../../Matrix";
 import { MathUtils } from "../../utils/MathUtils";
-import { RenderTexture } from "../assets/RenderTexture";
-import TextureCustom from "../base/TextureCustom";
+import { RenderTexture } from "../base/texture/RenderTexture";
+import TextureCustom from "../base/texture/TextureCustom";
 import CustomTextureData from "../data/CustomTextureData";
 import { syPrimitives } from "../shader/Primitives";
-import { BufferAttribsData, G_ShaderFactory, ShaderData } from "../shader/Shader";
+import { BufferAttribsData, ShaderData } from "../shader/Shader";
+import { G_ShaderFactory } from "../shader/ShaderFactory";
 
 
 /**

@@ -6,7 +6,7 @@ import { RenderSprite } from "../2d/RenderSprite";
 import FirstSprite from "../2d/FirstSprite";
 import TwoSprite from "../2d/TwoSprite";
 import GameMainCamera from "../camera/GameMainCamera";
-import { RenderTexture } from "../assets/RenderTexture";
+import { RenderTexture } from "./texture/RenderTexture";
 import Scene from "./Scene";
 import OrthoCamera from "../camera/OrthoCamera";
 import enums from "../camera/enums";

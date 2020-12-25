@@ -5,7 +5,8 @@ import { glMatrix } from "../../Matrix";
 import { MathUtils } from "../../utils/MathUtils";
 import {G_CameraModel } from "../camera/CameraModel";
 import { syPrimitives } from "../shader/Primitives";
-import { BufferAttribsData, G_ShaderFactory, ShaderData } from "../shader/Shader";
+import { BufferAttribsData, ShaderData } from "../shader/Shader";
+import { G_ShaderFactory } from "../shader/ShaderFactory";
 var vertexshader3d =
   'attribute vec4 a_position;' +
   'attribute vec4 a_color;' +

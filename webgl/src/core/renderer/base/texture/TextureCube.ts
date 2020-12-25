@@ -1,5 +1,5 @@
 import { Texture } from "./Texture";
-import { gltex_wrap, gltex_filter } from "../gfx/GLEnums";
+import { gltex_wrap, gltex_filter } from "../../gfx/GLEnums";
 
 /**
  * 立方体纹理

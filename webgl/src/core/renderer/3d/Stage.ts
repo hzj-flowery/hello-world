@@ -27,7 +27,8 @@ import { glMatrix } from "../../Matrix";
 import { MathUtils } from "../../utils/MathUtils";
 import { CameraFrustum, TriggerRenderType } from "../camera/CameraFrustum";
 import { syPrimitives } from "../shader/Primitives";
-import { BufferAttribsData, G_ShaderFactory, ShaderData } from "../shader/Shader";
+import { BufferAttribsData, ShaderData } from "../shader/Shader";
+import { G_ShaderFactory } from "../shader/ShaderFactory";
 
 var baseVertexShader =
   'attribute vec4 a_position;' +

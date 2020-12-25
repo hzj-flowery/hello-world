@@ -27,7 +27,7 @@ export enum ShaderUseVariantType {
     TEX_COORD6, //纹理6号单元
     TEX_COORD7, //纹理7号单元
     TEX_COORD8, //纹理8号单元
-
+    CUBE_COORD, //立方体纹理单元
     SKYBOX,//cube纹理单元
 
 
@@ -187,10 +187,14 @@ export class RenderData {
                 case ShaderUseVariantType.TEX_COORD8:
                     this._shader.setUseTexture(this._textureGLIDArray[8], 8);
                     break;
+                case ShaderUseVariantType.CUBE_COORD:
+                        //立方体纹理数据
+                        //-****-------------
+                        this._shader.setUseCubeTextureCoord();
+                        break;
                 //天空盒
                 case ShaderUseVariantType.SKYBOX:
                     this._shader.setUseSkyBox();
-                    
                     glMatrix.mat4.copy(this._temp001_matrix,view);
                     this._temp001_matrix[12] = 0;
                     this._temp001_matrix[13] = 0;

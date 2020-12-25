@@ -41,16 +41,17 @@ console.log(z);
 
 import Device from "../../Device";
 import LoaderManager from "../../LoaderManager";
-import { RenderTexture } from "../assets/RenderTexture";
+import { RenderTexture } from "./texture/RenderTexture";
 import { CameraData } from "../data/CameraData";
 import { NormalRenderData, RenderData, RenderDataPool, RenderDataType, ShaderUseVariantType } from "../data/RenderData";
 import { glprimitive_type } from "../gfx/GLEnums";
-import { BufferAttribsData, G_ShaderFactory, Shader, ShaderData } from "../shader/Shader";
+import { BufferAttribsData, Shader, ShaderData } from "../shader/Shader";
+import { G_ShaderFactory } from "../shader/ShaderFactory";
 import { Node } from "./Node";
-import { Texture, TextureOpts } from "./Texture";
-import { Texture2D } from "./Texture2D";
-import TextureCube from "./TextureCube";
-import TextureCustom from "./TextureCustom";
+import { Texture, TextureOpts } from "./texture/Texture";
+import { Texture2D } from "./texture/Texture2D";
+import TextureCube from "./texture/TextureCube";
+import TextureCustom from "./texture/TextureCustom";
 
 
  /**

@@ -3,7 +3,7 @@
 import Device from "../../Device";
 import { glMatrix } from "../../Matrix";
 import { OBJParseHelper } from "../parse/OBJParseHelper";
-import { G_ShaderFactory } from "../shader/Shader";
+import { G_ShaderFactory } from "../shader/ShaderFactory";
 
 const vs = `
   attribute vec4 a_position;

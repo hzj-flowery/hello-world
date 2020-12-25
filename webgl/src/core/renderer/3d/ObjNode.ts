@@ -1,6 +1,7 @@
 import { SY } from "../base/Sprite";
 import { OBJParseHelper } from "../parse/OBJParseHelper";
-import { G_ShaderFactory, ShaderData } from "../shader/Shader";
+import {ShaderData } from "../shader/Shader";
+import { G_ShaderFactory } from "../shader/ShaderFactory";
 
 const vs = `
   attribute vec4 a_position;
