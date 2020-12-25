@@ -14,8 +14,8 @@ export class LightData {
     private _specularShininess: number;//高光的指数(值越大光越小，值越小光越大)
     public reset(): void {
         this._position = [];
-        this._direction = [];
-        this._color = [1, 1, 1];
+        this._direction = [8,5,-10];
+        this._color = [1,0,0,1.0];
         this._specularShininess = 140;
         this._specularColor = [1, 0.2, 0.2];
     }

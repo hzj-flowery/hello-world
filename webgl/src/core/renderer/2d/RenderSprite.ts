@@ -34,8 +34,6 @@ export class RenderSprite extends SY.Sprite2D{
     }
     protected onInit(): void {
         this.setContentSize(Device.Instance.Width/4,Device.Instance.Height/4);
-        this._texture = new RenderTexture(this.gl);
-        (this._texture as RenderTexture).attach("color",this.gl.canvas.width,this.gl.canvas.height)
         this.setShader(vertextBaseCode,fragBaseCode);
     }
 }

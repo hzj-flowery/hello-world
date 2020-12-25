@@ -41,8 +41,9 @@ console.log(z);
 
 import Device from "../../Device";
 import LoaderManager from "../../LoaderManager";
+import { RenderTexture } from "../assets/RenderTexture";
 import { CameraData } from "../data/CameraData";
-import { NormalRenderData, RenderData, RenderDataPool, RenderDataType } from "../data/RenderData";
+import { NormalRenderData, RenderData, RenderDataPool, RenderDataType, ShaderUseVariantType } from "../data/RenderData";
 import { glprimitive_type } from "../gfx/GLEnums";
 import { BufferAttribsData, G_ShaderFactory, Shader, ShaderData } from "../shader/Shader";
 import { Node } from "./Node";
@@ -185,17 +186,11 @@ export namespace SY {
 
 
         protected gl: WebGL2RenderingContext;
-
         protected _shader: Shader;
-
         protected _renderData:RenderData;
-
         //参考glprimitive_type
         protected _glPrimitiveType: glprimitive_type;//绘制的类型
-
-
         protected _cameraType: number = 0;//相机的类型(0表示透视1表示正交)
-
         constructor(gl) {
             super();
             this.gl = gl;
@@ -203,7 +198,6 @@ export namespace SY {
             this._renderData = RenderDataPool.get(RenderDataType.Base);
             this.init();
         }
-
         private init(): void {
             this.onInit();
         }
@@ -223,12 +217,14 @@ export namespace SY {
         public createVertexsBuffer(vertexs: Array<number>, itemSize: number): VertexsBuffer {
             this._vertexsBuffer = new VertexsBuffer(this.gl, vertexs, itemSize);
             this._vertexsBuffer.uploadData2GPU();
+            this._renderData.pushShaderVariant(ShaderUseVariantType.Vertex);
             return this._vertexsBuffer;
         }
         //创建法线缓冲
         public createNormalsBuffer(normals: Array<number>, itemSize: number): NormalBuffer {
             this._normalsBuffer = new NormalBuffer(this.gl, normals, itemSize);
             this._normalsBuffer.uploadData2GPU();
+            this._renderData.pushShaderVariant(ShaderUseVariantType.Normal);
             return this._normalsBuffer;
         }
         //创建索引缓冲
@@ -242,26 +238,39 @@ export namespace SY {
         public createUVsBuffer(uvs: Array<number>, itemSize: number): UVsBuffer {
             this._uvsBuffer = new UVsBuffer(this.gl, uvs, itemSize);
             this._uvsBuffer.uploadData2GPU();
+            this._renderData.pushShaderVariant(ShaderUseVariantType.UVs);
             return this._uvsBuffer
         }
         //创建一个纹理buffer
         private createTexture2DBuffer(url: string): Texture {
             this._texture = new Texture2D(this.gl);
             (this._texture as Texture2D).url = url;
+            this._renderData.pushShaderVariant(ShaderUseVariantType.TEX_COORD);
             return this._texture
         }
         private createTextureCubeBuffer(arr: Array<string>): Texture {
             this._texture = new TextureCube(this.gl);
             (this._texture as TextureCube).url = arr;
+            this._renderData.pushShaderVariant(ShaderUseVariantType.TEX_COORD);
             return this._texture;
         }
         private createCustomTextureBuffer(data:TextureOpts): Texture {
             this._texture = new TextureCustom(this.gl);
             (this._texture as TextureCustom).url = data;
+            this._renderData.pushShaderVariant(ShaderUseVariantType.TEX_COORD);
             return this._texture;
         }
-
-        public set url(url: string | Array<string> | TextureOpts) {
+        /**
+         * 创建一个渲染纹理
+         * @param data {type,place,width,height}
+         */
+        private createRenderTextureBuffer(data:any):Texture{
+            this._texture = new RenderTexture(this.gl);
+            (this._texture as RenderTexture).attach(data.place,data.width,data.height);
+            this._renderData.pushShaderVariant(ShaderUseVariantType.TEX_COORD);
+            return this._texture;
+        }
+        public set url(url: string | Array<string> | TextureOpts|Object) {
             //普通图片
             if (typeof url == "string") {
                 this.createTexture2DBuffer(url);
@@ -275,8 +284,11 @@ export namespace SY {
                 console.log("自定义纹理------",url);
                 this.createCustomTextureBuffer(url);
             }
+            else if(url instanceof Object && url["type"]=="RenderTexture")
+            {
+                this.createRenderTextureBuffer(url);
+            }
         }
-
 
         public getGLID(type: GLID_TYPE): any {
             switch (type) {
@@ -330,15 +342,13 @@ export namespace SY {
             this._renderData._uvItemSize = this.getBufferItemSize(SY.GLID_TYPE.UV);
             this._renderData._normalGLID = this.getGLID(SY.GLID_TYPE.NORMAL);
             this._renderData._normalItemSize = this.getBufferItemSize(SY.GLID_TYPE.NORMAL);
-            this._renderData._lightColor = [0.0, 1, 1.0, 1];
             this._renderData._modelMatrix = this._modelMatrix;
             this._renderData._time = time;
-            this._renderData._lightDirection = this._glMatrix.vec3.normalize(null, [8, 5, -10]);
             if (this._shader.USE_SKYBOX) {
                 this._renderData._u_pvm_matrix_inverse = (this).updateCamera(time);
             }
             if (this._texture && this._texture._glID && !this._shader.USE_SKYBOX) {
-                this._renderData._textureGLIDArray.push(this.getGLID(SY.GLID_TYPE.TEXTURE_2D));
+                this._renderData.pushTexture(this.getGLID(SY.GLID_TYPE.TEXTURE_2D));
             }
             this._renderData._glPrimitiveType = this._glPrimitiveType;
             Device.Instance.collectData(this._renderData);
@@ -435,7 +445,6 @@ export namespace SY {
                 0.0, 1.0, //v3
             ];
             this.createUVsBuffer(floorVertexTextureCoordinates, 2);
-
             // 索引数据
             var floorVertexIndices = [0, 1, 2, 3];
             this.createIndexsBuffer(floorVertexIndices);

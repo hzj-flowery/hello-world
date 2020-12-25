@@ -410,7 +410,7 @@ export default class Camera extends Node {
          this._cameraData.modelMat = this._modelMatrix;
          this._cameraData.projectMat = this._projectionMatrix;
          this._cameraData.position = [this.x,this.y,this.z];
-         this._cameraData.lightData.setData([20, 30, 60],[1,1,1],[1,1,1]);
+         this._cameraData.lightData.setData([20, 30, 60],[0, 0, -1],[1,1,1,1.0]);
          return this._cameraData;
     }
 

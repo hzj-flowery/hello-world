@@ -3,6 +3,7 @@ import Camera from "../camera/Camera";
 import GameMainCamera from "../camera/GameMainCamera";
 import PerspectiveCamera from "../camera/PerspectiveCamera";
 import { CubeData } from "../data/CubeData";
+import { ShaderUseVariantType } from "../data/RenderData";
 
 var vertexshader3d =
      'attribute vec4 a_position;' +
@@ -35,6 +36,8 @@ export default class SkyBox extends SY.SpriteBase {
           this.createVertexsBuffer(rd.vertex, rd.dF.vertex_item_size);
           this.createIndexsBuffer(rd.indexs);
           this.setShader(vertexshader3d, fragmentshader3d);
+          // this._renderData.pushShaderVariant(ShaderUseVariantType.ModelViewProjectionInverse);
+          this._renderData.pushShaderVariant(ShaderUseVariantType.SKYBOX)
           this._shader.USE_SKYBOX = true;
      }
 

@@ -303,6 +303,11 @@ export default class Device {
         glMatrix.mat4.identity(this._temp1Matrix);
         switch (rData._type) {
             case RenderDataType.Base:
+
+                //补一下光的数据
+                rData._lightColor = cameraData.lightData.color;
+                rData._lightDirection = cameraData.lightData.direction;
+
                 if (isUseScene) {
                     let projMatix = G_CameraModel.getSceneProjectMatrix();
                     glMatrix.mat4.invert(this._temp1Matrix, G_CameraModel.getSceneCameraMatrix());

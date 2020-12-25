@@ -9,9 +9,9 @@ var vertexshader3d =
 
 var fragmentshader3d =
     'precision mediump float;' +
-    'uniform vec4 u_color;' +
+    'uniform vec4 u_lightColor;' +
     'void main() {' +
-    'gl_FragColor = u_color;' +
+    'gl_FragColor = u_lightColor;' +
     '}'
 
 export default class FirstSprite extends SY.SpriteBase {
@@ -78,7 +78,7 @@ export default class FirstSprite extends SY.SpriteBase {
             this._glMatrix.mat4.rotateZ(mat, mat, time * (0.1 + 0.1 * ndx));
 
                  const color = colors[ndx];
-            this._shader.setUseColor(color);
+            this._shader.setUseLightColor(color);
             this._shader.setUseProjectViewModelMatrix(mat);
 
             gl.drawArrays(

@@ -694,8 +694,9 @@ export class Shader {
     private a_normal_loc;//法线属性的位置
     private a_uv_loc;//uv属性位置
     private a_tangent_loc;//切线属性位置
-    private u_color_loc;//光照属性位置
-    private u_color_dir_loc;//光照方向属性位置
+    private u_node_color_loc;//节点颜色的位置
+    private u_light_color_loc;//光照属性位置
+    private u_light_color_dir_loc;//光照方向属性位置
     private u_MVMatrix_loc;//模型视口矩阵属性位置
     private u_PMatrix_loc;//透视投影矩阵属性位置
     private u_MMatrix_loc;//模型矩阵属性位置
@@ -703,18 +704,24 @@ export class Shader {
     private u_MTMatrix_loc;//模型矩阵的转置矩阵属性位置
     private u_MITMatrix_loc;//模型矩阵的逆矩阵的转置矩阵属性位置
     private u_VMatrix_loc;//视口矩阵属性位置
-    private u_texCoord_loc;//纹理属性位置
+
+    private u_texCoord_loc;//纹理属性0号位置
+    private u_texCoord1_loc;//纹理属性1号位置
+    private u_texCoord2_loc;//纹理属性2号位置
+    private u_texCoord3_loc;//纹理属性3号位置
+    private u_texCoord4_loc;//纹理属性4号位置
+    private u_texCoord5_loc;//纹理属性5号位置
+    private u_texCoord6_loc;//纹理属性6号位置
+    private u_texCoord7_loc;//纹理属性7号位置
+    private u_texCoord8_loc;//纹理属性8号位置
+
     private u_skybox_loc;//天空盒属性位置
     private u_pvm_matrix_loc;//投影视口模型矩阵
     private u_pvm_matrix_inverse_loc;//模型视图投影的逆矩阵
     private u_light_world_position_loc;//光的世界位置
     private u_camera_world_position_loc;//相机的世界位置
 
-    public USE_NORMAL: boolean = false;//法线
-    public USE_LIGHT: boolean = false;//光照
     public USE_SKYBOX: boolean = false;//天空盒
-
-
     public isShowDebugLog: boolean;//是否显示报错日志
 
     protected _gl: WebGLRenderingContext;
@@ -740,11 +747,21 @@ export class Shader {
         this._locSafeArr.set("a_normal_loc",this.a_normal_loc>=0);
         this._locSafeArr.set("a_uv_loc",this.a_uv_loc>=0);
         this._locSafeArr.set("a_tangent_loc",this.a_tangent_loc>=0);
-        this._locSafeArr.set("u_color_loc",this.u_color_loc>=0);
-        this._locSafeArr.set("u_color_dir_loc",this.u_color_dir_loc>=0);
+        this._locSafeArr.set("u_light_color_loc",this.u_light_color_loc>=0);
+        this._locSafeArr.set("u_light_color_dir_loc",this.u_light_color_dir_loc>=0);
         this._locSafeArr.set("u_MVMatrix_loc",this.u_MVMatrix_loc>=0);
         this._locSafeArr.set("u_PMatrix_loc",this.u_PMatrix_loc>=0);
+
         this._locSafeArr.set("u_texCoord_loc",this.u_texCoord_loc>=0);
+        this._locSafeArr.set("u_texCoord1_loc",this.u_texCoord1_loc>=0);
+        this._locSafeArr.set("u_texCoord2_loc",this.u_texCoord2_loc>=0);
+        this._locSafeArr.set("u_texCoord3_loc",this.u_texCoord3_loc>=0);
+        this._locSafeArr.set("u_texCoord4_loc",this.u_texCoord4_loc>=0);
+        this._locSafeArr.set("u_texCoord5_loc",this.u_texCoord5_loc>=0);
+        this._locSafeArr.set("u_texCoord6_loc",this.u_texCoord6_loc>=0);
+        this._locSafeArr.set("u_texCoord7_loc",this.u_texCoord7_loc>=0);
+        this._locSafeArr.set("u_texCoord8_loc",this.u_texCoord8_loc>=0);
+
         this._locSafeArr.set("u_skybox_loc",this.u_skybox_loc>=0);
         this._locSafeArr.set("u_pvm_matrix_loc",this.u_pvm_matrix_loc>=0);
         this._locSafeArr.set("u_pvm_matrix_inverse_loc",this.u_pvm_matrix_inverse_loc>=0);
@@ -754,30 +771,42 @@ export class Shader {
         this._locSafeArr.set("u_MTMatrix_loc",this.u_MTMatrix_loc>=0);
         this._locSafeArr.set("u_MITMatrix_loc",this.u_MITMatrix_loc>=0);
         this._locSafeArr.set("u_camera_world_position_loc",this.u_camera_world_position_loc>=0);
-        this._locSafeArr.set("u_light_world_position_loc",this.u_light_world_position_loc>=0); 
+        this._locSafeArr.set("u_light_world_position_loc",this.u_light_world_position_loc>=0);
+        this._locSafeArr.set("u_node_color_loc",this.u_node_color_loc); 
     }
     protected onCreateShader(): void {
-        var shaderProgramGLID = this._spGLID;
+        var _glID = this._spGLID;
         var gl = this._gl;
-        this.a_position_loc = gl.getAttribLocation(shaderProgramGLID, glvert_attr_semantic.POSITION);
-        this.a_normal_loc = gl.getAttribLocation(shaderProgramGLID, glvert_attr_semantic.NORMAL);
-        this.a_uv_loc = gl.getAttribLocation(shaderProgramGLID, glvert_attr_semantic.UV);
-        this.a_tangent_loc = gl.getAttribLocation(shaderProgramGLID, glvert_attr_semantic.TANGENT);
-        this.u_color_loc = gl.getUniformLocation(shaderProgramGLID, glvert_attr_semantic.COLOR);
-        this.u_color_dir_loc = gl.getUniformLocation(shaderProgramGLID, glvert_attr_semantic.COLOR_DIR);
-        this.u_MVMatrix_loc = gl.getUniformLocation(shaderProgramGLID, glvert_attr_semantic.MVMatrix);
-        this.u_PMatrix_loc = gl.getUniformLocation(shaderProgramGLID, glvert_attr_semantic.PMatrix);
-        this.u_texCoord_loc = gl.getUniformLocation(shaderProgramGLID, glvert_attr_semantic.TEX_COORD);
-        this.u_skybox_loc = gl.getUniformLocation(shaderProgramGLID, glvert_attr_semantic.SKYBOX);
-        this.u_pvm_matrix_loc = gl.getUniformLocation(shaderProgramGLID, glvert_attr_semantic.PMV_MATRIX);
-        this.u_pvm_matrix_inverse_loc = gl.getUniformLocation(shaderProgramGLID, glvert_attr_semantic.PMV_MATRIX_INVERSE);
-        this.u_MMatrix_loc = gl.getUniformLocation(shaderProgramGLID, glvert_attr_semantic.MMatrix);
-        this.u_VMatrix_loc = gl.getUniformLocation(shaderProgramGLID, glvert_attr_semantic.VMatrix);
-        this.u_MIMatrix_loc = gl.getUniformLocation(shaderProgramGLID,glvert_attr_semantic.MIMatrix);
-        this.u_MTMatrix_loc = gl.getUniformLocation(shaderProgramGLID,glvert_attr_semantic.MTMatrix);
-        this.u_MITMatrix_loc = gl.getUniformLocation(shaderProgramGLID,glvert_attr_semantic.MITMatrix);
-        this.u_camera_world_position_loc = gl.getUniformLocation(shaderProgramGLID,glvert_attr_semantic.CameraWorldPosition);
-        this.u_light_world_position_loc = gl.getUniformLocation(shaderProgramGLID,glvert_attr_semantic.LightWorldPosition);
+        this.a_position_loc = gl.getAttribLocation(_glID, glvert_attr_semantic.POSITION);
+        this.a_normal_loc = gl.getAttribLocation(_glID, glvert_attr_semantic.NORMAL);
+        this.a_uv_loc = gl.getAttribLocation(_glID, glvert_attr_semantic.UV);
+        this.a_tangent_loc = gl.getAttribLocation(_glID, glvert_attr_semantic.TANGENT);
+        this.u_light_color_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.LIGHT_COLOR);
+        this.u_light_color_dir_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.LIGHT_COLOR_DIR);
+        this.u_MVMatrix_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.MVMatrix);
+        this.u_PMatrix_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.PMatrix);
+
+        this.u_texCoord_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.TEX_COORD);
+        this.u_texCoord1_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.TEX_COORD1);
+        this.u_texCoord2_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.TEX_COORD2);
+        this.u_texCoord3_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.TEX_COORD3);
+        this.u_texCoord4_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.TEX_COORD4);
+        this.u_texCoord5_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.TEX_COORD5);
+        this.u_texCoord6_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.TEX_COORD6);
+        this.u_texCoord7_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.TEX_COORD7);
+        this.u_texCoord8_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.TEX_COORD8);
+
+        this.u_skybox_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.SKYBOX);
+        this.u_pvm_matrix_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.PMV_MATRIX);
+        this.u_pvm_matrix_inverse_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.PMV_MATRIX_INVERSE);
+        this.u_MMatrix_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.MMatrix);
+        this.u_VMatrix_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.VMatrix);
+        this.u_MIMatrix_loc = gl.getUniformLocation(_glID,glvert_attr_semantic.MIMatrix);
+        this.u_MTMatrix_loc = gl.getUniformLocation(_glID,glvert_attr_semantic.MTMatrix);
+        this.u_MITMatrix_loc = gl.getUniformLocation(_glID,glvert_attr_semantic.MITMatrix);
+        this.u_camera_world_position_loc = gl.getUniformLocation(_glID,glvert_attr_semantic.CameraWorldPosition);
+        this.u_light_world_position_loc = gl.getUniformLocation(_glID,glvert_attr_semantic.LightWorldPosition);
+        this.u_node_color_loc = gl.getUniformLocation(_glID,glvert_attr_semantic.NODE_COLOR);
         this._initLockSafeCheck();
     }
     public getCustomAttributeLocation(varName: string) {
@@ -816,16 +845,16 @@ export class Shader {
 
     }
     //shader中所有的attributes变量
-    private updateAttributes(shaderProgramGLID): void {
+    private updateAttributes(_glID): void {
         var gl = this._gl;
-        const numAttribs = gl.getProgramParameter(shaderProgramGLID, gl.ACTIVE_ATTRIBUTES);
+        const numAttribs = gl.getProgramParameter(_glID, gl.ACTIVE_ATTRIBUTES);
         for (let ii = 0; ii < numAttribs; ++ii) {
-            const attribInfo = gl.getActiveAttrib(shaderProgramGLID, ii);
+            const attribInfo = gl.getActiveAttrib(_glID, ii);
             if (!attribInfo) {
                 break;
             }
             console.log("attribInfo--", attribInfo.name);
-            const index = gl.getAttribLocation(shaderProgramGLID, attribInfo.name);
+            const index = gl.getAttribLocation(_glID, attribInfo.name);
         }
     }
     //激活shader
@@ -836,19 +865,33 @@ export class Shader {
     }
     /**
      * 
-     * @param color 光的颜色
-     * @param direction 光的方向
+     * @param color 设置使用光的颜色
      */
-    public setUseLight(color = [0.2, 1, 0.2, 1], direction = [0.5, 0.7, 1]): void {
-
-        if (!this.USE_LIGHT || !this.checklocValid(this.u_color_loc, "u_color_loc") || !this.checklocValid(this.u_color_dir_loc, "u_color_dir_loc")) {
-            return;
+    public setUseLightColor(color:Array<number>):void{
+        if(this.checklocValid(this.u_light_color_loc, "u_light_color_loc"))
+        {
+            this._gl.uniform4fv(this.u_light_color_loc, color); // green
         }
-        // Set the color to use
-        this._gl.uniform4fv(this.u_color_loc, color); // green
-
-        // set the light direction.
-        this._gl.uniform3fv(this.u_color_dir_loc, direction);
+    }
+    /**
+     * 设置光照的方向
+     * @param direction 
+     */
+    public setUseLightDirection(direction:Array<number>):void{
+        if(this.checklocValid(this.u_light_color_dir_loc, "u_light_color_dir_loc"))
+        {
+            this._gl.uniform3fv(this.u_light_color_dir_loc, direction);
+        }
+    }
+    /**
+     * 设置使用节点颜色
+     * @param color 
+     */
+    public setUseNodeColor(color:Array<number>):void{
+        if(this.checklocValid(this.u_node_color_loc,"u_node_color_loc"))
+        {
+            this._gl.uniform4fv(this.u_node_color_loc,color);
+        }
     }
     /**
      * 设置使用相机的世界位置
@@ -870,7 +913,7 @@ export class Shader {
            this._gl.uniform3fv(this.u_light_world_position_loc, pos);
         }
     }
-    public setUseSkyBox(u_pvm_matrix_inverse): void {
+    public setUseSkyBox(u_pvm_matrix_inverse?): void {
 
         var gl = this._gl;
         gl.enable(gl.CULL_FACE);
@@ -892,10 +935,11 @@ export class Shader {
             this._gl.uniformMatrix4fv(this.u_pvm_matrix_loc, false, pvmMatrix);
         }
     }
-    //设置光照
-    public setUseColor(uColor): void {
-        if (this.checklocValid(this.u_color_loc, "u_color_loc")) {
-            this._gl.uniform4fv(this.u_color_loc, uColor);
+    //设置使用投影视口模型矩阵的逆矩阵
+    public setUseProjectViewModelInverseMatrix(matrix):void{
+        if(this.checklocValid(this.u_pvm_matrix_inverse_loc,"u_pvm_matrix_inverse_loc"))
+        {
+            this._gl.uniformMatrix4fv(this.u_pvm_matrix_inverse_loc, false, matrix);
         }
     }
     //设置视口矩阵
@@ -978,19 +1022,18 @@ export class Shader {
     }
     //设置使用的纹理
     //注意如果此处不重新设置使用的纹理，那么会默认使用上一次绘制时的纹理
-    public setUseTexture(glID, pos = 0): void {
+    public setUseTexture(glID:WebGLTexture, pos = 0): void {
         if (!this.checkGLIDValid(glID)) return;
         /**
           * activeTexture必须在bindTexture之前。如果没activeTexture就bindTexture，会默认绑定到0号纹理单元
         */
-
-        if (this.checklocValid(this.u_texCoord_loc, "u_texCoord_loc")) {
-            // 激活 0 号纹理单元
+        let loc:string = (pos == 0) ? "u_texCoord_loc":"u_texCoord"+pos+"_loc"
+        if (this.checklocValid(this[loc],loc)) {
+            // 激活 指定 号纹理单元
             this._gl.activeTexture(this._gl[glTEXTURE_UNIT_VALID[pos]]);
             // 指定当前操作的贴图
             this._gl.bindTexture(this._gl.TEXTURE_2D, glID);
-
-            this._gl.uniform1i(this.u_texCoord_loc, pos);
+            this._gl.uniform1i(this[loc], pos);
         }
     }
 

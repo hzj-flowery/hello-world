@@ -188,7 +188,7 @@ export default class CameraView extends SY.SpriteBase {
         this._glMatrix.mat4.mul(newMV,v,m)
         this._shader.setUseModelViewMatrix(newMV);
         this._shader.setUseProjectionMatrix(GameMainCamera.instance.getCamera(this._cameraType).getProjectionMatrix());
-        this._shader.setUseColor([1, 0, 0, 1]);
+        this._shader.setUseLightColor([1, 0, 0, 1]);
         this._shader.setUseVertexAttribPointerForVertex(this.getGLID(SY.GLID_TYPE.VERTEX), this.getBufferItemSize(SY.GLID_TYPE.VERTEX));
         
         //绑定操作的索引缓冲
@@ -199,16 +199,16 @@ export default class CameraView extends SY.SpriteBase {
         var head = 24;
         var ray = 2*3;
         var clip = 24;
-        this._shader.setUseColor([0, 0, 0, 1]);
+        this._shader.setUseLightColor([0, 0, 0, 1]);
         this.gl.drawElements(this._glPrimitiveType,body, this.gl.UNSIGNED_SHORT, 0);
 
-        this._shader.setUseColor([0, 1, 0, 1]);
+        this._shader.setUseLightColor([0, 1, 0, 1]);
         this.gl.drawElements(this._glPrimitiveType,head, this.gl.UNSIGNED_SHORT,body*2);
 
-        this._shader.setUseColor([1, 0, 0, 1]);
+        this._shader.setUseLightColor([1, 0, 0, 1]);
         this.gl.drawElements(this._glPrimitiveType,ray, this.gl.UNSIGNED_SHORT,(body+head)*2);
 
-        this._shader.setUseColor([1, 1, 0, 1]);
+        this._shader.setUseLightColor([1, 1, 0, 1]);
         this.gl.drawElements(this._glPrimitiveType,clip, this.gl.UNSIGNED_SHORT,(body+head+ray)*2);
 
         //解除缓冲区绑定

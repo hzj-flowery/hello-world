@@ -31,10 +31,10 @@ export default class Scene2D extends Scene {
         this._2dCamera.lookAt([0, 0, 0]);
         this.setFatherMatrix(this._2dCamera.getModelViewMatrix());
 
-        // this._rectangle = new Rectangle(gl);
-        // this._rectangle.setPosition(0.5, 0, 0);
-        // this._rectangle.url = "res/tree.jpg";
-        // this.addChild(this._rectangle);
+        this._rectangle = new Rectangle(gl);
+        this._rectangle.setPosition(0.5, 0, 0);
+        this._rectangle.url = "res/tree.jpg";
+        this.addChild(this._rectangle);
 
         // this._firstSprite = new FirstSprite(gl);
         // this._firstSprite.setPosition(0,1,0);
@@ -46,6 +46,12 @@ export default class Scene2D extends Scene {
 
         this._renderSprite = new RenderSprite(gl);
         this._renderSprite.setPosition(0.6,0.8,0);
+        this._renderSprite.url = {
+            type:"RenderTexture",
+            place:"color",
+            width:Device.Instance.width,
+            height:Device.Instance.height
+        }
         this.addChild(this._renderSprite);
 
         this._2dCamera.targetTexture = this._renderSprite.texture as RenderTexture;;
@@ -53,7 +59,7 @@ export default class Scene2D extends Scene {
         // this._label = new Label(gl);
         // this._label.setPosition(0.0,0.0,0);
         // this._label.url = "res/8x8-font.png";
-        // this._label.content = "zm5"
+        // this._label.content = "111"
         // this.addChild(this._label);
     }
 
