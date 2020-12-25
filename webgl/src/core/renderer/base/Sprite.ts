@@ -314,11 +314,6 @@ export namespace SY {
             var buffer = this.getBuffer(type);
             return buffer ? buffer.itemSize : -1
         }
-
-        protected updateCamera(time: number): any {
-
-        }
-       
         /**
          * 
          * @param texture 纹理的GLID
@@ -344,10 +339,7 @@ export namespace SY {
             this._renderData._normalItemSize = this.getBufferItemSize(SY.GLID_TYPE.NORMAL);
             this._renderData._modelMatrix = this._modelMatrix;
             this._renderData._time = time;
-            if (this._shader.USE_SKYBOX) {
-                this._renderData._u_pvm_matrix_inverse = (this).updateCamera(time);
-            }
-            if (this._texture && this._texture._glID && !this._shader.USE_SKYBOX) {
+            if (this._texture && this._texture._glID && this._texture.isTexture2D) {
                 this._renderData.pushTexture(this.getGLID(SY.GLID_TYPE.TEXTURE_2D));
             }
             this._renderData._glPrimitiveType = this._glPrimitiveType;

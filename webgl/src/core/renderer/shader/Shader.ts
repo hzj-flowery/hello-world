@@ -717,11 +717,12 @@ export class Shader {
 
     private u_skybox_loc;//天空盒属性位置
     private u_pvm_matrix_loc;//投影视口模型矩阵
+    private u_pv_matrix_loc;//投影视口矩阵的位置
+    private u_pv_matrix_inverse_loc;//投影视口矩阵的逆矩阵的位置
     private u_pvm_matrix_inverse_loc;//模型视图投影的逆矩阵
     private u_light_world_position_loc;//光的世界位置
     private u_camera_world_position_loc;//相机的世界位置
 
-    public USE_SKYBOX: boolean = false;//天空盒
     public isShowDebugLog: boolean;//是否显示报错日志
 
     protected _gl: WebGLRenderingContext;
@@ -769,10 +770,16 @@ export class Shader {
         this._locSafeArr.set("u_VMatrix_loc",this.u_VMatrix_loc>=0);
         this._locSafeArr.set("u_MIMatrix_loc",this.u_MIMatrix_loc>=0);
         this._locSafeArr.set("u_MTMatrix_loc",this.u_MTMatrix_loc>=0);
+
+        this._locSafeArr.set("u_pv_matrix_loc",this.u_pv_matrix_loc>=0);
+        this._locSafeArr.set("u_pv_matrix_inverse_loc",this.u_pv_matrix_inverse_loc>=0);
+
         this._locSafeArr.set("u_MITMatrix_loc",this.u_MITMatrix_loc>=0);
         this._locSafeArr.set("u_camera_world_position_loc",this.u_camera_world_position_loc>=0);
         this._locSafeArr.set("u_light_world_position_loc",this.u_light_world_position_loc>=0);
         this._locSafeArr.set("u_node_color_loc",this.u_node_color_loc); 
+
+        
     }
     protected onCreateShader(): void {
         var _glID = this._spGLID;
@@ -797,13 +804,15 @@ export class Shader {
         this.u_texCoord8_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.TEX_COORD8);
 
         this.u_skybox_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.SKYBOX);
-        this.u_pvm_matrix_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.PMV_MATRIX);
-        this.u_pvm_matrix_inverse_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.PMV_MATRIX_INVERSE);
+        this.u_pvm_matrix_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.PVM_MATRIX);
+        this.u_pvm_matrix_inverse_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.PVM_MATRIX_INVERSE);
         this.u_MMatrix_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.MMatrix);
         this.u_VMatrix_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.VMatrix);
         this.u_MIMatrix_loc = gl.getUniformLocation(_glID,glvert_attr_semantic.MIMatrix);
         this.u_MTMatrix_loc = gl.getUniformLocation(_glID,glvert_attr_semantic.MTMatrix);
         this.u_MITMatrix_loc = gl.getUniformLocation(_glID,glvert_attr_semantic.MITMatrix);
+        this.u_pv_matrix_loc = gl.getUniformLocation(_glID,glvert_attr_semantic.PVMatrix);
+        this.u_pv_matrix_inverse_loc = gl.getUniformLocation(_glID,glvert_attr_semantic.PVMatrix_INVERSE);
         this.u_camera_world_position_loc = gl.getUniformLocation(_glID,glvert_attr_semantic.CameraWorldPosition);
         this.u_light_world_position_loc = gl.getUniformLocation(_glID,glvert_attr_semantic.LightWorldPosition);
         this.u_node_color_loc = gl.getUniformLocation(_glID,glvert_attr_semantic.NODE_COLOR);
@@ -913,19 +922,12 @@ export class Shader {
            this._gl.uniform3fv(this.u_light_world_position_loc, pos);
         }
     }
-    public setUseSkyBox(u_pvm_matrix_inverse?): void {
-
+    public setUseSkyBox(): void {
         var gl = this._gl;
         gl.enable(gl.CULL_FACE);
         gl.enable(gl.DEPTH_TEST);
-        // Set the uniforms
-        gl.uniformMatrix4fv(
-            this.u_pvm_matrix_inverse_loc, false,
-            u_pvm_matrix_inverse);
-
         // Tell the shader to use texture unit 0 for u_skybox
         gl.uniform1i(this.u_skybox_loc, 0);
-
         // let our quad pass the depth test at 1.0
         gl.depthFunc(gl.LEQUAL);
     }
@@ -933,6 +935,16 @@ export class Shader {
     public setUseProjectViewModelMatrix(pvmMatrix): void {
         if (this.checklocValid(this.u_pvm_matrix_loc, "u_pvm_matrix_loc")) {
             this._gl.uniformMatrix4fv(this.u_pvm_matrix_loc, false, pvmMatrix);
+        }
+    }
+    public setUseProjectionViewMatrix(mat):void{
+        if (this.checklocValid(this.u_pv_matrix_loc, "u_pv_matrix_loc")) {
+            this._gl.uniformMatrix4fv(this.u_pv_matrix_loc, false, mat);
+        }
+    }
+    public setUseProjectionViewInverseMatrix(mat):void{
+        if (this.checklocValid(this.u_pv_matrix_inverse_loc, "u_pv_matrix_inverse_loc")) {
+            this._gl.uniformMatrix4fv(this.u_pv_matrix_inverse_loc, false, mat);
         }
     }
     //设置使用投影视口模型矩阵的逆矩阵

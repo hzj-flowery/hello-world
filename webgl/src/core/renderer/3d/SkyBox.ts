@@ -17,11 +17,11 @@ var fragmentshader3d =
      'precision mediump float;' +
 
      'uniform samplerCube u_skybox;' +
-     'uniform mat4 u_PVM_Matrix_Inverse;' +
+     'uniform mat4 u_PVMatrix_Inverse;' +
 
      'varying vec4 v_position;' +
      'void main() {' +
-     'vec4 t = u_PVM_Matrix_Inverse * v_position;' +
+     'vec4 t = u_PVMatrix_Inverse * v_position;' +
      'vec3 pos = normalize(t.xyz / t.w);' +
      'vec4 color =  textureCube(u_skybox,pos);' +
      'gl_FragColor = color;' +
@@ -36,11 +36,8 @@ export default class SkyBox extends SY.SpriteBase {
           this.createVertexsBuffer(rd.vertex, rd.dF.vertex_item_size);
           this.createIndexsBuffer(rd.indexs);
           this.setShader(vertexshader3d, fragmentshader3d);
-          // this._renderData.pushShaderVariant(ShaderUseVariantType.ModelViewProjectionInverse);
-          this._renderData.pushShaderVariant(ShaderUseVariantType.SKYBOX)
-          this._shader.USE_SKYBOX = true;
+          this._renderData.pushShaderVariant(ShaderUseVariantType.SKYBOX);
      }
-
      private defaultPath = [
           'res/skybox/2/right+x.png',
           'res/skybox/2/left-x.png',
@@ -53,8 +50,9 @@ export default class SkyBox extends SY.SpriteBase {
      public setDefaultUrl(): void {
           this.url = this.defaultPath;
      }
-     public updateCamera(time: number): any {
-         return (GameMainCamera.instance.getCamera(this._cameraType) as PerspectiveCamera).updateLookAt(time);
+     protected draw(time){
+          // this._renderData._u_pv_matrix_inverse = (GameMainCamera.instance.getCamera(this._cameraType) as PerspectiveCamera).updateLookAt(time) as any;
+          super.draw(time);
      }
 
 

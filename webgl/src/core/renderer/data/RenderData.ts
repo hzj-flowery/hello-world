@@ -37,11 +37,12 @@ export enum ShaderUseVariantType {
     ModelInverse, //模型世界矩阵的逆矩阵
     ModelTransform, //模型世界矩阵的转置矩阵
     ModelInverseTransform,//模型世界矩阵的逆矩阵的转置矩阵
-    ModelView,//视口*模型世界矩阵
-    ModelViewProjection,//投影*视口*模型世界矩阵
-    ViewProjection,//投影*视口矩阵
+    ViewModel,//视口*模型世界矩阵
+    ProjectionViewModel,//投影*视口*模型世界矩阵
+    ProjectionView,//投影*视口矩阵
+    ProjectionViewInverse,//投影*视口矩阵的逆矩阵
     ProjectionInverse,//投影矩阵的逆矩阵
-    ModelViewProjectionInverse,//(投影*视口*模型世界矩阵)的逆矩阵
+    ProjectionViewModelInverse,//(投影*视口*模型世界矩阵)的逆矩阵
     LightWorldPosition, //世界中光的位置
     CameraWorldPosition,//世界中相机的位置
     LightColor,         //光的颜色
@@ -64,7 +65,7 @@ export class RenderData {
         this._temp002_matrix = glMatrix.mat4.identity(null);
         this._temp003_matrix = glMatrix.mat4.identity(null);
         this._temp004_matrix = glMatrix.mat4.identity(null);
-        this._useVariantType = [ShaderUseVariantType.ModelView, ShaderUseVariantType.Projection];
+        this._useVariantType = [ShaderUseVariantType.ViewModel, ShaderUseVariantType.Projection];
         this._isOffline = false;
         this.reset();
     }
@@ -90,7 +91,6 @@ export class RenderData {
     public _nodeColor: Array<number>;//节点的颜色
     public _glPrimitiveType: glprimitive_type;//绘制的类型
     public _modelMatrix: Float32Array;//模型矩阵
-    public _u_pvm_matrix_inverse: Float32Array;//
     public _time: number;
     public _isUse: boolean = false;//使用状态
 
@@ -122,7 +122,6 @@ export class RenderData {
         this._textureGLIDArray = [];
         this._nodeColor = [0, 0, 0, 0];//一般默认节点的颜色是全黑的
         this._modelMatrix = null;
-        this._u_pvm_matrix_inverse = null;
         this._time = 0;
         this._glPrimitiveType = glprimitive_type.TRIANGLE_FAN;
         this._isUse = false;
@@ -190,7 +189,16 @@ export class RenderData {
                     break;
                 //天空盒
                 case ShaderUseVariantType.SKYBOX:
-                    this._shader.setUseSkyBox(this._u_pvm_matrix_inverse);
+                    this._shader.setUseSkyBox();
+                    
+                    glMatrix.mat4.copy(this._temp001_matrix,view);
+                    this._temp001_matrix[12] = 0;
+                    this._temp001_matrix[13] = 0;
+                    this._temp001_matrix[14] = 0;                    
+                    glMatrix.mat4.multiply(this._temp002_matrix,proj,this._temp001_matrix);
+                    glMatrix.mat4.invert(this._temp001_matrix,this._temp002_matrix);
+                    this._shader.setUseProjectionViewInverseMatrix(this._temp001_matrix);
+
                     break;
                 case ShaderUseVariantType.Projection:
                     this._shader.setUseProjectionMatrix(proj);
@@ -201,7 +209,7 @@ export class RenderData {
                 case ShaderUseVariantType.View:
                     this._shader.setUseViewMatrix(view);
                     break;
-                case ShaderUseVariantType.ModelView:
+                case ShaderUseVariantType.ViewModel:
                     glMatrix.mat4.mul(this._temp_model_view_matrix, view, this._modelMatrix);
                     this._shader.setUseModelViewMatrix(this._temp_model_view_matrix);
                     break;
@@ -210,11 +218,20 @@ export class RenderData {
                     glMatrix.mat4.transpose(this._temp_model_inverse_transform_matrix, this._temp_model_inverse_matrix);
                     this._shader.setUseModelInverseTransformWorldMatrix(this._temp_model_inverse_transform_matrix);
                     break;
-                case ShaderUseVariantType.ModelViewProjectionInverse:
+                case ShaderUseVariantType.ProjectionViewModelInverse:
                     glMatrix.mat4.multiply(this._temp001_matrix,view,this._modelMatrix);
                     glMatrix.mat4.multiply(this._temp002_matrix,proj,this._temp001_matrix);
-                    glMatrix.mat4.invert(this._temp003_matrix,this._temp002_matrix)
+                    glMatrix.mat4.invert(this._temp003_matrix,this._temp002_matrix);
                     this._shader.setUseProjectViewModelInverseMatrix(this._temp003_matrix);
+                    break;
+                case ShaderUseVariantType.ProjectionView:
+                    glMatrix.mat4.multiply(this._temp001_matrix,proj,view);
+                    this._shader.setUseProjectionViewMatrix(this._temp001_matrix);
+                    break;
+                case ShaderUseVariantType.ProjectionViewInverse:
+                    glMatrix.mat4.multiply(this._temp001_matrix,proj,view);
+                    glMatrix.mat4.invert(this._temp002_matrix,this._temp001_matrix);
+                    this._shader.setUseProjectionViewInverseMatrix(this._temp002_matrix);
                     break;
                 case ShaderUseVariantType.CameraWorldPosition:
                     this._shader.setUseCameraWorldPosition(this._cameraPosition);

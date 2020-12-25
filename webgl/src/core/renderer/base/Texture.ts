@@ -138,6 +138,15 @@ export class Texture {
 
     protected _bites: number = 0;//纹理在GPU端所占的内存
 
+    
+    /**
+     * 是否是2d纹理图片
+     */
+    public get isTexture2D():boolean{
+       return this._target==this._gl.TEXTURE_2D;
+    }
+
+
     constructor(gl) {
         this._gl = gl;
         this._target = -1;
