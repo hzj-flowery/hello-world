@@ -190,7 +190,7 @@ export class RenderData {
                 case ShaderUseVariantType.CUBE_COORD:
                         //立方体纹理数据
                         //-****-------------
-                        this._shader.setUseCubeTextureCoord();
+                        this._shader.setUseCubeTexture();
                         break;
                 //天空盒
                 case ShaderUseVariantType.SKYBOX:

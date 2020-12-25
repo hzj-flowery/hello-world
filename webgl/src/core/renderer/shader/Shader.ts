@@ -282,6 +282,22 @@ export class Shader {
             this._gl.uniform3fv(this.u_light_world_position_loc, pos);
         }
     }
+    //设置使用的纹理
+    //注意如果此处不重新设置使用的纹理，那么会默认使用上一次绘制时的纹理
+    public setUseTexture(glID: WebGLTexture, pos = 0): void {
+        if (!this.checkGLIDValid(glID)) return;
+        /**
+          * activeTexture必须在bindTexture之前。如果没activeTexture就bindTexture，会默认绑定到0号纹理单元
+        */
+        let loc: string = (pos == 0) ? "u_texCoord_loc" : "u_texCoord" + pos + "_loc"
+        if (this.checklocValid(this[loc], loc)) {
+            // 激活 指定 号纹理单元
+            this._gl.activeTexture(this._gl[glTEXTURE_UNIT_VALID[pos]]);
+            // 指定当前操作的贴图
+            this._gl.bindTexture(this._gl.TEXTURE_2D, glID);
+            this._gl.uniform1i(this[loc], pos);
+        }
+    }
     public setUseSkyBox(): void {
         if (this.checklocValid(this.u_skybox_loc, "u_skybox_loc")) {
             var gl = this._gl;
@@ -293,10 +309,12 @@ export class Shader {
             gl.depthFunc(gl.LEQUAL);
         }
     }
-    public setUseCubeTextureCoord(): void {
+    public setUseCubeTexture(): void {
         var gl = this._gl;
         if (this.checklocValid(this.u_cubeCoord_loc, "u_cubeCoord_loc")) {
             gl.uniform1i(this.u_cubeCoord_loc, 0);
+            // 禁止写入深度缓存，造成背景在很远的假象
+            gl.depthMask(false);
         }
     }
     //设置使用投影视口模型矩阵
@@ -399,23 +417,7 @@ export class Shader {
             this._gl.vertexAttribPointer(this.a_uv_loc, itemSize, this._gl.FLOAT, false, 0, 0);
         }
     }
-    //设置使用的纹理
-    //注意如果此处不重新设置使用的纹理，那么会默认使用上一次绘制时的纹理
-    public setUseTexture(glID: WebGLTexture, pos = 0): void {
-        if (!this.checkGLIDValid(glID)) return;
-        /**
-          * activeTexture必须在bindTexture之前。如果没activeTexture就bindTexture，会默认绑定到0号纹理单元
-        */
-        let loc: string = (pos == 0) ? "u_texCoord_loc" : "u_texCoord" + pos + "_loc"
-        if (this.checklocValid(this[loc], loc)) {
-            // 激活 指定 号纹理单元
-            this._gl.activeTexture(this._gl[glTEXTURE_UNIT_VALID[pos]]);
-            // 指定当前操作的贴图
-            this._gl.bindTexture(this._gl.TEXTURE_2D, glID);
-            this._gl.uniform1i(this[loc], pos);
-        }
-    }
-
+    
     public disableVertexAttribArray(): void {
         if (this.checklocValid(this.a_position_loc, "a_position_loc")) {// 设定为数组类型的变量数据
             this._gl.disableVertexAttribArray(this.a_position_loc);

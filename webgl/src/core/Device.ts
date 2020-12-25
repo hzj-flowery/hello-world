@@ -306,7 +306,7 @@ export default class Device {
          rData._lightColor = cameraData.lightData.color;
          rData._lightDirection = cameraData.lightData.direction;
          rData._cameraPosition = cameraData.position;
-         
+
         switch (rData._type) {
             case RenderDataType.Base:
                 if (isUseScene) {
@@ -583,14 +583,14 @@ export default class Device {
         gl.blendEquation(gl.FUNC_ADD);
         gl.blendColor(1, 1, 1, 1);
 
-        gl.colorMask(true, true, true, true);
+        gl.colorMask(true, true, true, true);//允许往颜色缓冲写数据
 
         gl.enable(gl.CULL_FACE);
         gl.cullFace(gl.BACK);
 
         gl.disable(gl.DEPTH_TEST);
         gl.depthFunc(gl.LESS);
-        gl.depthMask(true);
+        gl.depthMask(true);//允许往深度缓存写数据
         gl.disable(gl.POLYGON_OFFSET_FILL);
         gl.depthRange(0, 1);
 

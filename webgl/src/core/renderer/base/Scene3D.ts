@@ -120,16 +120,18 @@ export default class Scene3D extends Scene {
         this._lightCube.setScale(0.5, 0.5, 0.5);
         this._centerNode.addChild(this._lightCube);
         
+        
+
+        this._skybox = new SkyBox(gl);
+        this._skybox.setDefaultUrl();
+        this.addChild(this._skybox);
+
         let tempNode = new Node();
         tempNode.setPosition(-10,-3.0,0);
         this.addChild(tempNode);
         this._mirrorCube = new MirrorCube(gl);
         this._mirrorCube.setDefaultUrl();
         tempNode.addChild(this._mirrorCube);
-
-        this._skybox = new SkyBox(gl);
-        this._skybox.setDefaultUrl();
-        this.addChild(this._skybox);
 
         this.setPosition(0, 0, 0);
         setTimeout(this.rotateCenterNode.bind(this), 20);
