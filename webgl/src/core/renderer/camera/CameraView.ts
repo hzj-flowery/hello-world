@@ -1,6 +1,5 @@
 import { SY } from "../base/Sprite";
 import { glprimitive_type } from "../gfx/GLEnums";
-import { GLapi } from "../gfx/GLapi";
 import GameMainCamera from "./GameMainCamera";
 
 /**

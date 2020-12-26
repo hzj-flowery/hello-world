@@ -120,6 +120,7 @@ export default class State {
     public program;
 
     public viewPort:any;
+
     public isSameViewPort(x,y,width,height):boolean{
          if(!this.viewPort)
          {

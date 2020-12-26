@@ -23,36 +23,7 @@ export const glEnums = {
     INDEX_FMT_UINT16: 5123, // gl.UNSIGNED_SHORT
     INDEX_FMT_UINT32: 5125, // gl.UNSIGNED_INT (OES_element_index_uint)
   
-    // vertex attribute semantic
-    ATTR_POSITION: 'a_position',
-    ATTR_NORMAL: 'a_normal',
-    ATTR_TANGENT: 'a_tangent',
-    ATTR_BITANGENT: 'a_bitangent',
-    ATTR_WEIGHTS: 'a_weights',
-    ATTR_JOINTS: 'a_joints',
-    ATTR_COLOR: 'a_color',
-    ATTR_COLOR0: 'a_color0',
-    ATTR_COLOR1: 'a_color1',
-    ATTR_UV: 'a_uv',
-    ATTR_UV0: 'a_uv0',
-    ATTR_UV1: 'a_uv1',
-    ATTR_UV2: 'a_uv2',
-    ATTR_UV3: 'a_uv3',
-    ATTR_UV4: 'a_uv4',
-    ATTR_UV5: 'a_uv5',
-    ATTR_UV6: 'a_uv6',
-    ATTR_UV7: 'a_uv7',
-    ATTR_TEX_COORD: 'a_texCoord',
-    ATTR_TEX_COORD1: 'a_texCoord1',
-    ATTR_TEX_COORD2: 'a_texCoord2',
-    ATTR_TEX_COORD3: 'a_texCoord3',
-    ATTR_TEX_COORD4: 'a_texCoord4',
-    ATTR_TEX_COORD5: 'a_texCoord5',
-    ATTR_TEX_COORD6: 'a_texCoord6',
-    ATTR_TEX_COORD7: 'a_texCoord7',
-    ATTR_TEX_COORD8: 'a_texCoord8',
-  
-  
+   
     // vertex attribute type
     ATTR_TYPE_INT8: 5120,    // gl.BYTE
     ATTR_TYPE_UINT8: 5121,   // gl.UNSIGNED_BYTE
@@ -180,7 +151,7 @@ export const glEnums = {
     PT_TRIANGLE_FAN: 6,   // gl.TRIANGLE_FAN
 };
 
-export namespace GLapi {
+namespace GLapi {
 
     //本地opegl上下文
     var gl:WebGLRenderingContext;

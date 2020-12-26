@@ -74,7 +74,7 @@ import { CameraData } from "../data/CameraData";
  * 左手坐标系：大拇指向右（+x）,食指向上（+y）,中指向前（+z）
  * 右手坐标系：大拇指向左（+x）,食指向上（+y）,中指向前（+z）
  * 
- * 一:opengl属于右手坐标系
+ * 一:opengl和webgl都属于右手坐标系
  * 二：设备坐标系属于左手坐标系
  * 三：unity属于左手坐标系
  * 四：Direct3D使用的是左手坐标系

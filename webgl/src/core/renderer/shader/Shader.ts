@@ -1,6 +1,5 @@
 
-import { glvert_attr_semantic, glTEXTURE_UNIT_VALID, glprimitive_type } from "../gfx/GLEnums";
-import { GLapi } from "../gfx/GLapi";
+import { glvert_attr_semantic, glTEXTURE_UNIT_VALID } from "../gfx/GLEnums";
 import { G_ShaderFactory } from "./ShaderFactory";
 
 
@@ -313,8 +312,6 @@ export class Shader {
         var gl = this._gl;
         if (this.checklocValid(this.u_cubeCoord_loc, "u_cubeCoord_loc")) {
             gl.uniform1i(this.u_cubeCoord_loc, 0);
-            // 禁止写入深度缓存，造成背景在很远的假象
-            gl.depthMask(false);
         }
     }
     //设置使用投影视口模型矩阵
@@ -387,7 +384,7 @@ export class Shader {
         if (this.checklocValid(this.a_position_loc, "a_position_loc")) {
             this._gl.bindBuffer(this._gl.ARRAY_BUFFER, glID);
             this._gl.enableVertexAttribArray(this.a_position_loc);
-            GLapi.vertexAttribPointer(this.a_position_loc, itemSize, this._gl.FLOAT, false, 0, 0);
+            this._gl.vertexAttribPointer(this.a_position_loc, itemSize, this._gl.FLOAT, false, 0, 0);
         }
     }
     //设置法线值

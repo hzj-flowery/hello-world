@@ -4,12 +4,25 @@ import Scene2D from "./renderer/base/Scene2D";
 import Scene3D from "./renderer/base/Scene3D";
 import { CameraModel, G_CameraModel } from "./renderer/camera/CameraModel";
 import GameMainCamera from "./renderer/camera/GameMainCamera";
-import { GLapi } from "./renderer/gfx/GLapi";
 import FrameBuffer from "./renderer/gfx/FrameBuffer";
 import { CameraData } from "./renderer/data/CameraData";
 import { NormalRenderData, RenderData, RenderDataPool, RenderDataType, SpineRenderData } from "./renderer/data/RenderData";
 import State from "./renderer/gfx/State";
 import { G_ShaderFactory } from "./renderer/shader/ShaderFactory";
+import { glEnums } from "./renderer/gfx/GLapi";
+
+/**
+ 渲染流程：
+ 阶段1--》CPU准备数据（顶点，法线，uv坐标，切线等）
+ 阶段2--》顶点着色器：主要完成顶点的空间变换，将顶点从模型空间变换到世界空间，再变换到视口空间，再变换到齐次裁切空间
+ 上面的三种变换就是大名鼎鼎的(PVM*position),在这三种变换以后，下面的操作就是GPU的内置操作了，如下：
+ 会进行齐次除法，完成真正的投影，然后会自动进行归一化，生成标准的NDC坐标，NDC的坐标范围是【-1,1】，而屏幕坐标的范围是【0,1】，最后会进行屏幕映射生成屏幕坐标
+ 阶段3--》图元装配：点，线，三角形目前支持这三种
+ 阶段4--》光栅化，生成片元，这里面也有裁切操作进行
+ 阶段5--》片元着色器
+ 阶段6--》逐片元操作
+
+ */
 
 /**
 * _attach
@@ -42,14 +55,125 @@ function _attach(gl, location, attachment, face = 0) {
     // }
 }
 
+//----------------------------------------------------------下面是状态管理-----------------------------
+//深度缓冲区 也称Z缓冲区
+/**
+深度缓冲区其实就是一个二维数组，下标就是屏幕坐标，里面存放着的值就是z坐标，我们可以通过下面描述的方法来对这个数组进行操作
+它的主要功能就是判断前后遮挡关系，选择片元是否渲染
+gl.enable(gl.DEPTH_TEST);开启深度检测
+gl.disable(gl.DEPTH_TEST);关闭深度检测
+gl.depthFunc(param)函数的参数如下：
+    gl.NEVER （总不通过）
+    gl.LESS（如果新值小于缓冲区中的值则通过）
+    gl.EQUAL（如果新值等于缓冲区中的值则通过）
+    gl.LEQUAL（如果新值小于等于缓冲区中的值则通过）
+    gl.GREATER（如果新值大于缓冲区中的值则通过）
+    gl.NOTEQUAL（如果新值不等于缓冲区中的值则通过）
+    gl.GEQUAL（如果新值大于等于缓冲区中的值则通过）
+    gl.ALWAYS（总通过）
+gl.depthMask(true);//允许往深度缓存写数据
+gl.depthMask(false);//不允许往深度缓存写数据
+
+gl.clearDepth(depth);指定深度缓冲区填充深度值，这个值一般是是最大值，因为屏幕坐标的范围是【0,1】，所以最大值一般为1
+注意上面这个函数并不是去清理，需要结合gl.clear(gl.DEPTH_BUFFER_BIT)这个清理函数来使用
+
+gl.depthRange(0,1);这个函数有两个参数near,far,near默认为0，far默认为1，near永远小于far
+这个函数的设置会影响到屏幕的z坐标的计算，当我们进行屏幕映射的时候，会用下边的公式将NDC的z坐标转为屏幕坐标系下的z坐标
+Zw = ((Far - Near)/2)*Zndc+(Far+Near)/2
+最终写入到深度缓冲区的值也是这个屏幕坐标系下的z坐标，我们在片段着色器中可以gl_FragCoord.z拿到这个z坐标
+  
+下面这个函数很有意思，叫多边形偏移
+出现这个功能是由于深度冲突才产生的，深度冲突指的是深度缓冲区的值和当前的顶点深度值，已经无法比较谁大谁小了
+比如在屏幕上有两个三角形他们在某个像素点的z值几乎是一样的，也就是在小数点n位才可以区分出来，而这个n位大于深度缓冲区的精度
+gl.disable(gl.POLYGON_OFFSET_FILL);//关闭多边形偏移
+gl.enable(gl.POLYGON_OFFSET_FILL); //开启多边形偏移
+多边形偏移使用举例：
+// 开启多边形偏移
+gl.enable(gl.POLYGON_OFFSET_FILL);
+// 绘制的时候分两次绘制产生冲突
+gl.drawArrays(gl.TRIANGLES, 0, n / 2);   // 绿色三角形
+gl.polygonOffset(1.0, 1.0);          // 设置偏移量
+gl.drawArrays(gl.TRIANGLES, n / 2, n / 2); // 黄色三角形
+
+ */
 function _commitDepthState(gl:WebGLRenderingContext,cur:State,next:State):void{
-    gl.enable(gl.DEPTH_TEST);
+    /**
+     * 下面函数中，只对面消除，深度写入，深度比较函数这个三个进行操作
+     */
+    if(cur.depthTest!=next.depthTest)
+    {
+        next.depthTest?gl.enable(gl.DEPTH_TEST):gl.disable(gl.DEPTH_TEST);
+    }
+    if(cur.depthWrite!=next.depthWrite)
+    {
+        next.depthWrite?gl.depthMask(true):gl.depthMask(false);
+    }
+    if(cur.depthFunc!=next.depthFunc)
+    {
+        gl.depthFunc(next.depthFunc);
+    }
 }
-function _commitCullState(gl:WebGLRenderingContext,cur:State,next:State):void{
-    gl.enable(gl.CULL_FACE);
+/**
+ * 
+gl.enable(gl.CULL_FACE);开启面剔除
+gl.disable(gl.CULL_FACE);关闭面剔除
+gl.frontFace()这个函数是设置那个面是正面
+gl.CW：表示逆时针绘制的代表正面gl.FRONT，否则是背面gl.BACK，这个是默认设置
+gl.CCW：表示顺时针绘制的代表正面gl.FRONT，否则是背面gl.BACK
+gl.cullFace()设置那一面被剔除有三个函数，如下
+gl.BACK：背面
+gl.FRONT：前面
+gl.FRONT_AND_BACK：前后两面
+ */
+function _commitCullState(gl: WebGLRenderingContext, cur: State, next: State): void {
+    if (cur.cullMode === next.cullMode) {
+        return;
+      }
+      if (next.cullMode === glEnums.CULL_NONE) {
+        gl.disable(gl.CULL_FACE);
+        return;
+      }
+      gl.enable(gl.CULL_FACE);
+      gl.cullFace(next.cullMode);
 }
+/**
+ * 裁切状态
+ * 剪裁测试用于限制绘制区域。区域内的像素，将被绘制修改。区域外的像素，将不会被修改。
+ * 例子 比如我要在画布的某个区域做一些其他的事情，让其为纯色等
+ */
 function _commitScissorState(gl:WebGLRenderingContext,cur:State,next:State):void{
-    gl.enable(gl.SCISSOR_TEST);
+   
+    // gl.enable(gl.SCISSOR_TEST);
+    // gl.scissor(0,0,50,50);
+    // gl.clearColor(1.0, 0.0, 0.0,1.0);
+    // gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    // gl.disable(gl.SCISSOR_TEST);
+}
+/**
+ * 混合状态
+ * 最常实现的功能就是半透明叠加
+ * gl.enable(gl.BLEND);开启混合
+ * gl.enable(gl.BLEND);//关闭混合
+公式：COLORfinal = COLORsource*FACTORsource op COLORdest * FACTORdest
+COLORfinal：混合之后的颜色。
+COLORsource：即将写入缓冲区的颜色。
+FACTORsource：写入颜色的比例因子，会与颜色值进行乘法计算。
+op：数学计算方法，将操作符左右两边的结果进行某种数学运算。最常见的是加法。
+COLORdest：缓冲区已经存在的颜色
+FACTORdest：已存在颜色的比例因子
+
+gl.blendFunc(sFactor,dFactor);设置混合方式
+
+最常见的混合方式gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);但这样的混合方式会改变alpha
+如果不希望改变混合后的alpha,可以使用gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ZERO, gl.ONE);
+
+gl.blendEquation(mode):该函数可以设置op的操作函数如下：
+gl.FUNC_ADD：相加处理
+gl.FUNC_SUBTRACT：相减处理
+gl.FUNC_REVERSE_SUBSTRACT：反向相减处理，即 dest 减去 source
+ */
+function _commitBlendState(gl:WebGLRenderingContext,cur:State,next:State):void{
+
 }
 
 export default class Device {
@@ -76,7 +200,6 @@ export default class Device {
         var gl = this.createGLContext(canvas);
         this.gl = gl;
         this.canvas = canvas;
-        GLapi.bindGL(gl);
         this._nextFrameS = new State(gl);
         this._curFrameS = new State(gl);
         canvas.onmousedown = this.onMouseDown.bind(this);
@@ -212,20 +335,20 @@ export default class Device {
      * 将结果绘制到UI上
      */
     private drawToUI(frameBuffer: WebGLFramebuffer): void {
-        this._commitRenderState([0, 0, 0.5, 1.0], frameBuffer);
+        this._commitRenderState(frameBuffer);
         this.triggerRender(false,false);
     }
     //将结果绘制到窗口
     private draw2screen(): void {
         let isShowCamera: boolean = true;
         if (isShowCamera) {
-            this._commitRenderState([0.5, 0.5, 0.5, 1.0], null, { x: 0, y: 0, w: 0.5, h: 1 });
+            this._commitRenderState(null, { x: 0, y: 0, w: 0.5, h: 1 });
             this.triggerRender(false,true);
             this.setViewPort({ x: 0.5, y: 0, w: 0.5, h: 1 });
             this.triggerRender(true,true);
         }
         else {
-            this._commitRenderState([0.5, 0.5, 0.5, 1.0], null);
+            this._commitRenderState(null);
             this.triggerRender(false,true);
         }
         if (this._isCapture) {
@@ -240,10 +363,15 @@ export default class Device {
     }
    
     //提交渲染状态
-    private _commitRenderState(clearColor: Array<number>, frameBuffer: WebGLFramebuffer, viewPort: any = { x: 0, y: 0, w: 1, h: 1 }): void {
+    private _commitRenderState(frameBuffer: WebGLFramebuffer, viewPort: any = { x: 0, y: 0, w: 1, h: 1 }): void {
         let gl = this.gl;
 
         this._nextFrameS.depthTest = true; //开启深度测试
+        this._nextFrameS.depthFunc = gl.LESS;
+        this._nextFrameS.depthWrite = true;//可以写入
+
+        this._nextFrameS.cullMode = glEnums.CULL_BACK;
+
         this._nextFrameS.ScissorTest = true;//裁切测试
         //设置viewport
         let x = viewPort.x * this.width;
@@ -258,7 +386,7 @@ export default class Device {
         
         gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuffer);
         this.setViewPort(viewPort);
-        gl.clearColor(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
+        gl.clearColor(0.5, 0.5, 0.5, 1.0);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
         
         //更新状态
@@ -296,16 +424,19 @@ export default class Device {
         rData.startDraw(this.gl,viewMatrix,projMatix)
     }
     private _temp1Matrix: Float32Array = glMatrix.mat4.identity(null);
-    private _temp2Matrix: Float32Array = glMatrix.mat4.identity(null);
-    private _temp3Matrix: Float32Array = glMatrix.mat4.identity(null);
+    /**
+     * 此函数每调用一次就有可能产生一次drawcall
+     * @param rData 
+     * @param isUseScene 
+     */
     private draw(rData: RenderData, isUseScene: boolean = false): void {
         var cameraData = GameMainCamera.instance.getCamera(rData._cameraType).getCameraData();
         glMatrix.mat4.identity(this._temp1Matrix);
 
          //补一下光的数据
-         rData._lightColor = cameraData.lightData.color;
-         rData._lightDirection = cameraData.lightData.direction;
-         rData._cameraPosition = cameraData.position;
+        rData._lightColor = cameraData.lightData.color;
+        rData._lightDirection = cameraData.lightData.direction;
+        rData._cameraPosition = cameraData.position;
 
         switch (rData._type) {
             case RenderDataType.Base:
@@ -342,7 +473,6 @@ export default class Device {
                     this._drawSpine(rData as SpineRenderData, cameraData.projectMat, this._temp1Matrix);
                 };
                 break
-
         }
 
     }
@@ -375,7 +505,6 @@ export default class Device {
         }
         G_ShaderFactory.drawBufferInfo(sData._attrbufferData, sData._glPrimitiveType);
     }
-
     private _renderData: Array<RenderData> = [];//绘制的数据
     public collectData(rData: RenderData): void {
         this._renderData.push(rData);
