@@ -120,7 +120,7 @@ class ShadowLight {
   private fragmentshader3d =
     `precision mediump float;
 
-    varying vec3 v_surfaceToLight;
+    varying vec3 v_surfaceToLight; 
     varying vec3 v_surfaceToView;
     uniform float u_shininess;//光照因子
 

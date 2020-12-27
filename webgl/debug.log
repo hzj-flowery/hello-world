@@ -39,3 +39,5 @@
 [1206/151937.884:ERROR:filesystem_win.cc(129)] GetFileAttributes C:\Users\17269\AppData\Local\Temp\.profile\Crashpad\attachments\14c05a9f-d98e-4aed-be04-c8e6babb6691: 系统找不到指定的路径。 (0x3)
 [1206/151958.967:ERROR:http_transport_win.cc(276)] WinHttpSendRequest: 操作成功完成。 (0x0)
 [1206/155754.562:ERROR:directory_reader_win.cc(43)] FindFirstFile: 系统找不到指定的路径。 (0x3)
+[1226/220503.573:ERROR:directory_reader_win.cc(43)] FindFirstFile: 系统找不到指定的路径。 (0x3)
+[1227/074727.692:ERROR:directory_reader_win.cc(43)] FindFirstFile: 系统找不到指定的路径。 (0x3)
