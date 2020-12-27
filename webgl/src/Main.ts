@@ -22,12 +22,13 @@ import SpotLightTest from "./core/renderer/light/SpotLightTest";
 import { StencilTest } from "./core/renderer/3d/StencilTest";
 import { RenderTargetTexture } from "./core/renderer/3d/RenderTargetTexture";
 import { G_ShaderFactory } from "./core/renderer/shader/ShaderFactory";
+import { G_BufferManager } from "./core/renderer/base/buffer/BufferManager";
 
 
 
 Device.Instance.init();
 G_ShaderFactory.init(Device.Instance.gl);
-
+G_BufferManager.init(Device.Instance.gl);
 
 
 // G_CameraModel.init(Device.Instance.gl);

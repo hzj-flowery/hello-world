@@ -52,6 +52,7 @@ import { Texture, TextureOpts } from "./texture/Texture";
 import { Texture2D } from "./texture/Texture2D";
 import TextureCube from "./texture/TextureCube";
 import TextureCustom from "./texture/TextureCustom";
+import { glBaseBuffer, G_BufferManager, IndexsBuffer, NormalBuffer, UVsBuffer, VertexsBuffer } from "./buffer/BufferManager";
 
 
 /**
@@ -59,141 +60,10 @@ import TextureCustom from "./texture/TextureCustom";
  */
 
 
-/**
- * 缓冲区中的数据就是一个二进制流，一般我们会按照字节处理，八个二进制为一个字节，又称字节流
- * 我们用字节流来表示数据，一个数据可以用若干个字节来表示
- * 一般用下面这几个数组来组织字节流
- * Int8Array：每个数据占1个字节
- * Uint8Array：每个数据占1个字节
- * Int16Array：每个数据占2个字节
- * Uint16Array：每个数据占2个字节
- * Float32Array：每个数据占4个字节
- *
- * 在使用bindBuffer() 
-gl.STREAM_DRAW：代码输入，用于绘制。设置一次，并且很少使用。
-gl.STREAM_READ：接受OpenGL输出，用于绘制。设置一次，并且很少使用。
-gl.STREAM_COPY：接受OpenGL输出，用于绘制或者用于拷贝至图片。设置一次，很少使用。
-gl.STATIC_DRAW：代码输入，用于绘制或者拷贝至图片。设置一次，经常使用。
-gl.STATIC_READ：接受OpenGL输出，用于绘制。设置一次，代码经常查询。
-gl.STATIC_COPY：接受OpenGL输出，用于绘制或者用于拷贝至图片。设置一次，经常使用。
-gl.DYNAMIC_DRAW：代码经常更新其内容，用于绘制或者用于拷贝至图片，使用频率高。
-gl.DYNAMIC_READ：OpenGL输出经常更新其内容，代码经常查询。
-gl.DYNAMIC_COPY：OpenGL输出经常更新其内容，用于绘制或者用于拷贝至图片，使用频率高。
- */
-abstract class glBaseBuffer {
-    constructor(gl: WebGLRenderingContext,
-        data: Array<number>,
-        itemSize: number, 
-        arrbufferType: number,
-        itemBytes:number) {
-        this._glID = gl.createBuffer();
-        this.itemSize = itemSize;
-        this.itemNums = data.length / itemSize;
-        this.gl = gl;
-        this._arrayBufferType = arrbufferType;
-        this._itemBytes = itemBytes;
-        // //默认使用以下数据
-        this._usage = gl.STATIC_DRAW;
-        this._curMapTotalBytes = 0;
-        this.pushData(data);
-    }
-    private _mapSourceData:Map<number,Array<number>> = new Map();//源数据
-    private _itemBytes: number = 2;    //每个数据的存储字节数
-    private _curMapTotalBytes:number;//当前map中含有的总的字节数
-    itemSize: number = 0;     //在缓冲区中，一个单位数据有几个数据组成
-    itemNums: number = 0;     //在缓冲区中，单位数据的数目
-    _glID: WebGLBuffer;//显存存储数据的地址
-    private _arrayBufferType: number;//缓冲区的类型
-    private _usage: number;
-    protected gl: WebGLRenderingContext;
-    
-    protected useDynamicUsage() {
-        this._usage = this.gl.DYNAMIC_DRAW;
-    }
 
-    public pushData(data:Array<number>){
-        //将数据放置在map中
-        this._mapSourceData.set(this._curMapTotalBytes,data);
-        this._curMapTotalBytes = this._curMapTotalBytes + data.length*this._itemBytes;
-        this.uploadData2GPU();
-    }
-    private getFloatArr() {
-        switch (this._itemBytes) {
-            case 2: return Uint16Array;
-            case 4: return Float32Array;
-        }
-    }
-    //上传数据到GPU显存
-    private uploadData2GPU(): void {
-        this.bufferSet();
-        this._usage == this.gl.STATIC_DRAW ? this.staticDraw() : this.dynamicDraw();
-    }
-    //静态绑定数据绘制
-    private staticDraw(): void {
-        let Arr = this.getFloatArr();
-        this.gl.bindBuffer(this._arrayBufferType, this._glID);
-        this.gl.bufferData(this._arrayBufferType, new Arr(this._mapSourceData.get(0)), this._usage);
-    }
-    //动态绑定数据绘制
-    private dynamicDraw(): void {
-        let Arr = this.getFloatArr();
-        this.gl.bindBuffer(this._arrayBufferType, this._glID);
-        this.gl.bufferData(this._arrayBufferType,this._curMapTotalBytes,this._usage);
-        this._mapSourceData.forEach((values,key)=>{
-            this.gl.bufferSubData(this._arrayBufferType,key, new Arr(values));
-        }) 
-    }
-    protected abstract bufferSet();
 
-    /**
-   * @method destroy
-   */
-    destroy() {
-        if (this._glID === -1) {
-            console.error('The buffer already destroyed');
-            return;
-        }
-        this.gl.deleteBuffer(this._glID);
-        this._glID = -1;
-    }
-}
-//顶点buffer
-class VertexsBuffer extends glBaseBuffer {
-    constructor(gl, vertexs: Array<number>, itemSize: number) {
-        super(gl, vertexs, itemSize, gl.ARRAY_BUFFER,4);
 
-    }
-    bufferSet(): void {
-        this.useDynamicUsage();
-    }
-}
-//索引buffer
-class IndexsBuffer extends glBaseBuffer {
-    constructor(gl, indexs: Array<number>, itemSize: number) {
-        super(gl, indexs, itemSize, gl.ELEMENT_ARRAY_BUFFER,2);
-    }
-    bufferSet(): void {
-        this.useDynamicUsage();
-    }
-}
-//uvbuffer
-class UVsBuffer extends glBaseBuffer {
-    constructor(gl, uvs: Array<number>, itemSize: number) {
-        super(gl, uvs, itemSize, gl.ARRAY_BUFFER,4);
-    }
-    bufferSet() {
-        this.useDynamicUsage();
-    }
-}
-//法线buffer
-class NormalBuffer extends glBaseBuffer {
-    constructor(gl, normals: Array<number>, itemSize: number) {
-        super(gl, normals, itemSize, gl.ARRAY_BUFFER,4);
-    }
-    bufferSet() {
-        this.useDynamicUsage();
-    }
-}
+
 
 /**
  * 显示节点
@@ -208,6 +78,7 @@ export namespace SY {
         TEXTURE_2D, //2D纹理
         TEXTURE_CUBE //立方体纹理
     }
+    var materialId: number = 0;//材质id
     /**
      * 这个渲染类可以用于基础研究
      * 数据生成 绑定  
@@ -219,11 +90,10 @@ export namespace SY {
         private _indexsBuffer: IndexsBuffer;
         //法线buffer
         private _normalsBuffer: NormalBuffer;
+        private _materialId: string;//这里存放一个材质id
         //纹理buffer
         private _uvsBuffer: UVsBuffer;
         protected _texture: Texture;
-
-
         protected gl: WebGL2RenderingContext;
         protected _shader: Shader;
         protected _renderData: RenderData;
@@ -232,6 +102,7 @@ export namespace SY {
         protected _cameraType: number = 0;//相机的类型(0表示透视1表示正交)
         constructor(gl) {
             super();
+            this._materialId = "materialId_" + materialId;
             this.gl = gl;
             this._glPrimitiveType = glprimitive_type.TRIANGLE_FAN;
             this._renderData = RenderDataPool.get(RenderDataType.Base);
@@ -251,28 +122,31 @@ export namespace SY {
         public setShader(vert: string, frag: string) {
             this._shader = Shader.create(vert, frag);
         }
-
         //创建顶点缓冲
         public createVertexsBuffer(vertexs: Array<number>, itemSize: number): VertexsBuffer {
-            this._vertexsBuffer = new VertexsBuffer(this.gl, vertexs, itemSize);
+            this._vertexsBuffer = G_BufferManager.createBuffer(GLID_TYPE.VERTEX,
+                this._materialId,vertexs,itemSize) as VertexsBuffer;
             this._renderData.pushShaderVariant(ShaderUseVariantType.Vertex);
             return this._vertexsBuffer;
         }
         //创建法线缓冲
         public createNormalsBuffer(normals: Array<number>, itemSize: number): NormalBuffer {
-            this._normalsBuffer = new NormalBuffer(this.gl, normals, itemSize);
+            this._normalsBuffer = G_BufferManager.createBuffer(GLID_TYPE.NORMAL,
+                this._materialId,normals,itemSize) as NormalBuffer;
             this._renderData.pushShaderVariant(ShaderUseVariantType.Normal);
             return this._normalsBuffer;
         }
         //创建索引缓冲
         //索引缓冲的单位数据个数肯定为1
         public createIndexsBuffer(indexs: Array<number>): IndexsBuffer {
-            this._indexsBuffer = new IndexsBuffer(this.gl, indexs, 1);
+            this._indexsBuffer = G_BufferManager.createBuffer(GLID_TYPE.INDEX,
+                this._materialId,indexs,1) as IndexsBuffer;
             return this._indexsBuffer;
         }
         //创建uv缓冲
         public createUVsBuffer(uvs: Array<number>, itemSize: number): UVsBuffer {
-            this._uvsBuffer = new UVsBuffer(this.gl, uvs, itemSize);
+            this._uvsBuffer = G_BufferManager.createBuffer(GLID_TYPE.UV,
+                this._materialId,uvs,itemSize) as UVsBuffer;
             this._renderData.pushShaderVariant(ShaderUseVariantType.UVs);
             return this._uvsBuffer
         }
@@ -324,7 +198,7 @@ export namespace SY {
             }
         }
 
-        public getGLID(type: GLID_TYPE): any {
+        protected getGLID(type: GLID_TYPE): any {
             switch (type) {
                 case GLID_TYPE.INDEX: return this._indexsBuffer ? this._indexsBuffer._glID : -1;
                 case GLID_TYPE.TEXTURE_2D: return this._texture ? this._texture._glID : -1;
@@ -335,7 +209,7 @@ export namespace SY {
                 default: return -1;//未知
             }
         }
-        public getBuffer(type: GLID_TYPE): glBaseBuffer {
+        private getBuffer(type: GLID_TYPE): glBaseBuffer {
             switch (type) {
                 case GLID_TYPE.INDEX: return this._indexsBuffer;
                 case GLID_TYPE.UV: return this._uvsBuffer;
