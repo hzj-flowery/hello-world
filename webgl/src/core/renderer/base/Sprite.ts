@@ -200,12 +200,12 @@ export namespace SY {
 
         protected getGLID(type: GLID_TYPE): any {
             switch (type) {
-                case GLID_TYPE.INDEX: return this._indexsBuffer ? this._indexsBuffer._glID : -1;
+                case GLID_TYPE.INDEX: return this._indexsBuffer ? this._indexsBuffer.glID : -1;
                 case GLID_TYPE.TEXTURE_2D: return this._texture ? this._texture._glID : -1;
                 case GLID_TYPE.TEXTURE_CUBE: return this._texture ? this._texture._glID : -1;
-                case GLID_TYPE.UV: return this._uvsBuffer ? this._uvsBuffer._glID : -1;
-                case GLID_TYPE.NORMAL: return this._normalsBuffer ? this._normalsBuffer._glID : -1;
-                case GLID_TYPE.VERTEX: return this._vertexsBuffer ? this._vertexsBuffer._glID : -1;
+                case GLID_TYPE.UV: return this._uvsBuffer ? this._uvsBuffer.glID : -1;
+                case GLID_TYPE.NORMAL: return this._normalsBuffer ? this._normalsBuffer.glID : -1;
+                case GLID_TYPE.VERTEX: return this._vertexsBuffer ? this._vertexsBuffer.glID : -1;
                 default: return -1;//未知
             }
         }

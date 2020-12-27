@@ -28,8 +28,8 @@ export abstract class glBaseBuffer {
         arrbufferType: number,
         itemBytes: number) {
         this._glID = gl.createBuffer();
-        this.itemSize = itemSize;
-        this.itemNums = data.length / itemSize;
+        this._itemSize = itemSize;
+        
         this.gl = gl;
         this._arrayBufferType = arrbufferType;
         this._itemBytes = itemBytes;
@@ -41,9 +41,9 @@ export abstract class glBaseBuffer {
     private _mapSourceData: Map<number, Array<number>> = new Map();//源数据
     private _itemBytes: number = 2;    //每个数据的存储字节数
     private _curMapTotalBytes: number;//当前map中含有的总的字节数
-    itemSize: number = 0;     //在缓冲区中，一个单位数据有几个数据组成
-    itemNums: number = 0;     //在缓冲区中，单位数据的数目
-    _glID: WebGLBuffer;//显存存储数据的地址
+    private _itemSize: number = 0;     //在缓冲区中，一个单位数据有几个数据组成
+    private _itemNums: number = 0;     //在缓冲区中，单位数据的数目
+    private _glID: WebGLBuffer;//显存存储数据的地址
     private _arrayBufferType: number;//缓冲区的类型
     private _usage: number;
     protected gl: WebGLRenderingContext;
@@ -51,10 +51,26 @@ export abstract class glBaseBuffer {
     protected useDynamicUsage() {
         this._usage = this.gl.DYNAMIC_DRAW;
     }
+    //一个数据有几个字节组成
+    public get itemBytes():number{
+        return this._itemBytes;
+    }
+    //一个单位数据有几个数据组成
+    public get itemSize():number{
+        return this._itemSize;
+    }
+    //一共有多少个单位数据
+    public get itemNums():number{
+        return this._itemNums;
+    }
+    public get glID():WebGLBuffer{
+        return this._glID;
+    }
     public pushData(data: Array<number>) {
         //将数据放置在map中
         this._mapSourceData.set(this._curMapTotalBytes, data);
         this._curMapTotalBytes = this._curMapTotalBytes + data.length * this._itemBytes;
+        this._itemNums = this._itemNums+data.length / this._itemSize;
         this.uploadData2GPU();
     }
     /**
