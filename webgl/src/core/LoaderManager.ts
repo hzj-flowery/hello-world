@@ -184,15 +184,50 @@ export default class LoaderManager {
 
     //加载图片数据
     private loadImageData(path: string, callBackProgress?, callBackFinish?): void {
-        var img = new Image();
-        img.onload = function (img: HTMLImageElement) {
-            if (!img) {
-                console.log("加载的图片路径不存在---", path);
-                return;
+        console.log("path------",path);
+        let isHttp = path.indexOf("http") >= 0;
+        if (!isHttp) {
+            //本地
+            var img = new Image();
+            img.onload = function (img: HTMLImageElement) {
+                if (!img) {
+                    console.log("加载的图片路径不存在---", path);
+                    return;
+                }
+                if (callBackFinish) callBackFinish.call(null, img, path);
+            }.bind(this, img);
+            img.src = path;
+        }
+        else {
+            //远程加载
+            // fetch(path).then((response)=>{
+            //     console.log("response-------",response);
+            //     if(response.ok)
+            //     {
+            //         console.log("进来啦----");
+            //         let myBlob =  response.blob();
+            //         var objectURL = URL.createObjectURL(myBlob);
+            //         var img = new Image(); 
+            //         img.src = objectURL;
+            //         console.log("objectURL------",objectURL);
+            //         if (callBackFinish) callBackFinish.call(null, img, path); 
+            //     }
+            //     throw new Error('Network response was not ok.');
+            // }).catch((err)=>{
+            //     console.log("加载图片失败了啊");
+            // })
+
+            var request = new XMLHttpRequest();
+            request.open("get", path,true);
+            request.send();
+            request.responseType = "blob";
+            request.onload = function () {
+                var objectURL = URL.createObjectURL(request.response);
+                var img = new Image(); 
+                img.src = objectURL;
+                if (callBackFinish) callBackFinish.call(null, img, path); 
             }
-            if (callBackFinish) callBackFinish.call(null, img, path);
-        }.bind(this, img);
-        img.src = path;
+        }
     }
     private getLoadFunc(path: string): Function {
         let strArr = path.split('.');

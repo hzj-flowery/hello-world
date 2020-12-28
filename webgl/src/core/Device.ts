@@ -152,6 +152,9 @@ function _commitScissorState(gl:WebGLRenderingContext,cur:State,next:State):void
 /**
  * 混合状态
  * 最常实现的功能就是半透明叠加
+ * 有一个问题 必须是透明的颜色才具备混合，也就是alpha的值必须小于1，否则就是覆盖了
+ * 所以我们说的混合都是针对alpha小于1的顶点颜色
+ * 
  * gl.enable(gl.BLEND);开启混合
  * gl.enable(gl.BLEND);//关闭混合
 公式：COLORfinal = COLORsource*FACTORsource op COLORdest * FACTORdest
@@ -162,18 +165,37 @@ op：数学计算方法，将操作符左右两边的结果进行某种数学运
 COLORdest：缓冲区已经存在的颜色
 FACTORdest：已存在颜色的比例因子
 
-gl.blendFunc(sFactor,dFactor);设置混合方式
-
+gl.blendFunc(sFactor,dFactor);设置混合方式，可以用的参数如下：
+gl.ONE;
+gl.ZERO;
+gl.SRC_COLOR;
+gl.DST_COLOR
+gl.SRC_ALPHA;
+gl.DST_ALPHA;
+gl.CONSTANT_ALPHA;
+gl.CONSTANT_COLOR;
+gl.ONE_MINUS_SRC_ALPHA;
+gl.ONE_MINUS_SRC_COLOR;
+gl.ONE_MINUS_DST_ALPHA;
+gl.ONE_MINUS_DST_COLOR;
+gl.ONE_MINUS_CONSTANT_ALPHA;
+gl.ONE_MINUS_CONSTANT_COLOR;
 最常见的混合方式gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);但这样的混合方式会改变alpha
-如果不希望改变混合后的alpha,可以使用gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ZERO, gl.ONE);
+如果不希望改变混合后的alpha,可以使用下面这个函数
+gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ZERO, gl.ONE);
+
+如果我们使用了上面提到的constant的混合因子，可以使用下面这个函数来指定混合颜色
+gl.blendColor(GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha)
 
 gl.blendEquation(mode):该函数可以设置op的操作函数如下：
 gl.FUNC_ADD：相加处理
 gl.FUNC_SUBTRACT：相减处理
 gl.FUNC_REVERSE_SUBSTRACT：反向相减处理，即 dest 减去 source
+下面这个函数可以对rgb和alpha
+gl.blendEquationSeparate(GLenum modeRGB, GLenum modeAlpha)
  */
 function _commitBlendState(gl:WebGLRenderingContext,cur:State,next:State):void{
-
+  
 }
 
 export default class Device {
@@ -279,7 +301,8 @@ export default class Device {
     private createGLContext(canvas: HTMLCanvasElement): WebGL2RenderingContext {
 
         let options = {
-            stencil: true //开启模板功能
+            stencil: true, //开启模板功能
+            // alpha:true, //那么这个颜色还会进一步和 canvas 所覆盖的页面颜色进行进一步叠加混色
         }
         var names = ["webgl2", "webgl", "experimental-webgl"];
         var context = null;

@@ -23,6 +23,7 @@ import { StencilTest } from "./core/renderer/3d/StencilTest";
 import { RenderTargetTexture } from "./core/renderer/3d/RenderTargetTexture";
 import { G_ShaderFactory } from "./core/renderer/shader/ShaderFactory";
 import { G_BufferManager } from "./core/renderer/base/buffer/BufferManager";
+import { ShadowMapProjectionTest } from "./core/renderer/3d/ShadowMapProjectionTest";
 
 
 
@@ -41,6 +42,7 @@ G_BufferManager.init(Device.Instance.gl);
 // SkinTes1.run();
 
  var arr = [
+    "res/f-texture.png",
     "res/models/killer_whale/whale.CYCLES.bin",
     "res/models/killer_whale/whale.CYCLES.gltf",
     "res/models/HeadData/head.json",
@@ -81,7 +83,7 @@ G_BufferManager.init(Device.Instance.gl);
 
 
 LoaderManager.instance.load(arr,null,function(){
-    new RenderFlow().startup();
+    // new RenderFlow().startup();
     // RampTextureTest.run();
     // CameraTest.run();
     // RobartTest.run();
@@ -99,4 +101,5 @@ LoaderManager.instance.load(arr,null,function(){
 
     // RenderTargetTexture.run();
     
+    ShadowMapProjectionTest.run();
 })
