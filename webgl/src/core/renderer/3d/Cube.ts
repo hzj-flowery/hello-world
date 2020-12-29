@@ -35,5 +35,6 @@ export default class Cube extends SY.SpriteBase {
         this.createUVsBuffer(rd.uvData,rd.dF.uv_item_size);
         this.createIndexsBuffer(rd.indexs);
         this.setShader(vertextBaseCode,fragBaseCode);
+        this._glPrimitiveType = this.gl.TRIANGLE_STRIP;
     }
 }

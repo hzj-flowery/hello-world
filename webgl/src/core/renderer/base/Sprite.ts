@@ -104,7 +104,7 @@ export namespace SY {
             super();
             this._materialId = "materialId_" + materialId;
             this.gl = gl;
-            this._glPrimitiveType = glprimitive_type.TRIANGLE_FAN;
+            this._glPrimitiveType = glprimitive_type.TRIANGLES;
             this._renderData = RenderDataPool.get(RenderDataType.Base);
             this.init();
         }
@@ -334,6 +334,7 @@ export namespace SY {
         private _rb: Array<number> = [];//右下
         constructor(gl) {
             super(gl);
+            this._glPrimitiveType = this.gl.TRIANGLE_STRIP;
         }
         private updateUV(): void {
             //uv 数据
@@ -345,7 +346,7 @@ export namespace SY {
             ];
             this.createUVsBuffer(floorVertexTextureCoordinates, 2);
             // 索引数据
-            var floorVertexIndices = [0, 1, 2, 3];
+            var floorVertexIndices = [0, 1, 2, 3,2,0];
             this.createIndexsBuffer(floorVertexIndices);
         }
         /**

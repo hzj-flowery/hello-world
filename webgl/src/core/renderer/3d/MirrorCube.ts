@@ -48,6 +48,7 @@ export default class MirrorCube extends SY.SpriteBase {
         this._renderData.pushShaderVariant(ShaderUseVariantType.CameraWorldPosition);
         this._renderData.pushShaderVariant(ShaderUseVariantType.CUBE_COORD);
         this.setShader(vertextBaseCode, fragBaseCode);
+        this._glPrimitiveType = this.gl.TRIANGLE_STRIP;
     }
     private defaultPath = [
         'res/skybox/2/right+x.png',

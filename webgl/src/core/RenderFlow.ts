@@ -34,7 +34,7 @@ export default class RenderFlow {
             let curFrameTime =  time-this._lastFrameStartTime;
             let standardFrameTime = (1000/this._frameRate);
             this._lastFrameStartTime = time;
-            if(curFrameTime>standardFrameTime)
+            // if(curFrameTime>standardFrameTime)
             {
                 Device.Instance.startDraw(time,this._2dScene,this._3dScene);
             }

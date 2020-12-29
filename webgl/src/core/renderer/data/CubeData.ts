@@ -238,20 +238,12 @@ export class CubeData {
         var uvData = concatData("UV");
         var indexs = concatData("Indexs");
         var normals = concatData("Normals");
-        // return {
-        //     vertex:vertex,
-        //     uvData:uvData,
-        //     indexs:indexs,
-        //     normals:normals,
-        //     dF:faceFrontData
-        // }
-        console.log("faceFrontData---", faceFrontData);
         return {
-            vertex: CubeData.verPos,
-            uvData: CubeData.texUV,
-            indexs: CubeData.verIndex,
-            normals: CubeData.normals,
-            dF: faceFrontData
+            vertex:vertex,
+            uvData:uvData,
+            indexs:indexs,
+            normals:normals,
+            dF:faceFrontData
         }
 
     }

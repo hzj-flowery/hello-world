@@ -70,7 +70,7 @@ export default class LightCube extends SY.SpriteBase {
         this._renderData.pushShaderVariant(ShaderUseVariantType.LightColor);
         this._renderData.pushShaderVariant(ShaderUseVariantType.LightDirection);
         
-        this._glPrimitiveType = this.gl.LINES;
+        this._glPrimitiveType = this.gl.TRIANGLE_STRIP;
     }
     public visit(time):void{
            super.visit(time);

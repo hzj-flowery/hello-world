@@ -37,6 +37,7 @@ export default class SkyBox extends SY.SpriteBase {
           this.createIndexsBuffer(rd.indexs);
           this.setShader(vertexshader3d, fragmentshader3d);
           this._renderData.pushShaderVariant(ShaderUseVariantType.SKYBOX);
+          this._glPrimitiveType = this.gl.TRIANGLE_STRIP;
      }
      private defaultPath = [
           'res/skybox/2/right+x.png',
