@@ -26,12 +26,22 @@ export default class RenderFlow {
         this.loopScale();
     }
     private _add:number;
+    private _lastFrameStartTime:number;//上一帧的时间
+    private _frameRate:number = 0;//帧率
     private loopScale():void{
         this._add = 0.01;
         var loop = function(time){
-            Device.Instance.startDraw(time,this._2dScene,this._3dScene);
+            let curFrameTime =  time-this._lastFrameStartTime;
+            let standardFrameTime = (1000/this._frameRate);
+            this._lastFrameStartTime = time;
+            if(curFrameTime>standardFrameTime)
+            {
+                Device.Instance.startDraw(time,this._2dScene,this._3dScene);
+            }
             requestAnimationFrame(loop);
         }.bind(this);
+        this._lastFrameStartTime = 0;
+        this._frameRate = 60;
         loop(0);
     }
     

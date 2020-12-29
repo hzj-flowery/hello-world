@@ -83,7 +83,7 @@ G_BufferManager.init(Device.Instance.gl);
 
 
 LoaderManager.instance.load(arr,null,function(){
-    // new RenderFlow().startup();
+    new RenderFlow().startup();
     // RampTextureTest.run();
     // CameraTest.run();
     // RobartTest.run();
@@ -101,5 +101,5 @@ LoaderManager.instance.load(arr,null,function(){
 
     // RenderTargetTexture.run();
     
-    ShadowMapProjectionTest.run();
+    // ShadowMapProjectionTest.run();
 })

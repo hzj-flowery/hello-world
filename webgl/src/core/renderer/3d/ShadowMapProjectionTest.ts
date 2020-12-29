@@ -4,6 +4,8 @@ import { cc } from "../../../CCDebug";
 import Device from "../../Device";
 import LoaderManager from "../../LoaderManager";
 import { glMatrix } from "../../Matrix";
+import TextureCustom from "../base/texture/TextureCustom";
+import CustomTextureData from "../data/CustomTextureData";
 import { syPrimitives } from "../shader/Primitives";
 import { G_ShaderFactory } from "../shader/ShaderFactory";
 
@@ -47,6 +49,7 @@ uniform sampler2D u_projectedTexture;
 
 void main() {
   vec3 projectedTexcoord = v_projectedTexcoord.xyz / v_projectedTexcoord.w;
+  projectedTexcoord.xyz = projectedTexcoord.xyz/2.0+0.5;
   bool inRange = 
       projectedTexcoord.x >= 0.0 &&
       projectedTexcoord.x <= 1.0 &&
@@ -132,29 +135,8 @@ function main() {
     });
 
     // make a 8x8 checkerboard texture
-    const checkerboardTexture = gl.createTexture();
-    gl.bindTexture(gl.TEXTURE_2D, checkerboardTexture);
-    gl.texImage2D(
-        gl.TEXTURE_2D,
-        0,                // mip level
-        gl.LUMINANCE,     // internal format
-        8,                // width
-        8,                // height
-        0,                // border
-        gl.LUMINANCE,     // format
-        gl.UNSIGNED_BYTE, // type
-        new Uint8Array([  // data
-            0xFF, 0xCC, 0xFF, 0xCC, 0xFF, 0xCC, 0xFF, 0xCC,
-            0xCC, 0xFF, 0xCC, 0xFF, 0xCC, 0xFF, 0xCC, 0xFF,
-            0xFF, 0xCC, 0xFF, 0xCC, 0xFF, 0xCC, 0xFF, 0xCC,
-            0xCC, 0xFF, 0xCC, 0xFF, 0xCC, 0xFF, 0xCC, 0xFF,
-            0xFF, 0xCC, 0xFF, 0xCC, 0xFF, 0xCC, 0xFF, 0xCC,
-            0xCC, 0xFF, 0xCC, 0xFF, 0xCC, 0xFF, 0xCC, 0xFF,
-            0xFF, 0xCC, 0xFF, 0xCC, 0xFF, 0xCC, 0xFF, 0xCC,
-            0xCC, 0xFF, 0xCC, 0xFF, 0xCC, 0xFF, 0xCC, 0xFF,
-        ]));
-    gl.generateMipmap(gl.TEXTURE_2D);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+    const checkerboardTexture = new TextureCustom(gl);
+    checkerboardTexture.url = CustomTextureData.getBoardData(8,8);
 
     function loadImageTexture() {
         // Create a texture.
@@ -170,7 +152,7 @@ function main() {
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
             // assumes this texture is a power of 2
             gl.generateMipmap(gl.TEXTURE_2D);
-            render();
+            // render();
         })
         return texture;
     }
@@ -215,12 +197,12 @@ function main() {
     // Uniforms for each object.
     const planeUniforms = {
         u_colorMult: [0.5, 0.5, 1, 1],  // lightblue
-        u_texture: checkerboardTexture,
+        u_texture: checkerboardTexture._glID,
         u_world: m4.translation(null, 0, 0, 0),
     };
     const sphereUniforms = {
         u_colorMult: [1, 0.5, 0.5, 1],  // pink
-        u_texture: checkerboardTexture,
+        u_texture: checkerboardTexture._glID,
         u_world: m4.translation(null, 2, 3, 4),
     };
 
@@ -248,8 +230,8 @@ function main() {
                 200);                     // far
 
         let textureMatrix = m4.identity(null);
-        m4.translate(textureMatrix, textureMatrix, [0.5, 0.5, 0.5]);
-        m4.scale(textureMatrix, textureMatrix, [0.5, 0.5, 0.5]);
+        // m4.translate(textureMatrix, textureMatrix, [0.5, 0.5, 0.5]);
+        // m4.scale(textureMatrix, textureMatrix, [0.5, 0.5, 0.5]);
         m4.multiply(textureMatrix, textureMatrix, textureProjectionMatrix);
         // use the inverse of this world matrix to make
         // a matrix that will transform other positions
@@ -288,12 +270,10 @@ function main() {
 
         // Setup all the needed attributes.
         G_ShaderFactory.setBuffersAndAttributes(colorProgramInfo.attrSetters, cubeLinesBufferInfo);
-
         // scale the cube in Z so it's really long
         // to represent the texture is being projected to
         // infinity
         const mat = m4.multiply(null, textureWorldMatrix, m4.invert(null, textureProjectionMatrix));
-
         // Set the uniforms we just computed
         G_ShaderFactory.setUniforms(colorProgramInfo.uniSetters, {
             u_color: [0, 0, 0, 1],
@@ -322,7 +302,7 @@ function main() {
         // Compute the projection matrix
         const aspect = gl.canvas.width / gl.canvas.height;
         const projectionMatrix = m4.perspective(null, fieldOfViewRadians, aspect, 1, 2000);
-
+        
         // Compute the camera's matrix using look at.
         const cameraPosition = [settings.cameraX, settings.cameraY, 7];
         const target = [0, 0, 0];

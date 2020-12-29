@@ -138,7 +138,7 @@ class ShadowLight {
     //普通计算阴影
     float getShadowLight(vec4 coordP){
       vec3 projectedTexcoord = coordP.xyz / coordP.w;   //手动进行齐次除法
-      projectedTexcoord = coordP.xyz / 2.0 + 0.5;                     //转为屏幕坐标
+      projectedTexcoord = projectedTexcoord.xyz / 2.0 + 0.5;                     //转为屏幕坐标
       float currentDepth = projectedTexcoord.z + u_bias;                          //Z2  当前顶点的深度值                  
       float projectedDepth = texture2D(u_shadowMap, projectedTexcoord.xy).r; //取出深度z值 Z1
       float shadowLight = (inRange(projectedTexcoord) && projectedDepth <= currentDepth) ? 0.0 : 1.0;//小于说明光看不见，则处于阴影中，否则正常显示
@@ -148,7 +148,7 @@ class ShadowLight {
     //coordP在光照下的顶点坐标
     float getShadowLightRYY(vec4 coordP){
       vec3 projectedTexcoord = coordP.xyz / coordP.w;   //手动进行齐次除法
-      projectedTexcoord = coordP.xyz / 2.0 + 0.5;       //转为屏幕坐标
+      projectedTexcoord = projectedTexcoord.xyz / 2.0 + 0.5;       //转为屏幕坐标
       float shadows =0.0;
       float opacity=0.1;// 阴影alpha值, 值越小暗度越深
       float texelSize=1.0/1024.0;// 阴影像素尺寸,值越小阴影越逼真

@@ -329,13 +329,13 @@ export default class Camera extends Node {
          glMatrix.mat4.identity(this._modelMatrix);
          glMatrix.mat4.identity(this._footMatrix);
          //先缩放
-         this.mat4Scale$3(this._modelMatrix, this._modelMatrix, [this.scaleX, this.scaleY, this.scaleZ]);
+         glMatrix.mat4.scale(this._modelMatrix, this._modelMatrix, [this.scaleX, this.scaleY, this.scaleZ]);
          //再旋转
-         this.matrix4RotateX(this._modelMatrix, this._modelMatrix, this.rotateX * (Math.PI / 180));
-         this.matrix4RotateY(this._modelMatrix, this._modelMatrix, this.rotateY * (Math.PI / 180));
-         this.matrix4RotateZ(this._modelMatrix, this._modelMatrix, this.rotateZ * (Math.PI / 180));
+         glMatrix.mat4.rotateX(this._modelMatrix, this._modelMatrix, this.rotateX * (Math.PI / 180));
+         glMatrix.mat4.rotateY(this._modelMatrix, this._modelMatrix, this.rotateY * (Math.PI / 180));
+         glMatrix.mat4.rotateZ(this._modelMatrix, this._modelMatrix, this.rotateZ * (Math.PI / 180));
          //最后平移
-         this.mat4Translate$2(this._footMatrix, this._footMatrix, [this.x, this.y, this.z]);
+         glMatrix.mat4.translate(this._footMatrix, this._footMatrix, [this.x, this.y, this.z]);
          //
          glMatrix.mat4.multiply(this._modelMatrix,this._footMatrix,this._modelMatrix);
          glMatrix.mat4.multiply(this._modelMatrix,this._worldMatrix,this._modelMatrix);

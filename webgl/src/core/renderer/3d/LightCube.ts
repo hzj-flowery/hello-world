@@ -69,7 +69,8 @@ export default class LightCube extends SY.SpriteBase {
         this._renderData.pushShaderVariant(ShaderUseVariantType.ModelInverseTransform);
         this._renderData.pushShaderVariant(ShaderUseVariantType.LightColor);
         this._renderData.pushShaderVariant(ShaderUseVariantType.LightDirection);
-
+        
+        this._glPrimitiveType = this.gl.LINES;
     }
     public visit(time):void{
            super.visit(time);
