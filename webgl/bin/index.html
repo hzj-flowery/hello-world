@@ -36,7 +36,7 @@
       <div id="zPosition"></div>
       <div id="yPosition"></div>
       <div id="xPosition"></div>
-      
+
       <div id="cameraPosX"></div>
       <div id="cameraPosY"></div>
       <div id="cameraPosZ"></div>
@@ -53,7 +53,7 @@
       <div id="zFar"></div>
 
       <!-- <button id="screenshot" type="button">Save...</button> -->
-      
+
     </div>
   </div>
 
@@ -62,6 +62,12 @@
   <canvas id="myCanvas" width="960" height="640" style="border: 1px solid red"></canvas>
   <canvas id="2dCanvas" width="512" height="512" style="border: 1px solid red"></canvas>
   <script type="text/javascript">
+
+    window.onload = function () {
+      var canvas = document.getElementById('myCanvas');
+      canvas.width = 960/2;
+      console.log("页面打开耗时----秒",performance.now()/1000);
+    }
 
     var canvas = document.getElementById('myCanvas');
     var canvas2d = document.getElementById('2dCanvas');
@@ -82,6 +88,7 @@
       script.src = url;
       document.body.appendChild(script);
     }
+
   </script>
   <script type="text/javascript" src="index.js"></script>
 </body>

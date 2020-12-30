@@ -32,7 +32,7 @@ export class RenderSprite extends SY.Sprite2D{
         this._renderData._isOffline = true;
     }
     protected onInit(): void {
-        this.setContentSize(Device.Instance.Width/4,Device.Instance.Height/4);
+        this.setContentSize(Device.Instance.width/4,Device.Instance.height/4);
         this.setShader(vertextBaseCode,fragBaseCode);
     }
 }

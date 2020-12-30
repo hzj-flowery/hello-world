@@ -281,12 +281,6 @@ export default class Device {
         return (this.canvas as any).getContext("webgl")
     }
 
-    public get Width(): number {
-        return this._width;
-    }
-    public get Height(): number {
-        return this._height;
-    }
 
     //获取webgl画笔的类型
     public getContextType(): string {
@@ -614,6 +608,12 @@ export default class Device {
     }
     public get height(){
         return this._height;
+    }
+    public set width(width){
+        this.width = width;
+    }
+    public set height(height){
+        this._height = height;
     }
     
 
