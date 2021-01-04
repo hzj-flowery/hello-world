@@ -3,7 +3,7 @@
     "module": "commonjs",
     "target": "es5",
     "noEmitHelpers": true,
-    "outDir": "./dist", //生成的js和js.map的目录
+    "outDir": "./bin",
     "sourceMap": true
   },
   "exclude": [

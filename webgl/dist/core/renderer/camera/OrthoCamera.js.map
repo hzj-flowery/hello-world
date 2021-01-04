@@ -1,1 +1,0 @@
-{"version":3,"file":"OrthoCamera.js","sourceRoot":"","sources":["../../../../src/core/renderer/camera/OrthoCamera.ts"],"names":[],"mappings":";;AAAA,mCAA8B;AAC9B,iCAA4B;AAE5B;IAAyC,+BAAM;IAC3C,qBAAY,IAAI,EAAC,MAAM,EAAC,IAAI,EAAC,GAAG;eAC5B,kBAAM,IAAI,EAAC,MAAM,EAAC,IAAI,EAAC,GAAG,EAAC,eAAK,CAAC,UAAU,CAAC;IAChD,CAAC;IACL,kBAAC;AAAD,CAAC,AAJD,CAAyC,gBAAM,GAI9C"}

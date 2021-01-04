@@ -85,6 +85,7 @@ G_BufferManager.init(Device.Instance.gl);
 LoaderManager.instance.load(arr,null,function(){
 
     console.log("-888888----",/mobile|android|iphone|ipad/.test("mobilczjjjjj"));
+    
 
     new RenderFlow().startup();
     // RampTextureTest.run();
