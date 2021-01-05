@@ -13,7 +13,7 @@ import enums from "../camera/enums";
 import OrthoCamera from "../camera/OrthoCamera";
 import PerspectiveCamera from "../camera/PerspectiveCamera";
 import Sphere from "../3d/Sphere";
-import Spine from "../3d/Spine";
+import Spine from "./spine/Spine";
 import Camera from "../camera/Camera";
 import { G_CameraModel } from "../camera/CameraModel";
 import { PointLight } from "../light/PointLight";
