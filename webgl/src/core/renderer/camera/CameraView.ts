@@ -53,8 +53,8 @@ var solidcolorfragmentshader =
     '}'
 
 export default class CameraView extends SY.SpriteBase {
-    constructor(gl) {
-        super(gl);
+    constructor() {
+        super();
     }
     protected onInit(): void {
         var result = this.createCameraBufferInfo(0.2);
@@ -182,7 +182,7 @@ export default class CameraView extends SY.SpriteBase {
         //激活shader 并且给shader中的变量赋值
         this._shader.active();
         var newMV = this._glMatrix.mat4.create();
-        var v = GameMainCamera.instance.getCamera(this._cameraType).getModelViewMatrix();
+        var v = GameMainCamera.instance.getCamera(this._cameraType).modelMatrix;
         var m = this._modelMatrix;
         this._glMatrix.mat4.mul(newMV,v,m)
         this._shader.setUseModelViewMatrix(newMV);

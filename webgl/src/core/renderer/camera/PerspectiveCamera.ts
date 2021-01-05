@@ -13,14 +13,6 @@ export default class PerspectiveCamera extends Camera {
         this.setRect(0, 0, 1, 1);
     }
 
-    public visit(time:number):void{
-           super.visit(time);
-    }
-
-    public getVP():Float32Array{
-        return glMatrix.mat4.multiply(null,this._projectionMatrix,this._modelMatrix);
-    }
-
     /**
      * @param time in seconds
      */

@@ -36,8 +36,8 @@ var fragBaseCode =
     '}'
 
 export default class Ground extends SY.SpriteBase {
-    constructor(gl) {
-        super(gl);
+    constructor() {
+        super();
     }
     protected onInit(): void {
         // 顶点数据

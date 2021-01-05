@@ -223,11 +223,11 @@ export class CameraFrustum extends SY.SpriteBase {
   private cubeBufferInfo: BufferAttribsData;
   private coordinateBufferInfo:BufferAttribsData; //世界坐标系
   private pointArrays:BufferAttribsData;//绘制点的数组
-  constructor(gl) {
-    super(gl);
+  constructor() {
+    super();
   }
   public static create() {
-    return new CameraFrustum(Device.Instance.gl);
+    return new CameraFrustum();
   }
 
   private zPosition:number=-25;

@@ -3718,6 +3718,7 @@ export namespace glMatrix {
         dst = dst || new MatType(16);
         var zAxis = [];
         var subR = [];
+        //用相机的位置向量减去看向的目标向量生成一条指向相机位置的z轴向量
         normalize(zAxis,subtractVectors(subR,cameraPosition, target));
         var xAxis = [];
         var cross1 = []
@@ -3726,7 +3727,6 @@ export namespace glMatrix {
         var cross2 = [];
         normalize(yAxis,cross(cross2,zAxis, xAxis));
 
-    
         dst[ 0] = xAxis[0];
         dst[ 1] = xAxis[1];
         dst[ 2] = xAxis[2];

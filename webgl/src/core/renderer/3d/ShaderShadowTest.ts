@@ -88,8 +88,20 @@ class ShadowLight {
     }`
   private fragBase =
     `precision mediump float;
+  
+    //分解保存深度值
+    vec4 pack (float depth) {
+        // 使用rgba 4字节共32位来存储z值,1个字节精度为1/256
+        const vec4 bitShift = vec4(1.0, 256.0, 256.0 * 256.0, 256.0 * 256.0 * 256.0);
+        const vec4 bitMask = vec4(1.0/256.0, 1.0/256.0, 1.0/256.0, 0.0);
+        // gl_FragCoord:片元的坐标,fract():返回数值的小数部分
+        vec4 rgbaDepth = fract(depth * bitShift); //计算每个点的z值 
+        rgbaDepth -= rgbaDepth.rgba * bitMask; // Cut off the value which do not fit in 8 bits
+        return rgbaDepth;
+    }
+
     void main() {
-    gl_FragColor = vec4(gl_FragCoord.z,0.0, 0.0, 1.0);  //将深度值存在帧缓冲的颜色缓冲中 如果帧缓冲和窗口绑定 那么就显示出来 如果帧缓冲和纹理绑定就存储在纹理中
+    gl_FragColor = pack(gl_FragCoord.z);  //将深度值存在帧缓冲的颜色缓冲中 如果帧缓冲和窗口绑定 那么就显示出来 如果帧缓冲和纹理绑定就存储在纹理中
     }`
   private vertexshader3d =
     `attribute vec4 a_position;
@@ -144,6 +156,10 @@ class ShadowLight {
       float shadowLight = (inRange(projectedTexcoord) && projectedDepth <= currentDepth) ? 0.0 : 1.0;//小于说明光看不见，则处于阴影中，否则正常显示
       return shadowLight;
     }
+    float unpack(const in vec4 rgbaDepth) {
+      const vec4 bitShift = vec4(1.0, 1.0/256.0, 1.0/(256.0*256.0), 1.0/(256.0*256.0*256.0));
+      return dot(rgbaDepth, bitShift);
+  }
     //软阴影
     //coordP在光照下的顶点坐标
     float getShadowLightRYY(vec4 coordP){
@@ -154,12 +170,15 @@ class ShadowLight {
       float texelSize=1.0/1024.0;// 阴影像素尺寸,值越小阴影越逼真
       vec4 rgbaDepth;
       bool isInRange = inRange(projectedTexcoord);
-      float curDepth = projectedTexcoord.z+u_bias;
+      float curDepth = projectedTexcoord.z-u_bias;
       //消除阴影边缘的锯齿
       for(float y=-1.5; y <= 1.5; y += 1.0){
           for(float x=-1.5; x <=1.5; x += 1.0){
+              //找出光照条件下的当前位置的最大深度
               rgbaDepth = texture2D(u_shadowMap, projectedTexcoord.xy+vec2(x,y)*texelSize);
-              shadows += (isInRange&&curDepth> rgbaDepth.r) ? 1.0 : 0.0;
+              //如果当前深度大于光照的最大深度 则表明处于阴影中
+              //否则可以看见
+              shadows += (isInRange&&curDepth>unpack(rgbaDepth)) ? 1.0 : 0.0;
           }
       }
       shadows/=16.0;// 4*4的样本
@@ -246,6 +265,8 @@ class ShadowLight {
     this.cubeBufferInfo = syPrimitives.createCubeBufferInfo(
       2,  // size
     );
+
+
     this.cubeLinesBufferInfo = G_ShaderFactory.createBufferInfoFromArrays({
       position: [
         -1, -1, -1,
@@ -309,7 +330,7 @@ class ShadowLight {
       projHeight: 10, //光照摄像机渲染的屏幕高度
       perspective: false, //是否为透视投影
       fieldOfView: 120,   //视角fov
-      bias: -0.006,
+      bias: 0.005,
     };
     var webglLessonsUI = window["webglLessonsUI"]
     webglLessonsUI.setupUI(document.querySelector('#ui'), this.settings, [
@@ -326,7 +347,7 @@ class ShadowLight {
       { type: 'slider', key: 'projHeight', min: 0, max: 100, change: this.render.bind(this), precision: 2, step: 0.001, },
       { type: 'checkbox', key: 'perspective', change: this.render.bind(this), },
       { type: 'slider', key: 'fieldOfView', min: 1, max: 179, change: this.render.bind(this), },
-      { type: 'slider', key: 'bias', min: -0.01, max: 0.00001, change: this.render.bind(this), precision: 4, step: 0.0001, },
+      { type: 'slider', key: 'bias', min:0.005, max: 0.001, change: this.render.bind(this), precision:3, step: 0.001, },
     ]);
   }
 
@@ -443,29 +464,29 @@ class ShadowLight {
     // first draw from the POV of the light
     /**
      * lightWorldMatrix是光照摄像机的视野坐标系
-     * x轴：0 1 2 3
-     * y轴：4 5 6 7
-     * z轴：8 9 10 11 这个其实是光照方向
-     * w:  12 13 14 15 
+     * x轴：0  1  2  3
+     * y轴：4  5  6  7
+     * z轴：8  9  10 11 这个其实是光照方向
+     * w:  12 13  14 15 
      */
     const lightWorldMatrix = glMatrix.mat4.lookAt2(null,
       [this.settings.posX, this.settings.posY, this.settings.posZ],          // position
       [this.settings.targetX, this.settings.targetY, this.settings.targetZ], // target
       [0, 1, 0],                                              // up
     )
-    let lightReverseDir = lightWorldMatrix.slice(8, 11);
+    let lightReverseDir = glMatrix.vec3.normalize(null,lightWorldMatrix.slice(8, 11));
     const lightProjectionMatrix = this.settings.perspective ? glMatrix.mat4.perspective(null,
       MathUtils.degToRad(this.settings.fieldOfView),
       this.settings.projWidth / this.settings.projHeight,
       0.5,  // near
-      100)   // far
+      1000)   // far
       : glMatrix.mat4.ortho(null,
         -this.settings.projWidth / 2,   // left
         this.settings.projWidth / 2,   // right
         -this.settings.projHeight / 2,  // bottom
         this.settings.projHeight / 2,  // top
         0.5,                      // near
-        100);                      // far
+        1000);                      // far
     return {
       mat: lightWorldMatrix,
       reverseDir: lightReverseDir,

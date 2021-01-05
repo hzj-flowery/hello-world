@@ -26,8 +26,8 @@ var fragBaseCode =
     '}'
 
 export default class Cube extends SY.SpriteBase {
-    constructor(gl) {
-        super(gl);
+    constructor() {
+        super();
     }
     protected onInit() {
         var rd = CubeData.getData();

@@ -7,7 +7,6 @@ import Device from "./core/Device";
 import LoaderManager from "./core/LoaderManager";
 import PointLightTest from "./core/renderer/light/PointLightTest";
 import RenderFlow from "./core/RenderFlow";
-import Stage from "./core/renderer/3d/Stage";
 import FogTest from "./core/renderer/3d/FogTest";
 import EarthSunTest from "./core/renderer/3d/EarthSunTest";
 import RobartTest from "./core/renderer/3d/RobartTest";
@@ -16,7 +15,6 @@ import RampTextureTest from "./core/renderer/3d/RampTextureTest";
 import ObjTest from "./core/renderer/3d/ObjTest";
 import { CameraTest } from "./core/renderer/3d/CameraTest";
 import ThreeDLightTest from "./core/renderer/light/ThreeDLightTest";
-import { G_CameraModel } from "./core/renderer/camera/CameraModel";
 import ShaderShadowTest from "./core/renderer/3d/ShaderShadowTest";
 import SpotLightTest from "./core/renderer/light/SpotLightTest";
 import { StencilTest } from "./core/renderer/3d/StencilTest";
@@ -85,7 +83,7 @@ G_BufferManager.init(Device.Instance.gl);
 LoaderManager.instance.load(arr,null,function(){
 
     console.log("-888888----",/mobile|android|iphone|ipad/.test("mobilczjjjjj"));
-    
+
 
     new RenderFlow().startup();
     // RampTextureTest.run();

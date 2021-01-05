@@ -85,8 +85,8 @@ const fs = `
   }
 `
 export default class ObjNode extends SY.SpriteBase{
-     constructor(gl){
-         super(gl);
+     constructor(){
+         super();
      }
      private _meshProgramInfo:ShaderData;
      private _objData:any;

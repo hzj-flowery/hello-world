@@ -26,8 +26,8 @@ var fragBaseCode =
     '}'
 
 export class RenderSprite extends SY.Sprite2D{
-    constructor(gl){
-        super(gl);
+    constructor(){
+        super();
         this._cameraType = 1;
         this._renderData._isOffline = true;
     }

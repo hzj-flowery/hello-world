@@ -89,8 +89,8 @@ var vs2 =
 
 
 export default class SkinMesh extends SY.SpriteBase{
-      constructor(gl){
-           super(gl);
+      constructor(){
+           super();
       }
       protected onInit():void{
 

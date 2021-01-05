@@ -27,8 +27,8 @@ var fragBaseCode =
 
 
 export class Rectangle extends SY.Sprite2D {
-    constructor(gl) {
-        super(gl);
+    constructor() {
+        super();
         this._cameraType = 1;
     }
     protected onInit(): void {

@@ -28,8 +28,8 @@ var fragmentshader3d =
      '}'
 
 export default class SkyBox extends SY.SpriteBase {
-     constructor(gl) {
-          super(gl);
+     constructor() {
+          super();
      }
      protected onInit(): void {
           var rd = CubeData.getData();

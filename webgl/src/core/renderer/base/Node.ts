@@ -1,6 +1,7 @@
 import Ref from "../../../Ref";
 import { glMatrix } from "../../Matrix";
 
+
 export class Node extends Ref {
     constructor() {
         super();
@@ -14,7 +15,7 @@ export class Node extends Ref {
     public scaleX: number = 1;
     public scaleY: number = 1;
     public scaleZ: number = 1;
-    
+
     //x轴旋转的角度
     public rotateX: number = 0;
     //y轴旋转的角度
@@ -38,7 +39,7 @@ export class Node extends Ref {
      * 当前节点各种旋转平移缩放都只记录在modelMatrix中，最后modelMatrix和worldMatrix相乘,就可以得到一个模型世界矩阵，再赋给modelMatrix
      */
     protected _modelMatrix: Float32Array; //模型世界矩阵
-    protected _worldMatrix: any[]|Float32Array;//父节点矩阵
+    protected _worldMatrix: any[] | Float32Array;//父节点矩阵
     private _parent: Node;//父亲
     private _children: Array<Node>;//孩子节点
 
@@ -77,7 +78,7 @@ export class Node extends Ref {
     protected updateWorldMatrix(): void {
         if (this._parent) {
             //二处调用
-            this.setFatherMatrix(this._parent.getModelViewMatrix());
+            this.setFatherMatrix(this._parent.modelMatrix);
             return;
         }
         //否则这就是场景节点，不需要变换
@@ -89,14 +90,6 @@ export class Node extends Ref {
     protected onDrawAfter(): void {
 
     }
-    private drawBefore(): void {
-        //更新矩阵数据
-
-    }
-    private drawAfter(): void {
-
-    }
-
     //开启绘制
     public visit(time: number): void {
         //更新世界节点
@@ -117,8 +110,8 @@ export class Node extends Ref {
      * 
      * @param mvMatrix 设置父节点矩阵
      */
-    public setFatherMatrix(mvMatrix): void {
-        this._worldMatrix = glMatrix.mat4.clone(mvMatrix);
+    private setFatherMatrix(mvMatrix): void {
+        this._worldMatrix = this._glMatrix.mat4.clone(mvMatrix);
     }
     /**
     * 更新2D矩阵
@@ -130,24 +123,44 @@ export class Node extends Ref {
       旋转变换改变坐标轴的走向，但不改变原点的位置，所以两个坐标系坐标轴不再处于相同走向。 
       平移变换不改变坐标轴走向，但改变原点位置，两个坐标系原点不再重合
     */
-    protected updateMatrixData(): void {
+    private updateMatrixData(): void {
         //初始化模型矩阵
-        glMatrix.mat4.identity(this._modelMatrix);
+        this._glMatrix.mat4.identity(this._modelMatrix);
         //先缩放
-        glMatrix.mat4.scale(this._modelMatrix, this._modelMatrix, [this.scaleX, this.scaleY, this.scaleZ]);
+        this.scaleModelMatrix();
         //再旋转
-        glMatrix.mat4.rotateX(this._modelMatrix, this._modelMatrix, this.rotateX * (Math.PI / 180));
-        glMatrix.mat4.rotateY(this._modelMatrix, this._modelMatrix, this.rotateY * (Math.PI / 180));
-        glMatrix.mat4.rotateZ(this._modelMatrix, this._modelMatrix, this.rotateZ * (Math.PI / 180));
+        this.rotateModelMatrix();
         //最后平移
-        glMatrix.mat4.translate(this._modelMatrix, this._modelMatrix, [this.x, this.y, this.z]);
-        glMatrix.mat4.multiply(this._modelMatrix,this._worldMatrix,this._modelMatrix);
+        this.translateModelMatrix();
+        this._glMatrix.mat4.multiply(this._modelMatrix, this._worldMatrix, this._modelMatrix);
+    }
+    //缩放模型矩阵
+    private scaleModelMatrix(): void {
+        this._glMatrix.mat4.scale(this._modelMatrix, this._modelMatrix, [this.scaleX, this.scaleY, this.scaleZ]);
+    }
+    //旋转模型矩阵
+    private rotateModelMatrix(): void {
+        this._glMatrix.mat4.rotateX(this._modelMatrix, this._modelMatrix, this.rotateX * (Math.PI / 180));
+        this._glMatrix.mat4.rotateY(this._modelMatrix, this._modelMatrix, this.rotateY * (Math.PI / 180));
+        this._glMatrix.mat4.rotateZ(this._modelMatrix, this._modelMatrix, this.rotateZ * (Math.PI / 180));
+    }
+    //平移模型矩阵
+    protected translateModelMatrix(): void {
+        this._glMatrix.mat4.translate(this._modelMatrix, this._modelMatrix, [this.x, this.y, this.z]);
     }
     /**
      * 模型世界矩阵
      */
-    public getModelViewMatrix(): any {
+    public get modelMatrix(): Float32Array {
         return this._modelMatrix;
+    }
+    /**
+     * 模型世界的逆矩阵
+     */
+    public getInversModelMatrix(): any {
+        var invers = this._glMatrix.mat4.create();
+        this._glMatrix.mat4.invert(invers, this._modelMatrix)
+        return invers;
     }
     public setPosition(x, y, z): void {
         this.x = x;
@@ -177,3 +190,4 @@ export class Node extends Ref {
     }
 
 }
+

@@ -390,7 +390,9 @@ export class CameraModel {
         //转换到相机坐标系下
         //你可以理解为相机中的点乘以相机坐标系可以转换到世界坐标系
         glMatrix.mat4.multiply(this._worldTemp2, this._worldTemp2, targetCameraMatrix);//投影矩阵xs视口矩阵x第一个摄像机的相机矩阵
+        //绘制相机的节点坐标系
         this._coordinate.drawLine(projMatrix, cameraMatrix, this._worldTemp2);
+        //绘制世界坐标系
         this._coordinate.drawLine(projMatrix, cameraMatrix);
 
         this._coordinate.drawPoint(projMatrix, cameraMatrix, this._worldTemp2);

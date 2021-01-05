@@ -195,8 +195,8 @@ var fragBaseCode =
 
 
 export class Label extends SY.SpriteBase {
-    constructor(gl) {
-        super(gl);
+    constructor() {
+        super();
         this._cameraType = 1;
     }
     

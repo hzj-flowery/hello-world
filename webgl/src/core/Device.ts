@@ -2,7 +2,7 @@
 import { glMatrix } from "./Matrix";
 import Scene2D from "./renderer/base/Scene2D";
 import Scene3D from "./renderer/base/Scene3D";
-import { CameraModel, G_CameraModel } from "./renderer/camera/CameraModel";
+import {G_CameraModel } from "./renderer/camera/CameraModel";
 import GameMainCamera from "./renderer/camera/GameMainCamera";
 import FrameBuffer from "./renderer/gfx/FrameBuffer";
 import { CameraData } from "./renderer/data/CameraData";
@@ -10,6 +10,7 @@ import { NormalRenderData, RenderData, RenderDataPool, RenderDataType, SpineRend
 import State from "./renderer/gfx/State";
 import { G_ShaderFactory } from "./renderer/shader/ShaderFactory";
 import { glEnums } from "./renderer/gfx/GLapi";
+import { Node } from "./renderer/base/Node";
 
 /**
  渲染流程：
@@ -331,10 +332,10 @@ export default class Device {
     private onMouseUp(ev): void {
         this._isCapture = false;
     }
-    public startDraw(time: number, scene2D: Scene2D, scene3D: Scene3D): void {
+    public startDraw(time: number,stage:Node): void {
         this.onBeforeRender();
-        this.visitRenderTree(time, scene2D, scene3D);
-        this.drawToUI(scene2D.getFrameBuffer());
+        this.visitRenderTree(time,stage);
+        this.drawToUI();
         this.draw2screen();
         this.onAfterRender();
     }
@@ -344,14 +345,14 @@ export default class Device {
      * @param scene2D 
      * @param scene3D 
      */
-    private visitRenderTree(time: number, scene2D: Scene2D, scene3D: Scene3D): void {
-        scene3D.visit(time);
-        scene2D.visit(time);
+    private visitRenderTree(time: number, stage:Node): void {
+        stage.visit(time);
     }
     /**
      * 将结果绘制到UI上
      */
-    private drawToUI(frameBuffer: WebGLFramebuffer): void {
+    private drawToUI(): void {
+        let frameBuffer: WebGLFramebuffer = GameMainCamera.instance.get2DCamera().getFramebuffer();
         this._commitRenderState(frameBuffer);
         this.triggerRender(false,false);
     }

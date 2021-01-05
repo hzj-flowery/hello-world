@@ -25,8 +25,8 @@ var fragBaseCode =
     '}'
 
 export default class CustomTextureCube extends SY.SpriteBase {
-    constructor(gl) {
-        super(gl);
+    constructor() {
+        super();
     }
     protected onInit(): void {
         var positions =

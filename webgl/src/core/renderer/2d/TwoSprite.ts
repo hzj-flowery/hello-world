@@ -24,8 +24,8 @@ var fragmentshader3d =
     '}'
 
 export default class TwoSprite extends SY.SpriteBase {
-    constructor(gl) {
-        super(gl);
+    constructor() {
+        super();
         this._cameraType = 1;//正交投影
     }
     private _colorLoc:any;
@@ -136,7 +136,7 @@ export default class TwoSprite extends SY.SpriteBase {
         this._shader.setUseVertexAttribPointerForVertex(this.getGLID(SY.GLID_TYPE.VERTEX), this.getBufferItemSize(SY.GLID_TYPE.VERTEX));
 
         var newMV = this._glMatrix.mat4.create();
-        var v = GameMainCamera.instance.getCamera(this._cameraType).getInversModelViewMatrix();
+        var v = GameMainCamera.instance.getCamera(this._cameraType).getInversModelMatrix();
         var m = this._modelMatrix;
         this._glMatrix.mat4.mul(newMV,v,m)
         this._shader.setUseModelViewMatrix(newMV);

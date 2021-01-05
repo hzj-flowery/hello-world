@@ -100,10 +100,10 @@ export namespace SY {
         //参考glprimitive_type
         protected _glPrimitiveType: glprimitive_type;//绘制的类型
         protected _cameraType: number = 0;//相机的类型(0表示透视1表示正交)
-        constructor(gl) {
+        constructor() {
             super();
             this._materialId = "materialId_" + materialId;
-            this.gl = gl;
+            this.gl = Device.Instance.gl;
             this._glPrimitiveType = glprimitive_type.TRIANGLES;
             this._renderData = RenderDataPool.get(RenderDataType.Base);
             this.init();
@@ -332,8 +332,8 @@ export namespace SY {
         private _lb: Array<number> = [];//左下
         private _rt: Array<number> = [];//右上
         private _rb: Array<number> = [];//右下
-        constructor(gl) {
-            super(gl);
+        constructor() {
+            super();
             this._glPrimitiveType = this.gl.TRIANGLE_STRIP;
         }
         private updateUV(): void {

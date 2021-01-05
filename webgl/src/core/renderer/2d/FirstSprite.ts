@@ -15,8 +15,8 @@ var fragmentshader3d =
     '}'
 
 export default class FirstSprite extends SY.SpriteBase {
-    constructor(gl) {
-        super(gl);
+    constructor() {
+        super();
         this._cameraType = 1;
     }
     protected onInit(): void {

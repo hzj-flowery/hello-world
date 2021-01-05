@@ -26,8 +26,6 @@ export default class GameMainCamera {
         this._cameraType = type;
         if (type == enums.PROJ_PERSPECTIVE) {
             this._3dCamera = new PerspectiveCamera(angle * Math.PI / 180, aspect, near, far);
-            // this.createUI();
-            // this._3dCamera.showFrustum();
             return this._3dCamera;
         }
         else if (type == enums.PROJ_ORTHO) {

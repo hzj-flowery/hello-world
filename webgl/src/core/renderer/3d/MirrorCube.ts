@@ -35,8 +35,8 @@ void main() {
 `
 
 export default class MirrorCube extends SY.SpriteBase {
-    constructor(gl) {
-        super(gl);
+    constructor() {
+        super();
     }
     protected onInit(): void {
         var rd = CubeData.getData();

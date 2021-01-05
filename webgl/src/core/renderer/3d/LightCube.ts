@@ -54,8 +54,8 @@ var fragmentshader3d =
  * 光照立方体
  */
 export default class LightCube extends SY.SpriteBase {
-    constructor(gl) {
-        super(gl);
+    constructor() {
+        super();
         this.name = "LightCube";
     }
     protected onInit() {

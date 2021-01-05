@@ -74,30 +74,30 @@ export default class Scene3D extends Scene {
         this.addChild(this._centerNode);
 
         var spNode = new Node();
-        this._sphere = new Sphere(gl);
+        this._sphere = new Sphere();
         spNode.setPosition(0, 5, 0);
         spNode.addChild(this._sphere);
         this._centerNode.addChild(spNode);
 
-        this._floorNode = new Ground(gl);
+        this._floorNode = new Ground();
         this._floorNode.url = "res/ground.jpg";
         this.addChild(this._floorNode);
 
-        this._spineNode = new Spine(gl);
+        this._spineNode = new Spine();
         this._spineNode.x = 0;
         this.addChild(this._spineNode);
 
-        this._customTexture = new CustomTextureCube(gl);
+        this._customTexture = new CustomTextureCube();
         this._customTexture.url = CustomTextureData.getRandomData(3, 5, gltex_config_format.RGB8);
         this._customTexture.setPosition(0, 3.1, 0);
         this._centerNode.addChild(this._customTexture);
 
-        this._tableNode = new Cube(gl);
+        this._tableNode = new Cube();
         this._tableNode.url = "res/wood.jpg";
         this._tableNode.setPosition(0, 1, 0);
         this._tableNode.setScale(2.0, 0.1, 2.0);
         this._centerNode.addChild(this._tableNode);
-        this._cubeNode = new Cube(gl);
+        this._cubeNode = new Cube();
         this._cubeNode.url = "res/wicker.jpg";
         this._cubeNode.setPosition(0, 1.7, 0);
         this._cubeNode.setScale(0.5, 0.5, 0.5);
@@ -106,7 +106,7 @@ export default class Scene3D extends Scene {
         // 绘制 4 个腿
         for (var i = -1; i <= 1; i += 2) {
             for (var j = -1; j <= 1; j += 2) {
-                var node = new Cube(gl);
+                var node = new Cube();
                 node.setPosition(i * 19, -0.1, j * 19);
                 node.setScale(0.1, 1.0, 0.1);
                 node.url = "res/wood.jpg";
@@ -114,7 +114,7 @@ export default class Scene3D extends Scene {
             }
         }
 
-        this._lightCube = new LightCube(gl);
+        this._lightCube = new LightCube();
         this._lightCube.url = "res/wicker.jpg";
         this._lightCube.setPosition(-5, 2.7, 0);
         this._lightCube.setScale(0.5, 0.5, 0.5);
@@ -122,14 +122,14 @@ export default class Scene3D extends Scene {
         
         
 
-        this._skybox = new SkyBox(gl);
+        this._skybox = new SkyBox();
         this._skybox.setDefaultUrl();
         this.addChild(this._skybox);
 
         let tempNode = new Node();
         tempNode.setPosition(-10,-3.0,0);
         this.addChild(tempNode);
-        this._mirrorCube = new MirrorCube(gl);
+        this._mirrorCube = new MirrorCube();
         this._mirrorCube.setDefaultUrl();
         tempNode.addChild(this._mirrorCube);
 
@@ -173,7 +173,6 @@ export default class Scene3D extends Scene {
     }
 
     public visit(time): void {
-        // this._3dCamera.rotate(0,0,1);
         this._3dCamera.visit(time);
         super.visit(time);
     }

@@ -557,10 +557,10 @@ class skeleton_Parse {
 //骨骼节点
 export default class Spine extends SY.SpriteBase {
 
-    constructor(gl) {
-        super(gl);
+    constructor() {
+        super();
         this._cameraType = 0;
-        this.gltf = skeleton_Parse.parseGLTF(gl);
+        this.gltf = skeleton_Parse.parseGLTF(this.gl);
     }
     private gltf;
     private sharedUniforms;

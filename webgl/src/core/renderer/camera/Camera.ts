@@ -136,12 +136,9 @@ export default class Camera extends Node {
         //创建透视矩阵
         this._projectionMatrix = this._glMatrix.mat4.create();
         this._type = type;
-        this._center = [0, 0, 0];//看向原点
-        this._up = [0, 1, 0];//向上看
-        this._eye = [0, 0, 0];//默认看向原点
-        this._footMatrix = glMatrix.mat4.identity(null);
+        this._holderMatrix = glMatrix.mat4.identity(null);
         this._cameraData = new CameraData();
-        this.updateCameraMatrix();
+        this.updateProjectMatrix();
     }
 
     /**
@@ -158,13 +155,15 @@ export default class Camera extends Node {
     protected _aspect: number;//相机的横纵比(width/height)
     protected _near: number;//相机最近能看到的位置
     protected _far: number;//相机最远能看到的位置
-    private _center: Array<number>;//相机正在看向的位置
-    private _up: Array<number>;//相机的摆放
-    private _eye: Array<number>;
     private _targetTexture: RenderTexture;//目标渲染纹理
     private _framebuffer: FrameBuffer;//渲染buffer
-
-    private _footMatrix:Float32Array;//脚矩阵
+    
+    /**
+     * 支架矩阵，该矩阵的出现，是因为相机的特殊性，一般情况
+     * 相机都是放在支架上的，我们说的平移相机其实指的是平移相机的支架
+     * 相机只相当与眼睛，眼睛主要争对缩放和旋转
+     */
+    private _holderMatrix:Float32Array;//支架矩阵
     
     /**
      * 弧度
@@ -291,7 +290,7 @@ export default class Camera extends Node {
      * 更新相机矩阵
      * 主要是投影矩阵和模型矩阵
      */
-    private updateCameraMatrix(): void {
+    private updateProjectMatrix(): void {
 
         if (this._type == enums.PROJ_PERSPECTIVE) {
             this._glMatrix.mat4.perspective(this._projectionMatrix, this._fovy, this._aspect, this._near, this._far);
@@ -322,33 +321,17 @@ export default class Camera extends Node {
                 -x, x, -y, y, this._near, this._far
             );
         }
-        this.updateMatrixData();
     }
 
-    protected updateMatrixData(){
-         //初始化模型矩阵
-         glMatrix.mat4.identity(this._modelMatrix);
-         glMatrix.mat4.identity(this._footMatrix);
-         //先缩放
-         glMatrix.mat4.scale(this._modelMatrix, this._modelMatrix, [this.scaleX, this.scaleY, this.scaleZ]);
-         //再旋转
-         glMatrix.mat4.rotateX(this._modelMatrix, this._modelMatrix, this.rotateX * (Math.PI / 180));
-         glMatrix.mat4.rotateY(this._modelMatrix, this._modelMatrix, this.rotateY * (Math.PI / 180));
-         glMatrix.mat4.rotateZ(this._modelMatrix, this._modelMatrix, this.rotateZ * (Math.PI / 180));
+    protected translateModelMatrix():void{
+        glMatrix.mat4.identity(this._holderMatrix);
          //最后平移
-         glMatrix.mat4.translate(this._footMatrix, this._footMatrix, [this.x, this.y, this.z]);
+         glMatrix.mat4.translate(this._holderMatrix, this._holderMatrix, [this.x, this.y, this.z]);
          //
-         glMatrix.mat4.multiply(this._modelMatrix,this._footMatrix,this._modelMatrix);
-         glMatrix.mat4.multiply(this._modelMatrix,this._worldMatrix,this._modelMatrix);
+         glMatrix.mat4.multiply(this._modelMatrix,this._holderMatrix,this._modelMatrix);
     }
 
-    
-
-    public getInversModelViewMatrix(): any {
-        var invers = this._glMatrix.mat4.create();
-        this._glMatrix.mat4.invert(invers, this._modelMatrix)
-        return invers;
-    }
+  
 
     /**
      * 此函数务必调用
@@ -362,11 +345,8 @@ export default class Camera extends Node {
      * eye.z<0,背面看屏幕的中心
      */
     public lookAt(eye: Array<number>, center: Array<number> = [0, 0, 0], up: Array<number> = [0, 1, 0]): void {
-        this._eye = eye;
-        this._center = center;
-        this._up = up;
         // //摄像机的位置
-        this._glMatrix.mat4.lookAt(this._modelMatrix, this._eye, this._center, this._up);
+        this._glMatrix.mat4.lookAt(this._modelMatrix, eye, center,up);
     }
     /**
      * !#en
