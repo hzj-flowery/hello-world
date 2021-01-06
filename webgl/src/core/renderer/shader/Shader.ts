@@ -80,7 +80,7 @@ export class Shader {
     private u_texCoord8_loc;//纹理属性8号位置
     private u_cubeCoord_loc;//立方体属性位置
     private u_skybox_loc;//天空盒属性位置
-    private 
+    private
     private u_pvm_matrix_loc;//投影视口模型矩阵
     private u_pv_matrix_loc;//投影视口矩阵的位置
     private u_pv_matrix_inverse_loc;//投影视口矩阵的逆矩阵的位置
@@ -144,7 +144,7 @@ export class Shader {
         this._locSafeArr.set("u_light_world_position_loc", this.u_light_world_position_loc >= 0);
         this._locSafeArr.set("a_node_color_loc", this.a_node_color_loc);
         this._locSafeArr.set("a_node_matrix_loc", this.a_node_matrix_loc);
-        
+
 
 
     }
@@ -186,7 +186,7 @@ export class Shader {
         this.u_pv_matrix_inverse_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.PVMatrix_INVERSE);
         this.u_camera_world_position_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.CameraWorldPosition);
         this.u_light_world_position_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.LightWorldPosition);
-        
+
         this._initLockSafeCheck();
     }
     public getCustomAttributeLocation(varName: string) {
@@ -274,14 +274,37 @@ export class Shader {
     }
     /**
      * 设置使用节点自定义矩阵
-     * @param mat 
+     * @param glID 
+     * @param itemSize 
      */
-    public setUseNodeCustomMatrix(glID, itemSize: number):void{
-        if(this.checklocValid(this.a_node_matrix_loc,"a_node_matrix_loc"))
-        {
+    public setUseNodeCustomMatrix(glID, itemSize: number): void {
+        if (this.checklocValid(this.a_node_matrix_loc, "a_node_matrix_loc")) {
             this._gl.bindBuffer(this._gl.ARRAY_BUFFER, glID);
-            this._gl.enableVertexAttribArray(this.a_node_matrix_loc);
-            this._gl.vertexAttribPointer(this.a_node_matrix_loc, itemSize, this._gl.FLOAT, false, 0, 0);
+            let gl = this._gl as WebGL2RenderingContext;
+            // set all 4 attributes for matrix
+            // 解析 
+            // 每一个矩阵的大小是四行四列，矩阵中元素的类型是gl.FLOAT,即元素占用四个字节
+            // 所以一个矩阵的占用字节数为4*4*4
+            // 关于矩阵在shader中的位置计算，可以把矩阵想象成一个一维数组，元素类型是vec4
+            // matrixLoc:表示矩阵的第1行在shader中的位置
+            // matrixLoc+1:表示矩阵的第2行在shader中的位置
+            // matrixLoc+2:表示矩阵的第3行在shader中的位置
+            // matrixLoc+3:表示矩阵的第4行在shader中的位置    
+            const bytesPerMatrix = 4 * 16;
+            for (let i = 0; i < 4; ++i) {
+                const loc = this.a_node_matrix_loc + i;
+                gl.enableVertexAttribArray(loc);
+                // note the stride and offset
+                const offset = i * 16;  // 4 floats per row, 4 bytes per float
+                gl.vertexAttribPointer(
+                    loc,              // location
+                    itemSize,                // size (num values to pull from buffer per iteration)
+                    gl.FLOAT,         // type of data in buffer
+                    false,            // normalize
+                    bytesPerMatrix,   // stride, num bytes to advance to get to next set of values
+                    offset,           // offset in buffer
+                );
+            }
         }
     }
     /**
@@ -435,7 +458,7 @@ export class Shader {
             this._gl.vertexAttribPointer(this.a_uv_loc, itemSize, this._gl.FLOAT, false, 0, 0);
         }
     }
-    
+
     public disableVertexAttribArray(): void {
         if (this.checklocValid(this.a_position_loc, "a_position_loc")) {// 设定为数组类型的变量数据
             this._gl.disableVertexAttribArray(this.a_position_loc);
