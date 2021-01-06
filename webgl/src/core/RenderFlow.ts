@@ -19,7 +19,8 @@ export default class RenderFlow {
         this._3dScene.init();
         this._2dScene = new Scene2D();
         this._2dScene.init();
-
+        
+        G_Stage.addChild(GameMainCamera.instance.get2DCamera());
         G_Stage.addChild(GameMainCamera.instance.get3DCamera());
         G_Stage.addChild(this._3dScene);
         G_Stage.addChild(this._2dScene);

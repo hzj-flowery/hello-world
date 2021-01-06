@@ -2,6 +2,7 @@ import { SY } from "../base/Sprite";
 import { pseudoRandom } from "../../value-types/utils";
 import Device from "../../Device";
 import GameMainCamera from "../camera/GameMainCamera";
+import enums from "../camera/enums";
 
 var vertexshader3d =
     'attribute vec4 a_position;' +
@@ -23,10 +24,9 @@ var fragmentshader3d =
     'gl_FragColor = v_color;' +
     '}'
 
-export default class TwoSprite extends SY.SpriteBase {
+export default class TwoSprite extends SY.Sprite2D {
     constructor() {
         super();
-        this._cameraType = 1;//正交投影
     }
     private _colorLoc:any;
     private _matrixLoc:any;
@@ -64,7 +64,7 @@ export default class TwoSprite extends SY.SpriteBase {
         var gl = this.gl;
 
         // setup matrixes, one per instance
-        this.numInstances = 3;
+        this.numInstances = 3000;
         // make a typed array with one view per matrix
         this.matrixData = new Float32Array(this.numInstances * 16);
         this.matrices = [];

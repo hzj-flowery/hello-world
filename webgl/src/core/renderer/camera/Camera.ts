@@ -371,7 +371,7 @@ export default class Camera extends Node {
      */
     public lookAt(eye: Array<number>, center: Array<number> = [0, 0, 0], up: Array<number> = [0, 1, 0]): void {
         // //摄像机的位置
-        this._glMatrix.mat4.lookAt(this.modelMatrix, eye, center,up);
+        this._glMatrix.mat4.lookAt2(this.modelMatrix, eye, center,up);
     }
     /**
      * !#en

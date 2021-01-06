@@ -1,5 +1,6 @@
 
 import { SY } from "../base/Sprite";
+import enums from "../camera/enums";
 
 
 var vertextBaseCode =
@@ -29,7 +30,6 @@ var fragBaseCode =
 export class Rectangle extends SY.Sprite2D {
     constructor() {
         super();
-        this._cameraType = 1;
     }
     protected onInit(): void {
 

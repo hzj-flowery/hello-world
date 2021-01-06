@@ -453,10 +453,12 @@ export class CameraModel {
 
     //------------------------------ui-------------------------------------------------------------------------------------
     private settings = {
-        posX: 0,
-        posY: 0,
-        posZ: 0,
-        rotation: 150,  // in degrees
+        cam2DPosX: 0,
+        cam2DPosY: 0,
+        cam2DPosZ: 0,
+        cam2DRotX: 0,  // in degrees
+        cam2DRotY: 0,  // in degrees
+        cam2DRotZ: 0,  // in degrees
         cam3DFieldOfView: 60,  // in degrees
         cam3DPosX: 0,
         cam3DPosY: 0,
@@ -466,18 +468,18 @@ export class CameraModel {
         cam3DRotZ: 0,
         cam3DNear: 1,
         cam3DFar: 200,
-        cam3DOrtho: false,
-        cam3DOrthoUnits: 120,
     };
     // //初始化UI
     private setUI(): void {
         var render = this.render.bind(this);
         var webglLessonsUI = window["webglLessonsUI"]
         webglLessonsUI.setupUI(document.querySelector('#ui'), this.settings, [
-            { type: 'slider', key: 'rotation', min: 0, max: 360, change: render, precision: 2, step: 0.001, },
-            { type: 'slider', key: 'posX', min: -200, max: 200, change: render, },
-            { type: 'slider', key: 'posY', min: -200, max: 200, change: render, },
-            { type: 'slider', key: 'posZ', min: -200, max: 200, change: render, },
+            { type: 'slider', key: 'cam2DPosX', min: -10, max: 10, change: render, precision: 2, step: 0.1},
+            { type: 'slider', key: 'cam2DPosY', min: -10, max: 10, change: render, precision: 2, step: 0.1},
+            { type: 'slider', key: 'cam2DPosZ', min: -10, max: 10, change: render, precision: 2, step: 0.1},
+            { type: 'slider', key: 'cam2DRotX', min: 0, max: 360, change: render, },
+            { type: 'slider', key: 'cam2DRotY', min: 0, max: 360, change: render, },
+            { type: 'slider', key: 'cam2DRotZ', min: 0, max: 360, change: render, },
             { type: 'slider', key: 'cam3DFieldOfView', min: 0, max: 180, change: render, },
             { type: 'slider', key: 'cam3DPosX', min: -100, max: 100, change: render, },
             { type: 'slider', key: 'cam3DPosY', min: -100, max: 100, change: render, },
@@ -488,8 +490,8 @@ export class CameraModel {
             { type: 'slider', key: 'cam3DNear', min: 1, max: 300, change: render, },
             { type: 'slider', key: 'cam3DFar', min: 1, max: 300, change: render, },
 
-            { type: 'checkbox', key: 'cam3DOrtho', change: render, },
-            { type: 'slider', key: 'cam3DOrthoUnits', min: 1, max: 150, change: render, },
+            // { type: 'checkbox', key: 'cam3DOrtho', change: render, },
+            // { type: 'slider', key: 'cam3DOrthoUnits', min: 1, max: 150, change: render, },
         ]);
         this.render();
     }

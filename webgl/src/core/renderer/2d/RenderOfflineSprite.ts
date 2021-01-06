@@ -30,7 +30,6 @@ var fragBaseCode =
 export class RenderOfflineSprite extends SY.Sprite2D{
     constructor(){
         super();
-        this._cameraType = 1;
         this._renderData._isOffline = true;
     }
     protected onInit(): void {

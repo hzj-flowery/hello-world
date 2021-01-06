@@ -24,8 +24,8 @@ export default class GameMainCamera {
   private init(): void {
     this.gl = Device.Instance.gl;
     //初始化2D相机
-    this._2dCamera = new OrthoCamera(this.gl.canvas.width / this.gl.canvas.height, 60, 0.1, 50);
-    this._2dCamera.lookAt([0, 0, 0]);
+    this._2dCamera = new OrthoCamera(this.gl.canvas.width / this.gl.canvas.height, 60, 0.1, 1000);
+    // this._2dCamera.lookAt([0, 0, 0]);
     //初始化3D相机
     this._3dCamera = new PerspectiveCamera(this.gl.canvas.width / this.gl.canvas.height, 60, 0.1, 50) as PerspectiveCamera;
 
@@ -36,7 +36,7 @@ export default class GameMainCamera {
   private _3dCamera: PerspectiveCamera;
   private _cameraType: number;
   private gl: WebGLRenderingContext;
-  public setCamera(type: number, aspect: number, angle: number = 60, near: number = 0.1, far: number = 50): Camera {
+  private updateCameraData(type: number, aspect: number, angle: number = 60, near: number = 0.1, far: number = 50): Camera {
     this._cameraType = type;
     if (type == enums.PROJ_PERSPECTIVE) {
 
@@ -67,9 +67,12 @@ export default class GameMainCamera {
 
   private renderCallBack(settings:any):void{
     let gl = Device.Instance.gl;
-    this.setCamera(enums.PROJ_PERSPECTIVE, gl.canvas.width / gl.canvas.height,settings.cam3DFieldOfView,settings.cam3DNear,settings.cam3DFar);
+    this.updateCameraData(enums.PROJ_PERSPECTIVE, gl.canvas.width / gl.canvas.height,settings.cam3DFieldOfView,settings.cam3DNear,settings.cam3DFar);
     this._3dCamera.setPosition(settings.cam3DPosX,settings.cam3DPosY,settings.cam3DPosZ);
     this._3dCamera.setRotation(settings.cam3DRotX,settings.cam3DRotY,settings.cam3DRotZ);
+
+    this._2dCamera.setPosition(settings.cam2DPosX,settings.cam2DPosY,settings.cam2DPosZ);
+    this._2dCamera.setRotation(settings.cam2DRotX,settings.cam2DRotY,settings.cam2DRotZ)
 }
 
 }

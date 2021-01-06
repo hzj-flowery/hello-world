@@ -194,10 +194,9 @@ var fragBaseCode =
     '}'
 
 
-export class Label extends SY.SpriteBase {
+export class Label extends SY.Sprite2D {
     constructor() {
         super();
-        this._cameraType = 1;
     }
     
     private _realCharWidth:number = 0;

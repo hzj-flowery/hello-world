@@ -53,6 +53,7 @@ import { Texture2D } from "./texture/Texture2D";
 import TextureCube from "./texture/TextureCube";
 import TextureCustom from "./texture/TextureCustom";
 import { glBaseBuffer, G_BufferManager, IndexsBuffer, NormalBuffer, UVsBuffer, VertexsBuffer } from "./buffer/BufferManager";
+import enums from "../camera/enums";
 
 
 /**
@@ -102,6 +103,7 @@ export namespace SY {
         protected _cameraType: number = 0;//相机的类型(0表示透视1表示正交)
         constructor() {
             super();
+            materialId++;
             this._materialId = "materialId_" + materialId;
             this.gl = Device.Instance.gl;
             this._glPrimitiveType = glprimitive_type.TRIANGLES;
@@ -342,6 +344,7 @@ export namespace SY {
         private _rb: Array<number> = [];//右下
         constructor() {
             super();
+            this._cameraType = enums.PROJ_ORTHO;
             this._glPrimitiveType = this.gl.TRIANGLE_STRIP;
         }
         private updateUV(): void {
@@ -369,7 +372,7 @@ export namespace SY {
             var clipW = this.width / Device.Instance.width;
             var clipH = this.height / Device.Instance.height;
 
-            var z = -0.1;
+            var z = -1;
 
             //[-1,1] = >[0,1]
             var w = 2 * clipW;
