@@ -52,7 +52,7 @@ import { Texture, TextureOpts } from "./texture/Texture";
 import { Texture2D } from "./texture/Texture2D";
 import TextureCube from "./texture/TextureCube";
 import TextureCustom from "./texture/TextureCustom";
-import { glBaseBuffer, G_BufferManager, IndexsBuffer, NormalBuffer, UVsBuffer, VertexsBuffer } from "./buffer/BufferManager";
+import { glBaseBuffer, G_BufferManager, IndexsBuffer, NodeCustomColorBuffer, NodeCustomMatrixBuffer, NormalBuffer, UVsBuffer, VertexsBuffer } from "./buffer/BufferManager";
 import enums from "../camera/enums";
 
 
@@ -76,6 +76,8 @@ export namespace SY {
         INDEX,   //索引
         NORMAL, //法线
         UV,     //uv
+        COLOR,  //节点自定义颜色
+        MATRIX,//节点自定义矩阵
         TEXTURE_2D, //2D纹理
         TEXTURE_CUBE //立方体纹理
     }
@@ -91,6 +93,8 @@ export namespace SY {
         private _indexsBuffer: IndexsBuffer;
         //法线buffer
         private _normalsBuffer: NormalBuffer;
+        private _customColorBuffer:NodeCustomColorBuffer;//节点自定义颜色buffer
+        private _customMatrixBuffer:NodeCustomMatrixBuffer;//节点自定义矩阵buffer
         private _materialId: string;//这里存放一个材质id
         //纹理buffer
         private _uvsBuffer: UVsBuffer;
@@ -152,6 +156,18 @@ export namespace SY {
             this._renderData.pushShaderVariant(ShaderUseVariantType.UVs);
             return this._uvsBuffer
         }
+        //创建节点自定义矩阵buffer
+        public createNodeCustomMatrixBuffer(matrix: Array<number>, itemSize: number,preAllocateLen:number=0):NodeCustomMatrixBuffer{
+            this._customMatrixBuffer = G_BufferManager.createBuffer(GLID_TYPE.MATRIX,this._materialId,matrix,itemSize,preAllocateLen) as NodeCustomMatrixBuffer;
+            this._renderData.pushShaderVariant(ShaderUseVariantType.NodeCustomMatrix);
+            return this._customMatrixBuffer;
+        }
+        //创建节点自定义颜色buffer
+        public createNodeCustomColorBuffer(color: Array<number>, itemSize: number):NodeCustomColorBuffer{
+            this._customColorBuffer = G_BufferManager.createBuffer(GLID_TYPE.COLOR,this._materialId,color,itemSize) as NodeCustomColorBuffer;
+            this._renderData.pushShaderVariant(ShaderUseVariantType.NodeCustomColor);
+            return this._customColorBuffer;
+        }
         //创建一个纹理buffer
         private createTexture2DBuffer(url: string): Texture {
             this._texture = new Texture2D(this.gl);
@@ -210,21 +226,19 @@ export namespace SY {
 
         protected getGLID(type: GLID_TYPE): any {
             switch (type) {
-                case GLID_TYPE.INDEX: return this._indexsBuffer ? this._indexsBuffer.glID : -1;
                 case GLID_TYPE.TEXTURE_2D: return this._texture ? this._texture._glID : -1;
                 case GLID_TYPE.TEXTURE_CUBE: return this._texture ? this._texture._glID : -1;
-                case GLID_TYPE.UV: return this._uvsBuffer ? this._uvsBuffer.glID : -1;
-                case GLID_TYPE.NORMAL: return this._normalsBuffer ? this._normalsBuffer.glID : -1;
-                case GLID_TYPE.VERTEX: return this._vertexsBuffer ? this._vertexsBuffer.glID : -1;
-                default: return -1;//未知
+                default: var buffer = this.getBuffer(type);return buffer?buffer.glID:-1;
             }
         }
-        private getBuffer(type: GLID_TYPE): glBaseBuffer {
+        public getBuffer(type: GLID_TYPE): glBaseBuffer {
             switch (type) {
                 case GLID_TYPE.INDEX: return this._indexsBuffer;
                 case GLID_TYPE.UV: return this._uvsBuffer;
                 case GLID_TYPE.NORMAL: return this._normalsBuffer;
                 case GLID_TYPE.VERTEX: return this._vertexsBuffer;
+                case GLID_TYPE.COLOR: return this._customColorBuffer;
+                case GLID_TYPE.MATRIX:return this._customMatrixBuffer;
                 default: return null;//未知
             }
         }

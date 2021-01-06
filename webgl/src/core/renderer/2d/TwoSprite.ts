@@ -6,16 +6,16 @@ import enums from "../camera/enums";
 
 var vertexshader3d =
     'attribute vec4 a_position;' +
-    'attribute vec4 color;' +
-    'attribute mat4 matrix;' +
+    'attribute vec4 a_color;' +
+    'attribute mat4 a_Matrix;' +
 
     'uniform mat4 u_MVMatrix;' +
     'uniform mat4 u_PMatrix;' +
 
     'varying vec4 v_color;' +
     'void main() {' +
-    'gl_Position =u_PMatrix*u_MVMatrix* matrix * a_position;' +
-    'v_color = color;' +
+    'gl_Position =u_PMatrix*u_MVMatrix* a_Matrix * a_position;' +
+    'v_color = a_color;' +
     '}'
 var fragmentshader3d =
     'precision mediump float;' +
@@ -28,43 +28,17 @@ export default class TwoSprite extends SY.Sprite2D {
     constructor() {
         super();
     }
-    private _colorLoc:any;
-    private _matrixLoc:any;
+    private _colorLoc: any;
+    private _matrixLoc: any;
+
     protected onInit(): void {
-        this.ColorTest =
-            [1, 0, 0, 1,  // red
-                0, 1, 0, 1,  // green
-                0, 0, 1, 1,  // blue
-                1, 0, 1, 1,  // magenta
-                0, 1, 1, 1,  // cyan
-            ]
-        var z = -1;
-        var positions = [-0.1, 0.4, z,
-        -0.1, -0.4, z,
-            0.1, -0.4, z,
-            0.1, -0.4, z,
-        -0.1, 0.4, z,
-            0.1, 0.4, z,
-            0.4, -0.1, z,
-        -0.4, -0.1, z,
-        -0.4, 0.1, z,
-        -0.4, 0.1, z,
-            0.4, -0.1, z,
-            0.4, 0.1, z,
-        ]
-        positions.forEach(function (value, index) {
-            positions[index];
-        });
-        this.createVertexsBuffer(positions, 3);
-
+        this.setContentSize(100,200);
         this.setShader(vertexshader3d, fragmentshader3d);
-        this._colorLoc = this._shader.getCustomAttributeLocation("color");
-        this._matrixLoc = this._shader.getCustomAttributeLocation('matrix');
-
+        this._colorLoc = this._shader.getCustomAttributeLocation("a_color");
+        this._matrixLoc = this._shader.getCustomAttributeLocation('a_Matrix');
         var gl = this.gl;
-
         // setup matrixes, one per instance
-        this.numInstances = 3000;
+        this.numInstances = 3;
         // make a typed array with one view per matrix
         this.matrixData = new Float32Array(this.numInstances * 16);
         this.matrices = [];
@@ -76,8 +50,6 @@ export default class TwoSprite extends SY.Sprite2D {
                 byteOffsetToMatrix,
                 numFloatsForView));
         }
-
-
         this.matrixBuffer = gl.createBuffer();
         this.gl.bindBuffer(gl.ARRAY_BUFFER, this.matrixBuffer);
         // just allocate the buffer
@@ -96,20 +68,20 @@ export default class TwoSprite extends SY.Sprite2D {
             colorData.push(res[2]);
             colorData.push(res[3]);
         }
-        this.gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(colorData),gl.STATIC_DRAW);
+        this.gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colorData), gl.STATIC_DRAW);
 
     }
-    private ColorTest =
-        [1, 0, 0, 1,  // red
-            0, 1, 0, 1,  // green
-            0, 0, 1, 1,  // blue
-            1, 0, 1, 1,  // magenta
-            0, 1, 1, 1,  // cyan
-        ]
     private getRandowColor() {
+        let ColorTest =
+            [1, 0, 0, 1,  // red
+                0, 1, 0, 1,  // green
+                0, 0, 1, 1,  // blue
+                1, 0, 1, 1,  // magenta
+                0, 1, 1, 1,  // cyan
+            ]
         var p = Math.floor(Math.random() * 10 / 2);
         if (p >= 5) p = 4;
-        var data = this.ColorTest.slice(p * 4, p * 4 + 4);
+        var data = ColorTest.slice(p * 4, p * 4 + 4);
         return data;
     }
     private matrices;
@@ -117,28 +89,26 @@ export default class TwoSprite extends SY.Sprite2D {
     private matrixData;
     private colorBuffer;
     private numInstances;
-    public draw(time:number):void{
-           if(Device.Instance.getContextType()=="webgl2")
-           {
-               this.drawWebgl2(time);
-           }
-           else
-           {
+    public draw(time: number): void {
+        if (Device.Instance.getContextType() == "webgl2") {
+            this.drawWebgl2(time);
+        }
+        else {
             this.drawWebgl1(time);
-           }
+        }
     }
     public drawWebgl2(time): void {
         var gl = this.gl;
-        const numVertices = 12;
+        const numVertices = 4;
         time *= 0.001; // seconds
-      
+
         this._shader.active();
         this._shader.setUseVertexAttribPointerForVertex(this.getGLID(SY.GLID_TYPE.VERTEX), this.getBufferItemSize(SY.GLID_TYPE.VERTEX));
 
         var newMV = this._glMatrix.mat4.create();
         var v = GameMainCamera.instance.getCamera(this._cameraType).getInversModelMatrix();
         var m = this.modelMatrix;
-        this._glMatrix.mat4.mul(newMV,v,m)
+        this._glMatrix.mat4.mul(newMV, v, m)
         this._shader.setUseModelViewMatrix(newMV);
         var pMatix = GameMainCamera.instance.getCamera(this._cameraType).getProjectionMatrix();
         this._shader.setUseProjectionMatrix(pMatix);
@@ -201,7 +171,7 @@ export default class TwoSprite extends SY.Sprite2D {
             this.numInstances,  // num instances
         );
 
-        gl.bindBuffer(gl.ARRAY_BUFFER,null);
+        gl.bindBuffer(gl.ARRAY_BUFFER, null);
         gl.vertexAttribDivisor(this._colorLoc, 0);
         for (let i = 0; i < 4; ++i) {
             const loc = this._matrixLoc + i;
@@ -217,18 +187,17 @@ export default class TwoSprite extends SY.Sprite2D {
         var testgl = Device.Instance.getWebglContext();
         var gl = this.gl;
         const ext = gl.getExtension('ANGLE_instanced_arrays');
-        if(!ext)
-        {
+        if (!ext) {
             console.log("no support ANGLE_instanced_arrays");
-            return ;
+            return;
         }
         const numVertices = 12;
 
 
         time *= 0.001; // seconds
 
-        const colorLoc = this._shader.getCustomAttributeLocation("color");
-        const matrixLoc = this._shader.getCustomAttributeLocation('matrix');
+        const colorLoc = this._shader.getCustomAttributeLocation("a_color");
+        const matrixLoc = this._shader.getCustomAttributeLocation('a_Matrix');
 
 
         this._shader.active();

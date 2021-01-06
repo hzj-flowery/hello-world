@@ -171,6 +171,8 @@ export const enum glvert_attr_semantic{
     BITANGENT = 'a_bitangent',
     WEIGHTS = 'a_weights',
     JOINTS = 'a_joints',
+    NODE_COLOR = 'a_color',//显示节点的颜色
+    NODE_Matrix = 'a_Matrix',//节点矩阵
     //现阶段场景中只支持三种光
     LIGHT_COLOR = 'u_lightColor',
     LIGHT_COLOR_DIR = 'u_lightColorDir',
@@ -178,7 +180,7 @@ export const enum glvert_attr_semantic{
     LIGHT_COLOR_DIR1 = 'u_lightColorDir1',
     LIGHT_COLOR2 = 'u_lightColor2',
     LIGHT_COLOR_DIR2 = 'u_lightColorDir2',
-    NODE_COLOR = 'u_nodeColor',//显示节点的颜色
+    
     UV = 'a_uv',
     UV0 = 'a_uv0',
     UV1 = 'a_uv1',
@@ -199,6 +201,7 @@ export const enum glvert_attr_semantic{
     TEX_COORD7 = 'u_texCoord7',
     TEX_COORD8 = 'u_texCoord8',
     SKYBOX = "u_skybox",
+    
     
     MVMatrix = 'u_MVMatrix',  //视口矩阵*模型世界矩阵
     MMatrix = 'u_MMatrix',    //模型世界矩阵

@@ -47,7 +47,8 @@ export enum ShaderUseVariantType {
     CameraWorldPosition,//世界中相机的位置
     LightColor,         //光的颜色
     LightDirection,     //光的方向
-    NodeColor,          //节点的颜色
+    NodeCustomColor,          //节点的颜色
+    NodeCustomMatrix,         //节点的自定义矩阵
     UndefinedMax,//无效
 }
 /**
@@ -77,7 +78,17 @@ export class RenderData {
     public _shader: Shader;//着色器
     public _vertGLID: WebGLBuffer;//顶点buffer的显存地址
     public _vertItemSize: number;//一个顶点buffer单元的顶点数目
-    public _vertItemNums: number;//所有顶点buffer单元的数目
+    public _vertItemNums: number;//所有顶点buffer单元数目
+
+    public _nodeCustomColorGLID: WebGLBuffer;//节点自定义颜色buffer的显存地址
+    public _nodeCustomColorItemSize: number;//一个节点自定义颜色buffer单元的数据数目
+    public _nodeCustomColorItemNums: number;//所有节点自定义颜色buffer单元数目
+
+    public _nodeCustomMatrixGLID: WebGLBuffer;//节点自定义矩阵buffer的显存地址
+    public _nodeCustomMatrixItemSize: number;//一个节点自定义矩阵的buffer单元的数据数目
+    public _nodeCustomMatrixItemNums: number;//所有节点自定义矩阵buffer单元数目
+
+
     public _indexGLID: WebGLBuffer;//索引buffer的显存地址
     public _indexItemSize: number;//一个索引buffer单元的顶点数目
     public _indexItemNums: number;//所有索引buffer单元的数目
@@ -89,6 +100,7 @@ export class RenderData {
     public _lightDirection: Array<number>;//光的方向
     public _lightPosition: Array<number>;//光的位置
     public _nodeColor: Array<number>;//节点的颜色
+    public _nodeCustomMatrix:Float32Array;//节点自定义矩阵
     public _glPrimitiveType: glprimitive_type;//绘制的类型
     public _modelMatrix: Float32Array;//模型矩阵
     public _time: number;
@@ -120,6 +132,7 @@ export class RenderData {
         this._lightDirection = [];
         this._lightPosition = [];
         this._textureGLIDArray = [];
+        this._nodeCustomMatrix = null;
         this._nodeColor = [0, 0, 0, 0];//一般默认节点的颜色是全黑的
         this._modelMatrix = null;
         this._time = 0;
@@ -249,8 +262,11 @@ export class RenderData {
                 case ShaderUseVariantType.LightDirection:
                     this._shader.setUseLightDirection(this._lightDirection);
                     break;
-                case ShaderUseVariantType.NodeColor:
-                    this._shader.setUseNodeColor(this._nodeColor);
+                case ShaderUseVariantType.NodeCustomColor:
+                    this._shader.setUseNodeCustomColor(this._nodeCustomColorGLID,this._nodeCustomColorItemSize);
+                    break;
+                case ShaderUseVariantType.NodeCustomMatrix:
+                    this._shader.setUseNodeCustomMatrix(this._nodeCustomMatrixGLID,this._nodeCustomMatrixItemSize);
                     break;
                 default:
                     console.log("目前还没有处理这个矩阵类型");
@@ -263,7 +279,6 @@ export class RenderData {
      * @param proj 
      */
     private bindGPUBufferData(view, proj): void {
-
         //激活shader
         this._shader.active();
         this.updateShaderVariant(view, proj);
@@ -284,6 +299,7 @@ export class RenderData {
         else {
             gl.drawArrays(this._glPrimitiveType, 0, this._vertItemNums);
         }
+        
         //解除缓冲区对于目标纹理的绑定
         gl.bindTexture(gl.TEXTURE_2D, null);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);

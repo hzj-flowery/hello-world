@@ -335,8 +335,8 @@ export default class Device {
     public startDraw(time: number,stage:Node): void {
         this.onBeforeRender();
         this.visitRenderTree(time,stage);
-        this.drawToUI();
-        this.draw2screen();
+        // this.drawToUI();
+        // this.draw2screen();
         this.onAfterRender();
     }
     /**

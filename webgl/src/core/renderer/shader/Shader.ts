@@ -57,7 +57,8 @@ export class Shader {
     private a_normal_loc;//法线属性的位置
     private a_uv_loc;//uv属性位置
     private a_tangent_loc;//切线属性位置
-    private u_node_color_loc;//节点颜色的位置
+    private a_node_color_loc;//节点颜色的位置
+    private a_node_matrix_loc;//节点自定义矩阵位置
     private u_light_color_loc;//光照属性位置
     private u_light_color_dir_loc;//光照方向属性位置
     private u_MVMatrix_loc;//模型视口矩阵属性位置
@@ -79,6 +80,7 @@ export class Shader {
     private u_texCoord8_loc;//纹理属性8号位置
     private u_cubeCoord_loc;//立方体属性位置
     private u_skybox_loc;//天空盒属性位置
+    private 
     private u_pvm_matrix_loc;//投影视口模型矩阵
     private u_pv_matrix_loc;//投影视口矩阵的位置
     private u_pv_matrix_inverse_loc;//投影视口矩阵的逆矩阵的位置
@@ -140,7 +142,9 @@ export class Shader {
         this._locSafeArr.set("u_MITMatrix_loc", this.u_MITMatrix_loc >= 0);
         this._locSafeArr.set("u_camera_world_position_loc", this.u_camera_world_position_loc >= 0);
         this._locSafeArr.set("u_light_world_position_loc", this.u_light_world_position_loc >= 0);
-        this._locSafeArr.set("u_node_color_loc", this.u_node_color_loc);
+        this._locSafeArr.set("a_node_color_loc", this.a_node_color_loc);
+        this._locSafeArr.set("a_node_matrix_loc", this.a_node_matrix_loc);
+        
 
 
     }
@@ -151,6 +155,9 @@ export class Shader {
         this.a_normal_loc = gl.getAttribLocation(_glID, glvert_attr_semantic.NORMAL);
         this.a_uv_loc = gl.getAttribLocation(_glID, glvert_attr_semantic.UV);
         this.a_tangent_loc = gl.getAttribLocation(_glID, glvert_attr_semantic.TANGENT);
+        this.a_node_color_loc = gl.getAttribLocation(_glID, glvert_attr_semantic.NODE_COLOR);
+        this.a_node_matrix_loc = gl.getAttribLocation(_glID, glvert_attr_semantic.NODE_Matrix);
+
         this.u_light_color_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.LIGHT_COLOR);
         this.u_light_color_dir_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.LIGHT_COLOR_DIR);
         this.u_MVMatrix_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.MVMatrix);
@@ -179,7 +186,7 @@ export class Shader {
         this.u_pv_matrix_inverse_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.PVMatrix_INVERSE);
         this.u_camera_world_position_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.CameraWorldPosition);
         this.u_light_world_position_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.LightWorldPosition);
-        this.u_node_color_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.NODE_COLOR);
+        
         this._initLockSafeCheck();
     }
     public getCustomAttributeLocation(varName: string) {
@@ -255,12 +262,26 @@ export class Shader {
         }
     }
     /**
-     * 设置使用节点颜色
+     * 设置使用节点自定义颜色
      * @param color 
      */
-    public setUseNodeColor(color: Array<number>): void {
-        if (this.checklocValid(this.u_node_color_loc, "u_node_color_loc")) {
-            this._gl.uniform4fv(this.u_node_color_loc, color);
+    public setUseNodeCustomColor(glID, itemSize: number): void {
+        if (this.checklocValid(this.a_node_color_loc, "a_node_color_loc")) {
+            this._gl.bindBuffer(this._gl.ARRAY_BUFFER, glID);
+            this._gl.enableVertexAttribArray(this.a_node_color_loc);
+            this._gl.vertexAttribPointer(this.a_node_color_loc, itemSize, this._gl.FLOAT, false, 0, 0);
+        }
+    }
+    /**
+     * 设置使用节点自定义矩阵
+     * @param mat 
+     */
+    public setUseNodeCustomMatrix(glID, itemSize: number):void{
+        if(this.checklocValid(this.a_node_matrix_loc,"a_node_matrix_loc"))
+        {
+            this._gl.bindBuffer(this._gl.ARRAY_BUFFER, glID);
+            this._gl.enableVertexAttribArray(this.a_node_matrix_loc);
+            this._gl.vertexAttribPointer(this.a_node_matrix_loc, itemSize, this._gl.FLOAT, false, 0, 0);
         }
     }
     /**
