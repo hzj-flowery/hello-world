@@ -100,14 +100,14 @@ export class SpotLight extends SY.Sprite {
         var up = [0, 1, 0];
 
         // Multiply the matrices.
-        var worldViewProjectionMatrix = glMatrix.mat4.multiply(null, cameraData.viewProjectionMat, this._modelMatrix);
-        var worldInverseMatrix = glMatrix.mat4.invert(null, this._modelMatrix);
+        var worldViewProjectionMatrix = glMatrix.mat4.multiply(null, cameraData.viewProjectionMat, this.modelMatrix);
+        var worldInverseMatrix = glMatrix.mat4.invert(null, this.modelMatrix);
         var worldInverseTransposeMatrix = glMatrix.mat4.identity(null);
         glMatrix.mat4.transpose(worldInverseTransposeMatrix, worldInverseMatrix);
 
         this._uniformData.u_worldViewProjection = worldViewProjectionMatrix;
         this._uniformData.u_worldInverseTranspose = worldInverseTransposeMatrix;
-        this._uniformData.u_world = this._modelMatrix;
+        this._uniformData.u_world = this.modelMatrix;
         this._uniformData.u_color = [0.2, 1, 0.2, 1];
         // set the light position
         const lightPosition = [40, 60, 120];

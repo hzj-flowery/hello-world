@@ -3,19 +3,12 @@ import Ground from "../3d/Ground";
 import Cube from "../3d/Cube";
 import LightCube from "../3d/LightCube";
 import SkyBox from "../3d/SkyBox";
-import Device from "../../Device";
 import { Node } from "./Node";
 import CustomTextureCube from "../3d/CustomTextureCube";
 import CustomTextureData from "../data/CustomTextureData";
 import { gltex_config_format } from "../gfx/GLEnums";
-import GameMainCamera from "../camera/GameMainCamera";
-import enums from "../camera/enums";
-import OrthoCamera from "../camera/OrthoCamera";
-import PerspectiveCamera from "../camera/PerspectiveCamera";
 import Sphere from "../3d/Sphere";
 import Spine from "./spine/Spine";
-import Camera from "../camera/Camera";
-import { G_CameraModel } from "../camera/CameraModel";
 import { PointLight } from "../light/PointLight";
 import { SpotLight } from "../light/SpotLight";
 import { ThreeDLight } from "../light/ThreeDLight";
@@ -31,7 +24,6 @@ export default class Scene3D extends Scene {
     private _spineNode: Spine;
     private _customTexture: CustomTextureCube;
     private _centerNode: Node;
-    private _3dCamera: PerspectiveCamera;
     private _mirrorCube:MirrorCube;
     private _FLightPoint:PointLight;
     private _FLightSpot:SpotLight;
@@ -44,10 +36,6 @@ export default class Scene3D extends Scene {
     }
     public init(): void {
         
-        G_CameraModel.setRenderCallBack(this.renderCallBack.bind(this));
-        
-       
-
         // this._FLightPoint = new PointLight();
         // this._FLightPoint.setPosition(0,20,-100);
         // this.addChild(this._FLightPoint);
@@ -64,11 +52,6 @@ export default class Scene3D extends Scene {
         // this._FLightThreeD.Url = "res/models/char/F.json";
 
 
-
-
-        this.renderCallBack(G_CameraModel.getSettings());
-
-        var gl = Device.Instance.gl;
         this._centerNode = new Node();
         this._centerNode.setPosition(0, 1.1, 0);
         this.addChild(this._centerNode);
@@ -137,15 +120,6 @@ export default class Scene3D extends Scene {
         setTimeout(this.rotateCenterNode.bind(this), 20);
     }
     
-    private renderCallBack(settings:any):void{
-        let gl = Device.Instance.gl;
-        this._3dCamera = GameMainCamera.instance.setCamera(enums.PROJ_PERSPECTIVE, gl.canvas.width / gl.canvas.height,
-            settings.cam1FieldOfView,settings.cam1Near,settings.cam1Far) as PerspectiveCamera;
-        this._3dCamera.setPosition(settings.cam1PosX,settings.cam1PosY,settings.cam1PosZ);
-        this._3dCamera.setRotation(settings.cam1RotX,settings.cam1RotY,settings.cam1RotZ);
-        
-        this.setPosition(settings.posX,settings.posY,settings.posZ);
-    }
     public rotateCenterNode() {
         this._centerNode.rotate(0, 1, 0);
         this._mirrorCube.rotate(1,-1,-0.2);
@@ -165,15 +139,5 @@ export default class Scene3D extends Scene {
             this._cubeNode.url = "res/wicker.jpg";
             this._tableNode.url = "res/wood.jpg";
         }, 7000)
-    }
-    
-    //获取摄像机
-    public getCamera():Camera{
-        return this._3dCamera;
-    }
-
-    public visit(time): void {
-        this._3dCamera.visit(time);
-        super.visit(time);
     }
 }

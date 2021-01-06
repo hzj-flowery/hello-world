@@ -196,6 +196,14 @@ export namespace SY {
             else if (url instanceof Object && url["type"] == "RenderTexture") {
                 this.createRenderTextureBuffer(url);
             }
+            this.onSetTextureUrl();
+        }
+        
+        /**
+         * 设置完纹理之后调用
+         */
+        protected onSetTextureUrl():void{
+
         }
 
         protected getGLID(type: GLID_TYPE): any {
@@ -244,7 +252,7 @@ export namespace SY {
             this._renderData._uvItemSize = this.getBufferItemSize(SY.GLID_TYPE.UV);
             this._renderData._normalGLID = this.getGLID(SY.GLID_TYPE.NORMAL);
             this._renderData._normalItemSize = this.getBufferItemSize(SY.GLID_TYPE.NORMAL);
-            this._renderData._modelMatrix = this._modelMatrix;
+            this._renderData._modelMatrix = this.modelMatrix;
             this._renderData._time = time;
             if (this._texture && this._texture._glID && this._texture.isTexture2D) {
                 this._renderData.pushTexture(this.getGLID(SY.GLID_TYPE.TEXTURE_2D));

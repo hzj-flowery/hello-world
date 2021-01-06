@@ -137,7 +137,7 @@ export default class TwoSprite extends SY.SpriteBase {
 
         var newMV = this._glMatrix.mat4.create();
         var v = GameMainCamera.instance.getCamera(this._cameraType).getInversModelMatrix();
-        var m = this._modelMatrix;
+        var m = this.modelMatrix;
         this._glMatrix.mat4.mul(newMV,v,m)
         this._shader.setUseModelViewMatrix(newMV);
         var pMatix = GameMainCamera.instance.getCamera(this._cameraType).getProjectionMatrix();
@@ -233,7 +233,7 @@ export default class TwoSprite extends SY.SpriteBase {
 
         this._shader.active();
         this._shader.setUseVertexAttribPointerForVertex(this.getGLID(SY.GLID_TYPE.VERTEX), this.getBufferItemSize(SY.GLID_TYPE.VERTEX));
-        this._shader.setUseModelViewMatrix(this._modelMatrix);
+        this._shader.setUseModelViewMatrix(this.modelMatrix);
         var pMatrix = GameMainCamera.instance.getCamera(this._cameraType).getProjectionMatrix();
         this._shader.setUseProjectionMatrix(pMatrix);
 

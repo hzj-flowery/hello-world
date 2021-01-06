@@ -129,16 +129,15 @@ export default class Camera extends Node {
      */
     constructor(fovy, aspect, near, far, type: number) {
         super();
-        this._fovy = fovy;
-        this._aspect = aspect;
-        this._near = near;
-        this._far = far;
+        this.Fovy = fovy;
+        this.Aspect = aspect;
+        this.Near = near;
+        this.Far = far;
         //创建透视矩阵
         this._projectionMatrix = this._glMatrix.mat4.create();
         this._type = type;
         this._holderMatrix = glMatrix.mat4.identity(null);
         this._cameraData = new CameraData();
-        this.updateProjectMatrix();
     }
 
     /**
@@ -155,6 +154,7 @@ export default class Camera extends Node {
     protected _aspect: number;//相机的横纵比(width/height)
     protected _near: number;//相机最近能看到的位置
     protected _far: number;//相机最远能看到的位置
+    private _updateFlag:boolean;//更新标志
     private _targetTexture: RenderTexture;//目标渲染纹理
     private _framebuffer: FrameBuffer;//渲染buffer
     
@@ -169,25 +169,43 @@ export default class Camera extends Node {
      * 弧度
      */
     public set Fovy(fov: number) {
-        this._fovy = fov;
+        if(fov!=this._fovy)
+        {
+            this._updateFlag = true;
+            this._fovy = fov;
+        }
     }
     public set Aspect(aspect: number) {
-        this._aspect = aspect;
+        if(aspect!=this._aspect)
+        {
+            this._updateFlag = true;
+            this._aspect = aspect;
+        }
     }
     public set Near(near: number) {
-        this._near = near;
+        if(near!=this._near)
+        {
+            this._updateFlag = true;
+            this._near = near;
+        }
     }
     public set Far(far) {
-        this._far = far;
+        if(far!=this._far)
+        {
+            this._updateFlag = true;
+            this._far = far;
+        }
     }
     
     /**
      * 弧度
      */
     public get Fovy():number {
+        
         return this._fovy;
     }
     public get Aspect():number {
+        
         return this._aspect;
     }
     public get Near():number{
@@ -287,10 +305,15 @@ export default class Camera extends Node {
     private _type: number = enums.PROJ_PERSPECTIVE;
 
     /**
-     * 更新相机矩阵
-     * 主要是投影矩阵和模型矩阵
+     * 更新投影矩阵
      */
     private updateProjectMatrix(): void {
+        if(!this._updateFlag)
+        {
+            //不需要更新
+            return;
+        }
+        this._updateFlag = false;
 
         if (this._type == enums.PROJ_PERSPECTIVE) {
             this._glMatrix.mat4.perspective(this._projectionMatrix, this._fovy, this._aspect, this._near, this._far);
@@ -328,11 +351,13 @@ export default class Camera extends Node {
          //最后平移
          glMatrix.mat4.translate(this._holderMatrix, this._holderMatrix, [this.x, this.y, this.z]);
          //
-         glMatrix.mat4.multiply(this._modelMatrix,this._holderMatrix,this._modelMatrix);
+         glMatrix.mat4.multiply(this._localMatrix,this._holderMatrix,this._localMatrix);
     }
 
-  
-
+    public visit(time:number):void{
+         this.updateProjectMatrix();
+         super.visit(time);
+    }
     /**
      * 此函数务必调用
      * @param eye  相机的位置
@@ -346,7 +371,7 @@ export default class Camera extends Node {
      */
     public lookAt(eye: Array<number>, center: Array<number> = [0, 0, 0], up: Array<number> = [0, 1, 0]): void {
         // //摄像机的位置
-        this._glMatrix.mat4.lookAt(this._modelMatrix, eye, center,up);
+        this._glMatrix.mat4.lookAt(this.modelMatrix, eye, center,up);
     }
     /**
      * !#en
@@ -388,7 +413,7 @@ export default class Camera extends Node {
      */
     private _cameraData:CameraData;//相机数据
     public getCameraData():CameraData{
-         this._cameraData.modelMat = this._modelMatrix;
+         this._cameraData.modelMat = this.modelMatrix;
          this._cameraData.projectMat = this._projectionMatrix;
          this._cameraData.position = [this.x,this.y,this.z];
          this._cameraData.lightData.setData([20, 30, 60],[0, 0, -1],[1,1,1,1.0]);

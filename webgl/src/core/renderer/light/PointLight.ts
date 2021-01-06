@@ -94,15 +94,15 @@ export class PointLight extends SY.Sprite {
   //更新unifoms变量
   public updateUniformsData(cData:CameraData):any{
     // Multiply the matrices.
-    var worldViewProjectionMatrix = glMatrix.mat4.multiply(null, cData.viewProjectionMat,  this._modelMatrix);
-    var worldInverseMatrix = glMatrix.mat4.invert(null,  this._modelMatrix);
+    var worldViewProjectionMatrix = glMatrix.mat4.multiply(null, cData.viewProjectionMat,  this.modelMatrix);
+    var worldInverseMatrix = glMatrix.mat4.invert(null,  this.modelMatrix);
     var worldInverseTransposeMatrix = glMatrix.mat4.identity(null);
     glMatrix.mat4.transpose(worldInverseTransposeMatrix, worldInverseMatrix);
 
 
     this._uniformData.u_worldViewProjection = worldViewProjectionMatrix;  //投影矩阵 x 视口矩阵 x 世界矩阵
     this._uniformData.u_worldInverseTranspose = worldInverseTransposeMatrix;//世界矩阵逆矩阵的转置矩阵
-    this._uniformData.u_world =  this._modelMatrix;//世界矩阵
+    this._uniformData.u_world =  this.modelMatrix;//世界矩阵
     this._uniformData.u_color = [0.2, 1, 0.2, 1];//点的颜色
     this._uniformData.u_lightWorldPosition = cData.lightData.position;//光的位置
     this._uniformData.u_viewWorldPosition = cData.position;//摄像机的位置

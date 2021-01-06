@@ -183,7 +183,7 @@ export default class CameraView extends SY.SpriteBase {
         this._shader.active();
         var newMV = this._glMatrix.mat4.create();
         var v = GameMainCamera.instance.getCamera(this._cameraType).modelMatrix;
-        var m = this._modelMatrix;
+        var m = this.modelMatrix;
         this._glMatrix.mat4.mul(newMV,v,m)
         this._shader.setUseModelViewMatrix(newMV);
         this._shader.setUseProjectionMatrix(GameMainCamera.instance.getCamera(this._cameraType).getProjectionMatrix());

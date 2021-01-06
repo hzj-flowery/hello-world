@@ -3,7 +3,10 @@ import Device from "./Device";
 import Scene2D from "./renderer/base/Scene2D";
 import Scene3D from "./renderer/base/Scene3D";
 import { G_Stage } from "./renderer/base/Stage";
+import { G_CameraModel } from "./renderer/camera/CameraModel";
+import enums from "./renderer/camera/enums";
 import GameMainCamera from "./renderer/camera/GameMainCamera";
+import PerspectiveCamera from "./renderer/camera/PerspectiveCamera";
 
 
 
@@ -17,6 +20,7 @@ export default class RenderFlow {
         this._2dScene = new Scene2D();
         this._2dScene.init();
 
+        G_Stage.addChild(GameMainCamera.instance.get3DCamera());
         G_Stage.addChild(this._3dScene);
         G_Stage.addChild(this._2dScene);
         Device.Instance.setViewPort(GameMainCamera.instance.get2DCamera().rect);

@@ -457,17 +457,17 @@ export class CameraModel {
         posY: 0,
         posZ: 0,
         rotation: 150,  // in degrees
-        cam1FieldOfView: 60,  // in degrees
-        cam1PosX: 0,
-        cam1PosY: 0,
-        cam1PosZ: 20,
-        cam1RotX: 0,
-        cam1RotY: 0,
-        cam1RotZ: 0,
-        cam1Near: 1,
-        cam1Far: 200,
-        cam1Ortho: false,
-        cam1OrthoUnits: 120,
+        cam3DFieldOfView: 60,  // in degrees
+        cam3DPosX: 0,
+        cam3DPosY: 0,
+        cam3DPosZ: 20,
+        cam3DRotX: 0,
+        cam3DRotY: 0,
+        cam3DRotZ: 0,
+        cam3DNear: 1,
+        cam3DFar: 200,
+        cam3DOrtho: false,
+        cam3DOrthoUnits: 120,
     };
     // //初始化UI
     private setUI(): void {
@@ -478,19 +478,18 @@ export class CameraModel {
             { type: 'slider', key: 'posX', min: -200, max: 200, change: render, },
             { type: 'slider', key: 'posY', min: -200, max: 200, change: render, },
             { type: 'slider', key: 'posZ', min: -200, max: 200, change: render, },
-            { type: 'slider', key: 'cam1FieldOfView', min: 0, max: 180, change: render, },
-            { type: 'slider', key: 'cam1PosX', min: -100, max: 100, change: render, },
-            { type: 'slider', key: 'cam1PosY', min: -100, max: 100, change: render, },
-            { type: 'slider', key: 'cam1PosZ', min: -100, max: 200, change: render, },
+            { type: 'slider', key: 'cam3DFieldOfView', min: 0, max: 180, change: render, },
+            { type: 'slider', key: 'cam3DPosX', min: -100, max: 100, change: render, },
+            { type: 'slider', key: 'cam3DPosY', min: -100, max: 100, change: render, },
+            { type: 'slider', key: 'cam3DPosZ', min: -100, max: 200, change: render, },
+            { type: 'slider', key: 'cam3DRotX', min: 0, max: 360, change: render, },
+            { type: 'slider', key: 'cam3DRotY', min: 0, max: 360, change: render, },
+            { type: 'slider', key: 'cam3DRotZ', min: 0, max: 360, change: render, },
+            { type: 'slider', key: 'cam3DNear', min: 1, max: 300, change: render, },
+            { type: 'slider', key: 'cam3DFar', min: 1, max: 300, change: render, },
 
-            { type: 'slider', key: 'cam1RotX', min: 0, max: 360, change: render, },
-            { type: 'slider', key: 'cam1RotY', min: 0, max: 360, change: render, },
-            { type: 'slider', key: 'cam1RotZ', min: 0, max: 360, change: render, },
-
-            { type: 'slider', key: 'cam1Near', min: 1, max: 300, change: render, },
-            { type: 'slider', key: 'cam1Far', min: 1, max: 300, change: render, },
-            { type: 'checkbox', key: 'cam1Ortho', change: render, },
-            { type: 'slider', key: 'cam1OrthoUnits', min: 1, max: 150, change: render, },
+            { type: 'checkbox', key: 'cam3DOrtho', change: render, },
+            { type: 'slider', key: 'cam3DOrthoUnits', min: 1, max: 150, change: render, },
         ]);
         this.render();
     }

@@ -60,8 +60,8 @@ export class ThreeDLight extends SY.Sprite {
     //更新unifoms变量
     public updateUniformsData(cameraData: CameraData): any {
 
-        var worldViewProjectionMatrix = glMatrix.mat4.multiply(null, cameraData.viewProjectionMat, this._modelMatrix);//pvm
-        var worldInverseMatrix = glMatrix.mat4.invert(null, this._modelMatrix);
+        var worldViewProjectionMatrix = glMatrix.mat4.multiply(null, cameraData.viewProjectionMat, this.modelMatrix);//pvm
+        var worldInverseMatrix = glMatrix.mat4.invert(null, this.modelMatrix);
         var worldInverseTransposeMatrix = glMatrix.mat4.identity(null);
         glMatrix.mat4.transpose(worldInverseTransposeMatrix, worldInverseMatrix);
         this._uniformData = {

@@ -47,10 +47,10 @@ export default class Spine extends SY.SpriteBase {
         this.spineMatrix = this._glMatrix.mat4.create();
         this._glMatrix.mat4.lookAt2(this.spineMatrix, cameraPosition, target, up);
 
-        this._glMatrix.mat4.mul(this._modelMatrix,this._modelMatrix,this.spineMatrix);
+        this._glMatrix.mat4.mul(this.modelMatrix,this.modelMatrix,this.spineMatrix);
     }
     private renderDrawables(node: Skeleton_Node) {
-        let msMatrix = this._glMatrix.mat4.multiply(null,this._modelMatrix,this.spineMatrix);
+        let msMatrix = this._glMatrix.mat4.multiply(null,this.modelMatrix,this.spineMatrix);
         //渲染网格
         for (const drawable of node.mesh_Drawables) {
             drawable.render(node,msMatrix,this.sharedUniforms);
