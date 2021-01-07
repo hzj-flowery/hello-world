@@ -1,6 +1,15 @@
 import { SY } from "../Sprite";
 
 /**
+ * 顶点buffer:若干字节组成一个数据，若干数据组成一个单元，若干单元组成一个图形
+ * 一般情况：存储顶点buffer的数组都是float类型，所以一个顶点的坐标便是4个字节，一个顶点有三个坐标（x,y,z）,所以就有三个数据组成一个顶点，一个顶点就代表一个单元
+ * 所以我们将顶点数组发给GPU的时候，GPU需要知道一个顶点或者说一个顶点单元，有多少数据表示
+ * 当我们绑定好当前的顶点缓冲，GPU就拿到了当前要操作的顶点缓冲，当GPU要绘制的时候，我们还需要告诉它从这个数组哪一个顶点单元开始绘制，一共要绘制多少个顶点单元，以及这些顶点
+ * 单元是如何分布的，比如点分布，线分布，三角形分布
+ * 
+ */
+
+/**
  * 缓冲区中的数据就是一个二进制流，一般我们会按照字节处理，八个二进制为一个字节，又称字节流
  * 我们用字节流来表示数据，一个数据可以用若干个字节来表示
  * 一般用下面这几个数组来组织字节流
@@ -97,6 +106,9 @@ export abstract class glBaseBuffer {
      * 在GPU显存中预分配一块内存为该buffer
      */
     private preAllocateBuffer(): void {
+        //默认设置为4
+        //凡是走这个逻辑 统统都要float32array
+        this._itemBytes = 4;
         this.gl.bindBuffer(this._arrayBufferType, this._glID);
         this.gl.bufferData(this._arrayBufferType, this._preAllocateLen, this._usage);
     }

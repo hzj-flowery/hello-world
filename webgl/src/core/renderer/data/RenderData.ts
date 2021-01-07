@@ -1,4 +1,5 @@
 import { glMatrix } from "../../Matrix";
+import { Node } from "../base/Node";
 import { SY } from "../base/Sprite";
 import { glprimitive_type } from "../gfx/GLEnums";
 import { BufferAttribsData, Shader, ShaderData } from "../shader/Shader";
@@ -16,7 +17,7 @@ export enum ShaderUseVariantType {
     Vertex,  //顶点缓冲
     Normal, //法线缓冲
     UVs,    //uv坐标缓冲
-    
+
     //目前支持同时使用9块纹理单元
     TEX_COORD, //纹理0号单元
     TEX_COORD1, //纹理1号单元
@@ -70,7 +71,15 @@ export class RenderData {
         this._isOffline = false;
         this.reset();
     }
+
+    public _node:Node;//渲染的节点
+
     public _isOffline: boolean = false; //是否是离线渲染
+
+    public _isDrawInstanced: boolean = false;//是否是实例化绘制
+    public _drawInstancedNums: number = 0;//实例的数目
+    public _drawInstancedVertNums: number = 0;//每个实例的顶点数目
+
     public _type: RenderDataType;
     public id: number;//每一个渲染数据都一个唯一的id
     public _cameraType: number;//相机的类型
@@ -100,7 +109,7 @@ export class RenderData {
     public _lightDirection: Array<number>;//光的方向
     public _lightPosition: Array<number>;//光的位置
     public _nodeColor: Array<number>;//节点的颜色
-    public _nodeCustomMatrix:Float32Array;//节点自定义矩阵
+    public _nodeCustomMatrix: Float32Array;//节点自定义矩阵
     public _glPrimitiveType: glprimitive_type;//绘制的类型
     public _modelMatrix: Float32Array;//模型矩阵
     public _time: number;
@@ -139,9 +148,8 @@ export class RenderData {
         this._glPrimitiveType = glprimitive_type.TRIANGLE_FAN;
         this._isUse = false;
     }
-    public pushTexture(texture:WebGLTexture):void{
-        if(this._textureGLIDArray.indexOf(texture)<0)
-        {
+    public pushTexture(texture: WebGLTexture): void {
+        if (this._textureGLIDArray.indexOf(texture) < 0) {
             this._textureGLIDArray.push(texture);
         }
     }
@@ -201,21 +209,20 @@ export class RenderData {
                     this._shader.setUseTexture(this._textureGLIDArray[8], 8);
                     break;
                 case ShaderUseVariantType.CUBE_COORD:
-                        //立方体纹理数据
-                        //-****-------------
-                        this._shader.setUseCubeTexture();
-                        break;
+                    //立方体纹理数据
+                    //-****-------------
+                    this._shader.setUseCubeTexture();
+                    break;
                 //天空盒
                 case ShaderUseVariantType.SKYBOX:
                     this._shader.setUseSkyBox();
-                    glMatrix.mat4.copy(this._temp001_matrix,view);
+                    glMatrix.mat4.copy(this._temp001_matrix, view);
                     this._temp001_matrix[12] = 0;
                     this._temp001_matrix[13] = 0;
-                    this._temp001_matrix[14] = 0;                    
-                    glMatrix.mat4.multiply(this._temp002_matrix,proj,this._temp001_matrix);
-                    glMatrix.mat4.invert(this._temp001_matrix,this._temp002_matrix);
+                    this._temp001_matrix[14] = 0;
+                    glMatrix.mat4.multiply(this._temp002_matrix, proj, this._temp001_matrix);
+                    glMatrix.mat4.invert(this._temp001_matrix, this._temp002_matrix);
                     this._shader.setUseProjectionViewInverseMatrix(this._temp001_matrix);
-
                     break;
                 case ShaderUseVariantType.Projection:
                     this._shader.setUseProjectionMatrix(proj);
@@ -236,18 +243,18 @@ export class RenderData {
                     this._shader.setUseModelInverseTransformWorldMatrix(this._temp_model_inverse_transform_matrix);
                     break;
                 case ShaderUseVariantType.ProjectionViewModelInverse:
-                    glMatrix.mat4.multiply(this._temp001_matrix,view,this._modelMatrix);
-                    glMatrix.mat4.multiply(this._temp002_matrix,proj,this._temp001_matrix);
-                    glMatrix.mat4.invert(this._temp003_matrix,this._temp002_matrix);
+                    glMatrix.mat4.multiply(this._temp001_matrix, view, this._modelMatrix);
+                    glMatrix.mat4.multiply(this._temp002_matrix, proj, this._temp001_matrix);
+                    glMatrix.mat4.invert(this._temp003_matrix, this._temp002_matrix);
                     this._shader.setUseProjectViewModelInverseMatrix(this._temp003_matrix);
                     break;
                 case ShaderUseVariantType.ProjectionView:
-                    glMatrix.mat4.multiply(this._temp001_matrix,proj,view);
+                    glMatrix.mat4.multiply(this._temp001_matrix, proj, view);
                     this._shader.setUseProjectionViewMatrix(this._temp001_matrix);
                     break;
                 case ShaderUseVariantType.ProjectionViewInverse:
-                    glMatrix.mat4.multiply(this._temp001_matrix,proj,view);
-                    glMatrix.mat4.invert(this._temp002_matrix,this._temp001_matrix);
+                    glMatrix.mat4.multiply(this._temp001_matrix, proj, view);
+                    glMatrix.mat4.invert(this._temp002_matrix, this._temp001_matrix);
                     this._shader.setUseProjectionViewInverseMatrix(this._temp002_matrix);
                     break;
                 case ShaderUseVariantType.CameraWorldPosition:
@@ -263,10 +270,10 @@ export class RenderData {
                     this._shader.setUseLightDirection(this._lightDirection);
                     break;
                 case ShaderUseVariantType.NodeCustomColor:
-                    this._shader.setUseNodeCustomColor(this._nodeCustomColorGLID,this._nodeCustomColorItemSize);
+                    this._shader.setUseNodeCustomColor(this._nodeCustomColorGLID, this._nodeCustomColorItemSize);
                     break;
                 case ShaderUseVariantType.NodeCustomMatrix:
-                    this._shader.setUseNodeCustomMatrix(this._nodeCustomMatrixGLID,this._nodeCustomMatrixItemSize);
+                    this._shader.setUseNodeCustomMatrix(this._nodeCustomMatrixGLID, this._nodeCustomMatrixItemSize);
                     break;
                 default:
                     console.log("目前还没有处理这个矩阵类型");
@@ -278,33 +285,10 @@ export class RenderData {
      * @param view 
      * @param proj 
      */
-    private bindGPUBufferData(view, proj): void {
+    public bindGPUBufferData(view, proj): void {
         //激活shader
         this._shader.active();
         this.updateShaderVariant(view, proj);
-    }
-    /**
-     * 启动绘制
-     * @param gl 
-     * @param view 
-     * @param proj 
-     */
-    public startDraw(gl: WebGLRenderingContext, view, proj): void {
-        this.bindGPUBufferData(view, proj);
-        var indexglID = this._indexGLID;
-        if (indexglID != -1) {
-            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexglID);
-            gl.drawElements(this._glPrimitiveType, this._indexItemNums, gl.UNSIGNED_SHORT, 0);
-        }
-        else {
-            gl.drawArrays(this._glPrimitiveType, 0, this._vertItemNums);
-        }
-        
-        //解除缓冲区对于目标纹理的绑定
-        gl.bindTexture(gl.TEXTURE_2D, null);
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
-        gl.bindBuffer(gl.ARRAY_BUFFER, null);
-        this._shader.disableVertexAttribArray();
     }
 }
 
@@ -336,7 +320,7 @@ export class NormalRenderData extends RenderData {
     public _projKey: string;//投影矩阵的key
     public _viewKey: string;//视口矩阵key
     public _worldKey: string;//世界矩阵key
-    public _node: SY.Sprite;//渲染的节点
+    
 }
 
 export class SpineRenderData extends NormalRenderData {

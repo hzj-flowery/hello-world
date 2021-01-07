@@ -80,7 +80,7 @@ export class Shader {
     private u_texCoord8_loc;//纹理属性8号位置
     private u_cubeCoord_loc;//立方体属性位置
     private u_skybox_loc;//天空盒属性位置
-    private
+
     private u_pvm_matrix_loc;//投影视口模型矩阵
     private u_pv_matrix_loc;//投影视口矩阵的位置
     private u_pv_matrix_inverse_loc;//投影视口矩阵的逆矩阵的位置
@@ -113,6 +113,9 @@ export class Shader {
         this._locSafeArr.set("a_normal_loc", this.a_normal_loc >= 0);
         this._locSafeArr.set("a_uv_loc", this.a_uv_loc >= 0);
         this._locSafeArr.set("a_tangent_loc", this.a_tangent_loc >= 0);
+        this._locSafeArr.set("a_node_color_loc", this.a_node_color_loc);
+        this._locSafeArr.set("a_node_matrix_loc", this.a_node_matrix_loc);
+
         this._locSafeArr.set("u_light_color_loc", this.u_light_color_loc >= 0);
         this._locSafeArr.set("u_light_color_dir_loc", this.u_light_color_dir_loc >= 0);
         this._locSafeArr.set("u_MVMatrix_loc", this.u_MVMatrix_loc >= 0);
@@ -142,11 +145,6 @@ export class Shader {
         this._locSafeArr.set("u_MITMatrix_loc", this.u_MITMatrix_loc >= 0);
         this._locSafeArr.set("u_camera_world_position_loc", this.u_camera_world_position_loc >= 0);
         this._locSafeArr.set("u_light_world_position_loc", this.u_light_world_position_loc >= 0);
-        this._locSafeArr.set("a_node_color_loc", this.a_node_color_loc);
-        this._locSafeArr.set("a_node_matrix_loc", this.a_node_matrix_loc);
-
-
-
     }
     protected onCreateShader(): void {
         var _glID = this._spGLID;
@@ -201,16 +199,8 @@ export class Shader {
      * @param loc 
      */
     private checklocValid(loc, tagName): boolean {
-        var result = !(loc == null || loc < 0);
-        if (!result && this.isShowDebugLog) {
-            console.error("err-------", loc, tagName);
-        }
-        return result;
+        return !(loc == null || loc < 0);
     }
-    private checkGLIDValid(glID): boolean {
-        return (glID == null || glID <= 0) ? false : true;
-    }
-
     //启用属性从缓冲区中获取数据的功能
     private enableVertexAttribute() {
         if (this.checklocValid(this.a_position_loc, "a_position_loc")) {// 设定为数组类型的变量数据
@@ -222,20 +212,43 @@ export class Shader {
         if (this.checklocValid(this.a_normal_loc, "a_normal_loc")) {
             this._gl.enableVertexAttribArray(this.a_normal_loc);
         }
-
-    }
-    //shader中所有的attributes变量
-    private updateAttributes(_glID): void {
-        var gl = this._gl;
-        const numAttribs = gl.getProgramParameter(_glID, gl.ACTIVE_ATTRIBUTES);
-        for (let ii = 0; ii < numAttribs; ++ii) {
-            const attribInfo = gl.getActiveAttrib(_glID, ii);
-            if (!attribInfo) {
-                break;
-            }
-            console.log("attribInfo--", attribInfo.name);
-            const index = gl.getAttribLocation(_glID, attribInfo.name);
+        if (this.checklocValid(this.a_tangent_loc, "a_tangent_loc")) {
+            this._gl.enableVertexAttribArray(this.a_tangent_loc);
         }
+        if (this.checklocValid(this.a_node_matrix_loc, "a_node_matrix_loc")) {
+            this._gl.enableVertexAttribArray(this.a_node_matrix_loc);
+        }
+        if (this.checklocValid(this.a_node_color_loc, "a_node_color_loc")) {
+            this._gl.enableVertexAttribArray(this.a_node_color_loc);
+        }
+    }
+    
+   /**
+    * 此函数的作用是要告诉GPU做下面三件事
+    * 1：当前要操作的数据缓冲是那个，这个缓冲其实就是一个数组
+    * 2：把这个数据缓冲复制给顶点着色器的那个变量
+    * 3：在赋值的时候，取多少个数据为一个单元
+    * 此处关于每个数据的类型默认设置为float,即一个数据有4个字节组成
+    * @param glID    显存的地址
+    * @param loc     shader中变量的位置
+    * @param itemSize 一个单元的数据数目
+    */
+    private activeVertexAttribArray(glID:number,loc:number,itemSize:number):void{
+        this._gl.bindBuffer(this._gl.ARRAY_BUFFER, glID);
+        this.enableVertexAttribArray(loc, itemSize, this._gl.FLOAT, false, 0, 0);
+    }
+    /**
+     * 
+     * @param loc 
+     * @param itemSize 
+     * @param type 
+     * @param normalized 是否归一化
+     * @param stride 管道字节数 默认为0表示数据是紧密存放的
+     * @param offset 单元偏移，注意这个不是以字节为单位的，它是以单元为单位的
+     */
+    private enableVertexAttribArray(loc,itemSize,type,normalized:boolean=false,stride:number=0,offset:number=0):void{
+        this._gl.enableVertexAttribArray(loc);
+        this._gl.vertexAttribPointer(loc, itemSize,type,normalized,stride,offset);
     }
     //激活shader
     public active(): void {
@@ -267,9 +280,7 @@ export class Shader {
      */
     public setUseNodeCustomColor(glID, itemSize: number): void {
         if (this.checklocValid(this.a_node_color_loc, "a_node_color_loc")) {
-            this._gl.bindBuffer(this._gl.ARRAY_BUFFER, glID);
-            this._gl.enableVertexAttribArray(this.a_node_color_loc);
-            this._gl.vertexAttribPointer(this.a_node_color_loc, itemSize, this._gl.FLOAT, false, 0, 0);
+            this.activeVertexAttribArray(glID,this.a_node_color_loc,itemSize);
         }
     }
     /**
@@ -293,17 +304,9 @@ export class Shader {
             const bytesPerMatrix = 4 * 16;
             for (let i = 0; i < 4; ++i) {
                 const loc = this.a_node_matrix_loc + i;
-                gl.enableVertexAttribArray(loc);
                 // note the stride and offset
                 const offset = i * 16;  // 4 floats per row, 4 bytes per float
-                gl.vertexAttribPointer(
-                    loc,              // location
-                    itemSize,                // size (num values to pull from buffer per iteration)
-                    gl.FLOAT,         // type of data in buffer
-                    false,            // normalize
-                    bytesPerMatrix,   // stride, num bytes to advance to get to next set of values
-                    offset,           // offset in buffer
-                );
+                this.enableVertexAttribArray(loc,itemSize,gl.FLOAT,false,bytesPerMatrix,offset)
             }
         }
     }
@@ -328,7 +331,6 @@ export class Shader {
     //设置使用的纹理
     //注意如果此处不重新设置使用的纹理，那么会默认使用上一次绘制时的纹理
     public setUseTexture(glID: WebGLTexture, pos = 0): void {
-        if (!this.checkGLIDValid(glID)) return;
         /**
           * activeTexture必须在bindTexture之前。如果没activeTexture就bindTexture，会默认绑定到0号纹理单元
         */
@@ -424,16 +426,12 @@ export class Shader {
     }
     //设置顶点值
     public setUseVertexAttribPointerForVertex(glID, itemSize: number): void {
-        if (!this.checkGLIDValid(glID)) return;
         if (this.checklocValid(this.a_position_loc, "a_position_loc")) {
-            this._gl.bindBuffer(this._gl.ARRAY_BUFFER, glID);
-            this._gl.enableVertexAttribArray(this.a_position_loc);
-            this._gl.vertexAttribPointer(this.a_position_loc, itemSize, this._gl.FLOAT, false, 0, 0);
+            this.activeVertexAttribArray(glID,this.a_position_loc,itemSize);
         }
     }
     //设置法线值
     public setUseVertexAttriPointerForNormal(glID, itemSize: number): void {
-        if (!this.checkGLIDValid(glID)) return;
         /**
          * localtion:shader中attribute声明变量的位置
          * size:每次迭代使用的单位数据
@@ -443,19 +441,13 @@ export class Shader {
          * offset:从绑定缓冲区的偏移位置
          */
         if (this.checklocValid(this.a_normal_loc, "a_normal_loc")) {
-            this._gl.bindBuffer(this._gl.ARRAY_BUFFER, glID);
-            this._gl.enableVertexAttribArray(this.a_normal_loc);
-            this._gl.vertexAttribPointer(this.a_normal_loc, itemSize, this._gl.FLOAT, false, 0, 0);
+            this.activeVertexAttribArray(glID,this.a_normal_loc,itemSize);
         }
     }
     //设置uv值
     public setUseVertexAttribPointerForUV(glID, itemSize: number): void {
-        if (!this.checkGLIDValid(glID)) return;
-
         if (this.checklocValid(this.a_uv_loc, "a_uv_loc")) {
-            this._gl.bindBuffer(this._gl.ARRAY_BUFFER, glID);
-            this._gl.enableVertexAttribArray(this.a_uv_loc);
-            this._gl.vertexAttribPointer(this.a_uv_loc, itemSize, this._gl.FLOAT, false, 0, 0);
+            this.activeVertexAttribArray(glID,this.a_uv_loc,itemSize);
         }
     }
 
@@ -468,6 +460,15 @@ export class Shader {
         }
         if (this.checklocValid(this.a_normal_loc, "a_normal_loc")) {
             this._gl.disableVertexAttribArray(this.a_normal_loc);
+        }
+        if (this.checklocValid(this.a_tangent_loc, "a_tangent_loc")) {
+            this._gl.disableVertexAttribArray(this.a_tangent_loc);
+        }
+        if (this.checklocValid(this.a_node_matrix_loc, "a_node_matrix_loc")) {
+            this._gl.disableVertexAttribArray(this.a_node_matrix_loc);
+        }
+        if (this.checklocValid(this.a_node_color_loc, "a_node_color_loc")) {
+            this._gl.disableVertexAttribArray(this.a_node_color_loc);
         }
     }
 

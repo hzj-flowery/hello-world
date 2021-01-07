@@ -169,10 +169,10 @@ export class Node extends Ref {
          this.updateMatrixData();
     }
     //绘制之前
-    protected onDrawBefore(): void {
+    public onDrawBefore(time:number): void {
 
     }
-    protected onDrawAfter(): void {
+    public onDrawAfter(time:number): void {
 
     }
     //开启绘制

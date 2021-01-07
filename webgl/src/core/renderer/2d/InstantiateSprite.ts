@@ -1,8 +1,5 @@
 import { SY } from "../base/Sprite";
-import { pseudoRandom } from "../../value-types/utils";
-import Device from "../../Device";
-import GameMainCamera from "../camera/GameMainCamera";
-import enums from "../camera/enums";
+import { glprimitive_type } from "../gfx/GLEnums";
 
 var vertexshader3d =
     'attribute vec4 a_position;' +
@@ -27,19 +24,26 @@ var fragmentshader3d =
 export default class InstantiateSprite extends SY.Sprite2D {
     constructor() {
         super();
+        this._glPrimitiveType = glprimitive_type.TRIANGLE_STRIP;
     }
     private _colorLoc: any;
     private _matrixLoc: any;
-
+    private _posArray:Array<Array<number>>;
     protected onInit(): void {
-        this.setContentSize(100,200);
+        this.setContentSize(100, 200);
         this.setShader(vertexshader3d, fragmentshader3d);
+        
+        this.numInstances = 2;
+        this._renderData._isDrawInstanced = true;
+        this._renderData._drawInstancedVertNums = 4;
+        this._renderData._drawInstancedNums = this.numInstances;
 
         this._colorLoc = this._shader.getCustomAttributeLocation("a_color");
         this._matrixLoc = this._shader.getCustomAttributeLocation('a_Matrix');
-        var gl = this.gl;
-        // setup matrixes, one per instance
-        this.numInstances = 30;
+
+        this.produceRandomPosArray();
+        
+        
         // make a typed array with one view per matrix
         this.matrixData = new Float32Array(this.numInstances * 16);
         this.matrices = [];
@@ -51,7 +55,7 @@ export default class InstantiateSprite extends SY.Sprite2D {
                 byteOffsetToMatrix,
                 numFloatsForView));
         }
-        this.createNodeCustomMatrixBuffer([],4,this.matrixData.byteLength);
+        this.createNodeCustomMatrixBuffer([], 4, this.matrixData.byteLength);
         var colorData = [];
         for (var j = 0; j < this.numInstances; j++) {
             var res = this.getRandowColor();
@@ -60,8 +64,18 @@ export default class InstantiateSprite extends SY.Sprite2D {
             colorData.push(res[2]);
             colorData.push(res[3]);
         }
-        this.createNodeCustomColorBuffer(colorData,4);
-
+        this.createNodeCustomColorBuffer(colorData, 4);
+    }
+    private produceRandomPosArray():void{
+        this._posArray = [];
+        for(let j = 0;j<this.numInstances;j++)
+        {
+            let temp1 = Math.random();
+            let temp2 = Math.random();
+            let temp3 = Math.random();
+            this._posArray[j] = [];
+            this._posArray[j] = [-0.5*temp1 + j * 0.025,temp2,0];
+        }
     }
     private getRandowColor() {
         let ColorTest =
@@ -79,24 +93,9 @@ export default class InstantiateSprite extends SY.Sprite2D {
     private matrices;
     private matrixData;
     private numInstances;
-    public draw(time: number): void {
-        this.drawWebgl2(time);
-    }
-    public drawWebgl2(time): void {
-        var gl = this.gl;
-        const numVertices = 4;
+    public onDrawBefore(time: number) {
+
         time *= 0.001; // seconds
-
-        this._shader.active();
-        this._shader.setUseVertexAttribPointerForVertex(this.getGLID(SY.GLID_TYPE.VERTEX), this.getBufferItemSize(SY.GLID_TYPE.VERTEX));
-
-        var newMV = this._glMatrix.mat4.create();
-        var v = GameMainCamera.instance.getCamera(this._cameraType).getInversModelMatrix();
-        var m = this.modelMatrix;
-        this._glMatrix.mat4.mul(newMV, v, m)
-        this._shader.setUseModelViewMatrix(newMV);
-        var pMatix = GameMainCamera.instance.getCamera(this._cameraType).getProjectionMatrix();
-        this._shader.setUseProjectionMatrix(pMatix);
 
         // update all the matrices
         this.matrices.forEach((mat, ndx) => {
@@ -104,20 +103,15 @@ export default class InstantiateSprite extends SY.Sprite2D {
              * 构造一个节点空间坐标系
              */
             this._glMatrix.mat4.identity(mat);
-
-            if (Math.random() > 0.5)
-                this._glMatrix.mat4.translate(mat, mat, [-0.5 + ndx * 0.025, 0, 0]);
-            else
-                this._glMatrix.mat4.translate(mat, mat, [-0.5, -0.5 + ndx * 0.025, 0]);
-
+            this._glMatrix.mat4.translate(mat, mat, this._posArray[ndx]);
             this._glMatrix.mat4.rotateZ(mat, mat, time * (0.1 + 0.1 * ndx));
+
         });
-
         //更新缓冲区数据
-        this.getBuffer(SY.GLID_TYPE.MATRIX).updateSubData(this.matrixData)
-        this._shader.setUseNodeCustomMatrix(this.getGLID(SY.GLID_TYPE.MATRIX),this.getBufferItemSize(SY.GLID_TYPE.MATRIX));
-        this._shader.setUseNodeCustomColor(this.getGLID(SY.GLID_TYPE.COLOR),this.getBufferItemSize(SY.GLID_TYPE.COLOR));
+        this.getBuffer(SY.GLID_TYPE.MATRIX).updateSubData(this.matrixData);
 
+
+        let gl = this.gl;
         for (let i = 0; i < 4; ++i) {
             const loc = this._matrixLoc + i;
             // this line says this attribute only changes for each 1 instance
@@ -125,13 +119,10 @@ export default class InstantiateSprite extends SY.Sprite2D {
         }
         // this line says this attribute only changes for each 1 instance
         gl.vertexAttribDivisor(this._colorLoc, 1);
-        gl.drawArraysInstanced(
-            gl.TRIANGLES,
-            0,             // offset
-            numVertices,   // num vertices per instance
-            this.numInstances,  // num instances
-        );
 
+    }
+    public onDrawAfter(): void {
+        let gl = this.gl;
         gl.bindBuffer(gl.ARRAY_BUFFER, null);
         gl.vertexAttribDivisor(this._colorLoc, 0);
         for (let i = 0; i < 4; ++i) {
@@ -140,9 +131,6 @@ export default class InstantiateSprite extends SY.Sprite2D {
         }
         gl.disableVertexAttribArray(this._colorLoc);
         gl.disableVertexAttribArray(this._matrixLoc);
-
     }
-
-    
 
 }

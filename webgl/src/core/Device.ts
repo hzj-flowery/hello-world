@@ -11,6 +11,8 @@ import State from "./renderer/gfx/State";
 import { G_ShaderFactory } from "./renderer/shader/ShaderFactory";
 import { glEnums } from "./renderer/gfx/GLapi";
 import { Node } from "./renderer/base/Node";
+import { SY } from "./renderer/base/Sprite";
+import { G_DrawEngine } from "./renderer/base/DrawEngine";
 
 /**
  渲染流程：
@@ -335,8 +337,8 @@ export default class Device {
     public startDraw(time: number,stage:Node): void {
         this.onBeforeRender();
         this.visitRenderTree(time,stage);
-        // this.drawToUI();
-        // this.draw2screen();
+        this.drawToUI();
+        this.draw2screen();
         this.onAfterRender();
     }
     /**
@@ -439,7 +441,7 @@ export default class Device {
      * @param viewMatrix 视口矩阵
      */
     private _drawBase(rData: RenderData, projMatix: Float32Array, viewMatrix: Float32Array): void {
-        rData.startDraw(this.gl,viewMatrix,projMatix)
+        G_DrawEngine.run(rData,this.gl,viewMatrix,projMatix);
     }
     private _temp1Matrix: Float32Array = glMatrix.mat4.identity(null);
     /**
@@ -516,7 +518,7 @@ export default class Device {
 
     private _drawNormal(sData: NormalRenderData, cameraData: CameraData): void {
         this.gl.useProgram(sData._shaderData.spGlID);
-        sData._node.updateUniformsData(cameraData);
+        (sData._node as SY.Sprite).updateUniformsData(cameraData);
         G_ShaderFactory.setBuffersAndAttributes(sData._shaderData.attrSetters, sData._attrbufferData);
         for (let j in sData._uniformData) {
             G_ShaderFactory.setUniforms(sData._shaderData.uniSetters, sData._uniformData[j]);
