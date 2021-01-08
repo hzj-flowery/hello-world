@@ -145,6 +145,12 @@ export class Texture {
     public get isTexture2D():boolean{
        return this._target==this._gl.TEXTURE_2D;
     }
+    /**
+     * 是否是立方体纹理
+     */
+    public get isTextureCube():boolean{
+        return this._target==this._gl.TEXTURE_CUBE_MAP;
+    }
 
 
     constructor(gl) {

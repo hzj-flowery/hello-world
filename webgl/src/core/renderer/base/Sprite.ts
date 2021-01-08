@@ -292,8 +292,11 @@ export namespace SY {
 
             this._renderData._modelMatrix = this.modelMatrix;
             this._renderData._time = time;
-            if (this._texture && this._texture._glID && this._texture.isTexture2D) {
-                this._renderData.pushTexture(this.getGLID(SY.GLID_TYPE.TEXTURE_2D));
+            if (this._texture && this._texture._glID) {
+                if(this._texture.isTexture2D)
+                this._renderData.push2DTexture(this.getGLID(SY.GLID_TYPE.TEXTURE_2D));
+                else if(this._texture.isTextureCube)
+                this._renderData.pushCubeTexture(this.getGLID(SY.GLID_TYPE.TEXTURE_CUBE));
             }
             this._renderData._glPrimitiveType = this._glPrimitiveType;
             Device.Instance.collectData(this._renderData);

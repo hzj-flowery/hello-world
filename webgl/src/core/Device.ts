@@ -441,7 +441,7 @@ export default class Device {
      * @param viewMatrix 视口矩阵
      */
     private _drawBase(rData: RenderData, projMatix: Float32Array, viewMatrix: Float32Array): void {
-        G_DrawEngine.run(rData,this.gl,viewMatrix,projMatix);
+        G_DrawEngine.run(rData,viewMatrix,projMatix);
     }
     private _temp1Matrix: Float32Array = glMatrix.mat4.identity(null);
     /**

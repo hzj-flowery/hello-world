@@ -1,4 +1,5 @@
 
+import { G_DrawEngine } from "../base/DrawEngine";
 import { glvert_attr_semantic, glTEXTURE_UNIT_VALID } from "../gfx/GLEnums";
 import { G_ShaderFactory } from "./ShaderFactory";
 
@@ -201,59 +202,8 @@ export class Shader {
     private checklocValid(loc, tagName): boolean {
         return !(loc == null || loc < 0);
     }
-    //启用属性从缓冲区中获取数据的功能
-    private enableVertexAttribute() {
-        if (this.checklocValid(this.a_position_loc, "a_position_loc")) {// 设定为数组类型的变量数据
-            this._gl.enableVertexAttribArray(this.a_position_loc);
-        }
-        if (this.checklocValid(this.a_uv_loc, "a_uv_loc")) {
-            this._gl.enableVertexAttribArray(this.a_uv_loc);
-        }
-        if (this.checklocValid(this.a_normal_loc, "a_normal_loc")) {
-            this._gl.enableVertexAttribArray(this.a_normal_loc);
-        }
-        if (this.checklocValid(this.a_tangent_loc, "a_tangent_loc")) {
-            this._gl.enableVertexAttribArray(this.a_tangent_loc);
-        }
-        if (this.checklocValid(this.a_node_matrix_loc, "a_node_matrix_loc")) {
-            this._gl.enableVertexAttribArray(this.a_node_matrix_loc);
-        }
-        if (this.checklocValid(this.a_node_color_loc, "a_node_color_loc")) {
-            this._gl.enableVertexAttribArray(this.a_node_color_loc);
-        }
-    }
-    
-   /**
-    * 此函数的作用是要告诉GPU做下面三件事
-    * 1：当前要操作的数据缓冲是那个，这个缓冲其实就是一个数组
-    * 2：把这个数据缓冲复制给顶点着色器的那个变量
-    * 3：在赋值的时候，取多少个数据为一个单元
-    * 此处关于每个数据的类型默认设置为float,即一个数据有4个字节组成
-    * @param glID    显存的地址
-    * @param loc     shader中变量的位置
-    * @param itemSize 一个单元的数据数目
-    */
-    private activeVertexAttribArray(glID:number,loc:number,itemSize:number):void{
-        this._gl.bindBuffer(this._gl.ARRAY_BUFFER, glID);
-        this.enableVertexAttribArray(loc, itemSize, this._gl.FLOAT, false, 0, 0);
-    }
-    /**
-     * 
-     * @param loc 
-     * @param itemSize 
-     * @param type 
-     * @param normalized 是否归一化
-     * @param stride 管道字节数 默认为0表示数据是紧密存放的
-     * @param offset 单元偏移，注意这个不是以字节为单位的，它是以单元为单位的
-     */
-    private enableVertexAttribArray(loc,itemSize,type,normalized:boolean=false,stride:number=0,offset:number=0):void{
-        this._gl.enableVertexAttribArray(loc);
-        this._gl.vertexAttribPointer(loc, itemSize,type,normalized,stride,offset);
-    }
     //激活shader
     public active(): void {
-        this.disableVertexAttribArray();
-        this.enableVertexAttribute();
         this._gl.useProgram(this._spGLID);
     }
     /**
@@ -262,7 +212,7 @@ export class Shader {
      */
     public setUseLightColor(color: Array<number>): void {
         if (this.checklocValid(this.u_light_color_loc, "u_light_color_loc")) {
-            this._gl.uniform4fv(this.u_light_color_loc, color); // green
+            G_DrawEngine.setUniformFloatVec4(this.u_light_color_loc, color);
         }
     }
     /**
@@ -271,7 +221,7 @@ export class Shader {
      */
     public setUseLightDirection(direction: Array<number>): void {
         if (this.checklocValid(this.u_light_color_dir_loc, "u_light_color_dir_loc")) {
-            this._gl.uniform3fv(this.u_light_color_dir_loc, direction);
+            G_DrawEngine.setUniformFloatVec3(this.u_light_color_dir_loc, direction);
         }
     }
     /**
@@ -280,7 +230,7 @@ export class Shader {
      */
     public setUseNodeCustomColor(glID, itemSize: number): void {
         if (this.checklocValid(this.a_node_color_loc, "a_node_color_loc")) {
-            this.activeVertexAttribArray(glID,this.a_node_color_loc,itemSize);
+            G_DrawEngine.activeVertexAttribArray(glID,this.a_node_color_loc,itemSize);
         }
     }
     /**
@@ -290,24 +240,7 @@ export class Shader {
      */
     public setUseNodeCustomMatrix(glID, itemSize: number): void {
         if (this.checklocValid(this.a_node_matrix_loc, "a_node_matrix_loc")) {
-            this._gl.bindBuffer(this._gl.ARRAY_BUFFER, glID);
-            let gl = this._gl as WebGL2RenderingContext;
-            // set all 4 attributes for matrix
-            // 解析 
-            // 每一个矩阵的大小是四行四列，矩阵中元素的类型是gl.FLOAT,即元素占用四个字节
-            // 所以一个矩阵的占用字节数为4*4*4
-            // 关于矩阵在shader中的位置计算，可以把矩阵想象成一个一维数组，元素类型是vec4
-            // matrixLoc:表示矩阵的第1行在shader中的位置
-            // matrixLoc+1:表示矩阵的第2行在shader中的位置
-            // matrixLoc+2:表示矩阵的第3行在shader中的位置
-            // matrixLoc+3:表示矩阵的第4行在shader中的位置    
-            const bytesPerMatrix = 4 * 16;
-            for (let i = 0; i < 4; ++i) {
-                const loc = this.a_node_matrix_loc + i;
-                // note the stride and offset
-                const offset = i * 16;  // 4 floats per row, 4 bytes per float
-                this.enableVertexAttribArray(loc,itemSize,gl.FLOAT,false,bytesPerMatrix,offset)
-            }
+            G_DrawEngine.activeMatrixVertexAttribArray(glID,this.a_node_matrix_loc,itemSize)
         }
     }
     /**
@@ -316,7 +249,7 @@ export class Shader {
      */
     public setUseCameraWorldPosition(pos: Array<number>): void {
         if (this.checklocValid(this.u_camera_world_position_loc, "u_camera_world_position_loc")) {
-            this._gl.uniform3fv(this.u_camera_world_position_loc, pos);
+            G_DrawEngine.setUniformFloatVec3(this.u_camera_world_position_loc, pos);
         }
     }
     /**
@@ -325,129 +258,112 @@ export class Shader {
      */
     public setUseLightWorldPosition(pos: Array<number>): void {
         if (this.checklocValid(this.u_light_world_position_loc, "u_light_world_position_loc")) {
-            this._gl.uniform3fv(this.u_light_world_position_loc, pos);
+            G_DrawEngine.setUniformFloatVec3(this.u_light_world_position_loc, pos);
         }
     }
     //设置使用的纹理
     //注意如果此处不重新设置使用的纹理，那么会默认使用上一次绘制时的纹理
     public setUseTexture(glID: WebGLTexture, pos = 0): void {
-        /**
-          * activeTexture必须在bindTexture之前。如果没activeTexture就bindTexture，会默认绑定到0号纹理单元
-        */
         let loc: string = (pos == 0) ? "u_texCoord_loc" : "u_texCoord" + pos + "_loc"
         if (this.checklocValid(this[loc], loc)) {
-            // 激活 指定 号纹理单元
-            this._gl.activeTexture(this._gl[glTEXTURE_UNIT_VALID[pos]]);
-            // 指定当前操作的贴图
-            this._gl.bindTexture(this._gl.TEXTURE_2D, glID);
-            this._gl.uniform1i(this[loc], pos);
+            G_DrawEngine.active2DTexture(glID,this[loc],pos)
         }
     }
-    public setUseSkyBox(): void {
+    public setUseSkyBox(glID:WebGLTexture): void {
         if (this.checklocValid(this.u_skybox_loc, "u_skybox_loc")) {
             var gl = this._gl;
             gl.enable(gl.CULL_FACE);
             gl.enable(gl.DEPTH_TEST);
-            // Tell the shader to use texture unit 0 for u_skybox
-            gl.uniform1i(this.u_skybox_loc, 0);
-            // let our quad pass the depth test at 1.0
             gl.depthFunc(gl.LEQUAL);
+            G_DrawEngine.activeCubeTexture(glID,this.u_skybox_loc,0)
+            
         }
     }
-    public setUseCubeTexture(): void {
-        var gl = this._gl;
+    public setUseCubeTexture(glID:WebGLTexture): void {
         if (this.checklocValid(this.u_cubeCoord_loc, "u_cubeCoord_loc")) {
-            gl.uniform1i(this.u_cubeCoord_loc, 0);
+            G_DrawEngine.activeCubeTexture(glID,this.u_cubeCoord_loc, 0)
         }
     }
     //设置使用投影视口模型矩阵
     public setUseProjectViewModelMatrix(pvmMatrix): void {
         if (this.checklocValid(this.u_pvm_matrix_loc, "u_pvm_matrix_loc")) {
-            this._gl.uniformMatrix4fv(this.u_pvm_matrix_loc, false, pvmMatrix);
+            G_DrawEngine.setUniformMatrix(this.u_pvm_matrix_loc,pvmMatrix);
         }
     }
     public setUseProjectionViewMatrix(mat): void {
         if (this.checklocValid(this.u_pv_matrix_loc, "u_pv_matrix_loc")) {
-            this._gl.uniformMatrix4fv(this.u_pv_matrix_loc, false, mat);
+            G_DrawEngine.setUniformMatrix(this.u_pv_matrix_loc, mat)
         }
     }
     public setUseProjectionViewInverseMatrix(mat): void {
         if (this.checklocValid(this.u_pv_matrix_inverse_loc, "u_pv_matrix_inverse_loc")) {
-            this._gl.uniformMatrix4fv(this.u_pv_matrix_inverse_loc, false, mat);
+            G_DrawEngine.setUniformMatrix(this.u_pv_matrix_inverse_loc, mat);
         }
     }
     //设置使用投影视口模型矩阵的逆矩阵
     public setUseProjectViewModelInverseMatrix(matrix): void {
         if (this.checklocValid(this.u_pvm_matrix_inverse_loc, "u_pvm_matrix_inverse_loc")) {
-            this._gl.uniformMatrix4fv(this.u_pvm_matrix_inverse_loc, false, matrix);
+            G_DrawEngine.setUniformMatrix(this.u_pvm_matrix_inverse_loc, matrix)
         }
     }
     //设置视口矩阵
     public setUseViewMatrix(vMatrix): void {
         if (this.checklocValid(this.u_VMatrix_loc, "u_VMatrix_loc")) {
-            this._gl.uniform4fv(this.u_VMatrix_loc, vMatrix);
+            G_DrawEngine.setUniformMatrix(this.u_VMatrix_loc, vMatrix);
         }
     }
     //设置模型视口矩阵
     public setUseModelViewMatrix(mvMatrix): void {
         if (this.checklocValid(this.u_MVMatrix_loc, "u_MVMatrix_loc")) {
-            this._gl.uniformMatrix4fv(this.u_MVMatrix_loc, false, mvMatrix);
+            G_DrawEngine.setUniformMatrix(this.u_MVMatrix_loc, mvMatrix);
         }
     }
     //设置透视投影矩阵
     public setUseProjectionMatrix(projMatrix): void {
         if (this.checklocValid(this.u_PMatrix_loc, "u_PMatrix_loc")) {
-            this._gl.uniformMatrix4fv(this.u_PMatrix_loc, false, projMatrix);
+            G_DrawEngine.setUniformMatrix(this.u_PMatrix_loc, projMatrix);
         }
     }
     //设置模型世界矩阵
     public setUseModelWorldMatrix(wMatrix): void {
         if (this.checklocValid(this.u_MMatrix_loc, "u_MMatrix_loc")) {
-            this._gl.uniformMatrix4fv(this.u_MMatrix_loc, false, wMatrix);
+            G_DrawEngine.setUniformMatrix(this.u_MMatrix_loc, wMatrix)
         }
     }
     //设置模型世界矩阵的逆矩阵
     public setUseModelWorldInverseMatrix(wiMatrix): void {
         if (this.checklocValid(this.u_MIMatrix_loc, "u_MIMatrix_loc")) {
-            this._gl.uniformMatrix4fv(this.u_MIMatrix_loc, false, wiMatrix);
+            G_DrawEngine.setUniformMatrix(this.u_MIMatrix_loc, wiMatrix)
         }
     }
     //设置模型世界矩阵的转置矩阵
     public setUseModelTransformWorldMatrix(wtMatrix): void {
         if (this.checklocValid(this.u_MTMatrix_loc, "u_MTMatrix_loc")) {
-            this._gl.uniformMatrix4fv(this.u_MTMatrix_loc, false, wtMatrix);
+            G_DrawEngine.setUniformMatrix(this.u_MTMatrix_loc, wtMatrix);
         }
     }
     //设置模型世界矩阵的逆矩阵的转置矩阵
     public setUseModelInverseTransformWorldMatrix(witMatrix): void {
         if (this.checklocValid(this.u_MITMatrix_loc, "u_MITMatrix_loc")) {
-            this._gl.uniformMatrix4fv(this.u_MITMatrix_loc, false, witMatrix);
+            G_DrawEngine.setUniformMatrix(this.u_MITMatrix_loc, witMatrix);
         }
     }
     //设置顶点值
     public setUseVertexAttribPointerForVertex(glID, itemSize: number): void {
         if (this.checklocValid(this.a_position_loc, "a_position_loc")) {
-            this.activeVertexAttribArray(glID,this.a_position_loc,itemSize);
+            G_DrawEngine.activeVertexAttribArray(glID,this.a_position_loc,itemSize);
         }
     }
     //设置法线值
     public setUseVertexAttriPointerForNormal(glID, itemSize: number): void {
-        /**
-         * localtion:shader中attribute声明变量的位置
-         * size:每次迭代使用的单位数据
-         * type:单位数据类型
-         * normallize:单位化（【0-255】--》【0-1】）
-         * stride:每次迭代跳多少个数据到下一个数据
-         * offset:从绑定缓冲区的偏移位置
-         */
         if (this.checklocValid(this.a_normal_loc, "a_normal_loc")) {
-            this.activeVertexAttribArray(glID,this.a_normal_loc,itemSize);
+            G_DrawEngine.activeVertexAttribArray(glID,this.a_normal_loc,itemSize);
         }
     }
     //设置uv值
     public setUseVertexAttribPointerForUV(glID, itemSize: number): void {
         if (this.checklocValid(this.a_uv_loc, "a_uv_loc")) {
-            this.activeVertexAttribArray(glID,this.a_uv_loc,itemSize);
+            G_DrawEngine.activeVertexAttribArray(glID,this.a_uv_loc,itemSize);
         }
     }
 

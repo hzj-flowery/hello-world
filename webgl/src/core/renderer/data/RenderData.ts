@@ -116,7 +116,8 @@ export class RenderData {
     public _isUse: boolean = false;//使用状态
 
     private _useVariantType: Array<ShaderUseVariantType> = [];
-    private _textureGLIDArray: Array<WebGLTexture>;
+    private _texture2DGLIDArray: Array<WebGLTexture>;//2d纹理
+    private _textureCubeGLIDArray: Array<WebGLTexture>;//立方体纹理
     private _temp_model_view_matrix;//视口模型矩阵
     private _temp_model_inverse_matrix;//模型世界矩阵的逆矩阵
     private _temp_model_transform_matrix;//模型世界矩阵的转置矩阵
@@ -140,7 +141,8 @@ export class RenderData {
         this._lightColor = [];
         this._lightDirection = [];
         this._lightPosition = [];
-        this._textureGLIDArray = [];
+        this._texture2DGLIDArray = [];
+        this._textureCubeGLIDArray = [];
         this._nodeCustomMatrix = null;
         this._nodeColor = [0, 0, 0, 0];//一般默认节点的颜色是全黑的
         this._modelMatrix = null;
@@ -148,9 +150,14 @@ export class RenderData {
         this._glPrimitiveType = glprimitive_type.TRIANGLE_FAN;
         this._isUse = false;
     }
-    public pushTexture(texture: WebGLTexture): void {
-        if (this._textureGLIDArray.indexOf(texture) < 0) {
-            this._textureGLIDArray.push(texture);
+    public push2DTexture(texture: WebGLTexture): void {
+        if (this._texture2DGLIDArray.indexOf(texture) < 0) {
+            this._texture2DGLIDArray.push(texture);
+        }
+    }
+    public pushCubeTexture(texture: WebGLTexture): void {
+        if (this._textureCubeGLIDArray.indexOf(texture) < 0) {
+            this._textureCubeGLIDArray.push(texture);
         }
     }
     public pushShaderVariant(type: ShaderUseVariantType): void {
@@ -182,40 +189,40 @@ export class RenderData {
                     this._shader.setUseVertexAttribPointerForUV(this._uvGLID, this._uvItemSize);
                     break;
                 case ShaderUseVariantType.TEX_COORD:
-                    this._shader.setUseTexture(this._textureGLIDArray[0], 0);
+                    this._shader.setUseTexture(this._texture2DGLIDArray[0], 0);
                     break;
                 case ShaderUseVariantType.TEX_COORD1:
-                    this._shader.setUseTexture(this._textureGLIDArray[1], 1);
+                    this._shader.setUseTexture(this._texture2DGLIDArray[1], 1);
                     break;
                 case ShaderUseVariantType.TEX_COORD2:
-                    this._shader.setUseTexture(this._textureGLIDArray[2], 2);
+                    this._shader.setUseTexture(this._texture2DGLIDArray[2], 2);
                     break;
                 case ShaderUseVariantType.TEX_COORD3:
-                    this._shader.setUseTexture(this._textureGLIDArray[3], 3);
+                    this._shader.setUseTexture(this._texture2DGLIDArray[3], 3);
                     break;
                 case ShaderUseVariantType.TEX_COORD4:
-                    this._shader.setUseTexture(this._textureGLIDArray[4], 4);
+                    this._shader.setUseTexture(this._texture2DGLIDArray[4], 4);
                     break;
                 case ShaderUseVariantType.TEX_COORD5:
-                    this._shader.setUseTexture(this._textureGLIDArray[5], 5);
+                    this._shader.setUseTexture(this._texture2DGLIDArray[5], 5);
                     break;
                 case ShaderUseVariantType.TEX_COORD6:
-                    this._shader.setUseTexture(this._textureGLIDArray[6], 6);
+                    this._shader.setUseTexture(this._texture2DGLIDArray[6], 6);
                     break;
                 case ShaderUseVariantType.TEX_COORD7:
-                    this._shader.setUseTexture(this._textureGLIDArray[7], 7);
+                    this._shader.setUseTexture(this._texture2DGLIDArray[7], 7);
                     break;
                 case ShaderUseVariantType.TEX_COORD8:
-                    this._shader.setUseTexture(this._textureGLIDArray[8], 8);
+                    this._shader.setUseTexture(this._texture2DGLIDArray[8], 8);
                     break;
                 case ShaderUseVariantType.CUBE_COORD:
                     //立方体纹理数据
                     //-****-------------
-                    this._shader.setUseCubeTexture();
+                    this._shader.setUseCubeTexture(this._textureCubeGLIDArray[0]);
                     break;
                 //天空盒
                 case ShaderUseVariantType.SKYBOX:
-                    this._shader.setUseSkyBox();
+                    this._shader.setUseSkyBox(this._textureCubeGLIDArray[0]);
                     glMatrix.mat4.copy(this._temp001_matrix, view);
                     this._temp001_matrix[12] = 0;
                     this._temp001_matrix[13] = 0;
