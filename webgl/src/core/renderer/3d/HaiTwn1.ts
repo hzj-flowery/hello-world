@@ -123,7 +123,7 @@ class skeleton_Skin {
 
         this.gl.bindTexture(this.gl.TEXTURE_2D, null);
         
-        this._texture = new Texture2D(this.gl);
+        this._texture = new Texture2D();
   
         this.createTexture2DBuffer("res/Hujing_saiyu.png");
     }
@@ -592,8 +592,8 @@ class Spine extends SY.SpriteBase {
         }
     }
 
-    protected draw(time:number):void{
-          super.draw(time);
+    protected collectRenderData(time:number):void{
+          super.collectRenderData(time);
            
           this.animSkin(this.gltf.skins[0], Math.sin(time) * .5);
            

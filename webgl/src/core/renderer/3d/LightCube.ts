@@ -1,7 +1,7 @@
 import { SY } from "../base/Sprite";
 import { CubeData } from "../data/CubeData";
-import { ShaderUseVariantType } from "../data/RenderData";
 import { glprimitive_type } from "../gfx/GLEnums";
+import { ShaderUseVariantType } from "../shader/ShaderUseVariantType";
 
 /**
  * 如果将三维物体的朝向和光的方向点乘， 结果为 1 则物体朝向和光照方向相同，为 -1 则物体朝向和光照方向相反
@@ -11,14 +11,15 @@ var vertexshader3d =
 'attribute vec4 a_position;'+
 'attribute vec3 a_normal;'+
 'attribute vec2 a_uv;' +
-'uniform mat4 u_MVMatrix;' +
+'uniform mat4 u_MMatrix;' +
+'uniform mat4 u_VMatrix;' +
 'uniform mat4 u_PMatrix;' +
 'uniform mat4 u_MITMatrix;' +  //模型的世界矩阵
 'varying vec2 v_uv;' +
 'varying vec3 v_normal;'+
 'void main() {'+
   // Multiply the position by the matrix.
-  'gl_Position = u_PMatrix *u_MVMatrix* a_position;'+
+  'gl_Position = u_PMatrix *u_VMatrix*u_MMatrix* a_position;'+
   // Pass the normal to the fragment shader
   'v_normal = mat3(u_MITMatrix)* a_normal;'+
   'v_uv = a_uv;' +
@@ -64,15 +65,13 @@ export default class LightCube extends SY.SpriteBase {
         this.createUVsBuffer(rd.uvData,rd.dF.uv_item_size);
         this.createIndexsBuffer(rd.indexs);
         this.createNormalsBuffer(rd.normals,rd.dF.normal_item_size);
-        
-        this.setShader(vertexshader3d,fragmentshader3d);
-        this._renderData.pushShaderVariant(ShaderUseVariantType.ModelInverseTransform);
-        this._renderData.pushShaderVariant(ShaderUseVariantType.LightColor);
-        this._renderData.pushShaderVariant(ShaderUseVariantType.LightDirection);
-        
+        this._vertStr = vertexshader3d;
+        this._fragStr = fragmentshader3d;
         this._glPrimitiveType = this.gl.TRIANGLE_STRIP;
     }
-    public visit(time):void{
-           super.visit(time);
+    protected onShader(){
+      this._shader.pushShaderVariant(ShaderUseVariantType.ModelInverseTransform);
+      this._shader.pushShaderVariant(ShaderUseVariantType.LightColor);
+      this._shader.pushShaderVariant(ShaderUseVariantType.LightDirection);
     }
 }

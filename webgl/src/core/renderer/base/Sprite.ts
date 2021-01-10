@@ -43,7 +43,7 @@ import Device from "../../Device";
 import LoaderManager from "../../LoaderManager";
 import { RenderTexture } from "./texture/RenderTexture";
 import { CameraData } from "../data/CameraData";
-import { NormalRenderData, RenderData, RenderDataPool, RenderDataType, ShaderUseVariantType } from "../data/RenderData";
+import { NormalRenderData, RenderData, RenderDataPool, RenderDataType} from "../data/RenderData";
 import { glprimitive_type } from "../gfx/GLEnums";
 import { BufferAttribsData, Shader, ShaderData } from "../shader/Shader";
 import { G_ShaderFactory } from "../shader/ShaderFactory";
@@ -54,6 +54,8 @@ import TextureCube from "./texture/TextureCube";
 import TextureCustom from "./texture/TextureCustom";
 import { glBaseBuffer, G_BufferManager, IndexsBuffer, NodeCustomColorBuffer, NodeCustomMatrixBuffer, NormalBuffer, UVsBuffer, VertexsBuffer } from "./buffer/BufferManager";
 import enums from "../camera/enums";
+import { G_ShaderCenter, ShaderType } from "../shader/ShaderCenter";
+import { ShaderUseVariantType } from "../shader/ShaderUseVariantType";
 
 
 /**
@@ -105,6 +107,9 @@ export namespace SY {
         //参考glprimitive_type
         protected _glPrimitiveType: glprimitive_type;//绘制的类型
         protected _cameraType: number = 0;//相机的类型(0表示透视1表示正交)
+        protected _vertStr:string = "";
+        protected _fragStr:string = "";
+        private _shaderUseVariantType:Array<ShaderUseVariantType> = [];
         constructor() {
             super();
             materialId++;
@@ -116,30 +121,36 @@ export namespace SY {
         }
         private init(): void {
             this.onInit();
+            this.setShader(this._vertStr,this._fragStr);
         }
         protected onInit(): void {
 
         }
-        //获取shader
-        public get shader(): Shader {
-            return this._shader;
+        protected onShader():void{
+
         }
 
-        public setShader(vert: string, frag: string) {
-            this._shader = Shader.create(vert, frag);
+        private setShader(vert: string, frag: string) {
+            if(vert==""||frag=="")
+            {
+                return;
+            }
+            this._shader = G_ShaderCenter.createShader(ShaderType.Custom,vert, frag);
+            this.onShader();
+            
         }
         //创建顶点缓冲
         public createVertexsBuffer(vertexs: Array<number>, itemSize: number): VertexsBuffer {
             this._vertexsBuffer = G_BufferManager.createBuffer(GLID_TYPE.VERTEX,
                 this._materialId, vertexs, itemSize) as VertexsBuffer;
-            this._renderData.pushShaderVariant(ShaderUseVariantType.Vertex);
+            this._shaderUseVariantType.push(ShaderUseVariantType.Vertex);
             return this._vertexsBuffer;
         }
         //创建法线缓冲
         public createNormalsBuffer(normals: Array<number>, itemSize: number): NormalBuffer {
             this._normalsBuffer = G_BufferManager.createBuffer(GLID_TYPE.NORMAL,
                 this._materialId, normals, itemSize) as NormalBuffer;
-            this._renderData.pushShaderVariant(ShaderUseVariantType.Normal);
+            this._shaderUseVariantType.push(ShaderUseVariantType.Normal);
             return this._normalsBuffer;
         }
         //创建索引缓冲
@@ -153,38 +164,38 @@ export namespace SY {
         public createUVsBuffer(uvs: Array<number>, itemSize: number): UVsBuffer {
             this._uvsBuffer = G_BufferManager.createBuffer(GLID_TYPE.UV,
                 this._materialId, uvs, itemSize) as UVsBuffer;
-            this._renderData.pushShaderVariant(ShaderUseVariantType.UVs);
+            this._shaderUseVariantType.push(ShaderUseVariantType.UVs);
             return this._uvsBuffer
         }
         //创建节点自定义矩阵buffer
         public createNodeCustomMatrixBuffer(matrix: Array<number>, itemSize: number, preAllocateLen: number = 0): NodeCustomMatrixBuffer {
             this._customMatrixBuffer = G_BufferManager.createBuffer(GLID_TYPE.MATRIX, this._materialId, matrix, itemSize, preAllocateLen) as NodeCustomMatrixBuffer;
-            this._renderData.pushShaderVariant(ShaderUseVariantType.NodeCustomMatrix);
+            this._shaderUseVariantType.push(ShaderUseVariantType.NodeCustomMatrix);
             return this._customMatrixBuffer;
         }
         //创建节点自定义颜色buffer
         public createNodeCustomColorBuffer(color: Array<number>, itemSize: number): NodeCustomColorBuffer {
             this._customColorBuffer = G_BufferManager.createBuffer(GLID_TYPE.COLOR, this._materialId, color, itemSize) as NodeCustomColorBuffer;
-            this._renderData.pushShaderVariant(ShaderUseVariantType.NodeCustomColor);
+            this._shaderUseVariantType.push(ShaderUseVariantType.NodeCustomColor);
             return this._customColorBuffer;
         }
         //创建一个纹理buffer
         private createTexture2DBuffer(url: string): Texture {
-            this._texture = new Texture2D(this.gl);
+            this._texture = new Texture2D();
             (this._texture as Texture2D).url = url;
-            this._renderData.pushShaderVariant(ShaderUseVariantType.TEX_COORD);
+            this._shaderUseVariantType.push(ShaderUseVariantType.TEX_COORD);
             return this._texture
         }
         private createTextureCubeBuffer(arr: Array<string>): Texture {
-            this._texture = new TextureCube(this.gl);
+            this._texture = new TextureCube();
             (this._texture as TextureCube).url = arr;
-            this._renderData.pushShaderVariant(ShaderUseVariantType.TEX_COORD);
+            this._shaderUseVariantType.push(ShaderUseVariantType.TEX_COORD);
             return this._texture;
         }
         private createCustomTextureBuffer(data: TextureOpts): Texture {
-            this._texture = new TextureCustom(this.gl);
+            this._texture = new TextureCustom();
             (this._texture as TextureCustom).url = data;
-            this._renderData.pushShaderVariant(ShaderUseVariantType.TEX_COORD);
+            this._shaderUseVariantType.push(ShaderUseVariantType.TEX_COORD);
             return this._texture;
         }
         /**
@@ -192,9 +203,9 @@ export namespace SY {
          * @param data {type,place,width,height}
          */
         private createRenderTextureBuffer(data: any): Texture {
-            this._texture = new RenderTexture(this.gl);
+            this._texture = new RenderTexture();
             (this._texture as RenderTexture).attach(data.place, data.width, data.height);
-            this._renderData.pushShaderVariant(ShaderUseVariantType.TEX_COORD);
+            this._shaderUseVariantType.push(ShaderUseVariantType.TEX_COORD);
             return this._texture;
         }
         public set url(url: string | Array<string> | TextureOpts | Object) {
@@ -250,11 +261,19 @@ export namespace SY {
          * 
          * @param texture 纹理的GLID
          */
-        protected draw(time: number): void {
+        protected collectRenderData(time: number): void {
+            if(!this._shader)
+            {
+                return;
+            }
             if (this._texture && this._texture.loaded == false) {
                 return;
             }
             this._renderData._node = this as Node;
+
+            this._shaderUseVariantType.forEach((value,index)=>{
+                this._shader.pushShaderVariant(value);
+            });
 
             this._renderData._cameraType = this._cameraType;//默认情况下是透视投影
             this._renderData._shader = this._shader;
@@ -288,8 +307,6 @@ export namespace SY {
                 this._renderData._nodeCustomMatrixItemSize = this.getBuffer(SY.GLID_TYPE.MATRIX).itemSize;
                 this._renderData._nodeCustomMatrixItemNums = this.getBuffer(SY.GLID_TYPE.MATRIX).itemNums;
             }
-
-
             this._renderData._modelMatrix = this.modelMatrix;
             this._renderData._time = time;
             if (this._texture && this._texture._glID) {
@@ -339,7 +356,7 @@ export namespace SY {
         protected onLoadFinish(data: any): void {
 
         }
-        protected draw(time: number): void {
+        protected collectRenderData(time: number): void {
             this.updateRenderData();
             Device.Instance.collectData(this._renderData);
         }

@@ -23,6 +23,7 @@ import { G_ShaderFactory } from "./core/renderer/shader/ShaderFactory";
 import { G_BufferManager } from "./core/renderer/base/buffer/BufferManager";
 import { ShadowMapProjectionTest } from "./core/renderer/3d/ShadowMapProjectionTest";
 import { G_DrawEngine } from "./core/renderer/base/DrawEngine";
+import { G_ShaderCenter } from "./core/renderer/shader/ShaderCenter";
 
 
 
@@ -30,7 +31,7 @@ Device.Instance.init();
 G_DrawEngine.init(Device.Instance.gl);
 G_ShaderFactory.init(Device.Instance.gl);
 G_BufferManager.init(Device.Instance.gl);
-
+G_ShaderCenter.init();
 
 // G_CameraModel.init(Device.Instance.gl);
 //testWebl_Label.run();

@@ -1,3 +1,4 @@
+import Device from "../../../Device";
 import { gltex_filter, gltex_wrap, gltex_config_format, glTextureChanelTotalBytes, glTextureFmtInfor, glType } from "../../gfx/GLEnums";
 
 
@@ -153,11 +154,11 @@ export class Texture {
     }
 
 
-    constructor(gl) {
-        this._gl = gl;
+    constructor() {
+        this._gl = Device.Instance.gl;
         this._target = -1;
         this._id = _textureID++;
-        this._glID = gl.createTexture();
+        this._glID = this._gl.createTexture();
         this._bites = 0;
         this.loaded = false;
     }

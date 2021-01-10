@@ -61,7 +61,7 @@ export default class Spine extends SY.SpriteBase {
         }
     }
 
-    protected draw(time: number): void {
+    protected collectRenderData(time: number): void {
         time *= 0.001;  // convert to seconds
         this.animSkin(this.gltf.skins[0], Math.sin(time) * .5);
         var lightDirection = this._glMatrix.vec3.create();

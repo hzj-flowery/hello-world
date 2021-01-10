@@ -38,11 +38,12 @@ var fragBaseCode =
  */
 var solidcolorvertexshader =
     'attribute vec4 a_position;' +
-    'uniform mat4 u_MVMatrix;' +
+    'uniform mat4 u_MMatrix;' +
+    'uniform mat4 u_VMatrix;' +
     'uniform mat4 u_PMatrix;' +
     'uniform mat4 u_PVMMatrix;' +
     'void main() {' +
-    'gl_Position = u_PMatrix*u_MVMatrix*a_position;' +
+    'gl_Position = u_PMatrix*u_VMatrix*u_MMatrix*a_position;' +
     '}'
 
 var solidcolorfragmentshader =
@@ -60,7 +61,8 @@ export default class CameraView extends SY.SpriteBase {
         var result = this.createCameraBufferInfo(0.2);
         this.createVertexsBuffer(result.pos, 3);
         this.createIndexsBuffer(result.index);
-        this.setShader(solidcolorvertexshader, solidcolorfragmentshader);
+        this._vertStr = solidcolorvertexshader;
+        this._fragStr = solidcolorfragmentshader;
 
         this._glPrimitiveType = glprimitive_type.LINES;
     }
@@ -178,7 +180,7 @@ export default class CameraView extends SY.SpriteBase {
          * 
          * @param texture 纹理的GLID
          */
-    protected draw(time: number): void {
+    protected collectRenderData(time: number): void {
         //激活shader 并且给shader中的变量赋值
         this._shader.active();
         var newMV = this._glMatrix.mat4.create();

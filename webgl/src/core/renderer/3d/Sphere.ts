@@ -3,12 +3,13 @@ import { SY } from "../base/Sprite";
 var vertextBaseCode =
     'precision highp float;'+
     'attribute vec3 a_position;' +
-    'uniform mat4 u_MVMatrix;' +
+    'uniform mat4 u_MMatrix;' +
+    'uniform mat4 u_VMatrix;' +
     'uniform mat4 u_PMatrix;' +
     'varying vec4 color;' +
 
     'void main() {' +
-    'gl_Position = u_PMatrix * u_MVMatrix * vec4(a_position, 1.0);' +
+    'gl_Position = u_PMatrix * u_VMatrix *u_MMatrix* vec4(a_position, 1.0);' +
     'color=vec4(gl_Position.x,gl_Position.y,gl_Position.z,0.8);' +
     '}'
 //基础的shader的片段着色器
@@ -94,12 +95,12 @@ export default class Sphere extends SY.SpriteBase {
 
         var data = this.drawQiu02(1, 18);
         this.createVertexsBuffer(data,3);
-        this.setShader(vertextBaseCode, fragBaseCode);
+        this._vertStr = vertextBaseCode;
+        this._fragStr = fragBaseCode;
         this._glPrimitiveType = this.gl.LINE_STRIP;
     }
 
     public visit(time){
-        // this.rotate(0.5,0.5,0.5);
         super.visit(time);
     }
 

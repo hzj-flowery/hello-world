@@ -230,6 +230,8 @@ class BufferManager {
     private _mapIndexBuffer: Map<string, IndexsBuffer> = new Map();
     private _mapNormalBuffer: Map<string, NormalBuffer> = new Map();
     private _mapUVBuffer: Map<string, UVsBuffer> = new Map();
+    private _mapNodeColorBuffer: Map<string, UVsBuffer> = new Map();
+    private _mapNodeMatrixBuffer: Map<string, UVsBuffer> = new Map();
     /**
      * 
      * @param type 
@@ -238,6 +240,7 @@ class BufferManager {
      * @param itemSize 一个单元的数据个数
      */
     public createBuffer(type: SY.GLID_TYPE, materialId: string = "default", data: Array<number>, itemSize: number, preAllocateLen: number = 0): glBaseBuffer {
+        console.log("materialId------",type,materialId);
         switch (type) {
             case SY.GLID_TYPE.VERTEX:
                 return this.createVertex(materialId, data, itemSize, preAllocateLen);
@@ -252,6 +255,23 @@ class BufferManager {
             case SY.GLID_TYPE.MATRIX:
                 return this.createMatrix(materialId, data, itemSize, preAllocateLen);
             default: break;
+        }
+    }
+    public getBuffer(type:SY.GLID_TYPE,materialId:string):glBaseBuffer{
+        switch (type) {
+            case SY.GLID_TYPE.VERTEX:
+                return this._mapVertexBuffer.get(materialId);
+            case SY.GLID_TYPE.INDEX:
+                return this._mapIndexBuffer.get(materialId);
+            case SY.GLID_TYPE.NORMAL:
+                return this._mapNormalBuffer.get(materialId);
+            case SY.GLID_TYPE.UV:
+                return this._mapUVBuffer.get(materialId);
+            case SY.GLID_TYPE.COLOR:
+                return this._mapNodeColorBuffer.get(materialId);
+            case SY.GLID_TYPE.MATRIX:
+                return this._mapNodeMatrixBuffer.get(materialId);
+            default: console.log("未知类型，请指明类型"); break;
         }
     }
     private createVertex(id: string, data: Array<number>, itemSize: number, preAllocateLen: number): VertexsBuffer {
@@ -276,12 +296,12 @@ class BufferManager {
     }
     private createColor(id: string, data: Array<number>, itemSize: number, preAllocateLen: number): NodeCustomColorBuffer {
         let buffer = new NodeCustomColorBuffer(this._gl, data, itemSize, preAllocateLen);
-        this._mapUVBuffer.set(id, buffer);
+        this._mapNodeColorBuffer.set(id, buffer);
         return buffer;
     }
     private createMatrix(id: string, data: Array<number>, itemSize: number, preAllocateLen: number): NodeCustomMatrixBuffer {
         let buffer = new NodeCustomMatrixBuffer(this._gl, data, itemSize, preAllocateLen);
-        this._mapUVBuffer.set(id, buffer);
+        this._mapNodeMatrixBuffer.set(id, buffer);
         return buffer;
     }
 }

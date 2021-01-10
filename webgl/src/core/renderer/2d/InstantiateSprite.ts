@@ -6,12 +6,13 @@ var vertexshader3d =
     'attribute vec4 a_color;' +
     'attribute mat4 a_Matrix;' +
 
-    'uniform mat4 u_MVMatrix;' +
+    'uniform mat4 u_MMatrix;' +
+    'uniform mat4 u_VMatrix;' +
     'uniform mat4 u_PMatrix;' +
 
     'varying vec4 v_color;' +
     'void main() {' +
-    'gl_Position =u_PMatrix*u_MVMatrix* a_Matrix * a_position;' +
+    'gl_Position =u_PMatrix*u_VMatrix*u_MMatrix* a_Matrix * a_position;' +
     'v_color = a_color;' +
     '}'
 var fragmentshader3d =
@@ -31,15 +32,16 @@ export default class InstantiateSprite extends SY.Sprite2D {
     private _posArray:Array<Array<number>>;
     protected onInit(): void {
         this.setContentSize(100, 200);
-        this.setShader(vertexshader3d, fragmentshader3d);
+
+        this._vertStr = vertexshader3d;
+        this._fragStr = fragmentshader3d;
         
         this.numInstances = 2;
         this._renderData._isDrawInstanced = true;
         this._renderData._drawInstancedVertNums = 4;
         this._renderData._drawInstancedNums = this.numInstances;
 
-        this._colorLoc = this._shader.getCustomAttributeLocation("a_color");
-        this._matrixLoc = this._shader.getCustomAttributeLocation('a_Matrix');
+        
 
         this.produceRandomPosArray();
         
@@ -93,10 +95,12 @@ export default class InstantiateSprite extends SY.Sprite2D {
     private matrices;
     private matrixData;
     private numInstances;
+    protected onShader():void{
+        this._colorLoc = this._shader.getCustomAttributeLocation("a_color");
+        this._matrixLoc = this._shader.getCustomAttributeLocation('a_Matrix');
+    }
     public onDrawBefore(time: number) {
-
         time *= 0.001; // seconds
-
         // update all the matrices
         this.matrices.forEach((mat, ndx) => {
             /**
@@ -105,11 +109,9 @@ export default class InstantiateSprite extends SY.Sprite2D {
             this._glMatrix.mat4.identity(mat);
             this._glMatrix.mat4.translate(mat, mat, this._posArray[ndx]);
             this._glMatrix.mat4.rotateZ(mat, mat, time * (0.1 + 0.1 * ndx));
-
         });
         //更新缓冲区数据
         this.getBuffer(SY.GLID_TYPE.MATRIX).updateSubData(this.matrixData);
-
 
         let gl = this.gl;
         for (let i = 0; i < 4; ++i) {

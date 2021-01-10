@@ -7,7 +7,6 @@ var vertextBaseCode =
     'attribute vec3 a_normal;' +
     'attribute vec2 a_uv;' +
 
-    'uniform mat4 u_MVMatrix;' +
     'uniform mat4 u_PMatrix;' +
     'uniform mat4 u_MMatrix;' +
     'uniform mat4 u_VMatrix;' +
@@ -16,7 +15,7 @@ var vertextBaseCode =
     'varying vec2 v_uv;' +
 
     'void main() {' +
-    'gl_Position = u_PMatrix * u_MVMatrix * vec4(a_position, 1.0);' +
+    'gl_Position = u_PMatrix * u_VMatrix*u_MMatrix * vec4(a_position, 1.0);' +
     'v_uv = a_uv;' +
     '}'
 //基础的shader的片段着色器

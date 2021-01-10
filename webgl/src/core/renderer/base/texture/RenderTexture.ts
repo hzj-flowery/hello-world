@@ -43,8 +43,8 @@ let DepthStencilFormat = {
  */
 export class RenderTexture extends Texture2D {
 
-    constructor(gl) {
-        super(gl);
+    constructor() {
+        super();
         this.initFrameBuffer();
     }
     //初始化帧缓存

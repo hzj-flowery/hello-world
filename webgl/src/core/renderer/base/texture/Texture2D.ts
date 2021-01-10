@@ -64,9 +64,9 @@ gl.CLAMP_TO_EDGE: 使用纹理图像边缘值
 */
 
 export class Texture2D extends Texture{
-    constructor(gl){
-        super(gl);
-        this._target = gl.TEXTURE_2D;
+    constructor(){
+        super();
+        this._target = this._gl.TEXTURE_2D;
     }
     private _url:string;
     public set url(soucePath){

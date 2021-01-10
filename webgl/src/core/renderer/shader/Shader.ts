@@ -2,6 +2,7 @@
 import { G_DrawEngine } from "../base/DrawEngine";
 import { glvert_attr_semantic, glTEXTURE_UNIT_VALID } from "../gfx/GLEnums";
 import { G_ShaderFactory } from "./ShaderFactory";
+import { ShaderUseVariantType } from "./ShaderUseVariantType";
 
 
 export class ShaderData {
@@ -89,63 +90,19 @@ export class Shader {
     private u_light_world_position_loc;//光的世界位置
     private u_camera_world_position_loc;//相机的世界位置
 
-    public isShowDebugLog: boolean;//是否显示报错日志
-
     protected _gl: WebGLRenderingContext;
     protected _spGLID;
-    constructor(gl, glID) {
+    public readonly name:string;
+    private _useVariantType: Array<ShaderUseVariantType> = [];
+    constructor(gl,glID,name) {
         this._gl = gl;
         this._spGLID = glID;
+        this.name = name;
+        this._useVariantType = [];
+        this._useVariantType.push(ShaderUseVariantType.Projection);
+        this._useVariantType.push(ShaderUseVariantType.Model);
+        this._useVariantType.push(ShaderUseVariantType.View);
         this.onCreateShader();
-    }
-    /**
-     * 创建一个shader
-     * @param vert 
-     * @param frag 
-     */
-    static create(vert, frag): Shader {
-        var glID = G_ShaderFactory.createShader(vert, frag);
-        return new Shader(G_ShaderFactory._gl, glID)
-    }
-    private _locSafeArr: Map<string, boolean> = new Map();
-    private _initLockSafeCheck(): void {
-        this._locSafeArr.clear();
-        this._locSafeArr.set("a_position_loc", this.a_position_loc >= 0);
-        this._locSafeArr.set("a_normal_loc", this.a_normal_loc >= 0);
-        this._locSafeArr.set("a_uv_loc", this.a_uv_loc >= 0);
-        this._locSafeArr.set("a_tangent_loc", this.a_tangent_loc >= 0);
-        this._locSafeArr.set("a_node_color_loc", this.a_node_color_loc);
-        this._locSafeArr.set("a_node_matrix_loc", this.a_node_matrix_loc);
-
-        this._locSafeArr.set("u_light_color_loc", this.u_light_color_loc >= 0);
-        this._locSafeArr.set("u_light_color_dir_loc", this.u_light_color_dir_loc >= 0);
-        this._locSafeArr.set("u_MVMatrix_loc", this.u_MVMatrix_loc >= 0);
-        this._locSafeArr.set("u_PMatrix_loc", this.u_PMatrix_loc >= 0);
-
-        this._locSafeArr.set("u_texCoord_loc", this.u_texCoord_loc >= 0);
-        this._locSafeArr.set("u_texCoord1_loc", this.u_texCoord1_loc >= 0);
-        this._locSafeArr.set("u_texCoord2_loc", this.u_texCoord2_loc >= 0);
-        this._locSafeArr.set("u_texCoord3_loc", this.u_texCoord3_loc >= 0);
-        this._locSafeArr.set("u_texCoord4_loc", this.u_texCoord4_loc >= 0);
-        this._locSafeArr.set("u_texCoord5_loc", this.u_texCoord5_loc >= 0);
-        this._locSafeArr.set("u_texCoord6_loc", this.u_texCoord6_loc >= 0);
-        this._locSafeArr.set("u_texCoord7_loc", this.u_texCoord7_loc >= 0);
-        this._locSafeArr.set("u_texCoord8_loc", this.u_texCoord8_loc >= 0);
-
-        this._locSafeArr.set("u_skybox_loc", this.u_skybox_loc >= 0);
-        this._locSafeArr.set("u_pvm_matrix_loc", this.u_pvm_matrix_loc >= 0);
-        this._locSafeArr.set("u_pvm_matrix_inverse_loc", this.u_pvm_matrix_inverse_loc >= 0);
-        this._locSafeArr.set("u_MMatrix_loc", this.u_MMatrix_loc >= 0);
-        this._locSafeArr.set("u_VMatrix_loc", this.u_VMatrix_loc >= 0);
-        this._locSafeArr.set("u_MIMatrix_loc", this.u_MIMatrix_loc >= 0);
-        this._locSafeArr.set("u_MTMatrix_loc", this.u_MTMatrix_loc >= 0);
-
-        this._locSafeArr.set("u_pv_matrix_loc", this.u_pv_matrix_loc >= 0);
-        this._locSafeArr.set("u_pv_matrix_inverse_loc", this.u_pv_matrix_inverse_loc >= 0);
-
-        this._locSafeArr.set("u_MITMatrix_loc", this.u_MITMatrix_loc >= 0);
-        this._locSafeArr.set("u_camera_world_position_loc", this.u_camera_world_position_loc >= 0);
-        this._locSafeArr.set("u_light_world_position_loc", this.u_light_world_position_loc >= 0);
     }
     protected onCreateShader(): void {
         var _glID = this._spGLID;
@@ -186,10 +143,23 @@ export class Shader {
         this.u_camera_world_position_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.CameraWorldPosition);
         this.u_light_world_position_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.LightWorldPosition);
 
-        this._initLockSafeCheck();
     }
-    public getCustomAttributeLocation(varName: string) {
-        return this._gl.getAttribLocation(this._spGLID, varName)
+    public pushShaderVariant(type: ShaderUseVariantType): void {
+        if (type >= ShaderUseVariantType.UndefinedMax || type <= ShaderUseVariantType.UndefinedMin) {
+            // console.log("这个类型的矩阵是不合法的！！！！", type);
+            return;
+        }
+        if (this._useVariantType.indexOf(type) >= 0) {
+            // console.log("这个类型的矩阵已经有了！！！！", type);
+            return;
+        }
+        this._useVariantType.push(type);
+    }
+    public get useVariantType():Array<ShaderUseVariantType>{
+       return this._useVariantType;
+    }
+    public getCustomAttributeLocation(varName: string):number {
+        return G_DrawEngine.getAttribLocation(this._spGLID, varName)
     }
 
     public getGLID() {
@@ -204,7 +174,7 @@ export class Shader {
     }
     //激活shader
     public active(): void {
-        this._gl.useProgram(this._spGLID);
+        G_DrawEngine.useProgram(this._spGLID);
     }
     /**
      * 
@@ -276,7 +246,6 @@ export class Shader {
             gl.enable(gl.DEPTH_TEST);
             gl.depthFunc(gl.LEQUAL);
             G_DrawEngine.activeCubeTexture(glID,this.u_skybox_loc,0)
-            
         }
     }
     public setUseCubeTexture(glID:WebGLTexture): void {
@@ -369,25 +338,22 @@ export class Shader {
 
     public disableVertexAttribArray(): void {
         if (this.checklocValid(this.a_position_loc, "a_position_loc")) {// 设定为数组类型的变量数据
-            this._gl.disableVertexAttribArray(this.a_position_loc);
+            G_DrawEngine.disableVertexAttribArray(this.a_position_loc);
         }
         if (this.checklocValid(this.a_uv_loc, "a_uv_loc")) {
-            this._gl.disableVertexAttribArray(this.a_uv_loc);
+            G_DrawEngine.disableVertexAttribArray(this.a_uv_loc);
         }
         if (this.checklocValid(this.a_normal_loc, "a_normal_loc")) {
-            this._gl.disableVertexAttribArray(this.a_normal_loc);
+            G_DrawEngine.disableVertexAttribArray(this.a_normal_loc);
         }
         if (this.checklocValid(this.a_tangent_loc, "a_tangent_loc")) {
-            this._gl.disableVertexAttribArray(this.a_tangent_loc);
+            G_DrawEngine.disableVertexAttribArray(this.a_tangent_loc);
         }
         if (this.checklocValid(this.a_node_matrix_loc, "a_node_matrix_loc")) {
-            this._gl.disableVertexAttribArray(this.a_node_matrix_loc);
+            G_DrawEngine.disableVertexAttribArray(this.a_node_matrix_loc);
         }
         if (this.checklocValid(this.a_node_color_loc, "a_node_color_loc")) {
-            this._gl.disableVertexAttribArray(this.a_node_color_loc);
+            G_DrawEngine.disableVertexAttribArray(this.a_node_color_loc);
         }
     }
-
-
-
 }

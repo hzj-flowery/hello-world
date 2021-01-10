@@ -16,12 +16,13 @@ var vertextBaseCode =
     'attribute vec3 a_position;' +
     'attribute vec2 a_uv;' +
 
-    'uniform mat4 u_MVMatrix;' +
+    'uniform mat4 u_MMatrix;' +
+    'uniform mat4 u_VMatrix;' +
     'uniform mat4 u_PMatrix;' +
     'varying vec2 vTextureCoordinates;' +
 
     'void main() {' +
-    'gl_Position = u_PMatrix * u_MVMatrix * vec4(a_position, 1.0);' +
+    'gl_Position = u_PMatrix * u_MMatrix *u_VMatrix* vec4(a_position, 1.0);' +
     'vTextureCoordinates = a_uv;' +
     '}'
 //基础的shader的片段着色器
@@ -64,7 +65,8 @@ export default class Ground extends SY.SpriteBase {
         // this.testDrawPrimitive_TRIANGLE_STRIP();
         // this.testDrawPrimitive_TRIANGLE_FAN();
         this.testDrawPrimitive_TRIANGLE();
-        this.setShader(vertextBaseCode,fragBaseCode);
+        this._vertStr = vertextBaseCode;
+        this._fragStr = fragBaseCode;
     }
 
     private testDrawPrimitive_TRIANGLE_STRIP():void{

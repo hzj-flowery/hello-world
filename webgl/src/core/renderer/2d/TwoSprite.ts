@@ -9,12 +9,13 @@ var vertexshader3d =
     'attribute vec4 a_color;' +
     'attribute mat4 a_Matrix;' +
 
-    'uniform mat4 u_MVMatrix;' +
+    'uniform mat4 u_MMatrix;' +
+    'uniform mat4 u_VMatrix;' +
     'uniform mat4 u_PMatrix;' +
 
     'varying vec4 v_color;' +
     'void main() {' +
-    'gl_Position =u_PMatrix*u_MVMatrix* a_Matrix * a_position;' +
+    'gl_Position =u_PMatrix*u_VMatrix*u_MMatrix* a_Matrix * a_position;' +
     'v_color = a_color;' +
     '}'
 var fragmentshader3d =
@@ -33,7 +34,8 @@ export default class TwoSprite extends SY.Sprite2D {
 
     protected onInit(): void {
         this.setContentSize(100,200);
-        this.setShader(vertexshader3d, fragmentshader3d);
+        this._vertStr = vertexshader3d;
+        this._fragStr = fragmentshader3d;
         this._colorLoc = this._shader.getCustomAttributeLocation("a_color");
         this._matrixLoc = this._shader.getCustomAttributeLocation('a_Matrix');
         var gl = this.gl;
@@ -89,7 +91,7 @@ export default class TwoSprite extends SY.Sprite2D {
     private matrixData;
     private colorBuffer;
     private numInstances;
-    public draw(time: number): void {
+    public collectRenderData(time: number): void {
         if (Device.Instance.getContextType() == "webgl2") {
             this.drawWebgl2(time);
         }

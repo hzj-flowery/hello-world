@@ -180,13 +180,13 @@ export class Node extends Ref {
         //更新世界节点
         this.updateWorldMatrix();
         //开始绘制
-        this.draw(time);
+        this.collectRenderData(time);
         for (var j = 0; j < this._children.length; j++) {
             this._children[j].visit(time);
         }
 
     }
-    protected draw(time: number): void {
+    protected collectRenderData(time: number): void {
 
     }
     /**

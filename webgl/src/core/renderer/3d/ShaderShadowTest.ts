@@ -199,7 +199,7 @@ class ShadowLight {
     //宾式模型高光
     vec3 getSpecularBingShi(vec3 normal){
       // 计算法向量和光线的点积
-      float cosTheta = max(dot(normal,-u_reverseLightDirection), 0.0);
+      float cosTheta = max(dot(normal,u_reverseLightDirection), 0.0);
       vec3 surfaceToLightDirection = normalize(v_surfaceToLight);
       vec3 surfaceToViewDirection = normalize(v_surfaceToView);
       vec3 specularColor =vec3(1.0,1.0,1.0);
@@ -214,7 +214,7 @@ class ShadowLight {
       vec3 surfaceToViewDirection = normalize(v_surfaceToView);
       vec3 specularColor =vec3(1.0,1.0,1.0);  
       // 计算法向量和光线的点积
-      float cosTheta = max(dot(normal,-u_reverseLightDirection), 0.0);
+      float cosTheta = max(dot(normal,u_reverseLightDirection), 0.0);
       vec3 reflectionDirection = reflect(-surfaceToLightDirection, normal);
       float specularWeighting = pow(max(dot(reflectionDirection, surfaceToViewDirection), 0.0), u_shininess);
       vec3 specular = specularColor.rgb * specularWeighting * step(cosTheta,0.0);
@@ -295,7 +295,7 @@ class ShadowLight {
         2, 6,
       ],
     });
-    this.createTexture(this.gl instanceof WebGLRenderingContext);
+    this.createTexture();
     this.setUI();
     this.createUniform();
     this.render();
@@ -307,11 +307,10 @@ class ShadowLight {
   // public _renderBuffer: WebGLRenderbuffer;//渲染缓冲的glID
 
   private renderTexture:RenderTexture;
-  private createTexture(isWebgl1: boolean = true): void {
-    var gl = this.gl;
-    this.checkerboardTexture = new TextureCustom(gl);
+  private createTexture(): void {
+    this.checkerboardTexture = new TextureCustom();
     this.checkerboardTexture.url = CustomTextureData.getBoardData(8,8);
-    this.renderTexture = new RenderTexture(gl);
+    this.renderTexture = new RenderTexture();
     this.renderTexture.attach("depth",this.depthTextureSize,this.depthTextureSize)
   }
 
@@ -464,10 +463,16 @@ class ShadowLight {
     // first draw from the POV of the light
     /**
      * lightWorldMatrix是光照摄像机的视野坐标系
-     * x轴：0  1  2  3
-     * y轴：4  5  6  7
-     * z轴：8  9  10 11 这个其实是光照方向
-     * w:  12 13  14 15 
+     * x  y  z  p
+     * 0  4  8  12
+     * 1  5  9  13
+     * 2  6  10 14 这个其实是光照方向
+     * 3  7  11 15 
+     * 
+     * 1  0  0  0
+     * 0  1  0  0
+     * 0  0  1  0 这个其实是光照方向
+     * 0  0  0  1 
      */
     const lightWorldMatrix = glMatrix.mat4.lookAt2(null,
       [this.settings.posX, this.settings.posY, this.settings.posZ],          // position
@@ -540,7 +545,7 @@ class ShadowLight {
     //因为一个点的位置与这个矩阵相乘，这个点的位置不会发生任何变化
     //它真正发挥作用的是在第二次绘制的时候对他的赋值
     let texMatrix = glMatrix.mat4.identity(null);
-    this.drawScene(lightData.project, lightData.mat, texMatrix, lightData.reverseDir, this.colorProgramInfo);
+    this.drawScene(lightData.project,lightData.mat,texMatrix,lightData.reverseDir, this.colorProgramInfo);
 
     Device.Instance.showCurFramerBufferOnCanvas(this.depthTextureSize,this.depthTextureSize);
 

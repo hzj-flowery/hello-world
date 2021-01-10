@@ -3,6 +3,7 @@ import { Node } from "../base/Node";
 import { SY } from "../base/Sprite";
 import { glprimitive_type } from "../gfx/GLEnums";
 import { BufferAttribsData, Shader, ShaderData } from "../shader/Shader";
+import { ShaderUseVariantType } from "../shader/ShaderUseVariantType";
 
 
 let renderDataId: number = 0;
@@ -11,51 +12,11 @@ export enum RenderDataType {
     Normal,
     Spine
 }
-export enum ShaderUseVariantType {
-    UndefinedMin = 0,
 
-    Vertex,  //顶点缓冲
-    Normal, //法线缓冲
-    UVs,    //uv坐标缓冲
-
-    //目前支持同时使用9块纹理单元
-    TEX_COORD, //纹理0号单元
-    TEX_COORD1, //纹理1号单元
-    TEX_COORD2, //纹理2号单元
-    TEX_COORD3, //纹理3号单元
-    TEX_COORD4, //纹理4号单元
-    TEX_COORD5, //纹理5号单元
-    TEX_COORD6, //纹理6号单元
-    TEX_COORD7, //纹理7号单元
-    TEX_COORD8, //纹理8号单元
-    CUBE_COORD, //立方体纹理单元
-    SKYBOX,//cube纹理单元
-
-
-    Model,  //模型世界矩阵
-    View,       //视口矩阵
-    Projection,  //投影矩阵
-    ModelInverse, //模型世界矩阵的逆矩阵
-    ModelTransform, //模型世界矩阵的转置矩阵
-    ModelInverseTransform,//模型世界矩阵的逆矩阵的转置矩阵
-    ViewModel,//视口*模型世界矩阵
-    ProjectionViewModel,//投影*视口*模型世界矩阵
-    ProjectionView,//投影*视口矩阵
-    ProjectionViewInverse,//投影*视口矩阵的逆矩阵
-    ProjectionInverse,//投影矩阵的逆矩阵
-    ProjectionViewModelInverse,//(投影*视口*模型世界矩阵)的逆矩阵
-    LightWorldPosition, //世界中光的位置
-    CameraWorldPosition,//世界中相机的位置
-    LightColor,         //光的颜色
-    LightDirection,     //光的方向
-    NodeCustomColor,          //节点的颜色
-    NodeCustomMatrix,         //节点的自定义矩阵
-    UndefinedMax,//无效
-}
 /**
  * 定义渲染数据
  */
-export class RenderData {
+export class  RenderData {
     constructor() {
         this.id = renderDataId++;
         this._type = RenderDataType.Base;
@@ -67,7 +28,6 @@ export class RenderData {
         this._temp002_matrix = glMatrix.mat4.identity(null);
         this._temp003_matrix = glMatrix.mat4.identity(null);
         this._temp004_matrix = glMatrix.mat4.identity(null);
-        this._useVariantType = [ShaderUseVariantType.ViewModel, ShaderUseVariantType.Projection];
         this._isOffline = false;
         this.reset();
     }
@@ -115,7 +75,6 @@ export class RenderData {
     public _time: number;
     public _isUse: boolean = false;//使用状态
 
-    private _useVariantType: Array<ShaderUseVariantType> = [];
     private _texture2DGLIDArray: Array<WebGLTexture>;//2d纹理
     private _textureCubeGLIDArray: Array<WebGLTexture>;//立方体纹理
     private _temp_model_view_matrix;//视口模型矩阵
@@ -160,127 +119,117 @@ export class RenderData {
             this._textureCubeGLIDArray.push(texture);
         }
     }
-    public pushShaderVariant(type: ShaderUseVariantType): void {
-        if (type >= ShaderUseVariantType.UndefinedMax || type <= ShaderUseVariantType.UndefinedMin) {
-            console.log("这个类型的矩阵是不合法的！！！！", type);
-            return;
-        }
-        if (this._useVariantType.indexOf(type) >= 0) {
-            console.log("这个类型的矩阵已经有了！！！！", type);
-            return;
-        }
-        this._useVariantType.push(type);
-    }
     /**
      * 设置矩阵
      * @param view 
      * @param proj 
      */
-    private updateShaderVariant(view, proj): void {
-        this._useVariantType.forEach((value: ShaderUseVariantType) => {
+    private updateShaderVariant(view, proj,_shader:Shader): void {
+        let useVariantType = _shader.useVariantType;
+        useVariantType.forEach((value: ShaderUseVariantType) => {
             switch (value) {
                 case ShaderUseVariantType.Vertex:
-                    this._shader.setUseVertexAttribPointerForVertex(this._vertGLID, this._vertItemSize);
+                    _shader.setUseVertexAttribPointerForVertex(this._vertGLID, this._vertItemSize);
                     break;
                 case ShaderUseVariantType.Normal:
-                    this._shader.setUseVertexAttriPointerForNormal(this._normalGLID, this._normalItemSize);
+                    _shader.setUseVertexAttriPointerForNormal(this._normalGLID, this._normalItemSize);
                     break;
                 case ShaderUseVariantType.UVs:
-                    this._shader.setUseVertexAttribPointerForUV(this._uvGLID, this._uvItemSize);
+                    _shader.setUseVertexAttribPointerForUV(this._uvGLID, this._uvItemSize);
                     break;
                 case ShaderUseVariantType.TEX_COORD:
-                    this._shader.setUseTexture(this._texture2DGLIDArray[0], 0);
+                    _shader.setUseTexture(this._texture2DGLIDArray[0], 0);
                     break;
                 case ShaderUseVariantType.TEX_COORD1:
-                    this._shader.setUseTexture(this._texture2DGLIDArray[1], 1);
+                    _shader.setUseTexture(this._texture2DGLIDArray[1], 1);
                     break;
                 case ShaderUseVariantType.TEX_COORD2:
-                    this._shader.setUseTexture(this._texture2DGLIDArray[2], 2);
+                    _shader.setUseTexture(this._texture2DGLIDArray[2], 2);
                     break;
                 case ShaderUseVariantType.TEX_COORD3:
-                    this._shader.setUseTexture(this._texture2DGLIDArray[3], 3);
+                    _shader.setUseTexture(this._texture2DGLIDArray[3], 3);
                     break;
                 case ShaderUseVariantType.TEX_COORD4:
-                    this._shader.setUseTexture(this._texture2DGLIDArray[4], 4);
+                    _shader.setUseTexture(this._texture2DGLIDArray[4], 4);
                     break;
                 case ShaderUseVariantType.TEX_COORD5:
-                    this._shader.setUseTexture(this._texture2DGLIDArray[5], 5);
+                    _shader.setUseTexture(this._texture2DGLIDArray[5], 5);
                     break;
                 case ShaderUseVariantType.TEX_COORD6:
-                    this._shader.setUseTexture(this._texture2DGLIDArray[6], 6);
+                    _shader.setUseTexture(this._texture2DGLIDArray[6], 6);
                     break;
                 case ShaderUseVariantType.TEX_COORD7:
-                    this._shader.setUseTexture(this._texture2DGLIDArray[7], 7);
+                    _shader.setUseTexture(this._texture2DGLIDArray[7], 7);
                     break;
                 case ShaderUseVariantType.TEX_COORD8:
-                    this._shader.setUseTexture(this._texture2DGLIDArray[8], 8);
+                    _shader.setUseTexture(this._texture2DGLIDArray[8], 8);
                     break;
                 case ShaderUseVariantType.CUBE_COORD:
                     //立方体纹理数据
                     //-****-------------
-                    this._shader.setUseCubeTexture(this._textureCubeGLIDArray[0]);
+                    _shader.setUseCubeTexture(this._textureCubeGLIDArray[0]);
                     break;
                 //天空盒
                 case ShaderUseVariantType.SKYBOX:
-                    this._shader.setUseSkyBox(this._textureCubeGLIDArray[0]);
+                    _shader.setUseSkyBox(this._textureCubeGLIDArray[0]);
                     glMatrix.mat4.copy(this._temp001_matrix, view);
                     this._temp001_matrix[12] = 0;
                     this._temp001_matrix[13] = 0;
                     this._temp001_matrix[14] = 0;
                     glMatrix.mat4.multiply(this._temp002_matrix, proj, this._temp001_matrix);
                     glMatrix.mat4.invert(this._temp001_matrix, this._temp002_matrix);
-                    this._shader.setUseProjectionViewInverseMatrix(this._temp001_matrix);
+                    _shader.setUseProjectionViewInverseMatrix(this._temp001_matrix);
                     break;
                 case ShaderUseVariantType.Projection:
-                    this._shader.setUseProjectionMatrix(proj);
+                    _shader.setUseProjectionMatrix(proj);
                     break;
                 case ShaderUseVariantType.Model:
-                    this._shader.setUseModelWorldMatrix(this._modelMatrix);
+                    _shader.setUseModelWorldMatrix(this._modelMatrix);
                     break;
                 case ShaderUseVariantType.View:
-                    this._shader.setUseViewMatrix(view);
+                    _shader.setUseViewMatrix(view);
                     break;
                 case ShaderUseVariantType.ViewModel:
                     glMatrix.mat4.mul(this._temp_model_view_matrix, view, this._modelMatrix);
-                    this._shader.setUseModelViewMatrix(this._temp_model_view_matrix);
+                    _shader.setUseModelViewMatrix(this._temp_model_view_matrix);
                     break;
                 case ShaderUseVariantType.ModelInverseTransform:
                     glMatrix.mat4.invert(this._temp_model_inverse_matrix, this._modelMatrix);
                     glMatrix.mat4.transpose(this._temp_model_inverse_transform_matrix, this._temp_model_inverse_matrix);
-                    this._shader.setUseModelInverseTransformWorldMatrix(this._temp_model_inverse_transform_matrix);
+                    _shader.setUseModelInverseTransformWorldMatrix(this._temp_model_inverse_transform_matrix);
                     break;
                 case ShaderUseVariantType.ProjectionViewModelInverse:
                     glMatrix.mat4.multiply(this._temp001_matrix, view, this._modelMatrix);
                     glMatrix.mat4.multiply(this._temp002_matrix, proj, this._temp001_matrix);
                     glMatrix.mat4.invert(this._temp003_matrix, this._temp002_matrix);
-                    this._shader.setUseProjectViewModelInverseMatrix(this._temp003_matrix);
+                    _shader.setUseProjectViewModelInverseMatrix(this._temp003_matrix);
                     break;
                 case ShaderUseVariantType.ProjectionView:
                     glMatrix.mat4.multiply(this._temp001_matrix, proj, view);
-                    this._shader.setUseProjectionViewMatrix(this._temp001_matrix);
+                    _shader.setUseProjectionViewMatrix(this._temp001_matrix);
                     break;
                 case ShaderUseVariantType.ProjectionViewInverse:
                     glMatrix.mat4.multiply(this._temp001_matrix, proj, view);
                     glMatrix.mat4.invert(this._temp002_matrix, this._temp001_matrix);
-                    this._shader.setUseProjectionViewInverseMatrix(this._temp002_matrix);
+                    _shader.setUseProjectionViewInverseMatrix(this._temp002_matrix);
                     break;
                 case ShaderUseVariantType.CameraWorldPosition:
-                    this._shader.setUseCameraWorldPosition(this._cameraPosition);
+                    _shader.setUseCameraWorldPosition(this._cameraPosition);
                     break;
                 case ShaderUseVariantType.LightWorldPosition:
-                    this._shader.setUseLightWorldPosition(this._lightPosition);
+                    _shader.setUseLightWorldPosition(this._lightPosition);
                     break;
                 case ShaderUseVariantType.LightColor:
-                    this._shader.setUseLightColor(this._lightColor);
+                    _shader.setUseLightColor(this._lightColor);
                     break;
                 case ShaderUseVariantType.LightDirection:
-                    this._shader.setUseLightDirection(this._lightDirection);
+                    _shader.setUseLightDirection(this._lightDirection);
                     break;
                 case ShaderUseVariantType.NodeCustomColor:
-                    this._shader.setUseNodeCustomColor(this._nodeCustomColorGLID, this._nodeCustomColorItemSize);
+                    _shader.setUseNodeCustomColor(this._nodeCustomColorGLID, this._nodeCustomColorItemSize);
                     break;
                 case ShaderUseVariantType.NodeCustomMatrix:
-                    this._shader.setUseNodeCustomMatrix(this._nodeCustomMatrixGLID, this._nodeCustomMatrixItemSize);
+                    _shader.setUseNodeCustomMatrix(this._nodeCustomMatrixGLID, this._nodeCustomMatrixItemSize);
                     break;
                 default:
                     console.log("目前还没有处理这个矩阵类型");
@@ -292,10 +241,10 @@ export class RenderData {
      * @param view 
      * @param proj 
      */
-    public bindGPUBufferData(view, proj): void {
+    public bindGPUBufferData(view, proj,shader:Shader): void {
         //激活shader
-        this._shader.active();
-        this.updateShaderVariant(view, proj);
+        shader.active();
+        this.updateShaderVariant(view, proj,shader);
     }
 }
 

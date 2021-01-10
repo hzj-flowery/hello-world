@@ -1,8 +1,8 @@
 
 import { SY } from "../base/Sprite";
 import { CubeData } from "../data/CubeData";
-import { ShaderUseVariantType } from "../data/RenderData";
 import { glprimitive_type } from "../gfx/GLEnums";
+import { ShaderUseVariantType } from "../shader/ShaderUseVariantType";
 
 var vertextBaseCode =
 `attribute vec4 a_position;
@@ -43,12 +43,15 @@ export default class MirrorCube extends SY.SpriteBase {
         this.createVertexsBuffer(rd.vertex,rd.dF.vertex_item_size);
         this.createIndexsBuffer(rd.indexs);
         this.createNormalsBuffer(rd.normals,rd.dF.normal_item_size);
-        this._renderData.pushShaderVariant(ShaderUseVariantType.ProjectionView);
-        this._renderData.pushShaderVariant(ShaderUseVariantType.Model);
-        this._renderData.pushShaderVariant(ShaderUseVariantType.CameraWorldPosition);
-        this._renderData.pushShaderVariant(ShaderUseVariantType.CUBE_COORD);
-        this.setShader(vertextBaseCode, fragBaseCode);
+        this._vertStr = vertextBaseCode;
+        this._fragStr = fragBaseCode;
         this._glPrimitiveType = this.gl.TRIANGLE_STRIP;
+    }
+    protected onShader(){
+        this._shader.pushShaderVariant(ShaderUseVariantType.ProjectionView);
+        this._shader.pushShaderVariant(ShaderUseVariantType.Model);
+        this._shader.pushShaderVariant(ShaderUseVariantType.CameraWorldPosition);
+        this._shader.pushShaderVariant(ShaderUseVariantType.CUBE_COORD);
     }
     private defaultPath = [
         'res/skybox/2/right+x.png',

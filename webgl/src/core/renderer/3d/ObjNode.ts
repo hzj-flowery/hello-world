@@ -104,6 +104,6 @@ export default class ObjNode extends SY.SpriteBase{
         this._objData = await OBJParseHelper.load(this.gl, str3);
      }
 
-     protected draw(time: number): void {
+     protected collectRenderData(time: number): void {
      }
 }

@@ -5,9 +5,9 @@ import { gltex_wrap, gltex_filter } from "../../gfx/GLEnums";
  * 立方体纹理
  */
 export default class TextureCube extends Texture {
-    constructor(gl) {
-        super(gl);
-        this._target = gl.TEXTURE_CUBE_MAP;
+    constructor() {
+        super();
+        this._target = this._gl.TEXTURE_CUBE_MAP;
     }
     private faceInfos: Array<{ target, url }>;
     /**

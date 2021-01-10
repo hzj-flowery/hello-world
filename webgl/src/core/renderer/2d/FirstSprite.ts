@@ -35,10 +35,11 @@ export default class FirstSprite extends SY.Sprite2D {
         ]
         this.createVertexsBuffer(positions, 3);
 
-        this.setShader(vertexshader3d, fragmentshader3d);
+        this._vertStr = vertexshader3d;
+        this._fragStr = fragmentshader3d;
     }
 
-    public draw(time): void {
+    public collectRenderData(time): void {
         const numInstances = 10000;
         var matrices = [];
         for (var j = 0; j < numInstances; j++) {

@@ -1,5 +1,6 @@
 import { RenderData } from "../data/RenderData";
 import { glTEXTURE_UNIT_VALID } from "../gfx/GLEnums";
+import { Shader } from "../shader/Shader";
 
 /**
  * 绘制发动机
@@ -59,9 +60,9 @@ class DrawEngine {
         let gl = this.gl as WebGL2RenderingContext;
         gl.drawElementsInstanced(mode,count,type,offset,instanceCount)
     }
-    public run(rd: RenderData, view, proj): void {
+    public run(rd: RenderData, view, proj,shader:Shader): void {
         let gl = this.gl;
-        rd.bindGPUBufferData(view, proj);
+        rd.bindGPUBufferData(view, proj,shader);
         //绘制前
         rd._node ? rd._node.onDrawBefore(rd._time) : null;
         if (!rd._isDrawInstanced) {
@@ -95,6 +96,19 @@ class DrawEngine {
         rd._shader.disableVertexAttribArray();
         //绘制后
         rd._node ? rd._node.onDrawAfter(rd._time) : null;
+    }
+    
+    /**
+     * 获取shader中变量的位置
+     * @param glID shader在显存中的地址
+     * @param varName 变量名
+     */
+    public getAttribLocation(glID:WebGLShader,varName:string):number{
+       return this.gl.getAttribLocation(glID, varName);
+    }
+
+    public useProgram(glID:WebGLShader):void{
+        this.gl.useProgram(glID);
     }
     
     /**
@@ -170,6 +184,14 @@ class DrawEngine {
        }
        //将贴图的纹理数据赋给shader中的变量
        gl.uniform1i(loc, pos);
+   }
+   
+   /**
+    * 关闭shader当前位置的变量对于数组缓冲中数据的使用
+    * @param loc 
+    */
+   public disableVertexAttribArray(loc:number):void{
+      this.gl.disableVertexAttribArray(loc);
    }
 
     /**

@@ -135,7 +135,7 @@ function main() {
     });
 
     // make a 8x8 checkerboard texture
-    const checkerboardTexture = new TextureCustom(gl);
+    const checkerboardTexture = new TextureCustom();
     checkerboardTexture.url = CustomTextureData.getBoardData(8,8);
 
     function loadImageTexture() {

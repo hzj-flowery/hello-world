@@ -3,7 +3,7 @@ import Camera from "../camera/Camera";
 import GameMainCamera from "../camera/GameMainCamera";
 import PerspectiveCamera from "../camera/PerspectiveCamera";
 import { CubeData } from "../data/CubeData";
-import { ShaderUseVariantType } from "../data/RenderData";
+import { ShaderUseVariantType } from "../shader/ShaderUseVariantType";
 
 var vertexshader3d =
      'attribute vec4 a_position;' +
@@ -35,9 +35,13 @@ export default class SkyBox extends SY.SpriteBase {
           var rd = CubeData.getData();
           this.createVertexsBuffer(rd.vertex, rd.dF.vertex_item_size);
           this.createIndexsBuffer(rd.indexs);
-          this.setShader(vertexshader3d, fragmentshader3d);
-          this._renderData.pushShaderVariant(ShaderUseVariantType.SKYBOX);
+          this._vertStr = vertexshader3d;
+          this._fragStr = fragmentshader3d;
+          
           this._glPrimitiveType = this.gl.TRIANGLE_STRIP;
+     }
+     protected onShader(){
+          this._shader.pushShaderVariant(ShaderUseVariantType.SKYBOX);
      }
      private defaultPath = [
           'res/skybox/2/right+x.png',
@@ -49,9 +53,6 @@ export default class SkyBox extends SY.SpriteBase {
      ]
      public setDefaultUrl(): void {
           this.url = this.defaultPath;
-     }
-     protected draw(time){
-          super.draw(time);
      }
 
 
