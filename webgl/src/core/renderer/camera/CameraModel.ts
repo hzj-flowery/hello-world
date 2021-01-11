@@ -215,7 +215,7 @@ export class CameraModel {
         'gl_FragColor = u_color;' +
         '}'
 
-    public init(gl: WebGLRenderingContext): void {
+    private init(gl: WebGLRenderingContext): void {
         if (this._isInit) {
             return;
         }
@@ -258,9 +258,9 @@ export class CameraModel {
         //场景摄像机
         this.setSceneCamera();
 
+        
         //UI
-        G_UISetting.setUI();
-
+        G_UISetting.render();
     }
     private createClipspaceCubeBufferInfo() {
         // first let's add a cube. It goes from 1 to 3

@@ -3,10 +3,13 @@
 
 import Device from "../../Device";
 import { glMatrix } from "../../Matrix";
+import { G_UISetting } from "../../ui/UiSetting";
 import { MathUtils } from "../../utils/MathUtils";
+import { G_DrawEngine } from "../base/DrawEngine";
 import { RenderTexture } from "../base/texture/RenderTexture";
 import TextureCustom from "../base/texture/TextureCustom";
 import CustomTextureData from "../data/CustomTextureData";
+import { G_LightCenter } from "../light/LightCenter";
 import { G_LightModel } from "../light/LightModel";
 import { syPrimitives } from "../shader/Primitives";
 import { BufferAttribsData, ShaderData } from "../shader/Shader";
@@ -102,7 +105,7 @@ class ShadowLight {
     }
 
     void main() {
-    gl_FragColor = pack(gl_FragCoord.z);  //将深度值存在帧缓冲的颜色缓冲中 如果帧缓冲和窗口绑定 那么就显示出来 如果帧缓冲和纹理绑定就存储在纹理中
+    gl_FragColor = vec4(gl_FragCoord.z,0.0,0.0,1.0);  //将深度值存在帧缓冲的颜色缓冲中 如果帧缓冲和窗口绑定 那么就显示出来 如果帧缓冲和纹理绑定就存储在纹理中
     }`
   private vertexshader3d =
     `attribute vec4 a_position;
@@ -179,7 +182,7 @@ class ShadowLight {
               rgbaDepth = texture2D(u_shadowMap, projectedTexcoord.xy+vec2(x,y)*texelSize);
               //如果当前深度大于光照的最大深度 则表明处于阴影中
               //否则可以看见
-              shadows += (isInRange&&curDepth>unpack(rgbaDepth)) ? 1.0 : 0.0;
+              shadows += (isInRange&&curDepth>(rgbaDepth).r) ? 1.0 : 0.0;
           }
       }
       shadows/=16.0;// 4*4的样本
@@ -246,7 +249,7 @@ class ShadowLight {
   private planeBufferInfo: BufferAttribsData;
   private cubeBufferInfo: BufferAttribsData;
 
-  private settings: any;
+  // private settings: any;
   public run(): void {
     this.textureProgramInfo = G_ShaderFactory.createProgramInfo(this.vertexshader3d, this.fragmentshader3d);
     this.colorProgramInfo = G_ShaderFactory.createProgramInfo(this.vertBase, this.fragBase);
@@ -266,61 +269,22 @@ class ShadowLight {
       2,  // size
     );
 
-
     this.createTexture();
-    this.setUI();
     this.createUniform();
     this.render();
+    G_UISetting.pushRenderCallBack(this.render.bind(this));
   }
-  // private depthTexture: WebGLTexture;
   private checkerboardTexture: TextureCustom;
-  // private _frameBuffer: WebGLFramebuffer;//帧缓冲的glID
   private depthTextureSize: number = 512;
-  // public _renderBuffer: WebGLRenderbuffer;//渲染缓冲的glID
-
-  private renderTexture:RenderTexture;
+  private renderTexture: RenderTexture;
   private createTexture(): void {
     this.checkerboardTexture = new TextureCustom();
-    this.checkerboardTexture.url = CustomTextureData.getBoardData(8,8);
+    this.checkerboardTexture.url = CustomTextureData.getBoardData(8, 8);
     this.renderTexture = new RenderTexture();
-    this.renderTexture.attach("depth",this.depthTextureSize,this.depthTextureSize)
+    this.renderTexture.attach("depth", this.depthTextureSize, this.depthTextureSize)
   }
 
-  private setUI(): void {
-    this.settings = {
-      cameraX: 6, //普通摄像机的x轴坐标
-      cameraY: 12, //普通摄像机的y轴坐标
-      cameraZ: 15,//普通摄像机的z轴坐标
-      posX: 2.5, //光照摄像机的x轴坐标
-      posY: 4.8, //光照摄像机的y轴坐标
-      posZ: 7,   //光照摄像机的z轴坐标
-      targetX: 3.5, //光照摄像机看向的目标的x轴坐标
-      targetY: 0,   //光照摄像机看向的目标的y轴坐标
-      targetZ: 3.5, //光照摄像机看向的目标的z轴坐标
-      projWidth: 10, //光照摄像机渲染的屏幕宽度
-      projHeight: 10, //光照摄像机渲染的屏幕高度
-      perspective: false, //是否为透视投影
-      fieldOfView: 120,   //视角fov
-      bias: 0.005,
-    };
-    var webglLessonsUI = window["webglLessonsUI"]
-    webglLessonsUI.setupUI(document.querySelector('#ui'), this.settings, [
-      { type: 'slider', key: 'cameraX', min: -10, max: 10, change: this.render.bind(this), precision: 2, step: 0.001, },
-      { type: 'slider', key: 'cameraY', min: 1, max: 20, change: this.render.bind(this), precision: 2, step: 0.001, },
-      { type: 'slider', key: 'cameraZ', min: 10, max: 200, change: this.render.bind(this), precision: 2, step: 0.001, },
-      { type: 'slider', key: 'posX', min: -10, max: 10, change: this.render.bind(this), precision: 2, step: 0.001, },
-      { type: 'slider', key: 'posY', min: 1, max: 20, change: this.render.bind(this), precision: 2, step: 0.001, },
-      { type: 'slider', key: 'posZ', min: 1, max: 20, change: this.render.bind(this), precision: 2, step: 0.001, },
-      { type: 'slider', key: 'targetX', min: -10, max: 10, change: this.render.bind(this), precision: 2, step: 0.001, },
-      { type: 'slider', key: 'targetY', min: 0, max: 20, change: this.render.bind(this), precision: 2, step: 0.001, },
-      { type: 'slider', key: 'targetZ', min: -10, max: 20, change: this.render.bind(this), precision: 2, step: 0.001, },
-      { type: 'slider', key: 'projWidth', min: 0, max: 100, change: this.render.bind(this), precision: 2, step: 0.001, },
-      { type: 'slider', key: 'projHeight', min: 0, max: 100, change: this.render.bind(this), precision: 2, step: 0.001, },
-      { type: 'checkbox', key: 'perspective', change: this.render.bind(this), },
-      { type: 'slider', key: 'fieldOfView', min: 1, max: 179, change: this.render.bind(this), },
-      { type: 'slider', key: 'bias', min:0.005, max: 0.001, change: this.render.bind(this), precision:3, step: 0.001, },
-    ]);
-  }
+
 
   /**
    * 绘制场景
@@ -348,12 +312,12 @@ class ShadowLight {
     G_ShaderFactory.setUniforms(programInfo.uniSetters, {
       u_view: viewMatrix,
       u_projection: pMatrix,
-      u_bias: this.settings.bias,
+      u_bias: G_LightCenter.lightData.bias,
       u_textureMatrix: texMatrix,
       u_shadowMap: this.renderTexture.depthTexture,
-      u_lightWorldPosition:lightPos,
+      u_lightWorldPosition: lightPos,
       u_cameraWorldPosition: cameraPos,
-      u_shininess:150,
+      u_shininess: 150,
       u_reverseLightDirection: lightReverseDir,
     });
 
@@ -405,54 +369,14 @@ class ShadowLight {
     };
   }
 
-
-  private getLightData() {
-    // first draw from the POV of the light
-    /**
-     * lightWorldMatrix是光照摄像机的视野坐标系
-     * x  y  z  p
-     * 0  4  8  12
-     * 1  5  9  13
-     * 2  6  10 14 这个其实是光照方向
-     * 3  7  11 15 
-     * 
-     * 1  0  0  0
-     * 0  1  0  0
-     * 0  0  1  0 这个其实是光照方向
-     * 0  0  0  1 
-     */
-    const lightWorldMatrix = glMatrix.mat4.lookAt2(null,
-      [this.settings.posX, this.settings.posY, this.settings.posZ],          // position
-      [this.settings.targetX, this.settings.targetY, this.settings.targetZ], // target
-      [0, 1, 0],                                              // up
-    )
-    let lightReverseDir = glMatrix.vec3.normalize(null,lightWorldMatrix.slice(8, 11));
-    const lightProjectionMatrix = this.settings.perspective ? glMatrix.mat4.perspective(null,
-      MathUtils.degToRad(this.settings.fieldOfView),
-      this.settings.projWidth / this.settings.projHeight,
-      0.5,  // near
-      1000)   // far
-      : glMatrix.mat4.ortho(null,
-        -this.settings.projWidth / 2,   // left
-        this.settings.projWidth / 2,   // right
-        -this.settings.projHeight / 2,  // bottom
-        this.settings.projHeight / 2,  // top
-        0.5,                      // near
-        1000);                      // far
-    return {
-      mat: lightWorldMatrix,
-      reverseDir: lightReverseDir,
-      project: lightProjectionMatrix,
-      pos: [this.settings.posX, this.settings.posY, this.settings.posZ]
-    }
-  }
   private getCameraData() {
     var gl = this.gl;
     // Compute the projection matrix
     const aspect = gl.canvas.width / gl.canvas.height;
     const projectionMatrix = glMatrix.mat4.perspective(null, this.fieldOfViewRadians, aspect, 1, 200);
     // Compute the camera's matrix using look at.
-    const cameraPosition = [this.settings.cameraX, this.settings.cameraY, this.settings.cameraZ];
+    // const cameraPosition = [this.settings.cameraX, this.settings.cameraY, this.settings.cameraZ];
+    const cameraPosition = [6, 12, 15];
     const target = [0, 0, 0];
     const up = [0, 1, 0];
     const cameraMatrix = glMatrix.mat4.lookAt2(null, cameraPosition, target, up);
@@ -473,7 +397,7 @@ class ShadowLight {
     gl.enable(gl.CULL_FACE);
     gl.enable(gl.DEPTH_TEST);
 
-    let lightData = this.getLightData();
+    let lightData = G_LightCenter.updateLightCameraData();
     // draw to the depth texture
     gl.bindFramebuffer(gl.FRAMEBUFFER, this.renderTexture.frameBuffer);//将结果绘制到深度纹理中
     gl.viewport(0, 0, this.depthTextureSize, this.depthTextureSize);
@@ -492,9 +416,9 @@ class ShadowLight {
     //因为一个点的位置与这个矩阵相乘，这个点的位置不会发生任何变化
     //它真正发挥作用的是在第二次绘制的时候对他的赋值
     let texMatrix = glMatrix.mat4.identity(null);
-    this.drawScene(lightData.project,lightData.mat,texMatrix,lightData.reverseDir, this.colorProgramInfo);
+    this.drawScene(lightData.project, lightData.mat, texMatrix, lightData.reverseDir, this.colorProgramInfo);
 
-    Device.Instance.showCurFramerBufferOnCanvas(this.depthTextureSize,this.depthTextureSize);
+    Device.Instance.showCurFramerBufferOnCanvas(this.depthTextureSize, this.depthTextureSize);
 
     // now draw scene to the canvas projecting the depth texture into the scene
     gl.bindFramebuffer(gl.FRAMEBUFFER, null); //将结果绘制到窗口中
@@ -507,14 +431,14 @@ class ShadowLight {
     glMatrix.mat4.multiply(textureMatrix, textureMatrix, glMatrix.mat4.invert(null, lightData.mat));
 
     let cameraData = this.getCameraData();
-    this.drawScene(cameraData.project, cameraData.mat, textureMatrix, lightData.reverseDir, this.textureProgramInfo,lightData.pos,cameraData.pos);
+    this.drawScene(cameraData.project, cameraData.mat, textureMatrix, lightData.reverseDir, this.textureProgramInfo, lightData.pos, cameraData.pos);
     // ------ Draw the frustum ------
     let matMatrix = glMatrix.mat4.multiply(null, lightData.mat, glMatrix.mat4.invert(null, lightData.project));
     G_LightModel.drawFrustum(cameraData.project, cameraData.mat, matMatrix);
 
   }
 
- 
+
 }
 
 

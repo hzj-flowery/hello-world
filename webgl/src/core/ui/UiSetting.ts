@@ -91,7 +91,7 @@ class UISetting {
         webglLessonsUI.setupUI(document.querySelector('#ui'), this.settings, [].concat(light));
         this.render();
     }
-    private render(): void {
+    public render(): void {
         if (this._renderCallBackArray.length > 0) {
             this._renderCallBackArray.forEach((fn, index) => {
                 fn(this.settings);
