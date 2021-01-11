@@ -13,6 +13,7 @@ import { SpotLight } from "../light/SpotLight";
 import { ThreeDLight } from "../light/ThreeDLight";
 import MirrorCube from "../3d/MirrorCube";
 import { PointLightFCube } from "../3d/PointLightFCube";
+import { Line } from "../3d/Line";
 
 export default class Scene3D extends Scene {
 
@@ -29,7 +30,7 @@ export default class Scene3D extends Scene {
     private _FLightSpot:SpotLight;
     private _FLightThreeD:ThreeDLight;
     private _sphere: Sphere;
-
+    private _line:Line;
       
     constructor() {
         super();
@@ -54,10 +55,13 @@ export default class Scene3D extends Scene {
         // this.addChild(this._FLightThreeD);
         // this._FLightThreeD.Url = "res/models/char/F.json";
 
-
+        
         this._centerNode = new Node();
         this._centerNode.setPosition(0, 1.1, 0);
         this.addChild(this._centerNode);
+
+        this._line = new Line();
+        this._centerNode.addChild(this._line);
 
         var spNode = new Node();
         this._sphere = new Sphere();
@@ -126,7 +130,7 @@ export default class Scene3D extends Scene {
     public rotateCenterNode() {
         this._centerNode.rotate(0, 1, 0);
         this._mirrorCube.rotate(1,-1,-0.2);
-        this._FLightPoint.rotate(0,1,0);
+        // this._FLightPoint.rotate(0,1,0);
         setTimeout(this.rotateCenterNode.bind(this), 20);
     }
     private readyRenderDraw(): void {

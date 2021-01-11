@@ -231,6 +231,8 @@ export default class Device {
         canvas.onmousedown = this.onMouseDown.bind(this);
         canvas.onmousemove = this.onMouseMove.bind(this);
         canvas.onmouseup = this.onMouseUp.bind(this);
+        // canvas.onkeydown = this.onKeyDown.bind(this);
+
         this._width = canvas.clientWidth;
         this._height = canvas.clientHeight;
         console.log("画布的尺寸----", this._width, this._height);
@@ -334,6 +336,9 @@ export default class Device {
     }
     private onMouseUp(ev): void {
         this._isCapture = false;
+    }
+    private onKeyDown(key):void{
+        console.log("key---------",key);
     }
     public startDraw(time: number,stage:Node): void {
         this.onBeforeRender();

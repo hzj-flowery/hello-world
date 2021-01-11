@@ -95,6 +95,8 @@ export class Graphic {
         this._programInfor = G_ShaderFactory.createProgramInfo(this.vert, this.frag);
         //创建attribuffer
         this._coordinateBufferInfo = G_ShaderFactory.createBufferInfoFromArrays(this._coordinateArrays);
+        this._tempMatrix = glMatrix.mat4.identity(null);
+        this._temp1Matrix = glMatrix.mat4.identity(null);
     }
     private _programInfor: ShaderData;
     private _coordinateBufferInfo: BufferAttribsData;
@@ -108,9 +110,9 @@ export class Graphic {
      * 
      */
     public drawLine(proj: Float32Array, camera: Float32Array, world = glMatrix.mat4.identity(null)): void {
-        var view = glMatrix.mat4.invert(null, camera)
-        let pv = glMatrix.mat4.multiply(null, proj, view);
-        glMatrix.mat4.multiply(pv, pv, world);
+        glMatrix.mat4.invert(this._tempMatrix, camera)
+        let pv = glMatrix.mat4.multiply(this._temp1Matrix, proj, this._tempMatrix);
+        glMatrix.mat4.multiply(this._temp1Matrix, this._temp1Matrix, world);
         this.gl.useProgram(this._programInfor.spGlID);
         G_ShaderFactory.setBuffersAndAttributes(this._programInfor.attrSetters, this._coordinateBufferInfo);
         G_ShaderFactory.setUniforms(this._programInfor.uniSetters, { u_worldViewProjection: pv });
@@ -125,7 +127,9 @@ export class Graphic {
         this._pointArrays.position[11] = this._pointArrays.position[11] + change;
         this._pointBufferInfor = G_ShaderFactory.createBufferInfoFromArrays(this._pointArrays);
     }
-
+    
+    private _tempMatrix:Float32Array;
+    private _temp1Matrix:Float32Array;
     public drawPoint(proj: Float32Array, camera: Float32Array, world = glMatrix.mat4.identity(null)): void {
         this.updatePoint();
         var view = glMatrix.mat4.invert(null, camera)

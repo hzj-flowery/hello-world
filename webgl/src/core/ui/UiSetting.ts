@@ -88,7 +88,7 @@ class UISetting {
             { type: 'slider', key: 'lightFieldOfView', min: 1, max: 179, change: this.render.bind(this), },
             { type: 'slider', key: 'lightBias', min: 0.005, max: 0.001, change: this.render.bind(this), precision: 3, step: 0.001, },
         ]
-        webglLessonsUI.setupUI(document.querySelector('#ui'), this.settings, [].concat(light));
+        webglLessonsUI.setupUI(document.querySelector('#ui'), this.settings, [].concat(camera2D).concat(camera3D));
         this.render();
     }
     public render(): void {
