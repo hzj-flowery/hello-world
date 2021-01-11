@@ -53,7 +53,7 @@ export class Skeleton_Skin {
 
         this.gl.bindTexture(this.gl.TEXTURE_2D, null);
 
-        this._texture = new Texture2D(this.gl);
+        this._texture = new Texture2D();
 
         this.createTexture2DBuffer("res/wicker.jpg");
     }
