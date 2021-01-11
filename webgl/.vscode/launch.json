@@ -15,7 +15,7 @@
             "url": "${workspaceFolder}/bin/index.html",
             "breakOnLoad": true,
             // "runtimeExecutable": "C:/Users/huzhengjiang/AppData/Local/Google/Chrome/Application/chrome.exe",//这里填自己的chrome.exe所在目录
-            "userDataDir": "${workspaceRoot}/.vscode/chrome",
+            // "userDataDir": "${workspaceRoot}/.vscode/chrome",
             "webRoot": "${workspaceFolder}/src",
             "sourceMapPathOverrides": {
                 "src/*": "${workspaceRoot}/src/*"
