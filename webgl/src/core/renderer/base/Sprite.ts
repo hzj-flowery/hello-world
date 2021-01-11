@@ -58,17 +58,6 @@ import { G_ShaderCenter, ShaderType } from "../shader/ShaderCenter";
 import { ShaderUseVariantType } from "../shader/ShaderUseVariantType";
 import { LightData } from "../data/LightData";
 
-
-/**
- * 现阶段 核心渲染计算都要放在此类中
- */
-
-
-
-
-
-
-
 /**
  * 显示节点
  * author:hzj
@@ -110,6 +99,7 @@ export namespace SY {
         protected _cameraType: number = 0;//相机的类型(0表示透视1表示正交)
         protected _vertStr:string = "";
         protected _fragStr:string = "";
+        private _url: string;//资源路径
         private _shaderUseVariantType:Array<ShaderUseVariantType> = [];
         constructor() {
             super();
@@ -209,7 +199,7 @@ export namespace SY {
             this._shaderUseVariantType.push(ShaderUseVariantType.TEX_COORD);
             return this._texture;
         }
-        public set url(url: string | Array<string> | TextureOpts | Object) {
+        public set spriteFrame(url: string | Array<string> | TextureOpts | Object) {
             //普通图片
             if (typeof url == "string") {
                 this.createTexture2DBuffer(url);
@@ -233,6 +223,15 @@ export namespace SY {
          * 设置完纹理之后调用
          */
         protected onSetTextureUrl(): void {
+
+        }
+
+        public set Url(url:string){
+            this._url = url;
+            let datas = LoaderManager.instance.getRes(url);
+            this.onLoadFinish(datas);
+        }
+        private onLoadFinish(datas:any):void{
 
         }
 
@@ -326,6 +325,7 @@ export namespace SY {
             this._texture.destroy();
         }
     }
+    
 
     export class Sprite extends Node {
         constructor() {

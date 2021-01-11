@@ -32,7 +32,7 @@ export class LightData {
         this.direction = [8, 5, -10];
         this.color = [0.1, 0.1, 0.1, 1.0];
         this._specularShininess = 140;
-        this._specularColor = [1, 0.2, 0.2];
+        this._specularColor = [1, 0.2, 0.2,1.0];
     }
     setData(pos: Array<number>, dir: Array<number>, color: Array<number>): void {
         this.position = pos;

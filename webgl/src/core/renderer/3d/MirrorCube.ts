@@ -62,6 +62,6 @@ export default class MirrorCube extends SY.SpriteBase {
         'res/skybox/2/front+z.png'
    ]
    public setDefaultUrl(): void {
-        this.url = this.defaultPath;
+        this.spriteFrame = this.defaultPath;
    }
 }

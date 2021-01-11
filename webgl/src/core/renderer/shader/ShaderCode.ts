@@ -20,7 +20,23 @@ export namespace ShaderCode {
         return rgbaDepth;
     }
     void main() {
-    gl_FragColor =  pack(gl_FragCoord.z);  //将深度值存在帧缓冲的颜色缓冲中 如果帧缓冲和窗口绑定 那么就显示出来 如果帧缓冲和纹理绑定就存储在纹理中
+    gl_FragColor =  vec4(gl_FragCoord.z,0.0,0.0,1.0);  //将深度值存在帧缓冲的颜色缓冲中 如果帧缓冲和窗口绑定 那么就显示出来 如果帧缓冲和纹理绑定就存储在纹理中
     }`
+    }
+    export var line = {
+        vert: `attribute vec4 a_position;
+        uniform mat4 u_projection;
+        uniform mat4 u_view;
+        uniform mat4 u_world;
+        void main() {
+        gl_Position = u_projection * u_view * u_world * a_position;
+        }`,
+        frag:
+            `precision mediump float;
+        uniform vec4 u_color;
+    void main() {
+    gl_FragColor =  u_color;  //线的颜色
+    }`
+
     }
 }

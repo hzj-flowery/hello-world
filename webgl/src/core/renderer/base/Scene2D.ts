@@ -25,7 +25,7 @@ export default class Scene2D extends Scene {
     
         this._rectangle = new Rectangle();
         this._rectangle.setPosition(0.5, 0, 0);
-        this._rectangle.url = "res/tree.jpg";
+        this._rectangle.spriteFrame = "res/tree.jpg";
         this.addChild(this._rectangle);
 
         // this._firstSprite = new FirstSprite();
@@ -39,7 +39,7 @@ export default class Scene2D extends Scene {
 
         this._renderSprite = new RenderOfflineSprite();
         this._renderSprite.setPosition(0.6,0.8,0);
-        this._renderSprite.url = {
+        this._renderSprite.spriteFrame = {
             type:"RenderTexture",
             place:"color",
             width:Device.Instance.width,
@@ -51,7 +51,7 @@ export default class Scene2D extends Scene {
 
         this._label = new Label();
         this._label.setPosition(0.0,0.0,0);
-        this._label.url = "res/8x8-font.png";
+        this._label.spriteFrame = "res/8x8-font.png";
         this._label.content = "111"
         this.addChild(this._label);
     }
