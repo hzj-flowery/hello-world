@@ -1,5 +1,6 @@
 import Device from "../../Device";
 import { glMatrix } from "../../Matrix";
+import { G_UISetting } from "../../ui/UiSetting";
 import { MathUtils } from "../../utils/MathUtils";
 import { syPrimitives } from "../shader/Primitives";
 import { BufferAttribsData, ShaderData } from "../shader/Shader";
@@ -190,7 +191,7 @@ export class CameraModel {
     private _loacalInvertProj: Float32Array;
     private _viewMatrix: Float32Array;
     private _originPos: Array<number>;
-    private _isInit:boolean = false;
+    private _isInit: boolean = false;
     // uniforms.
     private sharedUniforms = {
     };
@@ -214,9 +215,8 @@ export class CameraModel {
         'gl_FragColor = u_color;' +
         '}'
 
-    public init(gl:WebGLRenderingContext): void {
-        if(this._isInit)
-        {
+    public init(gl: WebGLRenderingContext): void {
+        if (this._isInit) {
             return;
         }
         this._isInit = true;
@@ -254,12 +254,12 @@ export class CameraModel {
         delete cubeArrays.texcoord;
         cubeArrays.color = colorVerts;
         this._cubeBufferInfo = G_ShaderFactory.createBufferInfoFromArrays(cubeArrays);
-        
+
         //场景摄像机
         this.setSceneCamera();
 
         //UI
-        this.setUI();
+        G_UISetting.setUI();
 
     }
     private createClipspaceCubeBufferInfo() {
@@ -452,60 +452,9 @@ export class CameraModel {
     }
 
     //------------------------------ui-------------------------------------------------------------------------------------
-    private settings = {
-        cam2DPosX: 0,
-        cam2DPosY: 0,
-        cam2DPosZ: 0,
-        cam2DRotX: 0,  // in degrees
-        cam2DRotY: 0,  // in degrees
-        cam2DRotZ: 0,  // in degrees
-        cam3DFieldOfView: 60,  // in degrees
-        cam3DPosX: 0,
-        cam3DPosY: 0,
-        cam3DPosZ: 20,
-        cam3DRotX: 0,
-        cam3DRotY: 0,
-        cam3DRotZ: 0,
-        cam3DNear: 1,
-        cam3DFar: 200,
-    };
-    // //初始化UI
-    private setUI(): void {
-        var render = this.render.bind(this);
-        var webglLessonsUI = window["webglLessonsUI"]
-        webglLessonsUI.setupUI(document.querySelector('#ui'), this.settings, [
-            { type: 'slider', key: 'cam2DPosX', min: -10, max: 10, change: render, precision: 2, step: 0.1},
-            { type: 'slider', key: 'cam2DPosY', min: -10, max: 10, change: render, precision: 2, step: 0.1},
-            { type: 'slider', key: 'cam2DPosZ', min: -10, max: 10, change: render, precision: 2, step: 0.1},
-            { type: 'slider', key: 'cam2DRotX', min: 0, max: 360, change: render, },
-            { type: 'slider', key: 'cam2DRotY', min: 0, max: 360, change: render, },
-            { type: 'slider', key: 'cam2DRotZ', min: 0, max: 360, change: render, },
-            { type: 'slider', key: 'cam3DFieldOfView', min: 0, max: 180, change: render, },
-            { type: 'slider', key: 'cam3DPosX', min: -100, max: 100, change: render, },
-            { type: 'slider', key: 'cam3DPosY', min: -100, max: 100, change: render, },
-            { type: 'slider', key: 'cam3DPosZ', min: -100, max: 200, change: render, },
-            { type: 'slider', key: 'cam3DRotX', min: 0, max: 360, change: render, },
-            { type: 'slider', key: 'cam3DRotY', min: 0, max: 360, change: render, },
-            { type: 'slider', key: 'cam3DRotZ', min: 0, max: 360, change: render, },
-            { type: 'slider', key: 'cam3DNear', min: 1, max: 300, change: render, },
-            { type: 'slider', key: 'cam3DFar', min: 1, max: 300, change: render, },
 
-            // { type: 'checkbox', key: 'cam3DOrtho', change: render, },
-            // { type: 'slider', key: 'cam3DOrthoUnits', min: 1, max: 150, change: render, },
-        ]);
-        this.render();
-    }
-    private render(): void {
-        if(this._renderCallBack)
-        this._renderCallBack(this.settings);
-    }
-    private _renderCallBack:Function;
-    public setRenderCallBack(cb:Function):void{
-       this._renderCallBack = cb;
-    }
-    public getSettings():any{
-        return this.settings;
-    }
 }
+
+
 
 export var G_CameraModel = new CameraModel()

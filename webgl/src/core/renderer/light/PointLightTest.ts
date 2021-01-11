@@ -3,6 +3,7 @@ import LoaderManager from "../../LoaderManager";
 import { glMatrix } from "../../Matrix";
 import { MathUtils } from "../../utils/MathUtils";
 import { CameraData } from "../data/CameraData";
+import { G_LightCenter } from "./LightCenter";
 import { PointLight } from "./PointLight";
 
 function main() {
@@ -102,7 +103,7 @@ function main() {
     let cameraData = setCamera();
     FModel.setRotation(0,fRotationRadians,0);
     FModel.visit(0);
-    FModel.updateUniformsData(cameraData);
+    FModel.updateUniformsData(cameraData,G_LightCenter.lightData);
     FModel.testDraw();
 
   }

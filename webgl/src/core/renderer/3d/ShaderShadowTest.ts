@@ -7,6 +7,7 @@ import { MathUtils } from "../../utils/MathUtils";
 import { RenderTexture } from "../base/texture/RenderTexture";
 import TextureCustom from "../base/texture/TextureCustom";
 import CustomTextureData from "../data/CustomTextureData";
+import { G_LightModel } from "../light/LightModel";
 import { syPrimitives } from "../shader/Primitives";
 import { BufferAttribsData, ShaderData } from "../shader/Shader";
 import { G_ShaderFactory } from "../shader/ShaderFactory";
@@ -244,7 +245,6 @@ class ShadowLight {
   private sphereBufferInfo: BufferAttribsData;
   private planeBufferInfo: BufferAttribsData;
   private cubeBufferInfo: BufferAttribsData;
-  private cubeLinesBufferInfo: BufferAttribsData;
 
   private settings: any;
   public run(): void {
@@ -267,34 +267,6 @@ class ShadowLight {
     );
 
 
-    this.cubeLinesBufferInfo = G_ShaderFactory.createBufferInfoFromArrays({
-      position: [
-        -1, -1, -1,
-        1, -1, -1,
-        -1, 1, -1,
-        1, 1, -1,
-        -1, -1, 1,
-        1, -1, 1,
-        -1, 1, 1,
-        1, 1, 1,
-      ],
-      indices: [
-        0, 1,
-        1, 3,
-        3, 2,
-        2, 0,
-
-        4, 5,
-        5, 7,
-        7, 6,
-        6, 4,
-
-        0, 4,
-        1, 5,
-        3, 7,
-        2, 6,
-      ],
-    });
     this.createTexture();
     this.setUI();
     this.createUniform();
@@ -433,31 +405,6 @@ class ShadowLight {
     };
   }
 
-  /**
-   * 绘制光源
-   * @param projectionMatrix 
-   * @param cameraMatrix 
-   * @param worldMatrix 
-   */
-  private drawFrustum(projectionMatrix, cameraMatrix, worldMatrix) {
-    var gl = this.gl;
-    const viewMatrix = glMatrix.mat4.invert(null, cameraMatrix);
-    gl.useProgram(this.colorProgramInfo.spGlID);
-    // Setup all the needed attributes.
-    G_ShaderFactory.setBuffersAndAttributes(this.colorProgramInfo.attrSetters, this.cubeLinesBufferInfo);
-    // scale the cube in Z so it's really long
-    // to represent the texture is being projected to
-    // infinity
-    // Set the uniforms we just computed
-    G_ShaderFactory.setUniforms(this.colorProgramInfo.uniSetters, {
-      u_view: viewMatrix,
-      u_projection: projectionMatrix,
-      u_world: worldMatrix,
-    });
-    // calls gl.drawArrays or gl.drawElements
-    G_ShaderFactory.drawBufferInfo(this.cubeLinesBufferInfo, gl.LINES);
-  }
-
 
   private getLightData() {
     // first draw from the POV of the light
@@ -563,7 +510,7 @@ class ShadowLight {
     this.drawScene(cameraData.project, cameraData.mat, textureMatrix, lightData.reverseDir, this.textureProgramInfo,lightData.pos,cameraData.pos);
     // ------ Draw the frustum ------
     let matMatrix = glMatrix.mat4.multiply(null, lightData.mat, glMatrix.mat4.invert(null, lightData.project));
-    this.drawFrustum(cameraData.project, cameraData.mat, matMatrix);
+    G_LightModel.drawFrustum(cameraData.project, cameraData.mat, matMatrix);
 
   }
 

@@ -117,7 +117,7 @@ export default class Scene3D extends Scene {
         tempNode.addChild(this._mirrorCube);
 
         this.setPosition(0, 0, 0);
-        setTimeout(this.rotateCenterNode.bind(this), 20);
+        // setTimeout(this.rotateCenterNode.bind(this), 20);
     }
     
     public rotateCenterNode() {

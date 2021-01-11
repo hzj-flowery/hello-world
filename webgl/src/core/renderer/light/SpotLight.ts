@@ -2,6 +2,7 @@ import { glMatrix } from "../../Matrix";
 import { MathUtils } from "../../utils/MathUtils";
 import { SY } from "../base/Sprite";
 import { CameraData } from "../data/CameraData";
+import { LightData } from "../data/LightData";
 import { G_ShaderFactory } from "../shader/ShaderFactory";
 
 
@@ -85,7 +86,7 @@ export class SpotLight extends SY.Sprite {
         this._attrData = G_ShaderFactory.createBufferInfoFromArrays(cubeDatas);
     }
     //更新unifoms变量
-    public updateUniformsData(cameraData: CameraData): any {
+    public updateUniformsData(cameraData: CameraData,lightData:LightData): any {
         
         var fieldOfViewRadians = MathUtils.degToRad(60);
         var fRotationRadians = 0;

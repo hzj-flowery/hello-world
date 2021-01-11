@@ -13,6 +13,7 @@ import { glEnums } from "./renderer/gfx/GLapi";
 import { Node } from "./renderer/base/Node";
 import { SY } from "./renderer/base/Sprite";
 import { G_DrawEngine } from "./renderer/base/DrawEngine";
+import { G_LightCenter } from "./renderer/light/LightCenter";
 
 /**
  渲染流程：
@@ -454,8 +455,8 @@ export default class Device {
         glMatrix.mat4.identity(this._temp1Matrix);
 
          //补一下光的数据
-        rData._lightColor = cameraData.lightData.color;
-        rData._lightDirection = cameraData.lightData.direction;
+        rData._lightColor = G_LightCenter.lightData.color;
+        rData._lightDirection = G_LightCenter.lightData.direction;
         rData._cameraPosition = cameraData.position;
 
         switch (rData._type) {
@@ -518,7 +519,7 @@ export default class Device {
 
     private _drawNormal(sData: NormalRenderData, cameraData: CameraData): void {
         this.gl.useProgram(sData._shaderData.spGlID);
-        (sData._node as SY.Sprite).updateUniformsData(cameraData);
+        (sData._node as SY.Sprite).updateUniformsData(cameraData,G_LightCenter.lightData);
         G_ShaderFactory.setBuffersAndAttributes(sData._shaderData.attrSetters, sData._attrbufferData);
         for (let j in sData._uniformData) {
             G_ShaderFactory.setUniforms(sData._shaderData.uniSetters, sData._uniformData[j]);

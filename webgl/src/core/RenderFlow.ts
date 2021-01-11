@@ -3,7 +3,6 @@ import Device from "./Device";
 import Scene2D from "./renderer/base/Scene2D";
 import Scene3D from "./renderer/base/Scene3D";
 import { G_Stage } from "./renderer/base/Stage";
-import { G_CameraModel } from "./renderer/camera/CameraModel";
 import enums from "./renderer/camera/enums";
 import GameMainCamera from "./renderer/camera/GameMainCamera";
 import PerspectiveCamera from "./renderer/camera/PerspectiveCamera";

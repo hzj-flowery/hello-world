@@ -24,6 +24,8 @@ import { G_BufferManager } from "./core/renderer/base/buffer/BufferManager";
 import { ShadowMapProjectionTest } from "./core/renderer/3d/ShadowMapProjectionTest";
 import { G_DrawEngine } from "./core/renderer/base/DrawEngine";
 import { G_ShaderCenter } from "./core/renderer/shader/ShaderCenter";
+import { G_LightCenter } from "./core/renderer/light/LightCenter";
+import { G_LightModel } from "./core/renderer/light/LightModel";
 
 
 
@@ -32,6 +34,8 @@ G_DrawEngine.init(Device.Instance.gl);
 G_ShaderFactory.init(Device.Instance.gl);
 G_BufferManager.init(Device.Instance.gl);
 G_ShaderCenter.init();
+G_LightCenter.init();
+G_LightModel.init();
 
 // G_CameraModel.init(Device.Instance.gl);
 //testWebl_Label.run();
@@ -88,7 +92,7 @@ LoaderManager.instance.load(arr,null,function(){
     console.log("-888888----",/mobile|android|iphone|ipad/.test("mobilczjjjjj"));
 
 
-    new RenderFlow().startup();
+    // new RenderFlow().startup();
     // RampTextureTest.run();
     // CameraTest.run();
     // RobartTest.run();
@@ -100,7 +104,7 @@ LoaderManager.instance.load(arr,null,function(){
     // PointLightTest.run();
     // ThreeDLightTest.run();
 
-    // ShaderShadowTest.run();
+    ShaderShadowTest.run();
 
     // StencilTest.run();
 

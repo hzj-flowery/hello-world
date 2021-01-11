@@ -1,6 +1,7 @@
 import { glMatrix } from "../../Matrix";
 import { SY } from "../base/Sprite";
 import { CameraData } from "../data/CameraData";
+import { LightData } from "../data/LightData";
 import { NormalRenderData } from "../data/RenderData";
 import { G_ShaderFactory } from "../shader/ShaderFactory";
 
@@ -92,7 +93,7 @@ export class PointLight extends SY.Sprite {
     this._attrData = G_ShaderFactory.createBufferInfoFromArrays(cubeDatas);
   }
   //更新unifoms变量
-  public updateUniformsData(cData:CameraData):any{
+  public updateUniformsData(cData:CameraData,lightData:LightData):any{
     // Multiply the matrices.
     var worldViewProjectionMatrix = glMatrix.mat4.multiply(null, cData.viewProjectionMat,  this.modelMatrix);
     var worldInverseMatrix = glMatrix.mat4.invert(null,  this.modelMatrix);
@@ -104,11 +105,11 @@ export class PointLight extends SY.Sprite {
     this._uniformData.u_worldInverseTranspose = worldInverseTransposeMatrix;//世界矩阵逆矩阵的转置矩阵
     this._uniformData.u_world =  this.modelMatrix;//世界矩阵
     this._uniformData.u_color = [0.2, 1, 0.2, 1];//点的颜色
-    this._uniformData.u_lightWorldPosition = cData.lightData.position;//光的位置
+    this._uniformData.u_lightWorldPosition = lightData.position;//光的位置
     this._uniformData.u_viewWorldPosition = cData.position;//摄像机的位置
-    this._uniformData.u_shininess = cData.lightData.specularShininess;//高光的指数
-    this._uniformData.u_lightColor = cData.lightData.color;
-    this._uniformData.u_specularColor = cData.lightData.specularColor;
+    this._uniformData.u_shininess = lightData.specularShininess;//高光的指数
+    this._uniformData.u_lightColor = lightData.color;
+    this._uniformData.u_specularColor = lightData.specularColor;
     super.updateRenderData();
     return this._uniformData;
   }

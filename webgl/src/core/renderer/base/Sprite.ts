@@ -56,6 +56,7 @@ import { glBaseBuffer, G_BufferManager, IndexsBuffer, NodeCustomColorBuffer, Nod
 import enums from "../camera/enums";
 import { G_ShaderCenter, ShaderType } from "../shader/ShaderCenter";
 import { ShaderUseVariantType } from "../shader/ShaderUseVariantType";
+import { LightData } from "../data/LightData";
 
 
 /**
@@ -378,7 +379,7 @@ export namespace SY {
             this._shaderData = G_ShaderFactory.createProgramInfo(vert, frag);
         }
         //更新unifoms变量
-        public updateUniformsData(cameraData: CameraData): any {
+        public updateUniformsData(cameraData: CameraData,lightData:LightData): any {
 
         }
         /**
