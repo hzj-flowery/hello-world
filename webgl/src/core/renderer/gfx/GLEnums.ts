@@ -171,8 +171,9 @@ export const enum glvert_attr_semantic{
     BITANGENT = 'a_bitangent',
     WEIGHTS = 'a_weights',
     JOINTS = 'a_joints',
-    NODE_COLOR = 'a_color',//显示节点的颜色
+    COLOR = 'a_color',//显示节点每一个顶点的颜色颜色
     NODE_Matrix = 'a_Matrix',//节点矩阵
+    UNIFORM_COLOR = 'u_color',
     //现阶段场景中只支持三种光
     LIGHT_COLOR = 'u_lightColor',
     LIGHT_COLOR_DIR = 'u_lightColorDir',

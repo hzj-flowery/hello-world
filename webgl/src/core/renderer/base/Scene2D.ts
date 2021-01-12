@@ -32,10 +32,10 @@ export default class Scene2D extends Scene {
         // this._firstSprite.setPosition(0,1,0);
         // this.addChild(this._firstSprite);
 
-        // this._instantiateSprite = new InstantiateSprite();
-        // this._instantiateSprite.setScale(0.5,0.5,0.5);
-        // this._instantiateSprite.setPosition(0.2,0.2,0);
-        // this.addChild(this._instantiateSprite);
+        this._instantiateSprite = new InstantiateSprite();
+        this._instantiateSprite.setScale(0.5,0.5,0.5);
+        this._instantiateSprite.setPosition(0.2,0.2,0);
+        this.addChild(this._instantiateSprite);
 
         this._renderSprite = new RenderOfflineSprite();
         this._renderSprite.setPosition(0.6,0.8,0);

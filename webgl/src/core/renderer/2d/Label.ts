@@ -1,51 +1,7 @@
 "use strict";
 
-import Device from "../../Device";
 import { SY } from "../base/Sprite";
 import { glprimitive_type } from "../gfx/GLEnums";
-
-
-var vertexshader3d =
-    'attribute vec4 a_position;' +
-    'attribute vec4 a_color;' +
-
-    'uniform mat4 u_matrix;' +
-
-    'varying vec4 v_color;' +
-
-    'void main() {' +
-    // Multiply the position by the matrix.
-    'gl_Position = u_matrix * a_position;' +
-    // Pass the color to the fragment shader.
-    'v_color = a_color;' +
-    '}'
-
-var fragmentshader3d =
-    'precision mediump float;' +
-    // Passed in from the vertex shader.
-    'varying vec4 v_color;' +
-    'void main() {' +
-    'gl_FragColor = v_color;' +
-    '}'
-var textvertexshader =
-    'attribute vec4 a_position;' +
-    'attribute vec2 a_texcoord;' +
-    'uniform mat4 u_matrix;' +
-    'varying vec2 v_texcoord;' +
-    'void main() {' +
-    // Multiply the position by the matrix.
-    'gl_Position = u_matrix * a_position;' +
-    // Pass the texcoord to the fragment shader.
-    'v_texcoord = a_texcoord;'
-
-var textfragmentshader =
-    'precision mediump float;' +
-    // Passed in from the vertex shader.
-    'varying vec2 v_texcoord;' +
-    'uniform sampler2D u_texture;' +
-    'void main() {' +
-    'gl_FragColor = texture2D(u_texture, v_texcoord);' +
-    '}'
 
 var fontInfo = {
     letterHeight: 8,

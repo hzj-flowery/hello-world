@@ -35,7 +35,8 @@ export enum ShaderUseVariantType {
     CameraWorldPosition,//世界中相机的位置
     LightColor,         //光的颜色
     LightDirection,     //光的方向
-    NodeCustomColor,          //节点的颜色
+    Color,                    //节点颜色
+    NodeVertColor,          //节点的颜色
     NodeCustomMatrix,         //节点的自定义矩阵
     UndefinedMax,//无效
 }

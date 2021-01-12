@@ -31,7 +31,7 @@ export default class Scene3D extends Scene {
     private _FLightThreeD:ThreeDLight;
     private _sphere: Sphere;
     private _line:Line;
-      
+    private _linePositions:Array<number>;
     constructor() {
         super();
     }
@@ -59,8 +59,14 @@ export default class Scene3D extends Scene {
         this._centerNode = new Node();
         this._centerNode.setPosition(0, 1.1, 0);
         this.addChild(this._centerNode);
-
+        
+        this._linePositions = [];
         this._line = new Line();
+        this._linePositions.push(
+            0,0,0,
+            1,1,1
+        );
+        this._line.updateLinePos(this._linePositions);
         this._centerNode.addChild(this._line);
 
         var spNode = new Node();
@@ -132,6 +138,11 @@ export default class Scene3D extends Scene {
         this._mirrorCube.rotate(1,-1,-0.2);
         // this._FLightPoint.rotate(0,1,0);
         setTimeout(this.rotateCenterNode.bind(this), 20);
+        
+        // this._linePositions = [];
+        this._linePositions.push(0,0,0,Math.random(),Math.random(),Math.random());
+
+        // this._line.updateLinePos(this._linePositions);
     }
     private readyRenderDraw(): void {
 

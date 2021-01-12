@@ -49,9 +49,11 @@ export class  RenderData {
     public _vertItemSize: number;//一个顶点buffer单元的顶点数目
     public _vertItemNums: number;//所有顶点buffer单元数目
 
-    public _nodeCustomColorGLID: WebGLBuffer;//节点自定义颜色buffer的显存地址
-    public _nodeCustomColorItemSize: number;//一个节点自定义颜色buffer单元的数据数目
-    public _nodeCustomColorItemNums: number;//所有节点自定义颜色buffer单元数目
+    public _nodeVertColorGLID: WebGLBuffer;//节点自定义颜色buffer的显存地址
+    public _nodeVertColorItemSize: number;//一个节点自定义颜色buffer单元的数据数目
+    public _nodeVertColorItemNums: number;//所有节点自定义颜色buffer单元数目
+
+    public _nodeColor:Array<number>;//节点自定义颜色buffer的显存地址
 
     public _nodeCustomMatrixGLID: WebGLBuffer;//节点自定义矩阵buffer的显存地址
     public _nodeCustomMatrixItemSize: number;//一个节点自定义矩阵的buffer单元的数据数目
@@ -68,7 +70,6 @@ export class  RenderData {
     public _lightColor: Array<number>;//光的颜色
     public _lightDirection: Array<number>;//光的方向
     public _lightPosition: Array<number>;//光的位置
-    public _nodeColor: Array<number>;//节点的颜色
     public _nodeCustomMatrix: Float32Array;//节点自定义矩阵
     public _glPrimitiveType: glprimitive_type;//绘制的类型
     public _modelMatrix: Float32Array;//模型矩阵
@@ -103,7 +104,6 @@ export class  RenderData {
         this._texture2DGLIDArray = [];
         this._textureCubeGLIDArray = [];
         this._nodeCustomMatrix = null;
-        this._nodeColor = [0, 0, 0, 0];//一般默认节点的颜色是全黑的
         this._modelMatrix = null;
         this._time = 0;
         this._glPrimitiveType = glprimitive_type.TRIANGLE_FAN;
@@ -225,8 +225,11 @@ export class  RenderData {
                 case ShaderUseVariantType.LightDirection:
                     _shader.setUseLightDirection(this._lightDirection);
                     break;
-                case ShaderUseVariantType.NodeCustomColor:
-                    _shader.setUseNodeCustomColor(this._nodeCustomColorGLID, this._nodeCustomColorItemSize);
+                case ShaderUseVariantType.Color:
+                    _shader.setUseNodeColor(this._nodeColor);
+                    break;
+                case ShaderUseVariantType.NodeVertColor:
+                    _shader.setUseNodeVertColor(this._nodeVertColorGLID, this._nodeVertColorItemSize);
                     break;
                 case ShaderUseVariantType.NodeCustomMatrix:
                     _shader.setUseNodeCustomMatrix(this._nodeCustomMatrixGLID, this._nodeCustomMatrixItemSize);

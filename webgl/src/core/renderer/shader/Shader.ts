@@ -59,8 +59,9 @@ export class Shader {
     private a_normal_loc;//法线属性的位置
     private a_uv_loc;//uv属性位置
     private a_tangent_loc;//切线属性位置
-    private a_node_color_loc;//节点颜色的位置
+    private a_vert_color_loc;//节点颜色的位置
     private a_node_matrix_loc;//节点自定义矩阵位置
+    private u_color_loc;//节点颜色（该变量针对节点下的所有顶点）
     private u_light_color_loc;//光照属性位置
     private u_light_color_dir_loc;//光照方向属性位置
     private u_MVMatrix_loc;//模型视口矩阵属性位置
@@ -111,9 +112,10 @@ export class Shader {
         this.a_normal_loc = gl.getAttribLocation(_glID, glvert_attr_semantic.NORMAL);
         this.a_uv_loc = gl.getAttribLocation(_glID, glvert_attr_semantic.UV);
         this.a_tangent_loc = gl.getAttribLocation(_glID, glvert_attr_semantic.TANGENT);
-        this.a_node_color_loc = gl.getAttribLocation(_glID, glvert_attr_semantic.NODE_COLOR);
+        this.a_vert_color_loc = gl.getAttribLocation(_glID, glvert_attr_semantic.COLOR);
         this.a_node_matrix_loc = gl.getAttribLocation(_glID, glvert_attr_semantic.NODE_Matrix);
-
+        
+        this.u_color_loc = gl.getUniformLocation(_glID,glvert_attr_semantic.UNIFORM_COLOR);
         this.u_light_color_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.LIGHT_COLOR);
         this.u_light_color_dir_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.LIGHT_COLOR_DIR);
         this.u_MVMatrix_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.MVMatrix);
@@ -176,6 +178,7 @@ export class Shader {
     public active(): void {
         G_DrawEngine.useProgram(this._spGLID);
     }
+    
     /**
      * 
      * @param color 设置使用光的颜色
@@ -194,13 +197,24 @@ export class Shader {
             G_DrawEngine.setUniformFloatVec3(this.u_light_color_dir_loc, direction);
         }
     }
+
+      /**
+     * 设置使用节点自定义颜色
+     * @param color 
+     */
+    public setUseNodeColor(color: Array<number>): void {
+        if (this.checklocValid(this.u_color_loc, "u_color_loc")) {
+            G_DrawEngine.setUniformFloatVec4(this.u_color_loc, color);
+        }
+    }
+
     /**
      * 设置使用节点自定义颜色
      * @param color 
      */
-    public setUseNodeCustomColor(glID, itemSize: number): void {
-        if (this.checklocValid(this.a_node_color_loc, "a_node_color_loc")) {
-            G_DrawEngine.activeVertexAttribArray(glID,this.a_node_color_loc,itemSize);
+    public setUseNodeVertColor(glID, itemSize: number): void {
+        if (this.checklocValid(this.a_vert_color_loc, "a_vert_color_loc")) {
+            G_DrawEngine.activeVertexAttribArray(glID,this.a_vert_color_loc,itemSize);
         }
     }
     /**
@@ -352,8 +366,8 @@ export class Shader {
         if (this.checklocValid(this.a_node_matrix_loc, "a_node_matrix_loc")) {
             G_DrawEngine.disableVertexAttribArray(this.a_node_matrix_loc);
         }
-        if (this.checklocValid(this.a_node_color_loc, "a_node_color_loc")) {
-            G_DrawEngine.disableVertexAttribArray(this.a_node_color_loc);
+        if (this.checklocValid(this.a_vert_color_loc, "a_vert_color_loc")) {
+            G_DrawEngine.disableVertexAttribArray(this.a_vert_color_loc);
         }
     }
 }

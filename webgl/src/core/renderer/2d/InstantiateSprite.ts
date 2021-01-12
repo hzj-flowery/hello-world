@@ -36,7 +36,7 @@ export default class InstantiateSprite extends SY.Sprite2D {
         this._vertStr = vertexshader3d;
         this._fragStr = fragmentshader3d;
         
-        this.numInstances = 2;
+        this.numInstances = 1;
         this._renderData._isDrawInstanced = true;
         this._renderData._drawInstancedVertNums = 4;
         this._renderData._drawInstancedNums = this.numInstances;
@@ -66,7 +66,7 @@ export default class InstantiateSprite extends SY.Sprite2D {
             colorData.push(res[2]);
             colorData.push(res[3]);
         }
-        this.createNodeCustomColorBuffer(colorData, 4);
+        this.createNodeVertColorBuffer(colorData, 4);
     }
     private produceRandomPosArray():void{
         this._posArray = [];
