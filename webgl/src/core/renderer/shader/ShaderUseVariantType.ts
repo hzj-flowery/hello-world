@@ -36,7 +36,7 @@ export enum ShaderUseVariantType {
     LightColor,         //光的颜色
     LightDirection,     //光的方向
     Color,                    //节点颜色
-    NodeVertColor,          //节点的颜色
+    VertColor,          //节点的颜色
     NodeCustomMatrix,         //节点的自定义矩阵
     UndefinedMax,//无效
 }

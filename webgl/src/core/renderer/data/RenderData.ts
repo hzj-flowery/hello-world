@@ -228,7 +228,7 @@ export class  RenderData {
                 case ShaderUseVariantType.Color:
                     _shader.setUseNodeColor(this._nodeColor);
                     break;
-                case ShaderUseVariantType.NodeVertColor:
+                case ShaderUseVariantType.VertColor:
                     _shader.setUseNodeVertColor(this._nodeVertColorGLID, this._nodeVertColorItemSize);
                     break;
                 case ShaderUseVariantType.NodeCustomMatrix:

@@ -234,8 +234,8 @@ class BufferManager {
     private _mapIndexBuffer: Map<string, IndexsBuffer> = new Map();
     private _mapNormalBuffer: Map<string, NormalBuffer> = new Map();
     private _mapUVBuffer: Map<string, UVsBuffer> = new Map();
-    private _mapNodeVertColorBuffer: Map<string, UVsBuffer> = new Map();
-    private _mapNodeMatrixBuffer: Map<string, UVsBuffer> = new Map();
+    private _mapNodeVertColorBuffer: Map<string, NodeVertColorBuffer> = new Map();
+    private _mapNodeMatrixBuffer: Map<string, NodeCustomMatrixBuffer> = new Map();
     /**
      * 
      * @param type buffer类型

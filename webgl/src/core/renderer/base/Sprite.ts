@@ -201,7 +201,7 @@ export namespace SY {
          */
         public createNodeVertColorBuffer(color: Array<number>, itemSize: number, preAllocateLen: number = 0): NodeVertColorBuffer {
             this._nodeVertColorBuffer = G_BufferManager.createBuffer(GLID_TYPE.COLOR, this._materialId, color, itemSize, preAllocateLen) as NodeVertColorBuffer;
-            this._shaderUseVariantType.push(ShaderUseVariantType.NodeVertColor);
+            this._shaderUseVariantType.push(ShaderUseVariantType.VertColor);
             return this._nodeVertColorBuffer;
         }
         
