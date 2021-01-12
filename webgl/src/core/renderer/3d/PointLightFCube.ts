@@ -29,7 +29,7 @@ var fragmentshader3d =
   'varying vec3 v_normal;' +
   'varying vec3 v_surfaceToLight;' +   //物体表面到光位置的方向
   'varying vec3 v_surfaceToView;' +    //物体表面到摄像机位置的方向
-  'uniform vec4 a_color;' +            //物体的表面颜色
+  'uniform vec4 u_color;' +            //物体的表面颜色
   'uniform float u_shininess;' +       //高光的指数
   'uniform vec4 u_lightColor;'+        //光的颜色
   'uniform vec4 u_specularColor;'+     //高光的颜色
@@ -41,7 +41,7 @@ var fragmentshader3d =
   'float light = dot(normal, surfaceToLightDirection);' + //法线*光的方向 算出光的反射强度
   'float specular = 0.0;' +
   'if (light > 0.0) {specular = pow(dot(normal, halfVector), u_shininess);}' +//法线*高光方向 算出高光的反射强度
-  'gl_FragColor = a_color;' +        //顶点颜色
+  'gl_FragColor = u_color;' +        //顶点颜色
   // 'gl_FragColor.rgb *= light;' +     //反射的颜色
   // 'gl_FragColor.rgb += specular;' +  //加上高光
 
@@ -63,7 +63,7 @@ export class PointLightFCube extends SY.Sprite {
     this._uniformData = {
       u_PVMMatrix: {},
       u_MITMatrix: {},
-      a_color: {},
+      u_color: {},
       u_shininess: {},
       u_lightColor:{},
       u_specularColor:{},
@@ -105,7 +105,7 @@ export class PointLightFCube extends SY.Sprite {
     this._uniformData.u_PVMMatrix = worldViewProjectionMatrix;  //投影矩阵 x 视口矩阵 x 世界矩阵
     this._uniformData.u_MITMatrix = worldInverseTransposeMatrix;//世界矩阵逆矩阵的转置矩阵
     this._uniformData.u_MMatrix =  this.modelMatrix;//世界矩阵
-    this._uniformData.a_color = [0.2, 1, 0.2, 1];//点的颜色
+    this._uniformData.u_color = [0.2, 1, 0.2, 1];//点的颜色
     this._uniformData.u_lightWorldPosition = lightData.position;//光的位置
     this._uniformData.u_cameraWorldPosition = cData.position;//摄像机的位置
     this._uniformData.u_shininess = lightData.specularShininess;//高光的指数
