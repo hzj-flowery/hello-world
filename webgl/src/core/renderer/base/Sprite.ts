@@ -68,7 +68,7 @@ export namespace SY {
         INDEX,   //索引
         NORMAL, //法线
         UV,     //uv
-        COLOR,  //节点自定义颜色
+        VERT_COLOR,  //顶点颜色
         MATRIX,//节点自定义矩阵
         TEXTURE_2D, //2D纹理
         TEXTURE_CUBE //立方体纹理
@@ -200,7 +200,7 @@ export namespace SY {
          * @param preAllocateLen 
          */
         public createNodeVertColorBuffer(color: Array<number>, itemSize: number, preAllocateLen: number = 0): NodeVertColorBuffer {
-            this._nodeVertColorBuffer = G_BufferManager.createBuffer(GLID_TYPE.COLOR, this._materialId, color, itemSize, preAllocateLen) as NodeVertColorBuffer;
+            this._nodeVertColorBuffer = G_BufferManager.createBuffer(GLID_TYPE.VERT_COLOR, this._materialId, color, itemSize, preAllocateLen) as NodeVertColorBuffer;
             this._shaderUseVariantType.push(ShaderUseVariantType.VertColor);
             return this._nodeVertColorBuffer;
         }
@@ -293,7 +293,7 @@ export namespace SY {
                 case GLID_TYPE.UV: return this._uvsBuffer;
                 case GLID_TYPE.NORMAL: return this._normalsBuffer;
                 case GLID_TYPE.VERTEX: return this._vertexsBuffer;
-                case GLID_TYPE.COLOR: return this._nodeVertColorBuffer;
+                case GLID_TYPE.VERT_COLOR: return this._nodeVertColorBuffer;
                 case GLID_TYPE.MATRIX: return this._customMatrixBuffer;
                 default: return null;//未知
             }
@@ -339,10 +339,10 @@ export namespace SY {
             this._renderData._normalItemSize = this.getBufferItemSize(SY.GLID_TYPE.NORMAL);
 
             //节点自定义顶点颜色组
-            this._renderData._nodeVertColorGLID = this.getGLID(SY.GLID_TYPE.COLOR);
+            this._renderData._nodeVertColorGLID = this.getGLID(SY.GLID_TYPE.VERT_COLOR);
             if (this._renderData._nodeVertColorGLID != -1) {
-                this._renderData._nodeVertColorItemSize = this.getBuffer(SY.GLID_TYPE.COLOR).itemSize;
-                this._renderData._nodeVertColorItemNums = this.getBuffer(SY.GLID_TYPE.COLOR).itemNums;
+                this._renderData._nodeVertColorItemSize = this.getBuffer(SY.GLID_TYPE.VERT_COLOR).itemSize;
+                this._renderData._nodeVertColorItemNums = this.getBuffer(SY.GLID_TYPE.VERT_COLOR).itemNums;
             }
 
             this._renderData._nodeColor = this._color;

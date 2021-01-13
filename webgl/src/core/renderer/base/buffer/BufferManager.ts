@@ -254,7 +254,7 @@ class BufferManager {
                 return this.createNormal(materialId, data, itemSize, preAllocateLen);
             case SY.GLID_TYPE.UV:
                 return this.createUV(materialId, data, itemSize, preAllocateLen);
-            case SY.GLID_TYPE.COLOR:
+            case SY.GLID_TYPE.VERT_COLOR:
                 return this.createVertColor(materialId, data, itemSize, preAllocateLen);
             case SY.GLID_TYPE.MATRIX:
                 return this.createMatrix(materialId, data, itemSize, preAllocateLen);
@@ -271,7 +271,7 @@ class BufferManager {
                 return this._mapNormalBuffer.get(materialId);
             case SY.GLID_TYPE.UV:
                 return this._mapUVBuffer.get(materialId);
-            case SY.GLID_TYPE.COLOR:
+            case SY.GLID_TYPE.VERT_COLOR:
                 return this._mapNodeVertColorBuffer.get(materialId);
             case SY.GLID_TYPE.MATRIX:
                 return this._mapNodeMatrixBuffer.get(materialId);

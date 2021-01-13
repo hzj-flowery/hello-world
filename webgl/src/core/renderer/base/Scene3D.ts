@@ -15,6 +15,7 @@ import MirrorCube from "../3d/MirrorCube";
 import { PointLightFCube } from "../3d/PointLightFCube";
 import { Line } from "../3d/Line";
 import { G_UISetting } from "../../ui/UiSetting";
+import PointLightCube from "../3d/PointLightCube";
 
 export default class Scene3D extends Scene {
 
@@ -24,6 +25,7 @@ export default class Scene3D extends Scene {
     private _cubeNode: Cube;
     private _tableNode: Cube;
     private _spineNode: Spine;
+    private _pointLightCube:PointLightCube;
     private _customTexture: CustomTextureCube;
     private _centerNode: Node;
     private _mirrorCube:MirrorCube;
@@ -90,11 +92,20 @@ export default class Scene3D extends Scene {
         this._tableNode.setPosition(0, 1, 0);
         this._tableNode.setScale(2.0, 0.1, 2.0);
         this._centerNode.addChild(this._tableNode);
+
         this._cubeNode = new Cube();
         this._cubeNode.spriteFrame = "res/wicker.jpg";
         this._cubeNode.setPosition(0, 1.7, 0);
         this._cubeNode.setScale(0.5, 0.5, 0.5);
         this._centerNode.addChild(this._cubeNode);
+
+        this._pointLightCube = new PointLightCube();
+        this._pointLightCube.spriteFrame = "res/bindu.jpg";
+        this._pointLightCube.setPosition(-2.7, 5.7, 0);
+        this._pointLightCube.setScale(0.5, 0.5, 0.5);
+        this._centerNode.addChild(this._pointLightCube);
+
+        
 
         // 绘制 4 个腿
         for (var i = -1; i <= 1; i += 2) {
@@ -128,6 +139,8 @@ export default class Scene3D extends Scene {
 
         this.setPosition(0, 0, 0);
         // setTimeout(this.rotateCenterNode.bind(this), 20);
+
+
 
         G_UISetting.pushRenderCallBack(this.render.bind(this));
         G_UISetting.render();
