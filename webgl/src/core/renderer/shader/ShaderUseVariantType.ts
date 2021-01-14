@@ -3,6 +3,7 @@ export enum ShaderUseVariantType {
 
     Vertex,  //顶点缓冲
     Normal, //法线缓冲
+    Tangent,
     UVs,    //uv坐标缓冲
 
     //目前支持同时使用9块纹理单元
@@ -35,6 +36,7 @@ export enum ShaderUseVariantType {
     CameraWorldPosition,//世界中相机的位置
     LightColor,         //光的颜色
     LightDirection,     //光的方向
+    SpecularColor,      //高光
     Color,                    //节点颜色
     VertColor,          //顶点的颜色
     NodeCustomMatrix,         //节点的自定义矩阵

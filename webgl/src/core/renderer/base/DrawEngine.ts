@@ -110,7 +110,15 @@ class DrawEngine {
     public useProgram(glID:WebGLShader):void{
         this.gl.useProgram(glID);
     }
-    
+
+    /**
+     * 设置一个uniform的float变量
+     * @param loc 
+     * @param v 
+     */
+    public setUniform1f(loc:number,v:number):void{
+        this.gl.uniform1f(loc, v);
+    }
     /**
      * 设置shader中Uniform变量的值
      * 在着色器中此值相当于const 不可以修改

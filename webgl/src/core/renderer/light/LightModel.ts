@@ -1,33 +1,30 @@
 import Device from "../../Device";
 import { glMatrix } from "../../Matrix";
+import { G_UISetting } from "../../ui/UiSetting";
+import { Line } from "../3d/Line";
+import { Node } from "../base/Node";
+import { SY } from "../base/Sprite";
+import { G_Stage } from "../base/Stage";
+import enums from "../camera/enums";
+import GameMainCamera from "../camera/GameMainCamera";
+import { syPrimitives } from "../shader/Primitives";
 import { BufferAttribsData, ShaderData } from "../shader/Shader";
 import { G_ShaderFactory } from "../shader/ShaderFactory";
+import { G_LightCenter } from "./LightCenter";
 
 
 let vertBase =
     `attribute vec4 a_position;
-uniform mat4 u_projection;
-uniform mat4 u_view;
-uniform mat4 u_world;
+    uniform mat4 u_PMatrix;
+    uniform mat4 u_VMatrix;
+    uniform mat4 u_MMatrix;
 void main() {
-gl_Position = u_projection * u_view * u_world * a_position;
+gl_Position = u_PMatrix * u_VMatrix * u_MMatrix * a_position;
 }`
 let fragBase =
     `precision mediump float;
-
-//分解保存深度值
-// vec4 pack (float depth) {
-//     // 使用rgba 4字节共32位来存储z值,1个字节精度为1/256
-//     const vec4 bitShift = vec4(1.0, 256.0, 256.0 * 256.0, 256.0 * 256.0 * 256.0);
-//     const vec4 bitMask = vec4(1.0/256.0, 1.0/256.0, 1.0/256.0, 0.0);
-//     // gl_FragCoord:片元的坐标,fract():返回数值的小数部分
-//     vec4 rgbaDepth = fract(depth * bitShift); //计算每个点的z值 
-//     rgbaDepth -= rgbaDepth.rgba * bitMask; // Cut off the value which do not fit in 8 bits
-//     return rgbaDepth;
-// }
-
 void main() {
-gl_FragColor = vec4(gl_FragCoord.z,0.0,0.0,1.0);  //将深度值存在帧缓冲的颜色缓冲中 如果帧缓冲和窗口绑定 那么就显示出来 如果帧缓冲和纹理绑定就存储在纹理中
+gl_FragColor = vec4(1.0,0.0,0.0,1.0); 
 }`
 
 class LightModel {
@@ -36,11 +33,23 @@ class LightModel {
     }
     private _colorProgramInfo: ShaderData;
     private _cubeLinesBufferInfo: BufferAttribsData;
+    private _lightViewMatrix: Float32Array;
+    private _lightWorldMatrix: Float32Array;
+    private _lightProjectInverseMatrix: Float32Array;
     private gl: WebGLRenderingContext;
+    private _sunSprite: SY.sySprite;
+    private _cameraLight:SY.sySprite;//相机光
+    private _lightLine: Line;
+    private _lightNode: Node;
     public init() {
+        this._lightWorldMatrix = glMatrix.mat4.identity(null);
+        this._lightProjectInverseMatrix = glMatrix.mat4.identity(null);
+        this._lightViewMatrix = glMatrix.mat4.identity(null);
+        this._lightNode = new Node();
+        G_Stage.addChild(this._lightNode);
         this._colorProgramInfo = G_ShaderFactory.createProgramInfo(vertBase, fragBase);
         this.gl = Device.Instance.gl;
-
+        this.createSun();
         this._cubeLinesBufferInfo = G_ShaderFactory.createBufferInfoFromArrays({
             position: [
                 -1, -1, -1,
@@ -69,17 +78,96 @@ class LightModel {
                 2, 6,
             ],
         });
+        G_UISetting.pushRenderCallBack(this.render.bind(this))
+    }
+    private createSun(): void {
+        this._sunSprite = new SY.sySprite();
+        let vertexData = syPrimitives.createSphereVertices(1, 24, 24);
+        this._sunSprite.createIndexsBuffer(vertexData.indices);
+        this._sunSprite.createNormalsBuffer(vertexData.normal, 3);
+        this._sunSprite.createUVsBuffer(vertexData.texcoord, 2);
+        this._sunSprite.createVertexsBuffer(vertexData.position, 3);
+        this._sunSprite.spriteFrame = "res/light.jpg";
+        this._lightNode.addChild(this._sunSprite);
+        setTimeout(this.autoRotateSun.bind(this), 17);
+
+        this._lightLine = new Line();
+        this._lightLine.updateLinePos(this._coordPos.concat([0, 0, 0, 1, 1, 1]));
+        this._lightNode.addChild(this._lightLine);
+        
+        let poss = [
+            -1, -1, -1,
+                1, -1, -1,
+                -1, 1, -1,
+                1, 1, -1,
+                -1, -1, 1,
+                1, -1, 1,
+                -1, 1, 1,
+                1, 1, 1,
+        ]
+        let indices = [
+            0, 1,
+                1, 3,
+                3, 2,
+                2, 0,
+
+                4, 5,
+                5, 7,
+                7, 6,
+                6, 4,
+
+                0, 4,
+                1, 5,
+                3, 7,
+                2, 6,
+        ]
+        // this._cameraLight = new SY.sySprite();
+        // this._cameraLight.shaderVert = vertBase;
+        // this._cameraLight.shaderFrag = fragBase;
+        // this._cameraLight.createVertexsBuffer(poss,3);
+        // this._cameraLight.createIndexsBuffer(indices);
+        // this._lightNode.addChild(this._cameraLight);
+
+    }
+    private autoRotateSun(): void {
+        this._sunSprite.rotate(1, 1, 1);
+        setTimeout(this.autoRotateSun.bind(this), 17);
+    }
+
+    private _coordPos: Array<number> = [
+        0, 0, 0, 20, 0, 0,   //x轴
+        0, 0, 0, 0, 20, 0,   //y轴
+        0, 0, 0, 0, 0, 20    //z轴
+    ];//坐标轴
+    private render(setting): void {
+        this._lightNode.x = setting.lightPosX;
+        this._lightNode.y = setting.lightPosY;
+        this._lightNode.z = setting.lightPosZ;
+
+        this._lightLine.updateLinePos(this._coordPos.concat([0, 0, 0, setting.lightDirX, setting.lightDirY, setting.lightDirZ]));
+        this._lightLine.color = [setting.lightColorR, setting.lightColorG, setting.lightColorB, setting.lightColorA];
+        this.drawFrustum(null, null);
     }
 
     /**
- * 绘制光源
- * @param projectionMatrix 
- * @param cameraMatrix 
- * @param worldMatrix 
- */
-    public drawFrustum(projectionMatrix, cameraMatrix, worldMatrix) {
+     * 
+     * @param projectionMatrix 
+     * @param cameraMatrix 
+     * @param worldMatrix 
+     */
+    public drawFrustum(projectionMatrix, cameraMatrix) {
+
+        if (!projectionMatrix || !cameraMatrix) {
+            var cameraData = GameMainCamera.instance.getCamera(enums.PROJ_PERSPECTIVE).getCameraData();
+            projectionMatrix = cameraData.projectMat;
+            cameraMatrix = cameraData.modelMat
+        }
+
+        let lightData = G_LightCenter.updateLightCameraData();
+        glMatrix.mat4.invert(this._lightProjectInverseMatrix, lightData.project)
+        glMatrix.mat4.multiply(this._lightWorldMatrix, lightData.mat, this._lightProjectInverseMatrix);
         var gl = this.gl;
-        const viewMatrix = glMatrix.mat4.invert(null, cameraMatrix);
+        glMatrix.mat4.invert(this._lightViewMatrix, cameraMatrix);
         gl.useProgram(this._colorProgramInfo.spGlID);
         // Setup all the needed attributes.
         G_ShaderFactory.setBuffersAndAttributes(this._colorProgramInfo.attrSetters, this._cubeLinesBufferInfo);
@@ -88,9 +176,9 @@ class LightModel {
         // infinity
         // Set the uniforms we just computed
         G_ShaderFactory.setUniforms(this._colorProgramInfo.uniSetters, {
-            u_view: viewMatrix,
-            u_projection: projectionMatrix,
-            u_world: worldMatrix,
+            u_VMatrix: this._lightViewMatrix,
+            u_PMatrix: projectionMatrix,
+            u_MMatrix: this._lightWorldMatrix,
         });
         // calls gl.drawArrays or gl.drawElements
         G_ShaderFactory.drawBufferInfo(this._cubeLinesBufferInfo, gl.LINES);

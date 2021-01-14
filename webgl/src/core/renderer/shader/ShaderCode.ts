@@ -1,11 +1,11 @@
 export namespace ShaderCode {
     export var shadowMap = {
         vert: `attribute vec4 a_position;
-        uniform mat4 u_projection;
-        uniform mat4 u_view;
-        uniform mat4 u_world;
+        uniform mat4 u_PMatrix;
+        uniform mat4 u_VMatrix;
+        uniform mat4 u_MMatrix;
         void main() {
-        gl_Position = u_projection * u_view * u_world * a_position;
+        gl_Position = u_PMatrix * u_VMatrix * u_MMatrix * a_position;
         }`
         ,
         frag: `precision mediump float;
@@ -25,18 +25,41 @@ export namespace ShaderCode {
     }
     export var line = {
         vert: `attribute vec4 a_position;
-        uniform mat4 u_projection;
-        uniform mat4 u_view;
-        uniform mat4 u_world;
+        
+        uniform mat4 u_PMatrix;
+        uniform mat4 u_VMatrix;
+        uniform mat4 u_MMatrix;
+        
         void main() {
-        gl_Position = u_projection * u_view * u_world * a_position;
+        gl_Position = u_PMatrix * u_VMatrix * u_MMatrix * a_position;
         }`,
         frag:
             `precision mediump float;
+            
         uniform vec4 u_color;
     void main() {
     gl_FragColor =  u_color;  //线的颜色
     }`
-
+    }
+    export var sprite = {
+        vert: `
+        attribute vec4 a_position;
+        attribute vec2 a_uv;
+        uniform mat4 u_PMatrix;
+        uniform mat4 u_VMatrix;
+        uniform mat4 u_MMatrix;
+        varying vec2 v_uv;
+        void main() {
+        gl_Position = u_PMatrix * u_VMatrix * u_MMatrix * a_position;
+        v_uv = a_uv;
+        }
+        `,
+        frag: `precision mediump float;
+              varying vec2 v_uv;
+              uniform sampler2D u_texCoord; 
+              void main() {
+               gl_FragColor =  texture2D(u_texCoord, v_uv);  //线的颜色
+            }
+        `
     }
 }

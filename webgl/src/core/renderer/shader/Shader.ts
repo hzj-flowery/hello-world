@@ -64,6 +64,8 @@ export class Shader {
     private u_color_loc;//节点颜色（该变量针对节点下的所有顶点）
     private u_light_color_loc;//光照属性位置
     private u_light_color_dir_loc;//光照方向属性位置
+    private u_light_specular_color_loc;//高光属性的位置
+    private u_light_specular_shininess_loc;//高光属性的位置
     private u_MVMatrix_loc;//模型视口矩阵属性位置
     private u_PMatrix_loc;//透视投影矩阵属性位置
     private u_MMatrix_loc;//模型矩阵属性位置
@@ -114,10 +116,13 @@ export class Shader {
         this.a_tangent_loc = gl.getAttribLocation(_glID, glvert_attr_semantic.TANGENT);
         this.a_vert_color_loc = gl.getAttribLocation(_glID, glvert_attr_semantic.COLOR);
         this.a_node_matrix_loc = gl.getAttribLocation(_glID, glvert_attr_semantic.NODE_Matrix);
+
         
-        this.u_color_loc = gl.getUniformLocation(_glID,glvert_attr_semantic.UNIFORM_COLOR);
+        this.u_color_loc = gl.getUniformLocation(_glID,glvert_attr_semantic.NODE_COLOR);
         this.u_light_color_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.LIGHT_COLOR);
         this.u_light_color_dir_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.LIGHT_COLOR_DIR);
+        this.u_light_specular_color_loc = gl.getUniformLocation(_glID,glvert_attr_semantic.LIGHT_SPECULAR_COLOR);
+        this.u_light_specular_shininess_loc = gl.getUniformLocation(_glID,glvert_attr_semantic.LIGHT_SPECULAR_SHININESS);     
         this.u_MVMatrix_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.MVMatrix);
         this.u_PMatrix_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.PMatrix);
 
@@ -171,12 +176,33 @@ export class Shader {
      * 检查shader中变量的位置是否有效
      * @param loc 
      */
-    private checklocValid(loc, tagName): boolean {
-        return !(loc == null || loc < 0);
+    private checklocValid(loc:number, tagName:string): boolean {
+        let result = !(loc == null || loc < 0);
+        if(!result)
+        {
+            // debugger;
+            return false;
+        }
+        return true;
     }
     //激活shader
     public active(): void {
         G_DrawEngine.useProgram(this._spGLID);
+    }
+
+    
+    /**
+     * 设置使用高光的颜色
+     * @param color 
+     */
+    public setUseSpecularLightColor(color: Array<number>,shininess:number): void {
+        if (this.checklocValid(this.u_light_specular_color_loc, "u_light_specular_color_loc")) {
+            G_DrawEngine.setUniformFloatVec4(this.u_light_specular_color_loc, color);
+        }
+        if(this.checklocValid(this.u_light_specular_shininess_loc,"u_light_specular_shininess_loc"))
+        {
+            G_DrawEngine.setUniform1f(this.u_light_specular_shininess_loc,shininess)
+        }
     }
     
     /**
@@ -351,22 +377,22 @@ export class Shader {
     }
 
     public disableVertexAttribArray(): void {
-        if (this.checklocValid(this.a_position_loc, "a_position_loc")) {// 设定为数组类型的变量数据
+        if (this._useVariantType.indexOf(ShaderUseVariantType.Vertex)>=0&&this.checklocValid(this.a_position_loc, "a_position_loc")) {// 设定为数组类型的变量数据
             G_DrawEngine.disableVertexAttribArray(this.a_position_loc);
         }
-        if (this.checklocValid(this.a_uv_loc, "a_uv_loc")) {
+        if (this._useVariantType.indexOf(ShaderUseVariantType.UVs)>=0&&this.checklocValid(this.a_uv_loc, "a_uv_loc")) {
             G_DrawEngine.disableVertexAttribArray(this.a_uv_loc);
         }
-        if (this.checklocValid(this.a_normal_loc, "a_normal_loc")) {
+        if (this._useVariantType.indexOf(ShaderUseVariantType.Normal)>=0&&this.checklocValid(this.a_normal_loc, "a_normal_loc")) {
             G_DrawEngine.disableVertexAttribArray(this.a_normal_loc);
         }
-        if (this.checklocValid(this.a_tangent_loc, "a_tangent_loc")) {
+        if (this._useVariantType.indexOf(ShaderUseVariantType.Tangent)>=0&&this.checklocValid(this.a_tangent_loc, "a_tangent_loc")) {
             G_DrawEngine.disableVertexAttribArray(this.a_tangent_loc);
         }
-        if (this.checklocValid(this.a_node_matrix_loc, "a_node_matrix_loc")) {
+        if (this._useVariantType.indexOf(ShaderUseVariantType.NodeCustomMatrix)>=0&&this.checklocValid(this.a_node_matrix_loc, "a_node_matrix_loc")) {
             G_DrawEngine.disableVertexAttribArray(this.a_node_matrix_loc);
         }
-        if (this.checklocValid(this.a_vert_color_loc, "a_vert_color_loc")) {
+        if (this._useVariantType.indexOf(ShaderUseVariantType.VertColor)>=0&&this.checklocValid(this.a_vert_color_loc, "a_vert_color_loc")) {
             G_DrawEngine.disableVertexAttribArray(this.a_vert_color_loc);
         }
     }

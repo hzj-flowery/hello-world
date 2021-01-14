@@ -54,6 +54,7 @@ G_UISetting.setUI();
  var arr = [
     "res/f-texture.png",
     "res/bindu.jpg",
+    "res/light.jpg",
     "res/models/killer_whale/whale.CYCLES.bin",
     "res/models/killer_whale/whale.CYCLES.gltf",
     "res/models/HeadData/head.json",

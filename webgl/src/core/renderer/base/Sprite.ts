@@ -57,6 +57,7 @@ import enums from "../camera/enums";
 import { G_ShaderCenter, ShaderType } from "../shader/ShaderCenter";
 import { ShaderUseVariantType } from "../shader/ShaderUseVariantType";
 import { LightData } from "../data/LightData";
+import { ShaderCode } from "../shader/ShaderCode";
 
 /**
  * 显示节点
@@ -116,6 +117,12 @@ export namespace SY {
         private init(): void {
             this.onInit();
             this.setShader(this._vertStr, this._fragStr);
+        }
+        public set shaderVert(vert:string){
+            this._vertStr = vert;
+        }
+        public set shaderFrag(frag:string){
+            this._fragStr = frag;
         }
         protected onInit(): void {
 
@@ -372,8 +379,17 @@ export namespace SY {
             this._texture.destroy();
         }
     }
+    export class  sySprite extends SpriteBase {
+        constructor() {
+            super();
+            this.name = "sySprite";
+        }
+        protected onInit(){
+            this._vertStr = ShaderCode.sprite.vert;
+            this._fragStr = ShaderCode.sprite.frag;
+        }
 
-
+    }
     export class Sprite extends Node {
         constructor() {
             super();

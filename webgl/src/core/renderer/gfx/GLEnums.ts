@@ -173,7 +173,7 @@ export const enum glvert_attr_semantic{
     JOINTS = 'a_joints',
     COLOR = 'a_color',//显示节点每一个顶点的颜色颜色
     NODE_Matrix = 'a_Matrix',//节点矩阵
-    UNIFORM_COLOR = 'u_color',
+    NODE_COLOR = 'u_color', //节点颜色
     //现阶段场景中只支持三种光
     LIGHT_COLOR = 'u_lightColor',
     LIGHT_COLOR_DIR = 'u_lightColorDir',
@@ -181,7 +181,10 @@ export const enum glvert_attr_semantic{
     LIGHT_COLOR_DIR1 = 'u_lightColorDir1',
     LIGHT_COLOR2 = 'u_lightColor2',
     LIGHT_COLOR_DIR2 = 'u_lightColorDir2',
+    LIGHT_SPECULAR_COLOR = 'u_specularColor', //高光
+    LIGHT_SPECULAR_SHININESS = 'u_shininess' ,//高光指数
     
+
     UV = 'a_uv',
     UV0 = 'a_uv0',
     UV1 = 'a_uv1',

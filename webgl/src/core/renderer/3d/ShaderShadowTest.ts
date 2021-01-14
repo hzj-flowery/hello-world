@@ -433,8 +433,7 @@ class ShadowLight {
     let cameraData = this.getCameraData();
     this.drawScene(cameraData.project, cameraData.mat, textureMatrix, lightData.reverseDir, this.textureProgramInfo, lightData.pos, cameraData.pos);
     // ------ Draw the frustum ------
-    let matMatrix = glMatrix.mat4.multiply(null, lightData.mat, glMatrix.mat4.invert(null, lightData.project));
-    G_LightModel.drawFrustum(cameraData.project, cameraData.mat, matMatrix);
+    G_LightModel.drawFrustum(cameraData.project, cameraData.mat);
 
   }
 

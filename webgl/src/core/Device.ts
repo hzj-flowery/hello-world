@@ -14,6 +14,8 @@ import { Node } from "./renderer/base/Node";
 import { SY } from "./renderer/base/Sprite";
 import { G_DrawEngine } from "./renderer/base/DrawEngine";
 import { G_LightCenter } from "./renderer/light/LightCenter";
+import enums from "./renderer/camera/enums";
+import { G_UISetting } from "./ui/UiSetting";
 
 /**
  渲染流程：
@@ -228,21 +230,29 @@ export default class Device {
         this.canvas = canvas;
         this._nextFrameS = new State(gl);
         this._curFrameS = new State(gl);
-        canvas.onmousedown = this.onMouseDown.bind(this);
-        canvas.onmousemove = this.onMouseMove.bind(this);
-        canvas.onmouseup = this.onMouseUp.bind(this);
-        // canvas.onkeydown = this.onKeyDown.bind(this);
+      
+        // 
 
         this._width = canvas.clientWidth;
         this._height = canvas.clientHeight;
         console.log("画布的尺寸----", this._width, this._height);
         this.initExt();
 
-        //添加事件监听
-        canvas.addEventListener("webglcontextlost", this.contextLost.bind(this));
-        canvas.addEventListener("webglcontextrestored", this.resume.bind(this));
-
+       
+        this.handleEvent(canvas);
         this.openStats();
+    }
+
+    private handleEvent(canvas: HTMLCanvasElement):void{
+         //添加事件监听
+         canvas.addEventListener("webglcontextlost", this.contextLost.bind(this));
+         canvas.addEventListener("webglcontextrestored", this.resume.bind(this));
+         canvas.onmousedown = this.onMouseDown.bind(this);
+         canvas.onmousemove = this.onMouseMove.bind(this);
+         canvas.onmouseup = this.onMouseUp.bind(this);
+         canvas.onwheel = this.onWheel.bind(this);
+         canvas.onmouseout = this.onMouseOut.bind(this);
+         canvas.onkeydown = this.onKeyDown.bind(this);
     }
 
     //
@@ -327,15 +337,57 @@ export default class Device {
     }
 
     private _isCapture: boolean = false;
+    private _press:boolean;
+    private _lastPressPos:Array<number> = [];
     private onMouseDown(ev): void {
-        this._isCapture = true;
+        //关闭截图功能
+        // this._isCapture = true;
+        this._press = true;
 
     }
-    private onMouseMove(ev): void {
-
+    private onMouseMove(ev:MouseEvent,value): void {
+        if(this._press)
+        {
+            //处理鼠标滑动逻辑
+            if(this._lastPressPos.length==0)
+            {
+                //本次不做任何操作
+                this._lastPressPos[0] = ev.x;
+                this._lastPressPos[1] = ev.y;
+            }
+            else
+            {
+                let detaX = ev.x - this._lastPressPos[0];
+                let detaY = ev.y - this._lastPressPos[1];
+                if(Math.abs(detaX)>Math.abs(detaY))
+                {
+                    //处理x轴方向
+                    G_UISetting.updateCameraX(detaX>0)
+                }
+                else
+                {
+                    //处理y轴方向
+                    G_UISetting.updateCameraY(detaY<0);
+                }
+                this._lastPressPos[0] = ev.x;
+                this._lastPressPos[1] = ev.y;
+            }
+    
+        }
+        
     }
     private onMouseUp(ev): void {
         this._isCapture = false;
+        this._press = false;
+        this._lastPressPos = [];
+    }
+    private onMouseOut():void{
+        this._isCapture = false;
+        this._press = false;
+        this._lastPressPos = [];
+    }
+    private onWheel(ev:WheelEvent):void{
+      G_UISetting.updateCameraZ(ev.deltaY>0);
     }
     private onKeyDown(key):void{
         console.log("key---------",key);
@@ -460,9 +512,12 @@ export default class Device {
         glMatrix.mat4.identity(this._temp1Matrix);
 
          //补一下光的数据
-        rData._lightColor = G_LightCenter.lightData.color;
-        rData._lightDirection = G_LightCenter.lightData.direction;
+        rData._lightColor = G_LightCenter.lightData.color; //光的颜色
+        rData._lightDirection = G_LightCenter.lightData.direction;//光的方向
         rData._cameraPosition = cameraData.position;
+        rData._specularShiness = G_LightCenter.lightData.specularShininess;
+        rData._specularColor = G_LightCenter.lightData.specularColor;
+        rData._lightPosition = G_LightCenter.lightData.position;
 
         switch (rData._type) {
             case RenderDataType.Base:

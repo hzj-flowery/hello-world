@@ -33,7 +33,6 @@ export default class Scene3D extends Scene {
     private _FLightSpot:SpotLight;
     private _FLightThreeD:ThreeDLight;
     private _sphere: Sphere;
-    private _line:Line;
     constructor() {
         super();
     }
@@ -63,10 +62,7 @@ export default class Scene3D extends Scene {
         this.addChild(this._centerNode);
         
 
-        this._line = new Line();
-        this._line.updateLinePos([0,0,0,
-            1,1,1]);
-        this._centerNode.addChild(this._line);
+       
 
         var spNode = new Node();
         this._sphere = new Sphere();
@@ -100,9 +96,7 @@ export default class Scene3D extends Scene {
         this._centerNode.addChild(this._cubeNode);
 
         this._pointLightCube = new PointLightCube();
-        this._pointLightCube.spriteFrame = "res/bindu.jpg";
-        this._pointLightCube.setPosition(-2.7, 5.7, 0);
-        this._pointLightCube.setScale(0.5, 0.5, 0.5);
+        this._pointLightCube.setPosition(-2.7, 0, 10);
         this._centerNode.addChild(this._pointLightCube);
 
         
@@ -140,20 +134,11 @@ export default class Scene3D extends Scene {
         this.setPosition(0, 0, 0);
         // setTimeout(this.rotateCenterNode.bind(this), 20);
 
-
-
-        G_UISetting.pushRenderCallBack(this.render.bind(this));
-        G_UISetting.render();
-    }
-
-    public render(setting:any):void{
-        this._line.updateLinePos([0,0,0,setting.lightDirX,setting.lightDirY,setting.lightDirZ]);
     }
     
     public rotateCenterNode() {
         this._centerNode.rotate(0, 1, 0);
         this._mirrorCube.rotate(1,-1,-0.2);
-        // this._FLightPoint.rotate(0,1,0);
         setTimeout(this.rotateCenterNode.bind(this), 20);
     }
     private readyRenderDraw(): void {

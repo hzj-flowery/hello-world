@@ -121,9 +121,6 @@ export class CameraModel {
         //场景摄像机
         this.setSceneCamera();
 
-        
-        //UI
-        G_UISetting.render();
     }
     private createClipspaceCubeBufferInfo() {
         // first let's add a cube. It goes from 1 to 3
