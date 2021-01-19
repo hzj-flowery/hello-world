@@ -1,2 +1,5 @@
-console.log("hello world");
-console.log("this is a test");
+
+
+var a = 10;
+var b = 10;
+var c = a+b;

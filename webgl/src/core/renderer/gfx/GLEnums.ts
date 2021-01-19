@@ -175,12 +175,14 @@ export const enum glvert_attr_semantic{
     NODE_Matrix = 'a_Matrix',//节点矩阵
     NODE_COLOR = 'u_color', //节点颜色
     //现阶段场景中只支持三种光
-    LIGHT_COLOR = 'u_lightColor',
-    LIGHT_COLOR_DIR = 'u_lightColorDir',
+    LIGHT_COLOR = 'u_lightColor',     //平行光的颜色
+    LIGHT_COLOR_DIR = 'u_lightColorDir',//平行光的方向
     LIGHT_COLOR1 = 'u_lightColor1',
     LIGHT_COLOR_DIR1 = 'u_lightColorDir1',
     LIGHT_COLOR2 = 'u_lightColor2',
     LIGHT_COLOR_DIR2 = 'u_lightColorDir2',
+    LIGHT_POINT_COLOR = 'u_pointColor',//点光
+    LIGHT_AMBIENT_COLOR = "u_ambientColor",//环境光
     LIGHT_SPECULAR_COLOR = 'u_specularColor', //高光
     LIGHT_SPECULAR_SHININESS = 'u_shininess' ,//高光指数
     

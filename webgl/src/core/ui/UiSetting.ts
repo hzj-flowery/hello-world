@@ -89,22 +89,24 @@ class UISetting {
             { type: 'slider', key: 'lightFieldOfView', min: 1, max: 179, change: this.render.bind(this), },
             { type: 'slider', key: 'lightBias', min: 0.005, max: 0.001, change: this.render.bind(this), precision: 3, step: 0.001, },
         ]
-        this.widgets = this.UI.setupUI(document.querySelector('#ui'), this.settings, [].concat(camera3D));
+        this.widgets = this.UI.setupUI(document.querySelector('#ui'), this.settings, [].concat(light));
         this.render();
     }
+
+    private _sensitivity:number = 0.3;
     //更新相机z坐标
     public updateCameraZ(scaleBig?) {
-        this.settings.cam3DPosZ = scaleBig == true ? this.settings.cam3DPosZ - 1 : this.settings.cam3DPosZ + 1;
+        this.settings.cam3DPosZ = scaleBig == true ? this.settings.cam3DPosZ - this._sensitivity : this.settings.cam3DPosZ + this._sensitivity;
         this.UI.updateUI(this.widgets, this.settings);
         this.render();
     }
     public updateCameraY(up?) {
-        this.settings.cam3DPosY = up == true ? this.settings.cam3DPosY - 1 : this.settings.cam3DPosY + 1;
+        this.settings.cam3DPosY = up == true ? this.settings.cam3DPosY - this._sensitivity : this.settings.cam3DPosY + this._sensitivity;
         this.UI.updateUI(this.widgets, this.settings);
         this.render();
     }
     public updateCameraX(right?) {
-        this.settings.cam3DPosX = right == true ? this.settings.cam3DPosX - 1 : this.settings.cam3DPosX + 1;
+        this.settings.cam3DPosX = right == true ? this.settings.cam3DPosX - this._sensitivity : this.settings.cam3DPosX + this._sensitivity;
         this.UI.updateUI(this.widgets, this.settings);
         this.render();
     }

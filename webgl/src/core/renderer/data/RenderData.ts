@@ -71,6 +71,8 @@ export class  RenderData {
     public _lightDirection: Array<number>;//光的方向
     public _lightPosition: Array<number>;//光的位置
     public _specularColor:Array<number>;//高光的颜色
+    public _pointColor:Array<number>;//点光的颜色
+    public _ambientColor:Array<number>;//环境光的颜色
     public _specularShiness:number;//高光指数
     public _nodeCustomMatrix: Float32Array;//节点自定义矩阵
     public _glPrimitiveType: glprimitive_type;//绘制的类型
@@ -104,6 +106,8 @@ export class  RenderData {
         this._lightDirection = [];
         this._lightPosition = [];
         this._specularColor = [];
+        this._ambientColor = [];
+        this._pointColor = [];
         this._specularShiness = 0;
         this._texture2DGLIDArray = [];
         this._textureCubeGLIDArray = [];
@@ -228,6 +232,12 @@ export class  RenderData {
                     break;
                 case ShaderUseVariantType.SpecularColor:
                     _shader.setUseSpecularLightColor(this._specularColor,this._specularShiness);
+                    break;
+                case ShaderUseVariantType.AmbientColor:
+                    _shader.setUseAmbientLightColor(this._ambientColor);
+                    break;
+                case ShaderUseVariantType.PointColor:
+                    _shader.setUseAmbientLightColor(this._pointColor);
                     break;
                 case ShaderUseVariantType.LightDirection:
                     _shader.setUseLightDirection(this._lightDirection);

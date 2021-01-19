@@ -96,7 +96,8 @@ export default class Scene3D extends Scene {
         this._centerNode.addChild(this._cubeNode);
 
         this._pointLightCube = new PointLightCube();
-        this._pointLightCube.setPosition(-2.7, 0, 10);
+        this._pointLightCube.setPosition(-2.7, 0, -10);
+        this._pointLightCube.spriteFrame = "res/dragon.jpg";
         this._centerNode.addChild(this._pointLightCube);
 
         

@@ -7,6 +7,8 @@ export class LightData {
     }
     private _specularColor: Array<number>;//高光的颜色
     private _specularShininess: number;//高光的指数(值越大光越小，值越小光越大)
+    private _ambientColor:Array<number>;//环境光颜色
+    private _pointColor:Array<number>;//点光的颜色
     private _posX: number = 0;
     private _posY: number = 0;
     private _posZ: number = 0;
@@ -32,7 +34,9 @@ export class LightData {
         this.direction = [8, 5, -10];
         this.color = [0.1, 0.1, 0.1, 1.0];
         this._specularShininess = 140;
-        this._specularColor = [1, 0.2, 0.2,1.0];
+        this._specularColor = [0.1, 0.1, 0.1,1.0];
+        this._ambientColor = [0.1,0.1,0.1,1.0];
+        this._pointColor = [0.0,1.0,0.0,1.0];//默认点光的颜色为红色
     }
     setData(pos: Array<number>, dir: Array<number>, color: Array<number>): void {
         this.position = pos;
@@ -125,5 +129,11 @@ export class LightData {
     }
     public get specularShininess(): number {
         return this._specularShininess;
+    }
+    public get ambientColor():Array<number>{
+       return this._ambientColor;
+    }
+    public get pointColor():Array<number>{
+        return this._pointColor;
     }
 }

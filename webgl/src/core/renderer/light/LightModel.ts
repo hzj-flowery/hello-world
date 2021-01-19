@@ -87,6 +87,7 @@ class LightModel {
         this._sunSprite.createNormalsBuffer(vertexData.normal, 3);
         this._sunSprite.createUVsBuffer(vertexData.texcoord, 2);
         this._sunSprite.createVertexsBuffer(vertexData.position, 3);
+        this._sunSprite.setScale(0.3,0.3,0.3);
         this._sunSprite.spriteFrame = "res/light.jpg";
         this._lightNode.addChild(this._sunSprite);
         setTimeout(this.autoRotateSun.bind(this), 17);

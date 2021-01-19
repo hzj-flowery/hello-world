@@ -515,6 +515,8 @@ export default class Device {
         rData._lightColor = G_LightCenter.lightData.color; //光的颜色
         rData._lightDirection = G_LightCenter.lightData.direction;//光的方向
         rData._cameraPosition = cameraData.position;
+        rData._ambientColor = G_LightCenter.lightData.ambientColor;//环境光
+        rData._pointColor = G_LightCenter.lightData.pointColor;//点光
         rData._specularShiness = G_LightCenter.lightData.specularShininess;
         rData._specularColor = G_LightCenter.lightData.specularColor;
         rData._lightPosition = G_LightCenter.lightData.position;
