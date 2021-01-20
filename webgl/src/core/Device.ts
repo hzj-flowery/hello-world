@@ -512,8 +512,8 @@ export default class Device {
         glMatrix.mat4.identity(this._temp1Matrix);
 
          //补一下光的数据
-        rData._lightColor = G_LightCenter.lightData.color; //光的颜色
-        rData._lightDirection = G_LightCenter.lightData.direction;//光的方向
+        rData._lightColor = G_LightCenter.lightData.parallelColor; //光的颜色
+        rData._lightDirection = G_LightCenter.lightData.parallelDirection;//光的方向
         rData._cameraPosition = cameraData.position;
         rData._ambientColor = G_LightCenter.lightData.ambientColor;//环境光
         rData._pointColor = G_LightCenter.lightData.pointColor;//点光

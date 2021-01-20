@@ -61,7 +61,7 @@ export class Shader {
     private a_tangent_loc;//切线属性位置
     private a_vert_color_loc;//节点颜色的位置
     private a_node_matrix_loc;//节点自定义矩阵位置
-    private u_color_loc;//节点颜色（该变量针对节点下的所有顶点）
+    private u_node_color_loc;//节点颜色（该变量针对节点下的所有顶点）
     private u_light_color_loc;//光照属性位置
     private u_light_color_dir_loc;//光照方向属性位置
     private u_pointColor_loc;//点光的颜色
@@ -120,7 +120,7 @@ export class Shader {
         this.a_node_matrix_loc = gl.getAttribLocation(_glID, glvert_attr_semantic.NODE_Matrix);
 
         
-        this.u_color_loc = gl.getUniformLocation(_glID,glvert_attr_semantic.NODE_COLOR);
+        this.u_node_color_loc = gl.getUniformLocation(_glID,glvert_attr_semantic.NODE_COLOR);
         this.u_ambientColor_loc = gl.getUniformLocation(_glID,glvert_attr_semantic.LIGHT_AMBIENT_COLOR);
         this.u_pointColor_loc = gl.getUniformLocation(_glID,glvert_attr_semantic.LIGHT_POINT_COLOR);
         this.u_light_color_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.LIGHT_COLOR);
@@ -233,8 +233,8 @@ export class Shader {
      * @param color 
      */
     public setUseNodeColor(color: Array<number>): void {
-        if (this.checklocValid(this.u_color_loc, "u_color_loc")) {
-            G_DrawEngine.setUniformFloatVec4(this.u_color_loc, color);
+        if (this.checklocValid(this.u_node_color_loc, "u_node_color_loc")) {
+            G_DrawEngine.setUniformFloatVec4(this.u_node_color_loc, color);
         }
     }
     /**

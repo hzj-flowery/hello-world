@@ -12,13 +12,15 @@ export class LightData {
     private _posX: number = 0;
     private _posY: number = 0;
     private _posZ: number = 0;
-    private _dirX: number = 0;
-    private _dirY: number = 0;
-    private _dirZ: number = 0;
-    private _colR: number = 0;
-    private _colG: number = 0;
-    private _colB: number = 0;
-    private _colA: number = 1.0;//透明通道
+
+    //1组平行光的方向和颜色
+    private _parallelDirX: number = 0;
+    private _parallelDirY: number = 0;
+    private _parallelDirZ: number = 0;
+    private _parallelColR: number = 0;
+    private _parallelColG: number = 0;
+    private _parallelColB: number = 0;
+    private _parallelColA: number = 1.0;//透明通道
 
     private _targetX: number = 3.5;//看向哪里
     private _targetY: number = 0;//看向哪里
@@ -31,17 +33,12 @@ export class LightData {
     private _perspective: boolean = false;//是否为透视
     public reset(): void {
         this.position = [0, 0, 0];
-        this.direction = [8, 5, -10];
-        this.color = [0.1, 0.1, 0.1, 1.0];
+        this.parallelDirection = [8, 5, -10];      //平行光的方向
+        this.parallelColor = [0.1, 0.1, 0.1, 1.0]; //平行光的颜色
         this._specularShininess = 140;
-        this._specularColor = [0.1, 0.1, 0.1,1.0];
+        this._specularColor = [1.0, 0.0, 0.0,1.0];
         this._ambientColor = [0.1,0.1,0.1,1.0];
-        this._pointColor = [0.0,1.0,0.0,1.0];//默认点光的颜色为红色
-    }
-    setData(pos: Array<number>, dir: Array<number>, color: Array<number>): void {
-        this.position = pos;
-        this.direction = dir;
-        this.color = color;
+        this._pointColor = [1.0,1.0,1.0,1.0];//默认点光的颜色为红色
     }
     public get perspective(): boolean {
         return this._perspective;
@@ -70,20 +67,20 @@ export class LightData {
     public set posY(p: number) { this._posY = p };
     public get posZ(): number { return this._posZ };
     public set posZ(p: number) { this._posZ = p };
-    public get dirX(): number { return this._dirX };
-    public set dirX(p: number) { this._dirX = p };
-    public get dirY(): number { return this._dirY };
-    public set dirY(p: number) { this._dirY = p };
-    public get dirZ(): number { return this._dirZ };
-    public set dirZ(p: number) { this._dirZ = p };
-    public get colR(): number { return this._colR };
-    public set colR(p: number) { this._colR = p };
-    public get colG(): number { return this._colG };
-    public set colG(p: number) { this._colG = p };
-    public get colB(): number { return this._colB };
-    public set colB(p: number) { this._colB = p };
-    public get colA(): number { return this._colA };
-    public set colA(p: number) { this._colA = p };
+    public get dirX(): number { return this._parallelDirX };
+    public set dirX(p: number) { this._parallelDirX = p };
+    public get dirY(): number { return this._parallelDirY };
+    public set dirY(p: number) { this._parallelDirY = p };
+    public get dirZ(): number { return this._parallelDirZ };
+    public set dirZ(p: number) { this._parallelDirZ = p };
+    public get colR(): number { return this._parallelColR };
+    public set colR(p: number) { this._parallelColR = p };
+    public get colG(): number { return this._parallelColG };
+    public set colG(p: number) { this._parallelColG = p };
+    public get colB(): number { return this._parallelColB };
+    public set colB(p: number) { this._parallelColB = p };
+    public get colA(): number { return this._parallelColA };
+    public set colA(p: number) { this._parallelColA = p };
 
     /**
      * 光看向的位置
@@ -104,22 +101,22 @@ export class LightData {
         this.posY = p[1] ? p[1] : this._posY;
         this.posZ = p[2] ? p[2] : this._posZ;
     }
-    public get direction(): Array<number> {
-        return [this._dirX, this._dirX, this._dirZ];
+    public get parallelDirection(): Array<number> {
+        return [this._parallelDirX, this._parallelDirY, this._parallelDirZ];
     }
-    public set direction(p: Array<number>) {
-        this.dirX = p[0] ? p[0] : this._dirX;
-        this.dirY = p[1] ? p[1] : this._dirY;
-        this.dirZ = p[2] ? p[2] : this._dirZ;
+    public set parallelDirection(p: Array<number>) {
+        this.dirX = p[0] ? p[0] : this._parallelDirX;
+        this.dirY = p[1] ? p[1] : this._parallelDirY;
+        this.dirZ = p[2] ? p[2] : this._parallelDirZ;
     }
-    public get color(): Array<number> {
-        return [this._colR, this._colG, this._colB, this._colA];
+    public get parallelColor(): Array<number> {
+        return [this._parallelColR, this._parallelColG, this._parallelColB, this._parallelColA];
     }
-    public set color(p: Array<number>) {
-        this.colR = p[0] ? p[0] : this._colR;
-        this.colG = p[1] ? p[1] : this._colG;
-        this.colB = p[2] ? p[2] : this._colB;
-        this.colA = p[3] ? p[3] : this._colA;
+    public set parallelColor(p: Array<number>) {
+        this.colR = p[0] ? p[0] : this._parallelColR;
+        this.colG = p[1] ? p[1] : this._parallelColG;
+        this.colB = p[2] ? p[2] : this._parallelColB;
+        this.colA = p[3] ? p[3] : this._parallelColA;
     }
     public get specularColor(): Array<number> {
         return this._specularColor;

@@ -174,13 +174,15 @@ export const enum glvert_attr_semantic{
     COLOR = 'a_color',//显示节点每一个顶点的颜色颜色
     NODE_Matrix = 'a_Matrix',//节点矩阵
     NODE_COLOR = 'u_color', //节点颜色
-    //现阶段场景中只支持三种光
+    //现阶段场景中只支持三束平行光
+    //平行光只有方向和颜色没有位置
     LIGHT_COLOR = 'u_lightColor',     //平行光的颜色
     LIGHT_COLOR_DIR = 'u_lightColorDir',//平行光的方向
     LIGHT_COLOR1 = 'u_lightColor1',
     LIGHT_COLOR_DIR1 = 'u_lightColorDir1',
     LIGHT_COLOR2 = 'u_lightColor2',
     LIGHT_COLOR_DIR2 = 'u_lightColorDir2',
+
     LIGHT_POINT_COLOR = 'u_pointColor',//点光
     LIGHT_AMBIENT_COLOR = "u_ambientColor",//环境光
     LIGHT_SPECULAR_COLOR = 'u_specularColor', //高光

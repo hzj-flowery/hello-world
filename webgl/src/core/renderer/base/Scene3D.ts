@@ -12,7 +12,6 @@ import Spine from "./spine/Spine";
 import { SpotLight } from "../light/SpotLight";
 import { ThreeDLight } from "../light/ThreeDLight";
 import MirrorCube from "../3d/MirrorCube";
-import { PointLightFCube } from "../3d/PointLightFCube";
 import { Line } from "../3d/Line";
 import { G_UISetting } from "../../ui/UiSetting";
 import PointLightCube from "../3d/PointLightCube";
@@ -29,7 +28,6 @@ export default class Scene3D extends Scene {
     private _customTexture: CustomTextureCube;
     private _centerNode: Node;
     private _mirrorCube:MirrorCube;
-    private _FLightPoint:PointLightFCube;
     private _FLightSpot:SpotLight;
     private _FLightThreeD:ThreeDLight;
     private _sphere: Sphere;
@@ -96,6 +94,7 @@ export default class Scene3D extends Scene {
         this._centerNode.addChild(this._cubeNode);
 
         this._pointLightCube = new PointLightCube();
+        this._pointLightCube.setScale(4.0,4.0,4.0);
         this._pointLightCube.setPosition(-2.7, 0, -10);
         this._pointLightCube.spriteFrame = "res/dragon.jpg";
         this._centerNode.addChild(this._pointLightCube);

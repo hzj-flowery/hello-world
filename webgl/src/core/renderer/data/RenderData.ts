@@ -237,7 +237,7 @@ export class  RenderData {
                     _shader.setUseAmbientLightColor(this._ambientColor);
                     break;
                 case ShaderUseVariantType.PointColor:
-                    _shader.setUseAmbientLightColor(this._pointColor);
+                    _shader.setUsePointLightColor(this._pointColor);
                     break;
                 case ShaderUseVariantType.LightDirection:
                     _shader.setUseLightDirection(this._lightDirection);
