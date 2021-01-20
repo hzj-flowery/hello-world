@@ -16,6 +16,8 @@ import { G_DrawEngine } from "./renderer/base/DrawEngine";
 import { G_LightCenter } from "./renderer/light/LightCenter";
 import enums from "./renderer/camera/enums";
 import { G_UISetting } from "./ui/UiSetting";
+import { SYMacro } from "./platform/SYMacro";
+import { G_LightModel } from "./renderer/light/LightModel";
 
 /**
  渲染流程：
@@ -307,12 +309,33 @@ export default class Device {
             return "webgl";
         }
     }
+
+    private handleAntialias(canvas: HTMLCanvasElement,context):void{
+        // canvas.width = canvas.width * window.devicePixelRatio;
+        // canvas.height = canvas.height * window.devicePixelRatio;
+        // context.scale(window.devicePixelRatio, window.devicePixelRatio);
+        let p = Math.sqrt(1080*1080+2340*2340)/6.5;
+        
+        console.log("我手机的物理像素的密度ppi----",window,p);
+    }
     //创建webgl画笔
     private createGLContext(canvas: HTMLCanvasElement): WebGL2RenderingContext {
-
+        /**
+         *   alpha?: boolean;
+            antialias?: boolean;
+            depth?: boolean;
+            desynchronized?: boolean;
+            failIfMajorPerformanceCaveat?: boolean;
+            powerPreference?: WebGLPowerPreference;
+            premultipliedAlpha?: boolean;
+            preserveDrawingBuffer?: boolean;
+            stencil?: boolean;
+         */
         let options = {
             stencil: true, //开启模板功能
-            // alpha:true, //那么这个颜色还会进一步和 canvas 所覆盖的页面颜色进行进一步叠加混色
+            antialias:SYMacro.macro.ENABLE_WEBGL_ANTIALIAS,//关闭抗锯齿
+            depth:true,
+            alpha:SYMacro.macro.ENABLE_TRANSPARENT_CANVAS, //那么这个颜色还会进一步和 canvas 所覆盖的页面颜色进行进一步叠加混色
         }
         var names = ["webgl2", "webgl", "experimental-webgl"];
         var context = null;
@@ -333,6 +356,8 @@ export default class Device {
         } else {
             alert("Failed to create WebGL context!");
         }
+        
+        this.handleAntialias(canvas,context);
         return context;
     }
 
@@ -397,6 +422,7 @@ export default class Device {
         this.visitRenderTree(time,stage);
         this.drawToUI();
         this.draw2screen();
+        
         this.onAfterRender();
     }
     /**
@@ -422,6 +448,7 @@ export default class Device {
         if (isShowCamera) {
             this._commitRenderState(null, { x: 0, y: 0, w: 0.5, h: 1 });
             this.triggerRender(false,true);
+            G_LightModel.drawFrustum(null,null);
             this.setViewPort({ x: 0.5, y: 0, w: 0.5, h: 1 });
             this.triggerRender(true,true);
         }

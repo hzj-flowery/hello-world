@@ -68,13 +68,7 @@ export class Shader {
     private u_ambientColor_loc;//环境光属性位置
     private u_light_specular_color_loc;//高光属性的位置
     private u_light_specular_shininess_loc;//高光属性的位置
-    private u_MVMatrix_loc;//模型视口矩阵属性位置
-    private u_PMatrix_loc;//透视投影矩阵属性位置
-    private u_MMatrix_loc;//模型矩阵属性位置
-    private u_MIMatrix_loc;//模型矩阵的逆矩阵属性位置
-    private u_MTMatrix_loc;//模型矩阵的转置矩阵属性位置
-    private u_MITMatrix_loc;//模型矩阵的逆矩阵的转置矩阵属性位置
-    private u_VMatrix_loc;//视口矩阵属性位置
+  
 
     private u_texCoord_loc;//纹理属性0号位置
     private u_texCoord1_loc;//纹理属性1号位置
@@ -88,10 +82,18 @@ export class Shader {
     private u_cubeCoord_loc;//立方体属性位置
     private u_skybox_loc;//天空盒属性位置
 
-    private u_pvm_matrix_loc;//投影视口模型矩阵
-    private u_pv_matrix_loc;//投影视口矩阵的位置
-    private u_pv_matrix_inverse_loc;//投影视口矩阵的逆矩阵的位置
-    private u_pvm_matrix_inverse_loc;//模型视图投影的逆矩阵
+    private u_Matrix_loc;//万能矩阵属性的位置
+    private u_VMMatrix_loc;//模型视口矩阵属性位置
+    private u_PMatrix_loc;//透视投影矩阵属性位置
+    private u_MMatrix_loc;//模型矩阵属性位置
+    private u_MIMatrix_loc;//模型矩阵的逆矩阵属性位置
+    private u_MTMatrix_loc;//模型矩阵的转置矩阵属性位置u_
+    private u_MITMatrix_loc;//模型矩阵的逆矩阵的转置矩阵属性位置
+    private u_VMatrix_loc;//视口矩阵属性位置
+    private u_PVMMatrix_loc;//投影视口模型矩阵
+    private u_PVMatrix_loc;//投影视口矩阵的位置
+    private u_PVMatrix_inverse_loc;//投影视口矩阵的逆矩阵的位置
+    private u_PVMMatrix_inverse_loc;//模型视图投影的逆矩阵
     private u_light_world_position_loc;//光的世界位置
     private u_camera_world_position_loc;//相机的世界位置
 
@@ -127,8 +129,9 @@ export class Shader {
         this.u_light_color_dir_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.LIGHT_COLOR_DIR);
         this.u_light_specular_color_loc = gl.getUniformLocation(_glID,glvert_attr_semantic.LIGHT_SPECULAR_COLOR);
         this.u_light_specular_shininess_loc = gl.getUniformLocation(_glID,glvert_attr_semantic.LIGHT_SPECULAR_SHININESS);     
-        this.u_MVMatrix_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.MVMatrix);
+        this.u_VMMatrix_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.VMMatrix);
         this.u_PMatrix_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.PMatrix);
+        this.u_Matrix_loc = gl.getUniformLocation(_glID,glvert_attr_semantic.Matrix);
 
         this.u_texCoord_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.TEX_COORD);
         this.u_texCoord1_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.TEX_COORD1);
@@ -142,15 +145,15 @@ export class Shader {
         this.u_cubeCoord_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.CUBE_COORD);
         this.u_skybox_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.SKYBOX);
 
-        this.u_pvm_matrix_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.PVM_MATRIX);
-        this.u_pvm_matrix_inverse_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.PVM_MATRIX_INVERSE);
+        this.u_PVMMatrix_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.PVM_MATRIX);
+        this.u_PVMMatrix_inverse_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.PVM_MATRIX_INVERSE);
         this.u_MMatrix_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.MMatrix);
         this.u_VMatrix_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.VMatrix);
         this.u_MIMatrix_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.MIMatrix);
         this.u_MTMatrix_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.MTMatrix);
         this.u_MITMatrix_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.MITMatrix);
-        this.u_pv_matrix_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.PVMatrix);
-        this.u_pv_matrix_inverse_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.PVMatrix_INVERSE);
+        this.u_PVMatrix_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.PVMatrix);
+        this.u_PVMatrix_inverse_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.PVMatrix_INVERSE);
         this.u_camera_world_position_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.CameraWorldPosition);
         this.u_light_world_position_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.LightWorldPosition);
 
@@ -211,7 +214,7 @@ export class Shader {
     
     /**
      * 
-     * @param color 设置使用光的颜色
+     * @param color 设置平行光的颜色
      */
     public setUseLightColor(color: Array<number>): void {
         if (this.checklocValid(this.u_light_color_loc, "u_light_color_loc")) {
@@ -219,7 +222,7 @@ export class Shader {
         }
     }
     /**
-     * 设置光照的方向
+     * 设置平行光的方向
      * @param direction 
      */
     public setUseLightDirection(direction: Array<number>): void {
@@ -320,24 +323,30 @@ export class Shader {
     }
     //设置使用投影视口模型矩阵
     public setUseProjectViewModelMatrix(pvmMatrix): void {
-        if (this.checklocValid(this.u_pvm_matrix_loc, "u_pvm_matrix_loc")) {
-            G_DrawEngine.setUniformMatrix(this.u_pvm_matrix_loc,pvmMatrix);
+        if (this.checklocValid(this.u_PVMMatrix_loc, "u_PVMMatrix_loc")) {
+            G_DrawEngine.setUniformMatrix(this.u_PVMMatrix_loc,pvmMatrix);
         }
     }
     public setUseProjectionViewMatrix(mat): void {
-        if (this.checklocValid(this.u_pv_matrix_loc, "u_pv_matrix_loc")) {
-            G_DrawEngine.setUniformMatrix(this.u_pv_matrix_loc, mat)
+        if (this.checklocValid(this.u_PVMatrix_loc, "u_PVMatrix_loc")) {
+            G_DrawEngine.setUniformMatrix(this.u_PVMatrix_loc, mat)
+        }
+    }
+    //设置使用万能矩阵
+    public setUseMatrix(mat):void{
+        if (this.checklocValid(this.u_Matrix_loc, "u_Matrix_loc")) {
+            G_DrawEngine.setUniformMatrix(this.u_Matrix_loc, mat)
         }
     }
     public setUseProjectionViewInverseMatrix(mat): void {
-        if (this.checklocValid(this.u_pv_matrix_inverse_loc, "u_pv_matrix_inverse_loc")) {
-            G_DrawEngine.setUniformMatrix(this.u_pv_matrix_inverse_loc, mat);
+        if (this.checklocValid(this.u_PVMatrix_inverse_loc, "u_PVMatrix_inverse_loc")) {
+            G_DrawEngine.setUniformMatrix(this.u_PVMatrix_inverse_loc, mat);
         }
     }
     //设置使用投影视口模型矩阵的逆矩阵
     public setUseProjectViewModelInverseMatrix(matrix): void {
-        if (this.checklocValid(this.u_pvm_matrix_inverse_loc, "u_pvm_matrix_inverse_loc")) {
-            G_DrawEngine.setUniformMatrix(this.u_pvm_matrix_inverse_loc, matrix)
+        if (this.checklocValid(this.u_PVMMatrix_inverse_loc, "u_PVMMatrix_inverse_loc")) {
+            G_DrawEngine.setUniformMatrix(this.u_PVMMatrix_inverse_loc, matrix)
         }
     }
     //设置视口矩阵
@@ -348,8 +357,8 @@ export class Shader {
     }
     //设置模型视口矩阵
     public setUseModelViewMatrix(mvMatrix): void {
-        if (this.checklocValid(this.u_MVMatrix_loc, "u_MVMatrix_loc")) {
-            G_DrawEngine.setUniformMatrix(this.u_MVMatrix_loc, mvMatrix);
+        if (this.checklocValid(this.u_VMMatrix_loc, "u_VMMatrix_loc")) {
+            G_DrawEngine.setUniformMatrix(this.u_VMMatrix_loc, mvMatrix);
         }
     }
     //设置透视投影矩阵

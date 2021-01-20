@@ -23,6 +23,7 @@ export enum ShaderUseVariantType {
     Model,  //模型世界矩阵
     View,       //视口矩阵
     Projection,  //投影矩阵
+    CustomMatrix,       //万能矩阵
     ModelInverse, //模型世界矩阵的逆矩阵
     ModelTransform, //模型世界矩阵的转置矩阵
     ModelInverseTransform,//模型世界矩阵的逆矩阵的转置矩阵

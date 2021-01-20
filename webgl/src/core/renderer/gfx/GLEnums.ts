@@ -210,8 +210,8 @@ export const enum glvert_attr_semantic{
     TEX_COORD8 = 'u_texCoord8',
     SKYBOX = "u_skybox",
     
-    
-    MVMatrix = 'u_MVMatrix',  //视口矩阵*模型世界矩阵
+    Matrix = 'u_Matrix',      //万能矩阵
+    VMMatrix = 'u_VMMatrix',  //视口矩阵*模型世界矩阵
     MMatrix = 'u_MMatrix',    //模型世界矩阵
     MTMatrix = 'u_MTMatrix',    //模型世界矩阵的转置矩阵
     MIMatrix = 'u_MIMatrix',    //模型世界矩阵的逆矩阵

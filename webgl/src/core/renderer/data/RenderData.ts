@@ -28,6 +28,7 @@ export class  RenderData {
         this._temp002_matrix = glMatrix.mat4.identity(null);
         this._temp003_matrix = glMatrix.mat4.identity(null);
         this._temp004_matrix = glMatrix.mat4.identity(null);
+        this._customMatrix = glMatrix.mat4.identity(null);
         this._isOffline = false;
         this.reset();
     }
@@ -58,6 +59,8 @@ export class  RenderData {
     public _nodeCustomMatrixGLID: WebGLBuffer;//节点自定义矩阵buffer的显存地址
     public _nodeCustomMatrixItemSize: number;//一个节点自定义矩阵的buffer单元的数据数目
     public _nodeCustomMatrixItemNums: number;//所有节点自定义矩阵buffer单元数目
+
+    public _customMatrix:Float32Array;//自定义矩阵
 
 
     public _indexGLID: WebGLBuffer;//索引buffer的显存地址
@@ -116,6 +119,7 @@ export class  RenderData {
         this._time = 0;
         this._glPrimitiveType = glprimitive_type.TRIANGLE_FAN;
         this._isUse = false;
+        glMatrix.mat4.identity(this._customMatrix);
     }
     public push2DTexture(texture: WebGLTexture): void {
         if (this._texture2DGLIDArray.indexOf(texture) < 0) {
@@ -196,6 +200,9 @@ export class  RenderData {
                     break;
                 case ShaderUseVariantType.View:
                     _shader.setUseViewMatrix(view);
+                    break;
+                case ShaderUseVariantType.CustomMatrix:
+                    _shader.setUseMatrix(this._customMatrix);
                     break;
                 case ShaderUseVariantType.ViewModel:
                     glMatrix.mat4.mul(this._temp_model_view_matrix, view, this._modelMatrix);

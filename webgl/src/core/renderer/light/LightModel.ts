@@ -21,6 +21,15 @@ let vertBase =
 void main() {
 gl_Position = u_PMatrix * u_VMatrix * u_MMatrix * a_position;
 }`
+let vertBase1 =
+    `attribute vec4 a_position;
+    uniform mat4 u_PMatrix;
+    uniform mat4 u_VMatrix;
+    uniform mat4 u_MMatrix;
+    uniform mat4 u_Matrix;
+void main() {
+gl_Position = u_PMatrix * u_VMatrix * u_MMatrix *u_Matrix* a_position;
+}`
 let fragBase =
     `precision mediump float;
 void main() {
@@ -148,6 +157,10 @@ class LightModel {
         this._lightLine.updateLinePos(this._coordPos.concat([0, 0, 0, setting.lightDirX, setting.lightDirY, setting.lightDirZ]));
         this._lightLine.color = [setting.lightColorR, setting.lightColorG, setting.lightColorB, setting.lightColorA];
         this.drawFrustum(null, null);
+    }
+
+    private test():void{
+
     }
 
     /**
