@@ -427,7 +427,7 @@ export default class Device {
      * @param drawtoUI 
      */
     public startDraw(time: number,stage:Node,debug:boolean = true,drawtoUI:boolean = true): void {
-        this._isDebugMode = debug;
+        this._isDebugMode = false //debug;
         this._isDrawToUI = drawtoUI;
         this.onBeforeRender();
         this.visitRenderTree(time,stage);

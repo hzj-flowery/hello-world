@@ -46,8 +46,8 @@ export class LightData {
         this._ambientColor = [0.1, 0.1, 0.1, 1.0];
         this._pointColor = [1.0, 1.0, 1.0, 1.0];//默认点光的颜色为红色
 
-        this._spotInnerLimit = MathUtils.degToRad(10);
-        this._spotOuterLimit = MathUtils.degToRad(20);
+        this._spotInnerLimit = MathUtils.degToRad(20);
+        this._spotOuterLimit = MathUtils.degToRad(30);
         this._spotDirection = [0, 0, 1];
         this._spotColor = [0, 1, 0, 1];
     }
@@ -72,8 +72,14 @@ export class LightData {
     public get spotInnerLimit(): number {
         return this._spotInnerLimit;
     }
+    public set spotInnerLimit(angle:number) {
+        this._spotInnerLimit = MathUtils.degToRad(angle);
+    }
     public get spotOuterLimit(): number {
         return this._spotOuterLimit;
+    }
+    public set spotOuterLimit(angle:number) {
+        this._spotOuterLimit = MathUtils.degToRad(angle);
     }
     public get projWidth(): number { return this._projWidth };
     public set projWidth(p: number) { this._projWidth = p };

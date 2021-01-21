@@ -79,6 +79,9 @@ class LightCenter {
         this._lightData.dirY = setting.lightDirY;
         this._lightData.dirZ = setting.lightDirZ;
 
+        this._lightData.spotInnerLimit = setting.spotInnerLimit;
+        this._lightData.spotOuterLimit = setting.spotOuterLimit;
+
         this._targetX = this._lightData.targetX = setting.lightTargetX;
         this._targetY =  this._lightData.targetY = setting.lightTargetY;
         this._targetZ =  this._lightData.targetZ = setting.lightTargetZ;
