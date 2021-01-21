@@ -40,6 +40,16 @@ class LightCenter {
     constructor() {
         this._lightData = new LightData();
     }
+    private _near:number = 0.1;
+    private _far:number = 50;
+    private _projWidth:number = 10;
+    private _projHeight:number = 10;
+    private _posX:number = 0;
+    private _posY:number = 0;
+    private _posZ:number = 0;
+    private _targetX:number = 0;
+    private _targetY:number = 0;
+    private _targetZ:number = 0;
     public init(): void {
         this._cameraMatrix = glMatrix.mat4.identity(null);
         this._projectMatrix = glMatrix.mat4.identity(null);
@@ -56,9 +66,9 @@ class LightCenter {
 
     public render(setting: any): void {
 
-        this._lightData.posX = setting.lightPosX;
-        this._lightData.posY = setting.lightPosY;
-        this._lightData.posZ = setting.lightPosZ;
+        this._posX =  this._lightData.posX = setting.lightPosX;
+        this._posY = this._lightData.posY = setting.lightPosY;
+        this._posZ =  this._lightData.posZ = setting.lightPosZ;
 
         this._lightData.colR = setting.lightColorR;
         this._lightData.colG = setting.lightColorG;
@@ -69,12 +79,12 @@ class LightCenter {
         this._lightData.dirY = setting.lightDirY;
         this._lightData.dirZ = setting.lightDirZ;
 
-        this._lightData.targetX = setting.lightTargetX;
-        this._lightData.targetY = setting.lightTargetY;
-        this._lightData.targetZ = setting.lightTargetZ;
+        this._targetX = this._lightData.targetX = setting.lightTargetX;
+        this._targetY =  this._lightData.targetY = setting.lightTargetY;
+        this._targetZ =  this._lightData.targetZ = setting.lightTargetZ;
 
-        this._lightData.projHeight = setting.lightProjHeight;
-        this._lightData.projWidth = setting.lightProjWidth;
+        this._projHeight = this._lightData.projHeight = setting.lightProjHeight;
+        this._projWidth =  this._lightData.projWidth = setting.lightProjWidth;
         this._lightData.fieldOfView = setting.lightFieldOfView;
         this._lightData.bias = setting.lightBias;
     }
@@ -101,29 +111,37 @@ class LightCenter {
          * 0  0  0  1 
          */
         glMatrix.mat4.lookAt2(this._cameraMatrix,
-            [this._lightData.posX, this._lightData.posY, this._lightData.posZ],          // position
-            [this._lightData.targetX, this._lightData.targetY, this._lightData.targetZ], // target
+            [this._posX, this._posY, this._posZ],          // position
+            [this._targetX, this._targetY, this._targetZ], // target
             [0, 1, 0],                                              // up
         )
         glMatrix.vec3.normalize(this._lightReverseDir, this._cameraMatrix.slice(8, 11));
         this._lightData.perspective ? glMatrix.mat4.perspective(this._projectMatrix,
             MathUtils.degToRad(this._lightData.fieldOfView),
-            this._lightData.projWidth / this._lightData.projHeight,
-            0.5,  // near
-            1000)   // far
+            this._projWidth / this._projHeight,
+            this._near,  // near
+            this._far)   // far
             : glMatrix.mat4.ortho(this._projectMatrix,
-                -this._lightData.projWidth / 2,   // left
-                this._lightData.projWidth / 2,   // right
-                -this._lightData.projHeight / 2,  // bottom
-                this._lightData.projHeight / 2,  // top
-                0.5,                      // near
-                1000);                      // far
+                -this._projWidth / 2,   // left
+                this._projWidth / 2,   // right
+                -this._projHeight / 2,  // bottom
+                this._projHeight / 2,  // top
+                this._near,                      // near
+                this._far);                      // far
         return {
             mat: this._cameraMatrix,
             reverseDir: this._lightReverseDir,
             project: this._projectMatrix,
-            pos: [this._lightData.posX, this._lightData.posY, this._lightData.posZ]
+            pos: [this._posX, this._posY, this._posZ]
         }
+    }
+    
+    /**
+     * 获取位置光的方向
+     */
+    public getPosLightDir():Array<number>
+    {
+        return [this._lightReverseDir[0],this._lightReverseDir[1],this._lightReverseDir[2]];
     }
 
 }

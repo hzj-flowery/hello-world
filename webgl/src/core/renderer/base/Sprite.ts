@@ -91,6 +91,7 @@ export namespace SY {
         private _materialId: string;//这里存放一个材质id
 
         private _color:Array<number>;//节点自定义颜色
+        private _customMatrix:Float32Array;//节点自定义矩阵
         //纹理buffer
         private _uvsBuffer: UVsBuffer;
         protected _texture: Texture;
@@ -130,14 +131,15 @@ export namespace SY {
         protected onShader(): void {
 
         }
-
         private setShader(vert: string, frag: string) {
             if (vert == "" || frag == "") {
                 return;
             }
             this._shader = G_ShaderCenter.createShader(ShaderType.Custom, vert, frag);
             this.onShader();
-
+        }
+        private pushShaderUseVariantType(type:ShaderUseVariantType):void{
+            this._shaderUseVariantType.indexOf(type)<0?this._shaderUseVariantType.push(type):null;
         }
         //创建顶点缓冲
         /**
@@ -149,7 +151,7 @@ export namespace SY {
         public createVertexsBuffer(vertexs: Array<number>, itemSize: number, preAllocateLen: number = 0): VertexsBuffer {
             this._vertexsBuffer = G_BufferManager.createBuffer(GLID_TYPE.VERTEX,
                 this._materialId, vertexs, itemSize, preAllocateLen) as VertexsBuffer;
-            this._shaderUseVariantType.push(ShaderUseVariantType.Vertex);
+            this.pushShaderUseVariantType(ShaderUseVariantType.Vertex);
             return this._vertexsBuffer;
         }
         //创建法线缓冲
@@ -162,7 +164,7 @@ export namespace SY {
         public createNormalsBuffer(normals: Array<number>, itemSize: number, preAllocateLen: number = 0): NormalBuffer {
             this._normalsBuffer = G_BufferManager.createBuffer(GLID_TYPE.NORMAL,
                 this._materialId, normals, itemSize, preAllocateLen) as NormalBuffer;
-            this._shaderUseVariantType.push(ShaderUseVariantType.Normal);
+            this.pushShaderUseVariantType(ShaderUseVariantType.Normal);
             return this._normalsBuffer;
         }
         //创建索引缓冲
@@ -186,7 +188,7 @@ export namespace SY {
         public createUVsBuffer(uvs: Array<number>, itemSize: number, preAllocateLen: number = 0): UVsBuffer {
             this._uvsBuffer = G_BufferManager.createBuffer(GLID_TYPE.UV,
                 this._materialId, uvs, itemSize, preAllocateLen) as UVsBuffer;
-            this._shaderUseVariantType.push(ShaderUseVariantType.UVs);
+            this.pushShaderUseVariantType(ShaderUseVariantType.UVs);
             return this._uvsBuffer
         }
         //创建节点自定义矩阵buffer
@@ -198,7 +200,7 @@ export namespace SY {
          */
         public createNodeCustomMatrixBuffer(matrix: Array<number>, itemSize: number, preAllocateLen: number = 0): NodeCustomMatrixBuffer {
             this._customMatrixBuffer = G_BufferManager.createBuffer(GLID_TYPE.MATRIX, this._materialId, matrix, itemSize, preAllocateLen) as NodeCustomMatrixBuffer;
-            this._shaderUseVariantType.push(ShaderUseVariantType.NodeCustomMatrix);
+            this.pushShaderUseVariantType(ShaderUseVariantType.NodeCustomMatrix);
             return this._customMatrixBuffer;
         }
         /** 
@@ -208,8 +210,12 @@ export namespace SY {
          */
         public createNodeVertColorBuffer(color: Array<number>, itemSize: number, preAllocateLen: number = 0): NodeVertColorBuffer {
             this._nodeVertColorBuffer = G_BufferManager.createBuffer(GLID_TYPE.VERT_COLOR, this._materialId, color, itemSize, preAllocateLen) as NodeVertColorBuffer;
-            this._shaderUseVariantType.push(ShaderUseVariantType.VertColor);
+            this.pushShaderUseVariantType(ShaderUseVariantType.VertColor);
             return this._nodeVertColorBuffer;
+        }
+        public createCustomMatrix(mat):void{
+            this._customMatrix = mat;
+            this.pushShaderUseVariantType(ShaderUseVariantType.CustomMatrix);
         }
         
         /**
@@ -220,25 +226,25 @@ export namespace SY {
             this._color[1] = color[1]!=null?color[1]:this._color[1];
             this._color[2] = color[2]!=null?color[2]:this._color[2];
             this._color[3] = color[3]!=null?color[3]:this._color[3];
-            this._shaderUseVariantType.push(ShaderUseVariantType.Color);
+            this.pushShaderUseVariantType(ShaderUseVariantType.Color);
         }
         //创建一个纹理buffer
         private createTexture2DBuffer(url: string): Texture {
             this._texture = new Texture2D();
             (this._texture as Texture2D).url = url;
-            this._shaderUseVariantType.push(ShaderUseVariantType.TEX_COORD);
+            this.pushShaderUseVariantType(ShaderUseVariantType.TEX_COORD);
             return this._texture
         }
         private createTextureCubeBuffer(arr: Array<string>): Texture {
             this._texture = new TextureCube();
             (this._texture as TextureCube).url = arr;
-            this._shaderUseVariantType.push(ShaderUseVariantType.TEX_COORD);
+            this.pushShaderUseVariantType(ShaderUseVariantType.TEX_COORD);
             return this._texture;
         }
         private createCustomTextureBuffer(data: TextureOpts): Texture {
             this._texture = new TextureCustom();
             (this._texture as TextureCustom).url = data;
-            this._shaderUseVariantType.push(ShaderUseVariantType.TEX_COORD);
+            this.pushShaderUseVariantType(ShaderUseVariantType.TEX_COORD);
             return this._texture;
         }
         /**
@@ -248,7 +254,7 @@ export namespace SY {
         private createRenderTextureBuffer(data: any): Texture {
             this._texture = new RenderTexture();
             (this._texture as RenderTexture).attach(data.place, data.width, data.height);
-            this._shaderUseVariantType.push(ShaderUseVariantType.TEX_COORD);
+            this.pushShaderUseVariantType(ShaderUseVariantType.TEX_COORD);
             return this._texture;
         }
         public set spriteFrame(url: string | Array<string> | TextureOpts | Object) {
@@ -353,6 +359,8 @@ export namespace SY {
             }
 
             this._renderData._nodeColor = this._color;
+
+            this._renderData._customMatrix = this._customMatrix;
 
 
             //节点自定义矩阵组

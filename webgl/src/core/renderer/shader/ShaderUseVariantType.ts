@@ -37,6 +37,7 @@ export enum ShaderUseVariantType {
     CameraWorldPosition,//世界中相机的位置
     LightColor,         //光的颜色
     LightDirection,     //光的方向
+    Spot,               //聚光
     SpecularColor,      //高光
     AmbientColor,       //环境光
     PointColor,         //点光

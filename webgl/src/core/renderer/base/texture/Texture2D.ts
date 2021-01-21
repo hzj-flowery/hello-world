@@ -86,8 +86,5 @@ export class Texture2D extends Texture{
         this.upload();
         this.loaded = true;
     }
-    public destroy():void{
-        super.destroy();
-    }
 
 }

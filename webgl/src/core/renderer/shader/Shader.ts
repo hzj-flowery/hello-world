@@ -68,6 +68,10 @@ export class Shader {
     private u_ambientColor_loc;//环境光属性位置
     private u_light_specular_color_loc;//高光属性的位置
     private u_light_specular_shininess_loc;//高光属性的位置
+    private u_light_spotDirection_loc;//聚光灯的方向
+    private u_light_spotColor_loc;//聚光灯颜色位置
+    private u_light_spotOuterLimit_loc;//聚光灯的外部限制
+    private u_light_spotInnerLimit_loc;//聚光灯的内部限制
   
 
     private u_texCoord_loc;//纹理属性0号位置
@@ -128,7 +132,12 @@ export class Shader {
         this.u_light_color_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.LIGHT_COLOR);
         this.u_light_color_dir_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.LIGHT_COLOR_DIR);
         this.u_light_specular_color_loc = gl.getUniformLocation(_glID,glvert_attr_semantic.LIGHT_SPECULAR_COLOR);
-        this.u_light_specular_shininess_loc = gl.getUniformLocation(_glID,glvert_attr_semantic.LIGHT_SPECULAR_SHININESS);     
+        this.u_light_specular_shininess_loc = gl.getUniformLocation(_glID,glvert_attr_semantic.LIGHT_SPECULAR_SHININESS);   
+        this.u_light_spotDirection_loc = gl.getUniformLocation(_glID,glvert_attr_semantic.LIGHT_SPOT_DIRECTION);
+        this.u_light_spotColor_loc = gl.getUniformLocation(_glID,glvert_attr_semantic.LIGHT_SPOT_COLOR);
+        this.u_light_spotInnerLimit_loc = gl.getUniformLocation(_glID,glvert_attr_semantic.LIGHT_SPOT_INNER_LIMIT);
+        this.u_light_spotOuterLimit_loc = gl.getUniformLocation(_glID,glvert_attr_semantic.LIGHT_SPOT_OUTER_LIMIT);
+
         this.u_VMMatrix_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.VMMatrix);
         this.u_PMatrix_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.PMatrix);
         this.u_Matrix_loc = gl.getUniformLocation(_glID,glvert_attr_semantic.Matrix);
@@ -230,6 +239,33 @@ export class Shader {
             G_DrawEngine.setUniformFloatVec3(this.u_light_color_dir_loc, direction);
         }
     }
+    
+    /**
+     * 设置使用聚光灯
+     * @param color 
+     * @param dir 
+     * @param inner 
+     * @param outer 
+     */
+    public setUseSpotLight(color:Array<number>,dir:Array<number>,inner:number,outer:number):void{
+        if(this.checklocValid(this.u_light_spotColor_loc,"u_light_spotColor_loc"))
+        {
+            G_DrawEngine.setUniformFloatVec4(this.u_light_spotColor_loc,color);
+        }
+        if(this.checklocValid(this.u_light_spotDirection_loc,"u_light_spotDirection_loc"))
+        {
+            G_DrawEngine.setUniformFloatVec3(this.u_light_spotDirection_loc,dir);
+        }
+        if(this.checklocValid(this.u_light_spotInnerLimit_loc,"u_light_spotInnerLimit_loc"))
+        {
+            G_DrawEngine.setUniform1f(this.u_light_spotInnerLimit_loc,inner);
+        }
+        if(this.checklocValid(this.u_light_spotOuterLimit_loc,"u_light_spotOuterLimit_loc"))
+        {
+            G_DrawEngine.setUniform1f(this.u_light_spotOuterLimit_loc,outer);
+        }
+    }
+
 
       /**
      * 设置使用节点自定义颜色

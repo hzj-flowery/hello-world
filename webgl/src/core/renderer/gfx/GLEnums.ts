@@ -187,7 +187,10 @@ export const enum glvert_attr_semantic{
     LIGHT_AMBIENT_COLOR = "u_ambientColor",//环境光
     LIGHT_SPECULAR_COLOR = 'u_specularColor', //高光
     LIGHT_SPECULAR_SHININESS = 'u_shininess' ,//高光指数
-    
+    LIGHT_SPOT_INNER_LIMIT = "u_spotInnerLimit",//聚光灯内部限制
+    LIGHT_SPOT_OUTER_LIMIT = "u_spotOuterLimit",//聚光灯内部限制
+    LIGHT_SPOT_COLOR = "u_spotColor",//聚光灯的颜色
+    LIGHT_SPOT_DIRECTION = "u_spotDirection",//聚光灯的方向
 
     UV = 'a_uv',
     UV0 = 'a_uv0',

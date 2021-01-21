@@ -68,9 +68,9 @@ class UISetting {
             { type: 'slider', key: 'cam3DFar', min: 1, max: 300, change: render, },
         ]
         let light = [
-            { type: 'slider', key: 'lightPosX', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.001, },
-            { type: 'slider', key: 'lightPosY', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.001, },
-            { type: 'slider', key: 'lightPosZ', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.001, },
+            { type: 'slider', key: 'lightPosX', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
+            { type: 'slider', key: 'lightPosY', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
+            { type: 'slider', key: 'lightPosZ', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
 
             { type: 'slider', key: 'lightDirX', min: -10, max: 10, change: this.render.bind(this), precision: 2, step: 1, },
             { type: 'slider', key: 'lightDirY', min: -10, max: 10, change: this.render.bind(this), precision: 2, step: 1, },
@@ -81,11 +81,11 @@ class UISetting {
             { type: 'slider', key: 'lightColorB', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
             { type: 'slider', key: 'lightColorA', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
 
-            { type: 'slider', key: 'lightTargetX', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.001, },
-            { type: 'slider', key: 'lightTargetY', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.001, },
-            { type: 'slider', key: 'lightTargetZ', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.001, },
-            { type: 'slider', key: 'lightProjWidth', min: 0, max: 100, change: this.render.bind(this), precision: 2, step: 0.001, },
-            { type: 'slider', key: 'lightProjHeight', min: 0, max: 100, change: this.render.bind(this), precision: 2, step: 0.001, },
+            { type: 'slider', key: 'lightTargetX', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
+            { type: 'slider', key: 'lightTargetY', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
+            { type: 'slider', key: 'lightTargetZ', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
+            { type: 'slider', key: 'lightProjWidth', min: 0, max: 100, change: this.render.bind(this), precision: 2, step: 0.1, },
+            { type: 'slider', key: 'lightProjHeight', min: 0, max: 100, change: this.render.bind(this), precision: 2, step: 0.1, },
             { type: 'slider', key: 'lightFieldOfView', min: 1, max: 179, change: this.render.bind(this), },
             { type: 'slider', key: 'lightBias', min: 0.005, max: 0.001, change: this.render.bind(this), precision: 3, step: 0.001, },
         ]

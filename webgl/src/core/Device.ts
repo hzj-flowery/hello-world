@@ -218,6 +218,8 @@ export default class Device {
     private _nextFrameS:State;//这个非常重要
 
     private static _instance: Device;
+    private _isDebugMode:boolean = true;
+    private _isDrawToUI:boolean = true;
     public static get Instance(): Device {
         if (!this._instance) {
             this._instance = new Device();
@@ -417,12 +419,20 @@ export default class Device {
     private onKeyDown(key):void{
         console.log("key---------",key);
     }
-    public startDraw(time: number,stage:Node): void {
+    /**
+     * 
+     * @param time 
+     * @param stage 
+     * @param debug 
+     * @param drawtoUI 
+     */
+    public startDraw(time: number,stage:Node,debug:boolean = true,drawtoUI:boolean = true): void {
+        this._isDebugMode = debug;
+        this._isDrawToUI = drawtoUI;
         this.onBeforeRender();
         this.visitRenderTree(time,stage);
-        this.drawToUI();
+        this._isDrawToUI?this.drawToUI():null;
         this.draw2screen();
-        
         this.onAfterRender();
     }
     /**
@@ -444,11 +454,9 @@ export default class Device {
     }
     //将结果绘制到窗口
     private draw2screen(): void {
-        let isShowCamera: boolean = true;
-        if (isShowCamera) {
+        if (this._isDebugMode) {
             this._commitRenderState(null, { x: 0, y: 0, w: 0.5, h: 1 });
             this.triggerRender(false,true);
-            G_LightModel.drawFrustum(null,null);
             this.setViewPort({ x: 0.5, y: 0, w: 0.5, h: 1 });
             this.triggerRender(true,true);
         }
@@ -547,6 +555,10 @@ export default class Device {
         rData._specularShiness = G_LightCenter.lightData.specularShininess;
         rData._specularColor = G_LightCenter.lightData.specularColor;
         rData._lightPosition = G_LightCenter.lightData.position;
+        rData._spotDirection = G_LightCenter.getPosLightDir();
+        rData._spotColor = G_LightCenter.lightData.spotColor;
+        rData._spotInnerLimit = G_LightCenter.lightData.spotInnerLimit;
+        rData._spotOuterLimit = G_LightCenter.lightData.spotOuterLimit;
 
         switch (rData._type) {
             case RenderDataType.Base:

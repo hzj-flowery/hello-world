@@ -7,10 +7,13 @@ import { SY } from "../base/Sprite";
 import { G_Stage } from "../base/Stage";
 import enums from "../camera/enums";
 import GameMainCamera from "../camera/GameMainCamera";
+import { glprimitive_type } from "../gfx/GLEnums";
 import { syPrimitives } from "../shader/Primitives";
 import { BufferAttribsData, ShaderData } from "../shader/Shader";
 import { G_ShaderFactory } from "../shader/ShaderFactory";
+import { ShaderUseVariantType } from "../shader/ShaderUseVariantType";
 import { G_LightCenter } from "./LightCenter";
+import { LineFrumstum } from "./LineFrumstum";
 
 
 let vertBase =
@@ -21,20 +24,13 @@ let vertBase =
 void main() {
 gl_Position = u_PMatrix * u_VMatrix * u_MMatrix * a_position;
 }`
-let vertBase1 =
-    `attribute vec4 a_position;
-    uniform mat4 u_PMatrix;
-    uniform mat4 u_VMatrix;
-    uniform mat4 u_MMatrix;
-    uniform mat4 u_Matrix;
-void main() {
-gl_Position = u_PMatrix * u_VMatrix * u_MMatrix *u_Matrix* a_position;
-}`
 let fragBase =
     `precision mediump float;
 void main() {
 gl_FragColor = vec4(1.0,0.0,0.0,1.0); 
 }`
+
+
 
 class LightModel {
     constructor() {
@@ -47,7 +43,7 @@ class LightModel {
     private _lightProjectInverseMatrix: Float32Array;
     private gl: WebGLRenderingContext;
     private _sunSprite: SY.sySprite;
-    private _cameraLight:SY.sySprite;//相机光
+    private _cameraLight:LineFrumstum;//相机光
     private _lightLine: Line;
     private _lightNode: Node;
     public init() {
@@ -104,40 +100,11 @@ class LightModel {
         this._lightLine = new Line();
         this._lightLine.updateLinePos(this._coordPos.concat([0, 0, 0, 1, 1, 1]));
         this._lightNode.addChild(this._lightLine);
+
+        this._cameraLight = new LineFrumstum();
+        this._lightNode.addChild(this._cameraLight);
+
         
-        let poss = [
-            -1, -1, -1,
-                1, -1, -1,
-                -1, 1, -1,
-                1, 1, -1,
-                -1, -1, 1,
-                1, -1, 1,
-                -1, 1, 1,
-                1, 1, 1,
-        ]
-        let indices = [
-            0, 1,
-                1, 3,
-                3, 2,
-                2, 0,
-
-                4, 5,
-                5, 7,
-                7, 6,
-                6, 4,
-
-                0, 4,
-                1, 5,
-                3, 7,
-                2, 6,
-        ]
-        // this._cameraLight = new SY.sySprite();
-        // this._cameraLight.shaderVert = vertBase;
-        // this._cameraLight.shaderFrag = fragBase;
-        // this._cameraLight.createVertexsBuffer(poss,3);
-        // this._cameraLight.createIndexsBuffer(indices);
-        // this._lightNode.addChild(this._cameraLight);
-
     }
     private autoRotateSun(): void {
         this._sunSprite.rotate(1, 1, 1);
@@ -153,15 +120,11 @@ class LightModel {
         this._lightNode.x = setting.lightPosX;
         this._lightNode.y = setting.lightPosY;
         this._lightNode.z = setting.lightPosZ;
-
         this._lightLine.updateLinePos(this._coordPos.concat([0, 0, 0, setting.lightDirX, setting.lightDirY, setting.lightDirZ]));
         this._lightLine.color = [setting.lightColorR, setting.lightColorG, setting.lightColorB, setting.lightColorA];
-        this.drawFrustum(null, null);
-    }
-
-    private test():void{
 
     }
+
 
     /**
      * 
@@ -196,6 +159,7 @@ class LightModel {
         });
         // calls gl.drawArrays or gl.drawElements
         G_ShaderFactory.drawBufferInfo(this._cubeLinesBufferInfo, gl.LINES);
+
     }
 
 }

@@ -56,6 +56,11 @@ export class  RenderData {
 
     public _nodeColor:Array<number>;//节点自定义颜色buffer的显存地址
 
+    public _spotColor:Array<number>;//聚光的颜色
+    public _spotDirection:Array<number>;//聚光的方向
+    public _spotInnerLimit:number;//聚光的内部限制
+    public _spotOuterLimit:number;//聚光的外部限制
+
     public _nodeCustomMatrixGLID: WebGLBuffer;//节点自定义矩阵buffer的显存地址
     public _nodeCustomMatrixItemSize: number;//一个节点自定义矩阵的buffer单元的数据数目
     public _nodeCustomMatrixItemNums: number;//所有节点自定义矩阵buffer单元数目
@@ -108,6 +113,10 @@ export class  RenderData {
         this._lightColor = [];
         this._lightDirection = [];
         this._lightPosition = [];
+        this._spotColor = [];
+        this._spotDirection = [];
+        this._spotInnerLimit = 0;
+        this._spotOuterLimit = 0;
         this._specularColor = [];
         this._ambientColor = [];
         this._pointColor = [];
@@ -248,6 +257,10 @@ export class  RenderData {
                     break;
                 case ShaderUseVariantType.LightDirection:
                     _shader.setUseLightDirection(this._lightDirection);
+                    break;
+                //聚光灯
+                case ShaderUseVariantType.Spot:
+                    _shader.setUseSpotLight(this._spotColor,this._spotDirection,this._spotInnerLimit,this._spotOuterLimit);
                     break;
                 case ShaderUseVariantType.Color:
                     _shader.setUseNodeColor(this._nodeColor);

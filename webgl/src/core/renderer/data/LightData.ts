@@ -1,3 +1,5 @@
+import { MathUtils } from "../../utils/MathUtils";
+
 /**
  * 光照数据
  */
@@ -7,8 +9,12 @@ export class LightData {
     }
     private _specularColor: Array<number>;//高光的颜色
     private _specularShininess: number;//高光的指数(值越大光越小，值越小光越大)
-    private _ambientColor:Array<number>;//环境光颜色
-    private _pointColor:Array<number>;//点光的颜色
+    private _ambientColor: Array<number>;//环境光颜色
+    private _pointColor: Array<number>;//点光的颜色
+    private _spotInnerLimit: number;//聚光的内圈
+    private _spotOuterLimit: number;//聚光的外圈
+    private _spotColor: Array<number>;//聚光的颜色
+    private _spotDirection: Array<number>;//聚光的方向
     private _posX: number = 0;
     private _posY: number = 0;
     private _posZ: number = 0;
@@ -36,15 +42,38 @@ export class LightData {
         this.parallelDirection = [8, 5, -10];      //平行光的方向
         this.parallelColor = [0.1, 0.1, 0.1, 1.0]; //平行光的颜色
         this._specularShininess = 140;
-        this._specularColor = [1.0, 0.0, 0.0,1.0];
-        this._ambientColor = [0.1,0.1,0.1,1.0];
-        this._pointColor = [1.0,1.0,1.0,1.0];//默认点光的颜色为红色
+        this._specularColor = [1.0, 0.0, 0.0, 1.0];
+        this._ambientColor = [0.1, 0.1, 0.1, 1.0];
+        this._pointColor = [1.0, 1.0, 1.0, 1.0];//默认点光的颜色为红色
+
+        this._spotInnerLimit = MathUtils.degToRad(10);
+        this._spotOuterLimit = MathUtils.degToRad(20);
+        this._spotDirection = [0, 0, 1];
+        this._spotColor = [0, 1, 0, 1];
     }
     public get perspective(): boolean {
         return this._perspective;
     }
     public set perspective(p: boolean) {
         this._perspective = p;
+    }
+    public set spotDirection(dir: Array<number>) {
+        this._spotDirection = dir;
+    }
+    public get spotDirection(): Array<number> {
+        return this._spotDirection;
+    }
+    public set spotColor(color: Array<number>) {
+        this._spotColor = color;
+    }
+    public get spotColor(): Array<number> {
+        return this._spotColor;
+    }
+    public get spotInnerLimit(): number {
+        return this._spotInnerLimit;
+    }
+    public get spotOuterLimit(): number {
+        return this._spotOuterLimit;
     }
     public get projWidth(): number { return this._projWidth };
     public set projWidth(p: number) { this._projWidth = p };
@@ -127,10 +156,10 @@ export class LightData {
     public get specularShininess(): number {
         return this._specularShininess;
     }
-    public get ambientColor():Array<number>{
-       return this._ambientColor;
+    public get ambientColor(): Array<number> {
+        return this._ambientColor;
     }
-    public get pointColor():Array<number>{
+    public get pointColor(): Array<number> {
         return this._pointColor;
     }
 }

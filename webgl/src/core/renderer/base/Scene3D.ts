@@ -15,6 +15,7 @@ import MirrorCube from "../3d/MirrorCube";
 import { Line } from "../3d/Line";
 import { G_UISetting } from "../../ui/UiSetting";
 import PointLightCube from "../3d/PointLightCube";
+import SpotLightCube from "../3d/SpotLightCube";
 
 export default class Scene3D extends Scene {
 
@@ -25,6 +26,7 @@ export default class Scene3D extends Scene {
     private _tableNode: Cube;
     private _spineNode: Spine;
     private _pointLightCube:PointLightCube;
+    private _spotLightCube:SpotLightCube;
     private _customTexture: CustomTextureCube;
     private _centerNode: Node;
     private _mirrorCube:MirrorCube;
@@ -98,6 +100,13 @@ export default class Scene3D extends Scene {
         this._pointLightCube.setPosition(-2.7, 0, -10);
         this._pointLightCube.spriteFrame = "res/dragon.jpg";
         this._centerNode.addChild(this._pointLightCube);
+        this._spotLightCube = new SpotLightCube();
+        this._spotLightCube.setScale(4.0,4.0,4.0);
+        this._spotLightCube.setPosition(2.7, 0, -10);
+        this._spotLightCube.spriteFrame = "res/dragon.jpg";
+        this._centerNode.addChild(this._spotLightCube);
+
+        
 
         
 
