@@ -78,14 +78,14 @@ var fragBaseCode =
   void main() {
   vec4 materialColor = texture2D(u_texCoord, v_uv);//材质颜色
   vec4 surfaceBaseColor = u_color*materialColor;//表面基底颜色
-  vec3 normal = normalize(v_normal);
+  vec3 normal = normalize(v_normal); // 因为 v_normal 是可变量，被插值过，所以不是单位向量，单位可以让它成为再次成为单位向量
   vec3 spotDirection = normalize(u_spotDirection);
   vec3 surfaceToLightDirection = normalize(v_surfaceToLight); //表面指向光位置的方向
   vec3 surfaceToViewDirection = normalize(v_surfaceToView);   //表面指向摄像机位置的方向
   vec3 halfVector = normalize(surfaceToLightDirection + surfaceToViewDirection);//高光方向
 
   float dotFromDirection = dot(surfaceToLightDirection,spotDirection);
-  float limitRange = u_spotOuterLimit - u_spotInnerLimit;
+  float limitRange = (u_spotOuterLimit - u_spotInnerLimit);
   float inLight = clamp((dotFromDirection - u_spotOuterLimit) / limitRange, 0.0, 1.0);
 
   float light =inLight* max(dot(normal, surfaceToLightDirection),0.0); //算出点光的入射强度
