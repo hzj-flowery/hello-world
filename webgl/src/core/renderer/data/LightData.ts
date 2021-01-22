@@ -12,6 +12,8 @@ export class LightData {
     constructor() {
         this.reset();
     }
+    private _fogColor:Array<number>;//雾的颜色
+    private _fogDensity:number;//雾的密度
     private _specularColor: Array<number>;//高光的颜色
     private _specularShininess: number;//高光的指数(值越大光越小，值越小光越大)
     private _ambientColor: Array<number>;//环境光颜色
@@ -55,6 +57,15 @@ export class LightData {
         this._spotOuterLimit = Math.cos(MathUtils.degToRad(30));
         this._spotDirection = [0, 0, 1];
         this._spotColor = [0, 1, 0, 1];
+
+        this._fogColor = [0.8, 0.9, 1, 1];
+        this._fogDensity = 0.092;
+    }
+    public get fogColor(){
+        return this._fogColor;
+    }
+    public get fogDensity(){
+        return this._fogDensity;
     }
     public get perspective(): boolean {
         return this._perspective;

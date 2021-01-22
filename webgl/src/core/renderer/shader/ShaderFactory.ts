@@ -24,13 +24,13 @@ var fragBaseCode =
 
     'varying vec2 v_uv;' +
     'uniform samplerCube u_skybox;' +
-    'uniform sampler2D u_texCoord;' +
+    'uniform sampler2D u_texture;' +
     'uniform mat4 u_PVMInverseMatrix;' +
     'uniform vec4 u_color;' +
     'uniform vec4 u_color_dir;' +
 
     'void main() {' +
-    'gl_FragColor = texture2D(u_texCoord, v_uv);' +
+    'gl_FragColor = texture2D(u_texture, v_uv);' +
     '}'
 
 enum ShaderType {

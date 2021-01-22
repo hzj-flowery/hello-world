@@ -40,6 +40,7 @@ export enum ShaderUseVariantType {
     SpecularLight,      //高光
     AmbientLight,       //环境光
     PointLight,         //点光
+    Fog,                //雾
     Color,                    //节点颜色
     VertColor,          //顶点的颜色
     NodeCustomMatrix,         //节点的自定义矩阵

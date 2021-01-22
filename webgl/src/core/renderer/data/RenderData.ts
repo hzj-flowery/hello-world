@@ -67,6 +67,9 @@ export class  RenderData {
 
     public _customMatrix:Float32Array;//自定义矩阵
 
+    public _fogColor:Array<number>;//雾的颜色
+    public _fogDensity:number;//雾的密度
+
 
     public _indexGLID: WebGLBuffer;//索引buffer的显存地址
     public _indexItemSize: number;//一个索引buffer单元的顶点数目
@@ -121,6 +124,8 @@ export class  RenderData {
         this._ambientColor = [];
         this._pointColor = [];
         this._specularShiness = 0;
+        this._fogColor = [];
+        this._fogDensity = 0;
         this._texture2DGLIDArray = [];
         this._textureCubeGLIDArray = [];
         this._nodeCustomMatrix = null;
@@ -259,6 +264,9 @@ export class  RenderData {
                 //聚光灯
                 case ShaderUseVariantType.SpotLight:
                     _shader.setUseSpotLight(this._spotColor,this._spotDirection,this._spotInnerLimit,this._spotOuterLimit);
+                    break;
+                case ShaderUseVariantType.Fog:
+                    _shader.setUseFog(this._fogColor,this._fogDensity);
                     break;
                 case ShaderUseVariantType.Color:
                     _shader.setUseNodeColor(this._nodeColor);

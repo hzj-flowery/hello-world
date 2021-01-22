@@ -63,7 +63,7 @@ var fragBaseCode =
   varying vec3 v_normal;
   varying vec3 v_surfaceToLight;
   varying vec3 v_surfaceToView;
-  uniform sampler2D u_texCoord;
+  uniform sampler2D u_texture;
   uniform vec4 u_color;     //节点的颜色
   uniform float u_shininess;
   uniform vec4 u_pointColor;//点光入射光的颜色
@@ -71,7 +71,7 @@ var fragBaseCode =
   uniform vec4 u_specularColor;//高光入射光颜色
 
   void main() {
-  vec4 materialColor = texture2D(u_texCoord, v_uv);//材质颜色
+  vec4 materialColor = texture2D(u_texture, v_uv);//材质颜色
   vec4 surfaceBaseColor = u_color*materialColor;//表面基底颜色
   vec3 normal = normalize(v_normal);
   vec3 surfaceToLightDirection = normalize(v_surfaceToLight); //表面指向光位置的方向

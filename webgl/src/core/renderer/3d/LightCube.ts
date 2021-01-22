@@ -31,12 +31,12 @@ var fragmentshader3d =
 'varying vec3 v_normal;'+                //法线
 'uniform vec3 u_lightColorDir;'+ //光的方向
 'uniform vec4 u_lightColor;'+               //光照
-'uniform sampler2D u_texCoord;' +     //纹理
+'uniform sampler2D u_texture;' +     //纹理
 'varying vec2 v_uv;' +
 
 'void main() {'+
 
-   'vec4 texColor = texture2D(u_texCoord, v_uv);'+
+   'vec4 texColor = texture2D(u_texture, v_uv);'+
   // because v_normal is a varying it's interpolated
   // so it will not be a unit vector. Normalizing it
   // will make it a unit vector again

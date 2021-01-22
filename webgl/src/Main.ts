@@ -7,7 +7,6 @@ import Device from "./core/Device";
 import LoaderManager from "./core/LoaderManager";
 import PointLightTest from "./core/renderer/light/PointLightTest";
 import RenderFlow from "./core/RenderFlow";
-import FogTest from "./core/renderer/3d/FogTest";
 import EarthSunTest from "./core/renderer/3d/EarthSunTest";
 import RobartTest from "./core/renderer/3d/RobartTest";
 import CaptureTest from "./core/renderer/3d/CaptureTest";
@@ -119,4 +118,6 @@ LoaderManager.instance.load(arr,null,function(){
     // RenderTargetTexture.run();
     
     // ShadowMapProjectionTest.run();
+
+    // FogTest.run();
 })

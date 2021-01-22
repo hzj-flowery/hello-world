@@ -192,6 +192,9 @@ export const enum glvert_attr_semantic{
     LIGHT_SPOT_COLOR = "u_spotColor",//聚光灯的颜色
     LIGHT_SPOT_DIRECTION = "u_spotDirection",//聚光灯的方向
 
+    FOG_COLOR = 'u_fogColor',//雾的颜色
+    FOG_DENSITY = 'u_fogDensity',//雾的密度
+
     UV = 'a_uv',
     UV0 = 'a_uv0',
     UV1 = 'a_uv1',
@@ -201,8 +204,8 @@ export const enum glvert_attr_semantic{
     UV5 = 'a_uv5',
     UV6 = 'a_uv6',
     UV7 = 'a_uv7',
-    CUBE_COORD = 'u_cubeCoord',//立方体纹理单元
-    TEX_COORD = 'u_texCoord',    //使用的纹理单元
+    CUBE_COORD = 'u_cubeTexture',//立方体纹理单元
+    TEX_COORD = 'u_texture',    //使用的纹理单元
     TEX_COORD1 = 'u_texCoord1',
     TEX_COORD2 = 'u_texCoord2',
     TEX_COORD3 = 'u_texCoord3',

@@ -54,13 +54,13 @@ var fs =
     'precision mediump float;' +        //精度
     'varying vec3 v_normal;' +          //法线
     'uniform vec4 u_diffuse;' +         //漫反射
-    'uniform sampler2D u_texCoord;' +   //骨骼矩阵纹理
+    'uniform sampler2D u_texture;' +   //骨骼矩阵纹理
     'uniform vec3 u_lightDirection;' +  //光的方向
     'varying vec2 a_uv;' +
     'void main () {' +
     'vec3 normal = normalize(v_normal);' +
     'float light = dot(u_lightDirection,normal) * .5 + .5;' +
-    'vec4 color = texture2D(u_texCoord,normalize(a_uv)); ' +
+    'vec4 color = texture2D(u_texture,normalize(a_uv)); ' +
     'gl_FragColor = color+vec4(u_diffuse.rgb * light, u_diffuse.a);' +
     '}'
 
@@ -83,7 +83,7 @@ export class Skeleton_SkinRenderer {
             renderData._shaderData = this.skinProgramInfo;
             renderData._uniformData.push({
                 u_world: node.worldMatrix,
-                u_texCoord: this.skin._texture._glID,
+                u_texture: this.skin._texture._glID,
                 u_jointTexture: this.skin.jointTexture,
                 u_numJoints: this.skin.joints.length,
             });

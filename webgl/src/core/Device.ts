@@ -560,6 +560,9 @@ export default class Device {
         rData._spotInnerLimit = G_LightCenter.lightData.spotInnerLimit;
         rData._spotOuterLimit = G_LightCenter.lightData.spotOuterLimit;
 
+        rData._fogColor = G_LightCenter.lightData.fogColor;
+        rData._fogDensity = G_LightCenter.lightData.fogDensity;
+
         switch (rData._type) {
             case RenderDataType.Base:
                 if (isUseScene) {

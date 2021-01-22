@@ -72,6 +72,9 @@ export class Shader {
     private u_light_spotColor_loc;//聚光灯颜色位置
     private u_light_spotOuterLimit_loc;//聚光灯的外部限制
     private u_light_spotInnerLimit_loc;//聚光灯的内部限制
+
+    private u_fogColor_loc;//雾的颜色
+    private u_fogDensity_loc;//雾的密度
   
 
     private u_texCoord_loc;//纹理属性0号位置
@@ -142,6 +145,9 @@ export class Shader {
         this.u_PMatrix_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.PMatrix);
         this.u_Matrix_loc = gl.getUniformLocation(_glID,glvert_attr_semantic.Matrix);
 
+        this.u_fogColor_loc = gl.getUniformLocation(_glID,glvert_attr_semantic.FOG_COLOR);
+        this.u_fogDensity_loc = gl.getUniformLocation(_glID,glvert_attr_semantic.FOG_DENSITY);
+
         this.u_texCoord_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.TEX_COORD);
         this.u_texCoord1_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.TEX_COORD1);
         this.u_texCoord2_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.TEX_COORD2);
@@ -205,8 +211,21 @@ export class Shader {
     public active(): void {
         G_DrawEngine.useProgram(this._spGLID);
     }
-
-    
+    /**
+     * 设置使用雾
+     * @param color 
+     * @param density 
+     */
+    public setUseFog(color: Array<number>,density:number):void{
+        if(this.checklocValid(this.u_fogColor_loc,"u_fogColor_loc"))
+        {
+            G_DrawEngine.setUniformFloatVec4(this.u_fogColor_loc,color)
+        }
+        if(this.checklocValid(this.u_fogDensity_loc,"u_fogDensity_loc"))
+        {
+            G_DrawEngine.setUniform1f(this.u_fogDensity_loc,density)
+        }
+    }
     /**
      * 设置使用高光的颜色
      * @param color 
@@ -328,7 +347,7 @@ export class Shader {
     //设置使用的纹理
     //注意如果此处不重新设置使用的纹理，那么会默认使用上一次绘制时的纹理
     public setUseTexture(glID: WebGLTexture, pos = 0): void {
-        let loc: string = (pos == 0) ? "u_texCoord_loc" : "u_texCoord" + pos + "_loc"
+        let loc: string = (pos == 0) ? "u_texCoord_loc" : "u_texture" + pos + "_loc"
         if (this.checklocValid(this[loc], loc)) {
             G_DrawEngine.active2DTexture(glID,this[loc],pos)
         }

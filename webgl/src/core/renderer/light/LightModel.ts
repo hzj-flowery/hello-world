@@ -122,7 +122,6 @@ class LightModel {
         this._lightNode.z = setting.lightPosZ;
         this._lightLine.updateLinePos(this._coordPos.concat([0, 0, 0, setting.lightDirX, setting.lightDirY, setting.lightDirZ]));
         this._lightLine.color = [setting.lightColorR, setting.lightColorG, setting.lightColorB, setting.lightColorA];
-
     }
 
 

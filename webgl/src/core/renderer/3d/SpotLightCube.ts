@@ -63,7 +63,7 @@ var fragBaseCode =
   varying vec3 v_normal;
   varying vec3 v_surfaceToLight;
   varying vec3 v_surfaceToView;
-  uniform sampler2D u_texCoord;
+  uniform sampler2D u_texture;
   uniform vec4 u_color;     //节点的颜色
   uniform float u_shininess;
   uniform vec4 u_specularColor;//高光入射光颜色
@@ -76,7 +76,7 @@ var fragBaseCode =
   uniform float u_spotOuterLimit;//聚光的外部限制
 
   void main() {
-  vec4 materialColor = texture2D(u_texCoord, v_uv);//材质颜色
+  vec4 materialColor = texture2D(u_texture, v_uv);//材质颜色
   vec4 surfaceBaseColor = u_color*materialColor;//表面基底颜色
   vec3 normal = normalize(v_normal); // 因为 v_normal 是可变量，被插值过，所以不是单位向量，单位可以让它成为再次成为单位向量
   vec3 spotDirection = normalize(u_spotDirection);

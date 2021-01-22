@@ -16,6 +16,7 @@ import { Line } from "../3d/Line";
 import { G_UISetting } from "../../ui/UiSetting";
 import PointLightCube from "../3d/PointLightCube";
 import SpotLightCube from "../3d/SpotLightCube";
+import { FogCube } from "../3d/FogCube";
 
 export default class Scene3D extends Scene {
 
@@ -27,6 +28,7 @@ export default class Scene3D extends Scene {
     private _spineNode: Spine;
     private _pointLightCube:PointLightCube;
     private _spotLightCube:SpotLightCube;
+    private _fogCubeArr:Array<FogCube>;
     private _customTexture: CustomTextureCube;
     private _centerNode: Node;
     private _mirrorCube:MirrorCube;
@@ -95,16 +97,29 @@ export default class Scene3D extends Scene {
         this._cubeNode.setScale(0.5, 0.5, 0.5);
         this._centerNode.addChild(this._cubeNode);
 
-        this._pointLightCube = new PointLightCube();
-        this._pointLightCube.setScale(4.0,4.0,4.0);
-        this._pointLightCube.setPosition(-2.7, 0, -10);
-        this._pointLightCube.spriteFrame = "res/dragon.jpg";
-        this._centerNode.addChild(this._pointLightCube);
-        this._spotLightCube = new SpotLightCube();
-        this._spotLightCube.setScale(100,50.0,10.0);
-        this._spotLightCube.setPosition(0, 0, -10);
-        this._spotLightCube.spriteFrame = "res/dragon.jpg";
-        this._centerNode.addChild(this._spotLightCube);
+        // this._pointLightCube = new PointLightCube();
+        // this._pointLightCube.setScale(100,50,10.0);
+        // this._pointLightCube.setPosition(0, 0, -10);
+        // this._pointLightCube.spriteFrame = "res/dragon.jpg";
+        // this._centerNode.addChild(this._pointLightCube);
+        // this._spotLightCube = new SpotLightCube();
+        // this._spotLightCube.setScale(100,50.0,10.0);
+        // this._spotLightCube.setPosition(0, 0, -10);
+        // this._spotLightCube.spriteFrame = "res/dragon.jpg";
+        // this._centerNode.addChild(this._spotLightCube);
+
+        this._fogCubeArr = [];
+        let fogCubeNums = 40;
+        let fogNode = new Node();
+        this._centerNode.addChild(fogNode);
+        for(let j = 0;j<fogCubeNums;j++)
+        {
+            let fog = new FogCube();
+            fog.spriteFrame = "resources/f-texture.png";
+            fog.setPosition(-2+j*1.1,0, j*2);
+            fogNode.addChild(fog);
+            this._fogCubeArr.push(fog);
+        }
 
         
 
@@ -143,6 +158,13 @@ export default class Scene3D extends Scene {
         this.setPosition(0, 0, 0);
         // setTimeout(this.rotateCenterNode.bind(this), 20);
 
+    }
+
+    protected collectRenderData(time):void{
+        this._fogCubeArr.forEach((fog,index)=>{
+            fog.rotate(0,1,0)
+        })
+        super.collectRenderData(time);
     }
     
     public rotateCenterNode() {
