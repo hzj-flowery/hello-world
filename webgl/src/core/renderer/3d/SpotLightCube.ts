@@ -120,9 +120,9 @@ export default class SpotLightCube extends SY.SpriteBase {
     this.color = [1, 1.0, 1.0, 1.0];
   }
   protected onShader() {
-    this._shader.pushShaderVariant(ShaderUseVariantType.SpecularColor);
-    this._shader.pushShaderVariant(ShaderUseVariantType.Spot);
-    this._shader.pushShaderVariant(ShaderUseVariantType.AmbientColor);
+    this._shader.pushShaderVariant(ShaderUseVariantType.SpecularLight);
+    this._shader.pushShaderVariant(ShaderUseVariantType.SpotLight);
+    this._shader.pushShaderVariant(ShaderUseVariantType.AmbientLight);
     this._shader.pushShaderVariant(ShaderUseVariantType.LightWorldPosition);
     this._shader.pushShaderVariant(ShaderUseVariantType.CameraWorldPosition);
     this._shader.pushShaderVariant(ShaderUseVariantType.ModelInverseTransform);

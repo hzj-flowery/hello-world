@@ -243,21 +243,21 @@ export class  RenderData {
                 case ShaderUseVariantType.LightWorldPosition:
                     _shader.setUseLightWorldPosition(this._lightPosition);
                     break;
-                case ShaderUseVariantType.SpecularColor:
+                case ShaderUseVariantType.SpecularLight:
                     _shader.setUseSpecularLightColor(this._specularColor,this._specularShiness);
                     break;
-                case ShaderUseVariantType.AmbientColor:
+                case ShaderUseVariantType.AmbientLight:
                     _shader.setUseAmbientLightColor(this._ambientColor);
                     break;
-                case ShaderUseVariantType.PointColor:
+                case ShaderUseVariantType.PointLight:
                     _shader.setUsePointLightColor(this._pointColor);
                     break;
                 //平行光
-                case ShaderUseVariantType.Parallel:
+                case ShaderUseVariantType.ParallelLight:
                     _shader.setUseParallelLight(this._parallelColor,this._parallelDirection);
                     break;
                 //聚光灯
-                case ShaderUseVariantType.Spot:
+                case ShaderUseVariantType.SpotLight:
                     _shader.setUseSpotLight(this._spotColor,this._spotDirection,this._spotInnerLimit,this._spotOuterLimit);
                     break;
                 case ShaderUseVariantType.Color:

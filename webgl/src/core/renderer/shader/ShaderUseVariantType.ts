@@ -35,11 +35,11 @@ export enum ShaderUseVariantType {
     ProjectionViewModelInverse,//(投影*视口*模型世界矩阵)的逆矩阵
     LightWorldPosition, //世界中光的位置
     CameraWorldPosition,//世界中相机的位置
-    Parallel,     //平行光
-    Spot,               //聚光
-    SpecularColor,      //高光
-    AmbientColor,       //环境光
-    PointColor,         //点光
+    ParallelLight,     //平行光
+    SpotLight,               //聚光
+    SpecularLight,      //高光
+    AmbientLight,       //环境光
+    PointLight,         //点光
     Color,                    //节点颜色
     VertColor,          //顶点的颜色
     NodeCustomMatrix,         //节点的自定义矩阵
