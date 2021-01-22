@@ -71,7 +71,6 @@ export default class LightCube extends SY.SpriteBase {
     }
     protected onShader(){
       this._shader.pushShaderVariant(ShaderUseVariantType.ModelInverseTransform);
-      this._shader.pushShaderVariant(ShaderUseVariantType.LightColor);
-      this._shader.pushShaderVariant(ShaderUseVariantType.LightDirection);
+      this._shader.pushShaderVariant(ShaderUseVariantType.Parallel);
     }
 }

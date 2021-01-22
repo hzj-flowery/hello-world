@@ -35,8 +35,7 @@ export enum ShaderUseVariantType {
     ProjectionViewModelInverse,//(投影*视口*模型世界矩阵)的逆矩阵
     LightWorldPosition, //世界中光的位置
     CameraWorldPosition,//世界中相机的位置
-    LightColor,         //光的颜色
-    LightDirection,     //光的方向
+    Parallel,     //平行光
     Spot,               //聚光
     SpecularColor,      //高光
     AmbientColor,       //环境光

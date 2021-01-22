@@ -220,21 +220,11 @@ export class Shader {
             G_DrawEngine.setUniform1f(this.u_light_specular_shininess_loc,shininess)
         }
     }
-    
-    /**
-     * 
-     * @param color 设置平行光的颜色
-     */
-    public setUseLightColor(color: Array<number>): void {
+    //设置使用平行光
+    public setUseParallelLight(color: Array<number>,direction: Array<number>):void{
         if (this.checklocValid(this.u_light_color_loc, "u_light_color_loc")) {
             G_DrawEngine.setUniformFloatVec4(this.u_light_color_loc, color);
         }
-    }
-    /**
-     * 设置平行光的方向
-     * @param direction 
-     */
-    public setUseLightDirection(direction: Array<number>): void {
         if (this.checklocValid(this.u_light_color_dir_loc, "u_light_color_dir_loc")) {
             G_DrawEngine.setUniformFloatVec3(this.u_light_color_dir_loc, direction);
         }

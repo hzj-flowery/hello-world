@@ -86,7 +86,11 @@ var fragBaseCode =
 
   float dotFromDirection = dot(surfaceToLightDirection,spotDirection);
   float limitRange = (u_spotOuterLimit - u_spotInnerLimit);
-  float inLight = clamp((dotFromDirection - u_spotOuterLimit) / limitRange, 0.0, 1.0);
+
+  //下面这个公式可以算出来
+  // float inLight = 1.0-clamp((dotFromDirection - u_spotOuterLimit) / limitRange, 0.0, 1.0);
+  //与上面公式的效果一样的
+  float inLight = smoothstep(u_spotOuterLimit, u_spotInnerLimit, dotFromDirection);
 
   float light =inLight* max(dot(normal, surfaceToLightDirection),0.0); //算出点光的入射强度
   float specular = 0.0;                                                  //高光强度

@@ -75,8 +75,8 @@ export class  RenderData {
     public _uvItemSize: number;//一个uv buffer单元的顶点数目
     public _normalGLID: WebGLBuffer;//法线buffer的显存地址
     public _normalItemSize: number;//一个法线buffer单元的顶点数目
-    public _lightColor: Array<number>;//光的颜色
-    public _lightDirection: Array<number>;//光的方向
+    public _parallelColor: Array<number>;//平行光的颜色
+    public _parallelDirection: Array<number>;//平行光的方向
     public _lightPosition: Array<number>;//光的位置
     public _specularColor:Array<number>;//高光的颜色
     public _pointColor:Array<number>;//点光的颜色
@@ -110,8 +110,8 @@ export class  RenderData {
         this._uvItemSize = -1;
         this._normalGLID = null;
         this._normalItemSize = -1;
-        this._lightColor = [];
-        this._lightDirection = [];
+        this._parallelColor = [];
+        this._parallelDirection = [];
         this._lightPosition = [];
         this._spotColor = [];
         this._spotDirection = [];
@@ -243,9 +243,6 @@ export class  RenderData {
                 case ShaderUseVariantType.LightWorldPosition:
                     _shader.setUseLightWorldPosition(this._lightPosition);
                     break;
-                case ShaderUseVariantType.LightColor:
-                    _shader.setUseLightColor(this._lightColor);
-                    break;
                 case ShaderUseVariantType.SpecularColor:
                     _shader.setUseSpecularLightColor(this._specularColor,this._specularShiness);
                     break;
@@ -255,8 +252,9 @@ export class  RenderData {
                 case ShaderUseVariantType.PointColor:
                     _shader.setUsePointLightColor(this._pointColor);
                     break;
-                case ShaderUseVariantType.LightDirection:
-                    _shader.setUseLightDirection(this._lightDirection);
+                //平行光
+                case ShaderUseVariantType.Parallel:
+                    _shader.setUseParallelLight(this._parallelColor,this._parallelDirection);
                     break;
                 //聚光灯
                 case ShaderUseVariantType.Spot:

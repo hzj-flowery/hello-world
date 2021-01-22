@@ -1,5 +1,10 @@
 import { MathUtils } from "../../utils/MathUtils";
 
+export enum LightType{
+    Parallel,  //平行光
+    Point,     //点光
+    Spot       //聚光
+}
 /**
  * 光照数据
  */
@@ -46,8 +51,8 @@ export class LightData {
         this._ambientColor = [0.1, 0.1, 0.1, 1.0];
         this._pointColor = [1.0, 1.0, 1.0, 1.0];//默认点光的颜色为红色
 
-        this._spotInnerLimit = MathUtils.degToRad(20);
-        this._spotOuterLimit = MathUtils.degToRad(30);
+        this._spotInnerLimit = Math.cos(MathUtils.degToRad(20));
+        this._spotOuterLimit = Math.cos(MathUtils.degToRad(30));
         this._spotDirection = [0, 0, 1];
         this._spotColor = [0, 1, 0, 1];
     }
@@ -73,13 +78,13 @@ export class LightData {
         return this._spotInnerLimit;
     }
     public set spotInnerLimit(angle:number) {
-        this._spotInnerLimit = MathUtils.degToRad(angle);
+        this._spotInnerLimit = Math.cos(MathUtils.degToRad(angle));
     }
     public get spotOuterLimit(): number {
         return this._spotOuterLimit;
     }
     public set spotOuterLimit(angle:number) {
-        this._spotOuterLimit = MathUtils.degToRad(angle);
+        this._spotOuterLimit = Math.cos(MathUtils.degToRad(angle));
     }
     public get projWidth(): number { return this._projWidth };
     public set projWidth(p: number) { this._projWidth = p };
@@ -136,6 +141,7 @@ export class LightData {
         this.posY = p[1] ? p[1] : this._posY;
         this.posZ = p[2] ? p[2] : this._posZ;
     }
+    //获取平行光的方向
     public get parallelDirection(): Array<number> {
         return [this._parallelDirX, this._parallelDirY, this._parallelDirZ];
     }
@@ -144,6 +150,7 @@ export class LightData {
         this.dirY = p[1] ? p[1] : this._parallelDirY;
         this.dirZ = p[2] ? p[2] : this._parallelDirZ;
     }
+    //获取平行光的颜色
     public get parallelColor(): Array<number> {
         return [this._parallelColR, this._parallelColG, this._parallelColB, this._parallelColA];
     }

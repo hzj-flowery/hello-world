@@ -78,7 +78,7 @@ export default class FirstSprite extends SY.Sprite2D {
             this._glMatrix.mat4.rotateZ(mat, mat, time * (0.1 + 0.1 * ndx));
 
                  const color = colors[ndx];
-            this._shader.setUseLightColor(color);
+            this._shader.setUseParallelLight(color,[]);
             this._shader.setUseProjectViewModelMatrix(mat);
 
             gl.drawArrays(
