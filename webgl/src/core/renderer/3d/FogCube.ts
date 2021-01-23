@@ -132,7 +132,4 @@ export class FogCube extends SY.SpriteBase {
         this._vertStr = vertexshader3d;
         this._fragStr = fragmentshader3d;
     }
-    onShader() {
-        this._shader.pushShaderVariant(ShaderUseVariantType.Fog);
-    }
 }

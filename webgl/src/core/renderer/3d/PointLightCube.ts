@@ -86,8 +86,7 @@ var fragBaseCode =
   gl_FragColor = diffuseColor + specularColor+ambientColor;
 
   }`
-
-
+  
 
 export default class PointLightCube extends SY.SpriteBase {
   constructor() {
@@ -103,14 +102,5 @@ export default class PointLightCube extends SY.SpriteBase {
     this._fragStr = fragBaseCode;
     this._glPrimitiveType = this.gl.TRIANGLE_STRIP;
     this.color = [1, 1.0, 1.0, 1.0];
-  }
-  protected onShader() {
-    this._shader.pushShaderVariant(ShaderUseVariantType.SpecularLight);
-    this._shader.pushShaderVariant(ShaderUseVariantType.PointLight);
-    this._shader.pushShaderVariant(ShaderUseVariantType.AmbientLight);
-    this._shader.pushShaderVariant(ShaderUseVariantType.LightWorldPosition);
-    this._shader.pushShaderVariant(ShaderUseVariantType.CameraWorldPosition);
-    this._shader.pushShaderVariant(ShaderUseVariantType.ModelInverseTransform);
-
   }
 }

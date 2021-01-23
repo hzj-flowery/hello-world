@@ -69,8 +69,4 @@ export default class LightCube extends SY.SpriteBase {
         this._fragStr = fragmentshader3d;
         this._glPrimitiveType = this.gl.TRIANGLE_STRIP;
     }
-    protected onShader(){
-      this._shader.pushShaderVariant(ShaderUseVariantType.ModelInverseTransform);
-      this._shader.pushShaderVariant(ShaderUseVariantType.ParallelLight);
-    }
 }

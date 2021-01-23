@@ -42,7 +42,8 @@ export enum ShaderUseVariantType {
     PointLight,         //点光
     Fog,                //雾
     Color,                    //节点颜色
-    VertColor,          //顶点的颜色
-    NodeCustomMatrix,         //节点的自定义矩阵
+    VertColor,          //顶点颜色
+    VertMatrix,         //顶点矩阵
+    Shadow,             //阴影
     UndefinedMax,//无效
 }

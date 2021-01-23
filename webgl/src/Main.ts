@@ -99,7 +99,7 @@ LoaderManager.instance.load(arr,null,function(){
     console.log("-888888----",/mobile|android|iphone|ipad/.test("mobilczjjjjj"));
 
 
-    new RenderFlow().startup();
+    // new RenderFlow().startup();
     // RampTextureTest.run();
     // CameraTest.run();
     // RobartTest.run();
@@ -111,7 +111,7 @@ LoaderManager.instance.load(arr,null,function(){
     // PointLightTest.run();
     // ThreeDLightTest.run();
 
-    // ShaderShadowTest.run();
+    ShaderShadowTest.run();
 
     // StencilTest.run();
 

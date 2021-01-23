@@ -4,7 +4,7 @@ import { glprimitive_type } from "../gfx/GLEnums";
 var vertexshader3d =
     'attribute vec4 a_position;' +
     'attribute vec4 a_color;' +
-    'attribute mat4 a_Matrix;' +
+    'attribute mat4 a_matrix;' +
 
     'uniform mat4 u_MMatrix;' +
     'uniform mat4 u_VMatrix;' +
@@ -12,7 +12,7 @@ var vertexshader3d =
 
     'varying vec4 v_color;' +
     'void main() {' +
-    'gl_Position =u_PMatrix*u_VMatrix*u_MMatrix* a_Matrix * a_position;' +
+    'gl_Position =u_PMatrix*u_VMatrix*u_MMatrix* a_matrix * a_position;' +
     'v_color = a_color;' +
     '}'
 var fragmentshader3d =
@@ -36,7 +36,7 @@ export default class InstantiateSprite extends SY.Sprite2D {
         this._vertStr = vertexshader3d;
         this._fragStr = fragmentshader3d;
         
-        this.numInstances = 1;
+        this.numInstances = 10;
         this._renderData._isDrawInstanced = true;
         this._renderData._drawInstancedVertNums = 4;
         this._renderData._drawInstancedNums = this.numInstances;
@@ -57,7 +57,7 @@ export default class InstantiateSprite extends SY.Sprite2D {
                 byteOffsetToMatrix,
                 numFloatsForView));
         }
-        this.createNodeCustomMatrixBuffer([], 4, this.matrixData.byteLength);
+        this.createVertMatrixBuffer([], 4, this.matrixData.byteLength);
         var colorData = [];
         for (var j = 0; j < this.numInstances; j++) {
             var res = this.getRandowColor();
@@ -97,7 +97,7 @@ export default class InstantiateSprite extends SY.Sprite2D {
     private numInstances;
     protected onShader():void{
         this._colorLoc = this._shader.getCustomAttributeLocation("a_color");
-        this._matrixLoc = this._shader.getCustomAttributeLocation('a_Matrix');
+        this._matrixLoc = this._shader.getCustomAttributeLocation('a_matrix');
     }
     public onDrawBefore(time: number) {
         time *= 0.001; // seconds
@@ -111,7 +111,7 @@ export default class InstantiateSprite extends SY.Sprite2D {
             this._glMatrix.mat4.rotateZ(mat, mat, time * (0.1 + 0.1 * ndx));
         });
         //更新缓冲区数据
-        this.getBuffer(SY.GLID_TYPE.MATRIX).updateSubData(this.matrixData);
+        this.getBuffer(SY.GLID_TYPE.VERT_MATRIX).updateSubData(this.matrixData);
 
         let gl = this.gl;
         for (let i = 0; i < 4; ++i) {

@@ -200,8 +200,8 @@ export class NormalBuffer extends glBaseBuffer {
         this.useDynamicUsage();
     }
 }
-//节点矩阵buffer
-export class NodeCustomMatrixBuffer extends glBaseBuffer {
+//顶点矩阵buffer
+export class VertMatrixBuffer extends glBaseBuffer {
     constructor(gl, matrix: Array<number>, itemSize: number, preAllocateLen: number) {
         super(gl, matrix, itemSize, gl.ARRAY_BUFFER, 4, preAllocateLen);
     }
@@ -209,8 +209,8 @@ export class NodeCustomMatrixBuffer extends glBaseBuffer {
         this.useDynamicUsage();
     }
 }
-//节点顶点颜色buffer
-export class NodeVertColorBuffer extends glBaseBuffer {
+//顶点颜色buffer
+export class VertColorBuffer extends glBaseBuffer {
     constructor(gl, color: Array<number>, itemSize: number, preAllocateLen: number) {
         super(gl, color, itemSize, gl.ARRAY_BUFFER, 4, preAllocateLen);
     }
@@ -234,8 +234,8 @@ class BufferManager {
     private _mapIndexBuffer: Map<string, IndexsBuffer> = new Map();
     private _mapNormalBuffer: Map<string, NormalBuffer> = new Map();
     private _mapUVBuffer: Map<string, UVsBuffer> = new Map();
-    private _mapNodeVertColorBuffer: Map<string, NodeVertColorBuffer> = new Map();
-    private _mapNodeMatrixBuffer: Map<string, NodeCustomMatrixBuffer> = new Map();
+    private _mapVertColorBuffer: Map<string, VertColorBuffer> = new Map();
+    private _mapVertMatrixBuffer: Map<string, VertMatrixBuffer> = new Map();
     /**
      * 
      * @param type buffer类型
@@ -256,7 +256,7 @@ class BufferManager {
                 return this.createUV(materialId, data, itemSize, preAllocateLen);
             case SY.GLID_TYPE.VERT_COLOR:
                 return this.createVertColor(materialId, data, itemSize, preAllocateLen);
-            case SY.GLID_TYPE.MATRIX:
+            case SY.GLID_TYPE.VERT_MATRIX:
                 return this.createMatrix(materialId, data, itemSize, preAllocateLen);
             default: break;
         }
@@ -272,9 +272,9 @@ class BufferManager {
             case SY.GLID_TYPE.UV:
                 return this._mapUVBuffer.get(materialId);
             case SY.GLID_TYPE.VERT_COLOR:
-                return this._mapNodeVertColorBuffer.get(materialId);
-            case SY.GLID_TYPE.MATRIX:
-                return this._mapNodeMatrixBuffer.get(materialId);
+                return this._mapVertColorBuffer.get(materialId);
+            case SY.GLID_TYPE.VERT_MATRIX:
+                return this._mapVertMatrixBuffer.get(materialId);
             default: console.log("未知类型，请指明类型"); break;
         }
     }
@@ -298,14 +298,14 @@ class BufferManager {
         this._mapUVBuffer.set(id, buffer);
         return buffer;
     }
-    private createVertColor(id: string, data: Array<number>, itemSize: number, preAllocateLen: number): NodeVertColorBuffer {
-        let buffer = new NodeVertColorBuffer(this._gl, data, itemSize, preAllocateLen);
-        this._mapNodeVertColorBuffer.set(id, buffer);
+    private createVertColor(id: string, data: Array<number>, itemSize: number, preAllocateLen: number): VertColorBuffer {
+        let buffer = new VertColorBuffer(this._gl, data, itemSize, preAllocateLen);
+        this._mapVertColorBuffer.set(id, buffer);
         return buffer;
     }
-    private createMatrix(id: string, data: Array<number>, itemSize: number, preAllocateLen: number): NodeCustomMatrixBuffer {
-        let buffer = new NodeCustomMatrixBuffer(this._gl, data, itemSize, preAllocateLen);
-        this._mapNodeMatrixBuffer.set(id, buffer);
+    private createMatrix(id: string, data: Array<number>, itemSize: number, preAllocateLen: number): VertMatrixBuffer {
+        let buffer = new VertMatrixBuffer(this._gl, data, itemSize, preAllocateLen);
+        this._mapVertMatrixBuffer.set(id, buffer);
         return buffer;
     }
 }

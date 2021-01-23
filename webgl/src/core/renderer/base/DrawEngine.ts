@@ -61,6 +61,8 @@ class DrawEngine {
         gl.drawElementsInstanced(mode,count,type,offset,instanceCount)
     }
     public run(rd: RenderData, view, proj,shader:Shader): void {
+        if(!shader)return;
+
         let gl = this.gl;
         rd.bindGPUBufferData(view, proj,shader);
         //绘制前

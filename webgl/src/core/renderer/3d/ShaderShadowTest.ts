@@ -148,6 +148,10 @@ class ShadowLight {
     uniform sampler2D u_shadowMap; //投影纹理，第一次站在光的位置进行绘制，将结果存在这里，这个纹理只用于存储深度
     uniform float u_bias;
     uniform vec3 u_reverseLightDirection;          //光的反方向
+
+   
+
+
     bool inRange(vec3 coordP){
        return coordP.x >= 0.0 && coordP.x <= 1.0 && coordP.y >= 0.0 && coordP.y <= 1.0; //uv纹理坐标必须处于【0，1】
     }

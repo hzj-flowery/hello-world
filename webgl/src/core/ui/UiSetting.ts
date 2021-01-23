@@ -36,8 +36,8 @@ class UISetting {
         lightTargetX: 3.5, //光照摄像机看向的目标的x轴坐标
         lightTargetY: 0,   //光照摄像机看向的目标的y轴坐标
         lightTargetZ: 3.5, //光照摄像机看向的目标的z轴坐标
-        lightProjWidth: 10, //光照摄像机渲染的屏幕宽度
-        lightProjHeight: 10, //光照摄像机渲染的屏幕高度
+        lightProjWidth: 2, //光照摄像机渲染的屏幕宽度
+        lightProjHeight: 2, //光照摄像机渲染的屏幕高度
         lightFieldOfView: 120,   //视角fov
         lightBias: 0.005,
         spotInnerLimit:10,//点光内围

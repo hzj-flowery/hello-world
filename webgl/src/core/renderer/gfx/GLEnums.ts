@@ -171,10 +171,10 @@ export const enum glvert_attr_semantic{
     BITANGENT = 'a_bitangent',
     WEIGHTS = 'a_weights',
     JOINTS = 'a_joints',
-    COLOR = 'a_color',//显示节点每一个顶点的颜色颜色
-    NODE_Matrix = 'a_Matrix',//节点矩阵
-    NODE_COLOR = 'u_color', //节点颜色
-    //现阶段场景中只支持三束平行光
+    VERT_COLOR = 'a_color',//显示节点每一个顶点的颜色颜色
+    VERT_Matrix = 'a_matrix',//顶点矩阵
+    COLOR = 'u_color', //节点颜色
+    //现阶段场景中只支持三束平行光VERT_
     //平行光只有方向和颜色没有位置
     LIGHT_COLOR = 'u_lightColor',     //平行光的颜色
     LIGHT_COLOR_DIR = 'u_lightColorDir',//平行光的方向
@@ -194,6 +194,15 @@ export const enum glvert_attr_semantic{
 
     FOG_COLOR = 'u_fogColor',//雾的颜色
     FOG_DENSITY = 'u_fogDensity',//雾的密度
+
+    SHADOW_MAP = 'u_shadowMap',//阴影贴图
+    /**
+     * mapInfor[0]:shadowMin  阴影的最小值
+     * mapInfor[1]:shadowMax   阴影的最大值
+     * mapInfor[2]:shadowBias  阴影的马赫带
+     * MapInfor[3]:shadowSize  阴影的像素尺寸
+     */
+    SHADOW_INFOR = 'u_shadowInfor',//阴影信息
 
     UV = 'a_uv',
     UV0 = 'a_uv0',

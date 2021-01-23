@@ -7,7 +7,7 @@ import enums from "../camera/enums";
 var vertexshader3d =
     'attribute vec4 a_position;' +
     'attribute vec4 a_color;' +
-    'attribute mat4 a_Matrix;' +
+    'attribute mat4 a_matrix;' +
 
     'uniform mat4 u_MMatrix;' +
     'uniform mat4 u_VMatrix;' +
@@ -15,7 +15,7 @@ var vertexshader3d =
 
     'varying vec4 v_color;' +
     'void main() {' +
-    'gl_Position =u_PMatrix*u_VMatrix*u_MMatrix* a_Matrix * a_position;' +
+    'gl_Position =u_PMatrix*u_VMatrix*u_MMatrix* a_matrix * a_position;' +
     'v_color = a_color;' +
     '}'
 var fragmentshader3d =
@@ -37,7 +37,7 @@ export default class TwoSprite extends SY.Sprite2D {
         this._vertStr = vertexshader3d;
         this._fragStr = fragmentshader3d;
         this._colorLoc = this._shader.getCustomAttributeLocation("a_color");
-        this._matrixLoc = this._shader.getCustomAttributeLocation('a_Matrix');
+        this._matrixLoc = this._shader.getCustomAttributeLocation('a_matrix');
         var gl = this.gl;
         // setup matrixes, one per instance
         this.numInstances = 3;
@@ -199,7 +199,7 @@ export default class TwoSprite extends SY.Sprite2D {
         time *= 0.001; // seconds
 
         const colorLoc = this._shader.getCustomAttributeLocation("a_color");
-        const matrixLoc = this._shader.getCustomAttributeLocation('a_Matrix');
+        const matrixLoc = this._shader.getCustomAttributeLocation('a_matrix');
 
 
         this._shader.active();

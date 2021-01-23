@@ -40,9 +40,6 @@ export default class SkyBox extends SY.SpriteBase {
           
           this._glPrimitiveType = this.gl.TRIANGLE_STRIP;
      }
-     protected onShader(){
-          this._shader.pushShaderVariant(ShaderUseVariantType.SKYBOX);
-     }
      private defaultPath = [
           'res/skybox/2/right+x.png',
           'res/skybox/2/left-x.png',

@@ -61,9 +61,9 @@ export class  RenderData {
     public _spotInnerLimit:number;//聚光的内部限制
     public _spotOuterLimit:number;//聚光的外部限制
 
-    public _nodeCustomMatrixGLID: WebGLBuffer;//节点自定义矩阵buffer的显存地址
-    public _nodeCustomMatrixItemSize: number;//一个节点自定义矩阵的buffer单元的数据数目
-    public _nodeCustomMatrixItemNums: number;//所有节点自定义矩阵buffer单元数目
+    public _vertMatrixGLID: WebGLBuffer;//节点自定义矩阵buffer的显存地址
+    public _vertMatrixItemSize: number;//一个节点自定义矩阵的buffer单元的数据数目
+    public _vertMatrixItemNums: number;//所有节点自定义矩阵buffer单元数目
 
     public _customMatrix:Float32Array;//自定义矩阵
 
@@ -274,11 +274,11 @@ export class  RenderData {
                 case ShaderUseVariantType.VertColor:
                     _shader.setUseNodeVertColor(this._nodeVertColorGLID, this._nodeVertColorItemSize);
                     break;
-                case ShaderUseVariantType.NodeCustomMatrix:
-                    _shader.setUseNodeCustomMatrix(this._nodeCustomMatrixGLID, this._nodeCustomMatrixItemSize);
+                case ShaderUseVariantType.VertMatrix:
+                    _shader.setUseVertMatrix(this._vertMatrixGLID, this._vertMatrixItemSize);
                     break;
                 default:
-                    console.log("目前还没有处理这个矩阵类型");
+                    // console.log("目前还没有处理这个矩阵类型");
             }
         })
     }
