@@ -3,7 +3,7 @@
 import { cc } from "../../../CCDebug";
 import Device from "../../Device";
 import LoaderManager from "../../LoaderManager";
-import { glMatrix } from "../../Matrix";
+import { glMatrix } from "../../math/Matrix";
 import TextureCustom from "../base/texture/TextureCustom";
 import CustomTextureData from "../data/CustomTextureData";
 import { syPrimitives } from "../shader/Primitives";

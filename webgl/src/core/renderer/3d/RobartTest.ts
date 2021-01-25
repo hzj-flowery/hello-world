@@ -1,6 +1,6 @@
 import Device from "../../Device";
 import LoaderManager from "../../LoaderManager";
-import { glMatrix } from "../../Matrix";
+import { glMatrix } from "../../math/Matrix";
 import { MathUtils } from "../../utils/MathUtils";
 import { syPrimitives } from "../shader/Primitives";
 import { BufferAttribsData, ShaderData } from "../shader/Shader";

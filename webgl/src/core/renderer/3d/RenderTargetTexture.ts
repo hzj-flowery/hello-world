@@ -1,5 +1,5 @@
 import Device from "../../Device";
-import { glMatrix } from "../../Matrix";
+import { glMatrix } from "../../math/Matrix";
 import { G_ShaderFactory } from "../shader/ShaderFactory";
 
 let vertexshader3d = 

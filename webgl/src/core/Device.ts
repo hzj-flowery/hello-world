@@ -1,5 +1,5 @@
 
-import { glMatrix } from "./Matrix";
+import { glMatrix } from "./math/Matrix";
 import Scene2D from "./renderer/base/Scene2D";
 import Scene3D from "./renderer/base/Scene3D";
 import {G_CameraModel } from "./renderer/camera/CameraModel";

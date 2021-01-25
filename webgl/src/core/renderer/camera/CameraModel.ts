@@ -1,6 +1,6 @@
 import Device from "../../Device";
 import { Graphic } from "../../Graphic/Graphic";
-import { glMatrix } from "../../Matrix";
+import { glMatrix } from "../../math/Matrix";
 import { G_UISetting } from "../../ui/UiSetting";
 import { MathUtils } from "../../utils/MathUtils";
 import { syPrimitives } from "../shader/Primitives";

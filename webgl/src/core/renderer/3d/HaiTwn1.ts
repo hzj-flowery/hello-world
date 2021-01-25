@@ -1,7 +1,7 @@
 "use strict";
 
 import Device from "../../Device";
-import { glMatrix } from "../../Matrix";
+import { glMatrix } from "../../math/Matrix";
 import { Texture2D } from "../base/texture/Texture2D";
 import LoaderManager from "../../LoaderManager";
 import { sy } from "../../Director";

@@ -1,5 +1,5 @@
 import Ref from "../../../Ref";
-import { glMatrix } from "../../Matrix";
+import { glMatrix } from "../../math/Matrix";
 
 
 export class Node extends Ref {

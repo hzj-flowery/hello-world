@@ -23,7 +23,7 @@
         </div>
  */
 import Device from "../../Device";
-import { glMatrix } from "../../Matrix";
+import { glMatrix } from "../../math/Matrix";
 import { syPrimitives } from "../shader/Primitives";
 import { BufferAttribsData, ShaderData } from "../shader/Shader";
 import { G_ShaderFactory } from "../shader/ShaderFactory";

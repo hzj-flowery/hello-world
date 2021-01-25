@@ -1,7 +1,7 @@
 "use strict";
 
 import Device from "../../Device";
-import { glMatrix } from "../../Matrix";
+import { glMatrix } from "../../math/Matrix";
 import { OBJParseHelper } from "../parse/OBJParseHelper";
 import { G_ShaderFactory } from "../shader/ShaderFactory";
 

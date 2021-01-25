@@ -17,6 +17,7 @@ import { G_UISetting } from "../../ui/UiSetting";
 import PointLightCube from "../3d/PointLightCube";
 import SpotLightCube from "../3d/SpotLightCube";
 import { FogCube } from "../3d/FogCube";
+import { glMatrix } from "../../math/Matrix";
 
 export default class Scene3D extends Scene {
 
@@ -119,9 +120,8 @@ export default class Scene3D extends Scene {
             fog.setPosition(-2+j*1.1,0, j*2);
             fogNode.addChild(fog);
             this._fogCubeArr.push(fog);
-        }
 
-        
+        }
 
         
 

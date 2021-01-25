@@ -1,5 +1,5 @@
 import Device from "../../Device";
-import { glMatrix } from "../../Matrix";
+import { glMatrix } from "../../math/Matrix";
 import { G_UISetting } from "../../ui/UiSetting";
 import { Line } from "../3d/Line";
 import { Node } from "../base/Node";

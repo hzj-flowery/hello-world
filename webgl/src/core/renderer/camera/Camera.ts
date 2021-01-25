@@ -3,7 +3,7 @@ import enums from "./enums";
 import { RenderTexture } from "../base/texture/RenderTexture";
 import FrameBuffer from "../gfx/FrameBuffer";
 import { Node } from "../base/Node";
-import { glMatrix } from "../../Matrix";
+import { glMatrix } from "../../math/Matrix";
 import { CameraData } from "../data/CameraData";
 
 /**

@@ -1,4 +1,4 @@
-import { glMatrix } from "../../Matrix";
+import { glMatrix } from "../../math/Matrix";
 import { Node } from "../base/Node";
 import { SY } from "../base/Sprite";
 import { glprimitive_type } from "../gfx/GLEnums";

@@ -1,4 +1,4 @@
-import { glMatrix } from "../../Matrix";
+import { glMatrix } from "../../math/Matrix";
 import { MathUtils } from "../../utils/MathUtils";
 import { SY } from "../base/Sprite";
 import { CameraData } from "../data/CameraData";

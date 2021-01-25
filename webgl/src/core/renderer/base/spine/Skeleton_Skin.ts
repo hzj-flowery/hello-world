@@ -1,5 +1,5 @@
 import Device from "../../../Device";
-import { glMatrix } from "../../../Matrix";
+import { glMatrix } from "../../../math/Matrix";
 import { Texture } from "../texture/Texture";
 import { Texture2D } from "../texture/Texture2D";
 import { Skeleton_Node } from "./Skeleton_Node";

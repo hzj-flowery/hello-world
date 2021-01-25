@@ -2563,7 +2563,6 @@ export namespace glMatrix {
      * @param {vec3} v vector to translate by
      * @returns {mat4} out
      */
-
     function translate$2(out, a, v:any[]) {
         out = out || new MatType(16);
         var x = v[0],
@@ -3103,6 +3102,7 @@ export namespace glMatrix {
         return out;
     }
     /**
+     * 从四元数旋转和矢量平移创建矩阵
      * Creates a matrix from a quaternion rotation and vector translation
      * This is equivalent to (but much faster than):
      *

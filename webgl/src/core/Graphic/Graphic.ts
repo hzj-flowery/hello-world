@@ -1,4 +1,4 @@
-import { glMatrix } from "../Matrix";
+import { glMatrix } from "../math/Matrix";
 import { BufferAttribsData, ShaderData } from "../renderer/shader/Shader";
 import { G_ShaderFactory } from "../renderer/shader/ShaderFactory";
 

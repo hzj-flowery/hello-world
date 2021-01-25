@@ -2,7 +2,7 @@
 'use strict';
 
 import Device from "../../Device";
-import { glMatrix } from "../../Matrix";
+import { glMatrix } from "../../math/Matrix";
 import { G_UISetting } from "../../ui/UiSetting";
 import { MathUtils } from "../../utils/MathUtils";
 import { G_DrawEngine } from "../base/DrawEngine";

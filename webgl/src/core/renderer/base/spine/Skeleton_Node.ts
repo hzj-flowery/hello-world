@@ -1,6 +1,6 @@
 //transforms
 
-import { glMatrix } from "../../../Matrix";
+import { glMatrix } from "../../../math/Matrix";
 import { Skeleton_MeshRenderer } from "./Skeleton_MeshRenderer";
 import { Skeleton_SkinRenderer } from "./Skeleton_SkinRenderer";
 

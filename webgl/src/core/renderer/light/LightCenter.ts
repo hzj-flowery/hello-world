@@ -1,4 +1,4 @@
-import { glMatrix } from "../../Matrix";
+import { glMatrix } from "../../math/Matrix";
 import { G_UISetting } from "../../ui/UiSetting";
 import { MathUtils } from "../../utils/MathUtils";
 import { LightData } from "../data/LightData";

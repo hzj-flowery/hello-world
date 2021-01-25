@@ -1,7 +1,7 @@
 'use strict';
 
 import Device from "../../Device";
-import { glMatrix } from "../../Matrix";
+import { glMatrix } from "../../math/Matrix";
 import { MathUtils } from "../../utils/MathUtils";
 import {G_CameraModel } from "../camera/CameraModel";
 import { syPrimitives } from "../shader/Primitives";
