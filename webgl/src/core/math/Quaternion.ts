@@ -119,7 +119,7 @@ export class Quaternion {
 		this._onChangeCallback();
 		return this;
 	}
-	setFromEuler(euler, update) {
+	setFromEuler(euler, update?) {
 		if (!(euler && euler.isEuler)) {
 			throw new Error('THREE.Quaternion: .setFromEuler() now expects an Euler rotation rather than a Vector3 and order.');
 		}
@@ -301,6 +301,7 @@ export class Quaternion {
 		this._onChangeCallback();
 		return this;
 	}
+	//两个4元数相乘
 	multiply(q, p) {
 		if (p !== undefined) {
 			console.warn('THREE.Quaternion: .multiply() now only accepts one argument. Use .multiplyQuaternions( a, b ) instead.');

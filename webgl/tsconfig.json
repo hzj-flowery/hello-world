@@ -11,5 +11,5 @@
   ],
     "include": [
     "./src/**/*.ts", "src/core/platform/id-generater.js", "src/core/platform/js.js", "src/core/renderer/shader/shaderFunc.txt", "src/js/bitmap_worker.js"
-  ]
+, "src/core/math/Object3D.js"  ]
 }

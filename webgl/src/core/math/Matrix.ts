@@ -2154,6 +2154,11 @@ export namespace glMatrix {
         return out;
     }
     /**
+     * 对于一个矩阵来说，他代表的是一个节点空间坐标系
+     * 我们对于节点所做的任何变换（平移 旋转 缩放）都将记录在这个矩阵中
+     * 关于平移和缩放分别用一个数组记录就可以了
+     * 关于旋转使用四元数来记录
+     * 最后我们l利用这三个数据调用下面这个函数就可以获得变换后空间坐标系
      * creates a matrix from translation, quaternion, scale
      * @param {Number[]} translation [x, y, z] translation
      * @param {Number[]} quaternion [x, y, z, z] quaternion rotation
