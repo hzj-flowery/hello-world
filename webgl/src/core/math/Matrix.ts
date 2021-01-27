@@ -2158,7 +2158,8 @@ export namespace glMatrix {
      * 我们对于节点所做的任何变换（平移 旋转 缩放）都将记录在这个矩阵中
      * 关于平移和缩放分别用一个数组记录就可以了
      * 关于旋转使用四元数来记录
-     * 最后我们l利用这三个数据调用下面这个函数就可以获得变换后空间坐标系
+     * 最后我们利用这三个数据调用下面这个函数就可以获得变换后空间坐标系
+     * 每次返回的矩阵都是一个全新的矩阵，也就说生成的矩阵完全是由这三个数据生成的
      * creates a matrix from translation, quaternion, scale
      * @param {Number[]} translation [x, y, z] translation
      * @param {Number[]} quaternion [x, y, z, z] quaternion rotation
@@ -2216,8 +2217,17 @@ export namespace glMatrix {
     
         return dst;
       }
-
-      function decompose(mat, translation, quaternion, scale) {
+      
+      /**
+       * 拆卸
+       * 在图形学世界里 矩阵就代表空间坐标系
+       * 可以通过一个矩阵拆卸出来 平移的数据，旋转四元数的数据 缩放的数据
+       * @param mat 
+       * @param translation 
+       * @param quaternion 
+       * @param scale 
+       */
+      function decompose(mat, translation:Array<number>, quaternion:Array<number>, scale:Array<number>) {
         let sx = length(mat.slice(0, 3));
         const sy = length(mat.slice(4, 7));
         const sz = length(mat.slice(8, 11));

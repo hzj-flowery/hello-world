@@ -3,7 +3,9 @@ import { glMatrix } from "./Matrix";
 import { Quaternion } from "./Quaternion";
 import { Vector3 } from "./Vector3";
 
-
+export interface Euler{
+    isEuler():boolean;
+}
 export class Euler {
     private _x: number;
     private _y: number;
@@ -65,6 +67,13 @@ export class Euler {
         this._onChangeCallback();
         return this;
     }
+    /**
+     * 从一个旋转矩阵中找出欧拉值
+     * 矩阵转欧拉
+     * @param m 
+     * @param order 
+     * @param update 
+     */
     setFromRotationMatrix(m:Float32Array, order:string, update:boolean) {
         const clamp = MathUtils.clamp;
         // assumes the upper 3x3 of m is a pure rotation matrix (i.e, unscaled)
@@ -141,10 +150,21 @@ export class Euler {
         if (update !== false) this._onChangeCallback();
         return this;
     }
-    setFromQuaternion(q, order:string, update?) {
+    /**
+     * 从一个四元数转欧拉角
+     * @param q 
+     * @param order 
+     * @param update 
+     */
+    setFromQuaternion(q:Quaternion, order:string, update?) {
         _matrix.makeRotationFromQuaternion(q);
         return this.setFromRotationMatrix(_matrix, order, update);
     }
+    /**
+     * 向量转欧拉
+     * @param v 
+     * @param order 
+     */
     setFromVector3(v, order) {
         return this.set(v.x, v.y, v.z, order || this._order);
     }
@@ -160,6 +180,10 @@ export class Euler {
     equals(euler:Euler) {
         return (euler._x === this._x) && (euler._y === this._y) && (euler._z === this._z) && (euler._order === this._order);
     }
+    /**
+     * 从一个数组中拷贝值给欧拉
+     * @param array 
+     */
     fromArray(array) {
         this._x = array[0];
         this._y = array[1];
@@ -168,6 +192,12 @@ export class Euler {
         this._onChangeCallback();
         return this;
     }
+    /**
+     * 将欧拉值赋给一个数组
+     * 将欧拉值转为一个数组
+     * @param array 
+     * @param offset 
+     */
     toArray(array = [], offset = 0) {
         array[offset] = this._x;
         array[offset + 1] = this._y;
@@ -175,6 +205,10 @@ export class Euler {
         array[offset + 3] = this._order;
         return array;
     }
+    /**
+     * 将欧拉值转为一个向量
+     * @param optionalResult 
+     */
     toVector3(optionalResult) {
         if (optionalResult) {
             return optionalResult.set(this._x, this._y, this._z);

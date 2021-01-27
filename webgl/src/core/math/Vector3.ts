@@ -4,9 +4,9 @@ import { Quaternion } from "./Quaternion";
 
 
 export class Vector3 {
-    private x: number;
-    private y: number;
-    private z: number;
+    public x: number;
+    public y: number;
+    public z: number;
     constructor(x = 0, y = 0, z = 0) {
         Object.defineProperty(this, 'isVector3', { value: true });
         this.x = x;

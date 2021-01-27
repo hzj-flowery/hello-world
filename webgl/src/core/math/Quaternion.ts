@@ -1,4 +1,6 @@
 import { MathUtils } from "../utils/MathUtils";
+import { Euler } from "./Euler";
+import { Vector3 } from "./Vector3";
 
 
 export class Quaternion {
@@ -119,11 +121,17 @@ export class Quaternion {
 		this._onChangeCallback();
 		return this;
 	}
-	setFromEuler(euler, update?) {
+	/**
+	 * 从一个欧拉角来找出四元数的值赋给当前这个四元数
+	 * 欧拉角转为四元数
+	 * @param euler 
+	 * @param update 
+	 */
+	setFromEuler(euler:Euler, update?) {
 		if (!(euler && euler.isEuler)) {
 			throw new Error('THREE.Quaternion: .setFromEuler() now expects an Euler rotation rather than a Vector3 and order.');
 		}
-		const x = euler._x, y = euler._y, z = euler._z, order = euler._order;
+		const x = euler.x, y = euler.y, z = euler.z, order = euler.order;
 		// http://www.mathworks.com/matlabcentral/fileexchange/
 		// 	20696-function-to-convert-between-dcm-euler-angles-quaternions-and-euler-vectors/
 		//	content/SpinCalc.m
@@ -178,7 +186,15 @@ export class Quaternion {
 		if (update !== false) this._onChangeCallback();
 		return this;
 	}
-	setFromAxisAngle(axis, angle) {
+	/**
+	 * 传入一个坐标轴和一个角度来设置当前的这个四元数
+	 * @param axis  坐标轴
+	 * @param angle 角度
+	 * (u*sin(angle/2),cos(angle/2))
+	 * 上面的公式中u:代表坐标轴的向量，angle代表旋转的角度，注意，外界要旋转的angle角度，则传入的值一定是angle/2
+	 * 这也是下面为啥要除以2的原因
+	 */
+	setFromAxisAngle(axis: Vector3, angle: number) {
 		// http://www.euclideanspace.com/maths/geometry/rotations/conversions/angleToQuaternion/index.htm
 		// assumes axis is normalized
 		const halfAngle = angle / 2, s = Math.sin(halfAngle);
@@ -189,10 +205,15 @@ export class Quaternion {
 		this._onChangeCallback();
 		return this;
 	}
-	setFromRotationMatrix(m) {
+	/**
+	 * 从一个旋转矩阵中找到对应的四元数值来赋值给当前的四元数
+	 * 矩阵转为四元数
+	 * @param matrix
+	 */
+	setFromRotationMatrix(matrix: Float32Array) {
 		// http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/index.htm
 		// assumes the upper 3x3 of m is a pure rotation matrix (i.e, unscaled)
-		const te = m.elements,
+		const te = matrix,
 			m11 = te[0], m12 = te[4], m13 = te[8],
 			m21 = te[1], m22 = te[5], m23 = te[9],
 			m31 = te[2], m32 = te[6], m33 = te[10],
@@ -275,15 +296,28 @@ export class Quaternion {
 		this._onChangeCallback();
 		return this;
 	}
+	/**
+	 * 四元数点乘
+	 * @param v 
+	 */
 	dot(v) {
 		return this._x * v._x + this._y * v._y + this._z * v._z + this._w * v._w;
 	}
+	/**
+	 * 四元数的长度的平方
+	 */
 	lengthSq() {
 		return this._x * this._x + this._y * this._y + this._z * this._z + this._w * this._w;
 	}
+	/**
+	 * 四元数的长度
+	 */
 	length() {
 		return Math.sqrt(this._x * this._x + this._y * this._y + this._z * this._z + this._w * this._w);
 	}
+	/**
+	 * 归一化
+	 */
 	normalize() {
 		let l = this.length();
 		if (l === 0) {
@@ -309,10 +343,16 @@ export class Quaternion {
 		}
 		return this.multiplyQuaternions(this, q);
 	}
+	//将自己和一个外来四元数相乘
 	premultiply(q) {
 		return this.multiplyQuaternions(q, this);
 	}
-	multiplyQuaternions(a, b) {
+	/**
+	 * 两个四元数相乘将结果赋给当前这个四元数
+	 * @param a 
+	 * @param b 
+	 */
+	private multiplyQuaternions(a, b) {
 		// from http://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/code/index.htm
 		const qax = a._x, qay = a._y, qaz = a._z, qaw = a._w;
 		const qbx = b._x, qby = b._y, qbz = b._z, qbw = b._w;
@@ -367,9 +407,19 @@ export class Quaternion {
 		this._onChangeCallback();
 		return this;
 	}
+	/**
+	 * 判断两个四元数相等
+	 * @param quaternion 
+	 */
 	equals(quaternion) {
 		return (quaternion._x === this._x) && (quaternion._y === this._y) && (quaternion._z === this._z) && (quaternion._w === this._w);
 	}
+	/**
+	 * 从一个数组中拷贝四个值给四元数
+	 * 数组转四元数
+	 * @param array 
+	 * @param offset 
+	 */
 	fromArray(array, offset = 0) {
 		this._x = array[offset];
 		this._y = array[offset + 1];
@@ -378,6 +428,12 @@ export class Quaternion {
 		this._onChangeCallback();
 		return this;
 	}
+	/**
+	 * 将自己的值赋值给一个数组
+	 * 四元数转数组
+	 * @param array 
+	 * @param offset 
+	 */
 	toArray(array = [], offset = 0) {
 		array[offset] = this._x;
 		array[offset + 1] = this._y;

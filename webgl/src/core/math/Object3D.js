@@ -29,6 +29,7 @@ const _yAxis = new Vector3( 0, 1, 0 );
  * z轴
  */
 const _zAxis = new Vector3( 0, 0, 1 );
+
 const _addedEvent = { type: 'added' };
 const _removedEvent = { type: 'removed' };
 function Object3D() {
@@ -79,7 +80,13 @@ function Object3D() {
 			value: new Matrix3()
 		}
 	} );
+	/**
+	 * 这是一个本地矩阵 它只关心缩放旋转平移
+	 */
 	this.matrix = new Matrix4();
+	/**
+	 * 这是一个模型世界矩阵 使用本地矩阵和父节点矩阵相乘
+	 */
 	this.matrixWorld = new Matrix4();
 	this.matrixAutoUpdate = Object3D.DefaultMatrixAutoUpdate;
 	this.matrixWorldNeedsUpdate = false;
@@ -336,10 +343,12 @@ Object3D.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 			parent.traverseAncestors( callback );
 		}
 	},
+	//更新矩阵
 	updateMatrix: function () {
 		this.matrix.compose( this.position, this.quaternion, this.scale );
 		this.matrixWorldNeedsUpdate = true;
 	},
+	//更新世界矩阵
 	updateMatrixWorld: function ( force ) {
 		if ( this.matrixAutoUpdate ) this.updateMatrix();
 		if ( this.matrixWorldNeedsUpdate || force ) {
