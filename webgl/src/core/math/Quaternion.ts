@@ -1,7 +1,12 @@
 import { MathUtils } from "../utils/MathUtils";
 import { Euler } from "./Euler";
 import { Vector3 } from "./Vector3";
-
+/**
+ * 用户须知：
+ * 用于旋转的四元数每个分量的范围都是【-1,1】
+ * 每一次旋转实际上需要两个四元数的参与，即q和q*
+ * 所有用于旋转的四元数都是单位四元数，即他们的模是1
+ */
 
 export class Quaternion {
 	private _x: number;
@@ -311,6 +316,7 @@ export class Quaternion {
 	}
 	/**
 	 * 四元数的长度
+	 * 即四元数到原点的距离
 	 */
 	length() {
 		return Math.sqrt(this._x * this._x + this._y * this._y + this._z * this._z + this._w * this._w);

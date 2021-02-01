@@ -20,7 +20,7 @@ export class Node extends Ref {
     //z轴旋转的角度
     private _rotateZ: number = 0;
     private _updateModelMatrixFlag: boolean = false;//是否更新模型矩阵的一个标志
-   
+
     public width: number = 0;//宽度
     public height: number = 0;//高度
     public anchorX: number = 0.5;//x轴锚点
@@ -38,7 +38,7 @@ export class Node extends Ref {
      */
     private _modelMatrix: Float32Array; //模型世界矩阵
     protected _worldMatrix: any[] | Float32Array;//父节点矩阵
-    protected _localMatrix:Float32Array;//本地矩阵，该矩阵只负责管理缩放旋转平移，不受父节点矩阵影响
+    protected _localMatrix: Float32Array;//本地矩阵，该矩阵只负责管理缩放旋转平移，不受父节点矩阵影响
     private _parent: Node;//父亲
     private _children: Array<Node>;//孩子节点
 
@@ -50,7 +50,7 @@ export class Node extends Ref {
         this._localMatrix = this._glMatrix.mat4.identity(null);
         this._updateModelMatrixFlag = true;
     }
-    public get x():number {
+    public get x(): number {
         return this._x;
     }
     public set x(dd) {
@@ -59,7 +59,7 @@ export class Node extends Ref {
             this._x = dd;
         }
     }
-    public get y():number {
+    public get y(): number {
         return this._y;
     }
     public set y(dd) {
@@ -68,7 +68,7 @@ export class Node extends Ref {
             this._y = dd;
         }
     }
-    public get z():number {
+    public get z(): number {
         return this._z;
     }
     public set z(dd) {
@@ -77,7 +77,7 @@ export class Node extends Ref {
             this._z = dd;
         }
     }
-    public get scaleX():number {
+    public get scaleX(): number {
         return this._scaleX;
     }
     public set scaleX(dd) {
@@ -86,7 +86,7 @@ export class Node extends Ref {
             this._scaleX = dd;
         }
     }
-    public get scaleY():number {
+    public get scaleY(): number {
         return this._scaleY;
     }
     public set scaleY(dd) {
@@ -95,7 +95,7 @@ export class Node extends Ref {
             this._scaleY = dd;
         }
     }
-    public get scaleZ():number {
+    public get scaleZ(): number {
         return this._scaleZ;
     }
     public set scaleZ(dd) {
@@ -104,7 +104,7 @@ export class Node extends Ref {
             this._scaleZ = dd;
         }
     }
-    public get rotateX():number {
+    public get rotateX(): number {
         return this._rotateX;
     }
     public set rotateX(dd) {
@@ -113,7 +113,7 @@ export class Node extends Ref {
             this._rotateX = dd;
         }
     }
-    public get rotateY():number {
+    public get rotateY(): number {
         return this._rotateY;
     }
     public set rotateY(dd) {
@@ -122,7 +122,7 @@ export class Node extends Ref {
             this._rotateY = dd;
         }
     }
-    public get rotateZ():number {
+    public get rotateZ(): number {
         return this._rotateZ;
     }
     public set rotateZ(dd) {
@@ -140,9 +140,8 @@ export class Node extends Ref {
      * @param node 
      */
     public addChild(node: Node): void {
-        console.assert(node&&node.parent==null,"添加节点失败",node);
-        if(this._children.indexOf(node)>=0)
-        {
+        console.assert(node && node.parent == null, "添加节点失败", node);
+        if (this._children.indexOf(node) >= 0) {
             console.log("该节点已经添加！！！！");
             return;
         }
@@ -165,14 +164,14 @@ export class Node extends Ref {
         if (this._parent) {
             this.setFatherMatrix(this._parent.modelMatrix);
         }
-         //更新当前节点的矩阵数据
-         this.updateMatrixData();
+        //更新当前节点的矩阵数据
+        this.updateMatrixData();
     }
     //绘制之前
-    public onDrawBefore(time:number): void {
+    public onDrawBefore(time: number): void {
 
     }
-    public onDrawAfter(time:number): void {
+    public onDrawAfter(time: number): void {
 
     }
     //开启绘制
@@ -207,8 +206,7 @@ export class Node extends Ref {
       平移变换不改变坐标轴走向，但改变原点位置，两个坐标系原点不再重合
     */
     private updateMatrixData(): void {
-        if(this._updateModelMatrixFlag)
-        {
+        if (this._updateModelMatrixFlag) {
             //初始化模型矩阵
             this._glMatrix.mat4.identity(this._modelMatrix);
             this._glMatrix.mat4.identity(this._localMatrix);
@@ -220,8 +218,8 @@ export class Node extends Ref {
             this.translateModelMatrix();
             this._updateModelMatrixFlag = false;
         }
-         //将本地矩阵拷贝过来
-        this._glMatrix.mat4.copy(this._modelMatrix,this._localMatrix);
+        //将本地矩阵拷贝过来
+        this._glMatrix.mat4.copy(this._modelMatrix, this._localMatrix);
         this._glMatrix.mat4.multiply(this._modelMatrix, this._worldMatrix, this._modelMatrix);
     }
     //缩放模型矩阵
@@ -252,12 +250,12 @@ export class Node extends Ref {
         this._glMatrix.mat4.invert(invers, this._modelMatrix)
         return invers;
     }
-    public setPosition(x:number, y:number, z:number): void {
+    public setPosition(x: number, y: number, z: number): void {
         this.x = x;
         this.y = y;
         this.z = z;
     }
-    public setScale(x:number, y:number, z:number): void {
+    public setScale(x: number, y: number, z: number): void {
         this.scaleX = x;
         this.scaleY = y;
         this.scaleZ = z;
@@ -268,7 +266,7 @@ export class Node extends Ref {
      * @param y angle
      * @param z angle
      */
-    public setRotation(x:number, y:number, z:number): void {
+    public setRotation(x: number, y: number, z: number): void {
         this.rotateX = x;
         this.rotateY = y;
         this.rotateZ = z;

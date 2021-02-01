@@ -164,10 +164,13 @@ class DrawEngine {
         */
         let gl = this.gl;
         // 激活 指定 号纹理单元
+        //在GPU那边有若干个纹理单元 下面这句话的意思就是说激活那个纹理单元
         gl.activeTexture(gl[glTEXTURE_UNIT_VALID[pos]]);
         // 指定当前操作的贴图
+        //将纹理贴图的显存地址放入到刚刚激活的纹理单元中
         gl.bindTexture(gl.TEXTURE_2D, glID);
         //将贴图的纹理数据赋给shader中的变量
+        //我们的shader变量要从那一块纹理单元中取数据
         gl.uniform1i(loc, pos);
     }
      /**

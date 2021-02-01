@@ -1253,7 +1253,7 @@ export namespace glMatrix {
     }
     /**
      * Transpose the values of a mat3
-     *
+     * 求一个3X3的转置矩阵
      * @param {mat3} out the receiving matrix
      * @param {mat3} a the source matrix
      * @returns {mat3} out
@@ -2104,7 +2104,7 @@ export namespace glMatrix {
     }
     /**
      * Transpose the values of a mat4
-     *
+     * 求一个4x4的转置矩阵
      * @param {mat4} out the receiving matrix
      * @param {mat4} a the source matrix
      * @returns {mat4} out
