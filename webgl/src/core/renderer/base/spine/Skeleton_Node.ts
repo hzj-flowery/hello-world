@@ -7,7 +7,7 @@ import { Skeleton_SkinRenderer } from "./Skeleton_SkinRenderer";
 //位置 旋转 缩放
 export class Skeleton_Transform {
     public position: Array<number>;
-    public rotation: Array<number>;
+    public rotation: Array<number>;//四元数
     public scale: Array<number>;
     constructor(position = [0, 0, 0], rotation = [0, 0, 0, 1], scale = [1, 1, 1]) {
         this.position = position;

@@ -75,12 +75,7 @@ var fragBaseCode =
   uniform float u_spotInnerLimit;//聚光的内部限制
   uniform float u_spotOuterLimit;//聚光的外部限制
 
-  #define PI 3.14//圆周率
-  #define RECIPROCAL_PI 0.318//圆周率倒数
-  float add(){
-    float f = PI*100.0;//预处理的时候会把PI符号自动替换为3.14
-    return f;
-  }
+  
 
   void main() {
   vec4 materialColor = texture2D(u_texture, v_uv);//材质颜色

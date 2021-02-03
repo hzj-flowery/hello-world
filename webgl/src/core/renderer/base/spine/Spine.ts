@@ -39,25 +39,23 @@ export default class Spine extends SY.SpriteBase {
     private localFunc():void{
         const cameraPosition = [5, 0, -5];
         const target = [0, 0, -10];
-        // for debugging .. see article
-        // const cameraPosition = [5, 0, 5];
-        // const target = [0, 0, 0];
         const up = [0, 1, 0];
-        // Compute the camera's matrix using look at.
-        this.spineMatrix = this._glMatrix.mat4.create();
-        this._glMatrix.mat4.lookAt2(this.spineMatrix, cameraPosition, target, up);
+        this.spineMatrix = this._glMatrix.mat4.identity(null);
+        this._msMatrix = this._glMatrix.mat4.identity(null);
+        // this._glMatrix.mat4.lookAt2(this.spineMatrix, cameraPosition, target, up);
 
         this._glMatrix.mat4.mul(this.modelMatrix,this.modelMatrix,this.spineMatrix);
     }
+    private _msMatrix:Float32Array;
     private renderDrawables(node: Skeleton_Node) {
-        let msMatrix = this._glMatrix.mat4.multiply(null,this.modelMatrix,this.spineMatrix);
+        this._glMatrix.mat4.multiply(this._msMatrix,this.modelMatrix,this.spineMatrix);
         //渲染网格
         for (const drawable of node.mesh_Drawables) {
-            drawable.render(node,msMatrix,this.sharedUniforms);
+            drawable.render(node,this._msMatrix,this.sharedUniforms);
         }
         //渲染皮肤
         for (const drawable of node.skin_Drawables) {
-            drawable.render(node,msMatrix,this.sharedUniforms);
+            drawable.render(node,this._msMatrix,this.sharedUniforms);
         }
     }
 
