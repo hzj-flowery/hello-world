@@ -348,14 +348,6 @@ export default class Camera extends Node {
         }
     }
 
-    protected translateModelMatrix():void{
-        glMatrix.mat4.identity(this._holderMatrix);
-         //最后平移
-         glMatrix.mat4.translate(this._holderMatrix, this._holderMatrix, [this.x, this.y, this.z]);
-         //
-         glMatrix.mat4.multiply(this._localMatrix,this._holderMatrix,this._localMatrix);
-    }
-
     public visit(time:number):void{
          this.updateProjectMatrix();
          super.visit(time);

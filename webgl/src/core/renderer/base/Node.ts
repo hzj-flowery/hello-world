@@ -37,8 +37,8 @@ export class Node extends Ref {
      * 当前节点各种旋转平移缩放都只记录在modelMatrix中，最后modelMatrix和worldMatrix相乘,就可以得到一个模型世界矩阵，再赋给modelMatrix
      */
     private _modelMatrix: Float32Array; //模型世界矩阵
-    protected _worldMatrix: any[] | Float32Array;//父节点矩阵
-    protected _localMatrix: Float32Array;//本地矩阵，该矩阵只负责管理缩放旋转平移，不受父节点矩阵影响
+    private _worldMatrix: any[] | Float32Array;//父节点矩阵
+    private _localMatrix: Float32Array;//本地矩阵，该矩阵只负责管理缩放旋转平移，不受父节点矩阵影响
     private _parent: Node;//父亲
     private _children: Array<Node>;//孩子节点
 
@@ -233,7 +233,7 @@ export class Node extends Ref {
         this._glMatrix.mat4.rotateZ(this._localMatrix, this._localMatrix, this.rotateZ * (Math.PI / 180));
     }
     //平移模型矩阵
-    protected translateModelMatrix(): void {
+    private translateModelMatrix(): void {
         this._glMatrix.mat4.translate(this._localMatrix, this._localMatrix, [this.x, this.y, this.z]);
     }
     /**

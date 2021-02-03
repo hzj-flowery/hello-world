@@ -12,7 +12,7 @@ export class Skeleton_Skin {
     public jointTexture: WebGLTexture;
     public _texture: Texture;
     private gl: WebGL2RenderingContext;
-    //inverseBindMatrixData Float32Array(96)
+    private _tempMatrix:Float32Array;
     constructor(joints, inverseBindMatrixData: Float32Array, gl) {
         this.gl = gl;
         this.joints = joints;
@@ -56,23 +56,23 @@ export class Skeleton_Skin {
         this._texture = new Texture2D();
 
         this.createTexture2DBuffer("res/wicker.jpg");
+
+        this._tempMatrix = glMatrix.mat4.identity(null);
     }
     //创建一个纹理buffer
     private createTexture2DBuffer(url: string): Texture {
-        // (this._texture as TextureCustom).url = CustomTextureData.getRandomData(30,50, gltex_format.RGB8);
         (this._texture as Texture2D).url = url;
         return this._texture
     }
     update(node: Skeleton_Node) {
-        const globalWorldInverse = glMatrix.mat4.create();
-        glMatrix.mat4.invert(globalWorldInverse, node.worldMatrix);
+        glMatrix.mat4.invert(this._tempMatrix, node.worldMatrix);
         // go through each joint and get its current worldMatrix
         // apply the inverse bind matrices and store the
         // entire result in the texture
         for (let j = 0; j < this.joints.length; ++j) {
             const joint = this.joints[j];
             const dst = this.jointMatrices[j];
-            glMatrix.mat4.multiply(dst, globalWorldInverse, joint.worldMatrix);
+            glMatrix.mat4.multiply(dst, this._tempMatrix, joint.worldMatrix);
             glMatrix.mat4.multiply(dst, dst, this.inverseBindMatrices[j]);
         }
         this.gl.bindTexture(this.gl.TEXTURE_2D, this.jointTexture);
