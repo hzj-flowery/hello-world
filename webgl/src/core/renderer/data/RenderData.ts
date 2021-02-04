@@ -297,7 +297,6 @@ export class  RenderData {
 export class NormalRenderData extends RenderData {
     constructor() {
         super();
-        this._extraViewLeftMatrix = glMatrix.mat4.identity(null);
         this._tempMatrix1 = glMatrix.mat4.identity(null);
         this._type = RenderDataType.Normal;
     }
@@ -309,7 +308,6 @@ export class NormalRenderData extends RenderData {
         this._projKey = "";
         this._viewKey = "";
         this._glPrimitiveType = glprimitive_type.TRIANGLES;
-        glMatrix.mat4.identity(this._extraViewLeftMatrix);
         glMatrix.mat4.identity(this._tempMatrix1);
     }
     public _shaderData: ShaderData;
@@ -317,7 +315,6 @@ export class NormalRenderData extends RenderData {
     public _attrbufferData: BufferAttribsData;
     //uniform变量的数据
     public _uniformData: Array<any>;
-    public _extraViewLeftMatrix: Float32Array;
     public _tempMatrix1: Float32Array;
     public _projKey: string;//投影矩阵的key
     public _viewKey: string;//视口矩阵key

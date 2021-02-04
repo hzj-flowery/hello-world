@@ -78,7 +78,7 @@ export default class Scene3D extends Scene {
         this.addChild(this._floorNode);
 
         this._spineNode = new Spine();
-        this._spineNode.x = 0;
+        this._spineNode.x = 5;
         this.addChild(this._spineNode);
 
         this._customTexture = new CustomTextureCube();

@@ -185,6 +185,12 @@ export class Skeleton_Parse {
             const node = new Skeleton_Node(trs, name);
             const realMesh = gltf.meshes[mesh];
             if (skin !== undefined) {
+                /**
+                 * 但凡遇到有skin的，说明有蒙皮数据
+                 * 蒙皮数据有下面两个：
+                 * 网格的顶点数据
+                 * 这张皮肤含有多少个骨骼，将用这些骨骼的空间坐标系去造一个纹理，这个纹理就是蒙皮的来源
+                 */
                 skinNodes.push({ node, mesh: realMesh, skinNdx: skin });
             } else if (realMesh) {
                 node.mesh_Drawables.push(new Skeleton_MeshRenderer(realMesh, gl));
@@ -192,7 +198,7 @@ export class Skeleton_Parse {
             return node;
         });
 
-        // setup skins
+        //创建皮肤
         gltf.skins = gltf.skins.map((skin) => {
             const joints = skin.joints.map(ndx => gltf.nodes[ndx]);
             //96个元素 每个元素四个字节

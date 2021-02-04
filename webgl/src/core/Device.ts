@@ -611,12 +611,11 @@ export default class Device {
         for (let j = 0; j < sData._uniformData.length; j++) {
             G_ShaderFactory.setUniforms(sData._shaderData.uniSetters, sData._uniformData[j]);
         }
-        let vleft = glMatrix.mat4.multiply(null, viewMatrix, sData._extraViewLeftMatrix)
         let projData = {};
         projData[sData._projKey] = projMatix;
         G_ShaderFactory.setUniforms(sData._shaderData.uniSetters, projData);
         let viewData = {};
-        viewData[sData._viewKey] = vleft;
+        viewData[sData._viewKey] = viewMatrix;
         G_ShaderFactory.setUniforms(sData._shaderData.uniSetters, viewData);
         G_ShaderFactory.drawBufferInfo(sData._attrbufferData, sData._glPrimitiveType);
     }

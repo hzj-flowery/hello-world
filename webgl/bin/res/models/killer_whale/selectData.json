@@ -1,15 +1,67 @@
-
-{
-    "compilerOptions": {
-      "module": "commonjs",
-      "target": "es5",
-      "noEmitHelpers": true,
-      "sourceMap": true
-    },
-    "exclude": [
-      "node_modules"
+[
+  {
+    "name": "Armature",
+    "index":0
+  },
+  {
+    "children": [
+      4,
+      6
     ],
-      "include": [
-      "./src/**/*.ts", "src/core/platform/id-generater.js", "src/core/platform/js.js"
-    ]
+    "name": "Armature.001",
+    "index":1
+  },
+  {
+    "name": "Camera",
+    "index":2
+  },
+  {
+    "name": "Light",
+    "index":3
+  },
+  {
+    "mesh": 0,
+    "name": "orca",
+    "skin": 0,
+    "index":4
+  },
+  {
+    "name": "Sun",
+    "index":5
+  },
+  {
+    "children": [
+      9,
+      7,
+      8
+    ],
+    "name": "Armature.001_Bone",
+    "index":6
+  },
+  {
+    "name": "Armature.001_Bone.003",
+    "index":7
+  },
+  {
+    "name": "Armature.001_Bone.004",
+    "index":8
+  },
+  {
+    "children": [
+      10
+    ],
+    "name": "Armature.001_Bone.001",
+    "index":9
+  },
+  {
+    "children": [
+      11
+    ],
+    "name": "Armature.001_Bone.002",
+    "index":10
+  },
+  {
+    "name": "Armature.001_Bone.005",
+    "index":11
   }
+]
