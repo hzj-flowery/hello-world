@@ -43,10 +43,10 @@ export class Skeleton_Parse {
         throw new Error(`no key: ${key}`);
     }
 
-    //变量类型占用的元素个数
+    //单位元数由几个数据组成
     private static readonly accessorTypeToNumComponentsMap = {
-        'SCALAR': 1,
-        'VEC2': 2,
+        'SCALAR': 1,  //标量
+        'VEC2': 2,    
         'VEC3': 3,
         'VEC4': 4,    //
         'MAT2': 4,
@@ -78,7 +78,7 @@ export class Skeleton_Parse {
 
     // given an accessor index return both the accessor and
     // a TypedArray for the correct portion of the buffer
-    private static getAccessorTypedArrayAndStride(gl, gltf, accessorIndex) {
+    private static getAccessorTypedArrayAndStride(gltf, accessorIndex) {
         //gltf.accessors是bufferView的数组
         const accessor = gltf.accessors[accessorIndex];
         //gltf.bufferViews存储了每个bufferview的在顶点数组中的存放位置以及大小
@@ -203,7 +203,7 @@ export class Skeleton_Parse {
             const joints = skin.joints.map(ndx => gltf.nodes[ndx]);
             //96个元素 每个元素四个字节
             //一个矩阵4x4 16个元素 可以组成6个矩阵
-            const { array } = this.getAccessorTypedArrayAndStride(gl, gltf, skin.inverseBindMatrices);
+            const { array } = this.getAccessorTypedArrayAndStride(gltf, skin.inverseBindMatrices);
             return new Skeleton_Skin(joints, array, gl);
         });
 

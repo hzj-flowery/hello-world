@@ -104,5 +104,7 @@ void main() {
   // 采集纹素，逐片元赋值像素值
   gl_FragColor = texture2D(u_Sampler,v_TexCoord);
 }
+
+
 `
 

@@ -43,8 +43,8 @@ export class TextureOpts {
     unpackFlipY:boolean = true;//webgl坐标系左下角 UI坐标系左上角
     level: number = 0;
     border: number = 0;
-    width: number = 1;    //纹理的宽度
-    height: number = 1;    //纹理的高度
+    width: number = 1;    //纹理的宽度 有多少个像素点
+    height: number = 1;    //纹理的高度 有多少个像素点
     genMipmaps: boolean = false;//是否开启mipmap技术
     compressed: boolean = false;//纹理是否是压缩的
     anisotropy: number = 1;//设置纹理所有方向的最大值
@@ -125,7 +125,7 @@ export class Texture {
     protected _level:number;
     protected _unpackFlipY:boolean;
     protected _alignment:number;
-    protected _pixelType:number;
+    protected _pixelType:number;//像素的类型,是一个字节存放还是多个字节
     protected _data:any;
     protected _wrapS;//设置s方向上的贴图模式
     protected _wrapT;//设置t方向上的贴图模式

@@ -77,13 +77,11 @@ export class Skeleton_SkinRenderer {
      */
     private mesh:any;
     private skin: Skeleton_Skin;
-    private gl: WebGLRenderingContext;
     private skinProgramInfo: ShaderData;
     private _temWolrdMatrix:Float32Array;//世界矩阵
     constructor(mesh, skin:Skeleton_Skin, gl) {
         this.mesh = mesh;
         this.skin = skin;
-        this.gl = gl;
         this.skinProgramInfo = G_ShaderFactory.createProgramInfo(skinVS, fs);
         this._temWolrdMatrix = glMatrix.mat4.identity(null);
     }

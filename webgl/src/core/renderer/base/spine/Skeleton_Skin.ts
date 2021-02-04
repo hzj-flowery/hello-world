@@ -86,6 +86,7 @@ export class Skeleton_Skin {
         for (let j = 0; j < this.jointNodes.length; ++j) {
             const jointNode = this.jointNodes[j];
             glMatrix.mat4.multiply(this.jointMatrices[j], this._tempMatrix, jointNode.worldMatrix);
+            glMatrix.mat4.copy(this.jointMatrices[j],jointNode.worldMatrix)
             /**
              * 为啥要乘以这个绑定矩阵的逆矩阵？
              * 
