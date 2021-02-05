@@ -1,4 +1,5 @@
-import { glprimitive_type } from "../gfx/GLEnums";
+
+import { syGL } from "../gfx/syGLEnums";
 import { BufferAttribsData, ShaderData } from "./Shader";
 
 
@@ -409,7 +410,7 @@ class ShaderFactory {
         }
     }
     //启动顶点着色器绘制
-    public drawBufferInfo(bufferInfo: BufferAttribsData, primitiveType?: glprimitive_type, count?: number, offset?: number) {
+    public drawBufferInfo(bufferInfo: BufferAttribsData, primitiveType?: syGL.PrimitiveType, count?: number, offset?: number) {
         var gl = this._gl;
         const indices = bufferInfo.indices;
         primitiveType = primitiveType === undefined ? gl.TRIANGLES : primitiveType;

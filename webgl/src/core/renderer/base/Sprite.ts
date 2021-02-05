@@ -44,7 +44,6 @@ import LoaderManager from "../../LoaderManager";
 import { RenderTexture } from "./texture/RenderTexture";
 import { CameraData } from "../data/CameraData";
 import { NormalRenderData, RenderData, RenderDataPool, RenderDataType } from "../data/RenderData";
-import { glprimitive_type } from "../gfx/GLEnums";
 import { BufferAttribsData, Shader, ShaderData } from "../shader/Shader";
 import { G_ShaderFactory } from "../shader/ShaderFactory";
 import { Node } from "./Node";
@@ -58,6 +57,7 @@ import { G_ShaderCenter, ShaderType } from "../shader/ShaderCenter";
 import { ShaderUseVariantType } from "../shader/ShaderUseVariantType";
 import { LightData } from "../data/LightData";
 import { ShaderCode } from "../shader/ShaderCode";
+import { syGL } from "../gfx/syGLEnums";
 
 /**
  * 显示节点
@@ -99,7 +99,7 @@ export namespace SY {
         protected _shader: Shader;
         protected _renderData: RenderData;
         //参考glprimitive_type
-        protected _glPrimitiveType: glprimitive_type;//绘制的类型
+        protected _glPrimitiveType: syGL.PrimitiveType;//绘制的类型
         protected _cameraType: number = 0;//相机的类型(0表示透视1表示正交)
         protected _vertStr: string = "";
         protected _fragStr: string = "";
@@ -109,7 +109,7 @@ export namespace SY {
             materialId++;
             this._materialId = "materialId_" + materialId;
             this.gl = Device.Instance.gl;
-            this._glPrimitiveType = glprimitive_type.TRIANGLES;
+            this._glPrimitiveType = syGL.PrimitiveType.TRIANGLES;
             this._renderData = RenderDataPool.get(RenderDataType.Base);
             this._color = [1.0,1.0,1.0,1.0];//默认颜色为白色
             this.init();
@@ -393,9 +393,9 @@ export namespace SY {
         protected _cameraType: number = 0;//相机的类型(0表示透视1表示正交)
         private _url: string;//资源路径
         //参考glprimitive_type
-        protected _glPrimitiveType: glprimitive_type;//绘制的类型
+        protected _glPrimitiveType: syGL.PrimitiveType;//绘制的类型
         private init(): void {
-            this._glPrimitiveType = glprimitive_type.TRIANGLES;
+            this._glPrimitiveType = syGL.PrimitiveType.TRIANGLES;
             this._renderData = RenderDataPool.get(RenderDataType.Normal) as NormalRenderData;
             this.onInit();
         }
@@ -426,7 +426,7 @@ export namespace SY {
             this._renderData._worldKey = "u_world";//世界坐标系的key
             this._renderData._attrbufferData = this._attrData;//顶点着色器的顶点相关属性
             this._renderData._node = this;//渲染的节点
-            this._renderData._glPrimitiveType = glprimitive_type.TRIANGLES;//三角形
+            this._renderData._glPrimitiveType = syGL.PrimitiveType.TRIANGLES;//三角形
         }
         //设置shader
         protected setShader(vert: string, frag: string): void {
@@ -442,14 +442,14 @@ export namespace SY {
         public testDraw(): void {
             G_ShaderFactory.setBuffersAndAttributes(this._shaderData.attrSetters, this._attrData);
             G_ShaderFactory.setUniforms(this._shaderData.uniSetters, this._uniformData);
-            G_ShaderFactory.drawBufferInfo(this._attrData, glprimitive_type.TRIANGLES);
+            G_ShaderFactory.drawBufferInfo(this._attrData, syGL.PrimitiveType.TRIANGLES);
         }
     }
     //动态
     export class SpriteBaseLine extends SY.SpriteBase {
         constructor() {
             super();
-            this._glPrimitiveType = glprimitive_type.LINES;
+            this._glPrimitiveType = syGL.PrimitiveType.LINES;
         }
         private _linePositions: Array<number>;
         public updateLinePos(posArr: Array<number>){

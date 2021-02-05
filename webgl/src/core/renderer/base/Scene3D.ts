@@ -17,7 +17,7 @@ import PointLightCube from "../3d/PointLightCube";
 import SpotLightCube from "../3d/SpotLightCube";
 import { FogCube } from "../3d/FogCube";
 import { glMatrix } from "../../math/Matrix";
-import { syGL } from "../gfx/GLEnums";
+import { syGL } from "../gfx/syGLEnums";
 
 export default class Scene3D extends Scene {
 

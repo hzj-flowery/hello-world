@@ -131,8 +131,6 @@ export class Skeleton_Parse {
     static parseGLTF(gl: WebGLRenderingContext, gltfPath: string = "res/models/killer_whale/whale.CYCLES.gltf", bufferPath: string = "res/models/killer_whale/whale.CYCLES.bin") {
         const gltf = LoaderManager.instance.getRes(gltfPath);
         gltf.buffers = [LoaderManager.instance.getRes(bufferPath)];
-
-        console.log(gltf);
         //缺省的材质
         const defaultMaterial = {
             uniforms: {

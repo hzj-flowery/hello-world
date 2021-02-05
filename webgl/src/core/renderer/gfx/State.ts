@@ -1,4 +1,4 @@
-import { glblend, glblend_func } from "./GLEnums";
+import { syGL} from "./syGLEnums";
 import { glEnums } from "./GLapi";
 
 
@@ -8,12 +8,12 @@ const _default = {
     blend: false,
     blendSep: false,
     blendColor: 0xffffffff,
-    blendEq: glblend_func.ADD,
-    blendAlphaEq: glblend_func.ADD,
-    blendSrc: glblend.ONE,
-    blendDst: glblend.ZERO,
-    blendSrcAlpha: glblend.ONE,
-    blendDstAlpha: glblend.ZERO,
+    blendEq: syGL.BlendFunc.ADD,
+    blendAlphaEq: syGL.BlendFunc.ADD,
+    blendSrc: syGL.Blend.ONE,
+    blendDst: syGL.Blend.ZERO,
+    blendSrcAlpha: syGL.Blend.ONE,
+    blendDstAlpha: syGL.Blend.ZERO,
 
     // depth
     depthTest: false,

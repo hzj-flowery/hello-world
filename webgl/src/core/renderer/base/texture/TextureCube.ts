@@ -1,5 +1,5 @@
 import { Texture } from "./Texture";
-import {syGL} from "../../gfx/GLEnums";
+import {syGL} from "../../gfx/syGLEnums";
 
 /**
  * 立方体纹理

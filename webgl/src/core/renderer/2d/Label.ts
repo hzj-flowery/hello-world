@@ -1,7 +1,7 @@
 "use strict";
 
 import { SY } from "../base/Sprite";
-import { glprimitive_type } from "../gfx/GLEnums";
+import { syGL } from "../gfx/syGLEnums";
 
 var fontInfo = {
     letterHeight: 8,
@@ -220,7 +220,7 @@ export class Label extends SY.Sprite2D {
         this._fragStr = fragBaseCode;
         this._vertStr = vertextBaseCode
 
-        this._glPrimitiveType = glprimitive_type.TRIANGLES;
+        this._glPrimitiveType = syGL.PrimitiveType.TRIANGLES;
 
     }
 }

@@ -1,6 +1,5 @@
 import { SY } from "../base/Sprite";
-import { glprimitive_type } from "../gfx/GLEnums";
-import { ShaderUseVariantType } from "../shader/ShaderUseVariantType";
+import { syGL } from "../gfx/syGLEnums";
 
 
 var vertexshader3d =
@@ -124,7 +123,7 @@ var texcoord = [
 export class FogCube extends SY.SpriteBase {
     constructor() {
         super();
-        this._glPrimitiveType = glprimitive_type.TRIANGLES;
+        this._glPrimitiveType = syGL.PrimitiveType.TRIANGLES;
     }
     onInit(): void {
         this.createVertexsBuffer(positions, 3);

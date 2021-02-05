@@ -1,5 +1,5 @@
 import { SY } from "../base/Sprite";
-import { glprimitive_type } from "../gfx/GLEnums";
+import { syGL } from "../gfx/syGLEnums";
 
 var vertextBaseCode =
     `attribute vec3 a_position;
@@ -128,7 +128,7 @@ export default class CustomTextureCube extends SY.SpriteBase {
         this.createVertexsBuffer(positions, 3);
         this.createUVsBuffer(uvs, 2);
         
-        this._glPrimitiveType = glprimitive_type.TRIANGLES;
+        this._glPrimitiveType = syGL.PrimitiveType.TRIANGLES;
         this._vertStr = vertextBaseCode;
         this._fragStr = fragBaseCode;
     }

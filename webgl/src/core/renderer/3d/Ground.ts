@@ -1,5 +1,5 @@
 import { SY } from "../base/Sprite";
-import { glprimitive_type } from "../gfx/GLEnums";
+import { syGL } from "../gfx/syGLEnums";
 
 /**
 基本图形	参数	                                   描述
@@ -71,17 +71,17 @@ export default class Ground extends SY.SpriteBase {
 
     private testDrawPrimitive_TRIANGLE_STRIP():void{
         var floorVertexIndices = [0, 1, 2,3,0,2];
-        this._glPrimitiveType = glprimitive_type.TRIANGLE_STRIP;
+        this._glPrimitiveType = syGL.PrimitiveType.TRIANGLE_STRIP;
         this.createIndexsBuffer(floorVertexIndices);
     }
     private testDrawPrimitive_TRIANGLE_FAN():void{
         var floorVertexIndices = [0, 1, 2,3];
-        this._glPrimitiveType = glprimitive_type.TRIANGLE_FAN;
+        this._glPrimitiveType = syGL.PrimitiveType.TRIANGLE_FAN;
         this.createIndexsBuffer(floorVertexIndices);
     }
     private testDrawPrimitive_TRIANGLE():void{
         var floorVertexIndices = [0, 1, 2,3,0,2];
-        this._glPrimitiveType = glprimitive_type.TRIANGLES;
+        this._glPrimitiveType = syGL.PrimitiveType.TRIANGLES;
         this.createIndexsBuffer(floorVertexIndices);
     }
 }

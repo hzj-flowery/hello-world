@@ -1,8 +1,6 @@
-import { glrender_buffer_format } from "../../gfx/GLEnums";
+
 import { Texture2D } from "./Texture2D";
-import FrameBuffer from "../../gfx/FrameBuffer";
-import RenderBuffer from "../../gfx/RenderBuffer";
-import { Color } from "../../../value-types/color";
+import { syGL } from "../../gfx/syGLEnums";
 
 /**
  * !#en The depth buffer and stencil buffer format for RenderTexture.
@@ -17,7 +15,7 @@ let DepthStencilFormat = {
      * @readonly
      * @type {number}
      */
-    RB_FMT_D24S8: glrender_buffer_format.D24S8,
+    RB_FMT_D24S8: syGL.RenderBufferFormat.D24S8,
     /**
      * !#en Only 8 bit stencil buffer
      * !#zh 只申请 8 位模板缓冲
@@ -25,7 +23,7 @@ let DepthStencilFormat = {
      * @readonly
      * @type {number}
      */
-    RB_FMT_S8: glrender_buffer_format.S8,
+    RB_FMT_S8: syGL.RenderBufferFormat.S8,
     /**
      * !#en Only 16 bit depth buffer
      * !#zh 只申请 16 位深度缓冲
@@ -33,7 +31,7 @@ let DepthStencilFormat = {
      * @readonly
      * @type {number}
      */
-    RB_FMT_D16: glrender_buffer_format.D16
+    RB_FMT_D16: syGL.RenderBufferFormat.D16
 }
 
 /**

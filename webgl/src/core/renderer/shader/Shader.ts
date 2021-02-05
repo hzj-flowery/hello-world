@@ -1,6 +1,6 @@
 
 import { G_DrawEngine } from "../base/DrawEngine";
-import { glvert_attr_semantic} from "../gfx/GLEnums";
+import { syGL } from "../gfx/syGLEnums";
 import { ShaderUseVariantType } from "./ShaderUseVariantType";
 
 
@@ -124,58 +124,58 @@ export class Shader {
     protected onCreateShader(): void {
         var _glID = this._spGLID;
         var gl = this._gl;
-        this.a_position_loc = gl.getAttribLocation(_glID, glvert_attr_semantic.POSITION);
-        this.a_normal_loc = gl.getAttribLocation(_glID, glvert_attr_semantic.NORMAL);
-        this.a_uv_loc = gl.getAttribLocation(_glID, glvert_attr_semantic.UV);
-        this.a_tangent_loc = gl.getAttribLocation(_glID, glvert_attr_semantic.TANGENT);
-        this.a_vert_color_loc = gl.getAttribLocation(_glID, glvert_attr_semantic.VERT_COLOR);
-        this.a_vert_matrix_loc = gl.getAttribLocation(_glID, glvert_attr_semantic.VERT_Matrix);
+        this.a_position_loc = gl.getAttribLocation(_glID, syGL.AttributeUniform.POSITION);
+        this.a_normal_loc = gl.getAttribLocation(_glID, syGL.AttributeUniform.NORMAL);
+        this.a_uv_loc = gl.getAttribLocation(_glID, syGL.AttributeUniform.UV);
+        this.a_tangent_loc = gl.getAttribLocation(_glID, syGL.AttributeUniform.TANGENT);
+        this.a_vert_color_loc = gl.getAttribLocation(_glID, syGL.AttributeUniform.VERT_COLOR);
+        this.a_vert_matrix_loc = gl.getAttribLocation(_glID, syGL.AttributeUniform.VERT_Matrix);
 
-        this.u_color_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.COLOR);
-        this.u_ambientColor_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.LIGHT_AMBIENT_COLOR);
-        this.u_pointColor_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.LIGHT_POINT_COLOR);
-        this.u_light_color_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.LIGHT_COLOR);
-        this.u_light_color_dir_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.LIGHT_COLOR_DIR);
-        this.u_light_specular_color_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.LIGHT_SPECULAR_COLOR);
-        this.u_light_specular_shininess_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.LIGHT_SPECULAR_SHININESS);
-        this.u_light_spotDirection_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.LIGHT_SPOT_DIRECTION);
-        this.u_light_spotColor_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.LIGHT_SPOT_COLOR);
-        this.u_light_spotInnerLimit_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.LIGHT_SPOT_INNER_LIMIT);
-        this.u_light_spotOuterLimit_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.LIGHT_SPOT_OUTER_LIMIT);
+        this.u_color_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.COLOR);
+        this.u_ambientColor_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.LIGHT_AMBIENT_COLOR);
+        this.u_pointColor_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.LIGHT_POINT_COLOR);
+        this.u_light_color_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.LIGHT_COLOR);
+        this.u_light_color_dir_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.LIGHT_COLOR_DIR);
+        this.u_light_specular_color_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.LIGHT_SPECULAR_COLOR);
+        this.u_light_specular_shininess_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.LIGHT_SPECULAR_SHININESS);
+        this.u_light_spotDirection_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.LIGHT_SPOT_DIRECTION);
+        this.u_light_spotColor_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.LIGHT_SPOT_COLOR);
+        this.u_light_spotInnerLimit_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.LIGHT_SPOT_INNER_LIMIT);
+        this.u_light_spotOuterLimit_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.LIGHT_SPOT_OUTER_LIMIT);
 
-        this.u_VMMatrix_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.VMMatrix);
-        this.u_PMatrix_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.PMatrix);
-        this.u_Matrix_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.Matrix);
+        this.u_VMMatrix_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.VMMatrix);
+        this.u_PMatrix_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.PMatrix);
+        this.u_Matrix_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.Matrix);
 
-        this.u_fogColor_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.FOG_COLOR);
-        this.u_fogDensity_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.FOG_DENSITY);
+        this.u_fogColor_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.FOG_COLOR);
+        this.u_fogDensity_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.FOG_DENSITY);
 
-        this.u_texCoord_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.TEX_COORD);
-        this.u_texCoord1_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.TEX_COORD1);
-        this.u_texCoord2_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.TEX_COORD2);
-        this.u_texCoord3_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.TEX_COORD3);
-        this.u_texCoord4_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.TEX_COORD4);
-        this.u_texCoord5_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.TEX_COORD5);
-        this.u_texCoord6_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.TEX_COORD6);
-        this.u_texCoord7_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.TEX_COORD7);
-        this.u_texCoord8_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.TEX_COORD8);
-        this.u_cubeCoord_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.CUBE_COORD);
-        this.u_skybox_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.SKYBOX);
+        this.u_texCoord_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.TEX_COORD);
+        this.u_texCoord1_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.TEX_COORD1);
+        this.u_texCoord2_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.TEX_COORD2);
+        this.u_texCoord3_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.TEX_COORD3);
+        this.u_texCoord4_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.TEX_COORD4);
+        this.u_texCoord5_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.TEX_COORD5);
+        this.u_texCoord6_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.TEX_COORD6);
+        this.u_texCoord7_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.TEX_COORD7);
+        this.u_texCoord8_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.TEX_COORD8);
+        this.u_cubeCoord_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.CUBE_COORD);
+        this.u_skybox_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.SKYBOX);
 
-        this.u_shadowMap_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.SHADOW_MAP);
-        this.u_shadowInfor_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.SHADOW_INFOR);
+        this.u_shadowMap_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.SHADOW_MAP);
+        this.u_shadowInfor_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.SHADOW_INFOR);
 
-        this.u_PVMMatrix_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.PVM_MATRIX);
-        this.u_PVMMatrix_inverse_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.PVM_MATRIX_INVERSE);
-        this.u_MMatrix_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.MMatrix);
-        this.u_VMatrix_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.VMatrix);
-        this.u_MIMatrix_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.MIMatrix);
-        this.u_MTMatrix_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.MTMatrix);
-        this.u_MITMatrix_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.MITMatrix);
-        this.u_PVMatrix_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.PVMatrix);
-        this.u_PVMatrix_inverse_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.PVMatrix_INVERSE);
-        this.u_camera_world_position_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.CameraWorldPosition);
-        this.u_light_world_position_loc = gl.getUniformLocation(_glID, glvert_attr_semantic.LightWorldPosition);
+        this.u_PVMMatrix_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.PVM_MATRIX);
+        this.u_PVMMatrix_inverse_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.PVM_MATRIX_INVERSE);
+        this.u_MMatrix_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.MMatrix);
+        this.u_VMatrix_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.VMatrix);
+        this.u_MIMatrix_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.MIMatrix);
+        this.u_MTMatrix_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.MTMatrix);
+        this.u_MITMatrix_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.MITMatrix);
+        this.u_PVMatrix_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.PVMatrix);
+        this.u_PVMatrix_inverse_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.PVMatrix_INVERSE);
+        this.u_camera_world_position_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.CameraWorldPosition);
+        this.u_light_world_position_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.LightWorldPosition);
 
         this.searchUseVariant()
     }

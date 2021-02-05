@@ -1,5 +1,5 @@
 import { SY } from "../base/Sprite";
-import { glprimitive_type } from "../gfx/GLEnums";
+import { syGL } from "../gfx/syGLEnums";
 
 let vert = `attribute vec4 a_position;
         uniform mat4 u_MMatrix;
@@ -18,7 +18,7 @@ export class Line extends SY.SpriteBaseLine {
     constructor() {
         super();
         //画线
-        this._glPrimitiveType = glprimitive_type.LINES;
+        this._glPrimitiveType = syGL.PrimitiveType.LINES;
     }
     protected onInit() {
         this._vertStr = vert;

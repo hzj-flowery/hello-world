@@ -1,5 +1,5 @@
 import { RenderData } from "../data/RenderData";
-import { syGL } from "../gfx/GLEnums";
+import { syGL } from "../gfx/syGLEnums";
 import { Shader } from "../shader/Shader";
 
 /**

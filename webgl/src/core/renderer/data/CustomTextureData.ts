@@ -1,5 +1,5 @@
 import { TextureOpts } from "../base/texture/Texture";
-import {syGL } from "../gfx/GLEnums";
+import {syGL } from "../gfx/syGLEnums";
 
 export default class CustomTextureData {
     static getRandomData(width, height, format: syGL.TextureFormat):TextureOpts {

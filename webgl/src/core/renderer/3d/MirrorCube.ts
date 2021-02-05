@@ -1,8 +1,6 @@
 
 import { SY } from "../base/Sprite";
 import { CubeData } from "../data/CubeData";
-import { glprimitive_type } from "../gfx/GLEnums";
-import { ShaderUseVariantType } from "../shader/ShaderUseVariantType";
 
 var vertextBaseCode =
 `attribute vec4 a_position;

@@ -1,5 +1,5 @@
 import LoaderManager from "../../../LoaderManager";
-import { glTextureFmtInfor, syGL } from "../../gfx/GLEnums";
+import { syGL } from "../../gfx/syGLEnums";
 import { Texture, TextureOpts } from "./Texture";
 
 /*

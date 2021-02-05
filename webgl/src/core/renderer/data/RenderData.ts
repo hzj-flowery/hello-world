@@ -1,7 +1,6 @@
 import { glMatrix } from "../../math/Matrix";
 import { Node } from "../base/Node";
-import { SY } from "../base/Sprite";
-import { glprimitive_type } from "../gfx/GLEnums";
+import { syGL } from "../gfx/syGLEnums";
 import { BufferAttribsData, Shader, ShaderData } from "../shader/Shader";
 import { ShaderUseVariantType } from "../shader/ShaderUseVariantType";
 
@@ -86,7 +85,7 @@ export class  RenderData {
     public _ambientColor:Array<number>;//环境光的颜色
     public _specularShiness:number;//高光指数
     public _nodeCustomMatrix: Float32Array;//节点自定义矩阵
-    public _glPrimitiveType: glprimitive_type;//绘制的类型
+    public _glPrimitiveType: syGL.PrimitiveType;//绘制的类型
     public _modelMatrix: Float32Array;//模型矩阵
     public _time: number;
     public _isUse: boolean = false;//使用状态
@@ -131,7 +130,7 @@ export class  RenderData {
         this._nodeCustomMatrix = null;
         this._modelMatrix = null;
         this._time = 0;
-        this._glPrimitiveType = glprimitive_type.TRIANGLE_FAN;
+        this._glPrimitiveType = syGL.PrimitiveType.TRIANGLE_FAN;
         this._isUse = false;
         glMatrix.mat4.identity(this._customMatrix);
     }
@@ -307,7 +306,7 @@ export class NormalRenderData extends RenderData {
         this._attrbufferData = null;
         this._projKey = "";
         this._viewKey = "";
-        this._glPrimitiveType = glprimitive_type.TRIANGLES;
+        this._glPrimitiveType = syGL.PrimitiveType.TRIANGLES;
         glMatrix.mat4.identity(this._tempMatrix1);
     }
     public _shaderData: ShaderData;

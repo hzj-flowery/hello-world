@@ -1,5 +1,5 @@
 import Device from "../../../Device";
-import {glTextureFmtInfor, syGL} from "../../gfx/GLEnums";
+import {syGL} from "../../gfx/syGLEnums";
 
 
 
@@ -12,7 +12,7 @@ export class TextureOpts {
     }
     public set configFormat(format: syGL.TextureFormat) {
         this._configFormat = format;
-        let infor = glTextureFmtInfor(format);
+        let infor = syGL.getTexFmtConfig(format);
         this._pixelType = infor.pixelType;
         this._format = infor.format;
         this._internalFormat = infor.internalFormat;

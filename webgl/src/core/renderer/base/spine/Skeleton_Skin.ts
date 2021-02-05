@@ -1,6 +1,6 @@
 import Device from "../../../Device";
 import { glMatrix } from "../../../math/Matrix";
-import { syGL } from "../../gfx/GLEnums";
+import { syGL } from "../../gfx/syGLEnums";
 import { Texture, TextureOpts } from "../texture/Texture";
 import { Texture2D } from "../texture/Texture2D";
 import TextureCustom from "../texture/TextureCustom";

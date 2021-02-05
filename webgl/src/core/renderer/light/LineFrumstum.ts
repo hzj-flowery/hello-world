@@ -1,6 +1,6 @@
 import { glMatrix } from "../../math/Matrix";
 import { SY } from "../base/Sprite";
-import { glprimitive_type } from "../gfx/GLEnums";
+import { syGL } from "../gfx/syGLEnums";
 import { G_LightCenter } from "./LightCenter";
 
 let vertBase =
@@ -22,7 +22,7 @@ gl_FragColor = vec4(1.0,0.0,0.0,1.0);
 export class  LineFrumstum extends SY.SpriteBase {
     constructor() {
         super();
-        this._glPrimitiveType = glprimitive_type.LINES;
+        this._glPrimitiveType = syGL.PrimitiveType.LINES;
     }
     private _lightWorldMatrix: Float32Array;
     private _lightProjectInverseMatrix: Float32Array;

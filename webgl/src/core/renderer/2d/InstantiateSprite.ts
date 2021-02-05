@@ -1,5 +1,5 @@
 import { SY } from "../base/Sprite";
-import { glprimitive_type } from "../gfx/GLEnums";
+import { syGL } from "../gfx/syGLEnums";
 
 var vertexshader3d =
     'attribute vec4 a_position;' +
@@ -25,7 +25,7 @@ var fragmentshader3d =
 export default class InstantiateSprite extends SY.Sprite2D {
     constructor() {
         super();
-        this._glPrimitiveType = glprimitive_type.TRIANGLE_STRIP;
+        this._glPrimitiveType = syGL.PrimitiveType.TRIANGLE_STRIP;
     }
     private _colorLoc: any;
     private _matrixLoc: any;

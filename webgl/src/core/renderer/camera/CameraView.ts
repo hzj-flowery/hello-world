@@ -1,5 +1,5 @@
 import { SY } from "../base/Sprite";
-import { glprimitive_type } from "../gfx/GLEnums";
+import { syGL } from "../gfx/syGLEnums";
 import GameMainCamera from "./GameMainCamera";
 
 /**
@@ -64,7 +64,7 @@ export default class CameraView extends SY.SpriteBase {
         this._vertStr = solidcolorvertexshader;
         this._fragStr = solidcolorfragmentshader;
 
-        this._glPrimitiveType = glprimitive_type.LINES;
+        this._glPrimitiveType = syGL.PrimitiveType.LINES;
     }
     private degToRad(d) {
         return d * Math.PI / 180;

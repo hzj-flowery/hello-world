@@ -1,7 +1,5 @@
 import { SY } from "../base/Sprite";
 import { CubeData } from "../data/CubeData";
-import { glprimitive_type } from "../gfx/GLEnums";
-import { ShaderUseVariantType } from "../shader/ShaderUseVariantType";
 
 /**
  * 如果将三维物体的朝向和光的方向点乘， 结果为 1 则物体朝向和光照方向相同，为 -1 则物体朝向和光照方向相反
