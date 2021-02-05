@@ -40,7 +40,7 @@ export class TextureOpts {
     private _internalFormat: number;
     /**
      * 像素的类型
-     * 它准确来说是决定每一个像素是如何分配字节的
+     * 它准确来说是决定每一个像素关于通道是如何分配字节的
      */
     private _pixelType:syGL.PixelType;
     alignment: number = 1;

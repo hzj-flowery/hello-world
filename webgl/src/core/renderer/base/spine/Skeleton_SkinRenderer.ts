@@ -78,31 +78,23 @@ export class Skeleton_SkinRenderer {
     private mesh:any;
     private skin: Skeleton_Skin;
     private skinProgramInfo: ShaderData;
-    private _temWolrdMatrix:Float32Array;//世界矩阵
     constructor(mesh, skin:Skeleton_Skin, gl) {
         this.mesh = mesh;
         this.skin = skin;
         this.skinProgramInfo = G_ShaderFactory.createProgramInfo(skinVS, fs);
-        this._temWolrdMatrix = glMatrix.mat4.identity(null);
     }
     /**
-     * 
-     * @param node 
+     *  
      * @param worldMatrix 当前3d模型的世界矩阵
      * @param sharedUniforms 
      */
-    render(node: Skeleton_Node,worldMatrix:Float32Array, sharedUniforms) {
-        this.skin.update(node);
-        /**
-         * 骨骼节点的世界矩阵 =    3d模型的世界矩阵*骨骼节点的世界矩阵
-         * 那么骨骼上所有的网格对应的顶点乘以这个this._temWolrdMatrix，就可以转换到真正的世界空间下了啊
-         */
-        glMatrix.mat4.mul(this._temWolrdMatrix,worldMatrix,node.worldMatrix);
+    render(worldMatrix:Float32Array, sharedUniforms) {
+        this.skin.update();
         for (const primitive of this.mesh.primitives) {
             var renderData = RenderDataPool.get(RenderDataType.Spine) as SpineRenderData;
             renderData._shaderData = this.skinProgramInfo;
             renderData._uniformData.push({
-                u_world: this._temWolrdMatrix,
+                u_world: worldMatrix,
                 u_texture: this.skin._texture._glID,
                 u_jointTexture: this.skin.jointTexture._glID,
                 u_numJoints: this.skin.jointNodes.length,

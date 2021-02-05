@@ -99,7 +99,7 @@ export class Skeleton_Parse {
     }
 
     // Given an accessor index return a WebGLBuffer and a stride
-    private static getAccessorAndWebGLBuffer(gl, gltf, accessorIndex, attribName = "") {
+    private static getAccessorAndWebGLBuffer(gl, gltf, accessorIndex) {
         const accessor = gltf.accessors[accessorIndex];
         const bufferView = gltf.bufferViews[accessor.bufferView];
         if (!bufferView.webglBuffer) {
@@ -112,12 +112,6 @@ export class Skeleton_Parse {
             //上传数据
             gl.bufferData(target, data, gl.STATIC_DRAW);
             bufferView.webglBuffer = buffer;
-            if (attribName == "JOINTS_0" || attribName == "WEIGHTS_0") {
-                var pData: Array<number> = []
-                data.forEach(function (value, index, array) {
-                    pData.push(value);
-                })
-            }
         }
         return {
             accessor,
@@ -137,6 +131,14 @@ export class Skeleton_Parse {
                 u_diffuse: [0.5, 0, 0, 1],
             },
         };
+
+        let shaderNameReplace = {
+            "a_POSITION": "a_position",
+            "a_NORMAL": "a_normal",    //法线
+            "a_WEIGHTS_0": "a_weights_0", //权重
+            "a_JOINTS_0": "a_joints_0",  //受到哪些骨骼节点的影响
+            "a_TEXCOORD_0": "a_uv"
+        }
         // setup meshes
         // 创建网格
         gltf.meshes.forEach((mesh) => {
@@ -144,7 +146,7 @@ export class Skeleton_Parse {
                 const attribs = {};
                 let numElements;
                 for (const [attribName, index] of Object.entries(primitive.attributes)) {
-                    const { accessor, buffer, stride } = this.getAccessorAndWebGLBuffer(gl, gltf, index, attribName);
+                    const { accessor, buffer, stride } = this.getAccessorAndWebGLBuffer(gl, gltf, index);
                     numElements = accessor.count;
                     attribs[`a_${attribName}`] = {
                         buffer,

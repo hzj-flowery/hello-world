@@ -31,7 +31,6 @@ export class Skeleton_Skin {
     public jointTexture: TextureCustom;
     public _texture: Texture;
     private gl: WebGL2RenderingContext;
-    private _tempMatrix:Float32Array;
     private _skinWidth:number;//皮肤纹理的宽度(宽有多少个像素点)
     private _skinHeight:number;//皮肤纹理的高度（高有多少个像素点）
     constructor(jointNodes:Array<Skeleton_Node>, inverseBindMatrixData: Float32Array, gl) {
@@ -70,30 +69,20 @@ export class Skeleton_Skin {
         opts.configFormat = syGL.TextureFormat.RGBA32F;
         this.jointTexture.url = opts;
 
-        this.gl.bindTexture(this.gl.TEXTURE_2D, null);
         this._texture = new Texture2D();
-        this.createTexture2DBuffer("res/bindu.jpg");
-        this._tempMatrix = glMatrix.mat4.identity(null);
+        (this._texture as Texture2D).url = ("res/bindu.jpg");
     }
-    //创建一个纹理buffer
-    private createTexture2DBuffer(url: string): Texture {
-        (this._texture as Texture2D).url = url;
-        return this._texture
-    }
-    update(node: Skeleton_Node) {
+    update() {
         /**
          * 此处传来一个node 并且取了它的逆矩阵，其实是想将顶点转换到该节点的空间坐标系
          * 但我在最后计算世界坐标系的时候，又去乘了这个节点的世界坐标系，又重新从这个节点坐标系转到了世界空间坐标系下
          * 所以我觉得这个过程有点多余，转来又转去
          */
-        glMatrix.mat4.invert(this._tempMatrix, node.worldMatrix);
         for (let j = 0; j < this.jointNodes.length; ++j) {
             const jointNode = this.jointNodes[j];
-            glMatrix.mat4.multiply(this.jointMatrices[j], this._tempMatrix, jointNode.worldMatrix);
             glMatrix.mat4.copy(this.jointMatrices[j],jointNode.worldMatrix)
             /**
              * 为啥要乘以这个绑定矩阵的逆矩阵？
-             * 
              */
             glMatrix.mat4.multiply(this.jointMatrices[j], this.jointMatrices[j], this.inverseBindMatrices[j]);
         }

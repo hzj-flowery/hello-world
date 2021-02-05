@@ -42,7 +42,7 @@ export default class Spine extends SY.SpriteBase {
         }
         for (const drawable of node.skin_Drawables) {
             //渲染皮肤
-            drawable.render(node,this.modelMatrix,this.sharedUniforms);
+            drawable.render(this.modelMatrix,this.sharedUniforms);
         }
     }
 
