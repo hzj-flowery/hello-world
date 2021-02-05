@@ -1,4 +1,5 @@
 import LoaderManager from "../../../LoaderManager";
+import { syGL } from "../../gfx/syGLEnums";
 import { Skeleton_MeshRenderer } from "./Skeleton_MeshRenderer";
 import { Skeleton_Node, Skeleton_Transform } from "./Skeleton_Node";
 import { Skeleton_Skin } from "./Skeleton_Skin";
@@ -131,13 +132,15 @@ export class Skeleton_Parse {
                 u_diffuse: [0.5, 0, 0, 1],
             },
         };
-
+        
+        //解析出来的数据需要兼容我的shader
+        //所以此处需要做一些变量名的替换
         let shaderNameReplace = {
-            "a_POSITION": "a_position",
-            "a_NORMAL": "a_normal",    //法线
-            "a_WEIGHTS_0": "a_weights_0", //权重
-            "a_JOINTS_0": "a_joints_0",  //受到哪些骨骼节点的影响
-            "a_TEXCOORD_0": "a_uv"
+            "a_POSITION": syGL.AttributeUniform.POSITION,
+            "a_NORMAL": syGL.AttributeUniform.NORMAL,    //法线
+            "a_WEIGHTS_0": syGL.AttributeUniform.WEIGHTS_0, //权重
+            "a_JOINTS_0": syGL.AttributeUniform.JOINTS_0,  //受到哪些骨骼节点的影响
+            "a_TEXCOORD_0": syGL.AttributeUniform.UV
         }
         // setup meshes
         // 创建网格
@@ -148,7 +151,17 @@ export class Skeleton_Parse {
                 for (const [attribName, index] of Object.entries(primitive.attributes)) {
                     const { accessor, buffer, stride } = this.getAccessorAndWebGLBuffer(gl, gltf, index);
                     numElements = accessor.count;
-                    attribs[`a_${attribName}`] = {
+
+                    let realName = `a_${attribName}`;
+                    if(shaderNameReplace[realName])
+                    {
+                        realName = shaderNameReplace[realName];
+                    }
+                    else
+                    {
+                        console.log("发现不明变量-------",attribName);
+                    }
+                    attribs[realName] = {
                         buffer,
                         type: accessor.componentType,
                         numComponents: this.accessorTypeToNumComponents(accessor.type),
