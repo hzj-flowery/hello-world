@@ -138,7 +138,6 @@ export default class Camera extends Node {
         //创建透视矩阵
         this._projectionMatrix = this._glMatrix.mat4.create();
         this._type = type;
-        this._holderMatrix = glMatrix.mat4.identity(null);
         this._cameraData = new CameraData();
     }
 
@@ -159,13 +158,6 @@ export default class Camera extends Node {
     private _updateFlag:boolean;//更新标志
     private _targetTexture: RenderTexture;//目标渲染纹理
     private _framebuffer: FrameBuffer;//渲染buffer
-    
-    /**
-     * 支架矩阵，该矩阵的出现，是因为相机的特殊性，一般情况
-     * 相机都是放在支架上的，我们说的平移相机其实指的是平移相机的支架
-     * 相机只相当与眼睛，眼睛主要争对缩放和旋转
-     */
-    private _holderMatrix:Float32Array;//支架矩阵
     
     /**
      * 弧度

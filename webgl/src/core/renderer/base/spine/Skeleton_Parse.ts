@@ -86,7 +86,6 @@ export class Skeleton_Parse {
         const bufferView = gltf.bufferViews[accessor.bufferView];
         const TypedArray = this.glTypeToTypedArray(accessor.componentType); //Float32Array
         const buffer = gltf.buffers[bufferView.buffer];
-        console.log(gltf.buffers);
         var array = new TypedArray(
             buffer,
             bufferView.byteOffset + (accessor.byteOffset || 0),
@@ -193,6 +192,14 @@ export class Skeleton_Parse {
         const skinNodes = [];
         const origNodes = gltf.nodes;
         gltf.nodes = gltf.nodes.map((n) => {
+            /**
+             * 这里面存储了模型中所有节点，更多的我们只关心骨骼节点
+             * 下面就是要拿这些节点的数据来还原这些节点
+             * 根据缩放，平移，以及四元数旋转，创建一个trs
+             * 无论如何，首先它是一个节点Skeleton_Node
+             * 如果该节点的数据中含有skin，说明这是一个带有蒙皮的节点，这个要注意，就要创建一个蒙皮节点
+             * 蒙皮节点中会包含蒙皮动画，我们会通过蒙皮节点来操作蒙皮动画
+             */
             const { name, skin, mesh, translation, rotation, scale } = n;
             const trs = new Skeleton_Transform(translation, rotation, scale);
             const node = new Skeleton_Node(trs, name);
@@ -203,6 +210,7 @@ export class Skeleton_Parse {
                  * 蒙皮数据有下面两个：
                  * 网格的顶点数据
                  * 这张皮肤含有多少个骨骼，将用这些骨骼的空间坐标系去造一个纹理，这个纹理就是蒙皮的来源
+                 * 这个节点是一个领头羊，我们会通过这个节点来操作皮肤，
                  */
                 skinNodes.push({ node, mesh: realMesh, skinNdx: skin });
             } else if (realMesh) {
@@ -211,16 +219,29 @@ export class Skeleton_Parse {
             return node;
         });
 
-        //创建皮肤
+        /**
+         * 创建皮肤
+         * 首先skins是一个数组，说明可以创建若干张骨骼纹理
+         * skins数组中每一个子项,包含如下数据：
+         * joints：骨骼节点索引数组
+         * inverseBindMatrices：与joints相对的每一个骨骼节点的绑定矩阵的逆矩阵
+         * OK拿到这两个数据就可以创建一张骨骼纹理
+         */
         gltf.skins = gltf.skins.map((skin) => {
             const joints = skin.joints.map(ndx => gltf.nodes[ndx]);
-            //96个元素 每个元素四个字节
-            //一个矩阵4x4 16个元素 可以组成6个矩阵
+            /**
+             * 利用骨骼节点和骨骼绑定姿势的逆矩阵来创建一张骨骼纹理
+             * 骨骼节点的顺序和骨骼绑定姿势的逆矩阵必须是一一对应的
+             */
             const { array } = this.getAccessorTypedArrayAndStride(gltf, skin.inverseBindMatrices);
             return new Skeleton_Skin(joints, array, gl);
         });
 
-        // Add SkinRenderers to nodes with skins
+        /**
+         * 给蒙皮节点加上一个蒙皮渲染器
+         * 蒙皮渲染器里传入mesh网格信息和对应的蒙皮
+         * 日后就会通过这个蒙皮节点来调用这个蒙皮渲染器，进而来渲染网格mesh
+         */
         for (const { node, mesh, skinNdx } of skinNodes) {
             node.skin_Drawables.push(new Skeleton_SkinRenderer(mesh, gltf.skins[skinNdx], gl));
         }
@@ -249,7 +270,7 @@ export class Skeleton_Parse {
         });
 
         // setup scenes
-        // 创建场景
+        // 创建场景,你可以理解为他就是一个模型场景
         for (const scene of gltf.scenes) {
             scene.root = new Skeleton_Node(new Skeleton_Transform(), scene.name);
             addChildren(gltf.nodes, scene.root, scene.nodes);

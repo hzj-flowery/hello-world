@@ -30,6 +30,8 @@ export default class Spine extends SY.SpriteBase {
             const origMatrix = this.origMatrices.get(jointNode);
             // rotate it
             this._glMatrix.mat4.rotateX(this._tempMatrix, origMatrix, a);
+            // this._glMatrix.mat4.rotateY(this._tempMatrix, origMatrix, a);
+            // this._glMatrix.mat4.rotateZ(this._tempMatrix, origMatrix, a);
             // decompose it back into position, rotation, scale
             // into the joint
             this._glMatrix.mat4.decompose(this._tempMatrix, jointNode.transform.position, jointNode.transform.rotation, jointNode.transform.scale);

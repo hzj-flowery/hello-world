@@ -18,6 +18,7 @@ import SpotLightCube from "../3d/SpotLightCube";
 import { FogCube } from "../3d/FogCube";
 import { glMatrix } from "../../math/Matrix";
 import { syGL } from "../gfx/syGLEnums";
+import GameMainCamera from "../camera/GameMainCamera";
 
 export default class Scene3D extends Scene {
 
@@ -157,7 +158,7 @@ export default class Scene3D extends Scene {
         tempNode.addChild(this._mirrorCube);
 
         this.setPosition(0, 0, 0);
-        // setTimeout(this.rotateCenterNode.bind(this), 20);
+        setTimeout(this.rotateCenterNode.bind(this), 20);
 
     }
 

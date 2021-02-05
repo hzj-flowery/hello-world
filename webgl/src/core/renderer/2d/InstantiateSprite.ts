@@ -121,7 +121,6 @@ export default class InstantiateSprite extends SY.Sprite2D {
         }
         // this line says this attribute only changes for each 1 instance
         gl.vertexAttribDivisor(this._colorLoc, 1);
-
     }
     public onDrawAfter(): void {
         let gl = this.gl;

@@ -220,7 +220,6 @@ export class Texture {
     
     /**
      * 更新显存中的纹理数据
-     * interfomat ：34836
      */
     public reUpload(data:Uint8Array|HTMLImageElement|Float32Array):void{
           this._data = data;
