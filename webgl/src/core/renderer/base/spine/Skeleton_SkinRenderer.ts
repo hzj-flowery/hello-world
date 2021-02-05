@@ -104,7 +104,7 @@ export class Skeleton_SkinRenderer {
             renderData._uniformData.push({
                 u_world: this._temWolrdMatrix,
                 u_texture: this.skin._texture._glID,
-                u_jointTexture: this.skin.jointTexture,
+                u_jointTexture: this.skin.jointTexture._glID,
                 u_numJoints: this.skin.jointNodes.length,
             });
             renderData._projKey = "u_projection";

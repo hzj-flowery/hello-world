@@ -1,5 +1,5 @@
 import LoaderManager from "../../../LoaderManager";
-import { glTextureFmtInfor, gltex_filter } from "../../gfx/GLEnums";
+import { glTextureFmtInfor, syGL } from "../../gfx/GLEnums";
 import { Texture, TextureOpts } from "./Texture";
 
 /*
@@ -79,8 +79,8 @@ export class Texture2D extends Texture{
         options.width = image.width;
         options.height = image.height;
         options.unpackFlipY = true;
-        options.magFilter = gltex_filter.LINEAR;
-        options.minFilter = gltex_filter.LINEAR_MIPMAP_LINEAR;
+        options.magFilter = syGL.TexFilter.LINEAR;
+        options.minFilter = syGL.TexFilter.LINEAR_MIPMAP_LINEAR;
         options.checkValid();
         this.updateOptions(options);
         this.upload();

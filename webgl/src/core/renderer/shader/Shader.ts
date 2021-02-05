@@ -1,7 +1,6 @@
 
 import { G_DrawEngine } from "../base/DrawEngine";
-import { glvert_attr_semantic, glTEXTURE_UNIT_VALID } from "../gfx/GLEnums";
-import { G_ShaderFactory } from "./ShaderFactory";
+import { glvert_attr_semantic} from "../gfx/GLEnums";
 import { ShaderUseVariantType } from "./ShaderUseVariantType";
 
 

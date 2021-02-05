@@ -1,7 +1,9 @@
 import Device from "../../../Device";
 import { glMatrix } from "../../../math/Matrix";
-import { Texture } from "../texture/Texture";
+import { syGL } from "../../gfx/GLEnums";
+import { Texture, TextureOpts } from "../texture/Texture";
 import { Texture2D } from "../texture/Texture2D";
+import TextureCustom from "../texture/TextureCustom";
 import { Skeleton_Node } from "./Skeleton_Node";
 /**
  * 
@@ -26,7 +28,7 @@ export class Skeleton_Skin {
     private inverseBindMatrices: Array<Float32Array>;
     private jointMatrices: Array<Float32Array>;
     private jointData: Float32Array;
-    public jointTexture: WebGLTexture;
+    public jointTexture: TextureCustom;
     public _texture: Texture;
     private gl: WebGL2RenderingContext;
     private _tempMatrix:Float32Array;
@@ -51,21 +53,23 @@ export class Skeleton_Skin {
         }
         this._skinWidth = 4;
         this._skinHeight = this.jointNodes.length;
-        // create a texture to hold the joint matrices
-        this.jointTexture = this.gl.createTexture();
-        this.gl.bindTexture(this.gl.TEXTURE_2D, this.jointTexture);
-        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.NEAREST);
-        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.NEAREST);
-        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
-        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
+
+        this.jointTexture = new TextureCustom();
+        let opts = new TextureOpts();
+        opts.data = this.jointData;
+        opts.width = this._skinWidth;
+        opts.height = this._skinHeight;
+        opts.magFilter = this.gl.NEAREST;
+        opts.minFilter = this.gl.NEAREST;
+        opts.wrapS = this.gl.CLAMP_TO_EDGE;
+        opts.wrapT = this.gl.CLAMP_TO_EDGE;
+        opts.unpackFlipY = false;
         if(Device.Instance.getContextType()=="webgl2")
-        {
-            this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA32F,this._skinWidth,this._skinHeight, 0,this.gl.RGBA, this.gl.FLOAT, this.jointData);
-        }
-        else
-        {
-            this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA,this._skinWidth,this._skinHeight, 0,this.gl.RGBA, this.gl.FLOAT, this.jointData);
-        }
+        opts.configFormat = syGL.TextureFormat.RGBA32F_2;
+        else 
+        opts.configFormat = syGL.TextureFormat.RGBA32F;
+        this.jointTexture.url = opts;
+
         this.gl.bindTexture(this.gl.TEXTURE_2D, null);
         this._texture = new Texture2D();
         this.createTexture2DBuffer("res/bindu.jpg");
@@ -93,14 +97,6 @@ export class Skeleton_Skin {
              */
             glMatrix.mat4.multiply(this.jointMatrices[j], this.jointMatrices[j], this.inverseBindMatrices[j]);
         }
-        this.gl.bindTexture(this.gl.TEXTURE_2D, this.jointTexture);
-        if(Device.Instance.getContextType()=="webgl2")
-        {
-            this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA32F,this._skinWidth,this._skinHeight, 0,this.gl.RGBA, this.gl.FLOAT, this.jointData);
-        }
-        else
-        {
-            this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA,this._skinWidth, this._skinHeight, 0,this.gl.RGBA, this.gl.FLOAT, this.jointData);
-        }
+        this.jointTexture.reUpload(this.jointData);
     }
 }

@@ -1,5 +1,5 @@
 import Device from "../../../Device";
-import { gltex_filter, gltex_wrap, gltex_config_format, glTextureChanelTotalBytes, glTextureFmtInfor, glType } from "../../gfx/GLEnums";
+import {glTextureFmtInfor, syGL} from "../../gfx/GLEnums";
 
 
 
@@ -8,9 +8,9 @@ import { gltex_filter, gltex_wrap, gltex_config_format, glTextureChanelTotalByte
  */
 export class TextureOpts {
     constructor() {
-        this.configFormat = gltex_config_format.RGBA8;//纹理的配置格式
+        this.configFormat = syGL.TextureFormat.RGBA8;//纹理的配置格式
     }
-    public set configFormat(format: gltex_config_format) {
+    public set configFormat(format: syGL.TextureFormat) {
         this._configFormat = format;
         let infor = glTextureFmtInfor(format);
         this._pixelType = infor.pixelType;
@@ -35,25 +35,48 @@ export class TextureOpts {
     public get data(){
         return this._data;
     }
-    private _data: Uint8Array|HTMLImageElement;
+    private _data: Uint8Array|HTMLImageElement|Float32Array;
     private _format: number;
     private _internalFormat: number;
-    private _pixelType: glType;
+    /**
+     * 像素的类型
+     * 它准确来说是决定每一个像素是如何分配字节的
+     */
+    private _pixelType:syGL.PixelType;
     alignment: number = 1;
-    unpackFlipY:boolean = true;//webgl坐标系左下角 UI坐标系左上角
+    /**
+     * 设置该值非常重要
+     * 对于外界的jpg png等格式图片数据，一般情况是要翻的转
+     * 因为webgl坐标系左下角 UI坐标系左上角
+     * 但对于其他格式的或者自己定义的纹理数据，可以根据实际情况来定
+     * 如果没有正确定义：可能会造成以下几种情况
+     * 对于2d节点，你看到的图像是倒着的
+     * 对于3d节点并且这个3d节点还有动画，那么有可能节点会变形
+     */
+    unpackFlipY:boolean = true;
     level: number = 0;
     border: number = 0;
-    width: number = 1;    //纹理的宽度 有多少个像素点
-    height: number = 1;    //纹理的高度 有多少个像素点
+    /**
+     * 纹理的宽度 有多少个像素点
+     */
+    width: number = 1;
+    /**
+     * 纹理的高度 有多少个像素点 
+    */    
+    height: number = 1;    
     genMipmaps: boolean = false;//是否开启mipmap技术
     compressed: boolean = false;//纹理是否是压缩的
     anisotropy: number = 1;//设置纹理所有方向的最大值
-    minFilter: number = gltex_filter.LINEAR;//纹理缩小过滤模式
-    magFilter: number = gltex_filter.LINEAR;//纹理放大过滤模式
-    mipFilter: number = gltex_filter.LINEAR_MIPMAP_LINEAR; //设置纹理缩小过滤的模式为特殊的线性过滤GL_LINEAR_MIPMAP_NEAREST
-    wrapS = gltex_wrap.MIRROR;//设置s方向上的贴图模式为镜像对称重复
-    wrapT = gltex_wrap.MIRROR;//设置t方向上的贴图模式为镜像对称重复
-    private _configFormat: gltex_config_format;//纹理的配置格式
+    minFilter: number = syGL.TexFilter.LINEAR;//纹理缩小过滤模式
+    magFilter: number = syGL.TexFilter.LINEAR;//纹理放大过滤模式
+    /**
+     *设置纹理缩小过滤的模式为特殊的线性过滤GL_LINEAR_MIPMAP_NEAREST
+      这个格式只适用于多远渐进纹理
+     */
+    mipFilter: number = syGL.TexFilter.LINEAR_MIPMAP_LINEAR; 
+    wrapS = syGL.TextureWrap.MIRROR;//设置s方向上的贴图模式为镜像对称重复
+    wrapT = syGL.TextureWrap.MIRROR;//设置t方向上的贴图模式为镜像对称重复
+    private _configFormat: syGL.TextureFormat;//纹理的配置格式
 
     //参数的有效性
     //一般使用前 调用一下
@@ -65,21 +88,19 @@ export class TextureOpts {
         }
         if(!this.isValidMag(this.magFilter))
         {
-            this.magFilter = gltex_filter.NEAREST;
+            this.magFilter = syGL.TexFilter.NEAREST;
         }
         if(!this.isValidMin(this.minFilter))
         {
-            this.minFilter = gltex_filter.NEAREST;
+            this.minFilter = syGL.TexFilter.NEAREST;
         }
-
     }
-
-    static readonly _validMagData: Array<number> = [gltex_filter.LINEAR, gltex_filter.NEAREST];
-    static readonly _validMinData: Array<number> = [gltex_filter.LINEAR, gltex_filter.NEAREST,
-    gltex_filter.LINEAR_MIPMAP_LINEAR,
-    gltex_filter.LINEAR_MIPMAP_NEAREST,
-    gltex_filter.NEAREST_MIPMAP_LINEAR,
-    gltex_filter.NEAREST_MIPMAP_NEAREST]
+    static readonly _validMagData: Array<number> = [syGL.TexFilter.LINEAR, syGL.TexFilter.NEAREST];
+    static readonly _validMinData: Array<number> = [syGL.TexFilter.LINEAR, syGL.TexFilter.NEAREST,
+    syGL.TexFilter.LINEAR_MIPMAP_LINEAR,
+    syGL.TexFilter.LINEAR_MIPMAP_NEAREST,
+    syGL.TexFilter.NEAREST_MIPMAP_LINEAR,
+    syGL.TexFilter.NEAREST_MIPMAP_NEAREST]
     private isValidMag(mag: number): boolean {
         return TextureOpts._validMagData.indexOf(mag) >= 0;
     }
@@ -129,7 +150,7 @@ export class Texture {
     protected _data:any;
     protected _wrapS;//设置s方向上的贴图模式
     protected _wrapT;//设置t方向上的贴图模式
-    protected _cformat: gltex_config_format;//纹理的格式
+    protected _cformat: syGL.TextureFormat;//纹理的格式
     protected _format:number;
     protected _internalFormat:number;
     protected _target;//目标缓冲区
@@ -176,7 +197,7 @@ export class Texture {
         this._level = options.level;
         this._data = options.data;
         this._format = options.format;
-        this._internalFormat = options.format;
+        this._internalFormat = options.internalFormat;
         this._pixelType = options.pixelType;
         this._alignment = options.alignment;
         this._unpackFlipY = options.unpackFlipY;
@@ -187,8 +208,8 @@ export class Texture {
 
         this._cformat = options.configFormat;
         this._compressed =
-            (this._cformat >= gltex_config_format.RGB_DXT1 && this._cformat <= gltex_config_format.RGBA_PVRTC_4BPPV1) ||
-            (this._cformat >= gltex_config_format.RGB_ETC2 && this._cformat <= gltex_config_format.RGBA_ETC2);
+            (this._cformat >= syGL.TextureFormat.RGB_DXT1 && this._cformat <= syGL.TextureFormat.RGBA_PVRTC_4BPPV1) ||
+            (this._cformat >= syGL.TextureFormat.RGB_ETC2 && this._cformat <= syGL.TextureFormat.RGBA_ETC2);
 
         this.updateNormalBytes();
     }
@@ -196,14 +217,22 @@ export class Texture {
     protected upload(){
         this.uploadTextureToGPU(); 
     }
-
+    
+    /**
+     * 更新显存中的纹理数据
+     * interfomat ：34836
+     */
+    public reUpload(data:Uint8Array|HTMLImageElement|Float32Array):void{
+          this._data = data;
+          this.upload();
+    }
     /**
      * 设置GPU中纹理操作
      */
     private setTextureOperator(): void {
         let gl = this._gl;
         this._gl.pixelStorei(gl.UNPACK_ALIGNMENT,this._alignment);
-        // Y 轴取反
+        // // Y 轴取反
         this._gl.pixelStorei(this._gl.UNPACK_FLIP_Y_WEBGL, this._unpackFlipY);
         if(this._genMipmaps)
         {
@@ -301,7 +330,7 @@ export class Texture {
     //更新字节数
     private updateNormalBytes(): void {
         if (this._compressed == false) {
-            this._bites = (this._width * this._height * glTextureChanelTotalBytes(this._cformat)) / 1024;
+            this._bites = (this._width * this._height * syGL.getTextureChanelTotalBytes(this._cformat)) / 1024;
             // 开启了mipmap而造成的纹理内存增大的字节数
             this._bites = this._genMipmaps?this._bites * (4 / 3):this._bites;
         }

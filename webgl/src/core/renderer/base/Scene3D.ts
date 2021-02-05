@@ -6,7 +6,6 @@ import SkyBox from "../3d/SkyBox";
 import { Node } from "./Node";
 import CustomTextureCube from "../3d/CustomTextureCube";
 import CustomTextureData from "../data/CustomTextureData";
-import { gltex_config_format } from "../gfx/GLEnums";
 import Sphere from "../3d/Sphere";
 import Spine from "./spine/Spine";
 import { SpotLight } from "../light/SpotLight";
@@ -18,6 +17,7 @@ import PointLightCube from "../3d/PointLightCube";
 import SpotLightCube from "../3d/SpotLightCube";
 import { FogCube } from "../3d/FogCube";
 import { glMatrix } from "../../math/Matrix";
+import { syGL } from "../gfx/GLEnums";
 
 export default class Scene3D extends Scene {
 
@@ -82,7 +82,7 @@ export default class Scene3D extends Scene {
         this.addChild(this._spineNode);
 
         this._customTexture = new CustomTextureCube();
-        this._customTexture.spriteFrame = CustomTextureData.getRandomData(3, 5, gltex_config_format.RGB8);
+        this._customTexture.spriteFrame = CustomTextureData.getRandomData(3, 5, syGL.TextureFormat.RGB8);
         this._customTexture.setPosition(0, 3.1, 0);
         this._centerNode.addChild(this._customTexture);
 

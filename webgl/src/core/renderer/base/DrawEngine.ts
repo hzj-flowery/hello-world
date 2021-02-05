@@ -1,5 +1,5 @@
 import { RenderData } from "../data/RenderData";
-import { glTEXTURE_UNIT_VALID } from "../gfx/GLEnums";
+import { syGL } from "../gfx/GLEnums";
 import { Shader } from "../shader/Shader";
 
 /**
@@ -168,7 +168,7 @@ class DrawEngine {
         let gl = this.gl;
         // 激活 指定 号纹理单元
         //在GPU那边有若干个纹理单元 下面这句话的意思就是说激活那个纹理单元
-        gl.activeTexture(gl[glTEXTURE_UNIT_VALID[pos]]);
+        gl.activeTexture(gl[syGL.TextureValidUnit[pos]]);
         // 指定当前操作的贴图
         //将纹理贴图的显存地址放入到刚刚激活的纹理单元中
         gl.bindTexture(gl.TEXTURE_2D, glID);
@@ -190,7 +190,7 @@ class DrawEngine {
        if(glID)
        {
             // 激活 指定 号纹理单元
-            gl.activeTexture(gl[glTEXTURE_UNIT_VALID[pos]]);
+            gl.activeTexture(gl[syGL.TextureValidUnit[pos]]);
             // 指定当前操作的贴图
             gl.bindTexture(gl.TEXTURE_CUBE_MAP, glID);
        }

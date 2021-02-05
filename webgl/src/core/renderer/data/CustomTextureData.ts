@@ -1,9 +1,9 @@
 import { TextureOpts } from "../base/texture/Texture";
-import { glTextureFmtInfor, gltex_config_format, glTextureTotalChanels, glFilter, gltex_filter } from "../gfx/GLEnums";
+import {syGL } from "../gfx/GLEnums";
 
 export default class CustomTextureData {
-    static getRandomData(width, height, format: gltex_config_format):TextureOpts {
-        var chanels = glTextureTotalChanels(format);
+    static getRandomData(width, height, format: syGL.TextureFormat):TextureOpts {
+        var chanels = syGL.getTextureTotalChanels(format);
         var urlData: TextureOpts = new TextureOpts();
         urlData.level = 0;
         urlData.width = width;
@@ -33,13 +33,13 @@ export default class CustomTextureData {
      * @param height 
      */
     static getBoardData(width:number,height:number):TextureOpts{
-         let cformat = gltex_config_format.L8;
+         let cformat = syGL.TextureFormat.L8;
          var urlData: TextureOpts = new TextureOpts();
          urlData.configFormat = cformat;
          urlData.width = width;
          urlData.height = height;
-         urlData.magFilter = gltex_filter.NEAREST;
-         urlData.minFilter = gltex_filter.NEAREST_MIPMAP_NEAREST;
+         urlData.magFilter = syGL.TexFilter.NEAREST;
+         urlData.minFilter = syGL.TexFilter.NEAREST_MIPMAP_NEAREST;
          urlData.genMipmaps = true;
          urlData.data = new Uint8Array([  // data
             0xFF, 0xCC, 0xFF, 0xCC, 0xFF, 0xCC, 0xFF, 0xCC,
