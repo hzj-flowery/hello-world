@@ -78,10 +78,15 @@ export class Skeleton_SkinRenderer {
     private mesh:any;
     private skin: Skeleton_Skin;
     private skinProgramInfo: ShaderData;
+    private _renderDataArray:Array<SpineRenderData>;
     constructor(mesh, skin:Skeleton_Skin, gl) {
         this.mesh = mesh;
         this.skin = skin;
         this.skinProgramInfo = G_ShaderFactory.createProgramInfo(skinVS, fs);
+        this._renderDataArray = []
+        for (const primitive of this.mesh.primitives) {
+            this._renderDataArray.push(RenderDataPool.get(RenderDataType.Spine) as SpineRenderData);
+        }
     }
     /**
      *  
@@ -90,8 +95,9 @@ export class Skeleton_SkinRenderer {
      */
     render(worldMatrix:Float32Array, sharedUniforms) {
         this.skin.update();
+        let j = 0;
         for (const primitive of this.mesh.primitives) {
-            var renderData = RenderDataPool.get(RenderDataType.Spine) as SpineRenderData;
+            var renderData = this._renderDataArray[j];
             renderData._shaderData = this.skinProgramInfo;
             renderData._uniformData.push({
                 u_MMatrix: worldMatrix,
@@ -105,6 +111,7 @@ export class Skeleton_SkinRenderer {
             renderData._uniformData.push(sharedUniforms);
             renderData._attrbufferData = primitive.bufferInfo;
             Device.Instance.collectData(renderData);
+            j++;
         }
     }
 }
