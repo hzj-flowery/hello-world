@@ -26,7 +26,6 @@ import { G_ShaderCenter } from "./core/renderer/shader/ShaderCenter";
 import { G_LightCenter } from "./core/renderer/light/LightCenter";
 import { G_LightModel } from "./core/renderer/light/LightModel";
 import { G_UISetting } from "./core/ui/UiSetting";
-import { G_CameraModel } from "./core/renderer/camera/CameraModel";
 
 
 
@@ -99,7 +98,6 @@ LoaderManager.instance.load(arr,null,function(){
     console.log("-888888----",/mobile|android|iphone|ipad/.test("mobilczjjjjj"));
 
 
-    new RenderFlow().startup();
     // RampTextureTest.run();
     // CameraTest.run();
     // RobartTest.run();
