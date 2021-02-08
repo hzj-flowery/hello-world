@@ -1,0 +1,2 @@
+node ./produce.js
+pause
