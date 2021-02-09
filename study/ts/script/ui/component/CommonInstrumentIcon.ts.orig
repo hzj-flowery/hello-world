@@ -1,0 +1,140 @@
+import CommonIconBase from "./CommonIconBase";
+import { TypeConvertHelper } from "../../utils/TypeConvertHelper";
+import { Colors, G_SceneManager } from "../../init";
+import { ComponentIconHelper } from "./ComponentIconHelper";
+import UIHelper from "../../utils/UIHelper";
+import { Path } from "../../utils/Path";
+import CommonUI from "./CommonUI";
+import { handler } from "../../utils/handler";
+<<<<<<< HEAD
+=======
+import PopupBase from "../PopupBase";
+>>>>>>> 欢庆佳节完成
+import PopupInstrumentDetail from "../../scene/view/instrument/PopupInstrumentDetail";
+
+const { ccclass, property } = cc._decorator;
+
+@ccclass
+export default class CommonInstrumentIcon extends CommonIconBase {
+
+    private _textItemTopNum: cc.Label;
+    private _imageLevel: cc.Node;
+    private _textRlevel: cc.Label;
+    private _limitLevel: number;
+    private _textLevel: cc.Label;
+    onLoad() {
+        super.onLoad();
+        this._textItemTopNum = null;
+        this._type = TypeConvertHelper.TYPE_INSTRUMENT;
+    }
+    _init() {
+        // super._init();
+        // this.setTouchEnabled(false);
+    }
+    setId(id) {
+
+    }
+    updateUI(value, size, limitLevel) {
+        this._limitLevel = limitLevel;
+        var itemParams = TypeConvertHelper.convert(TypeConvertHelper.TYPE_INSTRUMENT, value, null, null, limitLevel);
+        itemParams.size = size;
+        if (itemParams.icon_bg != null) {
+            this.loadColorBg(itemParams.icon_bg);
+        }
+        if (itemParams.icon != null) {
+            this.loadIcon(itemParams.icon);
+        }
+        if (itemParams.size) {
+            this.setCount(itemParams.size);
+        }
+        this._itemParams = itemParams;
+    }
+    setTopNum(size) {
+        if (this._textItemTopNum == null) {
+            var params = {
+                name: '_textItemTopNum',
+                text: 'x' + '0',
+                fontSize: 16,
+                color: Colors.WHITE_DEFAULT,
+                outlineColor: Colors.DEFAULT_OUTLINE_COLOR
+            };
+            ComponentIconHelper._setPostion(params, 'leftTop');
+            var uiWidget = UIHelper.createLabel(params);
+            this.appendUI(uiWidget);
+            this._textItemTopNum = uiWidget.getComponent(cc.Label);
+        }
+        this._textItemTopNum.string = ('' + size);
+        this._textItemTopNum.node.active = (size > 0);
+    }
+    setLevel(level) {
+        if (this._textLevel == null) {
+            var params = {
+                name: '_textLevel',
+                text: '0',
+                fontSize: 16,
+                color: Colors.COLOR_QUALITY[1],
+                outlineColor: Colors.COLOR_QUALITY_OUTLINE[1]
+            };
+            var label = UIHelper.createLabel(params);
+            label.setAnchorPoint(new cc.Vec2(0.5, 0.5));
+            label.setPosition(new cc.Vec2(21, 10));
+            this._textLevel = label.getComponent(cc.Label);
+        }
+        var itemParam = this.getItemParams();
+        if (this._imageLevel == null) {
+            var params1 = {
+                name: '_imageLevel',
+                texture: Path.getUICommonFrame('img_iconsmithingbg_0' + itemParam.color)
+            };
+            var imageBg = UIHelper.createImage(params1);
+            imageBg.addChild(this._textLevel.node);
+            imageBg.setAnchorPoint(new cc.Vec2(0, 1));
+            imageBg.setPosition(new cc.Vec2(3, 95));
+            this._imageLevel = imageBg;
+            this.appendUI(imageBg);
+        }
+        this._textLevel.string = (level);
+        this._imageLevel.addComponent(CommonUI).loadTexture(Path.getUICommonFrame('img_iconsmithingbg_0' + itemParam.color));
+        this._imageLevel.active = (level > 0);
+    }
+    setRlevel(rLevel) {
+        if (this._textRlevel == null) {
+            var params = {
+                name: '_textRlevel',
+                text: '+' + '0',
+                fontSize: 16,
+                color: Colors.COLOR_QUALITY[2],
+                outlineColor: Colors.COLOR_QUALITY_OUTLINE[2]
+            };
+            var label = UIHelper.createLabel(params);
+            label.setAnchorPoint(new cc.Vec2(0.5, 0.5));
+            label.setPosition(new cc.Vec2(46, 20));
+            this.appendUI(label);
+            this._textRlevel = label.getComponent(cc.Label);
+        }
+        this._textRlevel.string = ('+' + rLevel);
+        this._textRlevel.node.active = (rLevel > 0);
+    }
+    _onTouchCallBack(sender, state) {
+        // var moveOffsetX = Math.abs(sender.getTouchEndPosition().x - sender.getTouchBeganPosition().x);
+        // var moveOffsetY = Math.abs(sender.getTouchEndPosition().y - sender.getTouchBeganPosition().y);
+        //if (moveOffsetX < 20 && moveOffsetY < 20) {
+        if (this._callback) {
+            this._callback(sender, this._itemParams, this._limitLevel);
+        } else {
+<<<<<<< HEAD
+            PopupInstrumentDetail.getIns(PopupInstrumentDetail, (p: PopupInstrumentDetail) => {
+                p.init(TypeConvertHelper.TYPE_INSTRUMENT, this._itemParams.cfg.id, null, this._limitLevel);
+                p.openWithAction();
+=======
+            var id = this._itemParams.cfg.id;
+            var level = this._limitLevel;
+            PopupBase.loadCommonPrefab('PopupInstrumentDetail',(popup:PopupInstrumentDetail)=>{
+                popup.init(TypeConvertHelper.TYPE_INSTRUMENT, id, null, level);
+                popup.openWithAction();
+>>>>>>> 欢庆佳节完成
+            });
+        }
+        //}
+    }
+}

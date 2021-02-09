@@ -1,3 +1,4 @@
+import { EventType } from "./EventType"
 import { Event } from "./Event"
 import { Pool } from "./Pool"
 export class EventQueue{

@@ -1,4 +1,3 @@
-import { undefined } from "./undefined"
 import { Texture } from "./Texture"
 export class SharedAssetManager{
 public clientAssets:any;

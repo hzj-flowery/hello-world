@@ -1,3 +1,5 @@
+import { TextureFilter } from "./TextureFilter"
+import { TextureWrap } from "./TextureWrap"
 export class Texture{
 
         constructor(image){

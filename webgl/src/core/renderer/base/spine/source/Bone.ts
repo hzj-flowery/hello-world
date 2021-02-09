@@ -1,3 +1,4 @@
+import { TransformMode } from "./TransformMode"
 import { MathUtils } from "./MathUtils"
 import { Utils } from "./Utils"
 export class Bone{
@@ -99,7 +100,7 @@ public parent:any;
             this.worldX = pa * x + pb * y + parent.worldX;
             this.worldY = pc * x + pd * y + parent.worldY;
             switch (this.data.transformMode) {
-                case spine.TransformMode.Normal: {
+                case TransformMode.Normal: {
                     var rotationY = rotation + 90 + shearY;
                     var la = MathUtils.cosDeg(rotation + shearX) * scaleX;
                     var lb = MathUtils.cosDeg(rotationY) * scaleY;
@@ -111,7 +112,7 @@ public parent:any;
                     this.d = pc * lb + pd * ld;
                     return;
                 }
-                case spine.TransformMode.OnlyTranslation: {
+                case TransformMode.OnlyTranslation: {
                     var rotationY = rotation + 90 + shearY;
                     this.a = MathUtils.cosDeg(rotation + shearX) * scaleX;
                     this.b = MathUtils.cosDeg(rotationY) * scaleY;
@@ -119,7 +120,7 @@ public parent:any;
                     this.d = MathUtils.sinDeg(rotationY) * scaleY;
                     break;
                 }
-                case spine.TransformMode.NoRotationOrReflection: {
+                case TransformMode.NoRotationOrReflection: {
                     var s = pa * pa + pc * pc;
                     var prx = 0;
                     if (s > 0.0001) {
@@ -145,8 +146,8 @@ public parent:any;
                     this.d = pc * lb + pd * ld;
                     break;
                 }
-                case spine.TransformMode.NoScale:
-                case spine.TransformMode.NoScaleOrReflection: {
+                case TransformMode.NoScale:
+                case TransformMode.NoScaleOrReflection: {
                     var cos = MathUtils.cosDeg(rotation);
                     var sin = MathUtils.sinDeg(rotation);
                     var za = (pa * cos + pb * sin) / this.skeleton.scaleX;
@@ -157,7 +158,7 @@ public parent:any;
                     za *= s;
                     zc *= s;
                     s = Math.sqrt(za * za + zc * zc);
-                    if (this.data.transformMode == spine.TransformMode.NoScale
+                    if (this.data.transformMode == TransformMode.NoScale
                         && (pa * pd - pb * pc < 0) != (this.skeleton.scaleX < 0 != this.skeleton.scaleY < 0))
                         s = -s;
                     var r = Math.PI / 2 + Math.atan2(zc, za);

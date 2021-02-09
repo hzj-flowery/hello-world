@@ -1,4 +1,5 @@
 import { Animation } from "./Animation"
+import { TimelineType } from "./TimelineType"
 import { Event } from "./Event"
 import { Utils } from "./Utils"
 export class EventTimeline{

@@ -1,3 +1,4 @@
+import { TransformMode } from "./TransformMode"
 import { Color } from "./Color"
 export class BoneData{
 public x:number;

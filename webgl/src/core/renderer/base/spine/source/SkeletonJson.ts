@@ -1,5 +1,4 @@
 import { Animation } from "./Animation"
-import { undefined } from "./undefined"
 import { RotateTimeline } from "./RotateTimeline"
 import { TranslateTimeline } from "./TranslateTimeline"
 import { ScaleTimeline } from "./ScaleTimeline"
@@ -15,8 +14,10 @@ import { TransformConstraintTimeline } from "./TransformConstraintTimeline"
 import { PathConstraintPositionTimeline } from "./PathConstraintPositionTimeline"
 import { PathConstraintSpacingTimeline } from "./PathConstraintSpacingTimeline"
 import { PathConstraintMixTimeline } from "./PathConstraintMixTimeline"
+import { BlendMode } from "./BlendMode"
 import { Bone } from "./Bone"
 import { BoneData } from "./BoneData"
+import { TransformMode } from "./TransformMode"
 import { ConstraintData } from "./ConstraintData"
 import { Event } from "./Event"
 import { EventData } from "./EventData"
@@ -24,6 +25,9 @@ import { IkConstraint } from "./IkConstraint"
 import { IkConstraintData } from "./IkConstraintData"
 import { PathConstraint } from "./PathConstraint"
 import { PathConstraintData } from "./PathConstraintData"
+import { PositionMode } from "./PositionMode"
+import { SpacingMode } from "./SpacingMode"
+import { RotateMode } from "./RotateMode"
 import { Skeleton } from "./Skeleton"
 import { SkeletonData } from "./SkeletonData"
 import { Skin } from "./Skin"
@@ -191,10 +195,10 @@ public attachmentLoader:any;
                     data.rotateMode = SkeletonJson.rotateModeFromString(this.getValue(constraintMap, "rotateMode", "tangent"));
                     data.offsetRotation = this.getValue(constraintMap, "rotation", 0);
                     data.position = this.getValue(constraintMap, "position", 0);
-                    if (data.positionMode == spine.PositionMode.Fixed)
+                    if (data.positionMode == PositionMode.Fixed)
                         data.position *= scale;
                     data.spacing = this.getValue(constraintMap, "spacing", 0);
-                    if (data.spacingMode == spine.SpacingMode.Length || data.spacingMode == spine.SpacingMode.Fixed)
+                    if (data.spacingMode == SpacingMode.Length || data.spacingMode == SpacingMode.Fixed)
                         data.spacing *= scale;
                     data.rotateMix = this.getValue(constraintMap, "rotateMix", 1);
                     data.translateMix = this.getValue(constraintMap, "translateMix", 1);
@@ -596,12 +600,12 @@ public attachmentLoader:any;
                             var timelineScale = 1;
                             if (timelineName === "spacing") {
                                 timeline = new PathConstraintSpacingTimeline(timelineMap.length);
-                                if (data.spacingMode == spine.SpacingMode.Length || data.spacingMode == spine.SpacingMode.Fixed)
+                                if (data.spacingMode == SpacingMode.Length || data.spacingMode == SpacingMode.Fixed)
                                     timelineScale = scale;
                             }
                             else {
                                 timeline = new PathConstraintPositionTimeline(timelineMap.length);
-                                if (data.positionMode == spine.PositionMode.Fixed)
+                                if (data.positionMode == PositionMode.Fixed)
                                     timelineScale = scale;
                             }
                             timeline.pathConstraintIndex = index;
@@ -763,51 +767,51 @@ public attachmentLoader:any;
         };public static blendModeFromString (str){
             str = str.toLowerCase();
             if (str == "normal")
-                return spine.BlendMode.Normal;
+                return BlendMode.Normal;
             if (str == "additive")
-                return spine.BlendMode.Additive;
+                return BlendMode.Additive;
             if (str == "multiply")
-                return spine.BlendMode.Multiply;
+                return BlendMode.Multiply;
             if (str == "screen")
-                return spine.BlendMode.Screen;
+                return BlendMode.Screen;
             throw new Error("Unknown blend mode: " + str);
         };public static positionModeFromString (str){
             str = str.toLowerCase();
             if (str == "fixed")
-                return spine.PositionMode.Fixed;
+                return PositionMode.Fixed;
             if (str == "percent")
-                return spine.PositionMode.Percent;
+                return PositionMode.Percent;
             throw new Error("Unknown position mode: " + str);
         };public static spacingModeFromString (str){
             str = str.toLowerCase();
             if (str == "length")
-                return spine.SpacingMode.Length;
+                return SpacingMode.Length;
             if (str == "fixed")
-                return spine.SpacingMode.Fixed;
+                return SpacingMode.Fixed;
             if (str == "percent")
-                return spine.SpacingMode.Percent;
+                return SpacingMode.Percent;
             throw new Error("Unknown position mode: " + str);
         };public static rotateModeFromString (str){
             str = str.toLowerCase();
             if (str == "tangent")
-                return spine.RotateMode.Tangent;
+                return RotateMode.Tangent;
             if (str == "chain")
-                return spine.RotateMode.Chain;
+                return RotateMode.Chain;
             if (str == "chainscale")
-                return spine.RotateMode.ChainScale;
+                return RotateMode.ChainScale;
             throw new Error("Unknown rotate mode: " + str);
         };public static transformModeFromString (str){
             str = str.toLowerCase();
             if (str == "normal")
-                return spine.TransformMode.Normal;
+                return TransformMode.Normal;
             if (str == "onlytranslation")
-                return spine.TransformMode.OnlyTranslation;
+                return TransformMode.OnlyTranslation;
             if (str == "norotationorreflection")
-                return spine.TransformMode.NoRotationOrReflection;
+                return TransformMode.NoRotationOrReflection;
             if (str == "noscale")
-                return spine.TransformMode.NoScale;
+                return TransformMode.NoScale;
             if (str == "noscaleorreflection")
-                return spine.TransformMode.NoScaleOrReflection;
+                return TransformMode.NoScaleOrReflection;
             throw new Error("Unknown transform mode: " + str);
         };
        

@@ -1,5 +1,7 @@
 import { TranslateTimeline } from "./TranslateTimeline"
 import { Animation } from "./Animation"
+import { MixBlend } from "./MixBlend"
+import { TimelineType } from "./TimelineType"
 export class ShearTimeline extends TranslateTimeline{
 
         

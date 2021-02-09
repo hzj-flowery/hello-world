@@ -8,7 +8,7 @@ var js_code = fs.readFileSync(jsDir+"spine.js").toString();
 
 let existClassName = new Array();
 		let createInit = function (){
-		let reg = /spine\.([a-zA-Z]*)\s?=\s?([a-zA-Z]*);/gm
+		let reg = /spine\.([a-zA-Z]*)\s?=\s?([a-zA-Z\{\}]*)/gm
 		var result;
 		var ret = "export namespace sySpine{ \n";
 		let importData = "\n";

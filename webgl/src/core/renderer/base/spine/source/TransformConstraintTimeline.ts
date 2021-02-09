@@ -1,5 +1,7 @@
 import { CurveTimeline } from "./CurveTimeline"
 import { Animation } from "./Animation"
+import { MixBlend } from "./MixBlend"
+import { TimelineType } from "./TimelineType"
 import { Event } from "./Event"
 import { TransformConstraint } from "./TransformConstraint"
 import { Utils } from "./Utils"

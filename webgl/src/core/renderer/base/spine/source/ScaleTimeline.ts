@@ -1,5 +1,8 @@
 import { TranslateTimeline } from "./TranslateTimeline"
 import { Animation } from "./Animation"
+import { MixBlend } from "./MixBlend"
+import { MixDirection } from "./MixDirection"
+import { TimelineType } from "./TimelineType"
 import { MathUtils } from "./MathUtils"
 import { Utils } from "./Utils"
 export class ScaleTimeline extends TranslateTimeline{

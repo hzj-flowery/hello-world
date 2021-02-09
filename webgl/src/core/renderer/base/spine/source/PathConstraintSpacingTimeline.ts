@@ -1,5 +1,7 @@
 import { PathConstraintPositionTimeline } from "./PathConstraintPositionTimeline"
 import { Animation } from "./Animation"
+import { MixBlend } from "./MixBlend"
+import { TimelineType } from "./TimelineType"
 import { Event } from "./Event"
 import { PathConstraint } from "./PathConstraint"
 export class PathConstraintSpacingTimeline extends PathConstraintPositionTimeline{

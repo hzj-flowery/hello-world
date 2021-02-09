@@ -1,4 +1,7 @@
 import { Bone } from "./Bone"
+import { PositionMode } from "./PositionMode"
+import { SpacingMode } from "./SpacingMode"
+import { RotateMode } from "./RotateMode"
 import { Slot } from "./Slot"
 import { MathUtils } from "./MathUtils"
 import { Utils } from "./Utils"
@@ -61,9 +64,9 @@ public target:any;
             if (!translate && !rotate)
                 return;
             var data = this.data;
-            var percentSpacing = data.spacingMode == spine.SpacingMode.Percent;
+            var percentSpacing = data.spacingMode == SpacingMode.Percent;
             var rotateMode = data.rotateMode;
-            var tangents = rotateMode == spine.RotateMode.Tangent, scale = rotateMode == spine.RotateMode.ChainScale;
+            var tangents = rotateMode == RotateMode.Tangent, scale = rotateMode == RotateMode.ChainScale;
             var boneCount = this.bones.length, spacesCount = tangents ? boneCount : boneCount + 1;
             var bones = this.bones;
             var spaces = Utils.setArraySize(this.spaces, spacesCount), lengths = null;
@@ -71,7 +74,7 @@ public target:any;
             if (scale || !percentSpacing) {
                 if (scale)
                     lengths = Utils.setArraySize(this.lengths, boneCount);
-                var lengthSpacing = data.spacingMode == spine.SpacingMode.Length;
+                var lengthSpacing = data.spacingMode == SpacingMode.Length;
                 for (var i = 0, n = spacesCount - 1; i < n;) {
                     var bone = bones[i];
                     var setupLength = bone.data.length;
@@ -101,11 +104,11 @@ public target:any;
                 for (var i = 1; i < spacesCount; i++)
                     spaces[i] = spacing;
             }
-            var positions = this.computeWorldPositions(attachment, spacesCount, tangents, data.positionMode == spine.PositionMode.Percent, percentSpacing);
+            var positions = this.computeWorldPositions(attachment, spacesCount, tangents, data.positionMode == PositionMode.Percent, percentSpacing);
             var boneX = positions[0], boneY = positions[1], offsetRotation = data.offsetRotation;
             var tip = false;
             if (offsetRotation == 0)
-                tip = rotateMode == spine.RotateMode.Chain;
+                tip = rotateMode == RotateMode.Chain;
             else {
                 tip = false;
                 var p = this.target.bone;

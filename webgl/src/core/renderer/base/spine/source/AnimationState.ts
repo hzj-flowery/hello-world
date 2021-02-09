@@ -1,4 +1,6 @@
 import { Animation } from "./Animation"
+import { MixBlend } from "./MixBlend"
+import { MixDirection } from "./MixDirection"
 import { RotateTimeline } from "./RotateTimeline"
 import { AttachmentTimeline } from "./AttachmentTimeline"
 import { EventTimeline } from "./EventTimeline"
@@ -119,7 +121,7 @@ public data:any;
                 if (current == null || current.delay > 0)
                     continue;
                 applied = true;
-                var blend = i == 0 ? spine.MixBlend.first : current.mixBlend;
+                var blend = i == 0 ? MixBlend.first : current.mixBlend;
                 var mix = current.alpha;
                 if (current.mixingFrom != null)
                     mix *= this.applyMixingFrom(current, skeleton, blend);
@@ -128,10 +130,10 @@ public data:any;
                 var animationLast = current.animationLast, animationTime = current.getAnimationTime();
                 var timelineCount = current.animation.timelines.length;
                 var timelines = current.animation.timelines;
-                if ((i == 0 && mix == 1) || blend == spine.MixBlend.add) {
+                if ((i == 0 && mix == 1) || blend == MixBlend.add) {
                     for (var ii = 0; ii < timelineCount; ii++) {
                         Utils.webkit602BugfixHelper(mix, blend);
-                        timelines[ii].apply(skeleton, animationLast, animationTime, events, mix, blend, spine.MixDirection.mixIn);
+                        timelines[ii].apply(skeleton, animationLast, animationTime, events, mix, blend, MixDirection.mixIn);
                     }
                 }
                 else {
@@ -142,13 +144,13 @@ public data:any;
                     var timelinesRotation = current.timelinesRotation;
                     for (var ii = 0; ii < timelineCount; ii++) {
                         var timeline = timelines[ii];
-                        var timelineBlend = (timelineMode[ii] & (AnimationState.NOT_LAST - 1)) == AnimationState.SUBSEQUENT ? blend : spine.MixBlend.setup;
+                        var timelineBlend = (timelineMode[ii] & (AnimationState.NOT_LAST - 1)) == AnimationState.SUBSEQUENT ? blend : MixBlend.setup;
                         if (timeline instanceof RotateTimeline) {
                             this.applyRotateTimeline(timeline, skeleton, animationTime, mix, timelineBlend, timelinesRotation, ii << 1, firstFrame);
                         }
                         else {
                             Utils.webkit602BugfixHelper(mix, blend);
-                            timeline.apply(skeleton, animationLast, animationTime, events, mix, timelineBlend, spine.MixDirection.mixIn);
+                            timeline.apply(skeleton, animationLast, animationTime, events, mix, timelineBlend, MixDirection.mixIn);
                         }
                     }
                 }
@@ -167,14 +169,14 @@ public data:any;
             var mix = 0;
             if (to.mixDuration == 0) {
                 mix = 1;
-                if (blend == spine.MixBlend.first)
-                    blend = spine.MixBlend.setup;
+                if (blend == MixBlend.first)
+                    blend = MixBlend.setup;
             }
             else {
                 mix = to.mixTime / to.mixDuration;
                 if (mix > 1)
                     mix = 1;
-                if (blend != spine.MixBlend.first)
+                if (blend != MixBlend.first)
                     blend = from.mixBlend;
             }
             var events = mix < from.eventThreshold ? this.events : null;
@@ -183,9 +185,9 @@ public data:any;
             var timelineCount = from.animation.timelines.length;
             var timelines = from.animation.timelines;
             var alphaHold = from.alpha * to.interruptAlpha, alphaMix = alphaHold * (1 - mix);
-            if (blend == spine.MixBlend.add) {
+            if (blend == MixBlend.add) {
                 for (var i = 0; i < timelineCount; i++)
-                    timelines[i].apply(skeleton, animationLast, animationTime, events, alphaMix, blend, spine.MixDirection.mixOut);
+                    timelines[i].apply(skeleton, animationLast, animationTime, events, alphaMix, blend, MixDirection.mixOut);
             }
             else {
                 var timelineMode = from.timelineMode;
@@ -197,7 +199,7 @@ public data:any;
                 from.totalAlpha = 0;
                 for (var i = 0; i < timelineCount; i++) {
                     var timeline = timelines[i];
-                    var direction = spine.MixDirection.mixOut;
+                    var direction = MixDirection.mixOut;
                     var timelineBlend = void 0;
                     var alpha = 0;
                     switch (timelineMode[i] & (AnimationState.NOT_LAST - 1)) {
@@ -206,22 +208,22 @@ public data:any;
                             if (!attachments && timeline instanceof AttachmentTimeline) {
                                 if ((timelineMode[i] & AnimationState.NOT_LAST) == AnimationState.NOT_LAST)
                                     continue;
-                                timelineBlend = spine.MixBlend.setup;
+                                timelineBlend = MixBlend.setup;
                             }
                             if (!drawOrder && timeline instanceof DrawOrderTimeline)
                                 continue;
                             alpha = alphaMix;
                             break;
                         case AnimationState.FIRST:
-                            timelineBlend = spine.MixBlend.setup;
+                            timelineBlend = MixBlend.setup;
                             alpha = alphaMix;
                             break;
                         case AnimationState.HOLD:
-                            timelineBlend = spine.MixBlend.setup;
+                            timelineBlend = MixBlend.setup;
                             alpha = alphaHold;
                             break;
                         default:
-                            timelineBlend = spine.MixBlend.setup;
+                            timelineBlend = MixBlend.setup;
                             var holdMix = timelineHoldMix[i];
                             alpha = alphaHold * Math.max(0, 1 - holdMix.mixTime / holdMix.mixDuration);
                             break;
@@ -231,14 +233,14 @@ public data:any;
                         this.applyRotateTimeline(timeline, skeleton, animationTime, alpha, timelineBlend, timelinesRotation, i << 1, firstFrame);
                     else {
                         Utils.webkit602BugfixHelper(alpha, blend);
-                        if (timelineBlend == spine.MixBlend.setup) {
+                        if (timelineBlend == MixBlend.setup) {
                             if (timeline instanceof AttachmentTimeline) {
                                 if (attachments || (timelineMode[i] & AnimationState.NOT_LAST) == AnimationState.NOT_LAST)
-                                    direction = spine.MixDirection.mixIn;
+                                    direction = MixDirection.mixIn;
                             }
                             else if (timeline instanceof DrawOrderTimeline) {
                                 if (drawOrder)
-                                    direction = spine.MixDirection.mixIn;
+                                    direction = MixDirection.mixIn;
                             }
                         }
                         timeline.apply(skeleton, animationLast, animationTime, events, alpha, timelineBlend, direction);
@@ -256,7 +258,7 @@ public data:any;
             if (firstFrame)
                 timelinesRotation[i] = 0;
             if (alpha == 1) {
-                timeline.apply(skeleton, 0, time, null, 1, blend, spine.MixDirection.mixIn);
+                timeline.apply(skeleton, 0, time, null, 1, blend, MixDirection.mixIn);
                 return;
             }
             var rotateTimeline = timeline;
@@ -267,17 +269,17 @@ public data:any;
             var r1 = 0, r2 = 0;
             if (time < frames[0]) {
                 switch (blend) {
-                    case spine.MixBlend.setup:
+                    case MixBlend.setup:
                         bone.rotation = bone.data.rotation;
                     default:
                         return;
-                    case spine.MixBlend.first:
+                    case MixBlend.first:
                         r1 = bone.rotation;
                         r2 = bone.data.rotation;
                 }
             }
             else {
-                r1 = blend == spine.MixBlend.setup ? bone.data.rotation : bone.rotation;
+                r1 = blend == MixBlend.setup ? bone.data.rotation : bone.rotation;
                 if (time >= frames[frames.length - RotateTimeline.ENTRIES])
                     r2 = bone.data.rotation + frames[frames.length + RotateTimeline.PREV_ROTATION];
                 else {
@@ -534,7 +536,7 @@ public data:any;
                 while (entry.mixingFrom != null)
                     entry = entry.mixingFrom;
                 do {
-                    if (entry.mixingFrom == null || entry.mixBlend != spine.MixBlend.add)
+                    if (entry.mixingFrom == null || entry.mixBlend != MixBlend.add)
                         this.computeHold(entry);
                     entry = entry.mixingTo;
                 } while (entry != null);

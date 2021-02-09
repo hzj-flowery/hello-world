@@ -1,4 +1,7 @@
 import { Animation } from "./Animation"
+import { MixBlend } from "./MixBlend"
+import { MixDirection } from "./MixDirection"
+import { TimelineType } from "./TimelineType"
 import { Event } from "./Event"
 import { Utils } from "./Utils"
 export class DrawOrderTimeline{

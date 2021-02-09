@@ -1,5 +1,4 @@
 import { Animation } from "./Animation"
-import { undefined } from "./undefined"
 export class AnimationStateData{
 public animationToMixTime:any;
 public defaultMix:number;

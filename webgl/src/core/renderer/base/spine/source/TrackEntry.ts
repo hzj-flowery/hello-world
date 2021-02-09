@@ -1,4 +1,5 @@
 import { Animation } from "./Animation"
+import { MixBlend } from "./MixBlend"
 export class TrackEntry{
 public mixBlend:any;
 public timelineMode:Array<any>;
@@ -13,7 +14,7 @@ public animationLast:any;
 public nextAnimationLast:any;
 
         constructor(){
-            this.mixBlend = spine.MixBlend.replace;
+            this.mixBlend = MixBlend.replace;
             this.timelineMode = new Array();
             this.timelineHoldMix = new Array();
             this.timelinesRotation = new Array();

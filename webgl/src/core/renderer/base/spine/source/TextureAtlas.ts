@@ -1,4 +1,5 @@
 import { Texture } from "./Texture"
+import { TextureWrap } from "./TextureWrap"
 import { TextureAtlasPage } from "./TextureAtlasPage"
 import { TextureAtlasRegion } from "./TextureAtlasRegion"
 export class TextureAtlas{

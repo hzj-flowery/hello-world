@@ -1,5 +1,7 @@
 import { CurveTimeline } from "./CurveTimeline"
 import { Animation } from "./Animation"
+import { MixBlend } from "./MixBlend"
+import { TimelineType } from "./TimelineType"
 import { ColorTimeline } from "./ColorTimeline"
 import { Color } from "./Color"
 import { Utils } from "./Utils"

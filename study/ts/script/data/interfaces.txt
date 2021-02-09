@@ -1,0 +1,5008 @@
+ActivityDinnerData.js
+getConfig(): Object
+setConfig(value: Object): void
+getLastConfig(): Object
+getState(): number
+setState(value: number): void
+getLastState(): number
+getId(): number
+setId(value: number): void
+getLastId(): number
+getDay(): number
+setDay(value: number): void
+getLastDay(): number
+getStartTime(): number
+setStartTime(value: number): void
+getLastStartTime(): number
+getEndTime(): number
+setEndTime(value: number): void
+getLastEndTime(): number
+getCurrDay(): number
+setCurrDay(value: number): void
+getLastCurrDay(): number
+getBaseActivityData(): Object
+setBaseActivityData(value: Object): void
+getLastBaseActivityData(): Object
+
+
+ActivityFirstPayData.js
+
+
+
+ActivityGuildSprintData.js
+getGuild_rank(): number
+setGuild_rank(value: number): void
+getLastGuild_rank(): number
+isHasData(): boolean
+setHasData(value: boolean): void
+isLastHasData(): boolean
+
+
+ActivityGuildSprintRankUnitData.js
+getRank(): number
+setRank(value: number): void
+getLastRank(): number
+getGuild_name(): string
+setGuild_name(value: string): void
+getLastGuild_name(): string
+getGuild_leader_name(): string
+setGuild_leader_name(value: string): void
+getLastGuild_leader_name(): string
+getGuild_leader_office_level(): number
+setGuild_leader_office_level(value: number): void
+getLastGuild_leader_office_level(): number
+
+
+ActivityLevelGiftPkgData.js
+getConfig(): Object
+setConfig(value: Object): void
+getLastConfig(): Object
+getId(): number
+setId(value: number): void
+getLastId(): number
+getStart_time(): number
+setStart_time(value: number): void
+getLastStart_time(): number
+getIs_buy(): boolean
+setIs_buy(value: boolean): void
+getLastIs_buy(): boolean
+getVipConfig(): Object
+setVipConfig(value: Object): void
+getLastVipConfig(): Object
+getBaseActivityData(): Object
+setBaseActivityData(value: Object): void
+getLastBaseActivityData(): Object
+
+
+ActivityLuxuryGiftPkgData.js
+getTime(): number
+setTime(value: number): void
+getLastTime(): number
+getId(): number
+setId(value: number): void
+getLastId(): number
+getConfig(): Object
+setConfig(value: Object): void
+getLastConfig(): Object
+getVipConfig(): Object
+setVipConfig(value: Object): void
+getLastVipConfig(): Object
+getBaseActivityData(): Object
+setBaseActivityData(value: Object): void
+getLastBaseActivityData(): Object
+getStart_time(): number
+setStart_time(value: number): void
+getLastStart_time(): number
+
+
+ActivityMoneyTreeData.js
+getConfig(): Object
+setConfig(value: Object): void
+getLastConfig(): Object
+getId(): number
+setId(value: number): void
+getLastId(): number
+isReceived(): boolean
+setReceived(value: boolean): void
+isLastReceived(): boolean
+getBaseActivityData(): Object
+setBaseActivityData(value: Object): void
+getLastBaseActivityData(): Object
+getNum(): number
+setNum(value: number): void
+getLastNum(): number
+getFree_num(): number
+setFree_num(value: number): void
+getLastFree_num(): number
+
+
+ActivityMonthCardData.js
+getBaseActivityData(): Object
+setBaseActivityData(value: Object): void
+getLastBaseActivityData(): Object
+
+
+ActivityOpenServerFundData.js
+getId(): number
+setId(value: number): void
+getLastId(): number
+getConfig(): Object
+setConfig(value: Object): void
+getLastConfig(): Object
+isHasReceive(): boolean
+setHasReceive(value: boolean): void
+isLastHasReceive(): boolean
+getFundNum(): number
+setFundNum(value: number): void
+getLastFundNum(): number
+getGroup(): Object
+setGroup(value: Object): void
+getLastGroup(): Object
+getBaseActivityData(): Object
+setBaseActivityData(value: Object): void
+getLastBaseActivityData(): Object
+
+
+ActivityRechargeAwardData.js
+isHasData(): boolean
+setHasData(value: boolean): void
+isLastHasData(): boolean
+
+
+ActivityResourceBackData.js
+getBaseActivityData(): Object
+setBaseActivityData(value: Object): void
+getLastBaseActivityData(): Object
+getItems(): Object
+setItems(value: Object): void
+getLastItems(): Object
+
+
+ActivityResourceBackItemData.js
+getId(): number
+setId(value: number): void
+getLastId(): number
+getAwards(): Object
+setAwards(value: Object): void
+getLastAwards(): Object
+getState(): number
+setState(value: number): void
+getLastState(): number
+getValue(): number
+setValue(value: number): void
+getLastValue(): number
+getDescrible(): string
+setDescrible(value: string): void
+getLastDescrible(): string
+getGold(): number
+setGold(value: number): void
+getLastGold(): number
+getCoin(): number
+setCoin(value: number): void
+getLastCoin(): number
+getPercent(): number
+setPercent(value: number): void
+getLastPercent(): number
+
+
+ActivitySevenDaySprintInfoData.js
+getId(): number
+setId(value: number): void
+getLastId(): number
+getSprint_type(): number
+setSprint_type(value: number): void
+getLastSprint_type(): number
+getName(): string
+setName(value: string): void
+getLastName(): string
+getFunction_id(): number
+setFunction_id(value: number): void
+getLastFunction_id(): number
+getIs_work(): number
+setIs_work(value: number): void
+getLastIs_work(): number
+getOpen_day(): number
+setOpen_day(value: number): void
+getLastOpen_day(): number
+getOver_day(): number
+setOver_day(value: number): void
+getLastOver_day(): number
+getOver_view_day(): number
+setOver_view_day(value: number): void
+getLastOver_view_day(): number
+getOrder(): number
+setOrder(value: number): void
+getLastOrder(): number
+getActivity_content_text(): string
+setActivity_content_text(value: string): void
+getLastActivity_content_text(): string
+
+
+ActivitySuperCheckinData.js
+getBaseActivityData(): Object
+setBaseActivityData(value: Object): void
+getLastBaseActivityData(): Object
+getLastCheckinIndexs(): Object
+setLastCheckinIndexs(value: Object): void
+getLastLastCheckinIndexs(): Object
+getLastCheckinTime(): number
+setLastCheckinTime(value: number): void
+getLastLastCheckinTime(): number
+
+
+ActivityThreeKindomsData.js
+getAct_id(): number
+setAct_id(value: number): void
+getLastAct_id(): number
+getAct_type(): number
+setAct_type(value: number): void
+getLastAct_type(): number
+getFinish_time(): number
+setFinish_time(value: number): void
+getLastFinish_time(): number
+getTitle(): string
+setTitle(value: string): void
+getLastTitle(): string
+getStatus(): number
+setStatus(value: number): void
+getLastStatus(): number
+getCombineTaskQueryTask(): Object
+setCombineTaskQueryTask(value: Object): void
+getLastCombineTaskQueryTask(): Object
+
+
+ActivityWeeklyGiftPkgData.js
+getTime(): number
+setTime(value: number): void
+getLastTime(): number
+getId(): number
+setId(value: number): void
+getLastId(): number
+getConfig(): Object
+setConfig(value: Object): void
+getLastConfig(): Object
+getBaseActivityData(): Object
+setBaseActivityData(value: Object): void
+getLastBaseActivityData(): Object
+
+
+AgreementSetting.js
+
+
+
+ArenaData.js
+
+
+
+AttrData.js
+getCurPower(): number
+setCurPower(value: number): void
+getLastCurPower(): number
+getLastPower(): number
+setLastPower(value: number): void
+getLastLastPower(): number
+
+
+AttrRecordUnitData.js
+getId(): number
+setId(value: number): void
+getLastId(): number
+getAttr(): Object
+setAttr(value: Object): void
+getLastAttr(): Object
+
+
+AuctionData.js
+getId(): number
+setId(value: number): void
+getLastId(): number
+getItem(): Object
+setItem(value: Object): void
+getLastItem(): Object
+getInit_price(): number
+setInit_price(value: number): void
+getLastInit_price(): number
+getAdd_price(): number
+setAdd_price(value: number): void
+getLastAdd_price(): number
+getNow_price(): number
+setNow_price(value: number): void
+getLastNow_price(): number
+getNow_buyer(): number
+setNow_buyer(value: number): void
+getLastNow_buyer(): number
+getFinal_price(): number
+setFinal_price(value: number): void
+getLastFinal_price(): number
+getOpen_time(): number
+setOpen_time(value: number): void
+getLastOpen_time(): number
+getStart_time(): number
+setStart_time(value: number): void
+getLastStart_time(): number
+getEnd_time(): number
+setEnd_time(value: number): void
+getLastEnd_time(): number
+getBoss_id(): number
+setBoss_id(value: number): void
+getLastBoss_id(): number
+getOrder_id(): number
+setOrder_id(value: number): void
+getLastOrder_id(): number
+
+
+AvatarActivityData.js
+
+
+
+AvatarData.js
+getCurAvatarId(): number
+setCurAvatarId(value: number): void
+getLastCurAvatarId(): number
+
+
+AvatarPhotoData.js
+getAvatar_photo(): Object
+setAvatar_photo(value: Object): void
+getLastAvatar_photo(): Object
+
+
+AvatarUnitData.js
+getId(): number
+setId(value: number): void
+getLastId(): number
+getBase_id(): number
+setBase_id(value: number): void
+getLastBase_id(): number
+getLevel(): number
+setLevel(value: number): void
+getLastLevel(): number
+getConfig(): Object
+setConfig(value: Object): void
+getLastConfig(): Object
+
+
+BaseData.js
+
+
+
+BattleResourceData.js
+
+
+
+BattleResourceUnitData.js
+getPos(): number
+setPos(value: number): void
+getLastPos(): number
+getId(): number
+setId(value: number): void
+getLastId(): number
+getFlag(): number
+setFlag(value: number): void
+getLastFlag(): number
+getSlot(): number
+setSlot(value: number): void
+getLastSlot(): number
+
+
+BattleUserData.js
+
+
+
+BulletScreenData.js
+
+
+
+CakeActivityData.js
+getBatchId(): number
+setBatchId(value: number): void
+getLastBatchId(): number
+getActivityStartTime(): number
+setActivityStartTime(value: number): void
+getLastActivityStartTime(): number
+
+
+CakeActivityGuildRankData.js
+getGuild_id(): number
+setGuild_id(value: number): void
+getLastGuild_id(): number
+getGuild_name(): string
+setGuild_name(value: string): void
+getLastGuild_name(): string
+getCake_level(): number
+setCake_level(value: number): void
+getLastCake_level(): number
+getCake_exp(): number
+setCake_exp(value: number): void
+getLastCake_exp(): number
+getRank(): number
+setRank(value: number): void
+getLastRank(): number
+getServer_id(): number
+setServer_id(value: number): void
+getLastServer_id(): number
+getServer_name(): string
+setServer_name(value: string): void
+getLastServer_name(): string
+
+
+CakeActivityNoticeData.js
+getNotice_id(): number
+setNotice_id(value: number): void
+getLastNotice_id(): number
+getContents(): Object
+setContents(value: Object): void
+getLastContents(): Object
+isFake(): boolean
+setFake(value: boolean): void
+isLastFake(): boolean
+
+
+CakeActivityUserRankData.js
+getUser_id(): number
+setUser_id(value: number): void
+getLastUser_id(): number
+getRank(): number
+setRank(value: number): void
+getLastRank(): number
+getName(): string
+setName(value: string): void
+getLastName(): string
+getPoint(): number
+setPoint(value: number): void
+getLastPoint(): number
+getOffice_level(): number
+setOffice_level(value: number): void
+getLastOffice_level(): number
+getServer_id(): number
+setServer_id(value: number): void
+getLastServer_id(): number
+getServer_name(): string
+setServer_name(value: string): void
+getLastServer_name(): string
+getHead_frame_id(): number
+setHead_frame_id(value: number): void
+getLastHead_frame_id(): number
+getBase_id(): number
+setBase_id(value: number): void
+getLastBase_id(): number
+getAvater_base_id(): number
+setAvater_base_id(value: number): void
+getLastAvater_base_id(): number
+
+
+CakeTaskData.js
+getType(): number
+setType(value: number): void
+getLastType(): number
+getValue(): number
+setValue(value: number): void
+getLastValue(): number
+getReward_id(): Object
+setReward_id(value: Object): void
+getLastReward_id(): Object
+
+
+CampRaceData.js
+getCamp(): number
+setCamp(value: number): void
+getLastCamp(): number
+getStatus(): number
+setStatus(value: number): void
+getLastStatus(): number
+getChampion(): Object
+setChampion(value: Object): void
+getLastChampion(): Object
+getCurWatchUserId(): number
+setCurWatchUserId(value: number): void
+getLastCurWatchUserId(): number
+isSelfWinChampion(): boolean
+setSelfWinChampion(value: boolean): void
+isLastSelfWinChampion(): boolean
+
+
+CampRaceFormationBaseData.js
+getHero_id(): number
+setHero_id(value: number): void
+getLastHero_id(): number
+getHero_base_id(): number
+setHero_base_id(value: number): void
+getLastHero_base_id(): number
+getAvartar_base_id(): number
+setAvartar_base_id(value: number): void
+getLastAvartar_base_id(): number
+getRank_level(): number
+setRank_level(value: number): void
+getLastRank_level(): number
+getLimit_rank_level(): number
+setLimit_rank_level(value: number): void
+getLastLimit_rank_level(): number
+
+
+CampRaceFormationData.js
+getUid(): number
+setUid(value: number): void
+getLastUid(): number
+getBase_id(): number
+setBase_id(value: number): void
+getLastBase_id(): number
+getName(): string
+setName(value: string): void
+getLastName(): string
+getOfficer_level(): number
+setOfficer_level(value: number): void
+getLastOfficer_level(): number
+getPower(): number
+setPower(value: number): void
+getLastPower(): number
+getRank(): number
+setRank(value: number): void
+getLastRank(): number
+isFirst_hand(): boolean
+setFirst_hand(value: boolean): void
+isLastFirst_hand(): boolean
+getStatus(): number
+setStatus(value: number): void
+getLastStatus(): number
+getWin_num(): number
+setWin_num(value: number): void
+getLastWin_num(): number
+getPer_rank(): number
+setPer_rank(value: number): void
+getLastPer_rank(): number
+getFormation(): Object
+setFormation(value: Object): void
+getLastFormation(): Object
+
+
+CampRacePreRankData.js
+getCamp(): number
+setCamp(value: number): void
+getLastCamp(): number
+getSelf_rank(): number
+setSelf_rank(value: number): void
+getLastSelf_rank(): number
+getSelf_score(): number
+setSelf_score(value: number): void
+getLastSelf_score(): number
+
+
+CampRaceReportData.js
+getId(): number
+setId(value: number): void
+getLastId(): number
+getCamp(): number
+setCamp(value: number): void
+getLastCamp(): number
+getPos1(): number
+setPos1(value: number): void
+getLastPos1(): number
+getPos2(): number
+setPos2(value: number): void
+getLastPos2(): number
+getWin_pos(): number
+setWin_pos(value: number): void
+getLastWin_pos(): number
+getFirst_hand(): number
+setFirst_hand(value: number): void
+getLastFirst_hand(): number
+getLeft_power(): number
+setLeft_power(value: number): void
+getLastLeft_power(): number
+getLeft_heros(): Object
+setLeft_heros(value: Object): void
+getLastLeft_heros(): Object
+getRight_power(): number
+setRight_power(value: number): void
+getLastRight_power(): number
+getRight_heros(): Object
+setRight_heros(value: Object): void
+getLastRight_heros(): Object
+getReport_id(): number
+setReport_id(value: number): void
+getLastReport_id(): number
+
+
+CampRaceStateData.js
+getCamp(): number
+setCamp(value: number): void
+getLastCamp(): number
+getFinal_status(): number
+setFinal_status(value: number): void
+getLastFinal_status(): number
+getRound(): number
+setRound(value: number): void
+getLastRound(): number
+getStart_time(): number
+setStart_time(value: number): void
+getLastStart_time(): number
+
+
+CampRaceUserData.js
+getId(): number
+setId(value: number): void
+getLastId(): number
+getBase_id(): number
+setBase_id(value: number): void
+getLastBase_id(): number
+getAvatar_base_id(): number
+setAvatar_base_id(value: number): void
+getLastAvatar_base_id(): number
+getName(): string
+setName(value: string): void
+getLastName(): string
+getOfficer_level(): number
+setOfficer_level(value: number): void
+getLastOfficer_level(): number
+getScore(): number
+setScore(value: number): void
+getLastScore(): number
+getPower(): number
+setPower(value: number): void
+getLastPower(): number
+
+
+CarnivalActivityData.js
+
+
+
+CarnivalActivityTermData.js
+getTerm(): number
+setTerm(value: number): void
+getLastTerm(): number
+getPreview_time(): number
+setPreview_time(value: number): void
+getLastPreview_time(): number
+getStart_time(): number
+setStart_time(value: number): void
+getLastStart_time(): number
+getEnd_time(): number
+setEnd_time(value: number): void
+getLastEnd_time(): number
+getAward_time(): number
+setAward_time(value: number): void
+getLastAward_time(): number
+getState(): number
+setState(value: number): void
+getLastState(): number
+getStages(): Object
+setStages(value: Object): void
+getLastStages(): Object
+getCarnival_id(): number
+setCarnival_id(value: number): void
+getLastCarnival_id(): number
+getTerm_icon(): number
+setTerm_icon(value: number): void
+getLastTerm_icon(): number
+
+
+CarnivalActivityUnitData.js
+getId(): number
+setId(value: number): void
+getLastId(): number
+getName(): string
+setName(value: string): void
+getLastName(): string
+getPreview_time(): number
+setPreview_time(value: number): void
+getLastPreview_time(): number
+getStart_time(): number
+setStart_time(value: number): void
+getLastStart_time(): number
+getEnd_time(): number
+setEnd_time(value: number): void
+getLastEnd_time(): number
+getAward_time(): number
+setAward_time(value: number): void
+getLastAward_time(): number
+getMain_view(): number
+setMain_view(value: number): void
+getLastMain_view(): number
+getIcon_left_up(): number
+setIcon_left_up(value: number): void
+getLastIcon_left_up(): number
+getIcon_left_down(): number
+setIcon_left_down(value: number): void
+getLastIcon_left_down(): number
+getIcon_right_up(): number
+setIcon_right_up(value: number): void
+getLastIcon_right_up(): number
+getIcon_right_down(): number
+setIcon_right_down(value: number): void
+getLastIcon_right_down(): number
+
+
+CarnivalSingleActivityData.js
+getId(): number
+setId(value: number): void
+getLastId(): number
+getCarnival_id(): number
+setCarnival_id(value: number): void
+getLastCarnival_id(): number
+getTerm(): number
+setTerm(value: number): void
+getLastTerm(): number
+getStage(): number
+setStage(value: number): void
+getLastStage(): number
+getAct_type(): number
+setAct_type(value: number): void
+getLastAct_type(): number
+getQuest_type(): number
+setQuest_type(value: number): void
+getLastQuest_type(): number
+getTitle(): string
+setTitle(value: string): void
+getLastTitle(): string
+getDesc(): string
+setDesc(value: string): void
+getLastDesc(): string
+getTitle1(): string
+setTitle1(value: string): void
+getLastTitle1(): string
+getDesc1(): string
+setDesc1(value: string): void
+getLastDesc1(): string
+getTitle2(): string
+setTitle2(value: string): void
+getLastTitle2(): string
+getDesc2(): string
+setDesc2(value: string): void
+getLastDesc2(): string
+getPreview_time(): number
+setPreview_time(value: number): void
+getLastPreview_time(): number
+getStart_time(): number
+setStart_time(value: number): void
+getLastStart_time(): number
+getEnd_time(): number
+setEnd_time(value: number): void
+getLastEnd_time(): number
+getAward_time(): number
+setAward_time(value: number): void
+getLastAward_time(): number
+getSort(): number
+setSort(value: number): void
+getLastSort(): number
+getDrop_res_id(): number
+setDrop_res_id(value: number): void
+getLastDrop_res_id(): number
+
+
+CarnivalStageActivityData.js
+getId(): number
+setId(value: number): void
+getLastId(): number
+getName(): string
+setName(value: string): void
+getLastName(): string
+getResID(): number
+setResID(value: number): void
+getLastResID(): number
+getActivitys(): Object
+setActivitys(value: Object): void
+getLastActivitys(): Object
+
+
+ChapterBaseData.js
+getId(): number
+setId(value: number): void
+getLastId(): number
+getBreward(): number
+setBreward(value: number): void
+getLastBreward(): number
+getSreward(): number
+setSreward(value: number): void
+getLastSreward(): number
+getGreward(): number
+setGreward(value: number): void
+getLastGreward(): number
+getPreward(): number
+setPreward(value: number): void
+getLastPreward(): number
+isHas_entered(): boolean
+setHas_entered(value: boolean): void
+isLastHas_entered(): boolean
+isShowEnding(): boolean
+setShowEnding(value: boolean): void
+isLastShowEnding(): boolean
+getConfigData(): Object
+setConfigData(value: Object): void
+getLastConfigData(): Object
+getStageIdList(): Object
+setStageIdList(value: Object): void
+getLastStageIdList(): Object
+getBossId(): number
+setBossId(value: number): void
+getLastBossId(): number
+getBossState(): number
+setBossState(value: number): void
+getLastBossState(): number
+isShowRunningMap(): boolean
+setShowRunningMap(value: boolean): void
+isLastShowRunningMap(): boolean
+
+
+ChapterBoxData.js
+
+
+
+ChapterData.js
+getTotal_star(): number
+setTotal_star(value: number): void
+getLastTotal_star(): number
+getTotal_e_star(): number
+setTotal_e_star(value: number): void
+getLastTotal_e_star(): number
+getChapters(): Object
+setChapters(value: Object): void
+getLastChapters(): Object
+getE_chapters(): Object
+setE_chapters(value: Object): void
+getLastE_chapters(): Object
+getF_chapters(): Object
+setF_chapters(value: Object): void
+getLastF_chapters(): Object
+getGenerals(): Object
+setGenerals(value: Object): void
+getLastGenerals(): Object
+getHero_chapter_challenge_count(): number
+setHero_chapter_challenge_count(value: number): void
+getLastHero_chapter_challenge_count(): number
+isShowBossPage(): boolean
+setShowBossPage(value: boolean): void
+isLastShowBossPage(): boolean
+getResList(): Object
+setResList(value: Object): void
+getLastResList(): Object
+
+
+ChapterGeneralData.js
+getId(): number
+setId(value: number): void
+getLastId(): number
+isPass(): boolean
+setPass(value: boolean): void
+isLastPass(): boolean
+getConfigData(): Object
+setConfigData(value: Object): void
+getLastConfigData(): Object
+
+
+ChatData.js
+isHasData(): boolean
+setHasData(value: boolean): void
+isLastHasData(): boolean
+getLastUISelectedChannel(): Object
+setLastUISelectedChannel(value: Object): void
+getLastLastUISelectedChannel(): Object
+getLastUISelectedChatPlayerData(): Object
+setLastUISelectedChatPlayerData(value: Object): void
+getLastLastUISelectedChatPlayerData(): Object
+getChatSetting(): Object
+setChatSetting(value: Object): void
+getLastChatSetting(): Object
+getLastInputCache(): number
+setLastInputCache(value: number): void
+getLastLastInputCache(): number
+
+
+ChatMsgData.js
+getSender(): Object
+setSender(value: Object): void
+getLastSender(): Object
+getReciver(): Object
+setReciver(value: Object): void
+getLastReciver(): Object
+getChannel(): number
+setChannel(value: number): void
+getLastChannel(): number
+getContent(): string
+setContent(value: string): void
+getLastContent(): string
+getSysMsg(): Object
+setSysMsg(value: Object): void
+getLastSysMsg(): Object
+getId(): number
+setId(value: number): void
+getLastId(): number
+getStatus(): number
+setStatus(value: number): void
+getLastStatus(): number
+getMsg_type(): number
+setMsg_type(value: number): void
+getLastMsg_type(): number
+getIndex(): number
+setIndex(value: number): void
+getLastIndex(): number
+getVoiceInfo(): Object
+setVoiceInfo(value: Object): void
+getLastVoiceInfo(): Object
+isVoicePlay(): boolean
+setVoicePlay(value: boolean): void
+isLastVoicePlay(): boolean
+getEventInfo(): Object
+setEventInfo(value: Object): void
+getLastEventInfo(): Object
+getParameter(): Object
+setParameter(value: Object): void
+getLastParameter(): Object
+
+
+ChatObject.js
+getChannel(): number
+setChannel(value: number): void
+getLastChannel(): number
+getChatPlayerData(): Object
+setChatPlayerData(value: Object): void
+getLastChatPlayerData(): Object
+
+
+ChatPlayerData.js
+getId(): number
+setId(value: number): void
+getLastId(): number
+getName(): string
+setName(value: string): void
+getLastName(): string
+getBase_id(): number
+setBase_id(value: number): void
+getLastBase_id(): number
+getOffice_level(): number
+setOffice_level(value: number): void
+getLastOffice_level(): number
+getAvatar_base_id(): number
+setAvatar_base_id(value: number): void
+getLastAvatar_base_id(): number
+getPlayer_info(): Object
+setPlayer_info(value: Object): void
+getLastPlayer_info(): Object
+getTitles(): Object
+setTitles(value: Object): void
+getLastTitles(): Object
+getHead_frame_id(): number
+setHead_frame_id(value: number): void
+getLastHead_frame_id(): number
+
+
+ChatSetting.js
+
+
+
+CombineTaskStatusData.js
+getTask_id(): number
+setTask_id(value: number): void
+getLastTask_id(): number
+getStatus(): number
+setStatus(value: number): void
+getLastStatus(): number
+getParam1(): number
+setParam1(value: number): void
+getLastParam1(): number
+
+
+CommonActivityQuestData.js
+getQuest_id(): number
+setQuest_id(value: number): void
+getLastQuest_id(): number
+getAct_id(): number
+setAct_id(value: number): void
+getLastAct_id(): number
+getQuest_type(): number
+setQuest_type(value: number): void
+getLastQuest_type(): number
+getParam1(): string
+setParam1(value: string): void
+getLastParam1(): string
+getParam2(): number
+setParam2(value: number): void
+getLastParam2(): number
+getParam3(): number
+setParam3(value: number): void
+getLastParam3(): number
+getAward_select(): number
+setAward_select(value: number): void
+getLastAward_select(): number
+getAward_limit(): number
+setAward_limit(value: number): void
+getLastAward_limit(): number
+getServer_limit(): number
+setServer_limit(value: number): void
+getLastServer_limit(): number
+getServer_times(): number
+setServer_times(value: number): void
+getLastServer_times(): number
+getQuest_des(): string
+setQuest_des(value: string): void
+getLastQuest_des(): string
+getDiscout_id(): string
+setDiscout_id(value: string): void
+getLastDiscout_id(): string
+getSort_num(): number
+setSort_num(value: number): void
+getLastSort_num(): number
+getShow_limit_type(): number
+setShow_limit_type(value: number): void
+getLastShow_limit_type(): number
+getShow_limit_value(): number
+setShow_limit_value(value: number): void
+getLastShow_limit_value(): number
+
+
+CommonActivityUserTaskData.js
+getAct_id(): number
+setAct_id(value: number): void
+getLastAct_id(): number
+getQuest_id(): number
+setQuest_id(value: number): void
+getLastQuest_id(): number
+getTime(): number
+setTime(value: number): void
+getLastTime(): number
+getTime2(): number
+setTime2(value: number): void
+getLastTime2(): number
+getProgress(): string
+setProgress(value: string): void
+getLastProgress(): string
+getAward_time(): number
+setAward_time(value: number): void
+getLastAward_time(): number
+getAward_times(): number
+setAward_times(value: number): void
+getLastAward_times(): number
+getProgress_second(): string
+setProgress_second(value: string): void
+getLastProgress_second(): string
+getValueMap(): Object
+setValueMap(value: Object): void
+getLastValueMap(): Object
+
+
+ComplexRankData.js
+
+
+
+CountryBossData.js
+getChallenge_boss_time1(): number
+setChallenge_boss_time1(value: number): void
+getLastChallenge_boss_time1(): number
+getChallenge_boss_time2(): number
+setChallenge_boss_time2(value: number): void
+getLastChallenge_boss_time2(): number
+getChallenge_boss_user(): number
+setChallenge_boss_user(value: number): void
+getLastChallenge_boss_user(): number
+getSelf_vote(): number
+setSelf_vote(value: number): void
+getLastSelf_vote(): number
+getFinal_vote(): number
+setFinal_vote(value: number): void
+getLastFinal_vote(): number
+getAhead_time1(): number
+setAhead_time1(value: number): void
+getLastAhead_time1(): number
+getAhead_time3(): number
+setAhead_time3(value: number): void
+getLastAhead_time3(): number
+
+
+CountryBossInterceptUnitData.js
+getUser_id(): number
+setUser_id(value: number): void
+getLastUser_id(): number
+getName(): string
+setName(value: string): void
+getLastName(): string
+getPower(): number
+setPower(value: number): void
+getLastPower(): number
+getOffice_level(): number
+setOffice_level(value: number): void
+getLastOffice_level(): number
+getGuild_name(): string
+setGuild_name(value: string): void
+getLastGuild_name(): string
+getBase_id(): number
+setBase_id(value: number): void
+getLastBase_id(): number
+getHero_base_id(): Object
+setHero_base_id(value: Object): void
+getLastHero_base_id(): Object
+getTitle(): number
+setTitle(value: number): void
+getLastTitle(): number
+getAvatar_base_id(): number
+setAvatar_base_id(value: number): void
+getLastAvatar_base_id(): number
+
+
+CountryBossRankUnitData.js
+getGuild_id(): number
+setGuild_id(value: number): void
+getLastGuild_id(): number
+getHurt_rate(): number
+setHurt_rate(value: number): void
+getLastHurt_rate(): number
+getGuild_name(): string
+setGuild_name(value: string): void
+getLastGuild_name(): string
+getRank(): number
+setRank(value: number): void
+getLastRank(): number
+
+
+CountryBossUnitData.js
+getBoss_id(): number
+setBoss_id(value: number): void
+getLastBoss_id(): number
+getMax_hp(): number
+setMax_hp(value: number): void
+getLastMax_hp(): number
+getNow_hp(): number
+setNow_hp(value: number): void
+getLastNow_hp(): number
+getBoss_rank(): Object
+setBoss_rank(value: Object): void
+getLastBoss_rank(): Object
+getSelf_rank(): Object
+setSelf_rank(value: Object): void
+getLastSelf_rank(): Object
+
+
+CountryBossVoteUnitData.js
+getBoss_id(): number
+setBoss_id(value: number): void
+getLastBoss_id(): number
+isIs_kill(): boolean
+setIs_kill(value: boolean): void
+isLastIs_kill(): boolean
+getVote(): number
+setVote(value: number): void
+getLastVote(): number
+
+
+CreateRoleData.js
+
+
+
+CrystalShopData.js
+
+
+
+CrystalShopGoodData.js
+getId(): number
+setId(value: number): void
+getLastId(): number
+getValue(): number
+setValue(value: number): void
+getLastValue(): number
+getBuy_count(): number
+setBuy_count(value: number): void
+getLastBuy_count(): number
+getConfig(): Object
+setConfig(value: Object): void
+getLastConfig(): Object
+
+
+CrystalShopItemData.js
+getId(): number
+setId(value: number): void
+getLastId(): number
+getValue(): number
+setValue(value: number): void
+getLastValue(): number
+getBuy_count(): number
+setBuy_count(value: number): void
+getLastBuy_count(): number
+getAwards(): Object
+setAwards(value: Object): void
+getLastAwards(): Object
+getPay_amount(): number
+setPay_amount(value: number): void
+getLastPay_amount(): number
+getPay_type(): number
+setPay_type(value: number): void
+getLastPay_type(): number
+getDescription(): string
+setDescription(value: string): void
+getLastDescription(): string
+getIs_function(): number
+setIs_function(value: number): void
+getLastIs_function(): number
+getIs_work(): number
+setIs_work(value: number): void
+getLastIs_work(): number
+getPage(): number
+setPage(value: number): void
+getLastPage(): number
+getBuy_size(): number
+setBuy_size(value: number): void
+getLastBuy_size(): number
+getFunction_id(): number
+setFunction_id(value: number): void
+getLastFunction_id(): number
+
+
+CustomActivityData.js
+isHasData(): boolean
+setHasData(value: boolean): void
+isLastHasData(): boolean
+
+
+CustomActivityRechargeData.js
+getCurSelectedIndex(): number
+setCurSelectedIndex(value: number): void
+getLastCurSelectedIndex(): number
+getCurSelectedIndex2(): number
+setCurSelectedIndex2(value: number): void
+getLastCurSelectedIndex2(): number
+
+
+CustomActivityRechargeUnitData.js
+getAct_type(): number
+setAct_type(value: number): void
+getLastAct_type(): number
+getFree_use(): number
+setFree_use(value: number): void
+getLastFree_use(): number
+getTotal_use(): number
+setTotal_use(value: number): void
+getLastTotal_use(): number
+getLast_draw_time(): number
+setLast_draw_time(value: number): void
+getLastLast_draw_time(): number
+getRecords(): Object
+setRecords(value: Object): void
+getLastRecords(): Object
+
+
+CustomActivityTaskUnitData.js
+getQuest_id(): number
+setQuest_id(value: number): void
+getLastQuest_id(): number
+getAct_id(): number
+setAct_id(value: number): void
+getLastAct_id(): number
+getQuest_type(): number
+setQuest_type(value: number): void
+getLastQuest_type(): number
+getParam1(): string
+setParam1(value: string): void
+getLastParam1(): string
+getParam2(): number
+setParam2(value: number): void
+getLastParam2(): number
+getParam3(): number
+setParam3(value: number): void
+getLastParam3(): number
+getAward_select(): number
+setAward_select(value: number): void
+getLastAward_select(): number
+getAward_limit(): number
+setAward_limit(value: number): void
+getLastAward_limit(): number
+getServer_limit(): number
+setServer_limit(value: number): void
+getLastServer_limit(): number
+getServer_times(): number
+setServer_times(value: number): void
+getLastServer_times(): number
+getQuest_des(): string
+setQuest_des(value: string): void
+getLastQuest_des(): string
+getDiscout_id(): string
+setDiscout_id(value: string): void
+getLastDiscout_id(): string
+getSort_num(): number
+setSort_num(value: number): void
+getLastSort_num(): number
+getShow_limit_type(): number
+setShow_limit_type(value: number): void
+getLastShow_limit_type(): number
+getShow_limit_value(): number
+setShow_limit_value(value: number): void
+getLastShow_limit_value(): number
+
+
+CustomActivityUnitData.js
+getAct_id(): number
+setAct_id(value: number): void
+getLastAct_id(): number
+getAct_type(): number
+setAct_type(value: number): void
+getLastAct_type(): number
+getIcon_type(): number
+setIcon_type(value: number): void
+getLastIcon_type(): number
+getIcon_value(): number
+setIcon_value(value: number): void
+getLastIcon_value(): number
+getIcon_type_top_one(): number
+setIcon_type_top_one(value: number): void
+getLastIcon_type_top_one(): number
+getIcon_value_top_one(): number
+setIcon_value_top_one(value: number): void
+getLastIcon_value_top_one(): number
+getIcon_type_top_two(): number
+setIcon_type_top_two(value: number): void
+getLastIcon_type_top_two(): number
+getIcon_value_top_two(): number
+setIcon_value_top_two(value: number): void
+getLastIcon_value_top_two(): number
+getIcon_type_top_three(): number
+setIcon_type_top_three(value: number): void
+getLastIcon_type_top_three(): number
+getIcon_value_top_three(): number
+setIcon_value_top_three(value: number): void
+getLastIcon_value_top_three(): number
+getTitle(): string
+setTitle(value: string): void
+getLastTitle(): string
+getSub_title(): string
+setSub_title(value: string): void
+getLastSub_title(): string
+getDesc(): string
+setDesc(value: string): void
+getLastDesc(): string
+getDetail(): string
+setDetail(value: string): void
+getLastDetail(): string
+getPreview_time(): number
+setPreview_time(value: number): void
+getLastPreview_time(): number
+getStart_time(): number
+setStart_time(value: number): void
+getLastStart_time(): number
+getEnd_time(): number
+setEnd_time(value: number): void
+getLastEnd_time(): number
+getAward_time(): number
+setAward_time(value: number): void
+getLastAward_time(): number
+getButton_id(): number
+setButton_id(value: number): void
+getLastButton_id(): number
+getMin_vip(): number
+setMin_vip(value: number): void
+getLastMin_vip(): number
+getMax_vip(): number
+setMax_vip(value: number): void
+getLastMax_vip(): number
+getMin_level(): number
+setMin_level(value: number): void
+getLastMin_level(): number
+getMax_level(): number
+setMax_level(value: number): void
+getLastMax_level(): number
+getShow_schedule(): number
+setShow_schedule(value: number): void
+getLastShow_schedule(): number
+getBatch(): number
+setBatch(value: number): void
+getLastBatch(): number
+getSort_num(): number
+setSort_num(value: number): void
+getLastSort_num(): number
+isLast_act_visible(): boolean
+setLast_act_visible(value: boolean): void
+isLastLast_act_visible(): boolean
+
+
+CustomActivityUserTaskData.js
+getAct_id(): number
+setAct_id(value: number): void
+getLastAct_id(): number
+getQuest_id(): number
+setQuest_id(value: number): void
+getLastQuest_id(): number
+getTime(): number
+setTime(value: number): void
+getLastTime(): number
+getProgress(): string
+setProgress(value: string): void
+getLastProgress(): string
+getAward_time(): number
+setAward_time(value: number): void
+getLastAward_time(): number
+getAward_times(): number
+setAward_times(value: number): void
+getLastAward_times(): number
+getProgress_second(): string
+setProgress_second(value: string): void
+getLastProgress_second(): string
+getValueMap(): Object
+setValueMap(value: Object): void
+getLastValueMap(): Object
+
+
+DailyCountData.js
+getDaily_count(): Object
+setDaily_count(value: Object): void
+getLastDaily_count(): Object
+
+
+DailyDungeonBaseData.js
+getType(): number
+setType(value: number): void
+getLastType(): number
+getRemain_count(): number
+setRemain_count(value: number): void
+getLastRemain_count(): number
+getLast_battle_time(): number
+setLast_battle_time(value: number): void
+getLastLast_battle_time(): number
+getFirst_enter_max_id(): number
+setFirst_enter_max_id(value: number): void
+getLastFirst_enter_max_id(): number
+getMax_id(): number
+setMax_id(value: number): void
+getLastMax_id(): number
+
+
+DailyDungeonData.js
+getDds(): Object
+setDds(value: Object): void
+getLastDds(): Object
+getNowType(): number
+setNowType(value: number): void
+getLastNowType(): number
+
+
+DailyMissionData.js
+
+
+
+Day7ActivityData.js
+getStart_time(): number
+setStart_time(value: number): void
+getLastStart_time(): number
+getEnd_time(): number
+setEnd_time(value: number): void
+getLastEnd_time(): number
+getReward_time(): number
+setReward_time(value: number): void
+getLastReward_time(): number
+getCurrent_day(): number
+setCurrent_day(value: number): void
+getLastCurrent_day(): number
+isHasData(): boolean
+setHasData(value: boolean): void
+isLastHasData(): boolean
+
+
+Day7ActivityDiscountData.js
+getId(): number
+setId(value: number): void
+getLastId(): number
+getBuyCount(): number
+setBuyCount(value: number): void
+getLastBuyCount(): number
+getConfig(): Object
+setConfig(value: Object): void
+getLastConfig(): Object
+
+
+Day7ActivityTaskData.js
+getTask_type(): number
+setTask_type(value: number): void
+getLastTask_type(): number
+getTask_value(): number
+setTask_value(value: number): void
+getLastTask_value(): number
+getTaskRewards(): Object
+setTaskRewards(value: Object): void
+getLastTaskRewards(): Object
+
+
+Day7ActivityTaskUnitData.js
+getId(): number
+setId(value: number): void
+getLastId(): number
+getConfig(): Object
+setConfig(value: Object): void
+getLastConfig(): Object
+isInited(): boolean
+setInited(value: boolean): void
+isLastInited(): boolean
+getRewards(): Object
+setRewards(value: Object): void
+getLastRewards(): Object
+isHasReach(): boolean
+setHasReach(value: boolean): void
+isLastHasReach(): boolean
+isCanTaken(): boolean
+setCanTaken(value: boolean): void
+isLastCanTaken(): boolean
+isHasReceived(): boolean
+setHasReceived(value: boolean): void
+isLastHasReceived(): boolean
+
+
+EnemyBattleReportUnitData.js
+getFight_time(): number
+setFight_time(value: number): void
+getLastFight_time(): number
+getTar_uid(): number
+setTar_uid(value: number): void
+getLastTar_uid(): number
+getName(): string
+setName(value: string): void
+getLastName(): string
+isWin_type(): boolean
+setWin_type(value: boolean): void
+isLastWin_type(): boolean
+getGrap_value(): number
+setGrap_value(value: number): void
+getLastGrap_value(): number
+getOfficer_level(): number
+setOfficer_level(value: number): void
+getLastOfficer_level(): number
+
+
+EnemyData.js
+
+
+
+EnemyUnitData.js
+getUid(): number
+setUid(value: number): void
+getLastUid(): number
+getName(): string
+setName(value: string): void
+getLastName(): string
+getLevel(): number
+setLevel(value: number): void
+getLastLevel(): number
+getVip(): number
+setVip(value: number): void
+getLastVip(): number
+getOnline(): number
+setOnline(value: number): void
+getLastOnline(): number
+getPower(): number
+setPower(value: number): void
+getLastPower(): number
+getGuild_name(): string
+setGuild_name(value: string): void
+getLastGuild_name(): string
+getGuild_id(): number
+setGuild_id(value: number): void
+getLastGuild_id(): number
+getOffice_level(): number
+setOffice_level(value: number): void
+getLastOffice_level(): number
+getEnemy_value(): number
+setEnemy_value(value: number): void
+getLastEnemy_value(): number
+getMine_name(): string
+setMine_name(value: string): void
+getLastMine_name(): string
+getCovertId(): number
+setCovertId(value: number): void
+getLastCovertId(): number
+getHead_frame_id(): number
+setHead_frame_id(value: number): void
+getLastHead_frame_id(): number
+
+
+EquipmentData.js
+getCurEquipId(): number
+setCurEquipId(value: number): void
+getLastCurEquipId(): number
+
+
+EquipmentUnitData.js
+getId(): number
+setId(value: number): void
+getLastId(): number
+getBase_id(): number
+setBase_id(value: number): void
+getLastBase_id(): number
+getLevel(): number
+setLevel(value: number): void
+getLastLevel(): number
+getStar(): number
+setStar(value: number): void
+getLastStar(): number
+getRank(): number
+setRank(value: number): void
+getLastRank(): number
+getMoney(): number
+setMoney(value: number): void
+getLastMoney(): number
+getTime(): number
+setTime(value: number): void
+getLastTime(): number
+getUser_id(): number
+setUser_id(value: number): void
+getLastUser_id(): number
+getR_level(): number
+setR_level(value: number): void
+getLastR_level(): number
+getR_exp(): number
+setR_exp(value: number): void
+getLastR_exp(): number
+getAll_exp(): number
+setAll_exp(value: number): void
+getLastAll_exp(): number
+getConfig(): Object
+setConfig(value: Object): void
+getLastConfig(): Object
+isYokeRelation(): boolean
+setYokeRelation(value: boolean): void
+isLastYokeRelation(): boolean
+getMaterials(): Object
+setMaterials(value: Object): void
+getLastMaterials(): Object
+getRecycle_materials(): Object
+setRecycle_materials(value: Object): void
+getLastRecycle_materials(): Object
+getJades(): Object
+setJades(value: Object): void
+getLastJades(): Object
+getChange(): number
+setChange(value: number): void
+getLastChange(): number
+getLast_jades(): Object
+setLast_jades(value: Object): void
+getLastLast_jades(): Object
+
+
+ExpireStateData.js
+isDataExpired(): boolean
+setDataExpired(value: boolean): void
+isLastDataExpired(): boolean
+getLastUpdateTime(): number
+setLastUpdateTime(value: number): void
+getLastLastUpdateTime(): number
+getResetType(): number
+setResetType(value: number): void
+getLastResetType(): number
+
+
+ExploreBaseData.js
+getId(): number
+setId(value: number): void
+getLastId(): number
+getMap_id(): number
+setMap_id(value: number): void
+getLastMap_id(): number
+getFoot_index(): number
+setFoot_index(value: number): void
+getLastFoot_index(): number
+getPass_count(): number
+setPass_count(value: number): void
+getLastPass_count(): number
+getEvents(): Object
+setEvents(value: Object): void
+getLastEvents(): Object
+getAward(): Object
+setAward(value: Object): void
+getLastAward(): Object
+getRoll_nums(): Object
+setRoll_nums(value: Object): void
+getLastRoll_nums(): Object
+getConfigData(): Object
+setConfigData(value: Object): void
+getLastConfigData(): Object
+
+
+ExploreData.js
+getExplores(): Object
+setExplores(value: Object): void
+getLastExplores(): Object
+getEvents(): Object
+setEvents(value: Object): void
+getLastEvents(): Object
+getAutoExplore(): number
+setAutoExplore(value: number): void
+getLastAutoExplore(): number
+getFirstPassCity(): number
+setFirstPassCity(value: number): void
+getLastFirstPassCity(): number
+
+
+ExploreEventData.js
+getEvent_id(): number
+setEvent_id(value: number): void
+getLastEvent_id(): number
+getEvent_type(): number
+setEvent_type(value: number): void
+getLastEvent_type(): number
+getEvent_time(): number
+setEvent_time(value: number): void
+getLastEvent_time(): number
+getValue1(): number
+setValue1(value: number): void
+getLastValue1(): number
+getValue2(): number
+setValue2(value: number): void
+getLastValue2(): number
+getValue3(): number
+setValue3(value: number): void
+getLastValue3(): number
+getValue4(): number
+setValue4(value: number): void
+getLastValue4(): number
+getValue5(): number
+setValue5(value: number): void
+getLastValue5(): number
+getValue6(): number
+setValue6(value: number): void
+getLastValue6(): number
+getValue7(): number
+setValue7(value: number): void
+getLastValue7(): number
+getValue8(): number
+setValue8(value: number): void
+getLastValue8(): number
+getParam(): number
+setParam(value: number): void
+getLastParam(): number
+getEndTime(): number
+setEndTime(value: number): void
+getLastEndTime(): number
+
+
+FightReportData.js
+getReport(): Object
+setReport(value: Object): void
+getLastReport(): Object
+getLeftName(): string
+setLeftName(value: string): void
+getLastLeftName(): string
+getRightName(): string
+setRightName(value: string): void
+getLastRightName(): string
+getLeftOfficerLevel(): number
+setLeftOfficerLevel(value: number): void
+getLastLeftOfficerLevel(): number
+getRightOfficerLevel(): number
+setRightOfficerLevel(value: number): void
+getLastRightOfficerLevel(): number
+getLeftPower(): number
+setLeftPower(value: number): void
+getLastLeftPower(): number
+getRightPower(): number
+setRightPower(value: number): void
+getLastRightPower(): number
+getLeftBaseId(): number
+setLeftBaseId(value: number): void
+getLastLeftBaseId(): number
+getRightBaseId(): number
+setRightBaseId(value: number): void
+getLastRightBaseId(): number
+getFirstOrder(): number
+setFirstOrder(value: number): void
+getLastFirstOrder(): number
+isWin(): boolean
+setWin(value: boolean): void
+isLastWin(): boolean
+
+
+FragmentData.js
+getId(): number
+setId(value: number): void
+getLastId(): number
+getNum(): number
+setNum(value: number): void
+getLastNum(): number
+getType(): number
+setType(value: number): void
+getLastType(): number
+getConfig(): Object
+setConfig(value: Object): void
+getLastConfig(): Object
+getHeroYokeCount(): number
+setHeroYokeCount(value: number): void
+getLastHeroYokeCount(): number
+
+
+FriendData.js
+getSuggestRefreshTime(): number
+setSuggestRefreshTime(value: number): void
+getLastSuggestRefreshTime(): number
+
+
+FriendUnitData.js
+getId(): number
+setId(value: number): void
+getLastId(): number
+getName(): string
+setName(value: string): void
+getLastName(): string
+getLevel(): number
+setLevel(value: number): void
+getLastLevel(): number
+getVip(): number
+setVip(value: number): void
+getLastVip(): number
+getPower(): number
+setPower(value: number): void
+getLastPower(): number
+getOnline(): number
+setOnline(value: number): void
+getLastOnline(): number
+isCanGivePresent(): boolean
+setCanGivePresent(value: boolean): void
+isLastCanGivePresent(): boolean
+isCanGetPresent(): boolean
+setCanGetPresent(value: boolean): void
+isLastCanGetPresent(): boolean
+getGuild_name(): string
+setGuild_name(value: string): void
+getLastGuild_name(): string
+getFriend_count(): number
+setFriend_count(value: number): void
+getLastFriend_count(): number
+getOffice_level(): number
+setOffice_level(value: number): void
+getLastOffice_level(): number
+getBase_id(): number
+setBase_id(value: number): void
+getLastBase_id(): number
+getCovertId(): number
+setCovertId(value: number): void
+getLastCovertId(): number
+getPlayerShowInfo(): Object
+setPlayerShowInfo(value: Object): void
+getLastPlayerShowInfo(): Object
+getHead_frame_id(): number
+setHead_frame_id(value: number): void
+getLastHead_frame_id(): number
+
+
+GachaGoldenHeroData.js
+getStart_time(): number
+setStart_time(value: number): void
+getLastStart_time(): number
+getEnd_time(): number
+setEnd_time(value: number): void
+getLastEnd_time(): number
+getShow_time(): number
+setShow_time(value: number): void
+getLastShow_time(): number
+getDrop_id(): number
+setDrop_id(value: number): void
+getLastDrop_id(): number
+getFree_cnt(): number
+setFree_cnt(value: number): void
+getLastFree_cnt(): number
+getFree_cd(): number
+setFree_cd(value: number): void
+getLastFree_cd(): number
+getLuck_draw_num(): number
+setLuck_draw_num(value: number): void
+getLastLuck_draw_num(): number
+isAutoPopupJoy(): boolean
+setAutoPopupJoy(value: boolean): void
+isLastAutoPopupJoy(): boolean
+
+
+GatewayData.js
+getIp(): string
+setIp(value: string): void
+getLastIp(): string
+getPort(): number
+setPort(value: number): void
+getLastPort(): number
+
+
+GemstoneData.js
+getId(): number
+setId(value: number): void
+getLastId(): number
+getNum(): number
+setNum(value: number): void
+getLastNum(): number
+getType(): number
+setType(value: number): void
+getLastType(): number
+getConfig(): Object
+setConfig(value: Object): void
+getLastConfig(): Object
+getGemstones(): Object
+setGemstones(value: Object): void
+getLastGemstones(): Object
+
+
+GroupsData.js
+isTipInvite(): boolean
+setTipInvite(value: boolean): void
+isLastTipInvite(): boolean
+
+
+GroupsInviteData.js
+getUser_id(): number
+setUser_id(value: number): void
+getLastUser_id(): number
+getInvite_time(): number
+setInvite_time(value: number): void
+getLastInvite_time(): number
+
+
+GroupsMemberData.js
+getTeam_id(): number
+setTeam_id(value: number): void
+getLastTeam_id(): number
+getTeam_type(): number
+setTeam_type(value: number): void
+getLastTeam_type(): number
+getTeam_target(): number
+setTeam_target(value: number): void
+getLastTeam_target(): number
+getMin_level(): number
+setMin_level(value: number): void
+getLastMin_level(): number
+getMax_level(): number
+setMax_level(value: number): void
+getLastMax_level(): number
+getTeam_leader(): number
+setTeam_leader(value: number): void
+getLastTeam_leader(): number
+getMembers(): Object
+setMembers(value: Object): void
+getLastMembers(): Object
+isIs_scene(): boolean
+setIs_scene(value: boolean): void
+isLastIs_scene(): boolean
+getApplyEndTime(): number
+setApplyEndTime(value: number): void
+getLastApplyEndTime(): number
+
+
+GroupsMyMemberData.js
+isTeam_auto(): boolean
+setTeam_auto(value: boolean): void
+isLastTeam_auto(): boolean
+
+
+GroupsPreSceneData.js
+getTeam_target(): number
+setTeam_target(value: number): void
+getLastTeam_target(): number
+isFirst(): boolean
+setFirst(value: boolean): void
+isLastFirst(): boolean
+getAgreeTime(): number
+setAgreeTime(value: number): void
+getLastAgreeTime(): number
+
+
+GroupsUnitData.js
+
+
+
+GroupsUserData.js
+getUser_id(): number
+setUser_id(value: number): void
+getLastUser_id(): number
+getBase_id(): number
+setBase_id(value: number): void
+getLastBase_id(): number
+getAvatar_base_id(): number
+setAvatar_base_id(value: number): void
+getLastAvatar_base_id(): number
+getName(): string
+setName(value: string): void
+getLastName(): string
+getOffice_level(): number
+setOffice_level(value: number): void
+getLastOffice_level(): number
+getLevel(): number
+setLevel(value: number): void
+getLastLevel(): number
+getPower(): number
+setPower(value: number): void
+getLastPower(): number
+getGuild_name(): string
+setGuild_name(value: string): void
+getLastGuild_name(): string
+getTitle(): number
+setTitle(value: number): void
+getLastTitle(): number
+getHead_frame_id(): number
+setHead_frame_id(value: number): void
+getLastHead_frame_id(): number
+getCovertId(): number
+setCovertId(value: number): void
+getLastCovertId(): number
+getLimitLevel(): number
+setLimitLevel(value: number): void
+getLastLimitLevel(): number
+getApplyEndTime(): number
+setApplyEndTime(value: number): void
+getLastApplyEndTime(): number
+getInviteEndTime(): number
+setInviteEndTime(value: number): void
+getLastInviteEndTime(): number
+isConfirmEnterScene(): boolean
+setConfirmEnterScene(value: boolean): void
+isLastConfirmEnterScene(): boolean
+
+
+GuildAnswerData.js
+getRandomAward(): Object
+setRandomAward(value: Object): void
+getLastRandomAward(): Object
+getStartTime(): number
+setStartTime(value: number): void
+getLastStartTime(): number
+getAnswerData(): Object
+setAnswerData(value: Object): void
+getLastAnswerData(): Object
+
+
+GuildAnswerMyGuildRankUnitData.js
+getUser_id(): number
+setUser_id(value: number): void
+getLastUser_id(): number
+getName(): string
+setName(value: string): void
+getLastName(): string
+getPoint(): number
+setPoint(value: number): void
+getLastPoint(): number
+getRank(): number
+setRank(value: number): void
+getLastRank(): number
+
+
+GuildAnswerQuestionUnitData.js
+getQuestionNo(): number
+setQuestionNo(value: number): void
+getLastQuestionNo(): number
+getQuestionId(): number
+setQuestionId(value: number): void
+getLastQuestionId(): number
+getRightAnswer(): number
+setRightAnswer(value: number): void
+getLastRightAnswer(): number
+getOptions(): Object
+setOptions(value: Object): void
+getLastOptions(): Object
+getQuestionDes(): string
+setQuestionDes(value: string): void
+getLastQuestionDes(): string
+getSelectOption(): number
+setSelectOption(value: number): void
+getLastSelectOption(): number
+
+
+GuildAnswerRankUnitData.js
+getGuild_id(): number
+setGuild_id(value: number): void
+getLastGuild_id(): number
+getName(): string
+setName(value: string): void
+getLastName(): string
+getRank(): number
+setRank(value: number): void
+getLastRank(): number
+getPoint(): number
+setPoint(value: number): void
+getLastPoint(): number
+
+
+GuildApplicationData.js
+getUid(): number
+setUid(value: number): void
+getLastUid(): number
+getName(): string
+setName(value: string): void
+getLastName(): string
+getPower(): number
+setPower(value: number): void
+getLastPower(): number
+getOffline(): number
+setOffline(value: number): void
+getLastOffline(): number
+getBase_id(): number
+setBase_id(value: number): void
+getLastBase_id(): number
+getRank_lv(): number
+setRank_lv(value: number): void
+getLastRank_lv(): number
+getLevel(): number
+setLevel(value: number): void
+getLastLevel(): number
+getOfficer_level(): number
+setOfficer_level(value: number): void
+getLastOfficer_level(): number
+getAvatar(): number
+setAvatar(value: number): void
+getLastAvatar(): number
+getPlayer_info(): Object
+setPlayer_info(value: Object): void
+getLastPlayer_info(): Object
+getHead_frame_id(): number
+setHead_frame_id(value: number): void
+getLastHead_frame_id(): number
+
+
+GuildCakeData.js
+getGuild_id(): number
+setGuild_id(value: number): void
+getLastGuild_id(): number
+getGuild_name(): string
+setGuild_name(value: string): void
+getLastGuild_name(): string
+getCake_level(): number
+setCake_level(value: number): void
+getLastCake_level(): number
+getCake_exp(): number
+setCake_exp(value: number): void
+getLastCake_exp(): number
+getGuild_icon(): number
+setGuild_icon(value: number): void
+getLastGuild_icon(): number
+getGuild_noraml_end_rank(): number
+setGuild_noraml_end_rank(value: number): void
+getLastGuild_noraml_end_rank(): number
+
+
+GuildCrossWarBossUnitData.js
+getId(): number
+setId(value: number): void
+getLastId(): number
+getHp(): number
+setHp(value: number): void
+getLastHp(): number
+getMax_hp(): number
+setMax_hp(value: number): void
+getLastMax_hp(): number
+getConfig(): Object
+setConfig(value: Object): void
+getLastConfig(): Object
+
+
+GuildCrossWarData.js
+getPointMap(): Object
+setPointMap(value: Object): void
+getLastPointMap(): Object
+getUserMap(): Object
+setUserMap(value: Object): void
+getLastUserMap(): Object
+getBossMap(): Object
+setBossMap(value: Object): void
+getLastBossMap(): Object
+getPointHoleMap(): Object
+setPointHoleMap(value: Object): void
+getLastPointHoleMap(): Object
+
+
+GuildCrossWarPointUnitData.js
+getKey_point_id(): number
+setKey_point_id(value: number): void
+getLastKey_point_id(): number
+getGuild_id(): number
+setGuild_id(value: number): void
+getLastGuild_id(): number
+getGuild_name(): string
+setGuild_name(value: string): void
+getLastGuild_name(): string
+getSid(): number
+setSid(value: number): void
+getLastSid(): number
+getSname(): string
+setSname(value: string): void
+getLastSname(): string
+getAction(): action
+setAction(value: action): void
+getLastAction(): action
+
+
+GuildCrossWarUserUnitData.js
+getUid(): number
+setUid(value: number): void
+getLastUid(): number
+getSid(): number
+setSid(value: number): void
+getLastSid(): number
+getSname(): string
+setSname(value: string): void
+getLastSname(): string
+getName(): string
+setName(value: string): void
+getLastName(): string
+getBase_id(): number
+setBase_id(value: number): void
+getLastBase_id(): number
+getAvatar_base_id(): number
+setAvatar_base_id(value: number): void
+getLastAvatar_base_id(): number
+getGuild_id(): number
+setGuild_id(value: number): void
+getLastGuild_id(): number
+getGuild_name(): string
+setGuild_name(value: string): void
+getLastGuild_name(): string
+getOfficer_level(): number
+setOfficer_level(value: number): void
+getLastOfficer_level(): number
+getTitle(): number
+setTitle(value: number): void
+getLastTitle(): number
+getHp(): number
+setHp(value: number): void
+getLastHp(): number
+getMax_hp(): number
+setMax_hp(value: number): void
+getLastMax_hp(): number
+getPower(): number
+setPower(value: number): void
+getLastPower(): number
+getAction(): number
+setAction(value: number): void
+getLastAction(): number
+getMove_end_time(): number
+setMove_end_time(value: number): void
+getLastMove_end_time(): number
+getNeed_time(): number
+setNeed_time(value: number): void
+getLastNeed_time(): number
+getMove_cd(): number
+setMove_cd(value: number): void
+getLastMove_cd(): number
+getFight_cd(): number
+setFight_cd(value: number): void
+getLastFight_cd(): number
+getRevive_time(): number
+setRevive_time(value: number): void
+getLastRevive_time(): number
+getFrom_pos(): Object
+setFrom_pos(value: Object): void
+getLastFrom_pos(): Object
+getTo_pos(): Object
+setTo_pos(value: Object): void
+getLastTo_pos(): Object
+
+
+GuildData.js
+isLastCanSnatchRedPacketHintFlag(): boolean
+setLastCanSnatchRedPacketHintFlag(value: boolean): void
+isLastLastCanSnatchRedPacketHintFlag(): boolean
+isTipInvite(): boolean
+setTipInvite(value: boolean): void
+isLastTipInvite(): boolean
+
+
+GuildDungeonData.js
+isSynRecordData(): boolean
+setSynRecordData(value: boolean): void
+isLastSynRecordData(): boolean
+
+
+GuildDungeonInfoData.js
+getRank(): number
+setRank(value: number): void
+getLastRank(): number
+
+
+GuildDungeonMemberPoint.js
+getUser_id(): number
+setUser_id(value: number): void
+getLastUser_id(): number
+getPoint(): number
+setPoint(value: number): void
+getLastPoint(): number
+
+
+GuildDungeonRankData.js
+getGuild_id(): number
+setGuild_id(value: number): void
+getLastGuild_id(): number
+getRank(): number
+setRank(value: number): void
+getLastRank(): number
+getName(): string
+setName(value: string): void
+getLastName(): string
+getPoint(): number
+setPoint(value: number): void
+getLastPoint(): number
+getNum(): number
+setNum(value: number): void
+getLastNum(): number
+
+
+GuildDungeonRecordData.js
+getPlayer_id(): number
+setPlayer_id(value: number): void
+getLastPlayer_id(): number
+getPlayer_name(): string
+setPlayer_name(value: string): void
+getLastPlayer_name(): string
+getPlayer_officer(): number
+setPlayer_officer(value: number): void
+getLastPlayer_officer(): number
+getTarget_rank(): number
+setTarget_rank(value: number): void
+getLastTarget_rank(): number
+getTarget_id(): number
+setTarget_id(value: number): void
+getLastTarget_id(): number
+getTarget_name(): string
+setTarget_name(value: string): void
+getLastTarget_name(): string
+getTarget_officer(): number
+setTarget_officer(value: number): void
+getLastTarget_officer(): number
+isIs_win(): boolean
+setIs_win(value: boolean): void
+isLastIs_win(): boolean
+getReport_id(): number
+setReport_id(value: number): void
+getLastReport_id(): number
+getTime(): number
+setTime(value: number): void
+getLastTime(): number
+
+
+GuildHelpBaseData.js
+getHelp_no(): number
+setHelp_no(value: number): void
+getLastHelp_no(): number
+getHelp_id(): number
+setHelp_id(value: number): void
+getLastHelp_id(): number
+getLimit_max(): number
+setLimit_max(value: number): void
+getLastLimit_max(): number
+getAlready_help(): number
+setAlready_help(value: number): void
+getLastAlready_help(): number
+getAlready_get(): number
+setAlready_get(value: number): void
+getLastAlready_get(): number
+getTime(): number
+setTime(value: number): void
+getLastTime(): number
+
+
+GuildHelpData.js
+getMember(): Object
+setMember(value: Object): void
+getLastMember(): Object
+getHelp_base(): Object
+setHelp_base(value: Object): void
+getLastHelp_base(): Object
+
+
+GuildListData.js
+getTotal_cnt(): number
+setTotal_cnt(value: number): void
+getLastTotal_cnt(): number
+getNum(): number
+setNum(value: number): void
+getLastNum(): number
+
+
+GuildMemberData.js
+getUid(): number
+setUid(value: number): void
+getLastUid(): number
+getName(): string
+setName(value: string): void
+getLastName(): string
+getLevel(): number
+setLevel(value: number): void
+getLastLevel(): number
+getPosition(): number
+setPosition(value: number): void
+getLastPosition(): number
+getContribution(): number
+setContribution(value: number): void
+getLastContribution(): number
+getTime(): number
+setTime(value: number): void
+getLastTime(): number
+getOffline(): number
+setOffline(value: number): void
+getLastOffline(): number
+getBase_id(): number
+setBase_id(value: number): void
+getLastBase_id(): number
+getRank_lv(): number
+setRank_lv(value: number): void
+getLastRank_lv(): number
+getPower(): number
+setPower(value: number): void
+getLastPower(): number
+getWeek_contribution(): number
+setWeek_contribution(value: number): void
+getLastWeek_contribution(): number
+getVip(): number
+setVip(value: number): void
+getLastVip(): number
+getAvatar(): number
+setAvatar(value: number): void
+getLastAvatar(): number
+getOfficer_level(): number
+setOfficer_level(value: number): void
+getLastOfficer_level(): number
+getDungeon_point(): number
+setDungeon_point(value: number): void
+getLastDungeon_point(): number
+getActive_cnt(): number
+setActive_cnt(value: number): void
+getLastActive_cnt(): number
+getPlayer_info(): Object
+setPlayer_info(value: Object): void
+getLastPlayer_info(): Object
+getRankPower(): number
+setRankPower(value: number): void
+getLastRankPower(): number
+getHome_tree_level(): number
+setHome_tree_level(value: number): void
+getLastHome_tree_level(): number
+getTrain_daily_count(): number
+setTrain_daily_count(value: number): void
+getLastTrain_daily_count(): number
+getTrain_daily_acptcount(): number
+setTrain_daily_acptcount(value: number): void
+getLastTrain_daily_acptcount(): number
+getHead_frame_id(): number
+setHead_frame_id(value: number): void
+getLastHead_frame_id(): number
+
+
+GuildOpenRedBagUserData.js
+getUser_id(): number
+setUser_id(value: number): void
+getLastUser_id(): number
+getUser_name(): string
+setUser_name(value: string): void
+getLastUser_name(): string
+getGet_money(): number
+setGet_money(value: number): void
+getLastGet_money(): number
+isIs_best(): boolean
+setIs_best(value: boolean): void
+isLastIs_best(): boolean
+
+
+GuildRedPacketInfoData.js
+getId(): number
+setId(value: number): void
+getLastId(): number
+getRed_bag_id(): number
+setRed_bag_id(value: number): void
+getLastRed_bag_id(): number
+getTotal_money(): number
+setTotal_money(value: number): void
+getLastTotal_money(): number
+getMultiple(): number
+setMultiple(value: number): void
+getLastMultiple(): number
+getUser_id(): number
+setUser_id(value: number): void
+getLastUser_id(): number
+getUser_name(): string
+setUser_name(value: string): void
+getLastUser_name(): string
+getBase_id(): number
+setBase_id(value: number): void
+getLastBase_id(): number
+getAvatar_base_id(): number
+setAvatar_base_id(value: number): void
+getLastAvatar_base_id(): number
+getRed_bag_state(): number
+setRed_bag_state(value: number): void
+getLastRed_bag_state(): number
+getRed_bag_sum(): number
+setRed_bag_sum(value: number): void
+getLastRed_bag_sum(): number
+
+
+GuildServerAnswerData.js
+getNewStartTime(): number
+setNewStartTime(value: number): void
+getLastNewStartTime(): number
+getAnswerState(): number
+setAnswerState(value: number): void
+getLastAnswerState(): number
+getStateEndTime(): number
+setStateEndTime(value: number): void
+getLastStateEndTime(): number
+getCurQuestion(): Object
+setCurQuestion(value: Object): void
+getLastCurQuestion(): Object
+getReadySucess(): number
+setReadySucess(value: number): void
+getLastReadySucess(): number
+getRanks(): Object
+setRanks(value: Object): void
+getLastRanks(): Object
+getRandomAward(): Object
+setRandomAward(value: Object): void
+getLastRandomAward(): Object
+
+
+GuildServerAnswerPlayerUnitData.js
+getUser_id(): number
+setUser_id(value: number): void
+getLastUser_id(): number
+getGuild_id(): number
+setGuild_id(value: number): void
+getLastGuild_id(): number
+getGuild_name(): string
+setGuild_name(value: string): void
+getLastGuild_name(): string
+getName(): string
+setName(value: string): void
+getLastName(): string
+getLevel(): number
+setLevel(value: number): void
+getLastLevel(): number
+getBase_id(): number
+setBase_id(value: number): void
+getLastBase_id(): number
+getAvatar_base_id(): number
+setAvatar_base_id(value: number): void
+getLastAvatar_base_id(): number
+getSide(): number
+setSide(value: number): void
+getLastSide(): number
+getSort(): number
+setSort(value: number): void
+getLastSort(): number
+
+
+GuildShopData.js
+
+
+
+GuildSystemNotifyData.js
+getSn_type(): number
+setSn_type(value: number): void
+getLastSn_type(): number
+getContent(): Object
+setContent(value: Object): void
+getLastContent(): Object
+getTime(): number
+setTime(value: number): void
+getLastTime(): number
+
+
+GuildTaskUnitData.js
+getId(): number
+setId(value: number): void
+getLastId(): number
+getPeople(): number
+setPeople(value: number): void
+getLastPeople(): number
+getConfig(): Object
+setConfig(value: Object): void
+getLastConfig(): Object
+getExp(): number
+setExp(value: number): void
+getLastExp(): number
+
+
+GuildTrainData.js
+getUser_id(): number
+setUser_id(value: number): void
+getLastUser_id(): number
+getName(): string
+setName(value: string): void
+getLastName(): string
+getOffice_level(): number
+setOffice_level(value: number): void
+getLastOffice_level(): number
+getLeader(): number
+setLeader(value: number): void
+getLastLeader(): number
+getAvatar_base_id(): number
+setAvatar_base_id(value: number): void
+getLastAvatar_base_id(): number
+getTitle(): number
+setTitle(value: number): void
+getLastTitle(): number
+getLevel(): number
+setLevel(value: number): void
+getLastLevel(): number
+getAvarta_base_id(): number
+setAvarta_base_id(value: number): void
+getLastAvarta_base_id(): number
+getLimit_level(): number
+setLimit_level(value: number): void
+getLastLimit_level(): number
+getBase_id(): number
+setBase_id(value: number): void
+getLastBase_id(): number
+getOfficer_level(): number
+setOfficer_level(value: number): void
+getLastOfficer_level(): number
+getCovertId(): number
+setCovertId(value: number): void
+getLastCovertId(): number
+getInviteEndTime(): number
+setInviteEndTime(value: number): void
+getLastInviteEndTime(): number
+isConfirmEnterScene(): boolean
+setConfirmEnterScene(value: boolean): void
+isLastConfirmEnterScene(): boolean
+
+
+GuildUnitData.js
+getId(): number
+setId(value: number): void
+getLastId(): number
+getName(): string
+setName(value: string): void
+getLastName(): string
+getLevel(): number
+setLevel(value: number): void
+getLastLevel(): number
+getExp(): number
+setExp(value: number): void
+getLastExp(): number
+getAnnouncement(): string
+setAnnouncement(value: string): void
+getLastAnnouncement(): string
+getDeclaration(): string
+setDeclaration(value: string): void
+getLastDeclaration(): string
+getLeader(): number
+setLeader(value: number): void
+getLastLeader(): number
+getMember_num(): number
+setMember_num(value: number): void
+getLastMember_num(): number
+getDungeon_score(): number
+setDungeon_score(value: number): void
+getLastDungeon_score(): number
+getIcon(): number
+setIcon(value: number): void
+getLastIcon(): number
+getGuild_rank(): number
+setGuild_rank(value: number): void
+getLastGuild_rank(): number
+getCreated(): number
+setCreated(value: number): void
+getLastCreated(): number
+getLeader_name(): string
+setLeader_name(value: string): void
+getLastLeader_name(): string
+isHas_application(): boolean
+setHas_application(value: boolean): void
+isLastHas_application(): boolean
+getImpeach_time(): number
+setImpeach_time(value: number): void
+getLastImpeach_time(): number
+getLeader_base_id(): number
+setLeader_base_id(value: number): void
+getLastLeader_base_id(): number
+getDaily_total_exp(): number
+setDaily_total_exp(value: number): void
+getLastDaily_total_exp(): number
+getActive_days(): number
+setActive_days(value: number): void
+getLastActive_days(): number
+getDonate_point(): number
+setDonate_point(value: number): void
+getLastDonate_point(): number
+getLeader_officer_level(): number
+setLeader_officer_level(value: number): void
+getLastLeader_officer_level(): number
+getLeader_avater_base_id(): number
+setLeader_avater_base_id(value: number): void
+getLastLeader_avater_base_id(): number
+getLeader_player_info(): Object
+setLeader_player_info(value: Object): void
+getLastLeader_player_info(): Object
+getAnswer_time(): number
+setAnswer_time(value: number): void
+getLastAnswer_time(): number
+getAnswer_time_reset_cnt(): number
+setAnswer_time_reset_cnt(value: number): void
+getLastAnswer_time_reset_cnt(): number
+getMine_born_id(): number
+setMine_born_id(value: number): void
+getLastMine_born_id(): number
+getKick_member_cnt(): number
+setKick_member_cnt(value: number): void
+getLastKick_member_cnt(): number
+getWar_declare_time(): number
+setWar_declare_time(value: number): void
+getLastWar_declare_time(): number
+isEntry(): boolean
+setEntry(value: boolean): void
+isLastEntry(): boolean
+
+
+GuildUserData.js
+getLeave_time(): number
+setLeave_time(value: number): void
+getLastLeave_time(): number
+getGuild_id(): number
+setGuild_id(value: number): void
+getLastGuild_id(): number
+getFinish_help_cnt(): number
+setFinish_help_cnt(value: number): void
+getLastFinish_help_cnt(): number
+getGet_help_reward(): number
+setGet_help_reward(value: number): void
+getLastGet_help_reward(): number
+getAsk_help_cnt(): number
+setAsk_help_cnt(value: number): void
+getLastAsk_help_cnt(): number
+getDungeon_cnt(): number
+setDungeon_cnt(value: number): void
+getLastDungeon_cnt(): number
+getDungeon_atk_time(): number
+setDungeon_atk_time(value: number): void
+getLastDungeon_atk_time(): number
+getSource_reward(): number
+setSource_reward(value: number): void
+getLastSource_reward(): number
+getAsk_help_time(): number
+setAsk_help_time(value: number): void
+getLastAsk_help_time(): number
+getAsk_help_buy(): number
+setAsk_help_buy(value: number): void
+getLastAsk_help_buy(): number
+getAsk_help_cd_sec(): number
+setAsk_help_cd_sec(value: number): void
+getLastAsk_help_cd_sec(): number
+getReceivedBoxIndexList(): Object
+setReceivedBoxIndexList(value: Object): void
+getLastReceivedBoxIndexList(): Object
+getTaskDataList(): Object
+setTaskDataList(value: Object): void
+getLastTaskDataList(): Object
+getDonate(): number
+setDonate(value: number): void
+getLastDonate(): number
+getDonate_reward(): Object
+setDonate_reward(value: Object): void
+getLastDonate_reward(): Object
+getGet_red_bag_cnt(): number
+setGet_red_bag_cnt(value: number): void
+getLastGet_red_bag_cnt(): number
+getCreate_guild_cnt(): number
+setCreate_guild_cnt(value: number): void
+getLastCreate_guild_cnt(): number
+
+
+GuildWarCity.js
+getCity_id(): number
+setCity_id(value: number): void
+getLastCity_id(): number
+getOwn_guild_id(): number
+setOwn_guild_id(value: number): void
+getLastOwn_guild_id(): number
+getOwn_guild_name(): string
+setOwn_guild_name(value: string): void
+getLastOwn_guild_name(): string
+getOwn_guild_icon(): number
+setOwn_guild_icon(value: number): void
+getLastOwn_guild_icon(): number
+isIs_declare(): boolean
+setIs_declare(value: boolean): void
+isLastIs_declare(): boolean
+getDeclare_guild_num(): number
+setDeclare_guild_num(value: number): void
+getLastDeclare_guild_num(): number
+
+
+GuildWarData.js
+getIn_city_id(): number
+setIn_city_id(value: number): void
+getLastIn_city_id(): number
+
+
+GuildWarMemberData.js
+getUser_id(): number
+setUser_id(value: number): void
+getLastUser_id(): number
+getUser_name(): string
+setUser_name(value: string): void
+getLastUser_name(): string
+getOfficer_level(): number
+setOfficer_level(value: number): void
+getLastOfficer_level(): number
+
+
+GuildWarNotice.js
+getGuild_name(): string
+setGuild_name(value: string): void
+getLastGuild_name(): string
+getUser_name(): string
+setUser_name(value: string): void
+getLastUser_name(): string
+getPoint_id(): number
+setPoint_id(value: number): void
+getLastPoint_id(): number
+getId(): number
+setId(value: number): void
+getLastId(): number
+
+
+GuildWarRankValue.js
+getCity_id(): number
+setCity_id(value: number): void
+getLastCity_id(): number
+getGuild_id(): number
+setGuild_id(value: number): void
+getLastGuild_id(): number
+getGuild_name(): string
+setGuild_name(value: string): void
+getLastGuild_name(): string
+getHurt(): number
+setHurt(value: number): void
+getLastHurt(): number
+
+
+GuildWarUser.js
+getCity_id(): number
+setCity_id(value: number): void
+getLastCity_id(): number
+getUser_id(): number
+setUser_id(value: number): void
+getLastUser_id(): number
+getUser_name(): string
+setUser_name(value: string): void
+getLastUser_name(): string
+getGuild_id(): number
+setGuild_id(value: number): void
+getLastGuild_id(): number
+getGuild_name(): string
+setGuild_name(value: string): void
+getLastGuild_name(): string
+getOld_point(): number
+setOld_point(value: number): void
+getLastOld_point(): number
+getNow_point(): number
+setNow_point(value: number): void
+getLastNow_point(): number
+getMove_time(): number
+setMove_time(value: number): void
+getLastMove_time(): number
+getChallenge_time(): number
+setChallenge_time(value: number): void
+getLastChallenge_time(): number
+getChallenge_cd(): number
+setChallenge_cd(value: number): void
+getLastChallenge_cd(): number
+getOfficer_level(): number
+setOfficer_level(value: number): void
+getLastOfficer_level(): number
+getPower(): number
+setPower(value: number): void
+getLastPower(): number
+getBase_id(): number
+setBase_id(value: number): void
+getLastBase_id(): number
+getAvatar_base_id(): number
+setAvatar_base_id(value: number): void
+getLastAvatar_base_id(): number
+getWar_value(): number
+setWar_value(value: number): void
+getLastWar_value(): number
+getGuild_icon(): number
+setGuild_icon(value: number): void
+getLastGuild_icon(): number
+getPk_type(): number
+setPk_type(value: number): void
+getLastPk_type(): number
+getBorn_point_id(): number
+setBorn_point_id(value: number): void
+getLastBorn_point_id(): number
+getRelive_time(): number
+setRelive_time(value: number): void
+getLastRelive_time(): number
+
+
+GuildWarWatch.js
+getCity_id(): number
+setCity_id(value: number): void
+getLastCity_id(): number
+getPoint_id(): number
+setPoint_id(value: number): void
+getLastPoint_id(): number
+getWatch_value(): number
+setWatch_value(value: number): void
+getLastWatch_value(): number
+
+
+HandBookData.js
+
+
+
+HeadFrameData.js
+
+
+
+HeadFrameItemData.js
+getId(): number
+setId(value: number): void
+getLastId(): number
+getExpire_time(): number
+setExpire_time(value: number): void
+getLastExpire_time(): number
+getName(): string
+setName(value: string): void
+getLastName(): string
+getLimit_level(): number
+setLimit_level(value: number): void
+getLastLimit_level(): number
+getDay(): number
+setDay(value: number): void
+getLastDay(): number
+getColor(): number
+setColor(value: number): void
+getLastColor(): number
+getTime_type(): number
+setTime_type(value: number): void
+getLastTime_type(): number
+getTime_value(): number
+setTime_value(value: number): void
+getLastTime_value(): number
+getDes(): string
+setDes(value: string): void
+getLastDes(): string
+isHave(): boolean
+setHave(value: boolean): void
+isLastHave(): boolean
+
+
+HeroData.js
+getCurHeroId(): number
+setCurHeroId(value: number): void
+getLastCurHeroId(): number
+isListDataDirty(): boolean
+setListDataDirty(value: boolean): void
+isLastListDataDirty(): boolean
+isRangeDataDirty(): boolean
+setRangeDataDirty(value: boolean): void
+isLastRangeDataDirty(): boolean
+isReplaceDataDirty(): boolean
+setReplaceDataDirty(value: boolean): void
+isLastReplaceDataDirty(): boolean
+isReplaceReinforcementDataDirty(): boolean
+setReplaceReinforcementDataDirty(value: boolean): void
+isLastReplaceReinforcementDataDirty(): boolean
+isRecoveryDataDirty(): boolean
+setRecoveryDataDirty(value: boolean): void
+isLastRecoveryDataDirty(): boolean
+isRecoveryAutoDataDirty(): boolean
+setRecoveryAutoDataDirty(value: boolean): void
+isLastRecoveryAutoDataDirty(): boolean
+isRebornDataDirty(): boolean
+setRebornDataDirty(value: boolean): void
+isLastRebornDataDirty(): boolean
+isFragmentDataDirty(): boolean
+setFragmentDataDirty(value: boolean): void
+isLastFragmentDataDirty(): boolean
+
+
+HeroUnitData.js
+getId(): number
+setId(value: number): void
+getLastId(): number
+getBase_id(): number
+setBase_id(value: number): void
+getLastBase_id(): number
+getLevel(): number
+setLevel(value: number): void
+getLastLevel(): number
+getExp(): number
+setExp(value: number): void
+getLastExp(): number
+getHistory_gold(): number
+setHistory_gold(value: number): void
+getLastHistory_gold(): number
+getQuality(): number
+setQuality(value: number): void
+getLastQuality(): number
+getRank_lv(): number
+setRank_lv(value: number): void
+getLastRank_lv(): number
+getAssociation(): Object
+setAssociation(value: Object): void
+getLastAssociation(): Object
+getAwaken_level(): number
+setAwaken_level(value: number): void
+getLastAwaken_level(): number
+getAwaken_slots(): Object
+setAwaken_slots(value: Object): void
+getLastAwaken_slots(): Object
+getLimit_level(): number
+setLimit_level(value: number): void
+getLastLimit_level(): number
+getLimit_res(): Object
+setLimit_res(value: Object): void
+getLastLimit_res(): Object
+getConfig(): Object
+setConfig(value: Object): void
+getLastConfig(): Object
+getGold_res(): Object
+setGold_res(value: Object): void
+getLastGold_res(): Object
+getWillActivateYokeCount(): number
+setWillActivateYokeCount(value: number): void
+getLastWillActivateYokeCount(): number
+
+
+HistoryHeroData.js
+getHeroList(): Object
+setHeroList(value: Object): void
+getLastHeroList(): Object
+getSystemIdList(): Object
+setSystemIdList(value: Object): void
+getLastSystemIdList(): Object
+getHistoryHeroIds(): Object
+setHistoryHeroIds(value: Object): void
+getLastHistoryHeroIds(): Object
+getActivatedBookIds(): Object
+setActivatedBookIds(value: Object): void
+getLastActivatedBookIds(): Object
+getWeaponList(): Object
+setWeaponList(value: Object): void
+getLastWeaponList(): Object
+getHeroBook(): Object
+setHeroBook(value: Object): void
+getLastHeroBook(): Object
+
+
+HistoryHeroUnit.js
+getId(): number
+setId(value: number): void
+getLastId(): number
+getSystem_id(): number
+setSystem_id(value: number): void
+getLastSystem_id(): number
+getBreak_through(): number
+setBreak_through(value: number): void
+getLastBreak_through(): number
+getMaterials(): Object
+setMaterials(value: Object): void
+getLastMaterials(): Object
+
+
+HistoryHeroWeaponUnit.js
+getId(): number
+setId(value: number): void
+getLastId(): number
+getNum(): number
+setNum(value: number): void
+getLastNum(): number
+
+
+HomelandData.js
+
+
+
+HonorTitleData.js
+
+
+
+HonorTitleItemData.js
+getId(): number
+setId(value: number): void
+getLastId(): number
+getLimitLevel(): number
+setLimitLevel(value: number): void
+getLastLimitLevel(): number
+getDay(): number
+setDay(value: number): void
+getLastDay(): number
+getTimeType(): number
+setTimeType(value: number): void
+getLastTimeType(): number
+getTimeValue(): Object
+setTimeValue(value: Object): void
+getLastTimeValue(): Object
+getName(): string
+setName(value: string): void
+getLastName(): string
+getColour(): string
+setColour(value: string): void
+getLastColour(): string
+getResource(): string
+setResource(value: string): void
+getLastResource(): string
+getDes(): string
+setDes(value: string): void
+getLastDes(): string
+isIsEquip(): boolean
+setIsEquip(value: boolean): void
+isLastIsEquip(): boolean
+getExpireTime(): number
+setExpireTime(value: number): void
+getLastExpireTime(): number
+
+
+HorseData.js
+getCurHorseId(): number
+setCurHorseId(value: number): void
+getLastCurHorseId(): number
+
+
+HorseEquipmentData.js
+getCurEquipmentId(): number
+setCurEquipmentId(value: number): void
+getLastCurEquipmentId(): number
+getCurEquipmentPos(): number
+setCurEquipmentPos(value: number): void
+getLastCurEquipmentPos(): number
+
+
+HorseEquipmentUnitData.js
+getId(): number
+setId(value: number): void
+getLastId(): number
+getBase_id(): number
+setBase_id(value: number): void
+getLastBase_id(): number
+getHorse_id(): number
+setHorse_id(value: number): void
+getLastHorse_id(): number
+getConfig(): Object
+setConfig(value: Object): void
+getLastConfig(): Object
+
+
+HorseRaceData.js
+getHorseSoul(): number
+setHorseSoul(value: number): void
+getLastHorseSoul(): number
+getHorseBook(): number
+setHorseBook(value: number): void
+getLastHorseBook(): number
+getRaceCount(): number
+setRaceCount(value: number): void
+getLastRaceCount(): number
+
+
+HorseUnitData.js
+getId(): number
+setId(value: number): void
+getLastId(): number
+getBase_id(): number
+setBase_id(value: number): void
+getLastBase_id(): number
+getStar(): number
+setStar(value: number): void
+getLastStar(): number
+getConfig(): Object
+setConfig(value: Object): void
+getLastConfig(): Object
+getEquip(): Object
+setEquip(value: Object): void
+getLastEquip(): Object
+
+
+index.js
+
+
+
+index111.js
+
+
+
+index1111.js
+
+
+
+InstrumentData.js
+getCurInstrumentId(): number
+setCurInstrumentId(value: number): void
+getLastCurInstrumentId(): number
+
+
+InstrumentUnitData.js
+getId(): number
+setId(value: number): void
+getLastId(): number
+getBase_id(): number
+setBase_id(value: number): void
+getLastBase_id(): number
+getLevel(): number
+setLevel(value: number): void
+getLastLevel(): number
+getLimit_level(): number
+setLimit_level(value: number): void
+getLastLimit_level(): number
+getLimit_res(): Object
+setLimit_res(value: Object): void
+getLastLimit_res(): Object
+getConfig(): Object
+setConfig(value: Object): void
+getLastConfig(): Object
+
+
+ItemsData.js
+getId(): number
+setId(value: number): void
+getLastId(): number
+getNum(): number
+setNum(value: number): void
+getLastNum(): number
+getType(): number
+setType(value: number): void
+getLastType(): number
+getConfig(): Object
+setConfig(value: Object): void
+getLastConfig(): Object
+
+
+JadeStoneData.js
+
+
+
+JadeStoneUnitData.js
+getId(): number
+setId(value: number): void
+getLastId(): number
+getSys_id(): number
+setSys_id(value: number): void
+getLastSys_id(): number
+getEquipment_id(): number
+setEquipment_id(value: number): void
+getLastEquipment_id(): number
+getConfig(): Object
+setConfig(value: Object): void
+getLastConfig(): Object
+
+
+KarmaData.js
+getHero_base_id(): Object
+setHero_base_id(value: Object): void
+getLastHero_base_id(): Object
+getDestiny_id(): Object
+setDestiny_id(value: Object): void
+getLastDestiny_id(): Object
+
+
+KvPairs.js
+
+
+
+LimitTimeActivityData.js
+
+
+
+LinkageActivityData.js
+getStatus(): number
+setStatus(value: number): void
+getLastStatus(): number
+getRecords(): Object
+setRecords(value: Object): void
+getLastRecords(): Object
+getGame_id(): number
+setGame_id(value: number): void
+getLastGame_id(): number
+getBegin_time(): number
+setBegin_time(value: number): void
+getLastBegin_time(): number
+getEnd_time(): number
+setEnd_time(value: number): void
+getLastEnd_time(): number
+getAct_status(): number
+setAct_status(value: number): void
+getLastAct_status(): number
+
+
+MailData.js
+
+
+
+MineCraftData.js
+getMines(): Object
+setMines(value: Object): void
+getLastMines(): Object
+getSelfMoney(): number
+setSelfMoney(value: number): void
+getLastSelfMoney(): number
+getSelfLastProduceTime(): number
+setSelfLastProduceTime(value: number): void
+getLastSelfLastProduceTime(): number
+getSelfLastTime(): number
+setSelfLastTime(value: number): void
+getLastSelfLastTime(): number
+getSelfMineId(): number
+setSelfMineId(value: number): void
+getLastSelfMineId(): number
+getMineRoads(): Object
+setMineRoads(value: Object): void
+getLastMineRoads(): Object
+getMidPoints(): Object
+setMidPoints(value: Object): void
+getLastMidPoints(): Object
+getMyArmyValue(): number
+setMyArmyValue(value: number): void
+getLastMyArmyValue(): number
+getRoads(): Object
+setRoads(value: Object): void
+getLastRoads(): Object
+getAttackReport(): Object
+setAttackReport(value: Object): void
+getLastAttackReport(): Object
+getKillType(): number
+setKillType(value: number): void
+getLastKillType(): number
+getTargetPos(): number
+setTargetPos(value: number): void
+getLastTargetPos(): number
+getPrivilegeTime(): number
+setPrivilegeTime(value: number): void
+getLastPrivilegeTime(): number
+isReachTimeLimit(): boolean
+setReachTimeLimit(value: boolean): void
+isLastReachTimeLimit(): boolean
+
+
+MineData.js
+getId(): number
+setId(value: number): void
+getLastId(): number
+getConfigData(): Object
+setConfigData(value: Object): void
+getLastConfigData(): Object
+getGuildId(): number
+setGuildId(value: number): void
+getLastGuildId(): number
+getGuildName(): string
+setGuildName(value: string): void
+getLastGuildName(): string
+getUserCnt(): number
+setUserCnt(value: number): void
+getLastUserCnt(): number
+getUsers(): Object
+setUsers(value: Object): void
+getLastUsers(): Object
+isOwn(): boolean
+setOwn(value: boolean): void
+isLastOwn(): boolean
+getGuildIcon(): number
+setGuildIcon(value: number): void
+getLastGuildIcon(): number
+getMultiple(): number
+setMultiple(value: number): void
+getLastMultiple(): number
+
+
+MineDistrictData.js
+getId(): number
+setId(value: number): void
+getLastId(): number
+getConfigData(): Object
+setConfigData(value: Object): void
+getLastConfigData(): Object
+getMineIdList(): Object
+setMineIdList(value: Object): void
+getLastMineIdList(): Object
+getMineImageList(): Object
+setMineImageList(value: Object): void
+getLastMineImageList(): Object
+getGuildId(): number
+setGuildId(value: number): void
+getLastGuildId(): number
+getGuildName(): string
+setGuildName(value: string): void
+getLastGuildName(): string
+
+
+MineReportData.js
+getBase_id(): number
+setBase_id(value: number): void
+getLastBase_id(): number
+getAvatar_base_id(): number
+setAvatar_base_id(value: number): void
+getLastAvatar_base_id(): number
+getLevel(): number
+setLevel(value: number): void
+getLastLevel(): number
+getFight_time(): number
+setFight_time(value: number): void
+getLastFight_time(): number
+getName(): string
+setName(value: string): void
+getLastName(): string
+getOfficer_level(): number
+setOfficer_level(value: number): void
+getLastOfficer_level(): number
+getPower(): number
+setPower(value: number): void
+getLastPower(): number
+getUid(): number
+setUid(value: number): void
+getLastUid(): number
+getWin_type(): number
+setWin_type(value: number): void
+getLastWin_type(): number
+getSelf_dec_army(): number
+setSelf_dec_army(value: number): void
+getLastSelf_dec_army(): number
+getTar_dec_army(): number
+setTar_dec_army(value: number): void
+getLastTar_dec_army(): number
+isSelf_is_die(): boolean
+setSelf_is_die(value: boolean): void
+isLastSelf_is_die(): boolean
+isTar_is_die(): boolean
+setTar_is_die(value: boolean): void
+isLastTar_is_die(): boolean
+getReport_id(): number
+setReport_id(value: number): void
+getLastReport_id(): number
+getReport_type(): number
+setReport_type(value: number): void
+getLastReport_type(): number
+getSelf_army(): number
+setSelf_army(value: number): void
+getLastSelf_army(): number
+getTar_army(): number
+setTar_army(value: number): void
+getLastTar_army(): number
+isSelf_is_privilege(): boolean
+setSelf_is_privilege(value: boolean): void
+isLastSelf_is_privilege(): boolean
+isTar_is_privilege(): boolean
+setTar_is_privilege(value: boolean): void
+isLastTar_is_privilege(): boolean
+
+
+MineSystemNotifyData.js
+getSn_type(): number
+setSn_type(value: number): void
+getLastSn_type(): number
+getContent(): Object
+setContent(value: Object): void
+getLastContent(): Object
+getTime(): number
+setTime(value: number): void
+getLastTime(): number
+
+
+MineUserData.js
+getUser_id(): number
+setUser_id(value: number): void
+getLastUser_id(): number
+getUser_name(): string
+setUser_name(value: string): void
+getLastUser_name(): string
+getGuild_id(): number
+setGuild_id(value: number): void
+getLastGuild_id(): number
+getGuild_name(): string
+setGuild_name(value: string): void
+getLastGuild_name(): string
+getArmy_value(): number
+setArmy_value(value: number): void
+getLastArmy_value(): number
+getTired_value(): number
+setTired_value(value: number): void
+getLastTired_value(): number
+getOfficer_level(): number
+setOfficer_level(value: number): void
+getLastOfficer_level(): number
+getBase_id(): number
+setBase_id(value: number): void
+getLastBase_id(): number
+getPower(): number
+setPower(value: number): void
+getLastPower(): number
+getGuild_level(): number
+setGuild_level(value: number): void
+getLastGuild_level(): number
+getGuild_exp(): number
+setGuild_exp(value: number): void
+getLastGuild_exp(): number
+getBuff_id(): Object
+setBuff_id(value: Object): void
+getLastBuff_id(): Object
+getAvatar_base_id(): number
+setAvatar_base_id(value: number): void
+getLastAvatar_base_id(): number
+getGuild_icon(): number
+setGuild_icon(value: number): void
+getLastGuild_icon(): number
+getTitle(): number
+setTitle(value: number): void
+getLastTitle(): number
+getPrivilege_time(): number
+setPrivilege_time(value: number): void
+getLastPrivilege_time(): number
+
+
+NextFunctionOpenData.js
+
+
+
+PetData.js
+isListDataDirty(): boolean
+setListDataDirty(value: boolean): void
+isLastListDataDirty(): boolean
+isRangeDataDirty(): boolean
+setRangeDataDirty(value: boolean): void
+isLastRangeDataDirty(): boolean
+isFragmentDataDirty(): boolean
+setFragmentDataDirty(value: boolean): void
+isLastFragmentDataDirty(): boolean
+isRecoveryDataDirty(): boolean
+setRecoveryDataDirty(value: boolean): void
+isLastRecoveryDataDirty(): boolean
+isRecoveryAutoDataDirty(): boolean
+setRecoveryAutoDataDirty(value: boolean): void
+isLastRecoveryAutoDataDirty(): boolean
+isRebornDataDirty(): boolean
+setRebornDataDirty(value: boolean): void
+isLastRebornDataDirty(): boolean
+
+
+PetUnitData.js
+getId(): number
+setId(value: number): void
+getLastId(): number
+getBase_id(): number
+setBase_id(value: number): void
+getLastBase_id(): number
+getLevel(): number
+setLevel(value: number): void
+getLastLevel(): number
+getExp(): number
+setExp(value: number): void
+getLastExp(): number
+getStar(): number
+setStar(value: number): void
+getLastStar(): number
+getConfig(): Object
+setConfig(value: Object): void
+getLastConfig(): Object
+getMaterials(): Object
+setMaterials(value: Object): void
+getLastMaterials(): Object
+getRecycle_materials(): Object
+setRecycle_materials(value: Object): void
+getLastRecycle_materials(): Object
+
+
+QinTombData.js
+
+
+
+QinTombMonsterData.js
+getPoint_id(): number
+setPoint_id(value: number): void
+getLastPoint_id(): number
+getMonster_type(): number
+setMonster_type(value: number): void
+getLastMonster_type(): number
+getBegin_time(): number
+setBegin_time(value: number): void
+getLastBegin_time(): number
+getLeft_time(): number
+setLeft_time(value: number): void
+getLastLeft_time(): number
+getOwn_team_id(): number
+setOwn_team_id(value: number): void
+getLastOwn_team_id(): number
+getBattle_team_id(): number
+setBattle_team_id(value: number): void
+getLastBattle_team_id(): number
+getStop_time(): number
+setStop_time(value: number): void
+getLastStop_time(): number
+getReborn_time(): number
+setReborn_time(value: number): void
+getLastReborn_time(): number
+getConfig(): Object
+setConfig(value: Object): void
+getLastConfig(): Object
+getBaseId(): number
+setBaseId(value: number): void
+getLastBaseId(): number
+getColor(): number
+setColor(value: number): void
+getLastColor(): number
+getSpeed(): number
+setSpeed(value: number): void
+getLastSpeed(): number
+getName(): string
+setName(value: string): void
+getLastName(): string
+
+
+QinTombUnitData.js
+getTeam_info(): Object
+setTeam_info(value: Object): void
+getLastTeam_info(): Object
+getPath(): Object
+setPath(value: Object): void
+getLastPath(): Object
+getBegin_time(): number
+setBegin_time(value: number): void
+getLastBegin_time(): number
+getNeed_time(): number
+setNeed_time(value: number): void
+getLastNeed_time(): number
+getReborn_time(): number
+setReborn_time(value: number): void
+getLastReborn_time(): number
+getTitle(): number
+setTitle(value: number): void
+getLastTitle(): number
+
+
+QuestionnaireData.js
+
+
+
+QuestionnaireUnitData.js
+getId(): number
+setId(value: number): void
+getLastId(): number
+getLink(): string
+setLink(value: string): void
+getLastLink(): string
+getStart_time(): number
+setStart_time(value: number): void
+getLastStart_time(): number
+getEnd_time(): number
+setEnd_time(value: number): void
+getLastEnd_time(): number
+getLevel_min(): number
+setLevel_min(value: number): void
+getLastLevel_min(): number
+getLevel_max(): number
+setLevel_max(value: number): void
+getLastLevel_max(): number
+getVip_min(): number
+setVip_min(value: number): void
+getLastVip_min(): number
+getVip_max(): number
+setVip_max(value: number): void
+getLastVip_max(): number
+isApply(): boolean
+setApply(value: boolean): void
+isLastApply(): boolean
+
+
+RechargeBaseData.js
+getId(): number
+setId(value: number): void
+getLastId(): number
+getConfig(): Object
+setConfig(value: Object): void
+getLastConfig(): Object
+
+
+RechargeData.js
+
+
+
+RechargeMonthCardData.js
+getId(): number
+setId(value: number): void
+getLastId(): number
+getConfig(): Object
+setConfig(value: Object): void
+getLastConfig(): Object
+getRemainDay(): number
+setRemainDay(value: number): void
+getLastRemainDay(): number
+isCanReceive(): boolean
+setCanReceive(value: boolean): void
+isLastCanReceive(): boolean
+
+
+RechargeRebateData.js
+getBaseActivityData(): Object
+setBaseActivityData(value: Object): void
+getLastBaseActivityData(): Object
+
+
+RecruitData.js
+getNormal_cnt(): number
+setNormal_cnt(value: number): void
+getLastNormal_cnt(): number
+getNormal_free_time(): number
+setNormal_free_time(value: number): void
+getLastNormal_free_time(): number
+getGold_cnt(): number
+setGold_cnt(value: number): void
+getLastGold_cnt(): number
+getRecruit_point(): number
+setRecruit_point(value: number): void
+getLastRecruit_point(): number
+getRecruit_point_get(): number
+setRecruit_point_get(value: number): void
+getLastRecruit_point_get(): number
+getGold_baodi_cnt(): number
+setGold_baodi_cnt(value: number): void
+getLastGold_baodi_cnt(): number
+getDaily_normal_cnt(): number
+setDaily_normal_cnt(value: number): void
+getLastDaily_normal_cnt(): number
+getDaily_gold_cnt(): number
+setDaily_gold_cnt(value: number): void
+getLastDaily_gold_cnt(): number
+
+
+RedPacketRainData.js
+getActId(): number
+setActId(value: number): void
+getLastActId(): number
+getEmpty_big_num(): number
+setEmpty_big_num(value: number): void
+getLastEmpty_big_num(): number
+getEmpty_small_num(): number
+setEmpty_small_num(value: number): void
+getLastEmpty_small_num(): number
+getRob_big_num(): number
+setRob_big_num(value: number): void
+getLastRob_big_num(): number
+getRob_small_num(): number
+setRob_small_num(value: number): void
+getLastRob_small_num(): number
+getAct_end_time(): number
+setAct_end_time(value: number): void
+getLastAct_end_time(): number
+getAct_start_time(): number
+setAct_start_time(value: number): void
+getLastAct_start_time(): number
+
+
+RedPacketRainUnitData.js
+getId(): string
+setId(value: string): void
+getLastId(): string
+getRedpacket_type(): string
+setRedpacket_type(value: string): void
+getLastRedpacket_type(): string
+getMoney(): number
+setMoney(value: number): void
+getLastMoney(): number
+isRob(): boolean
+setRob(value: boolean): void
+isLastRob(): boolean
+
+
+RedPointData.js
+
+
+
+RedPointHelper.js
+
+
+
+RollNoticeData.js
+
+
+
+RunningManData.js
+getUser_bet(): Object
+setUser_bet(value: Object): void
+getLastUser_bet(): Object
+getBet_info(): Object
+setBet_info(value: Object): void
+getLastBet_info(): Object
+getWin_hero(): number
+setWin_hero(value: number): void
+getLastWin_hero(): number
+getMatch_info(): Object
+setMatch_info(value: Object): void
+getLastMatch_info(): Object
+getStart_time(): number
+setStart_time(value: number): void
+getLastStart_time(): number
+getEnd_time(): number
+setEnd_time(value: number): void
+getLastEnd_time(): number
+getBet_end(): number
+setBet_end(value: number): void
+getLastBet_end(): number
+getMatch_start(): number
+setMatch_start(value: number): void
+getLastMatch_start(): number
+getMatch_end(): number
+setMatch_end(value: number): void
+getLastMatch_end(): number
+getOpen_times(): number
+setOpen_times(value: number): void
+getLastOpen_times(): number
+getHistroy(): Object
+setHistroy(value: Object): void
+getLastHistroy(): Object
+
+
+RunningManUnitData.js
+getHero_id(): number
+setHero_id(value: number): void
+getLastHero_id(): number
+getRoad_num(): number
+setRoad_num(value: number): void
+getLastRoad_num(): number
+getRank(): number
+setRank(value: number): void
+getLastRank(): number
+
+
+SeasonSilkData.js
+
+
+
+SeasonSportData.js
+getCurSeason(): number
+setCurSeason(value: number): void
+getLastCurSeason(): number
+getSeason_Stage(): number
+setSeason_Stage(value: number): void
+getLastSeason_Stage(): number
+isInHerit(): boolean
+setInHerit(value: boolean): void
+isLastInHerit(): boolean
+getSeasonStartTime(): number
+setSeasonStartTime(value: number): void
+getLastSeasonStartTime(): number
+getSeasonEndTime(): number
+setSeasonEndTime(value: number): void
+getLastSeasonEndTime(): number
+getLastSeason_Star(): number
+setLastSeason_Star(value: number): void
+getLastLastSeason_Star(): number
+getCurSeason_Star(): number
+setCurSeason_Star(value: number): void
+getLastCurSeason_Star(): number
+getServerId(): number
+setServerId(value: number): void
+getLastServerId(): number
+getPrior(): number
+setPrior(value: number): void
+getLastPrior(): number
+getSuspendTime(): number
+setSuspendTime(value: number): void
+getLastSuspendTime(): number
+getSilkGroupInfo(): Object
+setSilkGroupInfo(value: Object): void
+getLastSilkGroupInfo(): Object
+isReceivedRewards(): boolean
+setReceivedRewards(value: boolean): void
+isLastReceivedRewards(): boolean
+getBindedSilkGroups(): Object
+setBindedSilkGroups(value: Object): void
+getLastBindedSilkGroups(): Object
+isOnGoing(): boolean
+setOnGoing(value: boolean): void
+isLastOnGoing(): boolean
+getSeason_Fight_Num(): number
+setSeason_Fight_Num(value: number): void
+getLastSeason_Fight_Num(): number
+getSeason_Win_Num(): number
+setSeason_Win_Num(value: number): void
+getLastSeason_Win_Num(): number
+getOwnRank(): number
+setOwnRank(value: number): void
+getLastOwnRank(): number
+getOwnFightCount(): number
+setOwnFightCount(value: number): void
+getLastOwnFightCount(): number
+getOwnWinCount(): number
+setOwnWinCount(value: number): void
+getLastOwnWinCount(): number
+getOwnFightReport(): Object
+setOwnFightReport(value: Object): void
+getLastOwnFightReport(): Object
+getOwn_DanInfo(): Object
+setOwn_DanInfo(value: Object): void
+getLastOwn_DanInfo(): Object
+getOther_DanInfo(): Object
+setOther_DanInfo(value: Object): void
+getLastOther_DanInfo(): Object
+getCurrentRound(): number
+setCurrentRound(value: number): void
+getLastCurrentRound(): number
+getCurrentRound_EndTime(): number
+setCurrentRound_EndTime(value: number): void
+getLastCurrentRound_EndTime(): number
+getOwn_SquadInfo(): Object
+setOwn_SquadInfo(value: Object): void
+getLastOwn_SquadInfo(): Object
+getOwn_SquadType(): Object
+setOwn_SquadType(value: Object): void
+getLastOwn_SquadType(): Object
+getOther_SquadInfo(): Object
+setOther_SquadInfo(value: Object): void
+getLastOther_SquadInfo(): Object
+getTimeOutCD(): number
+setTimeOutCD(value: number): void
+getLastTimeOutCD(): number
+isSquadOffline(): boolean
+setSquadOffline(value: boolean): void
+isLastSquadOffline(): boolean
+isSquadReconnect(): boolean
+setSquadReconnect(value: boolean): void
+isLastSquadReconnect(): boolean
+isInSquadSelectView(): boolean
+setInSquadSelectView(value: boolean): void
+isLastInSquadSelectView(): boolean
+getDailyFightReward(): Object
+setDailyFightReward(value: Object): void
+getLastDailyFightReward(): Object
+getDailyWinReward(): Object
+setDailyWinReward(value: Object): void
+getLastDailyWinReward(): Object
+getFightNum(): number
+setFightNum(value: number): void
+getLastFightNum(): number
+getWinNum(): number
+setWinNum(value: number): void
+getLastWinNum(): number
+getSeasonPets(): Object
+setSeasonPets(value: Object): void
+getLastSeasonPets(): Object
+getSeasonPetsStar(): number
+setSeasonPetsStar(value: number): void
+getLastSeasonPetsStar(): number
+getBanHeros(): Object
+setBanHeros(value: Object): void
+getLastBanHeros(): Object
+getBanPets(): Object
+setBanPets(value: Object): void
+getLastBanPets(): Object
+isBanPick(): boolean
+setBanPick(value: boolean): void
+isLastBanPick(): boolean
+isPlayReport(): boolean
+setPlayReport(value: boolean): void
+isLastPlayReport(): boolean
+
+
+ServerData.js
+getName(): string
+setName(value: string): void
+getLastName(): string
+getStatus(): number
+setStatus(value: number): void
+getLastStatus(): number
+getServer(): number
+setServer(value: number): void
+getLastServer(): number
+getOpentime(): string
+setOpentime(value: string): void
+getLastOpentime(): string
+isHide(): boolean
+setHide(value: boolean): void
+isLastHide(): boolean
+
+
+ServerGroupData.js
+getGroupid(): number
+setGroupid(value: number): void
+getLastGroupid(): number
+getGroupname(): string
+setGroupname(value: string): void
+getLastGroupname(): string
+getServers(): string
+setServers(value: string): void
+getLastServers(): string
+
+
+ServerListRoleUnitData.js
+getUid(): number
+setUid(value: number): void
+getLastUid(): number
+getUuid(): string
+setUuid(value: string): void
+getLastUuid(): string
+getServer_id(): number
+setServer_id(value: number): void
+getLastServer_id(): number
+getRole_name(): string
+setRole_name(value: string): void
+getLastRole_name(): string
+getRole_lv(): number
+setRole_lv(value: number): void
+getLastRole_lv(): number
+getIp(): string
+setIp(value: string): void
+getLastIp(): string
+getCreate_time(): number
+setCreate_time(value: number): void
+getLastCreate_time(): number
+getUpdate_time(): number
+setUpdate_time(value: number): void
+getLastUpdate_time(): number
+
+
+ServerRecordData.js
+
+
+
+ShopActiveData.js
+
+
+
+ShopActiveUnitData.js
+getGoods_id(): number
+setGoods_id(value: number): void
+getLastGoods_id(): number
+getBuy_count(): number
+setBuy_count(value: number): void
+getLastBuy_count(): number
+getConfig(): Object
+setConfig(value: Object): void
+getLastConfig(): Object
+
+
+ShopData.js
+
+
+
+ShopItemData.js
+getGoodId(): number
+setGoodId(value: number): void
+getLastGoodId(): number
+getGoodNo(): number
+setGoodNo(value: number): void
+getLastGoodNo(): number
+getBuyCount(): number
+setBuyCount(value: number): void
+getLastBuyCount(): number
+getShopId(): number
+setShopId(value: number): void
+getLastShopId(): number
+getConfigType(): string
+setConfigType(value: string): void
+getLastConfigType(): string
+getConfig(): Object
+setConfig(value: Object): void
+getLastConfig(): Object
+getIsCanBuy(): boolean
+setIsCanBuy(value: boolean): void
+getLastIsCanBuy(): boolean
+getIsHaveBuy(): boolean
+setIsHaveBuy(value: boolean): void
+getLastIsHaveBuy(): boolean
+
+
+SiegeBaseData.js
+getUid(): number
+setUid(value: number): void
+getLastUid(): number
+getUser_name(): string
+setUser_name(value: string): void
+getLastUser_name(): string
+getOfficer_level(): number
+setOfficer_level(value: number): void
+getLastOfficer_level(): number
+getId(): number
+setId(value: number): void
+getLastId(): number
+getEnd_time(): number
+setEnd_time(value: number): void
+getLastEnd_time(): number
+getHp_now(): number
+setHp_now(value: number): void
+getLastHp_now(): number
+getHp_max(): number
+setHp_max(value: number): void
+getLastHp_max(): number
+getKiller_id(): number
+setKiller_id(value: number): void
+getLastKiller_id(): number
+getKiller_name(): string
+setKiller_name(value: string): void
+getLastKiller_name(): string
+getKiller_officer_level(): number
+setKiller_officer_level(value: number): void
+getLastKiller_officer_level(): number
+isPublic(): boolean
+setPublic(value: boolean): void
+isLastPublic(): boolean
+getBoss_level(): number
+setBoss_level(value: number): void
+getLastBoss_level(): number
+isBoxEmpty(): boolean
+setBoxEmpty(value: boolean): void
+isLastBoxEmpty(): boolean
+isNotExist(): boolean
+setNotExist(value: boolean): void
+isLastNotExist(): boolean
+
+
+SiegeData.js
+getTotal_hurt(): number
+setTotal_hurt(value: number): void
+getLastTotal_hurt(): number
+getHurtRewardIds(): Object
+setHurtRewardIds(value: Object): void
+getLastHurtRewardIds(): Object
+getCountRewardIds(): Object
+setCountRewardIds(value: Object): void
+getLastCountRewardIds(): Object
+getUserLevel(): number
+setUserLevel(value: number): void
+getLastUserLevel(): number
+getUserRank(): number
+setUserRank(value: number): void
+getLastUserRank(): number
+getUserGuildRank(): number
+setUserGuildRank(value: number): void
+getLastUserGuildRank(): number
+getSiegeEnemys(): Object
+setSiegeEnemys(value: Object): void
+getLastSiegeEnemys(): Object
+isHasEnemy(): boolean
+setHasEnemy(value: boolean): void
+isLastHasEnemy(): boolean
+
+
+SiegeGuildRankBaseData.js
+getRank(): number
+setRank(value: number): void
+getLastRank(): number
+getName(): string
+setName(value: string): void
+getLastName(): string
+getHurt(): number
+setHurt(value: number): void
+getLastHurt(): number
+getGuild_id(): number
+setGuild_id(value: number): void
+getLastGuild_id(): number
+
+
+SiegeRankBaseData.js
+getRank(): number
+setRank(value: number): void
+getLastRank(): number
+getName(): string
+setName(value: string): void
+getLastName(): string
+getHurt(): number
+setHurt(value: number): void
+getLastHurt(): number
+getUser_id(): number
+setUser_id(value: number): void
+getLastUser_id(): number
+getLevel(): number
+setLevel(value: number): void
+getLastLevel(): number
+getOfficer_level(): number
+setOfficer_level(value: number): void
+getLastOfficer_level(): number
+
+
+SiegeRankData.js
+getSelfRank(): number
+setSelfRank(value: number): void
+getLastSelfRank(): number
+getSelfGuildRank(): number
+setSelfGuildRank(value: number): void
+getLastSelfGuildRank(): number
+getRankDatas(): Object
+setRankDatas(value: Object): void
+getLastRankDatas(): Object
+getGuildRankDatas(): Object
+setGuildRankDatas(value: Object): void
+getLastGuildRankDatas(): Object
+
+
+SilkbagData.js
+
+
+
+SilkbagOnTeamData.js
+
+
+
+SilkbagOnTeamUnitData.js
+getPos(): number
+setPos(value: number): void
+getLastPos(): number
+getIndex(): number
+setIndex(value: number): void
+getLastIndex(): number
+getSilkbag_id(): number
+setSilkbag_id(value: number): void
+getLastSilkbag_id(): number
+
+
+SilkbagUnitData.js
+getId(): number
+setId(value: number): void
+getLastId(): number
+getBase_id(): number
+setBase_id(value: number): void
+getLastBase_id(): number
+getType(): number
+setType(value: number): void
+getLastType(): number
+getConfig(): Object
+setConfig(value: Object): void
+getLastConfig(): Object
+
+
+SimpleUserData.js
+getUser_id(): number
+setUser_id(value: number): void
+getLastUser_id(): number
+getName(): string
+setName(value: string): void
+getLastName(): string
+getOfficer_level(): number
+setOfficer_level(value: number): void
+getLastOfficer_level(): number
+getLeader(): number
+setLeader(value: number): void
+getLastLeader(): number
+getAvatar_base_id(): number
+setAvatar_base_id(value: number): void
+getLastAvatar_base_id(): number
+getTitle(): number
+setTitle(value: number): void
+getLastTitle(): number
+getLevel(): number
+setLevel(value: number): void
+getLastLevel(): number
+
+
+SingleRaceData.js
+getNow_round(): number
+setNow_round(value: number): void
+getLastNow_round(): number
+getRound_begin_time(): number
+setRound_begin_time(value: number): void
+getLastRound_begin_time(): number
+getSupport_pos(): number
+setSupport_pos(value: number): void
+getLastSupport_pos(): number
+getSupport_user_id(): number
+setSupport_user_id(value: number): void
+getLastSupport_user_id(): number
+getMy_server_id(): number
+setMy_server_id(value: number): void
+getLastMy_server_id(): number
+getCurWatchPos(): number
+setCurWatchPos(value: number): void
+getLastCurWatchPos(): number
+getStatus(): number
+setStatus(value: number): void
+getLastStatus(): number
+
+
+SingleRaceGuessServerData.js
+getServer_id(): number
+setServer_id(value: number): void
+getLastServer_id(): number
+getServer_name(): string
+setServer_name(value: string): void
+getLastServer_name(): string
+getPower(): number
+setPower(value: number): void
+getLastPower(): number
+isVoted(): boolean
+setVoted(value: boolean): void
+isLastVoted(): boolean
+
+
+SingleRaceGuessUnitData.js
+getAnswer_id(): number
+setAnswer_id(value: number): void
+getLastAnswer_id(): number
+getSupport(): Object
+setSupport(value: Object): void
+getLastSupport(): Object
+getMy_support(): number
+setMy_support(value: number): void
+getLastMy_support(): number
+
+
+SingleRaceMatchData.js
+getUser_id(): number
+setUser_id(value: number): void
+getLastUser_id(): number
+getPosition(): number
+setPosition(value: number): void
+getLastPosition(): number
+getAtk_user_support(): number
+setAtk_user_support(value: number): void
+getLastAtk_user_support(): number
+getDef_user_support(): number
+setDef_user_support(value: number): void
+getLastDef_user_support(): number
+
+
+SingleRacePlayerRankData.js
+getServer_id(): number
+setServer_id(value: number): void
+getLastServer_id(): number
+getServer_name(): string
+setServer_name(value: string): void
+getLastServer_name(): string
+getSorce(): number
+setSorce(value: number): void
+getLastSorce(): number
+getRank(): number
+setRank(value: number): void
+getLastRank(): number
+getUser_id(): number
+setUser_id(value: number): void
+getLastUser_id(): number
+getUser_name(): string
+setUser_name(value: string): void
+getLastUser_name(): string
+
+
+SingleRaceReportData.js
+getPosition(): number
+setPosition(value: number): void
+getLastPosition(): number
+getBattle_no(): number
+setBattle_no(value: number): void
+getLastBattle_no(): number
+getAtk_user(): number
+setAtk_user(value: number): void
+getLastAtk_user(): number
+getDef_user(): number
+setDef_user(value: number): void
+getLastDef_user(): number
+getWin_user(): number
+setWin_user(value: number): void
+getLastWin_user(): number
+getFirst_hand(): number
+setFirst_hand(value: number): void
+getLastFirst_hand(): number
+getAtk_power(): number
+setAtk_power(value: number): void
+getLastAtk_power(): number
+getDef_power(): number
+setDef_power(value: number): void
+getLastDef_power(): number
+getAtk_heros(): Object
+setAtk_heros(value: Object): void
+getLastAtk_heros(): Object
+getDef_heros(): Object
+setDef_heros(value: Object): void
+getLastDef_heros(): Object
+getReport_id(): number
+setReport_id(value: number): void
+getLastReport_id(): number
+getWinnerSide(): number
+setWinnerSide(value: number): void
+getLastWinnerSide(): number
+
+
+SingleRaceServerRankData.js
+getServer_id(): number
+setServer_id(value: number): void
+getLastServer_id(): number
+getServer_name(): string
+setServer_name(value: string): void
+getLastServer_name(): string
+getSorce(): number
+setSorce(value: number): void
+getLastSorce(): number
+getRank(): number
+setRank(value: number): void
+getLastRank(): number
+
+
+SingleRaceUserData.js
+getUser_id(): number
+setUser_id(value: number): void
+getLastUser_id(): number
+getUser_name(): string
+setUser_name(value: string): void
+getLastUser_name(): string
+getPower(): number
+setPower(value: number): void
+getLastPower(): number
+getBase_id(): number
+setBase_id(value: number): void
+getLastBase_id(): number
+getRank(): number
+setRank(value: number): void
+getLastRank(): number
+getAvatar_base_id(): number
+setAvatar_base_id(value: number): void
+getLastAvatar_base_id(): number
+getOfficer_level(): number
+setOfficer_level(value: number): void
+getLastOfficer_level(): number
+getServer_id(): number
+setServer_id(value: number): void
+getLastServer_id(): number
+getServer_name(): string
+setServer_name(value: string): void
+getLastServer_name(): string
+getFormation(): Object
+setFormation(value: Object): void
+getLastFormation(): Object
+getEmbattle(): Object
+setEmbattle(value: Object): void
+getLastEmbattle(): Object
+getHero_data(): Object
+setHero_data(value: Object): void
+getLastHero_data(): Object
+
+
+StageBaseData.js
+getId(): number
+setId(value: number): void
+getLastId(): number
+getStar(): number
+setStar(value: number): void
+getLastStar(): number
+getExecute_count(): number
+setExecute_count(value: number): void
+getLastExecute_count(): number
+isIs_finished(): boolean
+setIs_finished(value: boolean): void
+isLastIs_finished(): boolean
+getReset_count(): number
+setReset_count(value: number): void
+getLastReset_count(): number
+isReceive_box(): boolean
+setReceive_box(value: boolean): void
+isLastReceive_box(): boolean
+getConfigData(): Object
+setConfigData(value: Object): void
+getLastConfigData(): Object
+getKiller(): string
+setKiller(value: string): void
+getLastKiller(): string
+getKillerId(): number
+setKillerId(value: number): void
+getLastKillerId(): number
+
+
+StageData.js
+getStages(): Object
+setStages(value: Object): void
+getLastStages(): Object
+getNowFightStage(): number
+setNowFightStage(value: number): void
+getLastNowFightStage(): number
+
+
+StarRankBaseData.js
+getRank(): number
+setRank(value: number): void
+getLastRank(): number
+getAvatar_base_id(): number
+setAvatar_base_id(value: number): void
+getLastAvatar_base_id(): number
+getName(): string
+setName(value: string): void
+getLastName(): string
+getStar(): number
+setStar(value: number): void
+getLastStar(): number
+getUser_id(): number
+setUser_id(value: number): void
+getLastUser_id(): number
+getLevel(): number
+setLevel(value: number): void
+getLastLevel(): number
+getOfficer_level(): number
+setOfficer_level(value: number): void
+getLastOfficer_level(): number
+getChapter(): number
+setChapter(value: number): void
+getLastChapter(): number
+
+
+StarRankData.js
+getSelfRank(): number
+setSelfRank(value: number): void
+getLastSelfRank(): number
+getStar(): star
+setStar(value: star): void
+getLastStar(): star
+getRankDatas(): Object
+setRankDatas(value: Object): void
+getLastRankDatas(): Object
+
+
+SvipData.js
+
+
+
+SynthesisData.js
+getAwards(): Object
+setAwards(value: Object): void
+getLastAwards(): Object
+
+
+TeamCacheData.js
+isShowHeroTrainFlag(): boolean
+setShowHeroTrainFlag(value: boolean): void
+isLastShowHeroTrainFlag(): boolean
+isShowEquipTrainFlag(): boolean
+setShowEquipTrainFlag(value: boolean): void
+isLastShowEquipTrainFlag(): boolean
+isShowTreasureTrainFlag(): boolean
+setShowTreasureTrainFlag(value: boolean): void
+isLastShowTreasureTrainFlag(): boolean
+isShowInstrumentTrainFlag(): boolean
+setShowInstrumentTrainFlag(value: boolean): void
+isLastShowInstrumentTrainFlag(): boolean
+isShowHorseTrainFlag(): boolean
+setShowHorseTrainFlag(value: boolean): void
+isLastShowHorseTrainFlag(): boolean
+isShowAvatarEquipFlag(): boolean
+setShowAvatarEquipFlag(value: boolean): void
+isLastShowAvatarEquipFlag(): boolean
+isShowAvatarTrainFlag(): boolean
+setShowAvatarTrainFlag(value: boolean): void
+isLastShowAvatarTrainFlag(): boolean
+
+
+TeamData.js
+getHeroIds(): Object
+setHeroIds(value: Object): void
+getLastHeroIds(): Object
+getPetIds(): Object
+setPetIds(value: Object): void
+getLastPetIds(): Object
+getEmbattle(): Object
+setEmbattle(value: Object): void
+getLastEmbattle(): Object
+getSecondHeroIds(): Object
+setSecondHeroIds(value: Object): void
+getLastSecondHeroIds(): Object
+getCurPos(): number
+setCurPos(value: number): void
+getLastCurPos(): number
+
+
+TeamRedPointData.js
+
+
+
+TerritoryData.js
+
+
+
+TerritoryUnit.js
+
+
+
+TextInputData.js
+getLastInputCache(): Object
+setLastInputCache(value: Object): void
+getLastLastInputCache(): Object
+
+
+TimeExpiredData.js
+
+
+
+TimeLimitActivityData.js
+
+
+
+TowerBaseData.js
+getId(): number
+setId(value: number): void
+getLastId(): number
+getStar(): number
+setStar(value: number): void
+getLastStar(): number
+getNow_star(): number
+setNow_star(value: number): void
+getLastNow_star(): number
+isReceive_box(): boolean
+setReceive_box(value: boolean): void
+isLastReceive_box(): boolean
+
+
+TowerData.js
+getNow_layer(): number
+setNow_layer(value: number): void
+getLastNow_layer(): number
+getNow_star(): number
+setNow_star(value: number): void
+getLastNow_star(): number
+getMax_layer(): number
+setMax_layer(value: number): void
+getLastMax_layer(): number
+getMax_star(): number
+setMax_star(value: number): void
+getLastMax_star(): number
+getLayers(): Object
+setLayers(value: Object): void
+getLastLayers(): Object
+getSurprises(): Object
+setSurprises(value: Object): void
+getLastSurprises(): Object
+isShowStarEft(): boolean
+setShowStarEft(value: boolean): void
+isLastShowStarEft(): boolean
+getSpuer_cnt(): number
+setSpuer_cnt(value: number): void
+getLastSpuer_cnt(): number
+getSuperStages(): Object
+setSuperStages(value: Object): void
+getLastSuperStages(): Object
+getShowRewardSuperStageId(): number
+setShowRewardSuperStageId(value: number): void
+getLastShowRewardSuperStageId(): number
+getSuperStageSelectStageId(): number
+setSuperStageSelectStageId(value: number): void
+getLastSuperStageSelectStageId(): number
+
+
+TowerRankBaseData.js
+getRank(): number
+setRank(value: number): void
+getLastRank(): number
+getAvatar_base_id(): number
+setAvatar_base_id(value: number): void
+getLastAvatar_base_id(): number
+getName(): string
+setName(value: string): void
+getLastName(): string
+getStar(): number
+setStar(value: number): void
+getLastStar(): number
+getUser_id(): number
+setUser_id(value: number): void
+getLastUser_id(): number
+getLevel(): number
+setLevel(value: number): void
+getLastLevel(): number
+getOfficer_level(): number
+setOfficer_level(value: number): void
+getLastOfficer_level(): number
+getLayer(): number
+setLayer(value: number): void
+getLastLayer(): number
+
+
+TowerRankData.js
+getSelfRank(): number
+setSelfRank(value: number): void
+getLastSelfRank(): number
+getRankDatas(): Object
+setRankDatas(value: Object): void
+getLastRankDatas(): Object
+
+
+TowerSuperStageUnitData.js
+getId(): number
+setId(value: number): void
+getLastId(): number
+getConfig(): Object
+setConfig(value: Object): void
+getLastConfig(): Object
+isPass(): boolean
+setPass(value: boolean): void
+isLastPass(): boolean
+
+
+TowerSurpriseData.js
+getSurprise_id(): number
+setSurprise_id(value: number): void
+getLastSurprise_id(): number
+isWin(): boolean
+setWin(value: boolean): void
+isLastWin(): boolean
+
+
+TreasureData.js
+getCurTreasureId(): number
+setCurTreasureId(value: number): void
+getLastCurTreasureId(): number
+
+
+TreasureUnitData.js
+getId(): number
+setId(value: number): void
+getLastId(): number
+getBase_id(): number
+setBase_id(value: number): void
+getLastBase_id(): number
+getUser_id(): number
+setUser_id(value: number): void
+getLastUser_id(): number
+getLevel(): number
+setLevel(value: number): void
+getLastLevel(): number
+getExp(): number
+setExp(value: number): void
+getLastExp(): number
+getHistory_gold(): number
+setHistory_gold(value: number): void
+getLastHistory_gold(): number
+getRefine_level(): number
+setRefine_level(value: number): void
+getLastRefine_level(): number
+getLimit_cost(): number
+setLimit_cost(value: number): void
+getLastLimit_cost(): number
+getMaterials(): Object
+setMaterials(value: Object): void
+getLastMaterials(): Object
+getRecycle_materials(): Object
+setRecycle_materials(value: Object): void
+getLastRecycle_materials(): Object
+getConfig(): Object
+setConfig(value: Object): void
+getLastConfig(): Object
+isYokeRelation(): boolean
+setYokeRelation(value: boolean): void
+isLastYokeRelation(): boolean
+
+
+UIGuideData.js
+
+
+
+UIGuideUnitData.js
+getId(): number
+setId(value: number): void
+getLastId(): number
+getConfig(): Object
+setConfig(value: Object): void
+getLastConfig(): Object
+
+
+UserBaseData.js
+getId(): number
+setId(value: number): void
+getLastId(): number
+getName(): string
+setName(value: string): void
+getLastName(): string
+getLevel(): number
+setLevel(value: number): void
+getLastLevel(): number
+getExp(): number
+setExp(value: number): void
+getLastExp(): number
+getCreate_time(): number
+setCreate_time(value: number): void
+getLastCreate_time(): number
+getOfficer_level(): number
+setOfficer_level(value: number): void
+getLastOfficer_level(): number
+getPower(): number
+setPower(value: number): void
+getLastPower(): number
+getGuide_id(): number
+setGuide_id(value: number): void
+getLastGuide_id(): number
+getOrder_state(): number
+setOrder_state(value: number): void
+getLastOrder_state(): number
+getServer_name(): string
+setServer_name(value: string): void
+getLastServer_name(): string
+getChange_name_count(): number
+setChange_name_count(value: number): void
+getLastChange_name_count(): number
+getRecharge_total(): number
+setRecharge_total(value: number): void
+getLastRecharge_total(): number
+getRecharge_fake_total(): number
+setRecharge_fake_total(value: number): void
+getLastRecharge_fake_total(): number
+getToday_online_time(): number
+setToday_online_time(value: number): void
+getLastToday_online_time(): number
+getOnline_time_update_time(): number
+setOnline_time_update_time(value: number): void
+getLastOnline_time_update_time(): number
+getToday_init_level(): number
+setToday_init_level(value: number): void
+getLastToday_init_level(): number
+getServer_open_time(): number
+setServer_open_time(value: number): void
+getLastServer_open_time(): number
+getAvatar_base_id(): number
+setAvatar_base_id(value: number): void
+getLastAvatar_base_id(): number
+getAvatar_id(): number
+setAvatar_id(value: number): void
+getLastAvatar_id(): number
+getOn_team_pet_id(): number
+setOn_team_pet_id(value: number): void
+getLastOn_team_pet_id(): number
+getCamp(): number
+setCamp(value: number): void
+getLastCamp(): number
+getRecharge_today(): number
+setRecharge_today(value: number): void
+getLastRecharge_today(): number
+isNoticeToday(): boolean
+setNoticeToday(value: boolean): void
+isLastNoticeToday(): boolean
+getVip_qq(): number
+setVip_qq(value: number): void
+getLastVip_qq(): number
+isIs_admit(): boolean
+setIs_admit(value: boolean): void
+isLastIs_admit(): boolean
+getGrave_left_sec(): number
+setGrave_left_sec(value: number): void
+getLastGrave_left_sec(): number
+getGrave_begin_time(): number
+setGrave_begin_time(value: number): void
+getLastGrave_begin_time(): number
+getGrave_assist_sec(): number
+setGrave_assist_sec(value: number): void
+getLastGrave_assist_sec(): number
+getGrave_assist_begin_time(): number
+setGrave_assist_begin_time(value: number): void
+getLastGrave_assist_begin_time(): number
+isIs_white_list(): boolean
+setIs_white_list(value: boolean): void
+isLastIs_white_list(): boolean
+getHead_frame_id(): number
+setHead_frame_id(value: number): void
+getLastHead_frame_id(): number
+getReal_server_name(): string
+setReal_server_name(value: string): void
+getLastReal_server_name(): string
+
+
+UserConfigData.js
+
+
+
+UserDetailData.js
+
+
+
+UserOperaData.js
+
+
+
+UserSettingData.js
+
+
+
+UserTodayData.js
+
+
+
+UserUnitData.js
+getId(): number
+setId(value: number): void
+getLastId(): number
+getName(): string
+setName(value: string): void
+getLastName(): string
+getLevel(): number
+setLevel(value: number): void
+getLastLevel(): number
+getExp(): number
+setExp(value: number): void
+getLastExp(): number
+getCreate_time(): number
+setCreate_time(value: number): void
+getLastCreate_time(): number
+getPower(): number
+setPower(value: number): void
+getLastPower(): number
+getOfficer_level(): number
+setOfficer_level(value: number): void
+getLastOfficer_level(): number
+getServer_name(): string
+setServer_name(value: string): void
+getLastServer_name(): string
+getChange_name_count(): number
+setChange_name_count(value: number): void
+getLastChange_name_count(): number
+getRecharge_total(): number
+setRecharge_total(value: number): void
+getLastRecharge_total(): number
+getGuide_id(): number
+setGuide_id(value: number): void
+getLastGuide_id(): number
+getToday_init_level(): number
+setToday_init_level(value: number): void
+getLastToday_init_level(): number
+getServer_open_time(): number
+setServer_open_time(value: number): void
+getLastServer_open_time(): number
+getAvatar_base_id(): number
+setAvatar_base_id(value: number): void
+getLastAvatar_base_id(): number
+getAvatar_id(): number
+setAvatar_id(value: number): void
+getLastAvatar_id(): number
+getOn_team_pet_id(): number
+setOn_team_pet_id(value: number): void
+getLastOn_team_pet_id(): number
+getOrder_state(): number
+setOrder_state(value: number): void
+getLastOrder_state(): number
+
+
+VipData.js
+getLevel(): number
+setLevel(value: number): void
+getLastLevel(): number
+getExp(): number
+setExp(value: number): void
+getLastExp(): number
+
+
+VipGeneralGoodsData.js
+getProduct_id(): number
+setProduct_id(value: number): void
+getLastProduct_id(): number
+getAwards(): Object
+setAwards(value: Object): void
+getLastAwards(): Object
+getPurchased_times(): number
+setPurchased_times(value: number): void
+getLastPurchased_times(): number
+
+
+VipItemData.js
+
+
+
+VipPayData.js
+isLogin(): boolean
+setLogin(value: boolean): void
+isLastLogin(): boolean
+isFlush(): boolean
+setFlush(value: boolean): void
+isLastFlush(): boolean
+
+
+WorldBossData.js
+getBoss_id(): number
+setBoss_id(value: number): void
+getLastBoss_id(): number
+getStart_time(): number
+setStart_time(value: number): void
+getLastStart_time(): number
+getEnd_time(): number
+setEnd_time(value: number): void
+getLastEnd_time(): number
+getUser_point(): number
+setUser_point(value: number): void
+getLastUser_point(): number
+getChallenge_boss_cnt(): number
+setChallenge_boss_cnt(value: number): void
+getLastChallenge_boss_cnt(): number
+getChallenge_boss_time(): number
+setChallenge_boss_time(value: number): void
+getLastChallenge_boss_time(): number
+getChallenge_user_cnt(): number
+setChallenge_user_cnt(value: number): void
+getLastChallenge_user_cnt(): number
+getChallenge_user_time(): number
+setChallenge_user_time(value: number): void
+getLastChallenge_user_time(): number
+getBechallenge_cnt(): number
+setBechallenge_cnt(value: number): void
+getLastBechallenge_cnt(): number
+getBechallenge_time(): number
+setBechallenge_time(value: number): void
+getLastBechallenge_time(): number
+getGuild_point(): number
+setGuild_point(value: number): void
+getLastGuild_point(): number
+getSelf_user_rank(): number
+setSelf_user_rank(value: number): void
+getLastSelf_user_rank(): number
+getSelf_guild_rank(): number
+setSelf_guild_rank(value: number): void
+getLastSelf_guild_rank(): number
+getEnd_notice(): Object
+setEnd_notice(value: Object): void
+getLastEnd_notice(): Object
+getUser_rank(): Object
+setUser_rank(value: Object): void
+getLastUser_rank(): Object
+getGuild_rank(): Object
+setGuild_rank(value: Object): void
+getLastGuild_rank(): Object
+getUsers(): Object
+setUsers(value: Object): void
+getLastUsers(): Object
+
+

@@ -14,8 +14,10 @@ import { TransformConstraintTimeline } from "./TransformConstraintTimeline"
 import { PathConstraintPositionTimeline } from "./PathConstraintPositionTimeline"
 import { PathConstraintSpacingTimeline } from "./PathConstraintSpacingTimeline"
 import { PathConstraintMixTimeline } from "./PathConstraintMixTimeline"
+import { BlendMode } from "./BlendMode"
 import { Bone } from "./Bone"
 import { BoneData } from "./BoneData"
+import { TransformMode } from "./TransformMode"
 import { ConstraintData } from "./ConstraintData"
 import { Event } from "./Event"
 import { EventData } from "./EventData"
@@ -23,6 +25,9 @@ import { IkConstraint } from "./IkConstraint"
 import { IkConstraintData } from "./IkConstraintData"
 import { PathConstraint } from "./PathConstraint"
 import { PathConstraintData } from "./PathConstraintData"
+import { PositionMode } from "./PositionMode"
+import { SpacingMode } from "./SpacingMode"
+import { RotateMode } from "./RotateMode"
 import { Skeleton } from "./Skeleton"
 import { SkeletonData } from "./SkeletonData"
 import { Skin } from "./Skin"
@@ -33,6 +38,7 @@ import { TransformConstraintData } from "./TransformConstraintData"
 import { Color } from "./Color"
 import { Utils } from "./Utils"
 import { Attachment } from "./Attachment"
+import { AttachmentType } from "./AttachmentType"
 import { BoundingBoxAttachment } from "./BoundingBoxAttachment"
 import { ClippingAttachment } from "./ClippingAttachment"
 import { MeshAttachment } from "./MeshAttachment"
@@ -156,10 +162,10 @@ public attachmentLoader:any;
                 data.rotateMode = SkeletonBinary.RotateModeValues[input.readInt(true)];
                 data.offsetRotation = input.readFloat();
                 data.position = input.readFloat();
-                if (data.positionMode == spine.PositionMode.Fixed)
+                if (data.positionMode == PositionMode.Fixed)
                     data.position *= scale;
                 data.spacing = input.readFloat();
-                if (data.spacingMode == spine.SpacingMode.Length || data.spacingMode == spine.SpacingMode.Fixed)
+                if (data.spacingMode == SpacingMode.Length || data.spacingMode == SpacingMode.Fixed)
                     data.spacing *= scale;
                 data.rotateMix = input.readFloat();
                 data.translateMix = input.readFloat();
@@ -586,12 +592,12 @@ public attachmentLoader:any;
                             var timelineScale = 1;
                             if (timelineType == SkeletonBinary.PATH_SPACING) {
                                 timeline = new PathConstraintSpacingTimeline(frameCount);
-                                if (data.spacingMode == spine.SpacingMode.Length || data.spacingMode == spine.SpacingMode.Fixed)
+                                if (data.spacingMode == SpacingMode.Length || data.spacingMode == SpacingMode.Fixed)
                                     timelineScale = scale;
                             }
                             else {
                                 timeline = new PathConstraintPositionTimeline(frameCount);
-                                if (data.positionMode == spine.PositionMode.Fixed)
+                                if (data.positionMode == PositionMode.Fixed)
                                     timelineScale = scale;
                             }
                             timeline.pathConstraintIndex = index;
@@ -726,11 +732,11 @@ public attachmentLoader:any;
         public setCurve(timeline, frameIndex, cx1, cy1, cx2, cy2) {
             timeline.setCurve(frameIndex, cx1, cy1, cx2, cy2);
         };public static AttachmentTypeValues = [0, 1, 2, 3, 4, 5, 6];
-public static TransformModeValues = [spine.TransformMode.Normal, spine.TransformMode.OnlyTranslation, spine.TransformMode.NoRotationOrReflection, spine.TransformMode.NoScale, spine.TransformMode.NoScaleOrReflection];
-public static PositionModeValues = [spine.PositionMode.Fixed, spine.PositionMode.Percent];
-public static SpacingModeValues = [spine.SpacingMode.Length, spine.SpacingMode.Fixed, spine.SpacingMode.Percent];
-public static RotateModeValues = [spine.RotateMode.Tangent, spine.RotateMode.Chain, spine.RotateMode.ChainScale];
-public static BlendModeValues = [spine.BlendMode.Normal, spine.BlendMode.Additive, spine.BlendMode.Multiply, spine.BlendMode.Screen];
+public static TransformModeValues = [TransformMode.Normal, TransformMode.OnlyTranslation, TransformMode.NoRotationOrReflection, TransformMode.NoScale, TransformMode.NoScaleOrReflection];
+public static PositionModeValues = [PositionMode.Fixed, PositionMode.Percent];
+public static SpacingModeValues = [SpacingMode.Length, SpacingMode.Fixed, SpacingMode.Percent];
+public static RotateModeValues = [RotateMode.Tangent, RotateMode.Chain, RotateMode.ChainScale];
+public static BlendModeValues = [BlendMode.Normal, BlendMode.Additive, BlendMode.Multiply, BlendMode.Screen];
 public static BONE_ROTATE = 0;
 public static BONE_TRANSLATE = 1;
 public static BONE_SCALE = 2;

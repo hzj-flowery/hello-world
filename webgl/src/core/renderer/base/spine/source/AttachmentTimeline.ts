@@ -1,4 +1,7 @@
 import { Animation } from "./Animation"
+import { MixBlend } from "./MixBlend"
+import { MixDirection } from "./MixDirection"
+import { TimelineType } from "./TimelineType"
 import { Utils } from "./Utils"
 import { Attachment } from "./Attachment"
 export class AttachmentTimeline{
