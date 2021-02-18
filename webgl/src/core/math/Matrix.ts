@@ -2771,11 +2771,22 @@ export namespace glMatrix {
     }
     /**
      * Rotates a matrix by the given angle around the X axis
-     *
+     * 旋转公式如下
+     * [1   0       0      ]
+     * [0   cos(a)  -sin(a)]
+     * [0   sin(a)  cos(a) ]
+     * 等价于
+     * [1   0   0  ] [0][4][8]
+     * [0   c   -s ] [1][5][9]
+     * [0   s   c  ] [2][6][10]
      * @param {mat4} out the receiving matrix
      * @param {mat4} a the matrix to rotate
      * @param {Number} rad the angle to rotate the matrix by
      * @returns {mat4} out
+     * 【0  4  8   12】
+     * 【1  5  9   13】
+     * 【2  6  10  14】
+     * 【3  7  11  15】
      */
 
     function rotateX(out, a, rad:number) {
@@ -2783,10 +2794,10 @@ export namespace glMatrix {
         var c = Math.cos(rad);
         var a10 = a[4];
         var a11 = a[5];
-        var a12 = a[6];
+        var a12 = a[6];  //y
         var a13 = a[7];
         var a20 = a[8];
-        var a21 = a[9];
+        var a21 = a[9];  //z
         var a22 = a[10];
         var a23 = a[11];
 
@@ -2805,10 +2816,10 @@ export namespace glMatrix {
 
         out[4] = a10 * c + a20 * s;
         out[5] = a11 * c + a21 * s;
-        out[6] = a12 * c + a22 * s;
+        out[6] = a12 * c + a22 * s;   //y
         out[7] = a13 * c + a23 * s;
         out[8] = a20 * c - a10 * s;
-        out[9] = a21 * c - a11 * s;
+        out[9] = a21 * c - a11 * s;   //z
         out[10] = a22 * c - a12 * s;
         out[11] = a23 * c - a13 * s;
         return out;
