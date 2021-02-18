@@ -122,5 +122,8 @@ export default class SpotLightCube extends SY.SpriteBase {
 
     this._vertStr = vertextBaseCode;
     this._fragStr = fragBaseCode;
+
+
+    
   }
 }
