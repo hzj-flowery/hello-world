@@ -2572,7 +2572,16 @@ export namespace glMatrix {
     }
     /**
      * Translate a mat4 by the given vector
-     *
+     *0  4   8   12   x
+      1  5   9   13   y
+      2  6   10  14   z
+      3  7   11  15
+
+      12(新) = 0*x+4*y+8*z+12
+      13(新) = 1*x+5*y+9*z+13
+      14(新) = 2*x+6*y+10*z+14
+      15(新) = 3*x+7*y+11*z+15
+      这里可以看出来 平移也并非完全符合矩阵和列向量相乘的规则
      * @param {mat4} out the receiving matrix
      * @param {mat4} a the matrix to translate
      * @param {vec3} v vector to translate by
@@ -2660,7 +2669,8 @@ export namespace glMatrix {
 
     /**
      * Scales the mat4 by the dimensions in the given vec3 not using vectorization
-     *
+     * 只对x y z三个坐标轴进行缩放
+     * 这里也可以看到缩放也并非完全符合矩阵和列向量相乘的规则
      * @param {mat4} out the receiving matrix
      * @param {mat4} a the matrix to scale
      * @param {vec3} v the vec3 to scale the matrix by
@@ -2673,7 +2683,7 @@ export namespace glMatrix {
             z = v[2];
         out[0] = a[0] * x;
         out[1] = a[1] * x;
-        out[2] = a[2] * x;
+        out[2] = a[2] * x;   
         out[3] = a[3] * x;
         out[4] = a[4] * y;
         out[5] = a[5] * y;
@@ -2683,9 +2693,10 @@ export namespace glMatrix {
         out[9] = a[9] * z;
         out[10] = a[10] * z;
         out[11] = a[11] * z;
+
         out[12] = a[12];
         out[13] = a[13];
-        out[14] = a[14];
+        out[14] = a[14];   //平移的位置不变
         out[15] = a[15];
         return out;
     }
@@ -2772,6 +2783,30 @@ export namespace glMatrix {
     /**
      * Rotates a matrix by the given angle around the X axis
      *
+     * 1   0        0
+     * 0   cos(a)   sin(a)
+     * 0   -sin(a)  cos(a)
+     * 
+     * 1   0    0    x[0,1,2,3]
+     * 0   c    s    y[4,5,6,7]   
+     * 0   -s   c    z[8,9,10,11]
+     * 
+     * 看到下面的计算有点懵逼
+     * 根据上面的公式 是一个旋转矩阵和一个列向量相乘
+     * 这里要做特殊处理
+     * x代表的是x轴向量
+     * y代表的是y轴向量
+     * z代表的是z轴向量
+     * 下面的这个函数是要绕着x轴旋转rad度，所以x轴应该保持不动，发生变换的是y轴和z轴
+     * 那么矩阵最终的行列式应该是
+     * c     s      y
+     * -s    c      z
+     * 
+     * 旋转以后:     
+     * y(新)= c*y+s*z   =  c*[4,5,6,7] + s*[8,9,10,11] = [4*c+8*s,5*c+9*s,6*c+10*s,7*c+11*s];
+     * z(新)= -s*y+c*z  = -s*[4,5,6,7] + c*[8,9,10,11] = [8*c-4*s,9*c-5*s,10*c-6*s,11*c-7*s];
+     * 
+     *         
      * @param {mat4} out the receiving matrix
      * @param {mat4} a the matrix to rotate
      * @param {Number} rad the angle to rotate the matrix by
@@ -2794,28 +2829,36 @@ export namespace glMatrix {
             // If the source and destination differ, copy the unchanged rows
             out[0] = a[0];
             out[1] = a[1];
-            out[2] = a[2];
+            out[2] = a[2];  //x轴不变化
             out[3] = a[3];
             out[12] = a[12];
-            out[13] = a[13];
+            out[13] = a[13]; //位置
             out[14] = a[14];
             out[15] = a[15];
         } // Perform axis-specific matrix multiplication
 
 
         out[4] = a10 * c + a20 * s;
-        out[5] = a11 * c + a21 * s;
+        out[5] = a11 * c + a21 * s;   //y轴[4,5,6,7]
         out[6] = a12 * c + a22 * s;
         out[7] = a13 * c + a23 * s;
+
         out[8] = a20 * c - a10 * s;
         out[9] = a21 * c - a11 * s;
-        out[10] = a22 * c - a12 * s;
+        out[10] = a22 * c - a12 * s;   //z轴[8,9,10,11]
         out[11] = a23 * c - a13 * s;
         return out;
     }
     /**
      * Rotates a matrix by the given angle around the Y axis
-     *
+     *cos(a)  0   -sin(a)
+      0       1    0
+      sin(a)  0   cos(a)
+
+      简化
+      c  0  -s   x[0,1,2,3]
+      0  1   0   y[4,5,6,7]
+      s  0   c   z[8,9,10,11]
      * @param {mat4} out the receiving matrix
      * @param {mat4} a the matrix to rotate
      * @param {Number} rad the angle to rotate the matrix by
@@ -2828,10 +2871,10 @@ export namespace glMatrix {
         var c = Math.cos(rad);
         var a00 = a[0];
         var a01 = a[1];
-        var a02 = a[2];
+        var a02 = a[2];  //x轴
         var a03 = a[3];
         var a20 = a[8];
-        var a21 = a[9];
+        var a21 = a[9];  //y轴
         var a22 = a[10];
         var a23 = a[11];
 
@@ -2839,28 +2882,34 @@ export namespace glMatrix {
             // If the source and destination differ, copy the unchanged rows
             out[4] = a[4];
             out[5] = a[5];
-            out[6] = a[6];
+            out[6] = a[6];//y轴不动
             out[7] = a[7];
             out[12] = a[12];
             out[13] = a[13];
-            out[14] = a[14];
+            out[14] = a[14];//平移的位置
             out[15] = a[15];
         } // Perform axis-specific matrix multiplication
 
-
+      
         out[0] = a00 * c - a20 * s;
         out[1] = a01 * c - a21 * s;
-        out[2] = a02 * c - a22 * s;
+        out[2] = a02 * c - a22 * s;  //x轴[0,1,2,3]
         out[3] = a03 * c - a23 * s;
         out[8] = a00 * s + a20 * c;
-        out[9] = a01 * s + a21 * c;
+        out[9] = a01 * s + a21 * c;   //z轴[8,9,10,11]
         out[10] = a02 * s + a22 * c;
         out[11] = a03 * s + a23 * c;
         return out;
     }
     /**
      * Rotates a matrix by the given angle around the Z axis
-     *
+     *cos(a)  sin(a)  0
+     -sin(a)  cos(a)  0
+      0        0      1
+
+      c   s  0   x[0,1,2,3]
+      -s  c  0   y[4,5,6,7]
+      0   0  1   z[8,9,10,11]
      * @param {mat4} out the receiving matrix
      * @param {mat4} a the matrix to rotate
      * @param {Number} rad the angle to rotate the matrix by
@@ -2872,22 +2921,22 @@ export namespace glMatrix {
         var c = Math.cos(rad);
         var a00 = a[0];
         var a01 = a[1];
-        var a02 = a[2];
+        var a02 = a[2];  //x轴[0,1,2,3]
         var a03 = a[3];
         var a10 = a[4];
         var a11 = a[5];
-        var a12 = a[6];
+        var a12 = a[6];  //y轴[4,5,6,7]
         var a13 = a[7];
 
         if (a !== out) {
             // If the source and destination differ, copy the unchanged last row
             out[8] = a[8];
             out[9] = a[9];
-            out[10] = a[10];
+            out[10] = a[10];   //z轴
             out[11] = a[11];
             out[12] = a[12];
             out[13] = a[13];
-            out[14] = a[14];
+            out[14] = a[14];   //平移的坐标位置
             out[15] = a[15];
         } // Perform axis-specific matrix multiplication
 

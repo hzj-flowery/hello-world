@@ -97,7 +97,7 @@ LoaderManager.instance.load(arr,null,function(){
 
     console.log("-888888----",/mobile|android|iphone|ipad/.test("mobilczjjjjj"));
 
-
+    new RenderFlow().startup();
     // RampTextureTest.run();
     // CameraTest.run();
     // RobartTest.run();

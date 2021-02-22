@@ -189,6 +189,7 @@ export default class LoaderManager {
         if (!isHttp) {
             //本地
             var img = new Image();
+            img.crossOrigin = "anonymous";
             img.onload = function (img: HTMLImageElement) {
                 if (!img) {
                     console.log("加载的图片路径不存在---", path);
@@ -223,7 +224,8 @@ export default class LoaderManager {
             request.responseType = "blob";
             request.onload = function () {
                 var objectURL = URL.createObjectURL(request.response);
-                var img = new Image(); 
+                var img = new Image();
+                img.crossOrigin = "anonymous"; 
                 img.src = objectURL;
                 if (callBackFinish) callBackFinish.call(null, img, path); 
             }
