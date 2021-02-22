@@ -54,6 +54,11 @@ export class TextureOpts {
      * 对于3d节点并且这个3d节点还有动画，那么有可能节点会变形
      */
     unpackFlipY:boolean = true;
+    /**
+     * 纹理是否开启预乘
+     * 预乘这个功能主要是为了纹理的线性过滤产生奇怪边缘颜色的
+     */
+    premultiplyAlpha:boolean = false;
     level: number = 0;
     border: number = 0;
     /**
