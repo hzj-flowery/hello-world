@@ -170,9 +170,9 @@ export default class Scene3D extends Scene {
     }
     
     public rotateCenterNode() {
-        this._centerNode.rotate(0, 1, 0);
-        this._mirrorCube.rotate(1,-1,-0.2);
-        setTimeout(this.rotateCenterNode.bind(this), 20);
+        // this._centerNode.rotate(0, 1, 0);
+        // this._mirrorCube.rotate(1,-1,-0.2);
+        // setTimeout(this.rotateCenterNode.bind(this), 20);
     }
     private readyRenderDraw(): void {
 

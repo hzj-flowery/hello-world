@@ -1,6 +1,10 @@
 import { SY } from "../base/Sprite";
 import { syGL } from "../gfx/syGLEnums";
 
+/**
+ * 误区：
+ * 实例化绘制的矩阵其实就是一个数组，里面包含了4个item,每个item都是一个vec4
+ */
 var vertexshader3d =
     'attribute vec4 a_position;' +
     'attribute vec4 a_color;' +
@@ -36,7 +40,7 @@ export default class InstantiateSprite extends SY.Sprite2D {
         this._vertStr = vertexshader3d;
         this._fragStr = fragmentshader3d;
         
-        this.numInstances = 10;
+        this.numInstances = 100;
         this._renderData._isDrawInstanced = true;
         this._renderData._drawInstancedVertNums = 4;
         this._renderData._drawInstancedNums = this.numInstances;
