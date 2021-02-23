@@ -57,6 +57,7 @@ export class TextureOpts {
     /**
      * 纹理是否开启预乘
      * 预乘这个功能主要是为了纹理的线性过滤产生奇怪边缘颜色的
+     * 
      */
     premultiplyAlpha:boolean = false;
     level: number = 0;
@@ -150,6 +151,7 @@ export class Texture {
     protected _border:number;
     protected _level:number;
     protected _unpackFlipY:boolean;
+    protected _premultiplyAlpha:boolean;
     protected _alignment:number;
     protected _pixelType:number;//像素的类型,是一个字节存放还是多个字节
     protected _data:any;
@@ -206,6 +208,7 @@ export class Texture {
         this._pixelType = options.pixelType;
         this._alignment = options.alignment;
         this._unpackFlipY = options.unpackFlipY;
+        this._premultiplyAlpha = options.premultiplyAlpha;
 
         // wrapR available in webgl2
         // this._wrapR = enums.WRAP_REPEAT;
@@ -235,9 +238,11 @@ export class Texture {
      */
     private setTextureOperator(): void {
         let gl = this._gl;
-        this._gl.pixelStorei(gl.UNPACK_ALIGNMENT,this._alignment);
-        // // Y 轴取反
-        this._gl.pixelStorei(this._gl.UNPACK_FLIP_Y_WEBGL, this._unpackFlipY);
+        gl.pixelStorei(gl.UNPACK_ALIGNMENT,this._alignment);
+        // Y 轴取反
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, this._unpackFlipY);
+        //预乘
+        gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,this._premultiplyAlpha);
         if(this._genMipmaps)
         {
             // 生成 MipMap 映射

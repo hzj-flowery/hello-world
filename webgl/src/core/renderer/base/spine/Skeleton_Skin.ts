@@ -33,6 +33,12 @@ export class Skeleton_Skin {
     private gl: WebGL2RenderingContext;
     private _skinWidth:number;//皮肤纹理的宽度(宽有多少个像素点)
     private _skinHeight:number;//皮肤纹理的高度（高有多少个像素点）
+    /**
+     * 
+     * @param jointNodes 
+     * @param inverseBindMatrixData 来源于网格信息中 它是绑定姿势的逆矩阵的数据
+     * @param gl 
+     */
     constructor(jointNodes:Array<Skeleton_Node>, inverseBindMatrixData: Float32Array, gl) {
         this.gl = gl;
         this.jointNodes = jointNodes;

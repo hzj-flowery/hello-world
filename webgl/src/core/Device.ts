@@ -785,7 +785,7 @@ export default class Device {
             'WEBGL_draw_buffers',
         ]);
         this._initCaps();
-        // this._initStates();
+        this._initStates();
 
         this.handlePrecision();
 
@@ -895,9 +895,19 @@ export default class Device {
     }
 
     _initCaps() {
+        /**
+         * shader中 对于一些变量的使用是有限制的，不同的设备限制还不一样
+         * 比如对于顶点着色器和片元着色器:
+         * 最多可以命名使用n个vec4变量
+         * 最多可以命名使用m个mat矩阵
+         * 最多可以命名使用m个texture单元
+         * ......
+         * 另外对于单个纹理单元的大小也是有上限控制的
+         * 一般一个纹理尺寸最大为（2048*2048），单位就是一个像素
+         * 
+         */
         const gl = this.gl;
         const extDrawBuffers = this.ext('WEBGL_draw_buffers');
-
         this._caps.maxVertexStreams = 4;
         this._caps.maxVertexTextures = gl.getParameter(gl.MAX_VERTEX_TEXTURE_IMAGE_UNITS);
         this._caps.maxFragUniforms = gl.getParameter(gl.MAX_FRAGMENT_UNIFORM_VECTORS);

@@ -6,13 +6,13 @@ import { RenderOfflineSprite } from "../2d/RenderOfflineSprite";
 import FirstSprite from "../2d/FirstSprite";
 import TwoSprite from "../2d/TwoSprite";
 import Scene from "./Scene";
-import InstantiateSprite from "../2d/InstantiateSprite";
+import InstantiateStage from "../2d/InstantiateStage";
 
 export default class Scene2D extends Scene {
     
     private _rectangle:Rectangle;
     private _firstSprite:FirstSprite;
-    private _instantiateSprite:InstantiateSprite;
+    private _instantiateStage:InstantiateStage;
     private _label:Label;
     private _renderSprite:RenderOfflineSprite;
     
@@ -32,10 +32,10 @@ export default class Scene2D extends Scene {
         // this._firstSprite.setPosition(0,1,0);
         // this.addChild(this._firstSprite);
 
-        this._instantiateSprite = new InstantiateSprite();
-        this._instantiateSprite.setScale(0.5,0.5,0.5);
-        this._instantiateSprite.setPosition(0.2,0.2,0);
-        this.addChild(this._instantiateSprite);
+        this._instantiateStage = new InstantiateStage();
+        this._instantiateStage.setScale(0.5,0.5,0.5);
+        this._instantiateStage.setPosition(0.2,0.2,0);
+        this.addChild(this._instantiateStage);
 
         this._renderSprite = new RenderOfflineSprite();
         this._renderSprite.setPosition(0.6,0.8,0);
