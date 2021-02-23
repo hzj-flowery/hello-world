@@ -42,8 +42,9 @@ class ShaderCenter {
     public createShader(type: ShaderType, vert: string, frag: string): Shader {
         var glID = G_ShaderFactory.createShader(vert, frag);
         let name = this.createShaderName(type);
-        this._shaderMap.set(name, glID);
-        return new Shader(Device.Instance.gl, glID, name)
+        let shader = new Shader(Device.Instance.gl, glID, name)
+        this._shaderMap.set(name, shader);
+        return shader;
     }
     public getCustomShader(name: string): Shader {
         return this._shaderMap.get(name);

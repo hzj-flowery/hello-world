@@ -58,6 +58,7 @@ import { ShaderUseVariantType } from "../shader/ShaderUseVariantType";
 import { LightData } from "../data/LightData";
 import { ShaderCode } from "../shader/ShaderCode";
 import { syGL } from "../gfx/syGLEnums";
+import { G_DrawEngine } from "./DrawEngine";
 
 /**
  * 显示节点
@@ -90,8 +91,8 @@ export namespace SY {
         private _vertMatrixBuffer: VertMatrixBuffer;//顶点矩阵buffer
         private _materialId: string;//这里存放一个材质id
 
-        private _color:Array<number>;//节点自定义颜色
-        private _customMatrix:Float32Array;//节点自定义矩阵
+        private _color: Array<number>;//节点自定义颜色
+        private _customMatrix: Float32Array;//节点自定义矩阵
         //纹理buffer
         private _uvsBuffer: UVsBuffer;
         protected _texture: Texture;
@@ -111,17 +112,17 @@ export namespace SY {
             this.gl = Device.Instance.gl;
             this._glPrimitiveType = syGL.PrimitiveType.TRIANGLES;
             this._renderData = RenderDataPool.get(RenderDataType.Base);
-            this._color = [1.0,1.0,1.0,1.0];//默认颜色为白色
+            this._color = [1.0, 1.0, 1.0, 1.0];//默认颜色为白色
             this.init();
         }
         private init(): void {
             this.onInit();
             this.setShader(this._vertStr, this._fragStr);
         }
-        public set shaderVert(vert:string){
+        public set shaderVert(vert: string) {
             this._vertStr = vert;
         }
-        public set shaderFrag(frag:string){
+        public set shaderFrag(frag: string) {
             this._fragStr = frag;
         }
         protected onInit(): void {
@@ -204,19 +205,19 @@ export namespace SY {
             this._VertColorBuffer = G_BufferManager.createBuffer(GLID_TYPE.VERT_COLOR, this._materialId, color, itemSize, preAllocateLen) as VertColorBuffer;
             return this._VertColorBuffer;
         }
-        public createCustomMatrix(mat):void{
+        public createCustomMatrix(mat): void {
             this._customMatrix = mat;
 
         }
-        
+
         /**
          * 设置节点颜色
          */
-        public set color(color: Array<number>){
-            this._color[0] = color[0]!=null?color[0]:this._color[0];
-            this._color[1] = color[1]!=null?color[1]:this._color[1];
-            this._color[2] = color[2]!=null?color[2]:this._color[2];
-            this._color[3] = color[3]!=null?color[3]:this._color[3];
+        public set color(color: Array<number>) {
+            this._color[0] = color[0] != null ? color[0] : this._color[0];
+            this._color[1] = color[1] != null ? color[1] : this._color[1];
+            this._color[2] = color[2] != null ? color[2] : this._color[2];
+            this._color[3] = color[3] != null ? color[3] : this._color[3];
         }
         //创建一个纹理buffer
         private createTexture2DBuffer(url: string): Texture {
@@ -370,12 +371,12 @@ export namespace SY {
             this._texture.destroy();
         }
     }
-    export class  sySprite extends SpriteBase {
+    export class sySprite extends SpriteBase {
         constructor() {
             super();
             this.name = "sySprite";
         }
-        protected onInit(){
+        protected onInit() {
             this._vertStr = ShaderCode.sprite.vert;
             this._fragStr = ShaderCode.sprite.frag;
         }
@@ -452,21 +453,19 @@ export namespace SY {
             this._glPrimitiveType = syGL.PrimitiveType.LINES;
         }
         private _linePositions: Array<number>;
-        public updateLinePos(posArr: Array<number>){
+        public updateLinePos(posArr: Array<number>) {
             if (!posArr || posArr.length < 3) return;
-            if(!this._linePositions)
-            {
+            if (!this._linePositions) {
                 this._linePositions = posArr;
-                this.createVertexsBuffer(this._linePositions,3,0);
+                this.createVertexsBuffer(this._linePositions, 3, 0);
             }
-            else
-            {
+            else {
                 this._linePositions = posArr;
                 this.getBuffer(SY.GLID_TYPE.VERTEX).updateSubData(new Float32Array(this._linePositions));
             }
         }
-        protected collectRenderData(time):void{
-            if(!this._linePositions||this._linePositions.length==0)return;
+        protected collectRenderData(time): void {
+            if (!this._linePositions || this._linePositions.length == 0) return;
             super.collectRenderData(time);
         }
     }
@@ -550,14 +549,64 @@ export namespace SY {
     export class SpriteInstance extends SY.Sprite2D {
         constructor() {
             super();
+            this._glPrimitiveType = syGL.PrimitiveType.TRIANGLE_STRIP;
+        }
+        /**
+         * 实例化的数目
+         */
+        private _numInstances:number;
+        /**
+         * 单个实例的顶点数目
+         */
+        private _InstanceVertNums:number;
+        protected onInit():void{
             this._renderData._isDrawInstanced = true;
+            this._divisorNameData = new Map();
+            this._divisorLocData = new Map();
         }
-        public setData(data: any): void {
-            let nums = data.instanceNums;//多少个实例
-            let vertNums = data.instanceVertNums;//单个实例含有多少个顶点
-            let positions = data.positions;//顶点位置
-            let uvs = data.uvs;  //uv数据
+        private _divisorNameData: Map<string, boolean> ;
+        private _divisorLocData: Map<number, boolean>;
+        public pushDivisor(name: string, isMatrix: boolean): void {
+            if (this._divisorNameData.has(name) == false)
+                this._divisorNameData.set(name, isMatrix);
         }
+        protected set InstanceVertNums(nums:number){
+            this._InstanceVertNums = nums;
+            this._renderData._drawInstancedVertNums = nums;
+        }
+        protected get InstanceVertNums():number{
+            return this._InstanceVertNums;
+        }
+        protected set numInstances(nums:number){
+            this._numInstances = nums;
+            this._renderData._drawInstancedNums = nums;
+        }
+        protected get numInstances():number{
+            return this._numInstances;
+        }
+        protected onShader() {
+            this._divisorNameData.forEach((value, key) => {
+                let loc = this._shader.getCustomAttributeLocation(key);
+                this._divisorLocData.set(loc, value)
+            })
+        }
+        public onDrawBefore(time: number) {
+            this._divisorLocData.forEach((value, key) => {
+                if (value)
+                    G_DrawEngine.vertexAttribDivisor(key, 1, true);
+                else
+                    G_DrawEngine.vertexAttribDivisor(key);
+            })
+        }
+        public onDrawAfter(): void {
+            this._divisorLocData.forEach((value, key) => {
+                if (value)
+                    G_DrawEngine.disableVertexAttribArrayDivisor(key, true);
+                else
+                    G_DrawEngine.disableVertexAttribArrayDivisor(key);
+            })
+        }
+
     }
 
 

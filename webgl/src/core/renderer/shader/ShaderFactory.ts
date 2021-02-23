@@ -123,7 +123,7 @@ class ShaderFactory {
      * @param vertextCode 顶点shader 
      * @param fragCode 片段shader
      */
-    public createShader(vertextCode: string = vertextBaseCode, fragCode: string = fragBaseCode): any {
+    public createShader(vertextCode: string = vertextBaseCode, fragCode: string = fragBaseCode): WebGLProgram {
         // 从 DOM 上创建对应的着色器
         var vertexShader = this.loadShader(ShaderType.VERTEX, vertextCode);
         var fragmentShader = this.loadShader(ShaderType.FRAGMENT, fragCode);

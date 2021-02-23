@@ -1,3 +1,4 @@
+import { G_DrawEngine } from "../base/DrawEngine";
 import { SY } from "../base/Sprite";
 import { syGL } from "../gfx/syGLEnums";
 
@@ -6,50 +7,46 @@ import { syGL } from "../gfx/syGLEnums";
  * 实例化绘制的矩阵其实就是一个数组，里面包含了4个item,每个item都是一个vec4
  */
 var vertexshader3d =
-    'attribute vec4 a_position;' +
-    'attribute vec4 a_color;' +
-    'attribute mat4 a_matrix;' +
+    `attribute vec4 a_position;
+    attribute vec4 a_color;
+    attribute mat4 a_matrix;
 
-    'uniform mat4 u_MMatrix;' +
-    'uniform mat4 u_VMatrix;' +
-    'uniform mat4 u_PMatrix;' +
+    uniform mat4 u_MMatrix;
+    uniform mat4 u_VMatrix;
+    uniform mat4 u_PMatrix;
 
-    'varying vec4 v_color;' +
-    'void main() {' +
-    'gl_Position =u_PMatrix*u_VMatrix*u_MMatrix* a_matrix * a_position;' +
-    'v_color = a_color;' +
-    '}'
+    varying vec4 v_color;
+    void main() {
+    gl_Position =u_PMatrix*u_VMatrix*u_MMatrix* a_matrix * a_position;
+    v_color = a_color;
+    }`
 var fragmentshader3d =
-    'precision mediump float;' +
-    'varying vec4 v_color;' +
-    'void main() {' +
-    'gl_FragColor = v_color;' +
-    '}'
+    ` precision mediump float;
+    varying vec4 v_color;
+    void main() {
+    gl_FragColor = v_color;
+    }`
 
-export default class InstantiateSprite extends SY.Sprite2D {
+export default class InstantiateStage extends SY.SpriteInstance {
     constructor() {
         super();
-        this._glPrimitiveType = syGL.PrimitiveType.TRIANGLE_STRIP;
     }
-    private _colorLoc: any;
-    private _matrixLoc: any;
-    private _posArray:Array<Array<number>>;
+    private _posArray: Array<Array<number>>;
     protected onInit(): void {
+        super.onInit();
         this.setContentSize(100, 200);
 
         this._vertStr = vertexshader3d;
         this._fragStr = fragmentshader3d;
-        
+
         this.numInstances = 100;
-        this._renderData._isDrawInstanced = true;
-        this._renderData._drawInstancedVertNums = 4;
-        this._renderData._drawInstancedNums = this.numInstances;
+        this.InstanceVertNums = 4;
 
-        
-
+        this.pushDivisor("a_color", false);
+        this.pushDivisor("a_matrix", true);
         this.produceRandomPosArray();
-        
-        
+
+
         // make a typed array with one view per matrix
         this.matrixData = new Float32Array(this.numInstances * 16);
         this.matrices = [];
@@ -72,15 +69,14 @@ export default class InstantiateSprite extends SY.Sprite2D {
         }
         this.createNodeVertColorBuffer(colorData, 4);
     }
-    private produceRandomPosArray():void{
+    private produceRandomPosArray(): void {
         this._posArray = [];
-        for(let j = 0;j<this.numInstances;j++)
-        {
+        for (let j = 0; j < this.numInstances; j++) {
             let temp1 = Math.random();
             let temp2 = Math.random();
             let temp3 = Math.random();
             this._posArray[j] = [];
-            this._posArray[j] = [-0.5*temp1 + j * 0.025,temp2,0];
+            this._posArray[j] = [-0.5 * temp1 + j * 0.025, temp2, 0];
         }
     }
     private getRandowColor() {
@@ -98,11 +94,6 @@ export default class InstantiateSprite extends SY.Sprite2D {
     }
     private matrices;
     private matrixData;
-    private numInstances;
-    protected onShader():void{
-        this._colorLoc = this._shader.getCustomAttributeLocation("a_color");
-        this._matrixLoc = this._shader.getCustomAttributeLocation('a_matrix');
-    }
     public onDrawBefore(time: number) {
         time *= 0.001; // seconds
         // update all the matrices
@@ -116,26 +107,7 @@ export default class InstantiateSprite extends SY.Sprite2D {
         });
         //更新缓冲区数据
         this.getBuffer(SY.GLID_TYPE.VERT_MATRIX).updateSubData(this.matrixData);
-
-        let gl = this.gl;
-        for (let i = 0; i < 4; ++i) {
-            const loc = this._matrixLoc + i;
-            // this line says this attribute only changes for each 1 instance
-            gl.vertexAttribDivisor(loc, 1);
-        }
-        // this line says this attribute only changes for each 1 instance
-        gl.vertexAttribDivisor(this._colorLoc, 1);
-    }
-    public onDrawAfter(): void {
-        let gl = this.gl;
-        gl.bindBuffer(gl.ARRAY_BUFFER, null);
-        gl.vertexAttribDivisor(this._colorLoc, 0);
-        for (let i = 0; i < 4; ++i) {
-            const loc = this._matrixLoc + i;
-            gl.vertexAttribDivisor(loc, 0);
-        }
-        gl.disableVertexAttribArray(this._colorLoc);
-        gl.disableVertexAttribArray(this._matrixLoc);
+        super.onDrawBefore(time);
     }
 
 }

@@ -107,10 +107,10 @@ export class Shader {
     private u_camera_world_position_loc;//相机的世界位置
 
     protected _gl: WebGLRenderingContext;
-    protected _spGLID;
+    protected _spGLID:WebGLProgram;
     public readonly name: string;
     private _useVariantType: Array<ShaderUseVariantType> = [];
-    constructor(gl, glID, name) {
+    constructor(gl:WebGLRenderingContext, glID:WebGLProgram, name:string) {
         this._gl = gl;
         this._spGLID = glID;
         this.name = name;
@@ -257,7 +257,7 @@ export class Shader {
         return G_DrawEngine.getAttribLocation(this._spGLID, varName)
     }
 
-    public getGLID() {
+    public getGLID():WebGLProgram {
         return this._spGLID;
     }
     /**

@@ -9,9 +9,9 @@ class DrawEngine {
     constructor() {
 
     }
-    private gl:WebGLRenderingContext;
-    init(gl:WebGLRenderingContext):void{
-       this.gl = gl;
+    private gl: WebGLRenderingContext;
+    init(gl: WebGLRenderingContext): void {
+        this.gl = gl;
     }
     /**
      * @param mode  绘制类型
@@ -19,7 +19,7 @@ class DrawEngine {
      * @param type  每个索引数据的类型 此处gl.UNSIGNED_SHORT 表示2个字节
      * @param offset 绘制的数据在索引缓冲数组中的起始地址
      */
-    private drawElements(mode:number,count:number,type:number,offset:number):void{
+    private drawElements(mode: number, count: number, type: number, offset: number): void {
         let gl = this.gl;
         gl.drawElements(mode, count, type, offset);
     }
@@ -28,9 +28,9 @@ class DrawEngine {
      * @param first 绘制数据在顶点缓冲数组中的起始地址
      * @param count 一共有多少个顶点需要绘制
      */
-    private drawArrays(mode:number,first:number,count:number):void{
+    private drawArrays(mode: number, first: number, count: number): void {
         let gl = this.gl;
-        gl.drawArrays(mode,first,count);
+        gl.drawArrays(mode, first, count);
     }
     /**
      * 
@@ -39,7 +39,7 @@ class DrawEngine {
      * @param count 单个实例所包含的顶点数目
      * @param instanceCount 一共有多少个实例
      */
-    private drawArraysInstanced(mode:number,first:number,count:number,instanceCount:number):void{
+    private drawArraysInstanced(mode: number, first: number, count: number, instanceCount: number): void {
         let gl = this.gl as WebGL2RenderingContext;
         gl.drawArraysInstanced(
             mode,
@@ -56,15 +56,15 @@ class DrawEngine {
      * @param offset 绘制数据在索引缓冲数组中的起始地址
      * @param instanceCount 一共有多少个实例
      */
-    private drawElementsInstanced(mode:number,count:number,type:number,offset:number,instanceCount: number):void{
+    private drawElementsInstanced(mode: number, count: number, type: number, offset: number, instanceCount: number): void {
         let gl = this.gl as WebGL2RenderingContext;
-        gl.drawElementsInstanced(mode,count,type,offset,instanceCount)
+        gl.drawElementsInstanced(mode, count, type, offset, instanceCount)
     }
-    public run(rd: RenderData, view, proj,shader:Shader): void {
-        if(!shader)return;
+    public run(rd: RenderData, view, proj, shader: Shader): void {
+        if (!shader) return;
 
         let gl = this.gl;
-        rd.bindGPUBufferData(view, proj,shader);
+        rd.bindGPUBufferData(view, proj, shader);
         //绘制前
         rd._node ? rd._node.onDrawBefore(rd._time) : null;
         if (!rd._isDrawInstanced) {
@@ -79,7 +79,7 @@ class DrawEngine {
         }
         else {
             var indexglID = rd._indexGLID;
-            
+
             !indexglID == true ? this.drawArraysInstanced(
                 rd._glPrimitiveType,
                 0,             // offset
@@ -99,17 +99,17 @@ class DrawEngine {
         //绘制后
         rd._node ? rd._node.onDrawAfter(rd._time) : null;
     }
-    
+
     /**
      * 获取shader中变量的位置
      * @param glID shader在显存中的地址
      * @param varName 变量名
      */
-    public getAttribLocation(glID:WebGLShader,varName:string):number{
-       return this.gl.getAttribLocation(glID, varName);
+    public getAttribLocation(glID: WebGLProgram, varName: string): number {
+        return this.gl.getAttribLocation(glID, varName);
     }
 
-    public useProgram(glID:WebGLShader):void{
+    public useProgram(glID: WebGLProgram): void {
         this.gl.useProgram(glID);
     }
 
@@ -118,7 +118,7 @@ class DrawEngine {
      * @param loc 
      * @param v 
      */
-    public setUniform1f(loc:number,v:number):void{
+    public setUniform1f(loc: number, v: number): void {
         this.gl.uniform1f(loc, v);
     }
     /**
@@ -128,7 +128,7 @@ class DrawEngine {
      * @param loc shader中变量的位置
      * @param matrix 矩阵数据
      */
-    public setUniformMatrix(loc:number,matrix:Float32Array):void{
+    public setUniformMatrix(loc: number, matrix: Float32Array): void {
         this.gl.uniformMatrix4fv(loc, false, matrix);
     }
     /**
@@ -138,7 +138,7 @@ class DrawEngine {
      * @param loc shader中变量的位置
      * @param matrix 矩阵数据
      */
-    public setUniformFloatVec3(loc:number,arr:Array<number>):void{
+    public setUniformFloatVec3(loc: number, arr: Array<number>): void {
         this.gl.uniform3fv(loc, arr);
     }
     /**
@@ -148,10 +148,10 @@ class DrawEngine {
      * @param loc shader中变量的位置
      * @param matrix 矩阵数据
      */
-    public setUniformFloatVec4(loc:number,arr:Array<number>):void{
+    public setUniformFloatVec4(loc: number, arr: Array<number>): void {
         this.gl.uniform4fv(loc, arr);
     }
-    
+
     /**
      * 此函数的作用是激活纹理单元
      * 在GPU显存中，有若干块显存专门用来存放纹理数据
@@ -161,10 +161,10 @@ class DrawEngine {
      * @param loc shader中变量的位置
      * @param pos 具体要使用那块纹理
      */
-    public active2DTexture(glID:WebGLTexture,loc:number,pos:number):void{
-         /**
-          * activeTexture必须在bindTexture之前。如果没activeTexture就bindTexture，会默认绑定到0号纹理单元
-        */
+    public active2DTexture(glID: WebGLTexture, loc: number, pos: number): void {
+        /**
+         * activeTexture必须在bindTexture之前。如果没activeTexture就bindTexture，会默认绑定到0号纹理单元
+       */
         let gl = this.gl;
         // 激活 指定 号纹理单元
         //在GPU那边有若干个纹理单元 下面这句话的意思就是说激活那个纹理单元
@@ -176,39 +176,37 @@ class DrawEngine {
         //我们的shader变量要从那一块纹理单元中取数据
         gl.uniform1i(loc, pos);
     }
-     /**
-     * 此函数的作用是激活纹理单元
-     * @param glID 纹理单元在显存的地址
-     * @param loc shader中变量的位置
-     * @param pos 具体要使用那块纹理
-     */
-    public activeCubeTexture(glID:WebGLTexture,loc:number,pos:number):void{
+    /**
+    * 此函数的作用是激活纹理单元
+    * @param glID 纹理单元在显存的地址
+    * @param loc shader中变量的位置
+    * @param pos 具体要使用那块纹理
+    */
+    public activeCubeTexture(glID: WebGLTexture, loc: number, pos: number): void {
         /**
          * activeTexture必须在bindTexture之前。如果没activeTexture就bindTexture，会默认绑定到0号纹理单元
        */
-       let gl = this.gl;
-       if(glID)
-       {
+        let gl = this.gl;
+        if (glID) {
             // 激活 指定 号纹理单元
             gl.activeTexture(gl[syGL.TextureValidUnit[pos]]);
             // 指定当前操作的贴图
             gl.bindTexture(gl.TEXTURE_CUBE_MAP, glID);
-       }
-       else
-       {
-           //默认使用上次的纹理单元
-       }
-       //将贴图的纹理数据赋给shader中的变量
-       gl.uniform1i(loc, pos);
-   }
-   
-   /**
-    * 关闭shader当前位置的变量对于数组缓冲中数据的使用
-    * @param loc 
-    */
-   public disableVertexAttribArray(loc:number):void{
-      this.gl.disableVertexAttribArray(loc);
-   }
+        }
+        else {
+            //默认使用上次的纹理单元
+        }
+        //将贴图的纹理数据赋给shader中的变量
+        gl.uniform1i(loc, pos);
+    }
+
+    /**
+     * 关闭shader当前位置的变量对于数组缓冲中数据的使用
+     * @param loc 
+     */
+    public disableVertexAttribArray(loc: number): void {
+        this.gl.disableVertexAttribArray(loc);
+    }
 
     /**
     * 此函数的作用是要告诉GPU做下面三件事
@@ -220,7 +218,7 @@ class DrawEngine {
     * @param loc     shader中变量的位置
     * @param itemSize 一个单元的数据数目
     */
-    public activeVertexAttribArray(glID:WebGLBuffer,loc:number,itemSize:number):void{
+    public activeVertexAttribArray(glID: WebGLBuffer, loc: number, itemSize: number): void {
         let gl = this.gl;
         gl.bindBuffer(gl.ARRAY_BUFFER, glID);
         this.enableVertexAttribArray(loc, itemSize, gl.FLOAT, false, 0, 0);
@@ -236,7 +234,7 @@ class DrawEngine {
     * @param loc     shader中变量的位置
     * @param itemSize 一个单元的数据数目
     */
-    public activeMatrixVertexAttribArray(glID:WebGLBuffer,loc:number,itemSize:number):void{
+    public activeMatrixVertexAttribArray(glID: WebGLBuffer, loc: number, itemSize: number): void {
         let gl = this.gl;
         gl.bindBuffer(gl.ARRAY_BUFFER, glID);
         const bytesPerMatrix = 4 * 16;
@@ -253,7 +251,7 @@ class DrawEngine {
             const locTemp = loc + i;
             // note the stride and offset
             const offset = i * 16;  // 4 floats per row, 4 bytes per float
-            this.enableVertexAttribArray(locTemp,itemSize,gl.FLOAT,false,bytesPerMatrix,offset)
+            this.enableVertexAttribArray(locTemp, itemSize, gl.FLOAT, false, bytesPerMatrix, offset)
         }
     }
     /**
@@ -265,10 +263,51 @@ class DrawEngine {
      * @param stride 管道字节数 默认为0表示数据是紧密存放的
      * @param offset 单元偏移，注意这个不是以字节为单位的，它是以单元为单位的
      */
-    private enableVertexAttribArray(loc,itemSize,type,normalized:boolean=false,stride:number=0,offset:number=0):void{
+    private enableVertexAttribArray(loc:number, itemSize:number, type:number, normalized: boolean = false, stride: number = 0, offset: number = 0): void {
         let gl = this.gl;
         gl.enableVertexAttribArray(loc);
-        gl.vertexAttribPointer(loc, itemSize,type,normalized,stride,offset);
+        gl.vertexAttribPointer(loc, itemSize, type, normalized, stride, offset);
+    }
+
+    /**
+     * 激活实例化绘制对于顶点数据的读取
+     * @param loc shader变量的显存地址
+     * @param instanceNum 每一波数据对应实例化的数量
+     * @param isMatrix  是否是矩阵
+     */
+    public vertexAttribDivisor(loc: number, instanceNum: number = 1, isMatrix: boolean = false): void {
+        let gl = this.gl as WebGL2RenderingContext;
+        if (isMatrix) {
+            for (let i = 0; i < 4; ++i) {
+                const locp = loc + i;
+                // this line says this attribute only changes for each 1 instance
+                gl.vertexAttribDivisor(locp, instanceNum);
+            }
+        }
+        else {
+            // this line says this attribute only changes for each 1 instance
+            gl.vertexAttribDivisor(loc, instanceNum);
+
+        }
+    }
+    /**
+     * 关闭实例化绘制对于顶点数据的读取
+     * @param loc  shader变量的显存地址
+     * @param isMatrix 
+     */
+    public disableVertexAttribArrayDivisor(loc: number, isMatrix: boolean = false): void {
+        let gl = this.gl as WebGL2RenderingContext;
+        gl.bindBuffer(gl.ARRAY_BUFFER, null);
+        if (isMatrix) {
+            gl.vertexAttribDivisor(loc, 0);
+        }
+        {
+            for (let i = 0; i < 4; ++i) {
+                const locp = loc + i;
+                gl.vertexAttribDivisor(locp, 0);
+            }
+        }
+        gl.disableVertexAttribArray(loc);
     }
 }
 export var G_DrawEngine = new DrawEngine();
