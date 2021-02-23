@@ -89,6 +89,9 @@ export class Skeleton_Skin {
             glMatrix.mat4.copy(this.jointMatrices[j],jointNode.worldMatrix)
             /**
              * 为啥要乘以这个绑定矩阵的逆矩阵？
+             * 在第一次将骨骼放置在具体位置的时候，这个时候对于周围受她影响的点是不起作用的，所以第一次绑定的数据是无效的
+             * 只有后面骨骼的骨骼发生变化，才算数，乘以逆矩阵相当于抵消了第一次绑定的影响
+             * 
              */
             glMatrix.mat4.multiply(this.jointMatrices[j], this.jointMatrices[j], this.inverseBindMatrices[j]);
         }
