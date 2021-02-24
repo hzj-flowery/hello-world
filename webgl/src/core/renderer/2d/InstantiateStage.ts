@@ -39,7 +39,7 @@ export default class InstantiateStage extends SY.SpriteInstance {
         this._vertStr = vertexshader3d;
         this._fragStr = fragmentshader3d;
 
-        this.numInstances = 100;
+        this.numInstances = 2;
         this.InstanceVertNums = 4;
 
         this.pushDivisor("a_color", false);

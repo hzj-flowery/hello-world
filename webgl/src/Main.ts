@@ -52,6 +52,9 @@ G_UISetting.setUI();
  var arr = [
     "res/f-texture.png",
     "res/bindu.jpg",
+    "res/friend.png",
+    "res/map1.png",
+    "res/dragon.png",
     "res/light.jpg",
     "res/dragon.jpg",
     "res/models/killer_whale/whale.CYCLES.bin",
@@ -96,6 +99,19 @@ G_UISetting.setUI();
 LoaderManager.instance.load(arr,null,function(){
 
     console.log("-888888----",/mobile|android|iphone|ipad/.test("mobilczjjjjj"));
+    let name = "zhangman";
+    let value = "xiaogui hen";
+    let str = `#define ${name} ${value}`;
+    console.log("---hzj------",str);
+    
+    let snippet = "czj123hdhhdj378kldkalk098673";
+    let unroll = "";
+    let index = 3;
+    for (let i = 1; i < 10; ++i) {
+        // unroll += snippet.replace(new RegExp(`{${index}}`, 'g'), i+"");
+        unroll += snippet.replace(new RegExp(`{${index}}`, 'g'), i+"");
+    }
+    console.log("czj----",unroll);
 
     new RenderFlow().startup();
     // RampTextureTest.run();

@@ -25,7 +25,7 @@ export default class Scene2D extends Scene {
     
         this._rectangle = new Rectangle();
         this._rectangle.setPosition(0.5, 0, 0);
-        this._rectangle.spriteFrame = "res/tree.jpg";
+        this._rectangle.spriteFrame = "res/map1.png";
         this.addChild(this._rectangle);
 
         // this._firstSprite = new FirstSprite();
