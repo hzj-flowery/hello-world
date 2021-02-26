@@ -103,15 +103,6 @@ LoaderManager.instance.load(arr,null,function(){
     let value = "xiaogui hen";
     let str = `#define ${name} ${value}`;
     console.log("---hzj------",str);
-    
-    let snippet = "czj123hdhhdj378kldkalk098673";
-    let unroll = "";
-    let index = 3;
-    for (let i = 1; i < 10; ++i) {
-        // unroll += snippet.replace(new RegExp(`{${index}}`, 'g'), i+"");
-        unroll += snippet.replace(new RegExp(`{${index}}`, 'g'), i+"");
-    }
-    console.log("czj----",unroll);
 
     new RenderFlow().startup();
     // RampTextureTest.run();
