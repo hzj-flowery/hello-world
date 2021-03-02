@@ -140,8 +140,8 @@ export class Texture {
     protected _gl: WebGL2RenderingContext;
     public _glID: WebGLTexture;
 
-    protected _width: number;
-    protected _height: number;
+    protected _width: number;     //纹理的真实宽度
+    protected _height: number;    //纹理的真实高度
     protected _genMipmaps: boolean;//是否开启mipmap技术
     protected _compressed: boolean;//纹理是否是压缩的
     protected _anisotropy: number;//设置纹理所有方向的最大值

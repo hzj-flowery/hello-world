@@ -1,3 +1,4 @@
+import Device from "../../Device";
 import { glMatrix } from "../../math/Matrix";
 import { Node } from "../base/Node";
 import { syGL } from "../gfx/syGLEnums";
@@ -276,6 +277,8 @@ export class  RenderData {
                 case ShaderUseVariantType.VertMatrix:
                     _shader.setUseVertMatrix(this._vertMatrixGLID, this._vertMatrixItemSize);
                     break;
+                case ShaderUseVariantType.Time:
+                    _shader.setUseTime(Device.Instance.triggerRenderTime);
                 default:
                     // console.log("目前还没有处理这个矩阵类型");
             }

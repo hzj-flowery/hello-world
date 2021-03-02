@@ -269,7 +269,10 @@ export default class LoaderManager {
 
                 if (count == length) {
                     this.onLoadFinish();
-                    if (callBackFinish) callBackFinish(resRet.length == 1 ? resRet[0] : resRet);
+                    //任何加载成功图片的逻辑 都必须等到下一帧再返回结果
+                    requestAnimationFrame(()=>{
+                        if (callBackFinish) callBackFinish(resRet.length == 1 ? resRet[0] : resRet);
+                    });
                     return;
                 }
                 //继续加载
@@ -285,7 +288,10 @@ export default class LoaderManager {
                 this.onLoadProgress(count / length);
                 if (count == length) {
                     this.onLoadFinish();
-                    if (callBackFinish) callBackFinish(resRet.length == 1 ? resRet[0] : resRet);
+                    //任何加载成功图片的逻辑 都必须等到下一帧再返回结果
+                    requestAnimationFrame(()=>{
+                        if (callBackFinish) callBackFinish(resRet.length == 1 ? resRet[0] : resRet);
+                    });
                 }
             });
         }

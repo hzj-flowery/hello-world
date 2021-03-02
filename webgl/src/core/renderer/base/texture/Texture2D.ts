@@ -69,6 +69,7 @@ export class Texture2D extends Texture{
         this._target = this._gl.TEXTURE_2D;
     }
     private _url:string;
+    private _loadCallBack:any;
     public set url(soucePath){
         this._url = soucePath;
         LoaderManager.instance.load(this._url,null,this.onLoadFinish.bind(this));
@@ -84,7 +85,14 @@ export class Texture2D extends Texture{
         options.checkValid();
         this.updateOptions(options);
         this.upload();
+        
+        if(this._loadCallBack)
+        this._loadCallBack(image);
+
         this.loaded = true;
+    }
+    public set textureOnLoad(cb:any){
+        this._loadCallBack = cb;
     }
 
 }

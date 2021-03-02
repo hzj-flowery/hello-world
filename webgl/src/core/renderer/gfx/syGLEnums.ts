@@ -120,6 +120,8 @@ export namespace syGL {
         JOINTS_0 = 'a_joints_0',    //骨骼节点
         VERT_COLOR = 'a_color',//显示节点每一个顶点的颜色颜色
         VERT_Matrix = 'a_matrix',//顶点矩阵
+
+        TIME = 'u_time',//时间
         COLOR = 'u_color', //节点颜色
         //现阶段场景中只支持三束平行光VERT_
         //平行光只有方向和颜色没有位置

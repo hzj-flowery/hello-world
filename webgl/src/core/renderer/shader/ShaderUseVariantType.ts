@@ -41,6 +41,7 @@ export enum ShaderUseVariantType {
     AmbientLight,       //环境光
     PointLight,         //点光
     Fog,                //雾
+    Time,               //时间
     Color,                    //节点颜色
     VertColor,          //顶点颜色
     VertMatrix,         //顶点矩阵

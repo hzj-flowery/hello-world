@@ -510,7 +510,19 @@ export default class Device {
         this.stats.end();
         RenderDataPool.return(this._renderData);
     }
+    
+    /**
+     * 触发渲染的时间 
+     */
+    private _triggerRenderTime:number=0;
+    public get triggerRenderTime(){
+        return this._triggerRenderTime;
+    }
     private triggerRender(isScene: boolean = false,isRenderToScreen:boolean) {
+        
+        //记录一下当前渲染的时间
+        this._triggerRenderTime++;
+
         if (isScene) {
             var cameraData = GameMainCamera.instance.getCamera(this._renderData[0]._cameraType).getCameraData();
             G_CameraModel.draw(cameraData.projectMat, cameraData.modelMat);

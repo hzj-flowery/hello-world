@@ -174,6 +174,7 @@ export class Node extends Ref {
     public onDrawAfter(time: number): void {
 
     }
+    
     //开启绘制
     public visit(time: number): void {
         //更新世界节点

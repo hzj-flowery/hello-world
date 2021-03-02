@@ -54,11 +54,11 @@ import TextureCustom from "./texture/TextureCustom";
 import { glBaseBuffer, G_BufferManager, IndexsBuffer, VertColorBuffer, VertMatrixBuffer, NormalBuffer, UVsBuffer, VertexsBuffer } from "./buffer/BufferManager";
 import enums from "../camera/enums";
 import { G_ShaderCenter, ShaderType } from "../shader/ShaderCenter";
-import { ShaderUseVariantType } from "../shader/ShaderUseVariantType";
 import { LightData } from "../data/LightData";
 import { ShaderCode } from "../shader/ShaderCode";
 import { syGL } from "../gfx/syGLEnums";
 import { G_DrawEngine } from "./DrawEngine";
+import { handler } from "../../../utils/handler";
 
 /**
  * 显示节点
@@ -74,6 +74,27 @@ export namespace SY {
         VERT_MATRIX,//节点自定义矩阵
         TEXTURE_2D, //2D纹理
         TEXTURE_CUBE //立方体纹理
+    }
+
+    export enum SpriteSizeMode {
+        /**
+     * !#en Use the customized node size.
+     * !#zh 使用节点预设的尺寸
+     * @property {Number} CUSTOM
+     */
+        CUSTOM = 0,
+        /**
+         * !#en Match the trimmed size of the sprite frame automatically.
+         * !#zh 自动适配为精灵裁剪后的尺寸
+         * @property {Number} TRIMMED
+         */
+        TRIMMED,
+        /**
+         * !#en Match the raw size of the sprite frame automatically.
+         * !#zh 自动适配为精灵原图尺寸
+         * @property {Number} RAW
+         */
+        RAW
     }
     var materialId: number = 0;//材质id
     /**
@@ -104,6 +125,7 @@ export namespace SY {
         protected _cameraType: number = 0;//相机的类型(0表示透视1表示正交)
         protected _vertStr: string = "";
         protected _fragStr: string = "";
+        protected _sizeMode:SpriteSizeMode;//节点的尺寸模式
         private _url: string;//资源路径
         constructor() {
             super();
@@ -113,6 +135,9 @@ export namespace SY {
             this._glPrimitiveType = syGL.PrimitiveType.TRIANGLES;
             this._renderData = RenderDataPool.get(RenderDataType.Base);
             this._color = [1.0, 1.0, 1.0, 1.0];//默认颜色为白色
+
+            this._sizeMode = SpriteSizeMode.CUSTOM;//默认加载图片的尺寸大小为自定义
+
             this.init();
         }
         private init(): void {
@@ -125,10 +150,14 @@ export namespace SY {
         public set shaderFrag(frag: string) {
             this._fragStr = frag;
         }
-        protected onInit(): void {
-
+        
+        /**
+         * 设置精灵图片的尺寸模式
+         */
+        public set sizeMode(mode:SpriteSizeMode){
+             this._sizeMode = mode;
         }
-        protected onShader(): void {
+        protected onInit(): void {
 
         }
         private setShader(vert: string, frag: string) {
@@ -136,7 +165,6 @@ export namespace SY {
                 return;
             }
             this._shader = G_ShaderCenter.createShader(ShaderType.Custom, vert, frag);
-            this.onShader();
         }
         //创建顶点缓冲
         /**
@@ -207,7 +235,6 @@ export namespace SY {
         }
         public createCustomMatrix(mat): void {
             this._customMatrix = mat;
-
         }
 
         /**
@@ -235,6 +262,8 @@ export namespace SY {
             (this._texture as TextureCustom).url = data;
             return this._texture;
         }
+
+
         /**
          * 创建一个渲染纹理
          * @param data {type,place,width,height}
@@ -261,25 +290,16 @@ export namespace SY {
             else if (url instanceof Object && url["type"] == "RenderTexture") {
                 this.createRenderTextureBuffer(url);
             }
+            
             this.onSetTextureUrl();
-        }
 
+        }
         /**
          * 设置完纹理之后调用
          */
         protected onSetTextureUrl(): void {
 
         }
-
-        public set Url(url: string) {
-            this._url = url;
-            let datas = LoaderManager.instance.getRes(url);
-            this.onLoadFinish(datas);
-        }
-        private onLoadFinish(datas: any): void {
-
-        }
-
         protected getGLID(type: GLID_TYPE): any {
             switch (type) {
                 case GLID_TYPE.TEXTURE_2D: return this._texture ? this._texture._glID : -1;
@@ -471,7 +491,7 @@ export namespace SY {
     }
 
     //2d显示节点
-    export class Sprite2D extends SY.SpriteBase {
+    export class Sprite2D extends SpriteBase {
 
         private _lt: Array<number> = [];//左上
         private _lb: Array<number> = [];//左下
@@ -494,7 +514,27 @@ export namespace SY {
             // 索引数据
             var floorVertexIndices = [0, 1, 2, 3, 2, 0];
             this.createIndexsBuffer(floorVertexIndices);
+
         }
+
+        protected onSetTextureUrl():void{
+            if(this._texture)
+            (this._texture as Texture2D).textureOnLoad = this.onTextureLoaded.bind(this);
+        }
+
+         /**
+         * 加载纹理之后调用
+         */
+        public onTextureLoaded(image:HTMLImageElement):void{
+            if(image)
+            {
+                if(this._sizeMode==SpriteSizeMode.RAW)
+                {
+                    this.setContentSize(image.width,image.height);
+                }
+            }
+        }
+
         /**
         *
         * @param width
@@ -534,8 +574,8 @@ export namespace SY {
             this._lt.push(z)
 
 
-            var floorVertexPosition = [].concat(this._lb, this._rb, this._rt, this._lt);
-            this.createVertexsBuffer(floorVertexPosition, 3);
+            var pos = [].concat(this._lb, this._rb, this._rt, this._lt);
+            this.createVertexsBuffer(pos, 3);
 
             this.updateUV();
 
@@ -567,34 +607,34 @@ export namespace SY {
         /**
          * 实例化的数目
          */
-        private _numInstances:number;
+        private _numInstances: number;
         /**
          * 单个实例的顶点数目
          */
-        private _InstanceVertNums:number;
-        protected onInit():void{
+        private _InstanceVertNums: number;
+        protected onInit(): void {
             this._renderData._isDrawInstanced = true;
             this._divisorNameData = new Map();
             this._divisorLocData = new Map();
         }
-        private _divisorNameData: Map<string, boolean> ;
+        private _divisorNameData: Map<string, boolean>;
         private _divisorLocData: Map<number, boolean>;
         public pushDivisor(name: string, isMatrix: boolean): void {
             if (this._divisorNameData.has(name) == false)
                 this._divisorNameData.set(name, isMatrix);
         }
-        protected set InstanceVertNums(nums:number){
+        protected set InstanceVertNums(nums: number) {
             this._InstanceVertNums = nums;
             this._renderData._drawInstancedVertNums = nums;
         }
-        protected get InstanceVertNums():number{
+        protected get InstanceVertNums(): number {
             return this._InstanceVertNums;
         }
-        protected set numInstances(nums:number){
+        protected set numInstances(nums: number) {
             this._numInstances = nums;
             this._renderData._drawInstancedNums = nums;
         }
-        protected get numInstances():number{
+        protected get numInstances(): number {
             return this._numInstances;
         }
         protected onShader() {

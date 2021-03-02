@@ -60,6 +60,8 @@ export class Shader {
     private a_tangent_loc;//切线属性位置
     private a_vert_color_loc;//节点颜色的位置
     private a_vert_matrix_loc;//顶点自定义矩阵位置
+
+    private u_time_loc;//时间
     private u_color_loc;//节点颜色（该变量针对节点下的所有顶点）
     private u_light_color_loc;//光照属性位置
     private u_light_color_dir_loc;//光照方向属性位置
@@ -130,7 +132,8 @@ export class Shader {
         this.a_tangent_loc = gl.getAttribLocation(_glID, syGL.AttributeUniform.TANGENT);
         this.a_vert_color_loc = gl.getAttribLocation(_glID, syGL.AttributeUniform.VERT_COLOR);
         this.a_vert_matrix_loc = gl.getAttribLocation(_glID, syGL.AttributeUniform.VERT_Matrix);
-
+        
+        this.u_time_loc = gl.getUniformLocation(_glID,syGL.AttributeUniform.TIME);
         this.u_color_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.COLOR);
         this.u_ambientColor_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.LIGHT_AMBIENT_COLOR);
         this.u_pointColor_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.LIGHT_POINT_COLOR);
@@ -189,7 +192,8 @@ export class Shader {
         this.a_tangent_loc >= 0 ? this.pushShaderVariant(ShaderUseVariantType.Tangent) : null;
         this.a_vert_color_loc >= 0 ? this.pushShaderVariant(ShaderUseVariantType.VertColor) : null;
         this.a_vert_matrix_loc >= 0 ? this.pushShaderVariant(ShaderUseVariantType.VertMatrix) : null;
-
+        
+        this.u_time_loc !=null?this.pushShaderVariant(ShaderUseVariantType.Time):null;
         this.u_color_loc !=null ? this.pushShaderVariant(ShaderUseVariantType.Color) : null;
         this.u_ambientColor_loc !=null ? this.pushShaderVariant(ShaderUseVariantType.AmbientLight) : null;
         this.u_pointColor_loc !=null ? this.pushShaderVariant(ShaderUseVariantType.PointLight) : null;
@@ -288,6 +292,15 @@ export class Shader {
         }
         if (this.checklocValid(this.u_fogDensity_loc, "u_fogDensity_loc")) {
             G_DrawEngine.setUniform1f(this.u_fogDensity_loc, density)
+        }
+    }
+    /**
+     * 设置使用时间
+     * @param time 
+     */
+    public setUseTime(time:number):void{
+        if (this.checklocValid(this.u_time_loc, "u_time_loc")) {
+            G_DrawEngine.setUniform1f(this.u_time_loc, time)
         }
     }
     /**

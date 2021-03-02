@@ -4,18 +4,18 @@ import Device from "../../Device";
 import { Label } from "../2d/Label";
 import { RenderOfflineSprite } from "../2d/RenderOfflineSprite";
 import FirstSprite from "../2d/FirstSprite";
-import TwoSprite from "../2d/TwoSprite";
 import Scene from "./Scene";
-import InstantiateStage from "../2d/InstantiateStage";
+import InstantiateSprite from "../2d/InstantiateSprite";
+import { UvSprite } from "../2d/UvSprite";
 
 export default class Scene2D extends Scene {
     
     private _rectangle:Rectangle;
     private _firstSprite:FirstSprite;
-    private _instantiateStage:InstantiateStage;
+    private _instantiateSprite:InstantiateSprite;
     private _label:Label;
     private _renderSprite:RenderOfflineSprite;
-    
+    private _uvSprite:UvSprite;
     constructor(){
         super();
     }
@@ -32,10 +32,15 @@ export default class Scene2D extends Scene {
         // this._firstSprite.setPosition(0,1,0);
         // this.addChild(this._firstSprite);
 
-        this._instantiateStage = new InstantiateStage();
-        this._instantiateStage.setScale(0.5,0.5,0.5);
-        this._instantiateStage.setPosition(0.2,0.2,0);
-        this.addChild(this._instantiateStage);
+        this._uvSprite = new UvSprite();
+        this._uvSprite.setPosition(-0.6,0.5,0);
+        this._uvSprite.spriteFrame = "res/tree.png";
+        this.addChild(this._uvSprite);
+
+        this._instantiateSprite = new InstantiateSprite();
+        this._instantiateSprite.setScale(0.5,0.5,0.5);
+        this._instantiateSprite.setPosition(0.2,0.2,0);
+        this.addChild(this._instantiateSprite);
 
         this._renderSprite = new RenderOfflineSprite();
         this._renderSprite.setPosition(0.6,0.8,0);

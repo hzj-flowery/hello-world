@@ -65,6 +65,7 @@ G_UISetting.setUI();
     "res/8x8-font.png",
     "res/wood.jpg",
     "res/tree.jpg",
+    "res/tree.png",
     "res/ground.jpg",
     "res/wicker.jpg"
  ]
