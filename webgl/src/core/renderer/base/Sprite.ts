@@ -123,8 +123,8 @@ export namespace SY {
         //参考glprimitive_type
         protected _glPrimitiveType: syGL.PrimitiveType;//绘制的类型
         protected _cameraType: number = 0;//相机的类型(0表示透视1表示正交)
-        protected _vertStr: string = "";
-        protected _fragStr: string = "";
+        private _vertStr: string = "";
+        private _fragStr: string = "";
         protected _sizeMode:SpriteSizeMode;//节点的尺寸模式
         private _url: string;//资源路径
         constructor() {
@@ -142,6 +142,10 @@ export namespace SY {
         }
         private init(): void {
             this.onInit();
+            if(this._vertStr==""||this._fragStr=="")
+            {
+                [this._vertStr,this._fragStr] = LoaderManager.instance.getGlslRes(this.name);
+            }
             this.setShader(this._vertStr, this._fragStr);
         }
         public set shaderVert(vert: string) {
@@ -401,8 +405,8 @@ export namespace SY {
             this.name = "sySprite";
         }
         protected onInit() {
-            this._vertStr = ShaderCode.sprite.vert;
-            this._fragStr = ShaderCode.sprite.frag;
+            this.shaderVert = ShaderCode.sprite.vert;
+            this.shaderFrag = ShaderCode.sprite.frag;
         }
 
     }

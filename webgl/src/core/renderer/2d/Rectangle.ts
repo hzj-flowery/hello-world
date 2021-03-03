@@ -8,8 +8,6 @@ export class Rectangle extends SY.Sprite2D {
         super();
     }
     protected onInit(): void {
-
         this.setContentSize(210,210);
-        [this._vertStr,this._fragStr] = LoaderManager.instance.getGlslRes("Rectangle");
     }
 }

@@ -7,6 +7,5 @@ export class UvSprite extends SY.Sprite2D {
     }
     protected onInit(): void {
         this.setContentSize(100,100);
-        [this._vertStr,this._fragStr] = LoaderManager.instance.getGlslRes("UvSprite");
     }
 }

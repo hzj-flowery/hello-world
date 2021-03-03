@@ -16,14 +16,8 @@ export default class InstantiateSprite extends SY.SpriteInstance {
     protected onInit(): void {
         super.onInit();
         this.setContentSize(100, 200);
-        
-
-        
-        [this._vertStr,this._fragStr] = LoaderManager.instance.getGlslRes("InstantiateSprite");
-
         this.numInstances = 2;
         this.InstanceVertNums = 4;
-
         this.pushDivisor("a_color", false);
         this.pushDivisor("a_matrix", true);
         this.produceRandomPosArray();

@@ -2,22 +2,7 @@ import { glMatrix } from "../../math/Matrix";
 import { SY } from "../base/Sprite";
 import { syGL } from "../gfx/syGLEnums";
 import { G_LightCenter } from "./LightCenter";
-
-let vertBase =
-    `attribute vec4 a_position;
-    uniform mat4 u_PMatrix;
-    uniform mat4 u_VMatrix;
-    uniform mat4 u_MMatrix;
-    uniform mat4 u_Matrix;
-void main() {
-// gl_Position = u_PMatrix * u_VMatrix * u_MMatrix*u_Matrix * a_position;
-gl_Position = u_PMatrix * u_VMatrix *u_Matrix * a_position;
-}`
-let fragBase =
-    `precision mediump float;
-void main() {
-gl_FragColor = vec4(1.0,0.0,0.0,1.0); 
-}`
+    ``
 
 export class  LineFrumstum extends SY.SpriteBase {
     constructor() {
@@ -27,8 +12,6 @@ export class  LineFrumstum extends SY.SpriteBase {
     private _lightWorldMatrix: Float32Array;
     private _lightProjectInverseMatrix: Float32Array;
     onInit():void{
-        this._fragStr = fragBase;
-        this._vertStr = vertBase;
         let position = [
             -1, -1, -1,
             1, -1, -1,

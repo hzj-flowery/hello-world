@@ -12,7 +12,6 @@ export class RenderOfflineSprite extends SY.Sprite2D{
     }
     protected onInit(): void {
         this.setContentSize(Device.Instance.width/4,Device.Instance.height/4);
-        [this._vertStr,this._fragStr] = LoaderManager.instance.getGlslRes("RenderOfflineSprite");
     }
     protected onSetTextureUrl():void{
         

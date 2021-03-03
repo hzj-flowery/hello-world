@@ -1,3 +1,4 @@
+import LoaderManager from "../../LoaderManager";
 import { SY } from "../base/Sprite";
 import { CubeData, CubeFace } from "../data/CubeData";
 import { ShaderUseVariantType } from "../shader/ShaderUseVariantType";
@@ -34,78 +35,6 @@ import { ShaderUseVariantType } from "../shader/ShaderUseVariantType";
 * 环境光，模拟了自然界的光的漫反射，弥补了平行光源的缺点。一般，这两种光会同时使用。只使用环境光的话，无法表现出模型的凹凸，只使用平行光源的话，阴影过于严重无法分清模型的轮廓
   环境光是没有方向的
 */
-var vertextBaseCode =
-  `attribute vec4 a_position;
-  attribute vec3 a_normal;
-  attribute vec2 a_uv;
-  uniform vec3 u_lightWorldPosition;
-  uniform vec3 u_cameraWorldPosition;
-  uniform mat4 u_MMatrix;
-  uniform mat4 u_PMatrix;
-  uniform mat4 u_VMatrix;
-  uniform mat4 u_MITMatrix;
-  varying vec3 v_normal;
-  varying vec2 v_uv;
-  varying vec3 v_surfaceToLight;
-  varying vec3 v_surfaceToView;
-  void main() {
-  
-  v_normal = mat3(u_MITMatrix) * a_normal;
-  vec3 surfaceWorldPosition = (u_MMatrix * a_position).xyz;
-  v_surfaceToLight = u_lightWorldPosition - surfaceWorldPosition;
-  v_surfaceToView = u_cameraWorldPosition - surfaceWorldPosition;
-  v_uv = a_uv;
-  gl_Position = u_PMatrix *u_VMatrix*u_MMatrix* a_position;
-  }`
-var fragBaseCode =
-  `precision mediump float;
-    varying vec2 v_uv;
-  varying vec3 v_normal;
-  varying vec3 v_surfaceToLight;
-  varying vec3 v_surfaceToView;
-  uniform sampler2D u_texture;
-  uniform vec4 u_color;     //节点的颜色
-  uniform float u_shininess;
-  uniform vec4 u_specularColor;//高光入射光颜色
-  
-  uniform vec4 u_ambientColor;//环境光入射光的颜色
-  
-  uniform vec3  u_spotDirection;//聚光的方向
-  uniform vec4  u_spotColor;//聚光入射光的颜色
-  uniform float u_spotInnerLimit;//聚光的内部限制
-  uniform float u_spotOuterLimit;//聚光的外部限制
-
-  
-
-  void main() {
-  vec4 materialColor = texture2D(u_texture, v_uv);//材质颜色
-  vec4 surfaceBaseColor = u_color*materialColor;//表面基底颜色
-  vec3 normal = normalize(v_normal); // 因为 v_normal 是可变量，被插值过，所以不是单位向量，单位可以让它成为再次成为单位向量
-  vec3 spotDirection = normalize(u_spotDirection);
-  vec3 surfaceToLightDirection = normalize(v_surfaceToLight); //表面指向光位置的方向
-  vec3 surfaceToViewDirection = normalize(v_surfaceToView);   //表面指向摄像机位置的方向
-  vec3 halfVector = normalize(surfaceToLightDirection + surfaceToViewDirection);//高光方向
-
-  float dotFromDirection = dot(surfaceToLightDirection,spotDirection);
-  float limitRange = (u_spotOuterLimit - u_spotInnerLimit);
-
-  //下面这个公式可以算出来
-  // float inLight = 1.0-clamp((dotFromDirection - u_spotOuterLimit) / limitRange, 0.0, 1.0);
-  //与上面公式的效果一样的
-  float inLight = smoothstep(u_spotOuterLimit, u_spotInnerLimit, dotFromDirection);
-
-  float light =inLight* max(dot(normal, surfaceToLightDirection),0.0); //算出点光的入射强度
-  float specular = 0.0;                                                  //高光强度
-  if (light > 0.0) {specular = inLight*pow(dot(normal, halfVector), u_shininess);}
-  vec4 diffuseColor = surfaceBaseColor*u_spotColor*light;//漫反射颜色
-  vec4 specularColor = u_specularColor*specular;//高光颜色
-  vec4 ambientColor = u_ambientColor*surfaceBaseColor;//环境光
-  gl_FragColor = diffuseColor +specularColor+ambientColor;
-
-  }`
-
-
-
 export default class SpotLightCube extends SY.SpriteBase {
   constructor() {
     super();
@@ -119,11 +48,5 @@ export default class SpotLightCube extends SY.SpriteBase {
     
     this._glPrimitiveType = this.gl.TRIANGLE_STRIP;
     this.color = [1, 1.0, 1.0, 1.0];
-
-    this._vertStr = vertextBaseCode;
-    this._fragStr = fragBaseCode;
-
-
-    
   }
 }

@@ -1,36 +1,7 @@
 
+import LoaderManager from "../../LoaderManager";
 import { SY } from "../base/Sprite";
 import { CubeData } from "../data/CubeData";
-
-var vertextBaseCode =
-`attribute vec4 a_position;
-attribute vec4 a_normal;
-uniform mat4 u_PVMatrix;
-uniform mat4 u_MMatrix;
-varying vec3 v_position;
-varying vec3 v_normal;
-
-void main() {
-    v_position = (u_MMatrix * a_position).xyz;
-    v_normal = vec3(u_MMatrix * a_normal);
-    gl_Position = u_PVMatrix * u_MMatrix * a_position;
-}
-`
-//基础的shader的片段着色器
-var fragBaseCode =
-`precision highp float;
-varying vec3 v_position;
-varying vec3 v_normal;
-uniform samplerCube u_cubeTexture;
-uniform vec3 u_cameraWorldPosition;
-
-void main() {
-    vec3 normal = normalize(v_normal);
-    vec3 eyeToSurfaceDir = normalize(v_position - u_cameraWorldPosition);
-    vec3 direction = reflect(eyeToSurfaceDir,normal);
-    gl_FragColor = textureCube(u_cubeTexture, direction);
-}
-`
 
 export default class MirrorCube extends SY.SpriteBase {
     constructor() {
@@ -41,8 +12,6 @@ export default class MirrorCube extends SY.SpriteBase {
         this.createVertexsBuffer(rd.vertex,rd.dF.vertex_item_size);
         this.createIndexsBuffer(rd.indexs);
         this.createNormalsBuffer(rd.normals,rd.dF.normal_item_size);
-        this._vertStr = vertextBaseCode;
-        this._fragStr = fragBaseCode;
         this._glPrimitiveType = this.gl.TRIANGLE_STRIP;
     }
     private defaultPath = [

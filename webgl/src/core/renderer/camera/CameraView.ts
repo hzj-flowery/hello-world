@@ -61,8 +61,8 @@ export default class CameraView extends SY.SpriteBase {
         var result = this.createCameraBufferInfo(0.2);
         this.createVertexsBuffer(result.pos, 3);
         this.createIndexsBuffer(result.index);
-        this._vertStr = solidcolorvertexshader;
-        this._fragStr = solidcolorfragmentshader;
+        this.shaderVert = solidcolorvertexshader;
+        this.shaderFrag = solidcolorfragmentshader;
 
         this._glPrimitiveType = syGL.PrimitiveType.LINES;
     }

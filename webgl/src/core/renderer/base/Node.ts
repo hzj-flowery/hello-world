@@ -43,7 +43,7 @@ export class Node extends Ref {
     private _children: Array<Node>;//孩子节点
 
     private initBaseNode(): void {
-        this.name = "defaultName";
+        this.name = this.constructor.name;
         this._children = [];
         this._worldMatrix = this._glMatrix.mat4.identity(null);
         this._modelMatrix = this._glMatrix.mat4.identity(null);

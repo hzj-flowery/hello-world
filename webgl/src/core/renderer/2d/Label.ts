@@ -192,8 +192,6 @@ export class Label extends SY.Sprite2D {
         }
         this.createIndexsBuffer(floorVertexIndices);
 
-        [this._vertStr,this._fragStr] = LoaderManager.instance.getGlslRes("Label");
-
         this._glPrimitiveType = syGL.PrimitiveType.TRIANGLES;
 
     }

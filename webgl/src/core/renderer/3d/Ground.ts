@@ -1,3 +1,4 @@
+import LoaderManager from "../../LoaderManager";
 import { SY } from "../base/Sprite";
 import { syGL } from "../gfx/syGLEnums";
 
@@ -12,29 +13,6 @@ import { syGL } from "../gfx/syGLEnums";
 三角扇	 gl.TRIANGLE_FAN	           一系列三角形组成的类似扇形的图形，前三个点构成第一个三角形，接下来的一个点和前一个三角形的最后一条边组成接下来的一个三角形，被绘制在(v0, v1, v2),(v0, v2, v3),(v0, v3, v4)...
  */
 
-var vertextBaseCode =
-    'attribute vec3 a_position;' +
-    'attribute vec2 a_uv;' +
-
-    'uniform mat4 u_MMatrix;' +
-    'uniform mat4 u_VMatrix;' +
-    'uniform mat4 u_PMatrix;' +
-    'varying vec2 vTextureCoordinates;' +
-
-    'void main() {' +
-    'gl_Position = u_PMatrix * u_MMatrix *u_VMatrix* vec4(a_position, 1.0);' +
-    'vTextureCoordinates = a_uv;' +
-    '}'
-//基础的shader的片段着色器
-var fragBaseCode =
-    'precision mediump float;' +
-
-    'varying vec2 vTextureCoordinates;' +
-    'uniform sampler2D u_texture;' +
-
-    'void main() {' +
-    'gl_FragColor = texture2D(u_texture, vTextureCoordinates);' +
-    '}'
 
 export default class Ground extends SY.SpriteBase {
     constructor() {
@@ -65,8 +43,6 @@ export default class Ground extends SY.SpriteBase {
         // this.testDrawPrimitive_TRIANGLE_STRIP();
         // this.testDrawPrimitive_TRIANGLE_FAN();
         this.testDrawPrimitive_TRIANGLE();
-        this._vertStr = vertextBaseCode;
-        this._fragStr = fragBaseCode;
     }
 
     private testDrawPrimitive_TRIANGLE_STRIP():void{

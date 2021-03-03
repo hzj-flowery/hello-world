@@ -7,20 +7,20 @@ import Device from "./core/Device";
 import LoaderManager from "./core/LoaderManager";
 import PointLightTest from "./core/renderer/light/PointLightTest";
 import RenderFlow from "./core/RenderFlow";
-import EarthSunTest from "./core/renderer/3d/EarthSunTest";
-import RobartTest from "./core/renderer/3d/RobartTest";
-import CaptureTest from "./core/renderer/3d/CaptureTest";
-import RampTextureTest from "./core/renderer/3d/RampTextureTest";
-import ObjTest from "./core/renderer/3d/ObjTest";
-import { CameraTest } from "./core/renderer/3d/CameraTest";
+import EarthSunTest from "./core/renderer/3d/test/EarthSunTest";
+import RobartTest from "./core/renderer/3d/test/RobartTest";
+import CaptureTest from "./core/renderer/3d/test/CaptureTest";
+import RampTextureTest from "./core/renderer/3d/test/RampTextureTest";
+import ObjTest from "./core/renderer/3d/test/ObjTest";
+import { CameraTest } from "./core/renderer/3d/test/CameraTest";
 import ThreeDLightTest from "./core/renderer/light/ThreeDLightTest";
-import ShaderShadowTest from "./core/renderer/3d/ShaderShadowTest";
+import ShaderShadowTest from "./core/renderer/3d/test/ShaderShadowTest";
 import SpotLightTest from "./core/renderer/light/SpotLightTest";
-import { StencilTest } from "./core/renderer/3d/StencilTest";
-import { RenderTargetTexture } from "./core/renderer/3d/RenderTargetTexture";
+import { StencilTest } from "./core/renderer/3d/test/StencilTest";
+import { RenderTargetTexture } from "./core/renderer/3d/test/RenderTargetTexture";
 import { G_ShaderFactory } from "./core/renderer/shader/ShaderFactory";
 import { G_BufferManager } from "./core/renderer/base/buffer/BufferManager";
-import { ShadowMapProjectionTest } from "./core/renderer/3d/ShadowMapProjectionTest";
+import { ShadowMapProjectionTest } from "./core/renderer/3d/test/ShadowMapProjectionTest";
 import { G_DrawEngine } from "./core/renderer/base/DrawEngine";
 import { G_ShaderCenter } from "./core/renderer/shader/ShaderCenter";
 import { G_LightCenter } from "./core/renderer/light/LightCenter";
@@ -29,14 +29,7 @@ import { G_UISetting } from "./core/ui/UiSetting";
 
 
 
-Device.Instance.init();
-G_DrawEngine.init(Device.Instance.gl);
-G_ShaderFactory.init(Device.Instance.gl);
-G_BufferManager.init(Device.Instance.gl);
-G_ShaderCenter.init();
-G_LightCenter.init();
-G_LightModel.init();
-G_UISetting.setUI();
+
 //UI
 
 
@@ -71,24 +64,34 @@ G_UISetting.setUI();
     "res/wicker.jpg"
  ]
 
- var glslArr = [
-    "res/glsl/UvSprite/vs.glsl",
-    "res/glsl/UvSprite/fs.glsl",
-    
-    "res/glsl/RenderOfflineSprite/vs.glsl",
-    "res/glsl/RenderOfflineSprite/fs.glsl",
-
-    "res/glsl/Rectangle/vs.glsl",
-    "res/glsl/Rectangle/fs.glsl",
-
-    "res/glsl/InstantiateSprite/vs.glsl",
-    "res/glsl/InstantiateSprite/fs.glsl",
-    
-    "res/glsl/Label/vs.glsl",
-    "res/glsl/Label/fs.glsl",
-    
-
+ var glslArr = [];
+ let spriteNameArr = [
+       "UvSprite",
+       "LineFrumstum",
+       "RenderOfflineSprite",
+       "Rectangle",
+       "InstantiateSprite",
+       "Label",
+       "Cube",
+       "FogCube",
+       "SkyBox",
+       "Sphere",
+       "Ground",
+       "Line",
+       "MoreSprite",
+       "LightCube",
+       "PointLightCube",
+       "SpotLightCube",
+       "MirrorCube",
+       "CustomTextureCube",
  ]
+ for(let i = 0;i<spriteNameArr.length;i++)
+ {
+     let vs = "res/glsl/"+spriteNameArr[i]+"/vs.glsl";
+     let fs = "res/glsl/"+spriteNameArr[i]+"/fs.glsl";
+     glslArr.push(vs);
+     glslArr.push(fs);
+ }
  arr = arr.concat(glslArr);
 
 // ThreeDTexture.run();
@@ -116,10 +119,20 @@ G_UISetting.setUI();
 // FogTest.run();
 
 
-
+function runBeforeInit(){
+    Device.Instance.init();
+    G_DrawEngine.init(Device.Instance.gl);
+    G_ShaderFactory.init(Device.Instance.gl);
+    G_BufferManager.init(Device.Instance.gl);
+    G_ShaderCenter.init();
+    G_LightCenter.init();
+    G_LightModel.init();
+    G_UISetting.setUI();
+}
 
 LoaderManager.instance.load(arr,null,function(){
-
+     
+    runBeforeInit();
     console.log("-888888----",/mobile|android|iphone|ipad/.test("mobilczjjjjj"));
     let name = "zhangman";
     let value = "xiaogui hen";

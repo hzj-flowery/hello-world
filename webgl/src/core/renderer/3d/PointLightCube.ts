@@ -1,3 +1,4 @@
+import LoaderManager from "../../LoaderManager";
 import { SY } from "../base/Sprite";
 import { CubeData, CubeFace } from "../data/CubeData";
 import { ShaderUseVariantType } from "../shader/ShaderUseVariantType";
@@ -34,58 +35,6 @@ import { ShaderUseVariantType } from "../shader/ShaderUseVariantType";
 * 环境光，模拟了自然界的光的漫反射，弥补了平行光源的缺点。一般，这两种光会同时使用。只使用环境光的话，无法表现出模型的凹凸，只使用平行光源的话，阴影过于严重无法分清模型的轮廓
   环境光是没有方向的
 */
-var vertextBaseCode =
-  `attribute vec4 a_position;
-  attribute vec3 a_normal;
-  attribute vec2 a_uv;
-  uniform vec3 u_lightWorldPosition;
-  uniform vec3 u_cameraWorldPosition;
-  uniform mat4 u_MMatrix;
-  uniform mat4 u_PMatrix;
-  uniform mat4 u_VMatrix;
-  uniform mat4 u_MITMatrix;
-  varying vec3 v_normal;
-  varying vec2 v_uv;
-  varying vec3 v_surfaceToLight;
-  varying vec3 v_surfaceToView;
-  void main() {
-  
-  v_normal = mat3(u_MITMatrix) * a_normal;
-  vec3 surfaceWorldPosition = (u_MMatrix * a_position).xyz;
-  v_surfaceToLight = u_lightWorldPosition - surfaceWorldPosition;
-  v_surfaceToView = u_cameraWorldPosition - surfaceWorldPosition;
-  v_uv = a_uv;
-  gl_Position = u_PMatrix *u_VMatrix*u_MMatrix* a_position;
-  }`
-var fragBaseCode =
-  `precision mediump float;
-    varying vec2 v_uv;
-  varying vec3 v_normal;
-  varying vec3 v_surfaceToLight;
-  varying vec3 v_surfaceToView;
-  uniform sampler2D u_texture;
-  uniform vec4 u_color;     //节点的颜色
-  uniform float u_shininess;
-  uniform vec4 u_pointColor;//点光入射光的颜色
-  uniform vec4 u_ambientColor;//环境光入射光的颜色
-  uniform vec4 u_specularColor;//高光入射光颜色
-
-  void main() {
-  vec4 materialColor = texture2D(u_texture, v_uv);//材质颜色
-  vec4 surfaceBaseColor = u_color*materialColor;//表面基底颜色
-  vec3 normal = normalize(v_normal);
-  vec3 surfaceToLightDirection = normalize(v_surfaceToLight); //表面指向光位置的方向
-  vec3 surfaceToViewDirection = normalize(v_surfaceToView);   //表面指向摄像机位置的方向
-  vec3 halfVector = normalize(surfaceToLightDirection + surfaceToViewDirection);//高光方向
-  float light = max(dot(normal, surfaceToLightDirection),0.0); //算出点光的入射强度
-  float specular = 0.0;                                                  //高光强度
-  if (light > 0.0) {specular = pow(dot(normal, halfVector), u_shininess);}
-  vec4 diffuseColor = surfaceBaseColor*u_pointColor*light;//漫反射颜色
-  vec4 specularColor = u_specularColor*specular;//高光颜色
-  vec4 ambientColor = u_ambientColor*surfaceBaseColor;//环境光
-  gl_FragColor = diffuseColor + specularColor+ambientColor;
-
-  }`
   
 
 export default class PointLightCube extends SY.SpriteBase {
@@ -98,8 +47,6 @@ export default class PointLightCube extends SY.SpriteBase {
     this.createIndexsBuffer(rd.indexs);
     this.createNormalsBuffer(rd.normals, rd.dF.normal_item_size);
     this.createUVsBuffer(rd.uvData, rd.dF.uv_item_size);
-    this._vertStr = vertextBaseCode;
-    this._fragStr = fragBaseCode;
     this._glPrimitiveType = this.gl.TRIANGLE_STRIP;
     this.color = [1, 1.0, 1.0, 1.0];
   }
