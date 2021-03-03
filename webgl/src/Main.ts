@@ -87,8 +87,8 @@ import { G_UISetting } from "./core/ui/UiSetting";
  ]
  for(let i = 0;i<spriteNameArr.length;i++)
  {
-     let vs = "res/glsl/"+spriteNameArr[i]+"/vs.glsl";
-     let fs = "res/glsl/"+spriteNameArr[i]+"/fs.glsl";
+     let vs = "res/glsl/"+spriteNameArr[i]+"/shader.vert";
+     let fs = "res/glsl/"+spriteNameArr[i]+"/shader.frag";
      glslArr.push(vs);
      glslArr.push(fs);
  }

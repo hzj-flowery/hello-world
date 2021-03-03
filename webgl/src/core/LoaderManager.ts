@@ -255,6 +255,8 @@ export default class LoaderManager {
             case "gltf": return this.loadJsonStringData;
             case "skel": return this.loadSkelData;
             case "glsl": return this.loadGlslStringData;
+            case "frag": return this.loadGlslStringData;
+            case "vert": return this.loadGlslStringData;
             default: console.log("发现未知后缀名的文件----", path); null; break;
         }
     }
@@ -319,7 +321,7 @@ export default class LoaderManager {
      * @param spriteName 
      */
     public getGlslRes(spriteName:string):Array<string>{
-         return [this.getRes("res/glsl/"+spriteName+"/vs.glsl"),this.getRes("res/glsl/"+spriteName+"/fs.glsl")]
+         return [this.getRes("res/glsl/"+spriteName+"/shader.vert"),this.getRes("res/glsl/"+spriteName+"/shader.frag")]
     }
     /**
      * 移除CPU端内存中的图片缓存
