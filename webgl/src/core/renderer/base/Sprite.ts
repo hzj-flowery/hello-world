@@ -126,6 +126,7 @@ export namespace SY {
         private _vertStr: string = "";
         private _fragStr: string = "";
         protected _sizeMode:SpriteSizeMode;//节点的尺寸模式
+        protected _shaderType:ShaderType;//shader的类型
         private _url: string;//资源路径
         constructor() {
             super();
@@ -137,7 +138,7 @@ export namespace SY {
             this._color = [1.0, 1.0, 1.0, 1.0];//默认颜色为白色
 
             this._sizeMode = SpriteSizeMode.CUSTOM;//默认加载图片的尺寸大小为自定义
-
+            this._shaderType = ShaderType.Custom;
             this.init();
         }
         private init(): void {
@@ -169,12 +170,28 @@ export namespace SY {
         private handleShader() {
             if(this._vertStr==""||this._fragStr=="")
             {
-                LoaderManager.instance.loadGlsl(this.name,(res)=>{
+                let name = this.name;
+                if(this._shaderType==ShaderType.Custom)
+                {
+                    //自定义shader
+                    name = this.name;
+                }
+                else if(this._shaderType==ShaderType.Sprite)
+                {
+                    //默认的sprite
+                     name = "Sprite";
+                }
+                else
+                {
+                    console.log("传入未知的类型shader 请检查---",this.name);
+                }
+                //自定义shader
+                LoaderManager.instance.loadGlsl(name,(res)=>{
                     this._vertStr = res[0];
                     this._fragStr = res[1];
                     this._shader = G_ShaderCenter.createShader(ShaderType.Custom, this._vertStr, this._fragStr);
                     this.onShader();
-                });
+                    });
             }
             else
             {
@@ -416,13 +433,8 @@ export namespace SY {
     export class sySprite extends SpriteBase {
         constructor() {
             super();
-            this.name = "sySprite";
+            this._shaderType = ShaderType.Sprite;
         }
-        protected onInit() {
-            this.shaderVert = ShaderCode.sprite.vert;
-            this.shaderFrag = ShaderCode.sprite.frag;
-        }
-
     }
     export class Sprite extends Node {
         constructor() {
