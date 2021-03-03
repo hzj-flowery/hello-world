@@ -320,9 +320,36 @@ export default class LoaderManager {
      * 获取着色器代码
      * @param spriteName 
      */
-    public getGlslRes(spriteName:string):Array<string>{
+    private getGlslRes(spriteName:string):Array<string>{
          return [this.getRes("res/glsl/"+spriteName+"/shader.vert"),this.getRes("res/glsl/"+spriteName+"/shader.frag")]
     }
+    /**
+     * 加载着色器代码
+     * @param spriteName 
+     * @param callBack 
+     */
+    public loadGlsl(spriteName:string,callBack?:Function):void{
+           let vs = "res/glsl/"+spriteName+"/shader.vert";
+           let fs = "res/glsl/"+spriteName+"/shader.frag";
+           let added = this.getGlslRes(spriteName);
+           if(added[0]&&added[1])
+           {
+               //说明已经加载过了
+               if(callBack)callBack(added);
+           }
+           else
+           {
+               this.load([vs,fs],null,(res)=>{
+                    let added = this.getGlslRes(spriteName);
+                    if(!added[0]||!added[1])
+                    {
+                        console.log("当前要加载的shader源码不存在------",spriteName);
+                        return;
+                    }
+                    if(callBack)callBack(added);
+               })        
+           }
+    }         
     /**
      * 移除CPU端内存中的图片缓存
      * @param url 

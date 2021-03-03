@@ -1,4 +1,4 @@
-import LoaderManager from "../../LoaderManager";
+
 import { SY } from "../base/Sprite";
 export class UvSprite extends SY.Sprite2D {
     constructor() {

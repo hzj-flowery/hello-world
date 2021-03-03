@@ -142,11 +142,7 @@ export namespace SY {
         }
         private init(): void {
             this.onInit();
-            if(this._vertStr==""||this._fragStr=="")
-            {
-                [this._vertStr,this._fragStr] = LoaderManager.instance.getGlslRes(this.name);
-            }
-            this.setShader(this._vertStr, this._fragStr);
+            this.handleShader();
         }
         public set shaderVert(vert: string) {
             this._vertStr = vert;
@@ -167,12 +163,25 @@ export namespace SY {
         protected onShader():void{
 
         }
-        private setShader(vert: string, frag: string) {
-            if (vert == "" || frag == "") {
-                return;
+        /**
+         * 处理着色器
+         */
+        private handleShader() {
+            if(this._vertStr==""||this._fragStr=="")
+            {
+                LoaderManager.instance.loadGlsl(this.name,(res)=>{
+                    this._vertStr = res[0];
+                    this._fragStr = res[1];
+                    this._shader = G_ShaderCenter.createShader(ShaderType.Custom, this._vertStr, this._fragStr);
+                    this.onShader();
+                });
             }
-            this._shader = G_ShaderCenter.createShader(ShaderType.Custom, vert, frag);
-            this.onShader();
+            else
+            {
+                this._shader = G_ShaderCenter.createShader(ShaderType.Custom, this._vertStr, this._fragStr);
+                this.onShader();
+            }
+            
         }
         //创建顶点缓冲
         /**
@@ -340,10 +349,15 @@ export namespace SY {
          */
         protected collectRenderData(time: number): void {
             if (this._texture && this._texture.loaded == false) {
+                //说明使用了纹理 但纹理还没有被加载完成
+                return;
+            }
+            if(!this._shader)
+            {
+                //一次渲染shader是必不可少的
                 return;
             }
             this._renderData._node = this as Node;
-
             this._renderData._cameraType = this._cameraType;//默认情况下是透视投影
             this._renderData._shader = this._shader;
             //顶点组

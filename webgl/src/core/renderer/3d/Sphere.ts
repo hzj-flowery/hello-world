@@ -1,4 +1,4 @@
-import LoaderManager from "../../LoaderManager";
+
 import { SY } from "../base/Sprite";
 
 export default class Sphere extends SY.SpriteBase {

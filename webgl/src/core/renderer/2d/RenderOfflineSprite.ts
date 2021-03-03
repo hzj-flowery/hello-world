@@ -2,7 +2,6 @@ import { SY } from "../base/Sprite";
 import Device from "../../Device";
 import GameMainCamera from "../camera/GameMainCamera";
 import { RenderTexture } from "../base/texture/RenderTexture";
-import LoaderManager from "../../LoaderManager";
 
 
 export class RenderOfflineSprite extends SY.Sprite2D{

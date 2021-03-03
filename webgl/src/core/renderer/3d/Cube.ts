@@ -1,6 +1,6 @@
-import LoaderManager from "../../LoaderManager";
+
 import { SY } from "../base/Sprite";
-import { CubeData, CubeFace } from "../data/CubeData";
+import { CubeData } from "../data/CubeData";
 
 export default class Cube extends SY.SpriteBase {
     constructor() {

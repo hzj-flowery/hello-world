@@ -1,7 +1,5 @@
-import LoaderManager from "../../LoaderManager";
-import { G_DrawEngine } from "../base/DrawEngine";
+
 import { SY } from "../base/Sprite";
-import { syGL } from "../gfx/syGLEnums";
 
 /**
  * 误区：

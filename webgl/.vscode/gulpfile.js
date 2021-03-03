@@ -36,11 +36,11 @@ gulp.task("glsl", done =>  {
 	var stringify = require('glsl-token-string')
 
 	// Synchronously:
-	var tokens = tokenString(fs.readFileSync(workSpaceDir + 'bin/res/glsl/vs.glsl'));
-	//给shader代码中的所有变量名加一个前缀
-    console.log(stringify(descope(tokens, function (name) {
-		return "a_" + name;
-	})))
+	// var tokens = tokenString(fs.readFileSync(workSpaceDir + 'bin/res/glsl/vs.glsl'));
+	// //给shader代码中的所有变量名加一个前缀
+    // console.log(stringify(descope(tokens, function (name) {
+	// 	return "a_" + name;
+	// })))
 	
 	//shader代码中可能存在模块调用，将用到的模块合并进来
 	var sourceCode = glsl.file(workSpaceDir + 'bin/res/glsl/input.glsl');

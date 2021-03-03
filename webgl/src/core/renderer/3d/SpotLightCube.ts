@@ -1,7 +1,6 @@
-import LoaderManager from "../../LoaderManager";
+
 import { SY } from "../base/Sprite";
-import { CubeData, CubeFace } from "../data/CubeData";
-import { ShaderUseVariantType } from "../shader/ShaderUseVariantType";
+import { CubeData } from "../data/CubeData";
 
 
 

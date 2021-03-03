@@ -64,36 +64,6 @@ import { G_UISetting } from "./core/ui/UiSetting";
     "res/wicker.jpg"
  ]
 
- var glslArr = [];
- let spriteNameArr = [
-       "UvSprite",
-       "LineFrumstum",
-       "RenderOfflineSprite",
-       "Rectangle",
-       "InstantiateSprite",
-       "Label",
-       "Cube",
-       "FogCube",
-       "SkyBox",
-       "Sphere",
-       "Ground",
-       "Line",
-       "MoreSprite",
-       "LightCube",
-       "PointLightCube",
-       "SpotLightCube",
-       "MirrorCube",
-       "CustomTextureCube",
- ]
- for(let i = 0;i<spriteNameArr.length;i++)
- {
-     let vs = "res/glsl/"+spriteNameArr[i]+"/shader.vert";
-     let fs = "res/glsl/"+spriteNameArr[i]+"/shader.frag";
-     glslArr.push(vs);
-     glslArr.push(fs);
- }
- arr = arr.concat(glslArr);
-
 // ThreeDTexture.run();
 // LabelTest.run();
 // ShaderShadowTest.run();
