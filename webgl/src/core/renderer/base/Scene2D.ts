@@ -42,15 +42,15 @@ export default class Scene2D extends Scene {
         this._instantiateSprite.setPosition(0.2,0.2,0);
         this.addChild(this._instantiateSprite);
 
-        this._renderSprite = new RenderOfflineSprite();
-        this._renderSprite.setPosition(0.6,0.8,0);
-        this._renderSprite.spriteFrame = {
-            type:"RenderTexture",
-            place:"color",
-            width:Device.Instance.width,
-            height:Device.Instance.height
-        }
-        this.addChild(this._renderSprite);
+        // this._renderSprite = new RenderOfflineSprite();
+        // this._renderSprite.setPosition(0.6,0.8,0);
+        // this._renderSprite.spriteFrame = {
+        //     type:"RenderTexture",
+        //     place:"color",
+        //     width:Device.Instance.width,
+        //     height:Device.Instance.height
+        // }
+        // this.addChild(this._renderSprite);
 
         
 

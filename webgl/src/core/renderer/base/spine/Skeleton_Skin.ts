@@ -30,6 +30,7 @@ export class Skeleton_Skin {
     private jointData: Float32Array;
     public jointTexture: TextureCustom;
     public _texture: Texture;
+    public _riverTexture:Texture;
     private gl: WebGL2RenderingContext;
     private _skinWidth:number;//皮肤纹理的宽度(宽有多少个像素点)
     private _skinHeight:number;//皮肤纹理的高度（高有多少个像素点）
@@ -77,6 +78,11 @@ export class Skeleton_Skin {
 
         this._texture = new Texture2D();
         (this._texture as Texture2D).url = ("res/bindu.jpg");
+        
+        //水波纹纹理
+        this._riverTexture = new Texture2D();
+        (this._riverTexture as Texture2D).url = ("res/caustics.png");
+        
     }
     update() {
         /**

@@ -57,6 +57,7 @@ G_UISetting.setUI();
     "res/dragon.png",
     "res/light.jpg",
     "res/dragon.jpg",
+    "res/caustics.png",
     "res/models/killer_whale/whale.CYCLES.bin",
     "res/models/killer_whale/whale.CYCLES.gltf",
     "res/models/HeadData/head.json",

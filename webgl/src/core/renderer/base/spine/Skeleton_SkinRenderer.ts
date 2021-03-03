@@ -55,11 +55,13 @@ var fs =
 varying vec3 v_normal;          //法线
 uniform vec4 u_diffuse;         //漫反射
 uniform sampler2D u_texture;   //骨骼矩阵纹理
+// uniform sampler2D u_texCoord1;   
 uniform vec3 u_lightDirection;  //光的方向
 varying vec2 v_uv;
 void main () {
 vec3 normal = normalize(v_normal);
 float light = dot(u_lightDirection,normal) * .5 + .5;
+// vec4 river = texture2D(u_texCoord1,normalize(v_uv));
 vec4 color = texture2D(u_texture,normalize(v_uv)); 
 gl_FragColor = color+vec4(u_diffuse.rgb * light, u_diffuse.a);
 }`
@@ -102,6 +104,7 @@ export class Skeleton_SkinRenderer {
             renderData._uniformData.push({
                 u_MMatrix: worldMatrix,
                 u_texture: this.skin._texture._glID,
+                // u_texCoord1:this.skin._riverTexture._glID,
                 u_jointTexture: this.skin.jointTexture._glID,
                 u_numJoints: this.skin.jointNodes.length,
             });
