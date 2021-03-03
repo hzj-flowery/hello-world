@@ -3,7 +3,6 @@ import { Rectangle } from "../2d/Rectangle";
 import Device from "../../Device";
 import { Label } from "../2d/Label";
 import { RenderOfflineSprite } from "../2d/RenderOfflineSprite";
-import FirstSprite from "../2d/FirstSprite";
 import Scene from "./Scene";
 import InstantiateSprite from "../2d/InstantiateSprite";
 import { UvSprite } from "../2d/UvSprite";
@@ -11,7 +10,6 @@ import { UvSprite } from "../2d/UvSprite";
 export default class Scene2D extends Scene {
     
     private _rectangle:Rectangle;
-    private _firstSprite:FirstSprite;
     private _instantiateSprite:InstantiateSprite;
     private _label:Label;
     private _renderSprite:RenderOfflineSprite;
@@ -28,9 +26,6 @@ export default class Scene2D extends Scene {
         this._rectangle.spriteFrame = "res/map1.png";
         this.addChild(this._rectangle);
 
-        // this._firstSprite = new FirstSprite();
-        // this._firstSprite.setPosition(0,1,0);
-        // this.addChild(this._firstSprite);
 
         this._uvSprite = new UvSprite();
         this._uvSprite.setPosition(-0.6,0.5,0);
@@ -42,15 +37,15 @@ export default class Scene2D extends Scene {
         this._instantiateSprite.setPosition(0.2,0.2,0);
         this.addChild(this._instantiateSprite);
 
-        // this._renderSprite = new RenderOfflineSprite();
-        // this._renderSprite.setPosition(0.6,0.8,0);
-        // this._renderSprite.spriteFrame = {
-        //     type:"RenderTexture",
-        //     place:"color",
-        //     width:Device.Instance.width,
-        //     height:Device.Instance.height
-        // }
-        // this.addChild(this._renderSprite);
+        this._renderSprite = new RenderOfflineSprite();
+        this._renderSprite.setPosition(0.6,0.8,0);
+        this._renderSprite.spriteFrame = {
+            type:"RenderTexture",
+            place:"color",
+            width:Device.Instance.width,
+            height:Device.Instance.height
+        }
+        this.addChild(this._renderSprite);
 
         
 

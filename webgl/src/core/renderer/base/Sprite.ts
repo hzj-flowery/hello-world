@@ -160,11 +160,15 @@ export namespace SY {
         protected onInit(): void {
 
         }
+        protected onShader():void{
+
+        }
         private setShader(vert: string, frag: string) {
             if (vert == "" || frag == "") {
                 return;
             }
             this._shader = G_ShaderCenter.createShader(ShaderType.Custom, vert, frag);
+            this.onShader();
         }
         //创建顶点缓冲
         /**

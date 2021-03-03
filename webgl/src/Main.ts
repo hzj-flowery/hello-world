@@ -71,6 +71,26 @@ G_UISetting.setUI();
     "res/wicker.jpg"
  ]
 
+ var glslArr = [
+    "res/glsl/UvSprite/vs.glsl",
+    "res/glsl/UvSprite/fs.glsl",
+    
+    "res/glsl/RenderOfflineSprite/vs.glsl",
+    "res/glsl/RenderOfflineSprite/fs.glsl",
+
+    "res/glsl/Rectangle/vs.glsl",
+    "res/glsl/Rectangle/fs.glsl",
+
+    "res/glsl/InstantiateSprite/vs.glsl",
+    "res/glsl/InstantiateSprite/fs.glsl",
+    
+    "res/glsl/Label/vs.glsl",
+    "res/glsl/Label/fs.glsl",
+    
+
+ ]
+ arr = arr.concat(glslArr);
+
 // ThreeDTexture.run();
 // LabelTest.run();
 // ShaderShadowTest.run();

@@ -142,6 +142,18 @@ export default class LoaderManager {
             }
         }
     }
+    //加载可以转化为json的数据
+    private loadGlslStringData(path: string, callBackProgress?, callBackFinish?): void {
+        var request = new XMLHttpRequest();
+        request.open("get", path);
+        request.send(null);
+        request.responseType = "text";
+        request.onload = function () {
+            if (request.status == 0) {
+                if (callBackFinish) callBackFinish.call(null, request.responseText, path);
+            }
+        }
+    }
     //加载骨骼数据
     private loadSkelData(path: string, callBackProgress?, callBackFinish?): void {
         var _this = this;
@@ -242,6 +254,7 @@ export default class LoaderManager {
             case "json": return this.loadJsonData;
             case "gltf": return this.loadJsonStringData;
             case "skel": return this.loadSkelData;
+            case "glsl": return this.loadGlslStringData;
             default: console.log("发现未知后缀名的文件----", path); null; break;
         }
     }
@@ -299,6 +312,14 @@ export default class LoaderManager {
     //获取缓存中的数据
     public getRes(url: string): any {
         return this._cache.get(url);
+    }
+    
+    /**
+     * 获取着色器代码
+     * @param spriteName 
+     */
+    public getGlslRes(spriteName:string):Array<string>{
+         return [this.getRes("res/glsl/"+spriteName+"/vs.glsl"),this.getRes("res/glsl/"+spriteName+"/fs.glsl")]
     }
     /**
      * 移除CPU端内存中的图片缓存

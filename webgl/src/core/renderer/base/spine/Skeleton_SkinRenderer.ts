@@ -55,15 +55,17 @@ var fs =
 varying vec3 v_normal;          //法线
 uniform vec4 u_diffuse;         //漫反射
 uniform sampler2D u_texture;   //骨骼矩阵纹理
-// uniform sampler2D u_texCoord1;   
+uniform sampler2D u_texCoord1;   
 uniform vec3 u_lightDirection;  //光的方向
+uniform float u_time;
 varying vec2 v_uv;
 void main () {
 vec3 normal = normalize(v_normal);
 float light = dot(u_lightDirection,normal) * .5 + .5;
-// vec4 river = texture2D(u_texCoord1,normalize(v_uv));
+float time = mod(u_time/1000.0,90.0);
+vec4 river = texture2D(u_texCoord1,normalize(v_uv)+sin(time));
 vec4 color = texture2D(u_texture,normalize(v_uv)); 
-gl_FragColor = color+vec4(u_diffuse.rgb * light, u_diffuse.a);
+gl_FragColor = color+vec4(u_diffuse.rgb * light, u_diffuse.a)+river;
 }`
 
 /**
@@ -104,9 +106,10 @@ export class Skeleton_SkinRenderer {
             renderData._uniformData.push({
                 u_MMatrix: worldMatrix,
                 u_texture: this.skin._texture._glID,
-                // u_texCoord1:this.skin._riverTexture._glID,
+                u_texCoord1:this.skin._riverTexture._glID,
                 u_jointTexture: this.skin.jointTexture._glID,
                 u_numJoints: this.skin.jointNodes.length,
+                u_time:Device.Instance.triggerRenderTime,
             });
             renderData._projKey = "u_PMatrix";
             renderData._viewKey = "u_VMatrix";
