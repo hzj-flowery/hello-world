@@ -131,7 +131,6 @@ export class Node extends Ref {
             this._rotateZ = dd;
         }
     }
-
     public get parent(): Node {
         return this._parent;
     }

@@ -1,8 +1,6 @@
 
 
-class Component{
 
-}
 
 export default class Ref{
         constructor(){
@@ -14,5 +12,15 @@ export default class Ref{
         }
         public reduceReferenceCount():void{
             this._referenceCount--;
+        }
+        
+        onEnable():void{
+
+        }
+        onEnter():void{
+
+        }
+        onEixt():void{
+
         }
 }

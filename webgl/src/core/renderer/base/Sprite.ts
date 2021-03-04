@@ -158,9 +158,10 @@ export namespace SY {
         public set sizeMode(mode:SpriteSizeMode){
              this._sizeMode = mode;
         }
-        protected onInit(): void {
+        protected  onInit():void{
 
         }
+
         protected onShader():void{
 
         }
@@ -168,6 +169,11 @@ export namespace SY {
          * 处理着色器
          */
         private handleShader() {
+            if(this._shaderType==ShaderType.NULL)
+            {
+                //此节点不需要shader
+                return;
+            }
             if(this._vertStr==""||this._fragStr=="")
             {
                 let name = this.name;
@@ -432,7 +438,9 @@ export namespace SY {
     }
     export class sySprite extends SpriteBase {
         constructor() {
-            super();
+            super();      
+        }
+        protected onInit():void{
             this._shaderType = ShaderType.Sprite;
         }
     }

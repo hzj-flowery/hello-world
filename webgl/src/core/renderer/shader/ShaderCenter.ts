@@ -9,7 +9,8 @@ export enum ShaderType {
     Sprite,
     Label,
     Spine,
-    ShadowMap
+    ShadowMap,
+    NULL          //不用shader渲染
 }
 class ShaderCenter {
     private _shaderMap: Map<string, Shader> = new Map();
@@ -39,6 +40,12 @@ class ShaderCenter {
         this.createShader(ShaderType.ShadowMap, ShaderCode.shadowMap.vert, ShaderCode.shadowMap.frag);
         this.createShader(ShaderType.Line,ShaderCode.line.vert,ShaderCode.line.frag);
     }
+    /**
+     * 创建shader
+     * @param type 
+     * @param vert 
+     * @param frag 
+     */
     public createShader(type: ShaderType, vert: string, frag: string): Shader {
         var glID = G_ShaderFactory.createShader(vert, frag);
         let name = this.createShaderName(type);

@@ -52,7 +52,7 @@ export default class Scene2D extends Scene {
         this._label = new Label();
         this._label.setPosition(0.0,0.0,0);
         this._label.spriteFrame = "res/8x8-font.png";
-        this._label.content = "zm520"
+        this._label.content = "czj520"
         this.addChild(this._label);
     }
 }

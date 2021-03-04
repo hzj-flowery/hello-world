@@ -154,6 +154,27 @@ export default class LoaderManager {
             }
         }
     }
+     //加载可以转化为json的数据
+     private loadTextData(path: string, callBackProgress?, callBackFinish?): void {
+        var request = new XMLHttpRequest();
+        request.open("get", path);
+        request.send(null);
+        request.responseType = "text";
+        request.onload = function () {
+            if (request.status == 0) {
+                let content = request.responseText;
+                let arr = content.split("&&");
+                let last = [];
+                for(let i = 0;i<arr.length;i = i+3)
+                {
+                     //0 1 2
+                     last.push({content:arr[i],type:arr[i+2]});
+                }
+                console.log(last);
+                if (callBackFinish) callBackFinish.call(null, request.responseText, path);
+            }
+        }
+    }
     //加载骨骼数据
     private loadSkelData(path: string, callBackProgress?, callBackFinish?): void {
         var _this = this;
@@ -254,6 +275,7 @@ export default class LoaderManager {
             case "json": return this.loadJsonData;
             case "gltf": return this.loadJsonStringData;
             case "skel": return this.loadSkelData;
+            case "txt": return this.loadTextData;
             case "glsl": return this.loadGlslStringData;
             case "frag": return this.loadGlslStringData;
             case "vert": return this.loadGlslStringData;
