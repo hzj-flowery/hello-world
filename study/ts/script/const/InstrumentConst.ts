@@ -1,0 +1,22 @@
+ namespace InstrumentConst {
+    export const FLAG = 3;
+    export const INSTRUMENT_RANGE_TYPE_1 = 1;
+    export const INSTRUMENT_RANGE_TYPE_2 = 2;
+    export const INSTRUMENT_TRAIN_ADVANCE = 1;
+    export const INSTRUMENT_TRAIN_LIMIT = 2;
+    export const INSTRUMENT_LIST_TYPE1 = 1;
+    export const INSTRUMENT_LIST_TYPE2 = 2;
+    export const INSTRUMENT_LIMIT_COST_KEY_1 = 1;
+    export const INSTRUMENT_LIMIT_COST_KEY_2 = 2;
+    export const INSTRUMENT_LIMIT_MAX_LEVEL = 2;
+    export const TRANSFORM_LIMIT_TYPE_0 = 0;
+    export const TRANSFORM_LIMIT_TYPE_1 = 1;
+    export const TRANSFORM_LIMIT_TYPE_2 = 2;
+    export const TRANSFORM_LIMIT_TYPE_3 = 3;
+    export const LIMIT_TEMPLATE_ORANGE = 1;
+    export const LIMIT_TEMPLATE_RED = 2;
+    export const LIMIT_ICON_ORANGE_LEVEL_1 = 1;
+    export const LIMIT_ICON_ORANGE_LEVEL_2 = 2;
+    export const LIMIT_ICON_RED_LEVEL_1 = 1;
+};
+export default InstrumentConst;

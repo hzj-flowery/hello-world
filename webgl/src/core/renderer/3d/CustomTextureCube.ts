@@ -1,28 +1,7 @@
+
 import { SY } from "../base/Sprite";
-import { glprimitive_type } from "../gfx/GLEnums";
+import { syGL } from "../gfx/syGLEnums";
 
-var vertextBaseCode =
-    'attribute vec3 a_position;' +
-    'attribute vec2 a_uv;' +
-
-    'uniform mat4 u_MVMatrix;' +
-    'uniform mat4 u_PMatrix;' +
-    'varying vec2 vTextureCoordinates;' +
-
-    'void main() {' +
-    'gl_Position = u_PMatrix * u_MVMatrix * vec4(a_position, 1.0);' +
-    'vTextureCoordinates = a_uv;' +
-    '}'
-//基础的shader的片段着色器
-var fragBaseCode =
-    'precision mediump float;' +
-
-    'varying vec2 vTextureCoordinates;' +
-    'uniform sampler2D u_texCoord;' +
-
-    'void main() {' +
-    'gl_FragColor = texture2D(u_texCoord, vTextureCoordinates);' +
-    '}'
 
 export default class CustomTextureCube extends SY.SpriteBase {
     constructor() {
@@ -127,9 +106,6 @@ export default class CustomTextureCube extends SY.SpriteBase {
         this.createVertexsBuffer(positions, 3);
         this.createUVsBuffer(uvs, 2);
         
-        this._glPrimitiveType = glprimitive_type.TRIANGLES;
-        this.setShader(vertextBaseCode, fragBaseCode);
-
-
+        this._glPrimitiveType = syGL.PrimitiveType.TRIANGLES;
     }
 }

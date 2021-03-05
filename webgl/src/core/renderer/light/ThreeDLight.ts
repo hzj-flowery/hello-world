@@ -1,6 +1,7 @@
-import { glMatrix } from "../../Matrix";
+import { glMatrix } from "../../math/Matrix";
 import { SY } from "../base/Sprite";
 import { CameraData } from "../data/CameraData";
+import { LightData } from "../data/LightData";
 import { G_ShaderFactory } from "../shader/ShaderFactory";
 
 
@@ -58,7 +59,7 @@ export class ThreeDLight extends SY.Sprite {
         this._attrData = G_ShaderFactory.createBufferInfoFromArrays(cubeDatas);
     }
     //更新unifoms变量
-    public updateUniformsData(cameraData: CameraData): any {
+    public updateUniformsData(cameraData: CameraData,lightData:LightData): any {
 
         var worldViewProjectionMatrix = glMatrix.mat4.multiply(null, cameraData.viewProjectionMat, this.modelMatrix);//pvm
         var worldInverseMatrix = glMatrix.mat4.invert(null, this.modelMatrix);

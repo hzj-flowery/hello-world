@@ -1,4 +1,5 @@
-import { glprimitive_type } from "../gfx/GLEnums";
+
+import { syGL } from "../gfx/syGLEnums";
 import { BufferAttribsData, ShaderData } from "./Shader";
 
 
@@ -7,7 +8,6 @@ var vertextBaseCode =
     'attribute vec3 a_normal;' +
     'attribute vec2 a_uv;' +
 
-    'uniform mat4 u_MVMatrix;' +
     'uniform mat4 u_PMatrix;' +
     'uniform mat4 u_MMatrix;' +
     'uniform mat4 u_VMatrix;' +
@@ -16,7 +16,7 @@ var vertextBaseCode =
     'varying vec2 v_uv;' +
 
     'void main() {' +
-    'gl_Position = u_PMatrix * u_MVMatrix * vec4(a_position, 1.0);' +
+    'gl_Position = u_PMatrix * u_VMatrix*u_MMatrix * vec4(a_position, 1.0);' +
     'v_uv = a_uv;' +
     '}'
 //基础的shader的片段着色器
@@ -25,13 +25,13 @@ var fragBaseCode =
 
     'varying vec2 v_uv;' +
     'uniform samplerCube u_skybox;' +
-    'uniform sampler2D u_texCoord;' +
+    'uniform sampler2D u_texture;' +
     'uniform mat4 u_PVMInverseMatrix;' +
     'uniform vec4 u_color;' +
     'uniform vec4 u_color_dir;' +
 
     'void main() {' +
-    'gl_FragColor = texture2D(u_texCoord, v_uv);' +
+    'gl_FragColor = texture2D(u_texture, v_uv);' +
     '}'
 
 enum ShaderType {
@@ -123,7 +123,7 @@ class ShaderFactory {
      * @param vertextCode 顶点shader 
      * @param fragCode 片段shader
      */
-    public createShader(vertextCode: string = vertextBaseCode, fragCode: string = fragBaseCode): any {
+    public createShader(vertextCode: string = vertextBaseCode, fragCode: string = fragBaseCode): WebGLProgram {
         // 从 DOM 上创建对应的着色器
         var vertexShader = this.loadShader(ShaderType.VERTEX, vertextCode);
         var fragmentShader = this.loadShader(ShaderType.FRAGMENT, fragCode);
@@ -410,7 +410,7 @@ class ShaderFactory {
         }
     }
     //启动顶点着色器绘制
-    public drawBufferInfo(bufferInfo: BufferAttribsData, primitiveType?: glprimitive_type, count?: number, offset?: number) {
+    public drawBufferInfo(bufferInfo: BufferAttribsData, primitiveType?: syGL.PrimitiveType, count?: number, offset?: number) {
         var gl = this._gl;
         const indices = bufferInfo.indices;
         primitiveType = primitiveType === undefined ? gl.TRIANGLES : primitiveType;

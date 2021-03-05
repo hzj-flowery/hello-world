@@ -1,5 +1,7 @@
 import Device from "../../Device";
-import { glMatrix } from "../../Matrix";
+import { Graphic } from "../../Graphic/Graphic";
+import { glMatrix } from "../../math/Matrix";
+import { G_UISetting } from "../../ui/UiSetting";
 import { MathUtils } from "../../utils/MathUtils";
 import { syPrimitives } from "../shader/Primitives";
 import { BufferAttribsData, ShaderData } from "../shader/Shader";
@@ -7,170 +9,32 @@ import { G_ShaderFactory } from "../shader/ShaderFactory";
 
 
 var baseVertexShader =
-    'attribute vec4 a_position;' +
-    'attribute vec4 a_color;' +
-    'uniform mat4 u_worldViewProjection;' +
-    'uniform mat4 u_exampleWorldViewProjection;' +
-    'varying vec4 v_color;' +
-    'varying vec4 v_position;' +
-    'void main() {' +
-    'gl_Position = u_worldViewProjection * a_position;' +
-    'v_position = u_exampleWorldViewProjection * a_position;' +
-    'v_position = v_position / v_position.w;' +
-    'v_color = a_color;' +
-    '}'
+    `attribute vec4 a_position;
+    attribute vec4 a_color;
+    uniform mat4 u_worldViewProjection;
+    uniform mat4 u_exampleWorldViewProjection;
+    varying vec4 v_color;
+    varying vec4 v_position;
+    void main() {
+    gl_Position = u_worldViewProjection * a_position;
+    v_position = u_exampleWorldViewProjection * a_position;
+    v_position = v_position / v_position.w;
+    v_color = a_color;
+    }`
 var colorFragmentShader =
-    'precision mediump float;' +
-    'varying vec4 v_color;' +
-    'varying vec4 v_position;' +
-    'uniform vec4 u_color;' +
-    'void main() {' +
-    'bool blend = (v_position.x < -1.0 || v_position.x > 1.0 ||' +
-    'v_position.y < -1.0 || v_position.y > 1.0 ||' +
-    'v_position.z < -1.0 || v_position.z > 1.0);' +
-    'vec4 blendColor = blend ? vec4(0.35, 0.35, 0.35, 1.0) : vec4(1, 1, 1, 1);' +
-    'gl_FragColor = v_color * u_color * blendColor;' +
-    '}'
-
-/**
- * 
- */
-class Graphic {
-    constructor(gl) {
-        this.gl = gl;
-        this.init();
-    }
-    private gl: WebGLRenderingContext;
-    private vert =
-        'attribute vec4 a_position;' +
-        'attribute vec4 a_color;' +
-        'uniform mat4 u_worldViewProjection;' +
-        'varying vec4 v_color;' +
-        'void main() {' +
-        'gl_Position = u_worldViewProjection * a_position;' +
-        'gl_PointSize = 5.0;' +
-        'v_color = a_color;' +
-        '}'
-
-    private frag =
-        'precision mediump float;' +
-        'uniform vec4 u_color;' +
-        'varying vec4 v_color;' +
-        'void main() {' +
-        'gl_FragColor = u_color * v_color;' +
-        '}'
+    `precision mediump float;
+    varying vec4 v_color;
+    varying vec4 v_position;
+    uniform vec4 u_color;
+    void main() {
+    bool blend = (v_position.x < -1.0 || v_position.x > 1.0 ||
+    v_position.y < -1.0 || v_position.y > 1.0 ||
+    v_position.z < -1.0 || v_position.z > 1.0);
+    vec4 blendColor = blend ? vec4(0.35, 0.35, 0.35, 1.0) : vec4(1, 1, 1, 1);
+    gl_FragColor = v_color * u_color * blendColor;
+    }`
 
 
-
-
-    private _coordinateArrays = {
-        position: [
-            0, 0, 0,         //原点0   //0
-            1, 0, 0,   //x   //1
-            0, 1, 0,   //y   //2
-            0, 0, 1,    //z  //3
-            0, 0, 0,         //原点1  //4
-            0, 0, 0,         //原点2  //5
-            0, 0, 0,         //原点3  //6
-
-            1.2, 0, 0,   //x轴延申    //7
-            0, 1.2, 0,   //y轴延申    //8
-            0, 0, 1.2,    //z轴延申   //9
-
-            0, 0, 0, 0,
-            0, 1, 1, 0
-        ],
-        color: [
-            0, 0, 0, 1,       //  0 原点
-            1, 0, 0, 1,       //  1  x     red    红色
-            0, 1, 0, 1,       //  2  y     green  绿色
-            0, 0, 1, 1,       //  3  z     blue   蓝色
-            1, 0, 0, 1,       //  4  原点x     red
-            0, 1, 0, 1,       //  5  原点y     green
-            0, 0, 1, 1,        // 6  原点z     blue
-            0, 0, 0, 1,        // 9
-            0, 0, 0, 1,        // 10
-            0, 0, 0, 1,        // 11
-            1, 1, 0, 0,        // 12
-            1, 1, 0, 0         // 13
-        ],
-        indices: [
-            4, 1, 5, 2, 6, 3, 1, 7, 2, 8, 3, 9, 10, 11 //11 12 13
-        ]
-    }
-    private _pointArrays = {
-        position: [
-            0, 0, 0,
-            1, 0, 0,   //3
-            0, 1, 0,   //7  
-            0, 0, 1    //11
-        ],
-        color: [
-            0, 0, 0, 1,
-            1, 0, 0, 1,
-            0, 1, 0, 1,
-            0, 0, 1, 1
-        ]
-    }
-
-    private init(): void {
-        let scale = 6;
-        for (var j = 0; j < this._coordinateArrays.position.length; j++) {
-            this._coordinateArrays.position[j] = this._coordinateArrays.position[j] * scale;
-        }
-
-        this._pointBufferInfor = G_ShaderFactory.createBufferInfoFromArrays(this._pointArrays);
-
-        //创建shader
-        this._programInfor = G_ShaderFactory.createProgramInfo(this.vert, this.frag);
-        //创建attribuffer
-        this._coordinateBufferInfo = G_ShaderFactory.createBufferInfoFromArrays(this._coordinateArrays);
-    }
-    private _programInfor: ShaderData;
-    private _coordinateBufferInfo: BufferAttribsData;
-    private _pointBufferInfor: BufferAttribsData;
-    /**
-     * 绘制世界坐标系
-     * 你想在上面位置来观察世界坐标系
-     * @param proj 投影矩阵
-     * @param camera 相机矩阵
-     * @param world 世界矩阵  当前模型中的点需要乘以这个矩阵转换到世界坐标系下
-     * 
-     */
-    public drawLine(proj: Float32Array, camera: Float32Array, world = glMatrix.mat4.identity(null)): void {
-        var view = glMatrix.mat4.invert(null, camera)
-        let pv = glMatrix.mat4.multiply(null, proj, view);
-        glMatrix.mat4.multiply(pv, pv, world);
-        this.gl.useProgram(this._programInfor.spGlID);
-        G_ShaderFactory.setBuffersAndAttributes(this._programInfor.attrSetters, this._coordinateBufferInfo);
-        G_ShaderFactory.setUniforms(this._programInfor.uniSetters, { u_worldViewProjection: pv });
-        G_ShaderFactory.setUniforms(this._programInfor.uniSetters, { u_color: [1, 1, 1, 1] });
-        G_ShaderFactory.drawBufferInfo(this._coordinateBufferInfo, this.gl.LINES);
-    }
-
-    private updatePoint(): void {
-        var change = 0.1;
-        this._pointArrays.position[3] = this._pointArrays.position[3] + change;//眼睛的位置
-        this._pointArrays.position[7] = this._pointArrays.position[7] + change;
-        this._pointArrays.position[11] = this._pointArrays.position[11] + change;
-        this._pointBufferInfor = G_ShaderFactory.createBufferInfoFromArrays(this._pointArrays);
-    }
-
-    public drawPoint(proj: Float32Array, camera: Float32Array, world = glMatrix.mat4.identity(null)): void {
-        this.updatePoint();
-        var view = glMatrix.mat4.invert(null, camera)
-        let vp = glMatrix.mat4.multiply(null, proj, view);
-        glMatrix.mat4.multiply(vp, vp, world);
-
-        this.gl.useProgram(this._programInfor.spGlID);
-        G_ShaderFactory.setBuffersAndAttributes(this._programInfor.attrSetters, this._pointBufferInfor);
-        G_ShaderFactory.setUniforms(this._programInfor.uniSetters, { u_worldViewProjection: vp });
-        G_ShaderFactory.setUniforms(this._programInfor.uniSetters, { u_color: [1, 1, 1, 1] });
-        G_ShaderFactory.drawBufferInfo(this._pointBufferInfor, this.gl.POINTS);
-
-    }
-
-}
 
 export class CameraModel {
     constructor() {
@@ -182,7 +46,7 @@ export class CameraModel {
     private _modelBuffer: BufferAttribsData;
     private _clipSpaceBuffer: BufferAttribsData;
     private _cubeBufferInfo: BufferAttribsData;
-    private _coordinate: Graphic;
+    private _graphic: Graphic;
     private _worldTemp: Float32Array;
     private _worldTemp1: Float32Array;
     private _worldTemp2: Float32Array;
@@ -190,7 +54,9 @@ export class CameraModel {
     private _loacalInvertProj: Float32Array;
     private _viewMatrix: Float32Array;
     private _originPos: Array<number>;
-    private _isInit:boolean = false;
+    private _isInit: boolean = false;
+    public _isDrawClipSpaceFrustum: boolean = false;
+    public _isDrawClipSpaceCube:boolean = false;
     // uniforms.
     private sharedUniforms = {
     };
@@ -201,22 +67,21 @@ export class CameraModel {
     };
 
     private solidcolorvertexshader =
-        'attribute vec4 a_position;' +
-        'uniform mat4 u_matrix;' +
-        'void main() {' +
-        'gl_Position = u_matrix * a_position;' +
-        '}'
+        `attribute vec4 a_position;
+        uniform mat4 u_matrix;
+        void main() {
+        gl_Position = u_matrix * a_position;
+        }`
 
     private solidcolorfragmentshader =
-        'precision mediump float;' +
-        'uniform vec4 u_color;' +
-        'void main() {' +
-        'gl_FragColor = u_color;' +
-        '}'
+        `precision mediump float;
+        uniform vec4 u_color;
+        void main() {
+        gl_FragColor = u_color;
+        }`
 
-    public init(gl:WebGLRenderingContext): void {
-        if(this._isInit)
-        {
+    private init(gl: WebGLRenderingContext): void {
+        if (this._isInit) {
             return;
         }
         this._isInit = true;
@@ -225,7 +90,7 @@ export class CameraModel {
         this._frustumCube = G_ShaderFactory.createProgramInfo(baseVertexShader, colorFragmentShader);
         this._modelBuffer = this.createCameraBufferInfo();
         this._clipSpaceBuffer = this.createClipspaceCubeBufferInfo();
-        this._coordinate = new Graphic(this.gl);//绘制线
+        this._graphic = new Graphic(this.gl);//绘制线
         this._worldTemp = glMatrix.mat4.identity(null);
         this._worldTemp1 = glMatrix.mat4.identity(null);
         this._worldTemp2 = glMatrix.mat4.identity(null);
@@ -254,18 +119,15 @@ export class CameraModel {
         delete cubeArrays.texcoord;
         cubeArrays.color = colorVerts;
         this._cubeBufferInfo = G_ShaderFactory.createBufferInfoFromArrays(cubeArrays);
-        
+
         //场景摄像机
         this.setSceneCamera();
 
-        //UI
-        this.setUI();
-
     }
     private createClipspaceCubeBufferInfo() {
-        // first let's add a cube. It goes from 1 to 3
+        // first lets add a cube. It goes from 1 to 3
         // because cameras look down -Z so we want
-        // the camera to start at Z = 0. We'll put a
+        // the camera to start at Z = 0. Well put a
         // a cone in front of this cube opening
         // toward -Z
         const positions = [
@@ -294,10 +156,10 @@ export class CameraModel {
 
     // create geometry for a camera
     private createCameraBufferInfo(scale = 1) {
-        // first let's add a cube. It goes from 1 to 3
+        // first lets add a cube. It goes from 1 to 3
         // because cameras look down -Z so we want
         // the camera to start at Z = 0.
-        // We'll put a cone in front of this cube opening
+        // Well put a cone in front of this cube opening
         // toward -Z
         const positions = [
             -1, -1, 1,  // cube vertices
@@ -356,8 +218,8 @@ export class CameraModel {
         // Make a view matrix from the camera matrix.
         glMatrix.mat4.invert(this._viewMatrix, cameraMatrix);
         glMatrix.mat4.multiply(this._worldTemp1, projMatrix, this._viewMatrix); //投影矩阵X视口矩阵
-        // use the first's camera's matrix as the matrix to position
-        // the camera's representative in the scene
+        // use the firsts cameras matrix as the matrix to position
+        // the cameras representative in the scene
         //可以这么理解，第一台摄像机上的点乘以它得相机矩阵，可以将位置转换到世界坐标系下
         //通过世界坐标系这个枢纽，再将点转换到其他的视口坐标系下，进行投影
         glMatrix.mat4.multiply(this._worldTemp1, this._worldTemp1, targetCameraMatrix);//投影矩阵xs视口矩阵x第一个摄像机的相机矩阵
@@ -373,17 +235,19 @@ export class CameraModel {
         });
         G_ShaderFactory.drawBufferInfo(this._modelBuffer, gl.LINES);
 
-        // ----- Draw the frustum ------- 绘制齐次裁切空间坐标系
-        //一个正方体乘以这个矩阵的逆矩阵可以变成一个棱台
-        glMatrix.mat4.multiply(this._worldTemp1, this._worldTemp1, glMatrix.mat4.invert(null, targetProjMatrix));
-        // Setup all the needed attributes.
-        G_ShaderFactory.setBuffersAndAttributes(this._programInfor.attrSetters, this._clipSpaceBuffer);
-        // Set the uniforms
-        G_ShaderFactory.setUniforms(this._programInfor.uniSetters, {
-            u_matrix: this._worldTemp1,
-            u_color: [0, 1, 0, 1],
-        });
-        G_ShaderFactory.drawBufferInfo(this._clipSpaceBuffer, gl.LINES);
+        if (this._isDrawClipSpaceFrustum) {
+            // ----- Draw the frustum ------- 绘制齐次裁切空间坐标系
+            //一个正方体乘以这个矩阵的逆矩阵可以变成一个棱台
+            glMatrix.mat4.multiply(this._worldTemp1, this._worldTemp1, glMatrix.mat4.invert(null, targetProjMatrix));
+            // Setup all the needed attributes.
+            G_ShaderFactory.setBuffersAndAttributes(this._programInfor.attrSetters, this._clipSpaceBuffer);
+            // Set the uniforms
+            G_ShaderFactory.setUniforms(this._programInfor.uniSetters, {
+                u_matrix: this._worldTemp1,
+                u_color: [0, 1, 0, 1],
+            });
+            G_ShaderFactory.drawBufferInfo(this._clipSpaceBuffer, gl.LINES);
+        }
 
         //原点
         glMatrix.mat4.identity(this._worldTemp2);
@@ -391,14 +255,15 @@ export class CameraModel {
         //你可以理解为相机中的点乘以相机坐标系可以转换到世界坐标系
         glMatrix.mat4.multiply(this._worldTemp2, this._worldTemp2, targetCameraMatrix);//投影矩阵xs视口矩阵x第一个摄像机的相机矩阵
         //绘制相机的节点坐标系
-        this._coordinate.drawLine(projMatrix, cameraMatrix, this._worldTemp2);
+        this._graphic.drawLine(projMatrix, cameraMatrix, this._worldTemp2);
         //绘制世界坐标系
-        this._coordinate.drawLine(projMatrix, cameraMatrix);
+        this._graphic.drawLine(projMatrix, cameraMatrix);
 
-        this._coordinate.drawPoint(projMatrix, cameraMatrix, this._worldTemp2);
-        this._coordinate.drawPoint(projMatrix, cameraMatrix);
+        this._graphic.drawPoint(projMatrix, cameraMatrix, this._worldTemp2);
+        this._graphic.drawPoint(projMatrix, cameraMatrix);
         //绘制棱台
-        // this.drawFrustumCube(projMatrix, cameraMatrix, targetProjMatrix, targetCameraMatrix);
+        if(this._isDrawClipSpaceCube)
+        this.drawFrustumCube(projMatrix, cameraMatrix, targetProjMatrix, targetCameraMatrix);
     }
 
     // Draw Frustum Cube behind
@@ -438,7 +303,7 @@ export class CameraModel {
         const near = 1;
         const far = 2000;
         glMatrix.mat4.perspective(this._sceneCameraProjectMatrix, MathUtils.degToRad(60), aspect, near, far);
-        // Compute the camera's matrix using look at.
+        // Compute the cameras matrix using look at.
         const cameraPosition2 = this._sceneCameraPosition;
         const target2 = [0, 0, 0];
         const up2 = [0, 1, 0];
@@ -452,60 +317,9 @@ export class CameraModel {
     }
 
     //------------------------------ui-------------------------------------------------------------------------------------
-    private settings = {
-        cam2DPosX: 0,
-        cam2DPosY: 0,
-        cam2DPosZ: 0,
-        cam2DRotX: 0,  // in degrees
-        cam2DRotY: 0,  // in degrees
-        cam2DRotZ: 0,  // in degrees
-        cam3DFieldOfView: 60,  // in degrees
-        cam3DPosX: 0,
-        cam3DPosY: 0,
-        cam3DPosZ: 20,
-        cam3DRotX: 0,
-        cam3DRotY: 0,
-        cam3DRotZ: 0,
-        cam3DNear: 1,
-        cam3DFar: 200,
-    };
-    // //初始化UI
-    private setUI(): void {
-        var render = this.render.bind(this);
-        var webglLessonsUI = window["webglLessonsUI"]
-        webglLessonsUI.setupUI(document.querySelector('#ui'), this.settings, [
-            { type: 'slider', key: 'cam2DPosX', min: -10, max: 10, change: render, precision: 2, step: 0.1},
-            { type: 'slider', key: 'cam2DPosY', min: -10, max: 10, change: render, precision: 2, step: 0.1},
-            { type: 'slider', key: 'cam2DPosZ', min: -10, max: 10, change: render, precision: 2, step: 0.1},
-            { type: 'slider', key: 'cam2DRotX', min: 0, max: 360, change: render, },
-            { type: 'slider', key: 'cam2DRotY', min: 0, max: 360, change: render, },
-            { type: 'slider', key: 'cam2DRotZ', min: 0, max: 360, change: render, },
-            { type: 'slider', key: 'cam3DFieldOfView', min: 0, max: 180, change: render, },
-            { type: 'slider', key: 'cam3DPosX', min: -100, max: 100, change: render, },
-            { type: 'slider', key: 'cam3DPosY', min: -100, max: 100, change: render, },
-            { type: 'slider', key: 'cam3DPosZ', min: -100, max: 200, change: render, },
-            { type: 'slider', key: 'cam3DRotX', min: 0, max: 360, change: render, },
-            { type: 'slider', key: 'cam3DRotY', min: 0, max: 360, change: render, },
-            { type: 'slider', key: 'cam3DRotZ', min: 0, max: 360, change: render, },
-            { type: 'slider', key: 'cam3DNear', min: 1, max: 300, change: render, },
-            { type: 'slider', key: 'cam3DFar', min: 1, max: 300, change: render, },
 
-            // { type: 'checkbox', key: 'cam3DOrtho', change: render, },
-            // { type: 'slider', key: 'cam3DOrthoUnits', min: 1, max: 150, change: render, },
-        ]);
-        this.render();
-    }
-    private render(): void {
-        if(this._renderCallBack)
-        this._renderCallBack(this.settings);
-    }
-    private _renderCallBack:Function;
-    public setRenderCallBack(cb:Function):void{
-       this._renderCallBack = cb;
-    }
-    public getSettings():any{
-        return this.settings;
-    }
 }
+
+
 
 export var G_CameraModel = new CameraModel()

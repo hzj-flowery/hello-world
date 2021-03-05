@@ -3,7 +3,7 @@ import enums from "./enums";
 import { RenderTexture } from "../base/texture/RenderTexture";
 import FrameBuffer from "../gfx/FrameBuffer";
 import { Node } from "../base/Node";
-import { glMatrix } from "../../Matrix";
+import { glMatrix } from "../../math/Matrix";
 import { CameraData } from "../data/CameraData";
 
 /**
@@ -75,6 +75,8 @@ import { CameraData } from "../data/CameraData";
  * 右手坐标系：大拇指向上（+y）,食指向前（+z）,中指向左（+x）
  * 右手坐标系(作图方便)：大拇指向右（+x）,食指向上（+y）,中指向自己（+z）
  * 
+ * 快速记忆，左右手只有中指（z轴）的朝向不一致，其余x和y轴的朝向一样的，大拇指朝右（x轴），食指向上（y轴）
+ * 
  * 一:opengl和webgl都属于右手坐标系
  * 二：设备坐标系属于左手坐标系
  * 三：unity属于左手坐标系
@@ -136,7 +138,6 @@ export default class Camera extends Node {
         //创建透视矩阵
         this._projectionMatrix = this._glMatrix.mat4.create();
         this._type = type;
-        this._holderMatrix = glMatrix.mat4.identity(null);
         this._cameraData = new CameraData();
     }
 
@@ -157,13 +158,6 @@ export default class Camera extends Node {
     private _updateFlag:boolean;//更新标志
     private _targetTexture: RenderTexture;//目标渲染纹理
     private _framebuffer: FrameBuffer;//渲染buffer
-    
-    /**
-     * 支架矩阵，该矩阵的出现，是因为相机的特殊性，一般情况
-     * 相机都是放在支架上的，我们说的平移相机其实指的是平移相机的支架
-     * 相机只相当与眼睛，眼睛主要争对缩放和旋转
-     */
-    private _holderMatrix:Float32Array;//支架矩阵
     
     /**
      * 弧度
@@ -346,14 +340,6 @@ export default class Camera extends Node {
         }
     }
 
-    protected translateModelMatrix():void{
-        glMatrix.mat4.identity(this._holderMatrix);
-         //最后平移
-         glMatrix.mat4.translate(this._holderMatrix, this._holderMatrix, [this.x, this.y, this.z]);
-         //
-         glMatrix.mat4.multiply(this._localMatrix,this._holderMatrix,this._localMatrix);
-    }
-
     public visit(time:number):void{
          this.updateProjectMatrix();
          super.visit(time);
@@ -416,7 +402,6 @@ export default class Camera extends Node {
          this._cameraData.modelMat = this.modelMatrix;
          this._cameraData.projectMat = this._projectionMatrix;
          this._cameraData.position = [this.x,this.y,this.z];
-         this._cameraData.lightData.setData([20, 30, 60],[0, 0, -1],[1,1,1,1.0]);
          return this._cameraData;
     }
 

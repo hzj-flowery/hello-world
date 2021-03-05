@@ -1,5 +1,5 @@
 import { SY } from "../base/Sprite";
-import { glprimitive_type } from "../gfx/GLEnums";
+import { syGL } from "../gfx/syGLEnums";
 import GameMainCamera from "./GameMainCamera";
 
 /**
@@ -26,23 +26,24 @@ var fragBaseCode =
 
     'varying vec2 v_uv;' +
     'uniform samplerCube u_skybox;'+
-    'uniform sampler2D u_texCoord;' +
+    'uniform sampler2D u_texture;' +
     'uniform mat4 u_PVMInverseMatrix;'+
     'uniform vec4 u_color;' +
     'uniform vec4 u_color_dir;' +
     
     'void main() {' +
-    'gl_FragColor = texture2D(u_texCoord, v_uv);' +
+    'gl_FragColor = texture2D(u_texture, v_uv);' +
     '}'
 
  */
 var solidcolorvertexshader =
     'attribute vec4 a_position;' +
-    'uniform mat4 u_MVMatrix;' +
+    'uniform mat4 u_MMatrix;' +
+    'uniform mat4 u_VMatrix;' +
     'uniform mat4 u_PMatrix;' +
     'uniform mat4 u_PVMMatrix;' +
     'void main() {' +
-    'gl_Position = u_PMatrix*u_MVMatrix*a_position;' +
+    'gl_Position = u_PMatrix*u_VMatrix*u_MMatrix*a_position;' +
     '}'
 
 var solidcolorfragmentshader =
@@ -60,9 +61,10 @@ export default class CameraView extends SY.SpriteBase {
         var result = this.createCameraBufferInfo(0.2);
         this.createVertexsBuffer(result.pos, 3);
         this.createIndexsBuffer(result.index);
-        this.setShader(solidcolorvertexshader, solidcolorfragmentshader);
+        this.shaderVert = solidcolorvertexshader;
+        this.shaderFrag = solidcolorfragmentshader;
 
-        this._glPrimitiveType = glprimitive_type.LINES;
+        this._glPrimitiveType = syGL.PrimitiveType.LINES;
     }
     private degToRad(d) {
         return d * Math.PI / 180;
@@ -178,7 +180,7 @@ export default class CameraView extends SY.SpriteBase {
          * 
          * @param texture 纹理的GLID
          */
-    protected draw(time: number): void {
+    protected collectRenderData(time: number): void {
         //激活shader 并且给shader中的变量赋值
         this._shader.active();
         var newMV = this._glMatrix.mat4.create();
@@ -187,7 +189,7 @@ export default class CameraView extends SY.SpriteBase {
         this._glMatrix.mat4.mul(newMV,v,m)
         this._shader.setUseModelViewMatrix(newMV);
         this._shader.setUseProjectionMatrix(GameMainCamera.instance.getCamera(this._cameraType).getProjectionMatrix());
-        this._shader.setUseLightColor([1, 0, 0, 1]);
+        this._shader.setUseParallelLight([1, 0, 0, 1],[]);
         this._shader.setUseVertexAttribPointerForVertex(this.getGLID(SY.GLID_TYPE.VERTEX), this.getBufferItemSize(SY.GLID_TYPE.VERTEX));
         
         //绑定操作的索引缓冲
@@ -198,16 +200,16 @@ export default class CameraView extends SY.SpriteBase {
         var head = 24;
         var ray = 2*3;
         var clip = 24;
-        this._shader.setUseLightColor([0, 0, 0, 1]);
+        this._shader.setUseParallelLight([0, 0, 0, 1],[]);
         this.gl.drawElements(this._glPrimitiveType,body, this.gl.UNSIGNED_SHORT, 0);
 
-        this._shader.setUseLightColor([0, 1, 0, 1]);
+        this._shader.setUseParallelLight([0, 1, 0, 1],[]);
         this.gl.drawElements(this._glPrimitiveType,head, this.gl.UNSIGNED_SHORT,body*2);
 
-        this._shader.setUseLightColor([1, 0, 0, 1]);
+        this._shader.setUseParallelLight([1, 0, 0, 1],[]);
         this.gl.drawElements(this._glPrimitiveType,ray, this.gl.UNSIGNED_SHORT,(body+head)*2);
 
-        this._shader.setUseLightColor([1, 1, 0, 1]);
+        this._shader.setUseParallelLight([1, 1, 0, 1],[]);
         this.gl.drawElements(this._glPrimitiveType,clip, this.gl.UNSIGNED_SHORT,(body+head+ray)*2);
 
         //解除缓冲区绑定

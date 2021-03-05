@@ -1,51 +1,6 @@
 "use strict";
-
-import Device from "../../Device";
 import { SY } from "../base/Sprite";
-import { glprimitive_type } from "../gfx/GLEnums";
-
-
-var vertexshader3d =
-    'attribute vec4 a_position;' +
-    'attribute vec4 a_color;' +
-
-    'uniform mat4 u_matrix;' +
-
-    'varying vec4 v_color;' +
-
-    'void main() {' +
-    // Multiply the position by the matrix.
-    'gl_Position = u_matrix * a_position;' +
-    // Pass the color to the fragment shader.
-    'v_color = a_color;' +
-    '}'
-
-var fragmentshader3d =
-    'precision mediump float;' +
-    // Passed in from the vertex shader.
-    'varying vec4 v_color;' +
-    'void main() {' +
-    'gl_FragColor = v_color;' +
-    '}'
-var textvertexshader =
-    'attribute vec4 a_position;' +
-    'attribute vec2 a_texcoord;' +
-    'uniform mat4 u_matrix;' +
-    'varying vec2 v_texcoord;' +
-    'void main() {' +
-    // Multiply the position by the matrix.
-    'gl_Position = u_matrix * a_position;' +
-    // Pass the texcoord to the fragment shader.
-    'v_texcoord = a_texcoord;'
-
-var textfragmentshader =
-    'precision mediump float;' +
-    // Passed in from the vertex shader.
-    'varying vec2 v_texcoord;' +
-    'uniform sampler2D u_texture;' +
-    'void main() {' +
-    'gl_FragColor = texture2D(u_texture, v_texcoord);' +
-    '}'
+import { syGL } from "../gfx/syGLEnums";
 
 var fontInfo = {
     letterHeight: 8,
@@ -167,31 +122,6 @@ var makeVerticesForString = function (fontInfo, s) {
   };
     
 }
-var vertextBaseCode =
-    'attribute vec3 a_position;' +
-    'attribute vec2 a_uv;' +
-
-    'uniform mat4 u_MVMatrix;' +
-    'uniform mat4 u_PMatrix;' +
-
-    'varying vec2 vTextureCoordinates;' +
-
-    'void main() {' +
-    'gl_Position = u_PMatrix * u_MVMatrix * vec4(a_position, 1.0);' +
-    'vTextureCoordinates = vec2(a_uv.x,a_uv.y);' + //取反
-    '}'
-//基础的shader的片段着色器
-var fragBaseCode =
-    'precision mediump float;' +
-
-    'varying vec2 vTextureCoordinates;' +
-    'uniform sampler2D u_texCoord;' +
-
-    'void main() {' +
-     'vec4 texcolor = texture2D(u_texCoord, vTextureCoordinates);'+
-      'if((texcolor.x+texcolor.y+texcolor.z)<0.1) discard;'+
-     'gl_FragColor = texcolor;'+
-    '}'
 
 
 export class Label extends SY.Sprite2D {
@@ -260,9 +190,7 @@ export class Label extends SY.Sprite2D {
         }
         this.createIndexsBuffer(floorVertexIndices);
 
-        this.setShader(vertextBaseCode,fragBaseCode);
-
-        this._glPrimitiveType = glprimitive_type.TRIANGLES;
+        this._glPrimitiveType = syGL.PrimitiveType.TRIANGLES;
 
     }
 }

@@ -6,13 +6,19 @@ import SkyBox from "../3d/SkyBox";
 import { Node } from "./Node";
 import CustomTextureCube from "../3d/CustomTextureCube";
 import CustomTextureData from "../data/CustomTextureData";
-import { gltex_config_format } from "../gfx/GLEnums";
 import Sphere from "../3d/Sphere";
 import Spine from "./spine/Spine";
-import { PointLight } from "../light/PointLight";
 import { SpotLight } from "../light/SpotLight";
 import { ThreeDLight } from "../light/ThreeDLight";
 import MirrorCube from "../3d/MirrorCube";
+import { Line } from "../3d/Line";
+import { G_UISetting } from "../../ui/UiSetting";
+import PointLightCube from "../3d/PointLightCube";
+import SpotLightCube from "../3d/SpotLightCube";
+import { FogCube } from "../3d/FogCube";
+import { glMatrix } from "../../math/Matrix";
+import { syGL } from "../gfx/syGLEnums";
+import GameMainCamera from "../camera/GameMainCamera";
 
 export default class Scene3D extends Scene {
 
@@ -22,23 +28,26 @@ export default class Scene3D extends Scene {
     private _cubeNode: Cube;
     private _tableNode: Cube;
     private _spineNode: Spine;
+    private _pointLightCube:PointLightCube;
+    private _spotLightCube:SpotLightCube;
+    private _fogCubeArr:Array<FogCube>;
     private _customTexture: CustomTextureCube;
     private _centerNode: Node;
     private _mirrorCube:MirrorCube;
-    private _FLightPoint:PointLight;
     private _FLightSpot:SpotLight;
     private _FLightThreeD:ThreeDLight;
     private _sphere: Sphere;
-
-      
     constructor() {
         super();
     }
     public init(): void {
         
-        // this._FLightPoint = new PointLight();
-        // this._FLightPoint.setPosition(0,20,-100);
-        // this.addChild(this._FLightPoint);
+        // let lightNode = new Node();
+        // this.addChild(lightNode);
+        // this._FLightPoint = new PointLightFCube();
+        // this._FLightPoint.rotateX = 0;
+        // this._FLightPoint.setPosition(-50, -75, -15);
+        // lightNode.addChild(this._FLightPoint);
         // this._FLightPoint.Url = "res/models/char/F.json";
 
         // this._FLightSpot = new SpotLight();
@@ -51,10 +60,13 @@ export default class Scene3D extends Scene {
         // this.addChild(this._FLightThreeD);
         // this._FLightThreeD.Url = "res/models/char/F.json";
 
-
+        
         this._centerNode = new Node();
         this._centerNode.setPosition(0, 1.1, 0);
         this.addChild(this._centerNode);
+        
+
+       
 
         var spNode = new Node();
         this._sphere = new Sphere();
@@ -63,28 +75,57 @@ export default class Scene3D extends Scene {
         this._centerNode.addChild(spNode);
 
         this._floorNode = new Ground();
-        this._floorNode.url = "res/ground.jpg";
+        this._floorNode.spriteFrame = "res/ground.jpg";
         this.addChild(this._floorNode);
 
         this._spineNode = new Spine();
-        this._spineNode.x = 0;
+        this._spineNode.x = -5;
+        this._spineNode.y = 10;
         this.addChild(this._spineNode);
 
         this._customTexture = new CustomTextureCube();
-        this._customTexture.url = CustomTextureData.getRandomData(3, 5, gltex_config_format.RGB8);
+        this._customTexture.spriteFrame = CustomTextureData.getRandomData(3, 5, syGL.TextureFormat.RGB8);
         this._customTexture.setPosition(0, 3.1, 0);
         this._centerNode.addChild(this._customTexture);
 
         this._tableNode = new Cube();
-        this._tableNode.url = "res/wood.jpg";
+        this._tableNode.spriteFrame = "res/wood.jpg";
         this._tableNode.setPosition(0, 1, 0);
         this._tableNode.setScale(2.0, 0.1, 2.0);
         this._centerNode.addChild(this._tableNode);
+
         this._cubeNode = new Cube();
-        this._cubeNode.url = "res/wicker.jpg";
+        this._cubeNode.spriteFrame = "res/wicker.jpg";
         this._cubeNode.setPosition(0, 1.7, 0);
         this._cubeNode.setScale(0.5, 0.5, 0.5);
         this._centerNode.addChild(this._cubeNode);
+
+        this._pointLightCube = new PointLightCube();
+        this._pointLightCube.setScale(100,50,10.0);
+        this._pointLightCube.setPosition(0, 0, -10);
+        this._pointLightCube.spriteFrame = "res/dragon.jpg";
+        this._centerNode.addChild(this._pointLightCube);
+        this._spotLightCube = new SpotLightCube();
+        this._spotLightCube.setScale(100,50.0,10.0);
+        this._spotLightCube.setPosition(0, 0, -10);
+        this._spotLightCube.spriteFrame = "res/dragon.jpg";
+        this._centerNode.addChild(this._spotLightCube);
+
+        this._fogCubeArr = [];
+        let fogCubeNums = 40;
+        let fogNode = new Node();
+        this._centerNode.addChild(fogNode);
+        for(let j = 0;j<fogCubeNums;j++)
+        {
+            let fog = new FogCube();
+            fog.spriteFrame = "resources/f-texture.png";
+            fog.setPosition(-2+j*1.1,0, j*2);
+            fogNode.addChild(fog);
+            this._fogCubeArr.push(fog);
+
+        }
+
+        
 
         // 绘制 4 个腿
         for (var i = -1; i <= 1; i += 2) {
@@ -92,13 +133,13 @@ export default class Scene3D extends Scene {
                 var node = new Cube();
                 node.setPosition(i * 19, -0.1, j * 19);
                 node.setScale(0.1, 1.0, 0.1);
-                node.url = "res/wood.jpg";
+                node.spriteFrame = "res/wood.jpg";
                 this._centerNode.addChild(node);
             }
         }
 
         this._lightCube = new LightCube();
-        this._lightCube.url = "res/wicker.jpg";
+        this._lightCube.spriteFrame = "res/wicker.jpg";
         this._lightCube.setPosition(-5, 2.7, 0);
         this._lightCube.setScale(0.5, 0.5, 0.5);
         this._centerNode.addChild(this._lightCube);
@@ -118,12 +159,20 @@ export default class Scene3D extends Scene {
 
         this.setPosition(0, 0, 0);
         setTimeout(this.rotateCenterNode.bind(this), 20);
+
+    }
+
+    protected collectRenderData(time):void{
+        this._fogCubeArr.forEach((fog,index)=>{
+            fog.rotate(0,1,0)
+        })
+        super.collectRenderData(time);
     }
     
     public rotateCenterNode() {
-        this._centerNode.rotate(0, 1, 0);
-        this._mirrorCube.rotate(1,-1,-0.2);
-        setTimeout(this.rotateCenterNode.bind(this), 20);
+        // this._centerNode.rotate(0, 1, 0);
+        // this._mirrorCube.rotate(1,-1,-0.2);
+        // setTimeout(this.rotateCenterNode.bind(this), 20);
     }
     private readyRenderDraw(): void {
 
@@ -135,9 +184,9 @@ export default class Scene3D extends Scene {
             this._tableNode.destroy();
         }, 5000)
         setTimeout(() => {
-            this._floorNode.url = "res/ground.jpg";
-            this._cubeNode.url = "res/wicker.jpg";
-            this._tableNode.url = "res/wood.jpg";
+            this._floorNode.spriteFrame = "res/ground.jpg";
+            this._cubeNode.spriteFrame = "res/wicker.jpg";
+            this._tableNode.spriteFrame = "res/wood.jpg";
         }, 7000)
     }
 }

@@ -1,4 +1,4 @@
-import { glMatrix } from "../../Matrix";
+import { glMatrix } from "../../math/Matrix";
 import { G_ShaderFactory } from "./ShaderFactory";
 
 /**

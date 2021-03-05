@@ -1,4 +1,26 @@
 import { SY } from "../Sprite";
+/**
+ * 该类主要用来生成顶点数据的buffer,顶点数据的种类如下：
+ * 位置：pos 在shader中的变量类型是vec3 所以一个单元的数据个数是3，每个数据由若干字节存放，一般是float类型，那就是4个字节
+ * uv:  vec2
+ * 法线：vec3
+ * 切线：vec3
+ * 颜色:vec4,一个单元数据有4个数据，因为颜色一般是rgba 4个通道
+ * 矩阵：matrix 在shader中的变量类型是mat4,但这种类型其实是一个结构体，其实它就是4个连续存放的vec4类型的变量，矩阵首地址就是第一个vec4变量的地址
+ * 后边的地址，就是依次+1，注意我这里说的是在shader中的地址，所以对于矩阵数据，它的一个单元数据就是一个vec4类型的变量，他们它就有4个数据组成，每个数据的类型也一般都是
+ * float类型，即4个字节
+ * 索引：为了节省字节而产生的，他有单独的索引缓冲存放 
+ *
+ */
+
+/**
+ * 顶点buffer:若干字节组成一个数据，若干数据组成一个单元，若干单元组成一个图形
+ * 一般情况：存储顶点buffer的数组都是float类型，所以一个顶点的坐标便是4个字节，一个顶点有三个坐标（x,y,z）,所以就有三个数据组成一个顶点，一个顶点就代表一个单元
+ * 所以我们将顶点数组发给GPU的时候，GPU需要知道一个顶点或者说一个顶点单元，有多少数据表示
+ * 当我们绑定好当前的顶点缓冲，GPU就拿到了当前要操作的顶点缓冲，当GPU要绘制的时候，我们还需要告诉它从这个数组哪一个顶点单元开始绘制，一共要绘制多少个顶点单元，以及这些顶点
+ * 单元是如何分布的，比如点分布，线分布，三角形分布
+ * 
+ */
 
 /**
  * 缓冲区中的数据就是一个二进制流，一般我们会按照字节处理，八个二进制为一个字节，又称字节流
@@ -25,11 +47,11 @@ export abstract class glBaseBuffer {
     /**
      * 构造一个buffer对象
      * @param gl 
-     * @param data 
-     * @param itemSize 
-     * @param arrbufferType 
-     * @param itemBytes 
-     * @param preAllocateLen  
+     * @param data 顶点数据（pos,uv,normal,切线，节点颜色，节点矩阵）
+     * @param itemSize 一个单元数据有多少个数据组成
+     * @param arrbufferType 顶点缓冲的类型
+     * @param itemBytes 存储每一个数据的字节数
+     * @param preAllocateLen  预先分配的长度 一般默认为0 否则第一次只是在显存中分配内存 后边才会更新和赋值到这块内存区域
      */
     constructor(gl: WebGLRenderingContext, data: Array<number>, itemSize: number, arrbufferType: number, itemBytes: number, preAllocateLen: number) {
         this._glID = gl.createBuffer();
@@ -39,10 +61,12 @@ export abstract class glBaseBuffer {
         this._itemBytes = itemBytes;
         // //默认使用以下数据
         this._usage = gl.STATIC_DRAW;
+
         this._curMapTotalBytes = 0;
+        this._hasAllocateByteLen = 0;
         if (preAllocateLen == 0) {
             //走正常的分配逻辑
-            this.mergeData(data);
+            this.uploadData2GPU(data);
         }
         else if (!data || data.length == 0) {
             //表示想要预先申请一段GPU内存来存当前的buffer 日后再更新这个buffer
@@ -53,7 +77,8 @@ export abstract class glBaseBuffer {
             console.log("无法创建，您传入的参数不合法！！！！！！");
         }
     }
-    private _mapSourceData: Map<number, Array<number>> = new Map();//源数据
+    // private _mapSourceData: Map<number, Array<number>> = new Map();//源数据
+    private _sourceData: Array<number>;
     private _itemBytes: number = 2;    //每个数据的存储字节数
     private _curMapTotalBytes: number;//当前map中含有的总的字节数
     private _itemSize: number = 0;     //在缓冲区中，一个单元有几个数据组成
@@ -62,6 +87,7 @@ export abstract class glBaseBuffer {
     private _arrayBufferType: number;//缓冲区的类型
     private _usage: number;
     private _preAllocateLen: number;//动态预分配的字节长度
+    private _hasAllocateByteLen: number;//已经分配的字节长度
     protected gl: WebGLRenderingContext;
 
     protected useDynamicUsage() {
@@ -82,25 +108,35 @@ export abstract class glBaseBuffer {
     public get glID(): WebGLBuffer {
         return this._glID;
     }
-    public mergeData(data: Array<number>) {
-        //将数据放置在map中
-        this._mapSourceData.set(this._curMapTotalBytes, data);
-        this._curMapTotalBytes = this._curMapTotalBytes + data.length * this._itemBytes;
-        this._itemNums = this._itemNums + data.length / this._itemSize;
-        this.uploadData2GPU();
+    private uploadData2GPU(data: Array<number>) {
+        this._curMapTotalBytes = data.length * this._itemBytes;
+        this._itemNums = data.length / this._itemSize;
+        this._sourceData = data;
+        this.bufferSet();
+        let Arr = this.getBytesArray();
+        this.gl.bindBuffer(this._arrayBufferType, this._glID),
+        this.gl.bufferData(this._arrayBufferType, new Arr(this._sourceData), this._usage)
     }
     public updateSubData(data: Float32Array): void {
         this.gl.bindBuffer(this._arrayBufferType, this._glID);
+        let curByteLen = data.byteLength;
+        if (this._hasAllocateByteLen < curByteLen) {
+            //说明当前显存中对于这块数据的存储内存不够用了，需要加
+            this.gl.bufferData(this._arrayBufferType, curByteLen, this._usage);
+        }
         this.gl.bufferSubData(this._arrayBufferType, 0, data);
+        this._hasAllocateByteLen = curByteLen;
+        this._itemNums = data.length / this._itemSize;
+        this._curMapTotalBytes = data.length * this._itemBytes;
     }
     /**
      * 在GPU显存中预分配一块内存为该buffer
      */
     private preAllocateBuffer(): void {
+        this._hasAllocateByteLen = this._preAllocateLen;
         this.gl.bindBuffer(this._arrayBufferType, this._glID);
         this.gl.bufferData(this._arrayBufferType, this._preAllocateLen, this._usage);
     }
-
     /**
      * 获取字节数组
      */
@@ -111,27 +147,6 @@ export abstract class glBaseBuffer {
             case 4: return Float32Array;
             case 8: return Float64Array;
         }
-    }
-    //上传数据到GPU显存
-    private uploadData2GPU(): void {
-        this.bufferSet();
-        this._usage == this.gl.STATIC_DRAW ? this.staticDraw() : this.dynamicDraw();
-    }
-    //静态绑定数据绘制
-    private staticDraw(): void {
-        let Arr = this.getBytesArray();
-        this.gl.bindBuffer(this._arrayBufferType, this._glID);
-        this.gl.bufferData(this._arrayBufferType, new Arr(this._mapSourceData.get(0)), this._usage);
-    }
-    //动态绑定数据绘制
-    private dynamicDraw(): void {
-        let Arr = this.getBytesArray();
-        this.gl.bindBuffer(this._arrayBufferType, this._glID);
-        //重新调整数组大小
-        this.gl.bufferData(this._arrayBufferType, this._curMapTotalBytes, this._usage);
-        this._mapSourceData.forEach((values, key) => {
-            this.gl.bufferSubData(this._arrayBufferType, key, new Arr(values));
-        })
     }
     protected abstract bufferSet();
 
@@ -185,8 +200,8 @@ export class NormalBuffer extends glBaseBuffer {
         this.useDynamicUsage();
     }
 }
-//节点矩阵buffer
-export class NodeCustomMatrixBuffer extends glBaseBuffer {
+//顶点矩阵buffer
+export class VertMatrixBuffer extends glBaseBuffer {
     constructor(gl, matrix: Array<number>, itemSize: number, preAllocateLen: number) {
         super(gl, matrix, itemSize, gl.ARRAY_BUFFER, 4, preAllocateLen);
     }
@@ -194,8 +209,8 @@ export class NodeCustomMatrixBuffer extends glBaseBuffer {
         this.useDynamicUsage();
     }
 }
-//节点颜色buffer
-export class NodeCustomColorBuffer extends glBaseBuffer {
+//顶点颜色buffer
+export class VertColorBuffer extends glBaseBuffer {
     constructor(gl, color: Array<number>, itemSize: number, preAllocateLen: number) {
         super(gl, color, itemSize, gl.ARRAY_BUFFER, 4, preAllocateLen);
     }
@@ -203,6 +218,7 @@ export class NodeCustomColorBuffer extends glBaseBuffer {
         // this.useDynamicUsage();
     }
 }
+
 /**
  * buffer 管理员
  */
@@ -218,14 +234,17 @@ class BufferManager {
     private _mapIndexBuffer: Map<string, IndexsBuffer> = new Map();
     private _mapNormalBuffer: Map<string, NormalBuffer> = new Map();
     private _mapUVBuffer: Map<string, UVsBuffer> = new Map();
+    private _mapVertColorBuffer: Map<string, VertColorBuffer> = new Map();
+    private _mapVertMatrixBuffer: Map<string, VertMatrixBuffer> = new Map();
     /**
      * 
-     * @param type 
-     * @param materialId 
-     * @param data  源数据
+     * @param type buffer类型
+     * @param materialId 材质的id
+     * @param data 顶点源数据
      * @param itemSize 一个单元的数据个数
+     * @param preAllocateLen 
      */
-    public createBuffer(type: SY.GLID_TYPE, materialId: string = "default", data: Array<number>, itemSize: number, preAllocateLen: number = 0): glBaseBuffer {
+    public createBuffer(type: SY.GLID_TYPE, materialId: string = "default", data: Array<number>, itemSize: number, preAllocateLen: number): glBaseBuffer {
         switch (type) {
             case SY.GLID_TYPE.VERTEX:
                 return this.createVertex(materialId, data, itemSize, preAllocateLen);
@@ -235,11 +254,28 @@ class BufferManager {
                 return this.createNormal(materialId, data, itemSize, preAllocateLen);
             case SY.GLID_TYPE.UV:
                 return this.createUV(materialId, data, itemSize, preAllocateLen);
-            case SY.GLID_TYPE.COLOR:
-                return this.createColor(materialId, data, itemSize, preAllocateLen);
-            case SY.GLID_TYPE.MATRIX:
+            case SY.GLID_TYPE.VERT_COLOR:
+                return this.createVertColor(materialId, data, itemSize, preAllocateLen);
+            case SY.GLID_TYPE.VERT_MATRIX:
                 return this.createMatrix(materialId, data, itemSize, preAllocateLen);
             default: break;
+        }
+    }
+    public getBuffer(type: SY.GLID_TYPE, materialId: string): glBaseBuffer {
+        switch (type) {
+            case SY.GLID_TYPE.VERTEX:
+                return this._mapVertexBuffer.get(materialId);
+            case SY.GLID_TYPE.INDEX:
+                return this._mapIndexBuffer.get(materialId);
+            case SY.GLID_TYPE.NORMAL:
+                return this._mapNormalBuffer.get(materialId);
+            case SY.GLID_TYPE.UV:
+                return this._mapUVBuffer.get(materialId);
+            case SY.GLID_TYPE.VERT_COLOR:
+                return this._mapVertColorBuffer.get(materialId);
+            case SY.GLID_TYPE.VERT_MATRIX:
+                return this._mapVertMatrixBuffer.get(materialId);
+            default: console.log("未知类型，请指明类型"); break;
         }
     }
     private createVertex(id: string, data: Array<number>, itemSize: number, preAllocateLen: number): VertexsBuffer {
@@ -262,14 +298,14 @@ class BufferManager {
         this._mapUVBuffer.set(id, buffer);
         return buffer;
     }
-    private createColor(id: string, data: Array<number>, itemSize: number, preAllocateLen: number): NodeCustomColorBuffer {
-        let buffer = new NodeCustomColorBuffer(this._gl, data, itemSize, preAllocateLen);
-        this._mapUVBuffer.set(id, buffer);
+    private createVertColor(id: string, data: Array<number>, itemSize: number, preAllocateLen: number): VertColorBuffer {
+        let buffer = new VertColorBuffer(this._gl, data, itemSize, preAllocateLen);
+        this._mapVertColorBuffer.set(id, buffer);
         return buffer;
     }
-    private createMatrix(id: string, data: Array<number>, itemSize: number, preAllocateLen: number): NodeCustomMatrixBuffer {
-        let buffer = new NodeCustomMatrixBuffer(this._gl, data, itemSize, preAllocateLen);
-        this._mapUVBuffer.set(id, buffer);
+    private createMatrix(id: string, data: Array<number>, itemSize: number, preAllocateLen: number): VertMatrixBuffer {
+        let buffer = new VertMatrixBuffer(this._gl, data, itemSize, preAllocateLen);
+        this._mapVertMatrixBuffer.set(id, buffer);
         return buffer;
     }
 }

@@ -1,5 +1,6 @@
+
 import { SY } from "../base/Sprite";
-import { glprimitive_type } from "../gfx/GLEnums";
+import { syGL } from "../gfx/syGLEnums";
 
 /**
 基本图形	参数	                                   描述
@@ -12,28 +13,6 @@ import { glprimitive_type } from "../gfx/GLEnums";
 三角扇	 gl.TRIANGLE_FAN	           一系列三角形组成的类似扇形的图形，前三个点构成第一个三角形，接下来的一个点和前一个三角形的最后一条边组成接下来的一个三角形，被绘制在(v0, v1, v2),(v0, v2, v3),(v0, v3, v4)...
  */
 
-var vertextBaseCode =
-    'attribute vec3 a_position;' +
-    'attribute vec2 a_uv;' +
-
-    'uniform mat4 u_MVMatrix;' +
-    'uniform mat4 u_PMatrix;' +
-    'varying vec2 vTextureCoordinates;' +
-
-    'void main() {' +
-    'gl_Position = u_PMatrix * u_MVMatrix * vec4(a_position, 1.0);' +
-    'vTextureCoordinates = a_uv;' +
-    '}'
-//基础的shader的片段着色器
-var fragBaseCode =
-    'precision mediump float;' +
-
-    'varying vec2 vTextureCoordinates;' +
-    'uniform sampler2D u_texCoord;' +
-
-    'void main() {' +
-    'gl_FragColor = texture2D(u_texCoord, vTextureCoordinates);' +
-    '}'
 
 export default class Ground extends SY.SpriteBase {
     constructor() {
@@ -64,22 +43,21 @@ export default class Ground extends SY.SpriteBase {
         // this.testDrawPrimitive_TRIANGLE_STRIP();
         // this.testDrawPrimitive_TRIANGLE_FAN();
         this.testDrawPrimitive_TRIANGLE();
-        this.setShader(vertextBaseCode,fragBaseCode);
     }
 
     private testDrawPrimitive_TRIANGLE_STRIP():void{
         var floorVertexIndices = [0, 1, 2,3,0,2];
-        this._glPrimitiveType = glprimitive_type.TRIANGLE_STRIP;
+        this._glPrimitiveType = syGL.PrimitiveType.TRIANGLE_STRIP;
         this.createIndexsBuffer(floorVertexIndices);
     }
     private testDrawPrimitive_TRIANGLE_FAN():void{
         var floorVertexIndices = [0, 1, 2,3];
-        this._glPrimitiveType = glprimitive_type.TRIANGLE_FAN;
+        this._glPrimitiveType = syGL.PrimitiveType.TRIANGLE_FAN;
         this.createIndexsBuffer(floorVertexIndices);
     }
     private testDrawPrimitive_TRIANGLE():void{
         var floorVertexIndices = [0, 1, 2,3,0,2];
-        this._glPrimitiveType = glprimitive_type.TRIANGLES;
+        this._glPrimitiveType = syGL.PrimitiveType.TRIANGLES;
         this.createIndexsBuffer(floorVertexIndices);
     }
 }

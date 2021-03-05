@@ -1,8 +1,7 @@
 
 import Device from "../../Device";
-import { MathUtils } from "../../utils/MathUtils";
+import { G_UISetting } from "../../ui/UiSetting";
 import Camera from "./Camera";
-import { G_CameraModel } from "./CameraModel";
 import enums from "./enums";
 import OrthoCamera from "./OrthoCamera";
 import PerspectiveCamera from "./PerspectiveCamera";
@@ -29,15 +28,13 @@ export default class GameMainCamera {
     //初始化3D相机
     this._3dCamera = new PerspectiveCamera(this.gl.canvas.width / this.gl.canvas.height, 60, 0.1, 50) as PerspectiveCamera;
 
-    G_CameraModel.setRenderCallBack(this.renderCallBack.bind(this));
+    G_UISetting.pushRenderCallBack(this.renderCallBack.bind(this));
   }
 
   private _2dCamera: OrthoCamera;
   private _3dCamera: PerspectiveCamera;
-  private _cameraType: number;
   private gl: WebGLRenderingContext;
   private updateCameraData(type: number, aspect: number, angle: number = 60, near: number = 0.1, far: number = 50): Camera {
-    this._cameraType = type;
     if (type == enums.PROJ_PERSPECTIVE) {
 
       this._3dCamera.Fovy = angle * Math.PI / 180;

@@ -1,7 +1,7 @@
 // Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
 import enums from "../camera/enums";
-import { glMatrix } from "../../Matrix";
+import { glMatrix } from "../../math/Matrix";
 import FrameBuffer from "../gfx/FrameBuffer";
 import Vec3, { sy_v3 } from "../../value-types/vec3";
 import { sy_mat4, Mat4 } from "../../value-types/mat4";

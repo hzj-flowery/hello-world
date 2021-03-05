@@ -98,10 +98,12 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     
     
     /**
+     * 获取当前对象属于那些象限
+     * 0-3 = top-right, top-left, bottom-left, bottom-right
+     * 
      * Determine which node the object belongs to
      * @param Object pRect      bounds of the area to be checked, with x, y, width, height
      * @return Array            an array of indexes of the intersecting subnodes 
-     *                          (0-3 = top-right, top-left, bottom-left, bottom-right / ne, nw, sw, se)
      */
     Quadtree.prototype.getIndex = function(pRect) {
         
@@ -139,6 +141,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     
     
     /**
+     * 插入一个节点到这颗树上
      * Insert the object into the node. If the node
      * exceeds the capacity, it will split and add all
      * objects to their corresponding subnodes.
@@ -151,8 +154,11 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
          
         //if we have subnodes, call insert on matching subnodes
         if(this.nodes.length) {
+            //说明我们有子节点,进一步来判断它属于哪个象限
+            //如果它位于边缘，可能处于多个象限
             indexes = this.getIndex(pRect);
-     
+            
+            //拿到象限以后，继续插入
             for(i=0; i<indexes.length; i++) {
                 this.nodes[indexes[i]].insert(pRect);     
             }
@@ -163,8 +169,11 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         this.objects.push(pRect);
 
         //max_objects reached
+        //最大的对象数达到了，就是一个子节点最多可以容纳n个对象，现在来了n+1个对象
+        //并且此时节点树的高度还没有达到最大值
         if(this.objects.length > this.max_objects && this.level < this.max_levels) {
-
+            
+            //继续拆分 一分为4
             //split if we don't already have subnodes
             if(!this.nodes.length) {
                 this.split();
@@ -185,6 +194,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
      
      
     /**
+     * 外界输入一个对象，先求出当前这个对象在那个象限里，再求出这个象限里有多少个其他对象，返回这些对象，用作外界逻辑
      * Return all objects that could collide with the given object
      * @param Object pRect      bounds of the object to be checked { x, y, width, height }
      * @Return Array            array with all detected objects

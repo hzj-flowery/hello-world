@@ -1,4 +1,5 @@
 import LoaderManager from "../../../LoaderManager";
+import { syGL } from "../../gfx/syGLEnums";
 import { Skeleton_MeshRenderer } from "./Skeleton_MeshRenderer";
 import { Skeleton_Node, Skeleton_Transform } from "./Skeleton_Node";
 import { Skeleton_Skin } from "./Skeleton_Skin";
@@ -43,10 +44,10 @@ export class Skeleton_Parse {
         throw new Error(`no key: ${key}`);
     }
 
-    //变量类型占用的元素个数
+    //单位元数由几个数据组成
     private static readonly accessorTypeToNumComponentsMap = {
-        'SCALAR': 1,
-        'VEC2': 2,
+        'SCALAR': 1,  //标量
+        'VEC2': 2,    
         'VEC3': 3,
         'VEC4': 4,    //
         'MAT2': 4,
@@ -78,14 +79,13 @@ export class Skeleton_Parse {
 
     // given an accessor index return both the accessor and
     // a TypedArray for the correct portion of the buffer
-    private static getAccessorTypedArrayAndStride(gl, gltf, accessorIndex) {
+    private static getAccessorTypedArrayAndStride(gltf, accessorIndex) {
         //gltf.accessors是bufferView的数组
         const accessor = gltf.accessors[accessorIndex];
         //gltf.bufferViews存储了每个bufferview的在顶点数组中的存放位置以及大小
         const bufferView = gltf.bufferViews[accessor.bufferView];
         const TypedArray = this.glTypeToTypedArray(accessor.componentType); //Float32Array
         const buffer = gltf.buffers[bufferView.buffer];
-        console.log(gltf.buffers);
         var array = new TypedArray(
             buffer,
             bufferView.byteOffset + (accessor.byteOffset || 0),
@@ -99,7 +99,7 @@ export class Skeleton_Parse {
     }
 
     // Given an accessor index return a WebGLBuffer and a stride
-    private static getAccessorAndWebGLBuffer(gl, gltf, accessorIndex, attribName = "") {
+    private static getAccessorAndWebGLBuffer(gl, gltf, accessorIndex) {
         const accessor = gltf.accessors[accessorIndex];
         const bufferView = gltf.bufferViews[accessor.bufferView];
         if (!bufferView.webglBuffer) {
@@ -112,12 +112,6 @@ export class Skeleton_Parse {
             //上传数据
             gl.bufferData(target, data, gl.STATIC_DRAW);
             bufferView.webglBuffer = buffer;
-            if (attribName == "JOINTS_0" || attribName == "WEIGHTS_0") {
-                var pData: Array<number> = []
-                data.forEach(function (value, index, array) {
-                    pData.push(value);
-                })
-            }
         }
         return {
             accessor,
@@ -131,14 +125,22 @@ export class Skeleton_Parse {
     static parseGLTF(gl: WebGLRenderingContext, gltfPath: string = "res/models/killer_whale/whale.CYCLES.gltf", bufferPath: string = "res/models/killer_whale/whale.CYCLES.bin") {
         const gltf = LoaderManager.instance.getRes(gltfPath);
         gltf.buffers = [LoaderManager.instance.getRes(bufferPath)];
-
-        console.log(gltf);
         //缺省的材质
         const defaultMaterial = {
             uniforms: {
                 u_diffuse: [0.5, 0, 0, 1],
             },
         };
+        
+        //解析出来的数据需要兼容我的shader
+        //所以此处需要做一些变量名的替换
+        let shaderNameReplace = {
+            "a_POSITION": syGL.AttributeUniform.POSITION,
+            "a_NORMAL": syGL.AttributeUniform.NORMAL,    //法线
+            "a_WEIGHTS_0": syGL.AttributeUniform.WEIGHTS_0, //权重
+            "a_JOINTS_0": syGL.AttributeUniform.JOINTS_0,  //受到哪些骨骼节点的影响
+            "a_TEXCOORD_0": syGL.AttributeUniform.UV
+        }
         // setup meshes
         // 创建网格
         gltf.meshes.forEach((mesh) => {
@@ -146,9 +148,19 @@ export class Skeleton_Parse {
                 const attribs = {};
                 let numElements;
                 for (const [attribName, index] of Object.entries(primitive.attributes)) {
-                    const { accessor, buffer, stride } = this.getAccessorAndWebGLBuffer(gl, gltf, index, attribName);
+                    const { accessor, buffer, stride } = this.getAccessorAndWebGLBuffer(gl, gltf, index);
                     numElements = accessor.count;
-                    attribs[`a_${attribName}`] = {
+
+                    let realName = `a_${attribName}`;
+                    if(shaderNameReplace[realName])
+                    {
+                        realName = shaderNameReplace[realName];
+                    }
+                    else
+                    {
+                        console.log("发现不明变量-------",attribName);
+                    }
+                    attribs[realName] = {
                         buffer,
                         type: accessor.componentType,
                         numComponents: this.accessorTypeToNumComponents(accessor.type),
@@ -180,11 +192,26 @@ export class Skeleton_Parse {
         const skinNodes = [];
         const origNodes = gltf.nodes;
         gltf.nodes = gltf.nodes.map((n) => {
+            /**
+             * 这里面存储了模型中所有节点，更多的我们只关心骨骼节点
+             * 下面就是要拿这些节点的数据来还原这些节点
+             * 根据缩放，平移，以及四元数旋转，创建一个trs
+             * 无论如何，首先它是一个节点Skeleton_Node
+             * 如果该节点的数据中含有skin，说明这是一个带有蒙皮的节点，这个要注意，就要创建一个蒙皮节点
+             * 蒙皮节点中会包含蒙皮动画，我们会通过蒙皮节点来操作蒙皮动画
+             */
             const { name, skin, mesh, translation, rotation, scale } = n;
             const trs = new Skeleton_Transform(translation, rotation, scale);
             const node = new Skeleton_Node(trs, name);
             const realMesh = gltf.meshes[mesh];
             if (skin !== undefined) {
+                /**
+                 * 但凡遇到有skin的，说明有蒙皮数据
+                 * 蒙皮数据有下面两个：
+                 * 网格的顶点数据
+                 * 这张皮肤含有多少个骨骼，将用这些骨骼的空间坐标系去造一个纹理，这个纹理就是蒙皮的来源
+                 * 这个节点是一个领头羊，我们会通过这个节点来操作皮肤，
+                 */
                 skinNodes.push({ node, mesh: realMesh, skinNdx: skin });
             } else if (realMesh) {
                 node.mesh_Drawables.push(new Skeleton_MeshRenderer(realMesh, gl));
@@ -192,16 +219,29 @@ export class Skeleton_Parse {
             return node;
         });
 
-        // setup skins
+        /**
+         * 创建皮肤
+         * 首先skins是一个数组，说明可以创建若干张骨骼纹理
+         * skins数组中每一个子项,包含如下数据：
+         * joints：骨骼节点索引数组
+         * inverseBindMatrices：与joints相对的每一个骨骼节点的绑定矩阵的逆矩阵
+         * OK拿到这两个数据就可以创建一张骨骼纹理
+         */
         gltf.skins = gltf.skins.map((skin) => {
             const joints = skin.joints.map(ndx => gltf.nodes[ndx]);
-            //96个元素 每个元素四个字节
-            //一个矩阵4x4 16个元素 可以组成6个矩阵
-            const { array } = this.getAccessorTypedArrayAndStride(gl, gltf, skin.inverseBindMatrices);
+            /**
+             * 利用骨骼节点和骨骼绑定姿势的逆矩阵来创建一张骨骼纹理
+             * 骨骼节点的顺序和骨骼绑定姿势的逆矩阵必须是一一对应的
+             */
+            const { array } = this.getAccessorTypedArrayAndStride(gltf, skin.inverseBindMatrices);
             return new Skeleton_Skin(joints, array, gl);
         });
 
-        // Add SkinRenderers to nodes with skins
+        /**
+         * 给蒙皮节点加上一个蒙皮渲染器
+         * 蒙皮渲染器里传入mesh网格信息和对应的蒙皮
+         * 日后就会通过这个蒙皮节点来调用这个蒙皮渲染器，进而来渲染网格mesh
+         */
         for (const { node, mesh, skinNdx } of skinNodes) {
             node.skin_Drawables.push(new Skeleton_SkinRenderer(mesh, gltf.skins[skinNdx], gl));
         }
@@ -230,7 +270,7 @@ export class Skeleton_Parse {
         });
 
         // setup scenes
-        // 创建场景
+        // 创建场景,你可以理解为他就是一个模型场景
         for (const scene of gltf.scenes) {
             scene.root = new Skeleton_Node(new Skeleton_Transform(), scene.name);
             addChildren(gltf.nodes, scene.root, scene.nodes);

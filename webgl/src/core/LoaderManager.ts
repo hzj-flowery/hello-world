@@ -142,6 +142,39 @@ export default class LoaderManager {
             }
         }
     }
+    //加载可以转化为json的数据
+    private loadGlslStringData(path: string, callBackProgress?, callBackFinish?): void {
+        var request = new XMLHttpRequest();
+        request.open("get", path);
+        request.send(null);
+        request.responseType = "text";
+        request.onload = function () {
+            if (request.status == 0) {
+                if (callBackFinish) callBackFinish.call(null, request.responseText, path);
+            }
+        }
+    }
+     //加载可以转化为json的数据
+     private loadTextData(path: string, callBackProgress?, callBackFinish?): void {
+        var request = new XMLHttpRequest();
+        request.open("get", path);
+        request.send(null);
+        request.responseType = "text";
+        request.onload = function () {
+            if (request.status == 0) {
+                let content = request.responseText;
+                let arr = content.split("&&");
+                let last = [];
+                for(let i = 0;i<arr.length;i = i+3)
+                {
+                     //0 1 2
+                     last.push({content:arr[i],type:arr[i+2]});
+                }
+                console.log(last);
+                if (callBackFinish) callBackFinish.call(null, request.responseText, path);
+            }
+        }
+    }
     //加载骨骼数据
     private loadSkelData(path: string, callBackProgress?, callBackFinish?): void {
         var _this = this;
@@ -189,6 +222,7 @@ export default class LoaderManager {
         if (!isHttp) {
             //本地
             var img = new Image();
+            img.crossOrigin = "anonymous";
             img.onload = function (img: HTMLImageElement) {
                 if (!img) {
                     console.log("加载的图片路径不存在---", path);
@@ -223,7 +257,8 @@ export default class LoaderManager {
             request.responseType = "blob";
             request.onload = function () {
                 var objectURL = URL.createObjectURL(request.response);
-                var img = new Image(); 
+                var img = new Image();
+                img.crossOrigin = "anonymous"; 
                 img.src = objectURL;
                 if (callBackFinish) callBackFinish.call(null, img, path); 
             }
@@ -240,6 +275,10 @@ export default class LoaderManager {
             case "json": return this.loadJsonData;
             case "gltf": return this.loadJsonStringData;
             case "skel": return this.loadSkelData;
+            case "txt": return this.loadTextData;
+            case "glsl": return this.loadGlslStringData;
+            case "frag": return this.loadGlslStringData;
+            case "vert": return this.loadGlslStringData;
             default: console.log("发现未知后缀名的文件----", path); null; break;
         }
     }
@@ -267,7 +306,10 @@ export default class LoaderManager {
 
                 if (count == length) {
                     this.onLoadFinish();
-                    if (callBackFinish) callBackFinish(resRet.length == 1 ? resRet[0] : resRet);
+                    //任何加载成功图片的逻辑 都必须等到下一帧再返回结果
+                    requestAnimationFrame(()=>{
+                        if (callBackFinish) callBackFinish(resRet.length == 1 ? resRet[0] : resRet);
+                    });
                     return;
                 }
                 //继续加载
@@ -283,7 +325,10 @@ export default class LoaderManager {
                 this.onLoadProgress(count / length);
                 if (count == length) {
                     this.onLoadFinish();
-                    if (callBackFinish) callBackFinish(resRet.length == 1 ? resRet[0] : resRet);
+                    //任何加载成功图片的逻辑 都必须等到下一帧再返回结果
+                    requestAnimationFrame(()=>{
+                        if (callBackFinish) callBackFinish(resRet.length == 1 ? resRet[0] : resRet);
+                    });
                 }
             });
         }
@@ -292,6 +337,41 @@ export default class LoaderManager {
     public getRes(url: string): any {
         return this._cache.get(url);
     }
+    
+    /**
+     * 获取着色器代码
+     * @param spriteName 
+     */
+    private getGlslRes(spriteName:string):Array<string>{
+         return [this.getRes("res/glsl/"+spriteName+"/shader.vert"),this.getRes("res/glsl/"+spriteName+"/shader.frag")]
+    }
+    /**
+     * 加载着色器代码
+     * @param spriteName 
+     * @param callBack 
+     */
+    public loadGlsl(spriteName:string,callBack?:Function):void{
+           let vs = "res/glsl/"+spriteName+"/shader.vert";
+           let fs = "res/glsl/"+spriteName+"/shader.frag";
+           let added = this.getGlslRes(spriteName);
+           if(added[0]&&added[1])
+           {
+               //说明已经加载过了
+               if(callBack)callBack(added);
+           }
+           else
+           {
+               this.load([vs,fs],null,(res)=>{
+                    let added = this.getGlslRes(spriteName);
+                    if(!added[0]||!added[1])
+                    {
+                        console.log("当前要加载的shader源码不存在------",spriteName);
+                        return;
+                    }
+                    if(callBack)callBack(added);
+               })        
+           }
+    }         
     /**
      * 移除CPU端内存中的图片缓存
      * @param url 

@@ -1,19 +1,23 @@
 //transforms
 
-import { glMatrix } from "../../../Matrix";
+import { glMatrix } from "../../../math/Matrix";
 import { Skeleton_MeshRenderer } from "./Skeleton_MeshRenderer";
 import { Skeleton_SkinRenderer } from "./Skeleton_SkinRenderer";
 
 //位置 旋转 缩放
 export class Skeleton_Transform {
     public position: Array<number>;
-    public rotation: Array<number>;
+    public rotation: Array<number>;//四元数
     public scale: Array<number>;
     constructor(position = [0, 0, 0], rotation = [0, 0, 0, 1], scale = [1, 1, 1]) {
         this.position = position;
         this.rotation = rotation;
         this.scale = scale;
     }
+    /**
+     * 利用自身的位置数据 四元数旋转数据 缩放数据来构造一个空间坐标系
+     * @param dst 
+     */
     public getMatrix(dst?) {
         dst = dst || new Float32Array(16);
         glMatrix.mat4.compose(dst,this.position, this.rotation, this.scale);
@@ -21,15 +25,20 @@ export class Skeleton_Transform {
     }
 }
 
-//节点
+/**
+ * 骨骼节点
+ */
 export class Skeleton_Node {
     private name: string;
     public transform: Skeleton_Transform;
     private parent: Skeleton_Node;
 
     private children: Array<Skeleton_Node>;
-    private localMatrix: Float32Array | any[];
-    public worldMatrix: Float32Array | any[];
+    private localMatrix: Float32Array;
+    /**
+     * 注意：这里指的是骨骼节点的世界矩阵，这个世界矩阵是基于3d模型原点的
+     */
+    public worldMatrix: Float32Array;//世界矩阵
     public mesh_Drawables: Array<Skeleton_MeshRenderer> = [];
     public skin_Drawables: Array<Skeleton_SkinRenderer> = [];
 
@@ -38,10 +47,8 @@ export class Skeleton_Node {
         this.transform = transform;
         this.parent = null;
         this.children = [];
-        // this.localMatrix = m4.identity();
-        // this.worldMatrix = m4.identity();
-        this.localMatrix = glMatrix.mat4.create();
-        this.worldMatrix = glMatrix.mat4.create();
+        this.localMatrix = glMatrix.mat4.identity(null);
+        this.worldMatrix = glMatrix.mat4.identity(null);
         glMatrix.mat4.identity(this.localMatrix);
         glMatrix.mat4.identity(this.worldMatrix);
         this.mesh_Drawables = [];

@@ -1,0 +1,1 @@
+type CCProgress = (completedCount: number, totalCount: number, item: any) => void

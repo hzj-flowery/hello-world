@@ -1,5 +1,5 @@
 import LoaderManager from "../../../LoaderManager";
-import { glTextureFmtInfor, gltex_filter } from "../../gfx/GLEnums";
+import { syGL } from "../../gfx/syGLEnums";
 import { Texture, TextureOpts } from "./Texture";
 
 /*
@@ -64,11 +64,12 @@ gl.CLAMP_TO_EDGE: 使用纹理图像边缘值
 */
 
 export class Texture2D extends Texture{
-    constructor(gl){
-        super(gl);
-        this._target = gl.TEXTURE_2D;
+    constructor(){
+        super();
+        this._target = this._gl.TEXTURE_2D;
     }
     private _url:string;
+    private _loadCallBack:any;
     public set url(soucePath){
         this._url = soucePath;
         LoaderManager.instance.load(this._url,null,this.onLoadFinish.bind(this));
@@ -79,15 +80,19 @@ export class Texture2D extends Texture{
         options.width = image.width;
         options.height = image.height;
         options.unpackFlipY = true;
-        options.magFilter = gltex_filter.LINEAR;
-        options.minFilter = gltex_filter.LINEAR_MIPMAP_LINEAR;
+        options.magFilter = syGL.TexFilter.LINEAR;
+        options.minFilter = syGL.TexFilter.LINEAR_MIPMAP_LINEAR;
         options.checkValid();
         this.updateOptions(options);
         this.upload();
+        
+        if(this._loadCallBack)
+        this._loadCallBack(image);
+
         this.loaded = true;
     }
-    public destroy():void{
-        super.destroy();
+    public set textureOnLoad(cb:any){
+        this._loadCallBack = cb;
     }
 
 }

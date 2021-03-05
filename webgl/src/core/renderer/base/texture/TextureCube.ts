@@ -1,13 +1,13 @@
 import { Texture } from "./Texture";
-import { gltex_wrap, gltex_filter } from "../../gfx/GLEnums";
+import {syGL} from "../../gfx/syGLEnums";
 
 /**
  * 立方体纹理
  */
 export default class TextureCube extends Texture {
-    constructor(gl) {
-        super(gl);
-        this._target = gl.TEXTURE_CUBE_MAP;
+    constructor() {
+        super();
+        this._target = this._gl.TEXTURE_CUBE_MAP;
     }
     private faceInfos: Array<{ target, url }>;
     /**
@@ -92,12 +92,12 @@ export default class TextureCube extends Texture {
         gl.generateMipmap(gl.TEXTURE_CUBE_MAP);
 
         //放大
-        gl.texParameteri(this._target, gl.TEXTURE_MAG_FILTER, gltex_filter.LINEAR);
+        gl.texParameteri(this._target, gl.TEXTURE_MAG_FILTER, syGL.TexFilter.LINEAR);
         //缩小
-        gl.texParameteri(this._target, gl.TEXTURE_MIN_FILTER, gltex_filter.LINEAR);
+        gl.texParameteri(this._target, gl.TEXTURE_MIN_FILTER, syGL.TexFilter.LINEAR);
         //水平方向
-        gl.texParameteri(this._target, gl.TEXTURE_WRAP_S, gltex_wrap.MIRROR);
+        gl.texParameteri(this._target, gl.TEXTURE_WRAP_S, syGL.TextureWrap.MIRROR);
         //垂直方向
-        gl.texParameteri(this._target, gl.TEXTURE_WRAP_T, gltex_wrap.MIRROR);
+        gl.texParameteri(this._target, gl.TEXTURE_WRAP_T, syGL.TextureWrap.MIRROR);
     }
 }

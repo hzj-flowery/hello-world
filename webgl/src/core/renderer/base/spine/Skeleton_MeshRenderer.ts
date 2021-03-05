@@ -1,4 +1,5 @@
 import Device from "../../../Device";
+import { glMatrix } from "../../../math/Matrix";
 import { RenderDataPool, RenderDataType, SpineRenderData } from "../../data/RenderData";
 import { ShaderData } from "../../shader/Shader";
 import { G_ShaderFactory } from "../../shader/ShaderFactory";
@@ -20,13 +21,13 @@ var fs =
     'precision mediump float;' +        //精度
     'varying vec3 v_normal;' +          //法线
     'uniform vec4 u_diffuse;' +         //漫反射
-    'uniform sampler2D u_texCoord;' +   //骨骼矩阵纹理
+    'uniform sampler2D u_texture;' +   //骨骼矩阵纹理
     'uniform vec3 u_lightDirection;' +  //光的方向
     'varying vec2 a_uv;' +
     'void main () {' +
     'vec3 normal = normalize(v_normal);' +
     'float light = dot(u_lightDirection,normal) * .5 + .5;' +
-    'vec4 color = texture2D(u_texCoord,normalize(a_uv)); ' +
+    'vec4 color = texture2D(u_texture,normalize(a_uv)); ' +
     'gl_FragColor = color+vec4(u_diffuse.rgb * light, u_diffuse.a);' +
     '}'
 
@@ -36,20 +37,22 @@ export class Skeleton_MeshRenderer {
     private mesh;
     private gl: WebGLRenderingContext;
     private meshProgramInfo: ShaderData;
+    private _temWolrdMatrix:Float32Array;//世界矩阵
     constructor(mesh, gl: WebGLRenderingContext) {
         this.mesh = mesh;
         this.gl = gl;
         this.meshProgramInfo = G_ShaderFactory.createProgramInfo(meshVS, fs);
+        this._temWolrdMatrix = glMatrix.mat4.identity(null);
     }
-    public render(node: Skeleton_Node, ext,sharedUniforms) {
+    public render(node: Skeleton_Node,worldMatrix:Float32Array,sharedUniforms) {
+        glMatrix.mat4.mul(this._temWolrdMatrix,worldMatrix,node.worldMatrix);
         for (const primitive of this.mesh.primitives) {
             var renderData = RenderDataPool.get(RenderDataType.Spine) as SpineRenderData;
-            renderData._extraViewLeftMatrix = ext;
             renderData._projKey = "u_projection";
             renderData._viewKey = "u_view";
             renderData._shaderData = this.meshProgramInfo;
             renderData._attrbufferData = primitive.bufferInfo;
-            renderData._uniformData.push({u_world: node.worldMatrix});
+            renderData._uniformData.push({u_world: this._temWolrdMatrix});
             renderData._uniformData.push(primitive.material.uniforms);
             renderData._uniformData.push(sharedUniforms);
             Device.Instance.collectData(renderData);

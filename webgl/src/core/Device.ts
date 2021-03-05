@@ -1,5 +1,5 @@
 
-import { glMatrix } from "./Matrix";
+import { glMatrix } from "./math/Matrix";
 import Scene2D from "./renderer/base/Scene2D";
 import Scene3D from "./renderer/base/Scene3D";
 import {G_CameraModel } from "./renderer/camera/CameraModel";
@@ -11,6 +11,13 @@ import State from "./renderer/gfx/State";
 import { G_ShaderFactory } from "./renderer/shader/ShaderFactory";
 import { glEnums } from "./renderer/gfx/GLapi";
 import { Node } from "./renderer/base/Node";
+import { SY } from "./renderer/base/Sprite";
+import { G_DrawEngine } from "./renderer/base/DrawEngine";
+import { G_LightCenter } from "./renderer/light/LightCenter";
+import enums from "./renderer/camera/enums";
+import { G_UISetting } from "./ui/UiSetting";
+import { SYMacro } from "./platform/SYMacro";
+import { G_LightModel } from "./renderer/light/LightModel";
 
 /**
  渲染流程：
@@ -211,6 +218,8 @@ export default class Device {
     private _nextFrameS:State;//这个非常重要
 
     private static _instance: Device;
+    private _isDebugMode:boolean = true;
+    private _isDrawToUI:boolean = true;
     public static get Instance(): Device {
         if (!this._instance) {
             this._instance = new Device();
@@ -225,19 +234,29 @@ export default class Device {
         this.canvas = canvas;
         this._nextFrameS = new State(gl);
         this._curFrameS = new State(gl);
-        canvas.onmousedown = this.onMouseDown.bind(this);
-        canvas.onmousemove = this.onMouseMove.bind(this);
-        canvas.onmouseup = this.onMouseUp.bind(this);
+      
+        // 
+
         this._width = canvas.clientWidth;
         this._height = canvas.clientHeight;
         console.log("画布的尺寸----", this._width, this._height);
         this.initExt();
 
-        //添加事件监听
-        canvas.addEventListener("webglcontextlost", this.contextLost.bind(this));
-        canvas.addEventListener("webglcontextrestored", this.resume.bind(this));
-
+       
+        this.handleEvent(canvas);
         this.openStats();
+    }
+
+    private handleEvent(canvas: HTMLCanvasElement):void{
+         //添加事件监听
+         canvas.addEventListener("webglcontextlost", this.contextLost.bind(this));
+         canvas.addEventListener("webglcontextrestored", this.resume.bind(this));
+         canvas.onmousedown = this.onMouseDown.bind(this);
+         canvas.onmousemove = this.onMouseMove.bind(this);
+         canvas.onmouseup = this.onMouseUp.bind(this);
+         canvas.onwheel = this.onWheel.bind(this);
+         canvas.onmouseout = this.onMouseOut.bind(this);
+         canvas.onkeydown = this.onKeyDown.bind(this);
     }
 
     //
@@ -292,12 +311,33 @@ export default class Device {
             return "webgl";
         }
     }
+
+    private handleAntialias(canvas: HTMLCanvasElement,context):void{
+        // canvas.width = canvas.width * window.devicePixelRatio;
+        // canvas.height = canvas.height * window.devicePixelRatio;
+        // context.scale(window.devicePixelRatio, window.devicePixelRatio);
+        let p = Math.sqrt(1080*1080+2340*2340)/6.5;
+        
+        console.log("我手机的物理像素的密度ppi----",window,p);
+    }
     //创建webgl画笔
     private createGLContext(canvas: HTMLCanvasElement): WebGL2RenderingContext {
-
+        /**
+         *   alpha?: boolean;
+            antialias?: boolean;
+            depth?: boolean;
+            desynchronized?: boolean;
+            failIfMajorPerformanceCaveat?: boolean;
+            powerPreference?: WebGLPowerPreference;
+            premultipliedAlpha?: boolean;
+            preserveDrawingBuffer?: boolean;
+            stencil?: boolean;
+         */
         let options = {
             stencil: true, //开启模板功能
-            // alpha:true, //那么这个颜色还会进一步和 canvas 所覆盖的页面颜色进行进一步叠加混色
+            antialias:SYMacro.macro.ENABLE_WEBGL_ANTIALIAS,//关闭抗锯齿
+            depth:true,
+            alpha:SYMacro.macro.ENABLE_TRANSPARENT_CANVAS, //那么这个颜色还会进一步和 canvas 所覆盖的页面颜色进行进一步叠加混色
         }
         var names = ["webgl2", "webgl", "experimental-webgl"];
         var context = null;
@@ -318,24 +358,80 @@ export default class Device {
         } else {
             alert("Failed to create WebGL context!");
         }
+        
+        this.handleAntialias(canvas,context);
         return context;
     }
 
     private _isCapture: boolean = false;
+    private _press:boolean;
+    private _lastPressPos:Array<number> = [];
     private onMouseDown(ev): void {
-        this._isCapture = true;
+        //关闭截图功能
+        // this._isCapture = true;
+        this._press = true;
 
     }
-    private onMouseMove(ev): void {
-
+    private onMouseMove(ev:MouseEvent,value): void {
+        if(this._press)
+        {
+            //处理鼠标滑动逻辑
+            if(this._lastPressPos.length==0)
+            {
+                //本次不做任何操作
+                this._lastPressPos[0] = ev.x;
+                this._lastPressPos[1] = ev.y;
+            }
+            else
+            {
+                let detaX = ev.x - this._lastPressPos[0];
+                let detaY = ev.y - this._lastPressPos[1];
+                if(Math.abs(detaX)>Math.abs(detaY))
+                {
+                    //处理x轴方向
+                    G_UISetting.updateCameraX(detaX>0)
+                }
+                else
+                {
+                    //处理y轴方向
+                    G_UISetting.updateCameraY(detaY<0);
+                }
+                this._lastPressPos[0] = ev.x;
+                this._lastPressPos[1] = ev.y;
+            }
+    
+        }
+        
     }
     private onMouseUp(ev): void {
         this._isCapture = false;
+        this._press = false;
+        this._lastPressPos = [];
     }
-    public startDraw(time: number,stage:Node): void {
+    private onMouseOut():void{
+        this._isCapture = false;
+        this._press = false;
+        this._lastPressPos = [];
+    }
+    private onWheel(ev:WheelEvent):void{
+      G_UISetting.updateCameraZ(ev.deltaY>0);
+    }
+    private onKeyDown(key):void{
+        console.log("key---------",key);
+    }
+    /**
+     * 
+     * @param time 
+     * @param stage 
+     * @param debug 
+     * @param drawtoUI 
+     */
+    public startDraw(time: number,stage:Node,debug:boolean = true,drawtoUI:boolean = true): void {
+        this._isDebugMode = debug;
+        this._isDrawToUI = drawtoUI;
         this.onBeforeRender();
         this.visitRenderTree(time,stage);
-        this.drawToUI();
+        this._isDrawToUI?this.drawToUI():null;
         this.draw2screen();
         this.onAfterRender();
     }
@@ -358,8 +454,7 @@ export default class Device {
     }
     //将结果绘制到窗口
     private draw2screen(): void {
-        let isShowCamera: boolean = true;
-        if (isShowCamera) {
+        if (this._isDebugMode) {
             this._commitRenderState(null, { x: 0, y: 0, w: 0.5, h: 1 });
             this.triggerRender(false,true);
             this.setViewPort({ x: 0.5, y: 0, w: 0.5, h: 1 });
@@ -415,7 +510,19 @@ export default class Device {
         this.stats.end();
         RenderDataPool.return(this._renderData);
     }
+    
+    /**
+     * 触发渲染的时间 
+     */
+    private _triggerRenderTime:number=0;
+    public get triggerRenderTime(){
+        return this._triggerRenderTime;
+    }
     private triggerRender(isScene: boolean = false,isRenderToScreen:boolean) {
+        
+        //记录一下当前渲染的时间
+        this._triggerRenderTime++;
+
         if (isScene) {
             var cameraData = GameMainCamera.instance.getCamera(this._renderData[0]._cameraType).getCameraData();
             G_CameraModel.draw(cameraData.projectMat, cameraData.modelMat);
@@ -439,7 +546,7 @@ export default class Device {
      * @param viewMatrix 视口矩阵
      */
     private _drawBase(rData: RenderData, projMatix: Float32Array, viewMatrix: Float32Array): void {
-        rData.startDraw(this.gl,viewMatrix,projMatix)
+        G_DrawEngine.run(rData,viewMatrix,projMatix,rData._shader);
     }
     private _temp1Matrix: Float32Array = glMatrix.mat4.identity(null);
     /**
@@ -452,9 +559,21 @@ export default class Device {
         glMatrix.mat4.identity(this._temp1Matrix);
 
          //补一下光的数据
-        rData._lightColor = cameraData.lightData.color;
-        rData._lightDirection = cameraData.lightData.direction;
+        rData._parallelColor = G_LightCenter.lightData.parallelColor; //光的颜色
+        rData._parallelDirection = G_LightCenter.lightData.parallelDirection;//光的方向
         rData._cameraPosition = cameraData.position;
+        rData._ambientColor = G_LightCenter.lightData.ambientColor;//环境光
+        rData._pointColor = G_LightCenter.lightData.pointColor;//点光
+        rData._specularShiness = G_LightCenter.lightData.specularShininess;
+        rData._specularColor = G_LightCenter.lightData.specularColor;
+        rData._lightPosition = G_LightCenter.lightData.position;
+        rData._spotDirection = G_LightCenter.getPosLightDir();
+        rData._spotColor = G_LightCenter.lightData.spotColor;
+        rData._spotInnerLimit = G_LightCenter.lightData.spotInnerLimit;
+        rData._spotOuterLimit = G_LightCenter.lightData.spotOuterLimit;
+
+        rData._fogColor = G_LightCenter.lightData.fogColor;
+        rData._fogDensity = G_LightCenter.lightData.fogDensity;
 
         switch (rData._type) {
             case RenderDataType.Base:
@@ -504,19 +623,18 @@ export default class Device {
         for (let j = 0; j < sData._uniformData.length; j++) {
             G_ShaderFactory.setUniforms(sData._shaderData.uniSetters, sData._uniformData[j]);
         }
-        let vleft = glMatrix.mat4.multiply(null, viewMatrix, sData._extraViewLeftMatrix)
         let projData = {};
         projData[sData._projKey] = projMatix;
         G_ShaderFactory.setUniforms(sData._shaderData.uniSetters, projData);
         let viewData = {};
-        viewData[sData._viewKey] = vleft;
+        viewData[sData._viewKey] = viewMatrix;
         G_ShaderFactory.setUniforms(sData._shaderData.uniSetters, viewData);
         G_ShaderFactory.drawBufferInfo(sData._attrbufferData, sData._glPrimitiveType);
     }
 
     private _drawNormal(sData: NormalRenderData, cameraData: CameraData): void {
         this.gl.useProgram(sData._shaderData.spGlID);
-        sData._node.updateUniformsData(cameraData);
+        (sData._node as SY.Sprite).updateUniformsData(cameraData,G_LightCenter.lightData);
         G_ShaderFactory.setBuffersAndAttributes(sData._shaderData.attrSetters, sData._attrbufferData);
         for (let j in sData._uniformData) {
             G_ShaderFactory.setUniforms(sData._shaderData.uniSetters, sData._uniformData[j]);
@@ -679,7 +797,7 @@ export default class Device {
             'WEBGL_draw_buffers',
         ]);
         this._initCaps();
-        // this._initStates();
+        this._initStates();
 
         this.handlePrecision();
 
@@ -789,9 +907,19 @@ export default class Device {
     }
 
     _initCaps() {
+        /**
+         * shader中 对于一些变量的使用是有限制的，不同的设备限制还不一样
+         * 比如对于顶点着色器和片元着色器:
+         * 最多可以命名使用n个vec4变量
+         * 最多可以命名使用m个mat矩阵
+         * 最多可以命名使用m个texture单元
+         * ......
+         * 另外对于单个纹理单元的大小也是有上限控制的
+         * 一般一个纹理尺寸最大为（2048*2048），单位就是一个像素
+         * 
+         */
         const gl = this.gl;
         const extDrawBuffers = this.ext('WEBGL_draw_buffers');
-
         this._caps.maxVertexStreams = 4;
         this._caps.maxVertexTextures = gl.getParameter(gl.MAX_VERTEX_TEXTURE_IMAGE_UNITS);
         this._caps.maxFragUniforms = gl.getParameter(gl.MAX_FRAGMENT_UNIFORM_VECTORS);
