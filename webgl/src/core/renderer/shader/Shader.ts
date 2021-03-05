@@ -419,16 +419,16 @@ export class Shader {
     public setUseTexture(glID: WebGLTexture, pos = 0): void {
         let loc: string = (pos == 0) ? "u_texCoord_loc" : "u_texture" + pos + "_loc"
         if (this.checklocValid(this[loc], loc)) {
-            G_DrawEngine.active2DTexture(glID, this[loc], pos)
+            G_DrawEngine.activeTexture(this._gl.TEXTURE_2D,glID, this[loc], pos)
         }
     }
-    public setUseSkyBox(glID: WebGLTexture): void {
+    public setUseSkyBox(glID: WebGLTexture,pos = 0): void {
         if (this.checklocValid(this.u_skybox_loc, "u_skybox_loc")) {
             var gl = this._gl;
             gl.enable(gl.CULL_FACE);
             gl.enable(gl.DEPTH_TEST);
             gl.depthFunc(gl.LEQUAL);
-            G_DrawEngine.activeCubeTexture(glID, this.u_skybox_loc, 0)
+            G_DrawEngine.activeTexture(gl.TEXTURE_CUBE_MAP,glID, this.u_skybox_loc, pos)
         }
     }
     /**
@@ -440,18 +440,18 @@ export class Shader {
      * mapInfor[2]:shadowBias
      * MapInfor[3]:shadowSize
      */
-    public setUseShadow(shaderMap:WebGLTexture,mapInfor:Array<number>):void{
+    public setUseShadow(shaderMap:WebGLTexture,mapInfor:Array<number>,pos = 0):void{
         if (this.checklocValid(this.u_shadowMap_loc, "u_shadowMap_loc")) {
-            G_DrawEngine.active2DTexture(shaderMap, this.u_shadowMap_loc, 1)
+            G_DrawEngine.activeTexture(this._gl.TEXTURE_2D,shaderMap, this.u_shadowMap_loc, pos)
         }
         if(this.checklocValid(this.u_shadowInfor_loc,"u_shadowInfor_loc"))
         {
             G_DrawEngine.setUniformFloatVec4(this.u_shadowInfor_loc,mapInfor)
         }
     }
-    public setUseCubeTexture(glID: WebGLTexture): void {
+    public setUseCubeTexture(glID: WebGLTexture,pos:number = 0): void {
         if (this.checklocValid(this.u_cubeCoord_loc, "u_cubeCoord_loc")) {
-            G_DrawEngine.activeCubeTexture(glID, this.u_cubeCoord_loc, 0)
+            G_DrawEngine.activeTexture(this._gl.TEXTURE_CUBE_MAP,glID,this.u_cubeCoord_loc, pos)
         }
     }
     //设置使用投影视口模型矩阵

@@ -151,6 +151,7 @@ export class  RenderData {
      * @param proj 
      */
     private updateShaderVariant(view, proj,_shader:Shader): void {
+        let useTextureAddres:number = 0;
         let useVariantType = _shader.useVariantType;
         useVariantType.forEach((value: ShaderUseVariantType) => {
             switch (value) {
@@ -164,40 +165,50 @@ export class  RenderData {
                     _shader.setUseVertexAttribPointerForUV(this._uvGLID, this._uvItemSize);
                     break;
                 case ShaderUseVariantType.TEX_COORD:
-                    _shader.setUseTexture(this._texture2DGLIDArray[0], 0);
+                    _shader.setUseTexture(this._texture2DGLIDArray[0], useTextureAddres);
+                    useTextureAddres++;
                     break;
                 case ShaderUseVariantType.TEX_COORD1:
-                    _shader.setUseTexture(this._texture2DGLIDArray[1], 1);
+                    _shader.setUseTexture(this._texture2DGLIDArray[1], useTextureAddres);
+                    useTextureAddres++;
                     break;
                 case ShaderUseVariantType.TEX_COORD2:
-                    _shader.setUseTexture(this._texture2DGLIDArray[2], 2);
+                    _shader.setUseTexture(this._texture2DGLIDArray[2], useTextureAddres);
+                    useTextureAddres++;
                     break;
                 case ShaderUseVariantType.TEX_COORD3:
-                    _shader.setUseTexture(this._texture2DGLIDArray[3], 3);
+                    _shader.setUseTexture(this._texture2DGLIDArray[3], useTextureAddres);
+                    useTextureAddres++;
                     break;
                 case ShaderUseVariantType.TEX_COORD4:
-                    _shader.setUseTexture(this._texture2DGLIDArray[4], 4);
+                    _shader.setUseTexture(this._texture2DGLIDArray[4], useTextureAddres);
+                    useTextureAddres++;
                     break;
                 case ShaderUseVariantType.TEX_COORD5:
-                    _shader.setUseTexture(this._texture2DGLIDArray[5], 5);
+                    _shader.setUseTexture(this._texture2DGLIDArray[5], useTextureAddres);
+                    useTextureAddres++;
                     break;
                 case ShaderUseVariantType.TEX_COORD6:
-                    _shader.setUseTexture(this._texture2DGLIDArray[6], 6);
+                    _shader.setUseTexture(this._texture2DGLIDArray[6], useTextureAddres);
+                    useTextureAddres++;
                     break;
                 case ShaderUseVariantType.TEX_COORD7:
-                    _shader.setUseTexture(this._texture2DGLIDArray[7], 7);
+                    _shader.setUseTexture(this._texture2DGLIDArray[7], useTextureAddres);
+                    useTextureAddres++;
                     break;
                 case ShaderUseVariantType.TEX_COORD8:
-                    _shader.setUseTexture(this._texture2DGLIDArray[8], 8);
+                    _shader.setUseTexture(this._texture2DGLIDArray[8], useTextureAddres);
+                    useTextureAddres++;
                     break;
                 case ShaderUseVariantType.CUBE_COORD:
                     //立方体纹理数据
                     //-****-------------
-                    _shader.setUseCubeTexture(this._textureCubeGLIDArray[0]);
+                    _shader.setUseCubeTexture(this._textureCubeGLIDArray[0],useTextureAddres);
+                    useTextureAddres++;
                     break;
                 //天空盒
                 case ShaderUseVariantType.SKYBOX:
-                    _shader.setUseSkyBox(this._textureCubeGLIDArray[0]);
+                    _shader.setUseSkyBox(this._textureCubeGLIDArray[0],useTextureAddres);
                     glMatrix.mat4.copy(this._temp001_matrix, view);
                     this._temp001_matrix[12] = 0;
                     this._temp001_matrix[13] = 0;
@@ -205,6 +216,7 @@ export class  RenderData {
                     glMatrix.mat4.multiply(this._temp002_matrix, proj, this._temp001_matrix);
                     glMatrix.mat4.invert(this._temp001_matrix, this._temp002_matrix);
                     _shader.setUseProjectionViewInverseMatrix(this._temp001_matrix);
+                    useTextureAddres++;
                     break;
                 case ShaderUseVariantType.Projection:
                     _shader.setUseProjectionMatrix(proj);

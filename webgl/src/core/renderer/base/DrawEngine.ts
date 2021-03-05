@@ -151,52 +151,48 @@ class DrawEngine {
     public setUniformFloatVec4(loc: number, arr: Array<number>): void {
         this.gl.uniform4fv(loc, arr);
     }
-
+    
     /**
      * 此函数的作用是激活纹理单元
      * 在GPU显存中，有若干块显存专门用来存放纹理数据
      * 我们在使用的时候，必须要激活指定具体使用那块显存，然后给这块显存绑定纹理数据，以及绑定shader变量和这块纹理的使用关系
      * 我们在一次绘制中可以使用多块纹理
+     * 
+     *  我们将纹理从本地加载到内存再从内存发送到显存 ，此时在显存中的纹理并不是活动纹理
+     *  只有我们想使用它的时候，将其放入插槽中，它才是活动纹理
+     *   一般在GPU中会为我们预留八个插槽来存放活动纹理
+     *   当我们要使用某个纹理时，可以把纹理丢尽指定插槽中，然后再shader中可以访问这个纹理
+     * 
+     * 关于纹理的类型也要说一下，一般是2d纹理，这个比较简单，就是一个纹理，如果是立方体纹理的化，这个会稍微有点绕，但其实
+     * 立方体纹理与2d纹理几乎是一样的，关于立方体的使用，我们也是在显存中创建一个立方体纹理，然后再创建六个2d纹理，与这个立方体纹理关联
+     * 我们在激活这个立方体纹理的时候，只是把这个立方体纹理放入插槽中即可，不需要将与这个立方体关联的6个2d纹理也放入插槽中，
+     * 普通2d纹理和立方体纹理的区别就是：
+     * 普通2d纹理是有纹理数据的，而立方体纹理本身是没有纹理数据的，它的纹理数据存储在和它关联的六个2d纹理中
+     * 普通2d纹理和立方体纹理的共同点就是：他们共用纹理插槽，激活方式完全一模一样
+     *  
+     * * [0][texture]
+     * * [1][texture]
+     * * [2][texture]
+     *   ...
+     *   [8][texture]
+     * @param target  TEXTURE_2D|TEXTURE_CUBE_MAP
      * @param glID 纹理单元在显存的地址
-     * @param loc shader中变量的位置
-     * @param pos 具体要使用那块纹理
+     * @param loc  shader中变量的位置
+     * @param pos  具体要使用那块纹理
      */
-    public active2DTexture(glID: WebGLTexture, loc: number, pos: number): void {
-        /**
-         * activeTexture必须在bindTexture之前。如果没activeTexture就bindTexture，会默认绑定到0号纹理单元
-       */
+    public activeTexture(target:number,glID: WebGLTexture, loc: number, pos: number):void{
+         /**
+           * activeTexture必须在bindTexture之前。如果没activeTexture就bindTexture，会默认绑定到0号纹理单元
+         */
         let gl = this.gl;
         // 激活 指定 号纹理单元
         //在GPU那边有若干个纹理单元 下面这句话的意思就是说激活那个纹理单元
         gl.activeTexture(gl[syGL.TextureValidUnit[pos]]);
         // 指定当前操作的贴图
         //将纹理贴图的显存地址放入到刚刚激活的纹理单元中
-        gl.bindTexture(gl.TEXTURE_2D, glID);
+        gl.bindTexture(target, glID);
         //将贴图的纹理数据赋给shader中的变量
         //我们的shader变量要从那一块纹理单元中取数据
-        gl.uniform1i(loc, pos);
-    }
-    /**
-    * 此函数的作用是激活纹理单元
-    * @param glID 纹理单元在显存的地址
-    * @param loc shader中变量的位置
-    * @param pos 具体要使用那块纹理
-    */
-    public activeCubeTexture(glID: WebGLTexture, loc: number, pos: number): void {
-        /**
-         * activeTexture必须在bindTexture之前。如果没activeTexture就bindTexture，会默认绑定到0号纹理单元
-       */
-        let gl = this.gl;
-        if (glID) {
-            // 激活 指定 号纹理单元
-            gl.activeTexture(gl[syGL.TextureValidUnit[pos]]);
-            // 指定当前操作的贴图
-            gl.bindTexture(gl.TEXTURE_CUBE_MAP, glID);
-        }
-        else {
-            //默认使用上次的纹理单元
-        }
-        //将贴图的纹理数据赋给shader中的变量
         gl.uniform1i(loc, pos);
     }
 
