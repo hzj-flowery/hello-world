@@ -19,6 +19,7 @@ import { FogCube } from "../3d/FogCube";
 import { glMatrix } from "../../math/Matrix";
 import { syGL } from "../gfx/syGLEnums";
 import GameMainCamera from "../camera/GameMainCamera";
+import { DeferredShading } from "../3d/DeferredShading";
 
 export default class Scene3D extends Scene {
 
@@ -26,6 +27,7 @@ export default class Scene3D extends Scene {
     private _skybox: SkyBox;
     private _floorNode: Ground;
     private _cubeNode: Cube;
+    private _deferredShading:DeferredShading;
     private _tableNode: Cube;
     private _spineNode: Spine;
     private _pointLightCube:PointLightCube;
@@ -93,6 +95,11 @@ export default class Scene3D extends Scene {
         this._tableNode.setPosition(0, 1, 0);
         this._tableNode.setScale(2.0, 0.1, 2.0);
         this._centerNode.addChild(this._tableNode);
+
+        this._deferredShading = new DeferredShading();
+        this._deferredShading.spriteFrame = "res/dragon.png";
+        this._deferredShading.setPosition(-1,3,0);
+        this._centerNode.addChild(this._deferredShading);
 
         this._cubeNode = new Cube();
         this._cubeNode.spriteFrame = "res/wicker.jpg";
