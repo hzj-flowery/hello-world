@@ -1,6 +1,6 @@
 import Device from "../../../Device";
 import { glMatrix } from "../../../math/Matrix";
-import { RenderDataPool, RenderDataType, SpineRenderData } from "../../data/RenderData";
+import {syRender} from "../../data/RenderData";
 import { ShaderData } from "../../shader/Shader";
 import { G_ShaderFactory } from "../../shader/ShaderFactory";
 import { Skeleton_Node } from "./Skeleton_Node";
@@ -82,14 +82,14 @@ export class Skeleton_SkinRenderer {
     private mesh:any;
     private skin: Skeleton_Skin;
     private skinProgramInfo: ShaderData;
-    private _renderDataArray:Array<SpineRenderData>;
+    private _renderDataArray:Array<syRender.SpineData>;
     constructor(mesh, skin:Skeleton_Skin, gl) {
         this.mesh = mesh;
         this.skin = skin;
         this.skinProgramInfo = G_ShaderFactory.createProgramInfo(skinVS, fs);
         this._renderDataArray = []
         for (const primitive of this.mesh.primitives) {
-            this._renderDataArray.push(RenderDataPool.get(RenderDataType.Spine) as SpineRenderData);
+            this._renderDataArray.push(syRender.DataPool.get(syRender.DataType.Spine) as syRender.SpineData);
         }
     }
     /**

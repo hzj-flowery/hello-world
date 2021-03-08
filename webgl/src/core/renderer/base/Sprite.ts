@@ -43,7 +43,7 @@ import Device from "../../Device";
 import LoaderManager from "../../LoaderManager";
 import { RenderTexture } from "./texture/RenderTexture";
 import { CameraData } from "../data/CameraData";
-import { NormalRenderData, RenderData, RenderDataPool, RenderDataType } from "../data/RenderData";
+import { syRender} from "../data/RenderData";
 import { BufferAttribsData, Shader, ShaderData } from "../shader/Shader";
 import { G_ShaderFactory } from "../shader/ShaderFactory";
 import { Node } from "./Node";
@@ -59,6 +59,7 @@ import { ShaderCode } from "../shader/ShaderCode";
 import { syGL } from "../gfx/syGLEnums";
 import { G_DrawEngine } from "./DrawEngine";
 import { handler } from "../../../utils/handler";
+import { G_TextureManager } from "./texture/TextureManager";
 
 /**
  * 显示节点
@@ -119,7 +120,7 @@ export namespace SY {
         protected _texture: Texture;
         protected gl: WebGL2RenderingContext;
         protected _shader: Shader;
-        protected _renderData: RenderData;
+        protected _renderData: syRender.BaseData;
         //参考glprimitive_type
         protected _glPrimitiveType: syGL.PrimitiveType;//绘制的类型
         protected _cameraType: number = 0;//相机的类型(0表示透视1表示正交)
@@ -134,7 +135,7 @@ export namespace SY {
             this._materialId = "materialId_" + materialId;
             this.gl = Device.Instance.gl;
             this._glPrimitiveType = syGL.PrimitiveType.TRIANGLES;
-            this._renderData = RenderDataPool.get(RenderDataType.Base);
+            this._renderData = syRender.DataPool.get(syRender.DataType.Base);
             this._color = [1.0, 1.0, 1.0, 1.0];//默认颜色为白色
 
             this._sizeMode = SpriteSizeMode.CUSTOM;//默认加载图片的尺寸大小为自定义
@@ -286,53 +287,9 @@ export namespace SY {
             this._color[2] = color[2] != null ? color[2] : this._color[2];
             this._color[3] = color[3] != null ? color[3] : this._color[3];
         }
-        //创建一个纹理buffer
-        private createTexture2DBuffer(url: string): Texture {
-            this._texture = new Texture2D();
-            (this._texture as Texture2D).url = url;
-            return this._texture
-        }
-        private createTextureCubeBuffer(arr: Array<string>): Texture {
-            this._texture = new TextureCube();
-            (this._texture as TextureCube).url = arr;
-            return this._texture;
-        }
-        private createCustomTextureBuffer(data: TextureOpts): Texture {
-            this._texture = new TextureCustom();
-            (this._texture as TextureCustom).url = data;
-            return this._texture;
-        }
-
-
-        /**
-         * 创建一个渲染纹理
-         * @param data {type,place,width,height}
-         */
-        private createRenderTextureBuffer(data: any): Texture {
-            this._texture = new RenderTexture();
-            (this._texture as RenderTexture).attach(data.place, data.width, data.height);
-            return this._texture;
-        }
         public set spriteFrame(url: string | Array<string> | TextureOpts | Object) {
-            //普通图片
-            if (typeof url == "string") {
-                this.createTexture2DBuffer(url);
-            }
-            //天空盒
-            else if (url instanceof Array && url.length == 6) {
-                this.createTextureCubeBuffer(url);
-            }
-            //自定义纹理
-            else if (url instanceof TextureOpts) {
-                console.log("自定义纹理------", url);
-                this.createCustomTextureBuffer(url);
-            }
-            else if (url instanceof Object && url["type"] == "RenderTexture") {
-                this.createRenderTextureBuffer(url);
-            }
-            
+            this._texture = G_TextureManager.createTexture(url);
             this.onSetTextureUrl();
-
         }
         /**
          * 设置完纹理之后调用
@@ -452,14 +409,14 @@ export namespace SY {
         public _attrData: BufferAttribsData;
         public _uniformData: any;
         public _shaderData: ShaderData;
-        private _renderData: NormalRenderData;
+        private _renderData: syRender.NormalData;
         protected _cameraType: number = 0;//相机的类型(0表示透视1表示正交)
         private _url: string;//资源路径
         //参考glprimitive_type
         protected _glPrimitiveType: syGL.PrimitiveType;//绘制的类型
         private init(): void {
             this._glPrimitiveType = syGL.PrimitiveType.TRIANGLES;
-            this._renderData = RenderDataPool.get(RenderDataType.Normal) as NormalRenderData;
+            this._renderData = syRender.DataPool.get(syRender.DataType.Normal) as syRender.NormalData;
             this.onInit();
         }
         protected onInit(): void {

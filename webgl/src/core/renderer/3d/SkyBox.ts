@@ -1,6 +1,7 @@
 
 import { SY } from "../base/Sprite";
 import { CubeData } from "../data/CubeData";
+import { glEnums } from "../gfx/GLapi";
 
 export default class SkyBox extends SY.SpriteBase {
      constructor() {
@@ -10,6 +11,10 @@ export default class SkyBox extends SY.SpriteBase {
           var rd = CubeData.getData();
           this.createVertexsBuffer(rd.vertex, rd.dF.vertex_item_size);
           this.createIndexsBuffer(rd.indexs);
+
+          this._renderData._state.depthFunc = glEnums.DS_FUNC_LEQUAL;
+
+          
           this._glPrimitiveType = this.gl.TRIANGLE_STRIP;
      }
      private defaultPath = [

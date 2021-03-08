@@ -1,4 +1,4 @@
-import { RenderData } from "../data/RenderData";
+import { syRender } from "../data/RenderData";
 import { syGL } from "../gfx/syGLEnums";
 import { Shader } from "../shader/Shader";
 
@@ -60,7 +60,7 @@ class DrawEngine {
         let gl = this.gl as WebGL2RenderingContext;
         gl.drawElementsInstanced(mode, count, type, offset, instanceCount)
     }
-    public run(rd: RenderData, view, proj, shader: Shader): void {
+    public run(rd: syRender.BaseData, view, proj, shader: Shader): void {
         if (!shader) return;
 
         let gl = this.gl;

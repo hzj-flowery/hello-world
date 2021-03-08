@@ -1,6 +1,6 @@
 import Device from "../../../Device";
 import { glMatrix } from "../../../math/Matrix";
-import { RenderDataPool, RenderDataType, SpineRenderData } from "../../data/RenderData";
+import {syRender} from "../../data/RenderData";
 import { ShaderData } from "../../shader/Shader";
 import { G_ShaderFactory } from "../../shader/ShaderFactory";
 import { Skeleton_Node } from "./Skeleton_Node";
@@ -47,7 +47,7 @@ export class Skeleton_MeshRenderer {
     public render(node: Skeleton_Node,worldMatrix:Float32Array,sharedUniforms) {
         glMatrix.mat4.mul(this._temWolrdMatrix,worldMatrix,node.worldMatrix);
         for (const primitive of this.mesh.primitives) {
-            var renderData = RenderDataPool.get(RenderDataType.Spine) as SpineRenderData;
+            var renderData = syRender.DataPool.get(syRender.DataType.Spine) as syRender.SpineData;
             renderData._projKey = "u_projection";
             renderData._viewKey = "u_view";
             renderData._shaderData = this.meshProgramInfo;
