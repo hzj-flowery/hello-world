@@ -8,12 +8,12 @@ import { SY } from "../../base/Sprite";
     'attribute vec2 a_uv;' +
 
     'uniform mat4 u_MVMatrix;' +
-    'uniform mat4 u_PMatrix;' +
+    'uniform mat4 u_Pmat;' +
     'varying vec3 v_normal;' +
     'varying vec2 v_uv;' +
 
     'void main() {' +
-    'gl_Position = u_PMatrix * u_MVMatrix * vec4(a_position, 1.0);' +
+    'gl_Position = u_Pmat * u_MVMatrix * vec4(a_position, 1.0);' +
     'v_uv = a_uv;' +
     '}'
 //基础的shader的片段着色器
@@ -23,7 +23,7 @@ var fragBaseCode =
     'varying vec2 v_uv;' +
     'uniform samplerCube u_skybox;'+
     'uniform sampler2D u_texture;' +
-    'uniform mat4 u_PVMInverseMatrix;'+
+    'uniform mat4 u_PVMmat_I;'+
     'uniform vec4 u_color;' +
     'uniform vec4 u_color_dir;' +
     
@@ -31,17 +31,17 @@ var fragBaseCode =
     'gl_FragColor = texture2D(u_texture, v_uv);' +
     '}'
 
-    'uniform mat4 u_PMatrix;' +
-    'uniform mat4 u_MMatrix;' +
-    'uniform mat4 u_VMatrix;' +
+    'uniform mat4 u_Pmat;' +
+    'uniform mat4 u_Mmat;' +
+    'uniform mat4 u_Vmat;' +
  */
 var vs  = 
 'attribute vec4 a_position;'+
 'attribute vec4 a_weight;'+
 'attribute vec4 a_boneNdx;'+
 
-'uniform mat4 u_PMatrix;'+
-'uniform mat4 u_VMatrix;'+
+'uniform mat4 u_Pmat;'+
+'uniform mat4 u_Vmat;'+
 'uniform sampler2D boneMatrixTexture;'+
 'uniform float numBones;'+
 
@@ -62,7 +62,7 @@ var vs  =
 
 'void main() {'+
 
-  'gl_Position = u_PMatrix * u_VMatrix *'+
+  'gl_Position = u_Pmat * u_Vmat *'+
                 '(getBoneMatrix(a_boneNdx[0]) * a_position * a_weight[0] +'+
                  'getBoneMatrix(a_boneNdx[1]) * a_position * a_weight[1] +'+
                  'getBoneMatrix(a_boneNdx[2]) * a_position * a_weight[2] +'+
@@ -78,12 +78,12 @@ var fs =
 var vs2 = 
 'attribute vec4 a_position;'+
 
-'uniform mat4 u_PMatrix;'+
-'uniform mat4 u_VMatrix;'+
-'uniform mat4 u_MMatrix;'+
+'uniform mat4 u_Pmat;'+
+'uniform mat4 u_Vmat;'+
+'uniform mat4 u_Mmat;'+
 
 'void main() {'+
-  'gl_Position = u_PMatrix * u_VMatrix * u_MMatrix * a_position;'+
+  'gl_Position = u_Pmat * u_Vmat * u_Mmat * a_position;'+
 '}'
 
 

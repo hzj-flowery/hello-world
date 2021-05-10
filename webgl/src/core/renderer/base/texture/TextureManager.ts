@@ -23,11 +23,11 @@ class TextureManager{
     }
     /**
      * 创建一个渲染纹理
-     * @param data {type,place,width,height}
+     * @param data {type,place,width,height,nums}
      */
     private static createRenderTextureBuffer(data: any): Texture {
         let texture = new RenderTexture();
-        (texture as RenderTexture).attach(data.place, data.width, data.height);
+        (texture as RenderTexture).attach(data.place, data.width, data.height,data.nums?data.nums:1);
         return texture;
     }
     static createTexture(url: string | Array<string> | TextureOpts | Object):Texture{

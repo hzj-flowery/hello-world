@@ -120,7 +120,7 @@ export default class State {
     public program;
 
 
-    constructor(device) {
+    constructor() {
         
         this.set(_default);
     }

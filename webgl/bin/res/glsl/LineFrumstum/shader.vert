@@ -1,9 +1,9 @@
 attribute vec4 a_position;
-    uniform mat4 u_PMatrix;
-    uniform mat4 u_VMatrix;
-    uniform mat4 u_MMatrix;
-    uniform mat4 u_Matrix;
+    uniform mat4 u_Pmat;
+    uniform mat4 u_Vmat;
+    uniform mat4 u_Mmat;
+    uniform mat4 u_mat;
 void main() {
-// gl_Position = u_PMatrix * u_VMatrix * u_MMatrix*u_Matrix * a_position;
-gl_Position = u_PMatrix * u_VMatrix *u_Matrix * a_position;
+// gl_Position = u_Pmat * u_Vmat * u_Mmat*u_mat * a_position;
+gl_Position = u_Pmat * u_Vmat *u_mat * a_position;
 }

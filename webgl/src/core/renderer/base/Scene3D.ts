@@ -20,6 +20,7 @@ import { glMatrix } from "../../math/Matrix";
 import { syGL } from "../gfx/syGLEnums";
 import GameMainCamera from "../camera/GameMainCamera";
 import { DeferredShading } from "../3d/DeferredShading";
+import { RTT } from "../3d/RTT";
 
 export default class Scene3D extends Scene {
 
@@ -28,6 +29,7 @@ export default class Scene3D extends Scene {
     private _floorNode: Ground;
     private _cubeNode: Cube;
     private _deferredShading:DeferredShading;
+    private _rtt:RTT;
     private _tableNode: Cube;
     private _spineNode: Spine;
     private _pointLightCube:PointLightCube;
@@ -98,8 +100,13 @@ export default class Scene3D extends Scene {
 
         this._deferredShading = new DeferredShading();
         this._deferredShading.spriteFrame = "res/dragon.png";
-        this._deferredShading.setPosition(-1,3,0);
+        this._deferredShading.setPosition(-3,10,0);
         this._centerNode.addChild(this._deferredShading);
+
+        this._rtt = new RTT();
+        this._rtt.spriteFrame = "res/dragon.png";
+        this._rtt.setPosition(-6,10,0);
+        this._centerNode.addChild(this._rtt);
 
         this._cubeNode = new Cube();
         this._cubeNode.spriteFrame = "res/wicker.jpg";
@@ -107,16 +114,16 @@ export default class Scene3D extends Scene {
         this._cubeNode.setScale(0.5, 0.5, 0.5);
         this._centerNode.addChild(this._cubeNode);
 
-        this._pointLightCube = new PointLightCube();
-        this._pointLightCube.setScale(100,50,10.0);
-        this._pointLightCube.setPosition(0, 0, -10);
-        this._pointLightCube.spriteFrame = "res/dragon.jpg";
-        this._centerNode.addChild(this._pointLightCube);
-        this._spotLightCube = new SpotLightCube();
-        this._spotLightCube.setScale(100,50.0,10.0);
-        this._spotLightCube.setPosition(0, 0, -10);
-        this._spotLightCube.spriteFrame = "res/dragon.jpg";
-        this._centerNode.addChild(this._spotLightCube);
+        // this._pointLightCube = new PointLightCube();
+        // this._pointLightCube.setScale(100,50,10.0);
+        // this._pointLightCube.setPosition(0, 0, -10);
+        // this._pointLightCube.spriteFrame = "res/dragon.jpg";
+        // this._centerNode.addChild(this._pointLightCube);
+        // this._spotLightCube = new SpotLightCube();
+        // this._spotLightCube.setScale(100,50.0,10.0);
+        // this._spotLightCube.setPosition(0, 0, -10);
+        // this._spotLightCube.spriteFrame = "res/dragon.jpg";
+        // this._centerNode.addChild(this._spotLightCube);
 
         this._fogCubeArr = [];
         let fogCubeNums = 40;

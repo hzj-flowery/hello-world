@@ -235,8 +235,8 @@ export default class Device {
         var gl = this.createGLContext(canvas);
         this.gl = gl;
         this.canvas = canvas;
-        this._nextFrameS = new State(gl);
-        this._curFrameS = new State(gl);
+        this._nextFrameS = new State();
+        this._curFrameS = new State();
       
         // 
 
@@ -541,7 +541,7 @@ export default class Device {
      * @param viewMatrix 视口矩阵
      */
     private _drawBase(rData:syRender.BaseData, projMatix: Float32Array, viewMatrix: Float32Array): void {
-        G_DrawEngine.run(rData,viewMatrix,projMatix,rData._shader);
+        G_DrawEngine.run(rData,viewMatrix,projMatix,rData.shader);
     }
     private _temp1Matrix: Float32Array = glMatrix.mat4.identity(null);
     /**
@@ -550,8 +550,6 @@ export default class Device {
      * @param isUseScene 
      */
     private draw(rData: syRender.BaseData, isUseScene: boolean = false): void {
-
-        this._commitRenderState(rData._state);
 
         var cameraData = GameMainCamera.instance.getCamera(rData._cameraType).getCameraData();
         glMatrix.mat4.identity(this._temp1Matrix);
@@ -575,6 +573,7 @@ export default class Device {
 
         switch (rData._type) {
             case syRender.DataType.Base:
+                this._commitRenderState(rData.pass.state);
                 if (isUseScene) {
                     let projMatix = G_CameraModel.getSceneProjectMatrix();
                     glMatrix.mat4.invert(this._temp1Matrix, G_CameraModel.getSceneCameraMatrix());
@@ -586,6 +585,7 @@ export default class Device {
                 };
                 break;
             case syRender.DataType.Normal:
+                this._commitRenderState(rData._state);
                 if (isUseScene) {
                     let projMatix = G_CameraModel.getSceneProjectMatrix();
                     glMatrix.mat4.invert(this._temp1Matrix, G_CameraModel.getSceneCameraMatrix());
@@ -598,6 +598,7 @@ export default class Device {
                 }
                 break;
             case syRender.DataType.Spine:
+                this._commitRenderState(rData._state);
                 if (isUseScene) {
                     let projMatix = G_CameraModel.getSceneProjectMatrix();
                     glMatrix.mat4.invert(this._temp1Matrix, G_CameraModel.getSceneCameraMatrix());

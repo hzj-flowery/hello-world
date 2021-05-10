@@ -27,13 +27,13 @@ gulp.task("compile", function () {
 });
 
 gulp.task("glsl", done =>  {
-	var tokenString = require('glsl-tokenizer/string')
-	var tokenStream = require('glsl-tokenizer/stream')
-	var glsl = require('glslify')
-	var fs = require('fs')
+	// var tokenString = require('glsl-tokenizer/string')
+	// var tokenStream = require('glsl-tokenizer/stream')
+	// var glsl = require('glslify')
+	// var fs = require('fs')
 
-	var descope = require('glsl-token-descope')
-	var stringify = require('glsl-token-string')
+	// var descope = require('glsl-token-descope')
+	// var stringify = require('glsl-token-string')
 
 	// Synchronously:
 	// var tokens = tokenString(fs.readFileSync(workSpaceDir + 'bin/res/glsl/vs.glsl'));
@@ -43,8 +43,8 @@ gulp.task("glsl", done =>  {
 	// })))
 	
 	//shader代码中可能存在模块调用，将用到的模块合并进来
-	var sourceCode = glsl.file(workSpaceDir + 'bin/res/glsl/input.glsl');
-	console.log("合并后的代码---",sourceCode);
+	// var sourceCode = glsl.file(workSpaceDir + 'bin/res/glsl/input.glsl');
+	// console.log("合并后的代码---",sourceCode);
     done();
 
 	// Streaming API:

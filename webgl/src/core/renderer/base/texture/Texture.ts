@@ -2,7 +2,6 @@ import Device from "../../../Device";
 import {syGL} from "../../gfx/syGLEnums";
 
 
-
 /**
  * 创建一个纹理的一些设置参数
  */

@@ -13,8 +13,8 @@ export default class MoreSprite extends SY.Sprite2D {
 
     protected onInit(): void {
         this.setContentSize(100,200);
-        this._colorLoc = this._shader.getCustomAttributeLocation("a_color");
-        this._matrixLoc = this._shader.getCustomAttributeLocation('a_matrix');
+        this._colorLoc = this.shader.getCustomAttributeLocation("a_color");
+        this._matrixLoc = this.shader.getCustomAttributeLocation('a_matrix');
         var gl = this.gl;
         // setup matrixes, one per instance
         this.numInstances = 3;
@@ -81,16 +81,16 @@ export default class MoreSprite extends SY.Sprite2D {
         const numVertices = 4;
         time *= 0.001; // seconds
 
-        this._shader.active();
-        this._shader.setUseVertexAttribPointerForVertex(this.getGLID(SY.GLID_TYPE.VERTEX), this.getBufferItemSize(SY.GLID_TYPE.VERTEX));
+        this.shader.active();
+        this.shader.setUseVertexAttribPointerForVertex(this.getGLID(SY.GLID_TYPE.VERTEX), this.getBufferItemSize(SY.GLID_TYPE.VERTEX));
 
         var newMV = this._glMatrix.mat4.create();
         var v = GameMainCamera.instance.getCamera(this._cameraType).getInversModelMatrix();
         var m = this.modelMatrix;
         this._glMatrix.mat4.mul(newMV, v, m)
-        this._shader.setUseModelViewMatrix(newMV);
+        this.shader.setUseModelViewMatrix(newMV);
         var pMatix = GameMainCamera.instance.getCamera(this._cameraType).getProjectionMatrix();
-        this._shader.setUseProjectionMatrix(pMatix);
+        this.shader.setUseProjectionMatrix(pMatix);
 
         // update all the matrices
         this.matrices.forEach((mat, ndx) => {
@@ -175,15 +175,15 @@ export default class MoreSprite extends SY.Sprite2D {
 
         time *= 0.001; // seconds
 
-        const colorLoc = this._shader.getCustomAttributeLocation("a_color");
-        const matrixLoc = this._shader.getCustomAttributeLocation('a_matrix');
+        const colorLoc = this.shader.getCustomAttributeLocation("a_color");
+        const matrixLoc = this.shader.getCustomAttributeLocation('a_matrix');
 
 
-        this._shader.active();
-        this._shader.setUseVertexAttribPointerForVertex(this.getGLID(SY.GLID_TYPE.VERTEX), this.getBufferItemSize(SY.GLID_TYPE.VERTEX));
-        this._shader.setUseModelViewMatrix(this.modelMatrix);
+        this.shader.active();
+        this.shader.setUseVertexAttribPointerForVertex(this.getGLID(SY.GLID_TYPE.VERTEX), this.getBufferItemSize(SY.GLID_TYPE.VERTEX));
+        this.shader.setUseModelViewMatrix(this.modelMatrix);
         var pMatrix = GameMainCamera.instance.getCamera(this._cameraType).getProjectionMatrix();
-        this._shader.setUseProjectionMatrix(pMatrix);
+        this.shader.setUseProjectionMatrix(pMatrix);
 
         // update all the matrices
         this.matrices.forEach((mat, ndx) => {

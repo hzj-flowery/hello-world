@@ -4,6 +4,7 @@ import { Node } from "../base/Node";
 import { glEnums } from "../gfx/GLapi";
 import State from "../gfx/State";
 import { syGL } from "../gfx/syGLEnums";
+import { Pass } from "../shader/Pass";
 import { BufferAttribsData, Shader, ShaderData } from "../shader/Shader";
 import { ShaderUseVariantType } from "../shader/ShaderUseVariantType";
 
@@ -25,7 +26,7 @@ export namespace syRender {
      */
     export class BaseData {
         constructor() {
-            this._state = new State(Device.Instance.gl);
+            this._state = new State();
             this.id = renderDataId++;
             this._type = syRender.DataType.Base;
             this._temp_model_view_matrix = glMatrix.mat4.identity(null);
@@ -61,7 +62,8 @@ export namespace syRender {
         public id: number;//每一个渲染数据都一个唯一的id
         public _cameraType: number;//相机的类型
         public _cameraPosition: Array<number>;//相机的位置
-        public _shader: Shader;//着色器
+        private _shader: Shader;//着色器
+        private _pass:Pass;
         public _vertGLID: WebGLBuffer;//顶点buffer的显存地址
         public _vertItemSize: number;//一个顶点buffer单元的顶点数目
         public _vertItemNums: number;//所有顶点buffer单元数目
@@ -118,6 +120,7 @@ export namespace syRender {
         private _temp003_matrix;//
         private _temp004_matrix;//
         public reset(): void {
+            this._pass = null;
             this._cameraType = 0;//默认情况下是透视投影
             this._cameraPosition = [];
             this._shader = null;
@@ -150,10 +153,20 @@ export namespace syRender {
             this._glPrimitiveType = syGL.PrimitiveType.TRIANGLE_FAN;
             this._isUse = false;
             glMatrix.mat4.identity(this._customMatrix);
-            
-         
-            
+               
         }
+
+        public set pass(pass:Pass){
+            this._pass = pass
+            this._shader = pass.code
+        }
+        public get pass(){
+            return this._pass
+        }
+        public get shader(){
+            return this._shader
+        }
+
         public push2DTexture(texture: WebGLTexture): void {
             if (this._texture2DGLIDArray.indexOf(texture) < 0) {
                 this._texture2DGLIDArray.push(texture);
@@ -317,8 +330,8 @@ export namespace syRender {
         }
         /**
          * 
-         * @param view 
-         * @param proj 
+         * @param view 视口矩阵
+         * @param proj 投影矩阵
          */
         public bindGPUBufferData(view, proj, shader: Shader): void {
             //激活shader

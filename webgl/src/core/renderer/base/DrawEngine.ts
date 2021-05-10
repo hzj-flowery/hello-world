@@ -3,6 +3,15 @@ import { syGL } from "../gfx/syGLEnums";
 import { Shader } from "../shader/Shader";
 
 /**
+ * 顶点信息：
+ *         名称      单元数目
+ * --------位置------[x,y,z]------------数组
+ * --------法线------[x,y,z]------------数组
+ * --------切线------[x,y]--------------数组
+ * --------uv--------[u,v]-------------数组
+ */
+
+/**
  * 绘制发动机
  */
 class DrawEngine {
@@ -95,7 +104,7 @@ class DrawEngine {
         gl.bindTexture(gl.TEXTURE_2D, null);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
         gl.bindBuffer(gl.ARRAY_BUFFER, null);
-        rd._shader.disableVertexAttribArray();
+        rd.shader.disableVertexAttribArray();
         //绘制后
         rd._node ? rd._node.onDrawAfter(rd._time) : null;
     }

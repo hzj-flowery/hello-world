@@ -1,4 +1,4 @@
-import Ref from "../../../Ref";
+import Ref from "./Ref";
 import { glMatrix } from "../../math/Matrix";
 
 

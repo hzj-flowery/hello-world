@@ -41,9 +41,8 @@ console.log(z);
 
 import Device from "../../Device";
 import LoaderManager from "../../LoaderManager";
-import { RenderTexture } from "./texture/RenderTexture";
 import { CameraData } from "../data/CameraData";
-import { syRender} from "../data/RenderData";
+import { syRender } from "../data/RenderData";
 import { BufferAttribsData, Shader, ShaderData } from "../shader/Shader";
 import { G_ShaderFactory } from "../shader/ShaderFactory";
 import { Node } from "./Node";
@@ -60,6 +59,8 @@ import { syGL } from "../gfx/syGLEnums";
 import { G_DrawEngine } from "./DrawEngine";
 import { handler } from "../../../utils/handler";
 import { G_TextureManager } from "./texture/TextureManager";
+import { G_PassFactory } from "../shader/PassFactory";
+import { Pass } from "../shader/Pass";
 
 /**
  * 显示节点
@@ -119,15 +120,16 @@ export namespace SY {
         private _uvsBuffer: UVsBuffer;
         protected _texture: Texture;
         protected gl: WebGL2RenderingContext;
-        protected _shader: Shader;
+        protected _pass: Array<Pass>;
         protected _renderData: syRender.BaseData;
         //参考glprimitive_type
         protected _glPrimitiveType: syGL.PrimitiveType;//绘制的类型
         protected _cameraType: number = 0;//相机的类型(0表示透视1表示正交)
         private _vertStr: string = "";
         private _fragStr: string = "";
-        protected _sizeMode:SpriteSizeMode;//节点的尺寸模式
-        protected _shaderType:ShaderType;//shader的类型
+        private _mapShaderCode
+        protected _sizeMode: SpriteSizeMode;//节点的尺寸模式
+        protected _shaderType: ShaderType;//shader的类型
         private _url: string;//资源路径
         constructor() {
             super();
@@ -142,7 +144,7 @@ export namespace SY {
             this._shaderType = ShaderType.Custom;
             this.init();
         }
-        private init(): void {
+        private init(): void { 
             this.onInit();
             this.handleShader();
         }
@@ -154,58 +156,72 @@ export namespace SY {
         }
         
         /**
+         * 
+         * @param vert 
+         * @param frag 
+         */
+        public pushShaderCode(vert:string,frag:string):void{
+
+        }
+
+        /**
          * 设置精灵图片的尺寸模式
          */
-        public set sizeMode(mode:SpriteSizeMode){
-             this._sizeMode = mode;
+        public set sizeMode(mode: SpriteSizeMode) {
+            this._sizeMode = mode;
         }
-        protected  onInit():void{
+        protected onInit(): void {
 
         }
 
-        protected onShader():void{
+        protected onShader(): void {
 
+        }
+        /**
+         * 获取当前正在使用的shader
+         */
+        protected get shader() {
+            return this._pass[0].code
+        }
+
+        protected pushPass(vert:string,frag:string,type:ShaderType=ShaderType.Custom):void{
+            this._pass.push(G_PassFactory.createPass(type,vert, frag));
         }
         /**
          * 处理着色器
          */
         private handleShader() {
-            if(this._shaderType==ShaderType.NULL)
-            {
+            this._pass = []
+            if (this._shaderType == ShaderType.NULL) {
                 //此节点不需要shader
                 return;
             }
-            if(this._vertStr==""||this._fragStr=="")
-            {
+            if (this._vertStr == "" || this._fragStr == "") {
                 let name = this.name;
-                if(this._shaderType==ShaderType.Custom)
-                {
+                if (this._shaderType == ShaderType.Custom) {
                     //自定义shader
                     name = this.name;
                 }
-                else if(this._shaderType==ShaderType.Sprite)
-                {
+                else if (this._shaderType == ShaderType.Sprite) {
                     //默认的sprite
-                     name = "Sprite";
+                    name = "Sprite";
                 }
-                else
-                {
-                    console.log("传入未知的类型shader 请检查---",this.name);
+                else {
+                    console.log("传入未知的类型shader 请检查---", this.name);
                 }
                 //自定义shader
-                LoaderManager.instance.loadGlsl(name,(res)=>{
+                LoaderManager.instance.loadGlsl(name, (res) => {
                     this._vertStr = res[0];
                     this._fragStr = res[1];
-                    this._shader = G_ShaderCenter.createShader(ShaderType.Custom, this._vertStr, this._fragStr);
+                    this.pushPass(this._vertStr, this._fragStr)
                     this.onShader();
-                    });
+                });
             }
-            else
-            {
-                this._shader = G_ShaderCenter.createShader(ShaderType.Custom, this._vertStr, this._fragStr);
+            else {
+                this.pushPass(this._vertStr, this._fragStr)
                 this.onShader();
             }
-            
+
         }
         //创建顶点缓冲
         /**
@@ -332,59 +348,65 @@ export namespace SY {
                 //说明使用了纹理 但纹理还没有被加载完成
                 return;
             }
-            if(!this._shader)
+            if(!this._pass||this._pass.length==0)
             {
                 //一次渲染shader是必不可少的
-                return;
+                return
             }
-            this._renderData._node = this as Node;
-            this._renderData._cameraType = this._cameraType;//默认情况下是透视投影
-            this._renderData._shader = this._shader;
-            //顶点组
-            this._renderData._vertGLID = this.getGLID(SY.GLID_TYPE.VERTEX);
-            this._renderData._vertItemSize = this.getBufferItemSize(SY.GLID_TYPE.VERTEX);
-            this._renderData._vertItemNums = this.getBuffer(SY.GLID_TYPE.VERTEX).itemNums;
-            //索引组
-            this._renderData._indexGLID = this.getGLID(SY.GLID_TYPE.INDEX);
-            if (this._renderData._indexGLID != -1) {
-                this._renderData._indexItemSize = this.getBuffer(SY.GLID_TYPE.INDEX).itemSize;
-                this._renderData._indexItemNums = this.getBuffer(SY.GLID_TYPE.INDEX).itemNums;
+            for (let i = 0; i < this._pass.length; i++) {
+                let pass = this._pass[i];
+                if (!pass) {
+                    continue;
+                }
+                this._renderData._node = this as Node;
+                this._renderData._cameraType = this._cameraType;//默认情况下是透视投影
+                this._renderData.pass = pass;
+                //顶点组
+                this._renderData._vertGLID = this.getGLID(SY.GLID_TYPE.VERTEX);
+                this._renderData._vertItemSize = this.getBufferItemSize(SY.GLID_TYPE.VERTEX);
+                this._renderData._vertItemNums = this.getBuffer(SY.GLID_TYPE.VERTEX).itemNums;
+                //索引组
+                this._renderData._indexGLID = this.getGLID(SY.GLID_TYPE.INDEX);
+                if (this._renderData._indexGLID != -1) {
+                    this._renderData._indexItemSize = this.getBuffer(SY.GLID_TYPE.INDEX).itemSize;
+                    this._renderData._indexItemNums = this.getBuffer(SY.GLID_TYPE.INDEX).itemNums;
+                }
+                //uv组
+                this._renderData._uvGLID = this.getGLID(SY.GLID_TYPE.UV);
+                this._renderData._uvItemSize = this.getBufferItemSize(SY.GLID_TYPE.UV);
+                //法线组
+                this._renderData._normalGLID = this.getGLID(SY.GLID_TYPE.NORMAL);
+                this._renderData._normalItemSize = this.getBufferItemSize(SY.GLID_TYPE.NORMAL);
+
+                //节点自定义顶点颜色组
+                this._renderData._nodeVertColorGLID = this.getGLID(SY.GLID_TYPE.VERT_COLOR);
+                if (this._renderData._nodeVertColorGLID != -1) {
+                    this._renderData._nodeVertColorItemSize = this.getBuffer(SY.GLID_TYPE.VERT_COLOR).itemSize;
+                    this._renderData._nodeVertColorItemNums = this.getBuffer(SY.GLID_TYPE.VERT_COLOR).itemNums;
+                }
+
+                this._renderData._nodeColor = this._color;
+
+                this._renderData._customMatrix = this._customMatrix;
+
+
+                //节点自定义矩阵组
+                this._renderData._vertMatrixGLID = this.getGLID(SY.GLID_TYPE.VERT_MATRIX);
+                if (this._renderData._vertMatrixGLID != -1) {
+                    this._renderData._vertMatrixItemSize = this.getBuffer(SY.GLID_TYPE.VERT_MATRIX).itemSize;
+                    this._renderData._vertMatrixItemNums = this.getBuffer(SY.GLID_TYPE.VERT_MATRIX).itemNums;
+                }
+                this._renderData._modelMatrix = this.modelMatrix;
+                this._renderData._time = time;
+                if (this._texture && this._texture._glID) {
+                    if (this._texture.isTexture2D)
+                        this._renderData.push2DTexture(this.getGLID(SY.GLID_TYPE.TEXTURE_2D));
+                    else if (this._texture.isTextureCube)
+                        this._renderData.pushCubeTexture(this.getGLID(SY.GLID_TYPE.TEXTURE_CUBE));
+                }
+                this._renderData._glPrimitiveType = this._glPrimitiveType;
+                Device.Instance.collectData(this._renderData);
             }
-            //uv组
-            this._renderData._uvGLID = this.getGLID(SY.GLID_TYPE.UV);
-            this._renderData._uvItemSize = this.getBufferItemSize(SY.GLID_TYPE.UV);
-            //法线组
-            this._renderData._normalGLID = this.getGLID(SY.GLID_TYPE.NORMAL);
-            this._renderData._normalItemSize = this.getBufferItemSize(SY.GLID_TYPE.NORMAL);
-
-            //节点自定义顶点颜色组
-            this._renderData._nodeVertColorGLID = this.getGLID(SY.GLID_TYPE.VERT_COLOR);
-            if (this._renderData._nodeVertColorGLID != -1) {
-                this._renderData._nodeVertColorItemSize = this.getBuffer(SY.GLID_TYPE.VERT_COLOR).itemSize;
-                this._renderData._nodeVertColorItemNums = this.getBuffer(SY.GLID_TYPE.VERT_COLOR).itemNums;
-            }
-
-            this._renderData._nodeColor = this._color;
-
-            this._renderData._customMatrix = this._customMatrix;
-
-
-            //节点自定义矩阵组
-            this._renderData._vertMatrixGLID = this.getGLID(SY.GLID_TYPE.VERT_MATRIX);
-            if (this._renderData._vertMatrixGLID != -1) {
-                this._renderData._vertMatrixItemSize = this.getBuffer(SY.GLID_TYPE.VERT_MATRIX).itemSize;
-                this._renderData._vertMatrixItemNums = this.getBuffer(SY.GLID_TYPE.VERT_MATRIX).itemNums;
-            }
-            this._renderData._modelMatrix = this.modelMatrix;
-            this._renderData._time = time;
-            if (this._texture && this._texture._glID) {
-                if (this._texture.isTexture2D)
-                    this._renderData.push2DTexture(this.getGLID(SY.GLID_TYPE.TEXTURE_2D));
-                else if (this._texture.isTextureCube)
-                    this._renderData.pushCubeTexture(this.getGLID(SY.GLID_TYPE.TEXTURE_CUBE));
-            }
-            this._renderData._glPrimitiveType = this._glPrimitiveType;
-            Device.Instance.collectData(this._renderData);
         }
         public get texture(): Texture {
             return this._texture;
@@ -395,9 +417,9 @@ export namespace SY {
     }
     export class sySprite extends SpriteBase {
         constructor() {
-            super();      
+            super();
         }
-        protected onInit():void{
+        protected onInit(): void {
             this._shaderType = ShaderType.Sprite;
         }
     }
@@ -516,20 +538,18 @@ export namespace SY {
 
         }
 
-        protected onSetTextureUrl():void{
-            if(this._texture)
-            (this._texture as Texture2D).textureOnLoad = this.onTextureLoaded.bind(this);
+        protected onSetTextureUrl(): void {
+            if (this._texture)
+                (this._texture as Texture2D).textureOnLoad = this.onTextureLoaded.bind(this);
         }
 
-         /**
-         * 加载纹理之后调用
-         */
-        public onTextureLoaded(image:HTMLImageElement):void{
-            if(image)
-            {
-                if(this._sizeMode==SpriteSizeMode.RAW)
-                {
-                    this.setContentSize(image.width,image.height);
+        /**
+        * 加载纹理之后调用
+        */
+        public onTextureLoaded(image: HTMLImageElement): void {
+            if (image) {
+                if (this._sizeMode == SpriteSizeMode.RAW) {
+                    this.setContentSize(image.width, image.height);
                 }
             }
         }
@@ -638,7 +658,7 @@ export namespace SY {
         }
         protected onShader() {
             this._divisorNameData.forEach((value, key) => {
-                let loc = this._shader.getCustomAttributeLocation(key);
+                let loc = this.shader.getCustomAttributeLocation(key);
                 this._divisorLocData.set(loc, value)
             })
         }
