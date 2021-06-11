@@ -7,9 +7,9 @@ import { G_ShaderCenter, ShaderType } from "./ShaderCenter"
 
 class PassFactory{
     constructor(){
-        this._passOrder[PassType.Normal] = 0;
-        this._passOrder[PassType.Middle] = 0;
-        this._passOrder[PassType.High] = 0;
+        this._passOrder.set(PassType.Normal,0);
+        this._passOrder.set(PassType.Middle,0);
+        this._passOrder.set(PassType.High,0);
     }
     private _pass:Array<Pass> = [];
     public _passOrder:Map<number,number> = new Map();
@@ -20,7 +20,8 @@ class PassFactory{
     private checkPassType(pType):Array<number>{
        if(this._passOrder.has(pType))
        {
-           var count = this._passOrder[pType]++;
+           var count = this._passOrder.get(pType);
+           this._passOrder.set(pType,count);
            return [pType,count]
        }
        return [];

@@ -608,7 +608,7 @@ export default class Device {
                     glMatrix.mat4.invert(this._temp1Matrix, cameraData.modelMat);
                     this._drawSpine(rData as syRender.SpineData, cameraData.projectMat, this._temp1Matrix);
                 };
-                break
+                break;
         }
 
     }
