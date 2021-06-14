@@ -62,6 +62,9 @@ const _default = {
 
 };
 
+/***
+ * 渲染状态
+ */
 export default class State {
 
     public vertexBuffers;

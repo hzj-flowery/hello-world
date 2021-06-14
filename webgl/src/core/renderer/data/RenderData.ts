@@ -73,6 +73,7 @@ export namespace syRender {
         public _nodeVertColorItemNums: number;//所有节点自定义颜色buffer单元数目
 
         public _nodeColor: Array<number>;//节点自定义颜色buffer的显存地址
+        public _nodeAlpha:number;        //节点自定义透明度
 
         public _spotColor: Array<number>;//聚光的颜色
         public _spotDirection: Array<number>;//聚光的方向
@@ -314,6 +315,9 @@ export namespace syRender {
                         break;
                     case ShaderUseVariantType.Color:
                         _shader.setUseNodeColor(this._nodeColor);
+                        break;
+                    case ShaderUseVariantType.Alpha:
+                        _shader.setUseNodeAlpha(this._nodeAlpha);
                         break;
                     case ShaderUseVariantType.VertColor:
                         _shader.setUseNodeVertColor(this._nodeVertColorGLID, this._nodeVertColorItemSize);

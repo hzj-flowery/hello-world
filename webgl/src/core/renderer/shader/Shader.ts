@@ -63,6 +63,7 @@ export class Shader {
 
     private u_time_loc;//时间
     private u_color_loc;//节点颜色（该变量针对节点下的所有顶点）
+    private u_alpha_loc;//节点透明度
     private u_light_color_loc;//光照属性位置
     private u_light_color_dir_loc;//光照方向属性位置
     private u_pointColor_loc;//点光的颜色
@@ -135,6 +136,7 @@ export class Shader {
 
         this.u_time_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.TIME);
         this.u_color_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.COLOR);
+        this.u_alpha_loc = gl.getUniformLocation(_glID,syGL.AttributeUniform.ALPHA)
         this.u_ambientColor_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.LIGHT_AMBIENT_COLOR);
         this.u_pointColor_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.LIGHT_POINT_COLOR);
         this.u_light_color_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.LIGHT_COLOR);
@@ -195,6 +197,7 @@ export class Shader {
 
         this.u_time_loc != null ? this.pushShaderVariant(ShaderUseVariantType.Time) : null;
         this.u_color_loc != null ? this.pushShaderVariant(ShaderUseVariantType.Color) : null;
+        this.u_alpha_loc != null ? this.pushShaderVariant(ShaderUseVariantType.Alpha) : null;
         this.u_ambientColor_loc != null ? this.pushShaderVariant(ShaderUseVariantType.AmbientLight) : null;
         this.u_pointColor_loc != null ? this.pushShaderVariant(ShaderUseVariantType.PointLight) : null;
         this.u_light_color_loc != null ? this.pushShaderVariant(ShaderUseVariantType.ParallelLight) : null;
@@ -354,6 +357,15 @@ export class Shader {
     public setUseNodeColor(color: Array<number>): void {
         if (this.checklocValid(this.u_color_loc, "u_node_color_loc")) {
             G_DrawEngine.setUniformFloatVec4(this.u_color_loc, color);
+        }
+    }
+    /**
+     * 设置使用节点的透明度
+     * @param alpha 
+     */
+    public setUseNodeAlpha(alpha:number):void{
+        if (this.checklocValid(this.u_alpha_loc, "u_alpha_loc")) {
+            G_DrawEngine.setUniform1f(this.u_alpha_loc, alpha);
         }
     }
     /**

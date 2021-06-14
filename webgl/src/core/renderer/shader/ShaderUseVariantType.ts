@@ -3,7 +3,7 @@ export enum ShaderUseVariantType {
 
     Vertex,  //顶点缓冲
     Normal, //法线缓冲
-    Tangent,
+    Tangent, //切线
     UVs,    //uv坐标缓冲
 
     //目前支持同时使用9块纹理单元
@@ -43,6 +43,7 @@ export enum ShaderUseVariantType {
     Fog,                //雾
     Time,               //时间
     Color,                    //节点颜色
+    Alpha,                  //节点的透明度
     VertColor,          //顶点颜色
     VertMatrix,         //顶点矩阵
     Shadow,             //阴影

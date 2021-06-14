@@ -123,6 +123,7 @@ export namespace syGL {
 
         TIME = 'u_time',//时间
         COLOR = 'u_color', //节点颜色
+        ALPHA = 'u_alpha',//节点透明度
         //现阶段场景中只支持三束平行光VERT_
         //平行光只有方向和颜色没有位置
         LIGHT_COLOR = 'u_lightColor',     //平行光的颜色

@@ -1,58 +1,6 @@
 import { SY } from "../base/Sprite";
 import { syGL } from "../gfx/syGLEnums";
 import GameMainCamera from "./GameMainCamera";
-
-/**
- * var vertextBaseCode =
-    'attribute vec3 a_position;' +
-    'attribute vec3 a_normal;' +
-    'attribute vec2 a_uv;' +
-
-    'uniform mat4 u_MVMatrix;' +
-    'uniform mat4 u_Pmat;' +
-    'uniform mat4 u_Mmat;' +
-    'uniform mat4 u_Vmat;' +
-
-    'varying vec3 v_normal;' +
-    'varying vec2 v_uv;' +
-
-    'void main() {' +
-    'gl_Position = u_Pmat * u_MVMatrix * vec4(a_position, 1.0);' +
-    'v_uv = a_uv;' +
-    '}'
-//基础的shader的片段着色器
-var fragBaseCode =
-    'precision mediump float;' +
-
-    'varying vec2 v_uv;' +
-    'uniform samplerCube u_skybox;'+
-    'uniform sampler2D u_texture;' +
-    'uniform mat4 u_PVMmat_I;'+
-    'uniform vec4 u_color;' +
-    'uniform vec4 u_color_dir;' +
-    
-    'void main() {' +
-    'gl_FragColor = texture2D(u_texture, v_uv);' +
-    '}'
-
- */
-var solidcolorvertexshader =
-    'attribute vec4 a_position;' +
-    'uniform mat4 u_Mmat;' +
-    'uniform mat4 u_Vmat;' +
-    'uniform mat4 u_Pmat;' +
-    'uniform mat4 u_PVMmat;' +
-    'void main() {' +
-    'gl_Position = u_Pmat*u_Vmat*u_Mmat*a_position;' +
-    '}'
-
-var solidcolorfragmentshader =
-    'precision mediump float;' +
-    'uniform vec4 u_color;' +
-    'void main() {' +
-    'gl_FragColor = u_color;' +
-    '}'
-
 export default class CameraView extends SY.SpriteBase {
     constructor() {
         super();
@@ -61,8 +9,6 @@ export default class CameraView extends SY.SpriteBase {
         var result = this.createCameraBufferInfo(0.2);
         this.createVertexsBuffer(result.pos, 3);
         this.createIndexsBuffer(result.index);
-        this.shaderVert = solidcolorvertexshader;
-        this.shaderFrag = solidcolorfragmentshader;
 
         this._glPrimitiveType = syGL.PrimitiveType.LINES;
     }
@@ -72,10 +18,10 @@ export default class CameraView extends SY.SpriteBase {
 
     // create geometry for a camera
     private createCameraBufferInfo(scale = 1) {
-        // first let's add a cube. It goes from 1 to 3
+        // first lets add a cube. It goes from 1 to 3
         // because cameras look down -Z so we want
         // the camera to start at Z = 0.
-        // We'll put a cone in front of this cube opening
+        // Well put a cone in front of this cube opening
         // toward -Z
         var positions = [];
         var indices = [];

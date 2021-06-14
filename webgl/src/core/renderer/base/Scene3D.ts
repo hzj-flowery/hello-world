@@ -21,6 +21,7 @@ import { syGL } from "../gfx/syGLEnums";
 import GameMainCamera from "../camera/GameMainCamera";
 import { DeferredShading } from "../3d/DeferredShading";
 import { RTT } from "../3d/RTT";
+import AlphaCube from "../3d/AlphaCube";
 
 export default class Scene3D extends Scene {
 
@@ -31,6 +32,7 @@ export default class Scene3D extends Scene {
     private _deferredShading:DeferredShading;
     private _rtt:RTT;
     private _tableNode: Cube;
+    private _alphaNode:AlphaCube;
     private _spineNode: Spine;
     private _pointLightCube:PointLightCube;
     private _spotLightCube:SpotLightCube;
@@ -97,6 +99,15 @@ export default class Scene3D extends Scene {
         this._tableNode.setPosition(0, 1, 0);
         this._tableNode.setScale(2.0, 0.1, 2.0);
         this._centerNode.addChild(this._tableNode);
+
+        this._alphaNode = new AlphaCube();
+        this._alphaNode.spriteFrame = "res/good.jpg";
+        this._alphaNode.setPosition(0, 3, 0);
+        this._alphaNode.setScale(2.0, 2.0, 2.0);
+        this._centerNode.addChild(this._alphaNode);
+
+
+        
 
         this._deferredShading = new DeferredShading();
         this._deferredShading.spriteFrame = "res/dragon.png";

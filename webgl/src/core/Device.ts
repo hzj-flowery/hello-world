@@ -161,6 +161,17 @@ function _commitScissorState(gl:WebGLRenderingContext,cur:State,next:State):void
     gl.disable(gl.SCISSOR_TEST);
 }
 /**
+ * 
+ * public blend;
+    public blendSep;
+    public blendColor;
+    public blendEq;
+    public blendAlphaEq;
+    public blendSrc;
+    public blendDst;
+    public blendSrcAlpha;
+    public blendDstAlpha;
+
  * 混合状态
  * 最常实现的功能就是半透明叠加
  * 有一个问题 必须是透明的颜色才具备混合，也就是alpha的值必须小于1，否则就是覆盖了
@@ -206,7 +217,9 @@ gl.FUNC_REVERSE_SUBSTRACT：反向相减处理，即 dest 减去 source
 gl.blendEquationSeparate(GLenum modeRGB, GLenum modeAlpha)
  */
 function _commitBlendState(gl:WebGLRenderingContext,cur:State,next:State):void{
-  
+    // gl.enable(gl.BLEND)
+    // gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
+    // gl.blendFunc(gl.ZERO, gl.ONE_MINUS_SRC_ALPHA)
 }
 
 export default class Device {
@@ -495,7 +508,7 @@ export default class Device {
         _commitDepthState(gl,this._curFrameS,this._nextFrameS);
         _commitCullState(gl,this._curFrameS,this._nextFrameS);
         _commitScissorState(gl,this._curFrameS,this._nextFrameS);
-        
+        _commitBlendState(gl,this._curFrameS,this._nextFrameS);
         //更新状态
         this._curFrameS.set(this._nextFrameS);
     }

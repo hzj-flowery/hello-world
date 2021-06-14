@@ -27,10 +27,10 @@ export default class Scene2D extends Scene {
         this.addChild(this._rectangle);
 
 
-        // this._uvSprite = new UvSprite();
-        // this._uvSprite.setPosition(-0.6,0.5,0);
-        // this._uvSprite.spriteFrame = "res/tree.png";
-        // this.addChild(this._uvSprite);
+        this._uvSprite = new UvSprite();
+        this._uvSprite.setPosition(-0.6,0.5,0);
+        this._uvSprite.spriteFrame = "res/tree.png";
+        this.addChild(this._uvSprite);
 
         this._instantiateSprite = new InstantiateSprite();
         this._instantiateSprite.setScale(0.5,0.5,0.5);

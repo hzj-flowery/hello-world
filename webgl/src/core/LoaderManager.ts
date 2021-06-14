@@ -342,36 +342,84 @@ export default class LoaderManager {
      * 获取着色器代码
      * @param spriteName 
      */
-    private getGlslRes(spriteName:string):Array<string>{
-         return [this.getRes("res/glsl/"+spriteName+"/shader.vert"),this.getRes("res/glsl/"+spriteName+"/shader.frag")]
+    private getGlslRes(spriteName:string,seq:number=0):Array<string>{
+        let shaderName = this.getShaderNameBySeq(seq)
+        let vs = "res/glsl/"+spriteName+"/"+shaderName+".vert";
+        let fs = "res/glsl/"+spriteName+"/"+shaderName+".frag";
+         return [this.getRes(vs),this.getRes(fs)]
+    }
+    private getShaderNameBySeq(seq):string{
+        if(seq>0)
+        {
+            console.log("aaaaa")
+        }
+        let shaderName = seq==0?"shader":"shader"+seq;
+        console.log("shaderName-------",shaderName)
+        return shaderName;
     }
     /**
      * 加载着色器代码
      * @param spriteName 
-     * @param callBack 
+     * @param progressBack
      */
-    public loadGlsl(spriteName:string,callBack?:Function):void{
-           let vs = "res/glsl/"+spriteName+"/shader.vert";
-           let fs = "res/glsl/"+spriteName+"/shader.frag";
-           let added = this.getGlslRes(spriteName);
-           if(added[0]&&added[1])
-           {
-               //说明已经加载过了
-               if(callBack)callBack(added);
-           }
-           else
-           {
-               this.load([vs,fs],null,(res)=>{
-                    let added = this.getGlslRes(spriteName);
-                    if(!added[0]||!added[1])
-                    {
-                        console.log("当前要加载的shader源码不存在------",spriteName);
+    public loadGlsl(spriteName: string, progressBack?: Function, finishBack?: Function): void {
+
+        let fatherPath = "res/glsl/" + spriteName + "/";
+        let passName = fatherPath + "pass.json";
+        let vertExtName = ".vert";
+        let fragExtName = ".frag";
+        //执行加载
+        var loadCount = 1;
+        let runRealLoad = function (passJson: any) {
+            let vs = fatherPath + passJson.name + vertExtName;
+            let fs = fatherPath + passJson.name + fragExtName;
+            let vsData = this.getRes(vs);
+            let fsData = this.getRes(fs);
+            loadCount--;
+            if (vsData && fsData) {
+                if (progressBack) progressBack([vsData, fsData, passJson]);
+                if(loadCount <=0&&finishBack)
+                {
+                    finishBack();
+                } 
+            }
+            else {
+                this.load([vs, fs], null, (res) => {
+                    let vsData = this.getRes(vs);
+                    let fsData = this.getRes(fs);
+                    if (!vsData || !fsData) {
+                        console.log("当前要加载的shader源码不存在------", spriteName);
+                        if(loadCount <=0&&finishBack)
+                        {
+                            finishBack();
+                        }
                         return;
                     }
-                    if(callBack)callBack(added);
-               })        
-           }
-    }         
+                    if (progressBack) progressBack([vsData, fsData, passJson]);
+                    if(loadCount <=0&&finishBack)
+                    {
+                        finishBack();
+                    }
+                })
+            }
+
+        }.bind(this)
+
+        //先加载pass
+        this.load(passName, () => { }, (res) => {
+            if (res && res.length > 0) {
+                //加载pass成功啦
+                loadCount = res.length
+                for (let k = 0; k < res.length; k++) {
+                    runRealLoad(res[k])
+                }
+            }
+            else
+            {
+                console.log("配置pass出错啦------",res);
+            }
+        })
+    }
     /**
      * 移除CPU端内存中的图片缓存
      * @param url 

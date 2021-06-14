@@ -26,7 +26,7 @@ class PassFactory{
        }
        return [];
     }
-    public createPass(type:ShaderType,vert:string,frag:string,ptype:PassType=PassType.Normal){
+    public createPass(type:ShaderType,vert:string,frag:string,passJson?:any,ptype:PassType=PassType.Normal){
         var ret = this.checkPassType(type)
         if(ret.length==0)
         {
@@ -37,11 +37,57 @@ class PassFactory{
         var pass = new Pass(ptype)
         pass.order = ret[1]
         pass.code = code
-        pass.state = new State()
-        //渲染状态
-        pass.state.depthFunc = glEnums.DS_FUNC_LESS;
-        pass.state.depthTest = true;
-        pass.state.depthWrite = true;
+        pass.state = new State();
+        if(passJson&&passJson.state) 
+        {
+            let stateData = passJson.state;
+            for(let k=0;k<stateData.length;k++)
+            { 
+                let temp = stateData[k];
+                let tempValue = temp["value"];
+                let tempKey = temp["key"];
+                if(typeof(tempValue)=="boolean")
+                {
+                    pass.state[tempKey] = tempValue;
+                }
+                else if(typeof(tempValue)=="number")
+                {
+                    pass.state[tempKey] = tempValue;
+                }
+                else if(typeof(tempValue)=="string")
+                {
+                    var str1 = new String(tempValue); 
+                    var index = str1.indexOf("glEnums");
+                    if(index>=0)
+                    {
+                        //符合预期
+                        let value = str1.split(".")[1];
+                        if(glEnums[value])
+                        {
+                            pass.state[tempKey] = glEnums[value];
+                        }
+                        else
+                        {
+                            console.log("你的配置有问题--",tempValue);
+                        }
+                    }
+                    else
+                    {
+                        console.log("你的配置有问题--",tempValue);
+                    }
+                }  
+                
+            }
+        }
+        else
+        {
+            //默认渲染状态
+            pass.state.depthFunc = glEnums.DS_FUNC_LESS;
+            pass.state.depthTest = true;
+            pass.state.depthWrite = true;
+            pass.state.blendSrcAlpha = glEnums.BLEND_SRC_ALPHA
+            pass.state.blendDstAlpha = glEnums.BLEND_ONE_MINUS_SRC_ALPHA
+        }
         this._pass.push(pass)
         return pass
     }
