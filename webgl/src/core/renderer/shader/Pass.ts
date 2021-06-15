@@ -23,6 +23,9 @@ export class Pass {
     public state:State;
     private _type:PassType;
     public order:number = 0;
+
+    public offlineRender:boolean = false; //是否是离线渲染
+    public drawInstanced:boolean = false; //是否是实例化绘制
     public get type(){
         return this._type;
     }

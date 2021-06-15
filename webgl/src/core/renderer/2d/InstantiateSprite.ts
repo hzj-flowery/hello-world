@@ -11,10 +11,9 @@ export default class InstantiateSprite extends SY.SpriteInstance {
         super();
     }
     private _posArray: Array<Array<number>>;
-    protected onInit(): void {
-        super.onInit();
+    protected onInitFinish():void{
         this.setContentSize(100, 200);
-        this.numInstances = 2;
+        this.numInstances = 12;
         this.InstanceVertNums = 4;
         this.pushDivisor("a_color", false);
         this.pushDivisor("a_matrix", true);
@@ -42,6 +41,7 @@ export default class InstantiateSprite extends SY.SpriteInstance {
             colorData.push(res[3]);
         }
         this.createNodeVertColorBuffer(colorData, 4);
+        super.onInitFinish()
     }
     private produceRandomPosArray(): void {
         this._posArray = [];

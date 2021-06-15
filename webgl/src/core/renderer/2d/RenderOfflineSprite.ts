@@ -7,7 +7,6 @@ import { RenderTexture } from "../base/texture/RenderTexture";
 export class RenderOfflineSprite extends SY.Sprite2D{
     constructor(){
         super();
-        this.setOfflineRender(true);
     }
     protected onInit(): void {
         this.setContentSize(Device.Instance.width/4,Device.Instance.height/4);

@@ -158,16 +158,9 @@ export namespace SY {
 
         }
 
-        protected onShader(): void {
+        protected onInitFinish(): void {
         }
 
-        /**
-         * 设置是否离线渲染
-         * @param status 
-         */
-        public setOfflineRender(status: boolean): void {
-            this._renderData[0]._isOffline = status;
-        }
         /**
          * 获取当前正在使用的shader
          */
@@ -197,9 +190,8 @@ export namespace SY {
             }
             LoaderManager.instance.loadGlsl(name, (res) => {
                 this._pass.push(G_PassFactory.createPass(ShaderType.Custom, res[0], res[1],res[2]));
-                this.onShader();
             }, () => {
-                this.onShader();
+                this.onInitFinish();
             });
 
         }
@@ -355,6 +347,10 @@ export namespace SY {
                 this._renderData[i]._node = this as Node;
                 this._renderData[i]._cameraType = this._cameraType;//默认情况下是透视投影
                 this._renderData[i].pass = pass;
+                //离线渲染
+                this._renderData[i]._isOffline = pass.offlineRender;
+                //实例化绘制
+                this._renderData[i]._isDrawInstanced = pass.drawInstanced;
                 //顶点组
                 this._renderData[i]._vertGLID = this.getGLID(SY.GLID_TYPE.VERTEX);
                 this._renderData[i]._vertItemSize = this.getBufferItemSize(SY.GLID_TYPE.VERTEX);
@@ -632,7 +628,7 @@ export namespace SY {
          */
         private _InstanceVertNums: number;
         protected onInit(): void {
-            this._renderData[0]._isDrawInstanced = true;
+            
             this._divisorNameData = new Map();
             this._divisorLocData = new Map();
         }
@@ -656,7 +652,7 @@ export namespace SY {
         protected get numInstances(): number {
             return this._numInstances;
         }
-        protected onShader() {
+        protected onInitFinish() {
             this._divisorNameData.forEach((value, key) => {
                 let loc = this.shader.getCustomAttributeLocation(key);
                 this._divisorLocData.set(loc, value)

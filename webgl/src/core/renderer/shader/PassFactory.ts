@@ -88,9 +88,32 @@ class PassFactory{
             pass.state.blendSrcAlpha = glEnums.BLEND_SRC_ALPHA
             pass.state.blendDstAlpha = glEnums.BLEND_ONE_MINUS_SRC_ALPHA
         }
+
+        if(passJson&&passJson.custom)
+        {
+            //自定义数据
+            let customData = passJson.custom
+            for(let k=0;k<customData.length;k++)
+            {
+                let key = customData[k]["key"];
+                let value = customData[k]["value"];
+                if(key=="offlineRender"&&typeof(value)=="boolean")
+                {
+                    //离线渲染
+                    pass.offlineRender = value;
+                }
+                if(key=="drawInstanced"&&typeof(value)=="boolean")
+                {
+                    //离线渲染
+                    pass.drawInstanced = value;
+                } 
+            }
+        }
+
+
         this._pass.push(pass)
         return pass
     }
-}
+} 
 
 export var G_PassFactory = new PassFactory()
