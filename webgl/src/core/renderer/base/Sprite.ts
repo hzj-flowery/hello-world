@@ -122,7 +122,7 @@ export namespace SY {
         protected _texture: Texture;
         protected gl: WebGL2RenderingContext;
         protected _pass: Array<Pass>;
-        protected _renderData: Array<syRender.BaseData>;
+        private _renderData: Array<syRender.BaseData>;
         //参考glprimitive_type
         protected _glPrimitiveType: syGL.PrimitiveType;//绘制的类型
         protected _cameraType: number = 0;//相机的类型(0表示透视1表示正交)
@@ -135,9 +135,7 @@ export namespace SY {
             this.gl = Device.Instance.gl;
             this._glPrimitiveType = syGL.PrimitiveType.TRIANGLES;
             this._renderData = []
-            this._renderData.push(syRender.DataPool.get(syRender.DataType.Base));
             this._color = [1.0, 1.0, 1.0, 1.0];//默认颜色为白色
-
             this._sizeMode = SpriteSizeMode.CUSTOM;//默认加载图片的尺寸大小为自定义
             this._shaderType = ShaderType.Custom;
             this.init();
@@ -323,6 +321,10 @@ export namespace SY {
             var buffer = this.getBuffer(type);
             return buffer ? buffer.itemSize : -1
         }
+        //实例化绘制
+        protected onDrawInstanced(data:syRender.BaseData){
+
+        }
         /**
          * 
          * @param texture 纹理的GLID
@@ -351,6 +353,10 @@ export namespace SY {
                 this._renderData[i]._isOffline = pass.offlineRender;
                 //实例化绘制
                 this._renderData[i]._isDrawInstanced = pass.drawInstanced;
+                if(pass.drawInstanced)
+                {
+                    this.onDrawInstanced(this._renderData[i])
+                }
                 //顶点组
                 this._renderData[i]._vertGLID = this.getGLID(SY.GLID_TYPE.VERTEX);
                 this._renderData[i]._vertItemSize = this.getBufferItemSize(SY.GLID_TYPE.VERTEX);
@@ -640,14 +646,12 @@ export namespace SY {
         }
         protected set InstanceVertNums(nums: number) {
             this._InstanceVertNums = nums;
-            this._renderData[0]._drawInstancedVertNums = nums;
         }
         protected get InstanceVertNums(): number {
             return this._InstanceVertNums;
         }
         protected set numInstances(nums: number) {
             this._numInstances = nums;
-            this._renderData[0]._drawInstancedNums = nums;
         }
         protected get numInstances(): number {
             return this._numInstances;
@@ -657,6 +661,10 @@ export namespace SY {
                 let loc = this.shader.getCustomAttributeLocation(key);
                 this._divisorLocData.set(loc, value)
             })
+        }
+        protected onDrawInstanced(renderData:syRender.BaseData):void{
+            renderData._drawInstancedNums = this._numInstances
+            renderData._drawInstancedVertNums = this._InstanceVertNums
         }
         public onDrawBefore(time: number) {
             this._divisorLocData.forEach((value, key) => {
