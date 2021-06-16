@@ -20,14 +20,21 @@ export namespace syRender {
         Normal,
         Spine
     }
+    
+    //bufferData
+    export class WebGLBufferData{
+        public glID: WebGLBuffer;//显存地址
+        public itemSize: number;//单个buffer单元的数据数目
+        public itemNums: number;//所有buffer单元数目
+    }
 
     /**
      * 定义渲染数据
      */
     export class BaseData {
         constructor() {
-            this._state = new State();
-            this.id = renderDataId++;
+            
+            this._id = renderDataId++;
             this._type = syRender.DataType.Base;
             this._temp_model_view_matrix = glMatrix.mat4.identity(null);
             this._temp_model_inverse_matrix = glMatrix.mat4.identity(null);
@@ -38,39 +45,33 @@ export namespace syRender {
             this._temp003_matrix = glMatrix.mat4.identity(null);
             this._temp004_matrix = glMatrix.mat4.identity(null);
             this._customMatrix = glMatrix.mat4.identity(null);
-            this._isOffline = false;
-
-            //渲染状态
-            this._state.depthFunc = glEnums.DS_FUNC_LESS;
-            this._state.depthTest = true;
-            this._state.depthWrite = true;
-
+            
+            this.nodeVertColor = new WebGLBufferData()
             this.reset();
         }
          
         /**
-         * 渲染状态
+         * 唯一id
          */
-        public _state:State;
+        public get id(){
+            return this._id
+        }
 
-        public _node: Node;//渲染的节点
-        public _isOffline: boolean = false; //是否是离线渲染
-        public _isDrawInstanced: boolean = false;//是否是实例化绘制
-        public _drawInstancedNums: number = 0;//实例的数目
-        public _drawInstancedVertNums: number = 0;//每个实例的顶点数目
-        public _type: syRender.DataType;
-        public id: number;//每一个渲染数据都一个唯一的id
+        public get type(){
+            return this._type
+        }
+       
+
+        public node: Node;//渲染的节点
+        public drawInstancedNums: number = 0;//实例的数目
+        public drawInstancedVertNums: number = 0;//每个实例的顶点数目
+      
         public _cameraType: number;//相机的类型
         public _cameraPosition: Array<number>;//相机的位置
-        private _shader: Shader;//着色器
         private _pass:Pass;
-        public _vertGLID: WebGLBuffer;//顶点buffer的显存地址
-        public _vertItemSize: number;//一个顶点buffer单元的顶点数目
-        public _vertItemNums: number;//所有顶点buffer单元数目
+        
 
-        public _nodeVertColorGLID: WebGLBuffer;//节点自定义颜色buffer的显存地址
-        public _nodeVertColorItemSize: number;//一个节点自定义颜色buffer单元的数据数目
-        public _nodeVertColorItemNums: number;//所有节点自定义颜色buffer单元数目
+       
 
         public _nodeColor: Array<number>;//节点自定义颜色buffer的显存地址
         public _nodeAlpha:number;        //节点自定义透明度
@@ -80,23 +81,34 @@ export namespace syRender {
         public _spotInnerLimit: number;//聚光的内部限制
         public _spotOuterLimit: number;//聚光的外部限制
 
-        public _vertMatrixGLID: WebGLBuffer;//节点自定义矩阵buffer的显存地址
-        public _vertMatrixItemSize: number;//一个节点自定义矩阵的buffer单元的数据数目
-        public _vertMatrixItemNums: number;//所有节点自定义矩阵buffer单元数目
+        
 
         public _customMatrix: Float32Array;//自定义矩阵
 
         public _fogColor: Array<number>;//雾的颜色
         public _fogDensity: number;//雾的密度
 
+        public nodeVertColor:WebGLBufferData;//节点自定义颜色
 
-        public _indexGLID: WebGLBuffer;//索引buffer的显存地址
-        public _indexItemSize: number;//一个索引buffer单元的顶点数目
-        public _indexItemNums: number;//所有索引buffer单元的数目
-        public _uvGLID: WebGLBuffer;//uv buffer的显存地址
-        public _uvItemSize: number;//一个uv buffer单元的顶点数目
-        public _normalGLID: WebGLBuffer;//法线buffer的显存地址
-        public _normalItemSize: number;//一个法线buffer单元的顶点数目
+
+        public vertMatrixGLID: WebGLBuffer;//节点自定义矩阵buffer的显存地址
+        public vertMatrixItemSize: number;//一个节点自定义矩阵的buffer单元的数据数目
+        public vertMatrixItemNums: number;//所有节点自定义矩阵buffer单元数目
+
+        public vertGLID: WebGLBuffer;//顶点buffer的显存地址
+        public vertItemSize: number;//一个顶点buffer单元的顶点数目
+        public vertItemNums: number;//所有顶点buffer单元数目
+
+        public indexGLID: WebGLBuffer;//索引buffer的显存地址
+        public indexItemSize: number;//一个索引buffer单元的顶点数目
+        public indexItemNums: number;//所有索引buffer单元的数目
+
+        public uvGLID: WebGLBuffer;//uv buffer的显存地址
+        public uvItemSize: number;//一个uv buffer单元的顶点数目
+
+        public normalGLID: WebGLBuffer;//法线buffer的显存地址
+        public normalItemSize: number;//一个法线buffer单元的顶点数目
+
         public _parallelColor: Array<number>;//平行光的颜色
         public _parallelDirection: Array<number>;//平行光的方向
         public _lightPosition: Array<number>;//光的位置
@@ -107,9 +119,12 @@ export namespace syRender {
         public _nodeCustomMatrix: Float32Array;//节点自定义矩阵
         public _glPrimitiveType: syGL.PrimitiveType;//绘制的类型
         public _modelMatrix: Float32Array;//模型矩阵
-        public _time: number;
-        public _isUse: boolean = false;//使用状态
+        public time: number;
+        public useFlag: boolean = false;//使用状态
 
+        protected _type: syRender.DataType;
+
+        private _id: number;//每一个渲染数据都一个唯一的id
         private _texture2DGLIDArray: Array<WebGLTexture>;//2d纹理
         private _textureCubeGLIDArray: Array<WebGLTexture>;//立方体纹理
         private _temp_model_view_matrix;//视口模型矩阵
@@ -124,15 +139,14 @@ export namespace syRender {
             this._pass = null;
             this._cameraType = 0;//默认情况下是透视投影
             this._cameraPosition = [];
-            this._shader = null;
-            this._vertGLID = null;
-            this._vertItemSize = -1;
-            this._indexGLID = null;
-            this._indexItemSize = -1;
-            this._uvGLID = null;
-            this._uvItemSize = -1;
-            this._normalGLID = null;
-            this._normalItemSize = -1;
+            this.vertGLID = null;
+            this.vertItemSize = -1;
+            this.indexGLID = null;
+            this.indexItemSize = -1;
+            this.uvGLID = null;
+            this.uvItemSize = -1;
+            this.normalGLID = null;
+            this.normalItemSize = -1;
             this._parallelColor = [];
             this._parallelDirection = [];
             this._lightPosition = [];
@@ -150,22 +164,29 @@ export namespace syRender {
             this._textureCubeGLIDArray = [];
             this._nodeCustomMatrix = null;
             this._modelMatrix = null;
-            this._time = 0;
+            this.time = 0;
             this._glPrimitiveType = syGL.PrimitiveType.TRIANGLE_FAN;
-            this._isUse = false;
+            this.useFlag = false;
             glMatrix.mat4.identity(this._customMatrix);
                
         }
 
         public set pass(pass:Pass){
             this._pass = pass
-            this._shader = pass.code
         }
         public get pass(){
             return this._pass
         }
         public get shader(){
-            return this._shader
+            return this._pass.code
+        }
+        public get isOffline(){
+            if(this._pass)return this._pass.offlineRender
+            return false
+        }
+        public get isDrawInstanced(){
+            if(this._pass)return this._pass.drawInstanced
+            return  false
         }
 
         public push2DTexture(texture: WebGLTexture): void {
@@ -189,13 +210,13 @@ export namespace syRender {
             useVariantType.forEach((value: ShaderUseVariantType) => {
                 switch (value) {
                     case ShaderUseVariantType.Vertex:
-                        _shader.setUseVertexAttribPointerForVertex(this._vertGLID, this._vertItemSize);
+                        _shader.setUseVertexAttribPointerForVertex(this.vertGLID, this.vertItemSize);
                         break;
                     case ShaderUseVariantType.Normal:
-                        _shader.setUseVertexAttriPointerForNormal(this._normalGLID, this._normalItemSize);
+                        _shader.setUseVertexAttriPointerForNormal(this.normalGLID, this.normalItemSize);
                         break;
                     case ShaderUseVariantType.UVs:
-                        _shader.setUseVertexAttribPointerForUV(this._uvGLID, this._uvItemSize);
+                        _shader.setUseVertexAttribPointerForUV(this.uvGLID, this.uvItemSize);
                         break;
                     case ShaderUseVariantType.TEX_COORD:
                         _shader.setUseTexture(this._texture2DGLIDArray[0], useTextureAddres);
@@ -320,10 +341,10 @@ export namespace syRender {
                         _shader.setUseNodeAlpha(this._nodeAlpha);
                         break;
                     case ShaderUseVariantType.VertColor:
-                        _shader.setUseNodeVertColor(this._nodeVertColorGLID, this._nodeVertColorItemSize);
+                        _shader.setUseNodeVertColor(this.nodeVertColor.glID, this.nodeVertColor.itemSize);
                         break;
                     case ShaderUseVariantType.VertMatrix:
-                        _shader.setUseVertMatrix(this._vertMatrixGLID, this._vertMatrixItemSize);
+                        _shader.setUseVertMatrix(this.vertMatrixGLID, this.vertMatrixItemSize);
                         break;
                     case ShaderUseVariantType.Time:
                         _shader.setUseTime(Device.Instance.triggerRenderTime);
@@ -349,6 +370,13 @@ export namespace syRender {
             super();
             this._tempMatrix1 = glMatrix.mat4.identity(null);
             this._type = syRender.DataType.Normal;
+            this._state = new State();
+
+             //渲染状态
+             this._state.depthFunc = glEnums.DS_FUNC_LESS;
+             this._state.depthTest = true;
+             this._state.depthWrite = true;
+
         }
         public reset() {
             super.reset();
@@ -360,6 +388,11 @@ export namespace syRender {
             this._glPrimitiveType = syGL.PrimitiveType.TRIANGLES;
             glMatrix.mat4.identity(this._tempMatrix1);
         }
+         /**
+         * 渲染状态
+         */
+        public _state:State;
+
         public _shaderData: ShaderData;
         //顶点着色器属性数据
         public _attrbufferData: BufferAttribsData;
@@ -389,7 +422,7 @@ export namespace syRender {
             let retItem: syRender.BaseData;
             for (var j = 0; j < pool.length; j++) {
                 let item = pool[j];
-                if (item._type == type && item._isUse == false) {
+                if (item.type == type && item.useFlag == false) {
                     retItem = item;
                     break;
                 }
@@ -400,7 +433,7 @@ export namespace syRender {
                 case syRender.DataType.Normal: retItem = new syRender.NormalData(); pool.push(retItem); break;
                 case syRender.DataType.Spine: retItem = new syRender.SpineData(); pool.push(retItem); break;
             }
-            retItem._isUse = true;
+            retItem.useFlag = true;
             return retItem;
         }
         static return(retData: syRender.BaseData | Array<syRender.BaseData>): void {

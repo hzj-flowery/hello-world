@@ -104,7 +104,7 @@ class PassFactory{
                 }
                 if(key=="drawInstanced"&&typeof(value)=="boolean")
                 {
-                    //离线渲染
+                    //实例化渲染
                     pass.drawInstanced = value;
                 } 
             }

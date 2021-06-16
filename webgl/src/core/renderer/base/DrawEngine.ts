@@ -75,29 +75,29 @@ class DrawEngine {
         let gl = this.gl;
         rd.bindGPUBufferData(view, proj, shader);
         //绘制前
-        rd._node ? rd._node.onDrawBefore(rd._time) : null;
-        if (!rd._isDrawInstanced) {
-            var indexglID = rd._indexGLID;
+        rd.node ? rd.node.onDrawBefore(rd.time) : null;
+        if (!rd.isDrawInstanced) {
+            var indexglID = rd.indexGLID;
             indexglID != -1 ? (
                 //绑定索引缓冲
                 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexglID),
-                this.drawElements(rd._glPrimitiveType, rd._indexItemNums, gl.UNSIGNED_SHORT, 0)
+                this.drawElements(rd._glPrimitiveType, rd.indexItemNums, gl.UNSIGNED_SHORT, 0)
             ) : (
-                    this.drawArrays(rd._glPrimitiveType, 0, rd._vertItemNums)
+                    this.drawArrays(rd._glPrimitiveType, 0, rd.vertItemNums)
                 )
         }
         else {
-            var indexglID = rd._indexGLID;
+            var indexglID = rd.indexGLID;
 
             !indexglID == true ? this.drawArraysInstanced(
                 rd._glPrimitiveType,
                 0,             // offset
-                rd._drawInstancedVertNums,   // num vertices per instance
-                rd._drawInstancedNums,  // num instances
+                rd.drawInstancedVertNums,   // num vertices per instance
+                rd.drawInstancedNums,  // num instances
             ) : (
                     //绑定索引缓冲
                     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexglID),
-                    this.drawElementsInstanced(rd._glPrimitiveType, rd._indexItemNums, gl.UNSIGNED_SHORT, 0, rd._drawInstancedNums)
+                    this.drawElementsInstanced(rd._glPrimitiveType, rd.indexItemNums, gl.UNSIGNED_SHORT, 0, rd.drawInstancedNums)
                 )
         }
         //解除缓冲区对于目标纹理的绑定
@@ -106,7 +106,7 @@ class DrawEngine {
         gl.bindBuffer(gl.ARRAY_BUFFER, null);
         rd.shader.disableVertexAttribArray();
         //绘制后
-        rd._node ? rd._node.onDrawAfter(rd._time) : null;
+        rd.node ? rd.node.onDrawAfter(rd.time) : null;
     }
 
     /**

@@ -28,5 +28,5 @@ export class Pass {
     public drawInstanced:boolean = false; //是否是实例化绘制
     public get type(){
         return this._type;
-    }
+    } 
 }

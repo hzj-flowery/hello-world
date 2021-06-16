@@ -536,7 +536,7 @@ export default class Device {
         }
         //提交数据给GPU 立即绘制
         for (var j = 0; j < this._renderTreeData.length; j++) {
-            if(this._renderTreeData[j]._isOffline&&!isRenderToScreen)
+            if(this._renderTreeData[j].isOffline&&!isRenderToScreen)
             {
                 //对于离屏渲染的数据 如果当前是离屏渲染的话 则不可以渲染它 否则会报错
                 //你想啊你把一堆显示数据渲染到一张纹理中，这张纹理本身就在这一堆渲染数据中 自然是会冲突的
@@ -584,7 +584,7 @@ export default class Device {
         rData._fogColor = G_LightCenter.lightData.fogColor;
         rData._fogDensity = G_LightCenter.lightData.fogDensity;
 
-        switch (rData._type) {
+        switch (rData.type) {
             case syRender.DataType.Base:
                 this._commitRenderState(rData.pass.state);
                 if (isUseScene) {
@@ -598,7 +598,7 @@ export default class Device {
                 };
                 break;
             case syRender.DataType.Normal:
-                this._commitRenderState(rData._state);
+                this._commitRenderState((rData as syRender.NormalData)._state);
                 if (isUseScene) {
                     let projMatix = G_CameraModel.getSceneProjectMatrix();
                     glMatrix.mat4.invert(this._temp1Matrix, G_CameraModel.getSceneCameraMatrix());
@@ -611,7 +611,7 @@ export default class Device {
                 }
                 break;
             case syRender.DataType.Spine:
-                this._commitRenderState(rData._state);
+                this._commitRenderState((rData  as syRender.SpineData)._state);
                 if (isUseScene) {
                     let projMatix = G_CameraModel.getSceneProjectMatrix();
                     glMatrix.mat4.invert(this._temp1Matrix, G_CameraModel.getSceneCameraMatrix());
@@ -645,7 +645,7 @@ export default class Device {
     }
     private _drawNormal(sData: syRender.NormalData, cameraData: CameraData): void {
         this.gl.useProgram(sData._shaderData.spGlID);
-        (sData._node as SY.Sprite).updateUniformsData(cameraData,G_LightCenter.lightData);
+        (sData.node as SY.Sprite).updateUniformsData(cameraData,G_LightCenter.lightData);
         G_ShaderFactory.setBuffersAndAttributes(sData._shaderData.attrSetters, sData._attrbufferData);
         for (let j in sData._uniformData) {
             G_ShaderFactory.setUniforms(sData._shaderData.uniSetters, sData._uniformData[j]);

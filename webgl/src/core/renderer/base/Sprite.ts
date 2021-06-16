@@ -121,7 +121,7 @@ export namespace SY {
         private _uvsBuffer: UVsBuffer;
         protected _texture: Texture;
         protected gl: WebGL2RenderingContext;
-        protected _pass: Array<Pass>;
+        private _pass: Array<Pass>;
         private _renderData: Array<syRender.BaseData>;
         //参考glprimitive_type
         protected _glPrimitiveType: syGL.PrimitiveType;//绘制的类型
@@ -322,7 +322,7 @@ export namespace SY {
             return buffer ? buffer.itemSize : -1
         }
         //实例化绘制
-        protected onDrawInstanced(data:syRender.BaseData){
+        protected onCollectRenderData(data:syRender.BaseData){
 
         }
         /**
@@ -346,39 +346,31 @@ export namespace SY {
                 if (!this._renderData[i]) {
                     this._renderData.push(syRender.DataPool.get(syRender.DataType.Base));
                 }
-                this._renderData[i]._node = this as Node;
+                this._renderData[i].node = this as Node;
                 this._renderData[i]._cameraType = this._cameraType;//默认情况下是透视投影
                 this._renderData[i].pass = pass;
-                //离线渲染
-                this._renderData[i]._isOffline = pass.offlineRender;
-                //实例化绘制
-                this._renderData[i]._isDrawInstanced = pass.drawInstanced;
-                if(pass.drawInstanced)
-                {
-                    this.onDrawInstanced(this._renderData[i])
-                }
                 //顶点组
-                this._renderData[i]._vertGLID = this.getGLID(SY.GLID_TYPE.VERTEX);
-                this._renderData[i]._vertItemSize = this.getBufferItemSize(SY.GLID_TYPE.VERTEX);
-                this._renderData[i]._vertItemNums = this.getBuffer(SY.GLID_TYPE.VERTEX).itemNums;
+                this._renderData[i].vertGLID = this.getGLID(SY.GLID_TYPE.VERTEX);
+                this._renderData[i].vertItemSize = this.getBufferItemSize(SY.GLID_TYPE.VERTEX);
+                this._renderData[i].vertItemNums = this.getBuffer(SY.GLID_TYPE.VERTEX).itemNums;
                 //索引组
-                this._renderData[i]._indexGLID = this.getGLID(SY.GLID_TYPE.INDEX);
-                if (this._renderData[i]._indexGLID != -1) {
-                    this._renderData[i]._indexItemSize = this.getBuffer(SY.GLID_TYPE.INDEX).itemSize;
-                    this._renderData[i]._indexItemNums = this.getBuffer(SY.GLID_TYPE.INDEX).itemNums;
+                this._renderData[i].indexGLID = this.getGLID(SY.GLID_TYPE.INDEX);
+                if (this._renderData[i].indexGLID != -1) {
+                    this._renderData[i].indexItemSize = this.getBuffer(SY.GLID_TYPE.INDEX).itemSize;
+                    this._renderData[i].indexItemNums = this.getBuffer(SY.GLID_TYPE.INDEX).itemNums;
                 }
                 //uv组
-                this._renderData[i]._uvGLID = this.getGLID(SY.GLID_TYPE.UV);
-                this._renderData[i]._uvItemSize = this.getBufferItemSize(SY.GLID_TYPE.UV);
+                this._renderData[i].uvGLID = this.getGLID(SY.GLID_TYPE.UV);
+                this._renderData[i].uvItemSize = this.getBufferItemSize(SY.GLID_TYPE.UV);
                 //法线组
-                this._renderData[i]._normalGLID = this.getGLID(SY.GLID_TYPE.NORMAL);
-                this._renderData[i]._normalItemSize = this.getBufferItemSize(SY.GLID_TYPE.NORMAL);
+                this._renderData[i].normalGLID = this.getGLID(SY.GLID_TYPE.NORMAL);
+                this._renderData[i].normalItemSize = this.getBufferItemSize(SY.GLID_TYPE.NORMAL);
 
                 //节点自定义顶点颜色组
-                this._renderData[i]._nodeVertColorGLID = this.getGLID(SY.GLID_TYPE.VERT_COLOR);
-                if (this._renderData[i]._nodeVertColorGLID != -1) {
-                    this._renderData[i]._nodeVertColorItemSize = this.getBuffer(SY.GLID_TYPE.VERT_COLOR).itemSize;
-                    this._renderData[i]._nodeVertColorItemNums = this.getBuffer(SY.GLID_TYPE.VERT_COLOR).itemNums;
+                this._renderData[i].nodeVertColor.glID = this.getGLID(SY.GLID_TYPE.VERT_COLOR);
+                if (this._renderData[i].nodeVertColor.glID != -1) {
+                    this._renderData[i].nodeVertColor.itemSize = this.getBuffer(SY.GLID_TYPE.VERT_COLOR).itemSize;
+                    this._renderData[i].nodeVertColor.itemNums = this.getBuffer(SY.GLID_TYPE.VERT_COLOR).itemNums;
                 }
 
                 //节点的颜色
@@ -390,13 +382,13 @@ export namespace SY {
 
 
                 //节点自定义矩阵组
-                this._renderData[i]._vertMatrixGLID = this.getGLID(SY.GLID_TYPE.VERT_MATRIX);
-                if (this._renderData[i]._vertMatrixGLID != -1) {
-                    this._renderData[i]._vertMatrixItemSize = this.getBuffer(SY.GLID_TYPE.VERT_MATRIX).itemSize;
-                    this._renderData[i]._vertMatrixItemNums = this.getBuffer(SY.GLID_TYPE.VERT_MATRIX).itemNums;
+                this._renderData[i].vertMatrixGLID = this.getGLID(SY.GLID_TYPE.VERT_MATRIX);
+                if (this._renderData[i].vertMatrixGLID != -1) {
+                    this._renderData[i].vertMatrixItemSize = this.getBuffer(SY.GLID_TYPE.VERT_MATRIX).itemSize;
+                    this._renderData[i].vertMatrixItemNums = this.getBuffer(SY.GLID_TYPE.VERT_MATRIX).itemNums;
                 }
                 this._renderData[i]._modelMatrix = this.modelMatrix;
-                this._renderData[i]._time = time;
+                this._renderData[i].time = time;
                 if (this._texture && this._texture._glID) {
                     if (this._texture.isTexture2D)
                         this._renderData[i].push2DTexture(this.getGLID(SY.GLID_TYPE.TEXTURE_2D));
@@ -407,6 +399,7 @@ export namespace SY {
                 if (this._pass.length == 2) {
                     console.log();
                 }
+                this.onCollectRenderData(this._renderData[i])
                 Device.Instance.collectData(this._renderData[i]);
             }
         }
@@ -469,7 +462,7 @@ export namespace SY {
             this._renderData._viewKey = "u_view";//视口矩阵的key
             this._renderData._worldKey = "u_world";//世界坐标系的key
             this._renderData._attrbufferData = this._attrData;//顶点着色器的顶点相关属性
-            this._renderData._node = this;//渲染的节点
+            this._renderData.node = this;//渲染的节点
             this._renderData._glPrimitiveType = syGL.PrimitiveType.TRIANGLES;//三角形
         }
         //设置shader
@@ -662,9 +655,9 @@ export namespace SY {
                 this._divisorLocData.set(loc, value)
             })
         }
-        protected onDrawInstanced(renderData:syRender.BaseData):void{
-            renderData._drawInstancedNums = this._numInstances
-            renderData._drawInstancedVertNums = this._InstanceVertNums
+        protected onCollectRenderData(renderData:syRender.BaseData):void{
+            renderData.drawInstancedNums = this._numInstances
+            renderData.drawInstancedVertNums = this._InstanceVertNums
         }
         public onDrawBefore(time: number) {
             this._divisorLocData.forEach((value, key) => {
