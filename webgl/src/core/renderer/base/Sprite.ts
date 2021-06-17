@@ -350,27 +350,27 @@ export namespace SY {
                 this._renderData[i]._cameraType = this._cameraType;//默认情况下是透视投影
                 this._renderData[i].pass = pass;
                 //顶点组
-                this._renderData[i].vert.glID = this.getGLID(SY.GLID_TYPE.VERTEX);
-                this._renderData[i].vert.itemSize = this.getBufferItemSize(SY.GLID_TYPE.VERTEX);
-                this._renderData[i].vert.itemNums = this.getBuffer(SY.GLID_TYPE.VERTEX).itemNums;
+                this._renderData[i].primitive.vert.glID = this.getGLID(SY.GLID_TYPE.VERTEX);
+                this._renderData[i].primitive.vert.itemSize = this.getBufferItemSize(SY.GLID_TYPE.VERTEX);
+                this._renderData[i].primitive.vert.itemNums = this.getBuffer(SY.GLID_TYPE.VERTEX).itemNums;
                 //索引组
-                this._renderData[i].index.glID = this.getGLID(SY.GLID_TYPE.INDEX);
-                if (this._renderData[i].index.glID != -1) {
-                    this._renderData[i].index.itemSize = this.getBuffer(SY.GLID_TYPE.INDEX).itemSize;
-                    this._renderData[i].index.itemNums = this.getBuffer(SY.GLID_TYPE.INDEX).itemNums;
+                this._renderData[i].primitive.index.glID = this.getGLID(SY.GLID_TYPE.INDEX);
+                if (this._renderData[i].primitive.index.glID != -1) {
+                    this._renderData[i].primitive.index.itemSize = this.getBuffer(SY.GLID_TYPE.INDEX).itemSize;
+                    this._renderData[i].primitive.index.itemNums = this.getBuffer(SY.GLID_TYPE.INDEX).itemNums;
                 }
                 //uv组
-                this._renderData[i].uv.glID = this.getGLID(SY.GLID_TYPE.UV);
-                this._renderData[i].uv.itemSize = this.getBufferItemSize(SY.GLID_TYPE.UV);
+                this._renderData[i].primitive.uv.glID = this.getGLID(SY.GLID_TYPE.UV);
+                this._renderData[i].primitive.uv.itemSize = this.getBufferItemSize(SY.GLID_TYPE.UV);
                 //法线组
-                this._renderData[i].normal.glID = this.getGLID(SY.GLID_TYPE.NORMAL);
-                this._renderData[i].normal.itemSize = this.getBufferItemSize(SY.GLID_TYPE.NORMAL);
+                this._renderData[i].primitive.normal.glID = this.getGLID(SY.GLID_TYPE.NORMAL);
+                this._renderData[i].primitive.normal.itemSize = this.getBufferItemSize(SY.GLID_TYPE.NORMAL);
 
                 //节点自定义顶点颜色组
-                this._renderData[i].nodeVertColor.glID = this.getGLID(SY.GLID_TYPE.VERT_COLOR);
-                if (this._renderData[i].nodeVertColor.glID != -1) {
-                    this._renderData[i].nodeVertColor.itemSize = this.getBuffer(SY.GLID_TYPE.VERT_COLOR).itemSize;
-                    this._renderData[i].nodeVertColor.itemNums = this.getBuffer(SY.GLID_TYPE.VERT_COLOR).itemNums;
+                this._renderData[i].primitive.nodeVertColor.glID = this.getGLID(SY.GLID_TYPE.VERT_COLOR);
+                if (this._renderData[i].primitive.nodeVertColor.glID != -1) {
+                    this._renderData[i].primitive.nodeVertColor.itemSize = this.getBuffer(SY.GLID_TYPE.VERT_COLOR).itemSize;
+                    this._renderData[i].primitive.nodeVertColor.itemNums = this.getBuffer(SY.GLID_TYPE.VERT_COLOR).itemNums;
                 }
 
                 //节点的颜色
@@ -382,10 +382,10 @@ export namespace SY {
 
 
                 //节点自定义矩阵组
-                this._renderData[i].vertMatrix.glID = this.getGLID(SY.GLID_TYPE.VERT_MATRIX);
-                if (this._renderData[i].vertMatrix.glID != -1) {
-                    this._renderData[i].vertMatrix.itemSize = this.getBuffer(SY.GLID_TYPE.VERT_MATRIX).itemSize;
-                    this._renderData[i].vertMatrix.itemNums = this.getBuffer(SY.GLID_TYPE.VERT_MATRIX).itemNums;
+                this._renderData[i].primitive.vertMatrix.glID = this.getGLID(SY.GLID_TYPE.VERT_MATRIX);
+                if (this._renderData[i].primitive.vertMatrix.glID != -1) {
+                    this._renderData[i].primitive.vertMatrix.itemSize = this.getBuffer(SY.GLID_TYPE.VERT_MATRIX).itemSize;
+                    this._renderData[i].primitive.vertMatrix.itemNums = this.getBuffer(SY.GLID_TYPE.VERT_MATRIX).itemNums;
                 }
                 this._renderData[i]._modelMatrix = this.modelMatrix;
                 this._renderData[i].time = time;
@@ -395,7 +395,7 @@ export namespace SY {
                     else if (this._texture.isTextureCube)
                         this._renderData[i].pushCubeTexture(this.getGLID(SY.GLID_TYPE.TEXTURE_CUBE));
                 }
-                this._renderData[i]._glPrimitiveType = this._glPrimitiveType;
+                this._renderData[i].primitive.type = this._glPrimitiveType;
                 if (this._pass.length == 2) {
                     console.log();
                 }
@@ -463,7 +463,7 @@ export namespace SY {
             this._renderData._worldKey = "u_world";//世界坐标系的key
             this._renderData._attrbufferData = this._attrData;//顶点着色器的顶点相关属性
             this._renderData.node = this;//渲染的节点
-            this._renderData._glPrimitiveType = syGL.PrimitiveType.TRIANGLES;//三角形
+            this._renderData.primitive.type = syGL.PrimitiveType.TRIANGLES;//三角形
         }
         //设置shader
         protected setShader(vert: string, frag: string): void {

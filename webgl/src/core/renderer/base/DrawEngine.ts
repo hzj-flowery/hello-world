@@ -77,27 +77,27 @@ class DrawEngine {
         //绘制前
         rd.node ? rd.node.onDrawBefore(rd.time) : null;
         if (!rd.isDrawInstanced) {
-            var indexglID = rd.index.glID;
+            var indexglID = rd.primitive.index.glID;
             indexglID != -1 ? (
                 //绑定索引缓冲
                 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexglID),
-                this.drawElements(rd._glPrimitiveType, rd.index.itemNums, gl.UNSIGNED_SHORT, 0)
+                this.drawElements(rd.primitive.type, rd.primitive.index.itemNums, gl.UNSIGNED_SHORT, 0)
             ) : (
-                    this.drawArrays(rd._glPrimitiveType, 0, rd.vert.itemNums)
+                    this.drawArrays(rd.primitive.type, 0, rd.primitive.vert.itemNums)
                 )
         }
         else {
-            var indexglID = rd.index.glID;
+            var indexglID = rd.primitive.index.glID;
 
             !indexglID == true ? this.drawArraysInstanced(
-                rd._glPrimitiveType,
+                rd.primitive.type,
                 0,             // offset
                 rd.drawInstancedVertNums,   // num vertices per instance
                 rd.drawInstancedNums,  // num instances
             ) : (
                     //绑定索引缓冲
                     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexglID),
-                    this.drawElementsInstanced(rd._glPrimitiveType, rd.index.itemNums, gl.UNSIGNED_SHORT, 0, rd.drawInstancedNums)
+                    this.drawElementsInstanced(rd.primitive.type, rd.primitive.index.itemNums, gl.UNSIGNED_SHORT, 0, rd.drawInstancedNums)
                 )
         }
         //解除缓冲区对于目标纹理的绑定

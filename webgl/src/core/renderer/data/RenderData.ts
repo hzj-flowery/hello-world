@@ -28,6 +28,131 @@ export namespace syRender {
         public itemSize: number;//单个buffer单元的数据数目
         public itemNums: number;//所有buffer单元数目
     }
+    
+    //绘制信息
+    export class Primitive{
+        constructor(){
+            this.nodeVertColor = new WebGLBufferData()
+            this.vertMatrix = new WebGLBufferData()
+            this.vert = new WebGLBufferData()
+            this.index = new WebGLBufferData()
+            this.uv = new WebGLBufferData()
+            this.normal = new WebGLBufferData();
+            this.type = syGL.PrimitiveType.TRIANGLE_FAN;
+        }
+        public nodeVertColor:WebGLBufferData;//节点自定义颜色
+        public vertMatrix:WebGLBufferData;//节点自定义矩阵
+        public vert:WebGLBufferData;//顶点buffer
+        public index:WebGLBufferData;//索引buffer
+        public uv:WebGLBufferData;//uv buffer
+        public normal:WebGLBufferData;//法线buffer
+
+        public type:syGL.PrimitiveType; //绘制类型
+    }
+    
+    //光的数据
+    export namespace Light{
+        export class Spot{
+            constructor(){
+                this.reset();
+            }
+            public reset():void{
+                this.color = [];
+                this.direction = [];
+                this.innerLimit = 0;
+                this.outerLimit = 0;
+            }
+            public color: Array<number>;//聚光的颜色
+            public direction: Array<number>;//聚光的方向
+            public innerLimit: number;//聚光的内部限制
+            public outerLimit: number;//聚光的外部限制
+        }
+        export class Fog{
+            constructor(){
+               this.reset();
+            }
+            public color: Array<number>;//雾的颜色
+            public density: number;//雾的密度
+            public reset(){
+               this.color = []
+               this.density = 0;
+            }
+        }
+        //平行光
+        export class Parallel{
+            constructor(){
+                this.reset()
+            }
+            public reset():void{
+                this.color = [];
+                this.direction = [];
+            }
+            public color: Array<number>;//平行光的颜色
+            public direction: Array<number>;//平行光的方向
+        }
+        //聚光灯
+        export class Specular{
+            constructor(){
+                this.reset()
+            }
+            public color: Array<number>;//高光的颜色
+            public shiness: number;//高光指数
+            public reset():void{
+                this.color = [];
+                this.shiness = 0;
+            }
+        }
+        //点光
+        export class Point{
+            constructor(){
+                this.reset()
+            }
+            public color: Array<number>;//光的颜色
+            public reset():void{
+                this.color = [];
+            }
+        }
+        //幻境光
+        export class Ambient{
+            constructor(){
+                this.reset()
+            }
+            public color: Array<number>;//光的颜色
+            public reset():void{
+                this.color = [];
+            }
+        }
+        //外界取数据接口
+        export class Center{
+            constructor(){
+                this.spot = new Light.Spot();
+                this.fog = new Light.Fog();
+                this.parallel = new Light.Parallel();
+                this.specular = new Light.Specular();
+                this.point = new Light.Point();
+                this.ambient = new Light.Ambient();
+                this.position = []
+            }
+            public spot:Light.Spot;    //聚光灯
+            public fog:Light.Fog;     //雾
+            public parallel:Light.Parallel;//平行光
+            public specular:Light.Specular;//高光
+            public point:Light.Point;     //点光
+            public ambient:Light.Ambient;//环境光
+
+            public position:Array<number>; //光的位置
+            public reset():void{
+                this.spot.reset();
+                this.fog.reset();
+                this.parallel.reset();
+                this.specular.reset();
+                this.point.reset();
+                this.ambient.reset();
+                this.position = [];
+            }
+        }
+    }
+    
 
     /**
      * 定义渲染数据
@@ -46,13 +171,10 @@ export namespace syRender {
             this._temp003_matrix = glMatrix.mat4.identity(null);
             this._temp004_matrix = glMatrix.mat4.identity(null);
             this._customMatrix = glMatrix.mat4.identity(null);
-            
-            this.nodeVertColor = new WebGLBufferData()
-            this.vertMatrix = new WebGLBufferData()
-            this.vert = new WebGLBufferData()
-            this.index = new WebGLBufferData()
-            this.uv = new WebGLBufferData()
-            this.normal = new WebGLBufferData();
+
+            this.light = new Light.Center();
+            this.primitive = new Primitive()
+
             this.reset();
         }
          
@@ -76,40 +198,15 @@ export namespace syRender {
         public _cameraPosition: Array<number>;//相机的位置
         private _pass:Pass;
         
-
-       
-
-        public _nodeColor: Array<number>;//节点自定义颜色buffer的显存地址
+        public _nodeColor: Array<number>;//节点自定义颜色
         public _nodeAlpha:number;        //节点自定义透明度
 
-        public _spotColor: Array<number>;//聚光的颜色
-        public _spotDirection: Array<number>;//聚光的方向
-        public _spotInnerLimit: number;//聚光的内部限制
-        public _spotOuterLimit: number;//聚光的外部限制
-
-        
+        public light:Light.Center;
 
         public _customMatrix: Float32Array;//自定义矩阵
 
-        public _fogColor: Array<number>;//雾的颜色
-        public _fogDensity: number;//雾的密度
+        public primitive:Primitive;
 
-        public nodeVertColor:WebGLBufferData;//节点自定义颜色
-        public vertMatrix:WebGLBufferData;//节点自定义矩阵
-        public vert:WebGLBufferData;//顶点buffer
-        public index:WebGLBufferData;//索引buffer
-        public uv:WebGLBufferData;//uv buffer
-        public normal:WebGLBufferData;//法线buffer
-
-        public _parallelColor: Array<number>;//平行光的颜色
-        public _parallelDirection: Array<number>;//平行光的方向
-        public _lightPosition: Array<number>;//光的位置
-        public _specularColor: Array<number>;//高光的颜色
-        public _pointColor: Array<number>;//点光的颜色
-        public _ambientColor: Array<number>;//环境光的颜色
-        public _specularShiness: number;//高光指数
-        public _nodeCustomMatrix: Float32Array;//节点自定义矩阵
-        public _glPrimitiveType: syGL.PrimitiveType;//绘制的类型
         public _modelMatrix: Float32Array;//模型矩阵
         public time: number;
         public useFlag: boolean = false;//使用状态
@@ -131,25 +228,11 @@ export namespace syRender {
             this._pass = null;
             this._cameraType = 0;//默认情况下是透视投影
             this._cameraPosition = [];
-            this._parallelColor = [];
-            this._parallelDirection = [];
-            this._lightPosition = [];
-            this._spotColor = [];
-            this._spotDirection = [];
-            this._spotInnerLimit = 0;
-            this._spotOuterLimit = 0;
-            this._specularColor = [];
-            this._ambientColor = [];
-            this._pointColor = [];
-            this._specularShiness = 0;
-            this._fogColor = [];
-            this._fogDensity = 0;
+            this.light.reset();
             this._texture2DGLIDArray = [];
             this._textureCubeGLIDArray = [];
-            this._nodeCustomMatrix = null;
             this._modelMatrix = null;
             this.time = 0;
-            this._glPrimitiveType = syGL.PrimitiveType.TRIANGLE_FAN;
             this.useFlag = false;
             glMatrix.mat4.identity(this._customMatrix);
                
@@ -194,13 +277,13 @@ export namespace syRender {
             useVariantType.forEach((value: ShaderUseVariantType) => {
                 switch (value) {
                     case ShaderUseVariantType.Vertex:
-                        _shader.setUseVertexAttribPointerForVertex(this.vert.glID, this.vert.itemSize);
+                        _shader.setUseVertexAttribPointerForVertex(this.primitive.vert.glID, this.primitive.vert.itemSize);
                         break;
                     case ShaderUseVariantType.Normal:
-                        _shader.setUseVertexAttriPointerForNormal(this.normal.glID, this.normal.itemSize);
+                        _shader.setUseVertexAttriPointerForNormal(this.primitive.normal.glID, this.primitive.normal.itemSize);
                         break;
                     case ShaderUseVariantType.UVs:
-                        _shader.setUseVertexAttribPointerForUV(this.uv.glID, this.uv.itemSize);
+                        _shader.setUseVertexAttribPointerForUV(this.primitive.uv.glID, this.primitive.uv.itemSize);
                         break;
                     case ShaderUseVariantType.TEX_COORD:
                         _shader.setUseTexture(this._texture2DGLIDArray[0], useTextureAddres);
@@ -296,27 +379,27 @@ export namespace syRender {
                         _shader.setUseCameraWorldPosition(this._cameraPosition);
                         break;
                     case ShaderUseVariantType.LightWorldPosition:
-                        _shader.setUseLightWorldPosition(this._lightPosition);
+                        _shader.setUseLightWorldPosition(this.light.position);
                         break;
                     case ShaderUseVariantType.SpecularLight:
-                        _shader.setUseSpecularLightColor(this._specularColor, this._specularShiness);
+                        _shader.setUseSpecularLightColor(this.light.specular.color, this.light.specular.shiness);
                         break;
                     case ShaderUseVariantType.AmbientLight:
-                        _shader.setUseAmbientLightColor(this._ambientColor);
+                        _shader.setUseAmbientLightColor(this.light.ambient.color);
                         break;
                     case ShaderUseVariantType.PointLight:
-                        _shader.setUsePointLightColor(this._pointColor);
+                        _shader.setUsePointLightColor(this.light.point.color);
                         break;
                     //平行光
                     case ShaderUseVariantType.ParallelLight:
-                        _shader.setUseParallelLight(this._parallelColor, this._parallelDirection);
+                        _shader.setUseParallelLight(this.light.parallel.color, this.light.parallel.direction);
                         break;
                     //聚光灯
                     case ShaderUseVariantType.SpotLight:
-                        _shader.setUseSpotLight(this._spotColor, this._spotDirection, this._spotInnerLimit, this._spotOuterLimit);
+                        _shader.setUseSpotLight(this.light.spot.color, this.light.spot.direction, this.light.spot.innerLimit, this.light.spot.outerLimit);
                         break;
                     case ShaderUseVariantType.Fog:
-                        _shader.setUseFog(this._fogColor, this._fogDensity);
+                        _shader.setUseFog(this.light.fog.color, this.light.fog.density);
                         break;
                     case ShaderUseVariantType.Color:
                         _shader.setUseNodeColor(this._nodeColor);
@@ -325,10 +408,10 @@ export namespace syRender {
                         _shader.setUseNodeAlpha(this._nodeAlpha);
                         break;
                     case ShaderUseVariantType.VertColor:
-                        _shader.setUseNodeVertColor(this.nodeVertColor.glID, this.nodeVertColor.itemSize);
+                        _shader.setUseNodeVertColor(this.primitive.nodeVertColor.glID, this.primitive.nodeVertColor.itemSize);
                         break;
                     case ShaderUseVariantType.VertMatrix:
-                        _shader.setUseVertMatrix(this.vertMatrix.glID, this.vertMatrix.itemSize);
+                        _shader.setUseVertMatrix(this.primitive.vertMatrix.glID, this.primitive.vertMatrix.itemSize);
                         break;
                     case ShaderUseVariantType.Time:
                         _shader.setUseTime(Device.Instance.triggerRenderTime);
@@ -369,7 +452,7 @@ export namespace syRender {
             this._attrbufferData = null;
             this._projKey = "";
             this._viewKey = "";
-            this._glPrimitiveType = syGL.PrimitiveType.TRIANGLES;
+            this.primitive.type = syGL.PrimitiveType.TRIANGLES;
             glMatrix.mat4.identity(this._tempMatrix1);
         }
          /**

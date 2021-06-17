@@ -568,21 +568,21 @@ export default class Device {
         glMatrix.mat4.identity(this._temp1Matrix);
 
          //补一下光的数据
-        rData._parallelColor = G_LightCenter.lightData.parallelColor; //光的颜色
-        rData._parallelDirection = G_LightCenter.lightData.parallelDirection;//光的方向
+        rData.light.parallel.color = G_LightCenter.lightData.parallelColor; //光的颜色
+        rData.light.parallel.direction = G_LightCenter.lightData.parallelDirection;//光的方向
         rData._cameraPosition = cameraData.position;
-        rData._ambientColor = G_LightCenter.lightData.ambientColor;//环境光
-        rData._pointColor = G_LightCenter.lightData.pointColor;//点光
-        rData._specularShiness = G_LightCenter.lightData.specularShininess;
-        rData._specularColor = G_LightCenter.lightData.specularColor;
-        rData._lightPosition = G_LightCenter.lightData.position;
-        rData._spotDirection = G_LightCenter.getPosLightDir();
-        rData._spotColor = G_LightCenter.lightData.spotColor;
-        rData._spotInnerLimit = G_LightCenter.lightData.spotInnerLimit;
-        rData._spotOuterLimit = G_LightCenter.lightData.spotOuterLimit;
+        rData.light.ambient.color = G_LightCenter.lightData.ambientColor;//环境光
+        rData.light.point.color = G_LightCenter.lightData.pointColor;//点光
+        rData.light.specular.shiness = G_LightCenter.lightData.specularShininess;
+        rData.light.specular.color = G_LightCenter.lightData.specularColor;
+        rData.light.position = G_LightCenter.lightData.position;
+        rData.light.spot.direction = G_LightCenter.getPosLightDir();
+        rData.light.spot.color = G_LightCenter.lightData.spotColor;
+        rData.light.spot.innerLimit = G_LightCenter.lightData.spotInnerLimit;
+        rData.light.spot.outerLimit = G_LightCenter.lightData.spotOuterLimit;
 
-        rData._fogColor = G_LightCenter.lightData.fogColor;
-        rData._fogDensity = G_LightCenter.lightData.fogDensity;
+        rData.light.fog.color = G_LightCenter.lightData.fogColor;
+        rData.light.fog.density = G_LightCenter.lightData.fogDensity;
 
         switch (rData.type) {
             case syRender.DataType.Base:
@@ -641,7 +641,7 @@ export default class Device {
         let viewData = {};
         viewData[sData._viewKey] = viewMatrix;
         G_ShaderFactory.setUniforms(sData._shaderData.uniSetters, viewData);
-        G_ShaderFactory.drawBufferInfo(sData._attrbufferData, sData._glPrimitiveType);
+        G_ShaderFactory.drawBufferInfo(sData._attrbufferData, sData.primitive.type);
     }
     private _drawNormal(sData: syRender.NormalData, cameraData: CameraData): void {
         this.gl.useProgram(sData._shaderData.spGlID);
@@ -650,7 +650,7 @@ export default class Device {
         for (let j in sData._uniformData) {
             G_ShaderFactory.setUniforms(sData._shaderData.uniSetters, sData._uniformData[j]);
         }
-        G_ShaderFactory.drawBufferInfo(sData._attrbufferData, sData._glPrimitiveType);
+        G_ShaderFactory.drawBufferInfo(sData._attrbufferData, sData.primitive.type);
     }
     private _renderTreeData: Array<syRender.BaseData> = [];//渲染树上的绘制数据
     public collectData(rData: syRender.BaseData): void {
