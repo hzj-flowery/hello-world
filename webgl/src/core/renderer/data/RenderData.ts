@@ -1,3 +1,4 @@
+import { isThisTypeNode } from "typescript";
 import Device from "../../Device";
 import { glMatrix } from "../../math/Matrix";
 import { Node } from "../base/Node";
@@ -47,6 +48,11 @@ export namespace syRender {
             this._customMatrix = glMatrix.mat4.identity(null);
             
             this.nodeVertColor = new WebGLBufferData()
+            this.vertMatrix = new WebGLBufferData()
+            this.vert = new WebGLBufferData()
+            this.index = new WebGLBufferData()
+            this.uv = new WebGLBufferData()
+            this.normal = new WebGLBufferData();
             this.reset();
         }
          
@@ -89,25 +95,11 @@ export namespace syRender {
         public _fogDensity: number;//雾的密度
 
         public nodeVertColor:WebGLBufferData;//节点自定义颜色
-
-
-        public vertMatrixGLID: WebGLBuffer;//节点自定义矩阵buffer的显存地址
-        public vertMatrixItemSize: number;//一个节点自定义矩阵的buffer单元的数据数目
-        public vertMatrixItemNums: number;//所有节点自定义矩阵buffer单元数目
-
-        public vertGLID: WebGLBuffer;//顶点buffer的显存地址
-        public vertItemSize: number;//一个顶点buffer单元的顶点数目
-        public vertItemNums: number;//所有顶点buffer单元数目
-
-        public indexGLID: WebGLBuffer;//索引buffer的显存地址
-        public indexItemSize: number;//一个索引buffer单元的顶点数目
-        public indexItemNums: number;//所有索引buffer单元的数目
-
-        public uvGLID: WebGLBuffer;//uv buffer的显存地址
-        public uvItemSize: number;//一个uv buffer单元的顶点数目
-
-        public normalGLID: WebGLBuffer;//法线buffer的显存地址
-        public normalItemSize: number;//一个法线buffer单元的顶点数目
+        public vertMatrix:WebGLBufferData;//节点自定义矩阵
+        public vert:WebGLBufferData;//顶点buffer
+        public index:WebGLBufferData;//索引buffer
+        public uv:WebGLBufferData;//uv buffer
+        public normal:WebGLBufferData;//法线buffer
 
         public _parallelColor: Array<number>;//平行光的颜色
         public _parallelDirection: Array<number>;//平行光的方向
@@ -139,14 +131,6 @@ export namespace syRender {
             this._pass = null;
             this._cameraType = 0;//默认情况下是透视投影
             this._cameraPosition = [];
-            this.vertGLID = null;
-            this.vertItemSize = -1;
-            this.indexGLID = null;
-            this.indexItemSize = -1;
-            this.uvGLID = null;
-            this.uvItemSize = -1;
-            this.normalGLID = null;
-            this.normalItemSize = -1;
             this._parallelColor = [];
             this._parallelDirection = [];
             this._lightPosition = [];
@@ -210,13 +194,13 @@ export namespace syRender {
             useVariantType.forEach((value: ShaderUseVariantType) => {
                 switch (value) {
                     case ShaderUseVariantType.Vertex:
-                        _shader.setUseVertexAttribPointerForVertex(this.vertGLID, this.vertItemSize);
+                        _shader.setUseVertexAttribPointerForVertex(this.vert.glID, this.vert.itemSize);
                         break;
                     case ShaderUseVariantType.Normal:
-                        _shader.setUseVertexAttriPointerForNormal(this.normalGLID, this.normalItemSize);
+                        _shader.setUseVertexAttriPointerForNormal(this.normal.glID, this.normal.itemSize);
                         break;
                     case ShaderUseVariantType.UVs:
-                        _shader.setUseVertexAttribPointerForUV(this.uvGLID, this.uvItemSize);
+                        _shader.setUseVertexAttribPointerForUV(this.uv.glID, this.uv.itemSize);
                         break;
                     case ShaderUseVariantType.TEX_COORD:
                         _shader.setUseTexture(this._texture2DGLIDArray[0], useTextureAddres);
@@ -344,7 +328,7 @@ export namespace syRender {
                         _shader.setUseNodeVertColor(this.nodeVertColor.glID, this.nodeVertColor.itemSize);
                         break;
                     case ShaderUseVariantType.VertMatrix:
-                        _shader.setUseVertMatrix(this.vertMatrixGLID, this.vertMatrixItemSize);
+                        _shader.setUseVertMatrix(this.vertMatrix.glID, this.vertMatrix.itemSize);
                         break;
                     case ShaderUseVariantType.Time:
                         _shader.setUseTime(Device.Instance.triggerRenderTime);
