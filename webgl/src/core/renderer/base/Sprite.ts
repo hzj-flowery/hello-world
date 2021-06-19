@@ -374,11 +374,11 @@ export namespace SY {
                 }
 
                 //节点的颜色
-                this._renderData[i]._nodeColor = this._color;
+                this._renderData[i].primitive.color = this._color;
                 //节点的透明度
-                this._renderData[i]._nodeAlpha = this._alpha;
-
-                this._renderData[i]._customMatrix = this._customMatrix;
+                this._renderData[i].primitive.alpha = this._alpha;
+                //自定义的矩阵
+                this._renderData[i].primitive.customMatrix = this._customMatrix;
 
 
                 //节点自定义矩阵组
@@ -387,7 +387,7 @@ export namespace SY {
                     this._renderData[i].primitive.vertMatrix.itemSize = this.getBuffer(SY.GLID_TYPE.VERT_MATRIX).itemSize;
                     this._renderData[i].primitive.vertMatrix.itemNums = this.getBuffer(SY.GLID_TYPE.VERT_MATRIX).itemNums;
                 }
-                this._renderData[i]._modelMatrix = this.modelMatrix;
+                this._renderData[i].primitive.modelMatrix = this.modelMatrix;
                 this._renderData[i].time = time;
                 if (this._texture && this._texture._glID) {
                     if (this._texture.isTexture2D)
@@ -428,7 +428,6 @@ export namespace SY {
         public _shaderData: ShaderData;
         private _renderData: syRender.NormalData;
         protected _cameraType: number = 0;//相机的类型(0表示透视1表示正交)
-        private _url: string;//资源路径
         //参考glprimitive_type
         protected _glPrimitiveType: syGL.PrimitiveType;//绘制的类型
         private init(): void {
@@ -441,7 +440,6 @@ export namespace SY {
         }
 
         public set Url(url) {
-            this._url = url;
             let datas = LoaderManager.instance.getRes(url);
             this.onLoadFinish(datas);
         }
@@ -656,8 +654,8 @@ export namespace SY {
             })
         }
         protected onCollectRenderData(renderData:syRender.BaseData):void{
-            renderData.drawInstancedNums = this._numInstances
-            renderData.drawInstancedVertNums = this._InstanceVertNums
+            renderData.primitive.instancedNums = this._numInstances
+            renderData.primitive.instancedVertNums = this._InstanceVertNums
         }
         public onDrawBefore(time: number) {
             this._divisorLocData.forEach((value, key) => {

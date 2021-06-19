@@ -92,12 +92,12 @@ class DrawEngine {
             !indexglID == true ? this.drawArraysInstanced(
                 rd.primitive.type,
                 0,             // offset
-                rd.drawInstancedVertNums,   // num vertices per instance
-                rd.drawInstancedNums,  // num instances
+                rd.primitive.instancedVertNums,   // num vertices per instance
+                rd.primitive.instancedNums,  // num instances
             ) : (
                     //绑定索引缓冲
                     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexglID),
-                    this.drawElementsInstanced(rd.primitive.type, rd.primitive.index.itemNums, gl.UNSIGNED_SHORT, 0, rd.drawInstancedNums)
+                    this.drawElementsInstanced(rd.primitive.type, rd.primitive.index.itemNums, gl.UNSIGNED_SHORT, 0, rd.primitive.instancedNums)
                 )
         }
         //解除缓冲区对于目标纹理的绑定

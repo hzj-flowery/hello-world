@@ -39,15 +39,28 @@ export namespace syRender {
             this.uv = new WebGLBufferData()
             this.normal = new WebGLBufferData();
             this.type = syGL.PrimitiveType.TRIANGLE_FAN;
+            this.customMatrix = glMatrix.mat4.identity(null);
         }
-        public nodeVertColor:WebGLBufferData;//节点自定义颜色
+        public nodeVertColor:WebGLBufferData;//节点自定义顶点颜色
         public vertMatrix:WebGLBufferData;//节点自定义矩阵
         public vert:WebGLBufferData;//顶点buffer
         public index:WebGLBufferData;//索引buffer
         public uv:WebGLBufferData;//uv buffer
         public normal:WebGLBufferData;//法线buffer
 
+        public color: Array<number>;//节点自定义颜色
+        public alpha:number;        //节点自定义透明度
+        public customMatrix: Float32Array;//自定义矩阵
+        public modelMatrix: Float32Array;//模型矩阵
         public type:syGL.PrimitiveType; //绘制类型
+
+        public instancedNums: number = 0;//实例的数目
+        public instancedVertNums: number = 0;//每个实例的顶点数目
+
+        public reset(){
+            glMatrix.mat4.identity(this.customMatrix);
+            this.modelMatrix = null;
+        }
     }
     
     //光的数据
@@ -170,7 +183,6 @@ export namespace syRender {
             this._temp002_matrix = glMatrix.mat4.identity(null);
             this._temp003_matrix = glMatrix.mat4.identity(null);
             this._temp004_matrix = glMatrix.mat4.identity(null);
-            this._customMatrix = glMatrix.mat4.identity(null);
 
             this.light = new Light.Center();
             this.primitive = new Primitive()
@@ -191,23 +203,15 @@ export namespace syRender {
        
 
         public node: Node;//渲染的节点
-        public drawInstancedNums: number = 0;//实例的数目
-        public drawInstancedVertNums: number = 0;//每个实例的顶点数目
+        
       
         public _cameraType: number;//相机的类型
         public _cameraPosition: Array<number>;//相机的位置
         private _pass:Pass;
-        
-        public _nodeColor: Array<number>;//节点自定义颜色
-        public _nodeAlpha:number;        //节点自定义透明度
-
         public light:Light.Center;
-
-        public _customMatrix: Float32Array;//自定义矩阵
-
         public primitive:Primitive;
 
-        public _modelMatrix: Float32Array;//模型矩阵
+       
         public time: number;
         public useFlag: boolean = false;//使用状态
 
@@ -229,13 +233,11 @@ export namespace syRender {
             this._cameraType = 0;//默认情况下是透视投影
             this._cameraPosition = [];
             this.light.reset();
+            this.primitive.reset();
             this._texture2DGLIDArray = [];
             this._textureCubeGLIDArray = [];
-            this._modelMatrix = null;
             this.time = 0;
-            this.useFlag = false;
-            glMatrix.mat4.identity(this._customMatrix);
-               
+            this.useFlag = false;   
         }
 
         public set pass(pass:Pass){
@@ -343,25 +345,25 @@ export namespace syRender {
                         _shader.setUseProjectionMatrix(proj);
                         break;
                     case ShaderUseVariantType.Model:
-                        _shader.setUseModelWorldMatrix(this._modelMatrix);
+                        _shader.setUseModelWorldMatrix(this.primitive.modelMatrix);
                         break;
                     case ShaderUseVariantType.View:
                         _shader.setUseViewMatrix(view);
                         break;
                     case ShaderUseVariantType.CustomMatrix:
-                        _shader.setUseMatrix(this._customMatrix);
+                        _shader.setUseMatrix(this.primitive.customMatrix);
                         break;
                     case ShaderUseVariantType.ViewModel:
-                        glMatrix.mat4.mul(this._temp_model_view_matrix, view, this._modelMatrix);
+                        glMatrix.mat4.mul(this._temp_model_view_matrix, view, this.primitive.modelMatrix);
                         _shader.setUseModelViewMatrix(this._temp_model_view_matrix);
                         break;
                     case ShaderUseVariantType.ModelInverseTransform:
-                        glMatrix.mat4.invert(this._temp_model_inverse_matrix, this._modelMatrix);
+                        glMatrix.mat4.invert(this._temp_model_inverse_matrix, this.primitive.modelMatrix);
                         glMatrix.mat4.transpose(this._temp_model_inverse_transform_matrix, this._temp_model_inverse_matrix);
                         _shader.setUseModelInverseTransformWorldMatrix(this._temp_model_inverse_transform_matrix);
                         break;
                     case ShaderUseVariantType.ProjectionViewModelInverse:
-                        glMatrix.mat4.multiply(this._temp001_matrix, view, this._modelMatrix);
+                        glMatrix.mat4.multiply(this._temp001_matrix, view, this.primitive.modelMatrix);
                         glMatrix.mat4.multiply(this._temp002_matrix, proj, this._temp001_matrix);
                         glMatrix.mat4.invert(this._temp003_matrix, this._temp002_matrix);
                         _shader.setUseProjectViewModelInverseMatrix(this._temp003_matrix);
@@ -402,10 +404,10 @@ export namespace syRender {
                         _shader.setUseFog(this.light.fog.color, this.light.fog.density);
                         break;
                     case ShaderUseVariantType.Color:
-                        _shader.setUseNodeColor(this._nodeColor);
+                        _shader.setUseNodeColor(this.primitive.color);
                         break;
                     case ShaderUseVariantType.Alpha:
-                        _shader.setUseNodeAlpha(this._nodeAlpha);
+                        _shader.setUseNodeAlpha(this.primitive.alpha);
                         break;
                     case ShaderUseVariantType.VertColor:
                         _shader.setUseNodeVertColor(this.primitive.nodeVertColor.glID, this.primitive.nodeVertColor.itemSize);

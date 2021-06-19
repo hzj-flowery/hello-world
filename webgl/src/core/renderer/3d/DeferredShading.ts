@@ -1,4 +1,6 @@
 import { SY } from "../base/Sprite";
+import { RenderTexture } from "../base/texture/RenderTexture";
+import GameMainCamera from "../camera/GameMainCamera";
 import { CubeData } from "../data/CubeData";
 
 /**

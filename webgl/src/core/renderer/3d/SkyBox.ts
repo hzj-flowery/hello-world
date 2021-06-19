@@ -3,6 +3,11 @@ import { SY } from "../base/Sprite";
 import { CubeData } from "../data/CubeData";
 import { glEnums } from "../gfx/GLapi";
 
+
+/**
+ * 图片尺寸大小一样否则会有显示不出来的问题
+ */
+
 export default class SkyBox extends SY.SpriteBase {
      constructor() {
           super();
@@ -21,6 +26,14 @@ export default class SkyBox extends SY.SpriteBase {
           'res/skybox/2/back-z.png',
           'res/skybox/2/front+z.png'
      ]
+     // private defaultPath = [
+     //      'res/skybox/3/1.jpg',
+     //      'res/skybox/3/2.jpg',
+     //      'res/skybox/3/3.jpg',
+     //      'res/skybox/3/4.jpg',
+     //      'res/skybox/3/5.jpg',
+     //      'res/skybox/3/6.jpg'
+     // ]
      public setDefaultUrl(): void {
           this.spriteFrame = this.defaultPath;
      }
