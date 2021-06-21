@@ -10,4 +10,7 @@ export default class Scene extends Node{
         super();
         this.name = "scene";
     }
+    public getSceneName():string{
+        return this.name
+    }
 }
