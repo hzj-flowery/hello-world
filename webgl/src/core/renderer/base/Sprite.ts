@@ -396,9 +396,6 @@ export namespace SY {
                         this._renderData[i].pushCubeTexture(this.getGLID(SY.GLID_TYPE.TEXTURE_CUBE));
                 }
                 this._renderData[i].primitive.type = this._glPrimitiveType;
-                if (this._pass.length == 2) {
-                    console.log();
-                }
                 this.onCollectRenderData(this._renderData[i])
                 Device.Instance.collectData(this._renderData[i]);
             }
