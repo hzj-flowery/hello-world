@@ -63,6 +63,7 @@ export class Shader {
 
     private u_time_loc;//时间
     private u_color_loc;//节点颜色（该变量针对节点下的所有顶点）
+    private u_alpha_loc;//节点透明度
     private u_light_color_loc;//光照属性位置
     private u_light_color_dir_loc;//光照方向属性位置
     private u_pointColor_loc;//点光的颜色
@@ -109,10 +110,10 @@ export class Shader {
     private u_camera_world_position_loc;//相机的世界位置
 
     protected _gl: WebGLRenderingContext;
-    protected _spGLID:WebGLProgram;
+    protected _spGLID: WebGLProgram;
     public readonly name: string;
     private _useVariantType: Array<ShaderUseVariantType> = [];
-    constructor(gl:WebGLRenderingContext, glID:WebGLProgram, name:string) {
+    constructor(gl: WebGLRenderingContext, glID: WebGLProgram, name: string) {
         this._gl = gl;
         this._spGLID = glID;
         this.name = name;
@@ -132,9 +133,10 @@ export class Shader {
         this.a_tangent_loc = gl.getAttribLocation(_glID, syGL.AttributeUniform.TANGENT);
         this.a_vert_color_loc = gl.getAttribLocation(_glID, syGL.AttributeUniform.VERT_COLOR);
         this.a_vert_matrix_loc = gl.getAttribLocation(_glID, syGL.AttributeUniform.VERT_Matrix);
-        
-        this.u_time_loc = gl.getUniformLocation(_glID,syGL.AttributeUniform.TIME);
+
+        this.u_time_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.TIME);
         this.u_color_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.COLOR);
+        this.u_alpha_loc = gl.getUniformLocation(_glID,syGL.AttributeUniform.ALPHA)
         this.u_ambientColor_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.LIGHT_AMBIENT_COLOR);
         this.u_pointColor_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.LIGHT_POINT_COLOR);
         this.u_light_color_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.LIGHT_COLOR);
@@ -192,56 +194,56 @@ export class Shader {
         this.a_tangent_loc >= 0 ? this.pushShaderVariant(ShaderUseVariantType.Tangent) : null;
         this.a_vert_color_loc >= 0 ? this.pushShaderVariant(ShaderUseVariantType.VertColor) : null;
         this.a_vert_matrix_loc >= 0 ? this.pushShaderVariant(ShaderUseVariantType.VertMatrix) : null;
-        
-        this.u_time_loc !=null?this.pushShaderVariant(ShaderUseVariantType.Time):null;
-        this.u_color_loc !=null ? this.pushShaderVariant(ShaderUseVariantType.Color) : null;
-        this.u_ambientColor_loc !=null ? this.pushShaderVariant(ShaderUseVariantType.AmbientLight) : null;
-        this.u_pointColor_loc !=null ? this.pushShaderVariant(ShaderUseVariantType.PointLight) : null;
-        this.u_light_color_loc !=null ? this.pushShaderVariant(ShaderUseVariantType.ParallelLight) : null;
+
+        this.u_time_loc != null ? this.pushShaderVariant(ShaderUseVariantType.Time) : null;
+        this.u_color_loc != null ? this.pushShaderVariant(ShaderUseVariantType.Color) : null;
+        this.u_alpha_loc != null ? this.pushShaderVariant(ShaderUseVariantType.Alpha) : null;
+        this.u_ambientColor_loc != null ? this.pushShaderVariant(ShaderUseVariantType.AmbientLight) : null;
+        this.u_pointColor_loc != null ? this.pushShaderVariant(ShaderUseVariantType.PointLight) : null;
+        this.u_light_color_loc != null ? this.pushShaderVariant(ShaderUseVariantType.ParallelLight) : null;
         // this.u_light_color_dir_loc !=null ? this.pushShaderVariant(ShaderUseVariantType.ParallelLight) : null;
-        this.u_light_specular_color_loc !=null ? this.pushShaderVariant(ShaderUseVariantType.SpecularLight) : null;
+        this.u_light_specular_color_loc != null ? this.pushShaderVariant(ShaderUseVariantType.SpecularLight) : null;
         // this.u_light_specular_shininess_loc !=null ? this.pushShaderVariant(ShaderUseVariantType.SpecularLight) : null;
-        this.u_light_spotColor_loc !=null ? this.pushShaderVariant(ShaderUseVariantType.SpotLight) : null;
+        this.u_light_spotColor_loc != null ? this.pushShaderVariant(ShaderUseVariantType.SpotLight) : null;
         // this.u_light_spotDirection_loc !=null ? this.pushShaderVariant(ShaderUseVariantType.SpotLight) : null;
         // this.u_light_spotInnerLimit_loc !=null ? this.pushShaderVariant(ShaderUseVariantType.SpotLight) : null;
         // this.u_light_spotOuterLimit_loc !=null ? this.pushShaderVariant(ShaderUseVariantType.SpotLight) : null;
 
-        this.u_shadowMap_loc !=null? this.pushShaderVariant(ShaderUseVariantType.Shadow) : null;
+        this.u_shadowMap_loc != null ? this.pushShaderVariant(ShaderUseVariantType.Shadow) : null;
 
-        this.u_VMMatrix_loc !=null ? this.pushShaderVariant(ShaderUseVariantType.ViewModel) : null;
-        this.u_PMatrix_loc !=null ? this.pushShaderVariant(ShaderUseVariantType.Projection) : null;
-        this.u_Matrix_loc !=null ? this.pushShaderVariant(ShaderUseVariantType.CustomMatrix) : null;
+        this.u_VMMatrix_loc != null ? this.pushShaderVariant(ShaderUseVariantType.ViewModel) : null;
+        this.u_PMatrix_loc != null ? this.pushShaderVariant(ShaderUseVariantType.Projection) : null;
+        this.u_Matrix_loc != null ? this.pushShaderVariant(ShaderUseVariantType.CustomMatrix) : null;
 
-        this.u_fogColor_loc !=null ? this.pushShaderVariant(ShaderUseVariantType.Fog) : null;
-        this.u_fogDensity_loc !=null ? this.pushShaderVariant(ShaderUseVariantType.Fog) : null;
+        this.u_fogColor_loc != null ? this.pushShaderVariant(ShaderUseVariantType.Fog) : null;
+        this.u_fogDensity_loc != null ? this.pushShaderVariant(ShaderUseVariantType.Fog) : null;
 
-        this.u_texCoord_loc !=null ? this.pushShaderVariant(ShaderUseVariantType.TEX_COORD) : null;
-        this.u_texCoord1_loc !=null ? this.pushShaderVariant(ShaderUseVariantType.TEX_COORD1) : null;
-        this.u_texCoord2_loc !=null ? this.pushShaderVariant(ShaderUseVariantType.TEX_COORD2) : null;
-        this.u_texCoord3_loc !=null ? this.pushShaderVariant(ShaderUseVariantType.TEX_COORD3) : null;
-        this.u_texCoord4_loc !=null ? this.pushShaderVariant(ShaderUseVariantType.TEX_COORD4) : null;
-        this.u_texCoord5_loc !=null ? this.pushShaderVariant(ShaderUseVariantType.TEX_COORD5) : null;
-        this.u_texCoord6_loc !=null ? this.pushShaderVariant(ShaderUseVariantType.TEX_COORD6) : null;
-        this.u_texCoord7_loc !=null ? this.pushShaderVariant(ShaderUseVariantType.TEX_COORD7) : null;
-        this.u_texCoord8_loc !=null ? this.pushShaderVariant(ShaderUseVariantType.TEX_COORD8) : null;
-        this.u_cubeCoord_loc !=null ? this.pushShaderVariant(ShaderUseVariantType.CUBE_COORD) : null;
-        if(this.u_skybox_loc)
-        {
-            setTimeout(()=>{
+        this.u_texCoord_loc != null ? this.pushShaderVariant(ShaderUseVariantType.TEX_COORD) : null;
+        this.u_texCoord1_loc != null ? this.pushShaderVariant(ShaderUseVariantType.TEX_COORD1) : null;
+        this.u_texCoord2_loc != null ? this.pushShaderVariant(ShaderUseVariantType.TEX_COORD2) : null;
+        this.u_texCoord3_loc != null ? this.pushShaderVariant(ShaderUseVariantType.TEX_COORD3) : null;
+        this.u_texCoord4_loc != null ? this.pushShaderVariant(ShaderUseVariantType.TEX_COORD4) : null;
+        this.u_texCoord5_loc != null ? this.pushShaderVariant(ShaderUseVariantType.TEX_COORD5) : null;
+        this.u_texCoord6_loc != null ? this.pushShaderVariant(ShaderUseVariantType.TEX_COORD6) : null;
+        this.u_texCoord7_loc != null ? this.pushShaderVariant(ShaderUseVariantType.TEX_COORD7) : null;
+        this.u_texCoord8_loc != null ? this.pushShaderVariant(ShaderUseVariantType.TEX_COORD8) : null;
+        this.u_cubeCoord_loc != null ? this.pushShaderVariant(ShaderUseVariantType.CUBE_COORD) : null;
+        if (this.u_skybox_loc) {
+            setTimeout(() => {
                 this.pushShaderVariant(ShaderUseVariantType.SKYBOX)
-            },1000);
+            }, 1000);
         }
-        this.u_PVMMatrix_loc !=null ? this.pushShaderVariant(ShaderUseVariantType.ProjectionViewModel) : null;
-        this.u_PVMMatrix_inverse_loc !=null ? this.pushShaderVariant(ShaderUseVariantType.ProjectionViewModelInverse) : null;
-        this.u_MMatrix_loc !=null ? this.pushShaderVariant(ShaderUseVariantType.Model) : null;
-        this.u_VMatrix_loc !=null ? this.pushShaderVariant(ShaderUseVariantType.View) : null;
-        this.u_MIMatrix_loc !=null ? this.pushShaderVariant(ShaderUseVariantType.ModelInverse) : null;
-        this.u_MTMatrix_loc !=null ? this.pushShaderVariant(ShaderUseVariantType.ModelTransform) : null;
-        this.u_MITMatrix_loc !=null ? this.pushShaderVariant(ShaderUseVariantType.ModelInverseTransform) : null;
-        this.u_PVMatrix_loc !=null ? this.pushShaderVariant(ShaderUseVariantType.ProjectionView) : null;
-        this.u_PVMatrix_inverse_loc !=null ? this.pushShaderVariant(ShaderUseVariantType.ProjectionViewInverse) : null;
-        this.u_camera_world_position_loc !=null ? this.pushShaderVariant(ShaderUseVariantType.CameraWorldPosition) : null;
-        this.u_light_world_position_loc !=null ? this.pushShaderVariant(ShaderUseVariantType.LightWorldPosition) : null;
+        this.u_PVMMatrix_loc != null ? this.pushShaderVariant(ShaderUseVariantType.ProjectionViewModel) : null;
+        this.u_PVMMatrix_inverse_loc != null ? this.pushShaderVariant(ShaderUseVariantType.ProjectionViewModelInverse) : null;
+        this.u_MMatrix_loc != null ? this.pushShaderVariant(ShaderUseVariantType.Model) : null;
+        this.u_VMatrix_loc != null ? this.pushShaderVariant(ShaderUseVariantType.View) : null;
+        this.u_MIMatrix_loc != null ? this.pushShaderVariant(ShaderUseVariantType.ModelInverse) : null;
+        this.u_MTMatrix_loc != null ? this.pushShaderVariant(ShaderUseVariantType.ModelTransform) : null;
+        this.u_MITMatrix_loc != null ? this.pushShaderVariant(ShaderUseVariantType.ModelInverseTransform) : null;
+        this.u_PVMatrix_loc != null ? this.pushShaderVariant(ShaderUseVariantType.ProjectionView) : null;
+        this.u_PVMatrix_inverse_loc != null ? this.pushShaderVariant(ShaderUseVariantType.ProjectionViewInverse) : null;
+        this.u_camera_world_position_loc != null ? this.pushShaderVariant(ShaderUseVariantType.CameraWorldPosition) : null;
+        this.u_light_world_position_loc != null ? this.pushShaderVariant(ShaderUseVariantType.LightWorldPosition) : null;
     }
     private pushShaderVariant(type: ShaderUseVariantType): void {
         if (type >= ShaderUseVariantType.UndefinedMax || type <= ShaderUseVariantType.UndefinedMin) {
@@ -261,7 +263,7 @@ export class Shader {
         return G_DrawEngine.getAttribLocation(this._spGLID, varName)
     }
 
-    public getGLID():WebGLProgram {
+    public getGLID(): WebGLProgram {
         return this._spGLID;
     }
     /**
@@ -298,7 +300,7 @@ export class Shader {
      * 设置使用时间
      * @param time 
      */
-    public setUseTime(time:number):void{
+    public setUseTime(time: number): void {
         if (this.checklocValid(this.u_time_loc, "u_time_loc")) {
             G_DrawEngine.setUniform1f(this.u_time_loc, time)
         }
@@ -355,6 +357,15 @@ export class Shader {
     public setUseNodeColor(color: Array<number>): void {
         if (this.checklocValid(this.u_color_loc, "u_node_color_loc")) {
             G_DrawEngine.setUniformFloatVec4(this.u_color_loc, color);
+        }
+    }
+    /**
+     * 设置使用节点的透明度
+     * @param alpha 
+     */
+    public setUseNodeAlpha(alpha:number):void{
+        if (this.checklocValid(this.u_alpha_loc, "u_alpha_loc")) {
+            G_DrawEngine.setUniform1f(this.u_alpha_loc, alpha);
         }
     }
     /**
@@ -416,19 +427,23 @@ export class Shader {
     }
     //设置使用的纹理
     //注意如果此处不重新设置使用的纹理，那么会默认使用上一次绘制时的纹理
-    public setUseTexture(glID: WebGLTexture, pos = 0): void {
-        let loc: string = (pos == 0) ? "u_texCoord_loc" : "u_texture" + pos + "_loc"
-        if (this.checklocValid(this[loc], loc)) {
-            G_DrawEngine.activeTexture(this._gl.TEXTURE_2D,glID, this[loc], pos)
+    public setUseTexture(glID: WebGLTexture, pos = 0, is2D: boolean = true): void {
+        if (is2D) {
+            let loc: string = (pos == 0) ? "u_texCoord_loc" : "u_texture" + pos + "_loc"
+            if (this.checklocValid(this[loc], loc)) {
+                G_DrawEngine.activeTexture(this._gl.TEXTURE_2D, glID, this[loc], pos)
+            }
+        }
+        else {
+            if (this.checklocValid(this.u_cubeCoord_loc, "u_cubeCoord_loc")) {
+                G_DrawEngine.activeTexture(this._gl.TEXTURE_CUBE_MAP, glID, this.u_cubeCoord_loc, pos)
+            }
         }
     }
-    public setUseSkyBox(glID: WebGLTexture,pos = 0): void {
+    public setUseSkyBox(glID: WebGLTexture, pos = 0): void {
         if (this.checklocValid(this.u_skybox_loc, "u_skybox_loc")) {
             var gl = this._gl;
-            gl.enable(gl.CULL_FACE);
-            gl.enable(gl.DEPTH_TEST);
-            gl.depthFunc(gl.LEQUAL);
-            G_DrawEngine.activeTexture(gl.TEXTURE_CUBE_MAP,glID, this.u_skybox_loc, pos)
+            G_DrawEngine.activeTexture(gl.TEXTURE_CUBE_MAP, glID, this.u_skybox_loc, pos)
         }
     }
     /**
@@ -440,18 +455,12 @@ export class Shader {
      * mapInfor[2]:shadowBias
      * MapInfor[3]:shadowSize
      */
-    public setUseShadow(shaderMap:WebGLTexture,mapInfor:Array<number>,pos = 0):void{
+    public setUseShadow(shaderMap: WebGLTexture, mapInfor: Array<number>, pos = 0): void {
         if (this.checklocValid(this.u_shadowMap_loc, "u_shadowMap_loc")) {
-            G_DrawEngine.activeTexture(this._gl.TEXTURE_2D,shaderMap, this.u_shadowMap_loc, pos)
+            G_DrawEngine.activeTexture(this._gl.TEXTURE_2D, shaderMap, this.u_shadowMap_loc, pos)
         }
-        if(this.checklocValid(this.u_shadowInfor_loc,"u_shadowInfor_loc"))
-        {
-            G_DrawEngine.setUniformFloatVec4(this.u_shadowInfor_loc,mapInfor)
-        }
-    }
-    public setUseCubeTexture(glID: WebGLTexture,pos:number = 0): void {
-        if (this.checklocValid(this.u_cubeCoord_loc, "u_cubeCoord_loc")) {
-            G_DrawEngine.activeTexture(this._gl.TEXTURE_CUBE_MAP,glID,this.u_cubeCoord_loc, pos)
+        if (this.checklocValid(this.u_shadowInfor_loc, "u_shadowInfor_loc")) {
+            G_DrawEngine.setUniformFloatVec4(this.u_shadowInfor_loc, mapInfor)
         }
     }
     //设置使用投影视口模型矩阵

@@ -40,4 +40,7 @@ RGBA4	        RGBA	        UNSIGNED_BYTE UNSIGNED_SHORT_4_4_4_4
 RGBA16F	        RGBA	        HALF_FLOAT  FLOAT
 RGBA32F	        RGBA	        FLOAT
 RGBA8UI	        RGBA_INTEGER	UNSIGNED_BYTE
+
+#version 300 es:定义glsl的版本
+
 `

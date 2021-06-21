@@ -23,7 +23,6 @@ export default class RenderFlow {
         G_Stage.addChild(GameMainCamera.instance.get3DCamera());
         G_Stage.addChild(this._3dScene);
         G_Stage.addChild(this._2dScene);
-        Device.Instance.setViewPort(GameMainCamera.instance.get2DCamera().rect);
         this.loopScale();
     }
 

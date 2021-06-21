@@ -17,6 +17,7 @@
   "dependencies": {
     "@types/jquery": "^3.5.1",
     "browserify": "^16.5.2",
+    "cnpm": "^6.1.1",
     "glsl-token-descope": "^1.0.2",
     "glsl-token-string": "^1.0.1",
     "gulp": "^4.0.2",
@@ -27,6 +28,7 @@
     "yargs": "^15.4.1"
   },
   "devDependencies": {
+    "@types/jquery": "^3.5.5",
     "tern": "^0.24.3"
   }
 }

@@ -62,7 +62,6 @@ import { G_UISetting } from "./core/ui/UiSetting";
     "res/tree.png",
     "res/ground.jpg",
     "res/wicker.jpg",
-    "res/txt/libai.txt",
  ]
 
 // ThreeDTexture.run();

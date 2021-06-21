@@ -79,8 +79,4 @@ export default class Sphere extends SY.SpriteBase {
         this._glPrimitiveType = this.gl.LINE_STRIP;
     }
 
-    public visit(time) {
-        super.visit(time);
-    }
-
 }

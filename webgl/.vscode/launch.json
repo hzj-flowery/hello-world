@@ -9,7 +9,7 @@
             "type": "chrome",
             "request": "launch",
             "sourceMaps": true,
-            "runtimeArgs": ["--disable-web-security"],
+            "runtimeArgs": ["--disable-web-security","--enable-d3d11 flag"],
             "cwd": "${workspaceRoot}",
             //选择要启动的文件
             "url": "${workspaceFolder}/bin/index.html",

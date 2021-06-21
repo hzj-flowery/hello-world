@@ -6,7 +6,7 @@ import {G_CameraModel } from "./renderer/camera/CameraModel";
 import GameMainCamera from "./renderer/camera/GameMainCamera";
 import FrameBuffer from "./renderer/gfx/FrameBuffer";
 import { CameraData } from "./renderer/data/CameraData";
-import { NormalRenderData, RenderData, RenderDataPool, RenderDataType, SpineRenderData } from "./renderer/data/RenderData";
+import {syRender} from "./renderer/data/RenderData";
 import State from "./renderer/gfx/State";
 import { G_ShaderFactory } from "./renderer/shader/ShaderFactory";
 import { glEnums } from "./renderer/gfx/GLapi";
@@ -110,14 +110,17 @@ function _commitDepthState(gl:WebGLRenderingContext,cur:State,next:State):void{
      */
     if(cur.depthTest!=next.depthTest)
     {
+        //是否开启深度测试
         next.depthTest?gl.enable(gl.DEPTH_TEST):gl.disable(gl.DEPTH_TEST);
     }
     if(cur.depthWrite!=next.depthWrite)
     {
+        //深度值是否写入深度附件中
         next.depthWrite?gl.depthMask(true):gl.depthMask(false);
     }
     if(cur.depthFunc!=next.depthFunc)
     {
+        //比较函数
         gl.depthFunc(next.depthFunc);
     }
 }
@@ -151,13 +154,24 @@ function _commitCullState(gl: WebGLRenderingContext, cur: State, next: State): v
  */
 function _commitScissorState(gl:WebGLRenderingContext,cur:State,next:State):void{
    
-    // gl.enable(gl.SCISSOR_TEST);
-    // gl.scissor(0,0,50,50);
-    // gl.clearColor(1.0, 0.0, 0.0,1.0);
-    // gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-    // gl.disable(gl.SCISSOR_TEST);
+    gl.enable(gl.SCISSOR_TEST);
+    gl.scissor(0,0,200,50);
+    gl.clearColor(1.0, 0.0, 0.0,1.0);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    gl.disable(gl.SCISSOR_TEST);
 }
 /**
+ * 
+ * public blend;
+    public blendSep;
+    public blendColor;
+    public blendEq;
+    public blendAlphaEq;
+    public blendSrc;
+    public blendDst;
+    public blendSrcAlpha;
+    public blendDstAlpha;
+
  * 混合状态
  * 最常实现的功能就是半透明叠加
  * 有一个问题 必须是透明的颜色才具备混合，也就是alpha的值必须小于1，否则就是覆盖了
@@ -203,7 +217,9 @@ gl.FUNC_REVERSE_SUBSTRACT：反向相减处理，即 dest 减去 source
 gl.blendEquationSeparate(GLenum modeRGB, GLenum modeAlpha)
  */
 function _commitBlendState(gl:WebGLRenderingContext,cur:State,next:State):void{
-  
+    // gl.enable(gl.BLEND)
+    // gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
+    // gl.blendFunc(gl.ZERO, gl.ONE_MINUS_SRC_ALPHA)
 }
 
 export default class Device {
@@ -232,8 +248,8 @@ export default class Device {
         var gl = this.createGLContext(canvas);
         this.gl = gl;
         this.canvas = canvas;
-        this._nextFrameS = new State(gl);
-        this._curFrameS = new State(gl);
+        this._nextFrameS = new State();
+        this._curFrameS = new State();
       
         // 
 
@@ -449,19 +465,19 @@ export default class Device {
      */
     private drawToUI(): void {
         let frameBuffer: WebGLFramebuffer = GameMainCamera.instance.get2DCamera().getFramebuffer();
-        this._commitRenderState(frameBuffer);
+        this.readyForOneFrame(frameBuffer,{ x: 0, y: 0, w: 1, h: 1 });
         this.triggerRender(false,false);
     }
     //将结果绘制到窗口
     private draw2screen(): void {
         if (this._isDebugMode) {
-            this._commitRenderState(null, { x: 0, y: 0, w: 0.5, h: 1 });
+            this.readyForOneFrame(null,{ x: 0, y: 0, w: 0.5, h: 1 });
             this.triggerRender(false,true);
-            this.setViewPort({ x: 0.5, y: 0, w: 0.5, h: 1 });
+            this.readyForOneFrame(null,{ x: 0.5, y: 0, w: 0.5, h: 1 },false);
             this.triggerRender(true,true);
         }
         else {
-            this._commitRenderState(null);
+            this.readyForOneFrame(null,{ x: 0, y: 0, w: 1, h: 1 });
             this.triggerRender(false,true);
         }
         if (this._isCapture) {
@@ -472,43 +488,34 @@ export default class Device {
     //渲染前
     private onBeforeRender() {
         this.stats.begin();
-        this._renderData = [];
+        this._renderTreeData = [];
     }
    
-    //提交渲染状态
-    private _commitRenderState(frameBuffer: WebGLFramebuffer, viewPort: any = { x: 0, y: 0, w: 1, h: 1 }): void {
+    /**
+     * 提交渲染状态
+     */
+    private _commitRenderState(state:State): void {
         let gl = this.gl;
 
-        this._nextFrameS.depthTest = true; //开启深度测试
-        this._nextFrameS.depthFunc = gl.LESS;
-        this._nextFrameS.depthWrite = true;//可以写入
+        this._nextFrameS.depthTest = state.depthTest; //开启深度测试
+        this._nextFrameS.depthFunc = state.depthFunc;//距离视野近的则留下
+        this._nextFrameS.depthWrite = state.depthWrite;//可以写入
 
         this._nextFrameS.cullMode = glEnums.CULL_BACK;
 
         this._nextFrameS.ScissorTest = true;//裁切测试
-        //设置viewport
-        let x = viewPort.x * this.width;
-        let y = viewPort.y * this.height;
-        let width = viewPort.w * this.width;
-        let height = viewPort.h * this.height;
-        this._nextFrameS.setViewPort(x,y,width,height);
 
         _commitDepthState(gl,this._curFrameS,this._nextFrameS);
         _commitCullState(gl,this._curFrameS,this._nextFrameS);
         _commitScissorState(gl,this._curFrameS,this._nextFrameS);
-        
-        gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuffer);
-        this.setViewPort(viewPort);
-        gl.clearColor(0.5, 0.5, 0.5, 1.0);
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-        
+        _commitBlendState(gl,this._curFrameS,this._nextFrameS);
         //更新状态
         this._curFrameS.set(this._nextFrameS);
     }
     //渲染后
     private onAfterRender() {
         this.stats.end();
-        RenderDataPool.return(this._renderData);
+        syRender.DataPool.return(this._renderTreeData);
     }
     
     /**
@@ -524,19 +531,20 @@ export default class Device {
         this._triggerRenderTime++;
 
         if (isScene) {
-            var cameraData = GameMainCamera.instance.getCamera(this._renderData[0]._cameraType).getCameraData();
+            var cameraData = GameMainCamera.instance.getCamera(this._renderTreeData[0]._cameraType).getCameraData();
             G_CameraModel.draw(cameraData.projectMat, cameraData.modelMat);
         }
         //提交数据给GPU 立即绘制
-        for (var j = 0; j < this._renderData.length; j++) {
-            if(this._renderData[j]._isOffline&&!isRenderToScreen)
+        for (var j = 0; j < this._renderTreeData.length; j++) {
+            if(this._renderTreeData[j].isOffline&&!isRenderToScreen)
             {
                 //对于离屏渲染的数据 如果当前是离屏渲染的话 则不可以渲染它 否则会报错
                 //你想啊你把一堆显示数据渲染到一张纹理中，这张纹理本身就在这一堆渲染数据中 自然是会冲突的
                 //[.Offscreen-For-WebGL-07E77500]GL ERROR :GL_INVALID_OPERATION : glDrawElements: Source and destination textures of the draw are the same
                 continue;
             }
-            this.draw(this._renderData[j], isScene);
+            
+            this.draw(this._renderTreeData[j], isScene);
         }
     }
     /**
@@ -545,8 +553,8 @@ export default class Device {
      * @param projMatix 投影矩阵
      * @param viewMatrix 视口矩阵
      */
-    private _drawBase(rData: RenderData, projMatix: Float32Array, viewMatrix: Float32Array): void {
-        G_DrawEngine.run(rData,viewMatrix,projMatix,rData._shader);
+    private _drawBase(rData:syRender.BaseData, projMatix: Float32Array, viewMatrix: Float32Array): void {
+        G_DrawEngine.run(rData,viewMatrix,projMatix,rData.shader);
     }
     private _temp1Matrix: Float32Array = glMatrix.mat4.identity(null);
     /**
@@ -554,29 +562,31 @@ export default class Device {
      * @param rData 
      * @param isUseScene 
      */
-    private draw(rData: RenderData, isUseScene: boolean = false): void {
+    private draw(rData: syRender.BaseData, isUseScene: boolean = false): void {
+
         var cameraData = GameMainCamera.instance.getCamera(rData._cameraType).getCameraData();
         glMatrix.mat4.identity(this._temp1Matrix);
 
          //补一下光的数据
-        rData._parallelColor = G_LightCenter.lightData.parallelColor; //光的颜色
-        rData._parallelDirection = G_LightCenter.lightData.parallelDirection;//光的方向
+        rData.light.parallel.color = G_LightCenter.lightData.parallelColor; //光的颜色
+        rData.light.parallel.direction = G_LightCenter.lightData.parallelDirection;//光的方向
         rData._cameraPosition = cameraData.position;
-        rData._ambientColor = G_LightCenter.lightData.ambientColor;//环境光
-        rData._pointColor = G_LightCenter.lightData.pointColor;//点光
-        rData._specularShiness = G_LightCenter.lightData.specularShininess;
-        rData._specularColor = G_LightCenter.lightData.specularColor;
-        rData._lightPosition = G_LightCenter.lightData.position;
-        rData._spotDirection = G_LightCenter.getPosLightDir();
-        rData._spotColor = G_LightCenter.lightData.spotColor;
-        rData._spotInnerLimit = G_LightCenter.lightData.spotInnerLimit;
-        rData._spotOuterLimit = G_LightCenter.lightData.spotOuterLimit;
+        rData.light.ambient.color = G_LightCenter.lightData.ambientColor;//环境光
+        rData.light.point.color = G_LightCenter.lightData.pointColor;//点光
+        rData.light.specular.shiness = G_LightCenter.lightData.specularShininess;
+        rData.light.specular.color = G_LightCenter.lightData.specularColor;
+        rData.light.position = G_LightCenter.lightData.position;
+        rData.light.spot.direction = G_LightCenter.getPosLightDir();
+        rData.light.spot.color = G_LightCenter.lightData.spotColor;
+        rData.light.spot.innerLimit = G_LightCenter.lightData.spotInnerLimit;
+        rData.light.spot.outerLimit = G_LightCenter.lightData.spotOuterLimit;
 
-        rData._fogColor = G_LightCenter.lightData.fogColor;
-        rData._fogDensity = G_LightCenter.lightData.fogDensity;
+        rData.light.fog.color = G_LightCenter.lightData.fogColor;
+        rData.light.fog.density = G_LightCenter.lightData.fogDensity;
 
-        switch (rData._type) {
-            case RenderDataType.Base:
+        switch (rData.type) {
+            case syRender.DataType.Base:
+                this._commitRenderState(rData.pass.state);
                 if (isUseScene) {
                     let projMatix = G_CameraModel.getSceneProjectMatrix();
                     glMatrix.mat4.invert(this._temp1Matrix, G_CameraModel.getSceneCameraMatrix());
@@ -587,34 +597,36 @@ export default class Device {
                     this._drawBase(rData, cameraData.projectMat, this._temp1Matrix);
                 };
                 break;
-            case RenderDataType.Normal:
+            case syRender.DataType.Normal:
+                this._commitRenderState((rData as syRender.NormalData)._state);
                 if (isUseScene) {
                     let projMatix = G_CameraModel.getSceneProjectMatrix();
                     glMatrix.mat4.invert(this._temp1Matrix, G_CameraModel.getSceneCameraMatrix());
                     cameraData.projectMat = projMatix;
                     cameraData.modelMat = this._temp1Matrix;
-                    this._drawNormal(rData as NormalRenderData, cameraData);
+                    this._drawNormal(rData as syRender.NormalData, cameraData);
                 }
                 else {
-                    this._drawNormal(rData as NormalRenderData, cameraData);
+                    this._drawNormal(rData as syRender.NormalData, cameraData);
                 }
                 break;
-            case RenderDataType.Spine:
+            case syRender.DataType.Spine:
+                this._commitRenderState((rData  as syRender.SpineData)._state);
                 if (isUseScene) {
                     let projMatix = G_CameraModel.getSceneProjectMatrix();
                     glMatrix.mat4.invert(this._temp1Matrix, G_CameraModel.getSceneCameraMatrix());
-                    this._drawSpine(rData as SpineRenderData, projMatix, this._temp1Matrix);
+                    this._drawSpine(rData as syRender.SpineData, projMatix, this._temp1Matrix);
                 }
                 else {
                     glMatrix.mat4.invert(this._temp1Matrix, cameraData.modelMat);
-                    this._drawSpine(rData as SpineRenderData, cameraData.projectMat, this._temp1Matrix);
+                    this._drawSpine(rData as syRender.SpineData, cameraData.projectMat, this._temp1Matrix);
                 };
-                break
+                break;
         }
 
     }
     private _curGLID = -1;
-    private _drawSpine(sData: SpineRenderData, projMatix: Float32Array, viewMatrix: Float32Array): void {
+    private _drawSpine(sData: syRender.SpineData, projMatix: Float32Array, viewMatrix: Float32Array): void {
         if (this._curGLID != sData._shaderData.spGlID) {
             this.gl.useProgram(sData._shaderData.spGlID);
             this._curGLID == sData._shaderData.spGlID;
@@ -629,77 +641,47 @@ export default class Device {
         let viewData = {};
         viewData[sData._viewKey] = viewMatrix;
         G_ShaderFactory.setUniforms(sData._shaderData.uniSetters, viewData);
-        G_ShaderFactory.drawBufferInfo(sData._attrbufferData, sData._glPrimitiveType);
+        G_ShaderFactory.drawBufferInfo(sData._attrbufferData, sData.primitive.type);
     }
-
-    private _drawNormal(sData: NormalRenderData, cameraData: CameraData): void {
+    private _drawNormal(sData: syRender.NormalData, cameraData: CameraData): void {
         this.gl.useProgram(sData._shaderData.spGlID);
-        (sData._node as SY.Sprite).updateUniformsData(cameraData,G_LightCenter.lightData);
+        (sData.node as SY.Sprite).updateUniformsData(cameraData,G_LightCenter.lightData);
         G_ShaderFactory.setBuffersAndAttributes(sData._shaderData.attrSetters, sData._attrbufferData);
         for (let j in sData._uniformData) {
             G_ShaderFactory.setUniforms(sData._shaderData.uniSetters, sData._uniformData[j]);
         }
-        G_ShaderFactory.drawBufferInfo(sData._attrbufferData, sData._glPrimitiveType);
+        G_ShaderFactory.drawBufferInfo(sData._attrbufferData, sData.primitive.type);
     }
-    private _renderData: Array<RenderData> = [];//绘制的数据
-    public collectData(rData: RenderData): void {
-        this._renderData.push(rData);
+    private _renderTreeData: Array<syRender.BaseData> = [];//渲染树上的绘制数据
+    public collectData(rData: syRender.BaseData): void {
+        this._renderTreeData.push(rData);
     }
 
-    private _framebuffer: FrameBuffer;//帧缓存
+    //----------------------------------------------------------------------------------------------------------------start---------
+    /**
+     * 渲染一帧前 对缓冲区做一些准备工作
+     * @param fb  帧缓冲
+     * @param viewPort 视口大小
+     * @param isClear 是否清理缓冲区
+     */
+    private readyForOneFrame(fb: WebGLFramebuffer,viewPort:any,isClear:boolean=true):void{
+          this.setFrameBuffer(fb);
+          this.setViewPort(viewPort);
+          if(isClear)
+          this.clear();
+    }
+    private _framebuffer: WebGLFramebuffer;//帧缓冲
     /**
    * @method setFrameBuffer
    * @param {FrameBuffer} fb - null means use the backbuffer
    */
-    setFrameBuffer(fb: FrameBuffer) {
+    private setFrameBuffer(fb: WebGLFramebuffer) {
         if (this._framebuffer === fb) {
             return;
         }
-
         this._framebuffer = fb;
-        const gl = this.gl;
-
-        if (!fb) {
-            console.log("绑定帧缓冲失败--------");
-            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-            return;
-        }
-        else {
-            console.log("绑定帧缓冲成功");
-        }
-
-        gl.bindFramebuffer(gl.FRAMEBUFFER, fb.getHandle());
-
-        // let numColors = fb._colors.length;
-        // for (let i = 0; i < numColors; ++i) {
-        //     let colorBuffer = fb._colors[i];
-        //     _attach(gl, gl.COLOR_ATTACHMENT0 + i, colorBuffer);
-
-        //     // TODO: what about cubemap face??? should be the target parameter for colorBuffer
-        // }
-        // for (let i = numColors; i < this._caps.maxColorAttachments; ++i) {
-        //     gl.framebufferTexture2D(
-        //         gl.FRAMEBUFFER,
-        //         gl.COLOR_ATTACHMENT0 + i,
-        //         gl.TEXTURE_2D,
-        //         null,
-        //         0
-        //     );
-        // }
-
-        // if (fb._depth) {
-        //     _attach(gl, gl.DEPTH_ATTACHMENT, fb._depth);
-        // }
-
-        // if (fb._stencil) {
-        //     _attach(gl, gl.STENCIL_ATTACHMENT, fb._stencil);
-        // }
-
-        // if (fb._depthStencil) {
-        //     _attach(gl, gl.DEPTH_STENCIL_ATTACHMENT, fb._depthStencil);
-        // }
+        this.gl.bindFramebuffer(this.gl.FRAMEBUFFER,this._framebuffer);
     }
-
     /**
      * 设置视口
      * @param object 
@@ -710,18 +692,34 @@ export default class Device {
      * h:【0,1】
      * }
      */
-    public setViewPort(object: any): void {
+    private _curViewPort:any;
+    private setViewPort(object: any): void {
         let x = object.x * this.width;
         let y = object.y * this.height;
         let width = object.w * this.width;
         let height = object.h * this.height;
-        if(this._curFrameS.isSameViewPort(x,y,width,height)==false)
+       if(this._curViewPort==null||
+        !(this._curViewPort.x == x&&this._curViewPort.y == y&&this._curViewPort.width == width&&this._curViewPort.height == height))
         {
             this.gl.viewport(x, y, width, height);
             this.gl.scissor(x, y, width, height);
+            this._curViewPort = {x:x,y:y,width:width,height:height};
         }
         
     }
+    /**
+     * 清理附件
+     * 颜色
+     * 深度
+     * 模板
+     */
+    public clear():void{
+        let gl = this.gl;
+        gl.clearColor(0.5, 0.5, 0.5, 1.0);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    }
+    //---------------------------------------------------------------------------------------------end---------------------------------
+
     public get width(){
         return this._width;
     }

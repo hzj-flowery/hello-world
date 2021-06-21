@@ -3588,6 +3588,11 @@ export namespace glMatrix {
     /**
      * Generates a perspective projection matrix with the given bounds.
      * Passing null/undefined/no value for far will generate infinite projection matrix.
+     * 
+     * f/aspect  0       0                           0
+     * 0         f       0                           0
+     * 0         0       (far + near)/(near - far)   2 * far * near /(near - far)
+     * 0         0       -1                          0
      *
      * @param {mat4} out mat4 frustum matrix will be written into
      * @param {number} fovy Vertical field of view in radians

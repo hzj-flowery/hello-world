@@ -123,6 +123,7 @@ export namespace syGL {
 
         TIME = 'u_time',//时间
         COLOR = 'u_color', //节点颜色
+        ALPHA = 'u_alpha',//节点透明度
         //现阶段场景中只支持三束平行光VERT_
         //平行光只有方向和颜色没有位置
         LIGHT_COLOR = 'u_lightColor',     //平行光的颜色
@@ -169,18 +170,18 @@ export namespace syGL {
         TEX_COORD7 = 'u_texCoord7',
         TEX_COORD8 = 'u_texCoord8',
         SKYBOX = "u_skybox",
-        Matrix = 'u_Matrix',      //万能矩阵
-        VMMatrix = 'u_VMMatrix',  //视口矩阵*模型世界矩阵
-        MMatrix = 'u_MMatrix',    //模型世界矩阵
-        MTMatrix = 'u_MTMatrix',    //模型世界矩阵的转置矩阵
-        MIMatrix = 'u_MIMatrix',    //模型世界矩阵的逆矩阵
-        MITMatrix = 'u_MITMatrix',    //模型世界矩阵的逆矩阵的转置矩阵
-        VMatrix = 'u_VMatrix',    //视口矩阵
-        PMatrix = 'u_PMatrix',    //投影矩阵
-        PVMatrix = 'u_PVMatrix',    //投影*视口矩阵
-        PVMatrix_INVERSE = 'u_PVInverseMatrix',    //投影*视口矩阵的逆矩阵
-        PVM_MATRIX = "u_PVMMatrix",//投影矩阵*视口矩阵*模型世界矩阵
-        PVM_MATRIX_INVERSE = "u_PVMInverseMatrix", //(投影矩阵*视口矩阵*模型世界矩阵)的逆矩阵
+        Matrix = 'u_mat',      //万能矩阵
+        VMMatrix = 'u_VMmat',  //视口矩阵*模型世界矩阵
+        MMatrix = 'u_Mmat',    //模型世界矩阵
+        MTMatrix = 'u_Mmat_T',    //模型世界矩阵的转置矩阵
+        MIMatrix = 'u_Mmat_I',    //模型世界矩阵的逆矩阵
+        MITMatrix = 'u_Mmat_I_T',    //模型世界矩阵的逆矩阵的转置矩阵
+        VMatrix = 'u_Vmat',    //视口矩阵
+        PMatrix = 'u_Pmat',    //投影矩阵
+        PVMatrix = 'u_PVmat',    //投影*视口矩阵
+        PVMatrix_INVERSE = 'u_PVmat_I',    //投影*视口矩阵的逆矩阵
+        PVM_MATRIX = "u_PVMmat",//投影矩阵*视口矩阵*模型世界矩阵
+        PVM_MATRIX_INVERSE = "u_PVMmat_I", //(投影矩阵*视口矩阵*模型世界矩阵)的逆矩阵
         LightWorldPosition = "u_lightWorldPosition", //光的位置
         CameraWorldPosition = "u_cameraWorldPosition" //相机的位置
     }

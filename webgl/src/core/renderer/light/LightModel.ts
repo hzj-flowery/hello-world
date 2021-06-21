@@ -17,11 +17,11 @@ import { LineFrumstum } from "./LineFrumstum";
 
 let vertBase =
     `attribute vec4 a_position;
-    uniform mat4 u_PMatrix;
-    uniform mat4 u_VMatrix;
-    uniform mat4 u_MMatrix;
+    uniform mat4 u_Pmat;
+    uniform mat4 u_Vmat;
+    uniform mat4 u_Mmat;
 void main() {
-gl_Position = u_PMatrix * u_VMatrix * u_MMatrix * a_position;
+gl_Position = u_Pmat * u_Vmat * u_Mmat * a_position;
 }`
 let fragBase =
     `precision mediump float;
@@ -151,9 +151,9 @@ class LightModel {
         // infinity
         // Set the uniforms we just computed
         G_ShaderFactory.setUniforms(this._colorProgramInfo.uniSetters, {
-            u_VMatrix: this._lightViewMatrix,
-            u_PMatrix: projectionMatrix,
-            u_MMatrix: this._lightWorldMatrix,
+            u_Vmat: this._lightViewMatrix,
+            u_Pmat: projectionMatrix,
+            u_Mmat: this._lightWorldMatrix,
         });
         // calls gl.drawArrays or gl.drawElements
         G_ShaderFactory.drawBufferInfo(this._cubeLinesBufferInfo, gl.LINES);

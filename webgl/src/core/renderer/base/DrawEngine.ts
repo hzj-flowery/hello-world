@@ -1,6 +1,15 @@
-import { RenderData } from "../data/RenderData";
+import { syRender } from "../data/RenderData";
 import { syGL } from "../gfx/syGLEnums";
 import { Shader } from "../shader/Shader";
+
+/**
+ * 顶点信息：
+ *         名称      单元数目
+ * --------位置------[x,y,z]------------数组
+ * --------法线------[x,y,z]------------数组
+ * --------切线------[x,y]--------------数组
+ * --------uv--------[u,v]-------------数组
+ */
 
 /**
  * 绘制发动机
@@ -60,44 +69,44 @@ class DrawEngine {
         let gl = this.gl as WebGL2RenderingContext;
         gl.drawElementsInstanced(mode, count, type, offset, instanceCount)
     }
-    public run(rd: RenderData, view, proj, shader: Shader): void {
+    public run(rd: syRender.BaseData, view, proj, shader: Shader): void {
         if (!shader) return;
 
         let gl = this.gl;
         rd.bindGPUBufferData(view, proj, shader);
         //绘制前
-        rd._node ? rd._node.onDrawBefore(rd._time) : null;
-        if (!rd._isDrawInstanced) {
-            var indexglID = rd._indexGLID;
+        rd.node ? rd.node.onDrawBefore(rd.time) : null;
+        if (!rd.isDrawInstanced) {
+            var indexglID = rd.primitive.index.glID;
             indexglID != -1 ? (
                 //绑定索引缓冲
                 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexglID),
-                this.drawElements(rd._glPrimitiveType, rd._indexItemNums, gl.UNSIGNED_SHORT, 0)
+                this.drawElements(rd.primitive.type, rd.primitive.index.itemNums, gl.UNSIGNED_SHORT, 0)
             ) : (
-                    this.drawArrays(rd._glPrimitiveType, 0, rd._vertItemNums)
+                    this.drawArrays(rd.primitive.type, 0, rd.primitive.vert.itemNums)
                 )
         }
         else {
-            var indexglID = rd._indexGLID;
+            var indexglID = rd.primitive.index.glID;
 
             !indexglID == true ? this.drawArraysInstanced(
-                rd._glPrimitiveType,
+                rd.primitive.type,
                 0,             // offset
-                rd._drawInstancedVertNums,   // num vertices per instance
-                rd._drawInstancedNums,  // num instances
+                rd.primitive.instancedVertNums,   // num vertices per instance
+                rd.primitive.instancedNums,  // num instances
             ) : (
                     //绑定索引缓冲
                     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexglID),
-                    this.drawElementsInstanced(rd._glPrimitiveType, rd._indexItemNums, gl.UNSIGNED_SHORT, 0, rd._drawInstancedNums)
+                    this.drawElementsInstanced(rd.primitive.type, rd.primitive.index.itemNums, gl.UNSIGNED_SHORT, 0, rd.primitive.instancedNums)
                 )
         }
         //解除缓冲区对于目标纹理的绑定
         gl.bindTexture(gl.TEXTURE_2D, null);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
         gl.bindBuffer(gl.ARRAY_BUFFER, null);
-        rd._shader.disableVertexAttribArray();
+        rd.shader.disableVertexAttribArray();
         //绘制后
-        rd._node ? rd._node.onDrawAfter(rd._time) : null;
+        rd.node ? rd.node.onDrawAfter(rd.time) : null;
     }
 
     /**

@@ -1,6 +1,6 @@
 import Device from "../../../Device";
 import { glMatrix } from "../../../math/Matrix";
-import { RenderDataPool, RenderDataType, SpineRenderData } from "../../data/RenderData";
+import {syRender} from "../../data/RenderData";
 import { ShaderData } from "../../shader/Shader";
 import { G_ShaderFactory } from "../../shader/ShaderFactory";
 import { Skeleton_Node } from "./Skeleton_Node";
@@ -13,9 +13,9 @@ attribute vec3 a_normal;    //法线
 attribute vec4 a_weights_0; //权重
 attribute vec4 a_joints_0;  //受到哪些骨骼节点的影响
 attribute vec2 a_uv;
-uniform mat4 u_PMatrix;  //投影
-uniform mat4 u_VMatrix;        //观察空间
-uniform mat4 u_MMatrix;       //世界空间
+uniform mat4 u_Pmat;  //投影
+uniform mat4 u_Vmat;        //观察空间
+uniform mat4 u_Mmat;       //世界空间
 uniform sampler2D u_jointTexture;   //骨骼矩阵纹理
 
 uniform float u_numJoints;  //[6,7,8,9,10,11]
@@ -45,8 +45,8 @@ void main() {
 mat4 skinMatrix =   getBoneMatrix(a_joints_0[0]) * a_weights_0[0] + getBoneMatrix(a_joints_0[1]) * a_weights_0[1] +
 getBoneMatrix(a_joints_0[2]) * a_weights_0[2] +
 getBoneMatrix(a_joints_0[3]) * a_weights_0[3];
-mat4 world = u_MMatrix * skinMatrix;
-gl_Position = u_PMatrix * u_VMatrix * world * a_position;
+mat4 world = u_Mmat * skinMatrix;
+gl_Position = u_Pmat * u_Vmat * world * a_position;
 v_normal = mat3(world) * a_normal;
 v_uv = a_uv;
 }`
@@ -82,14 +82,14 @@ export class Skeleton_SkinRenderer {
     private mesh:any;
     private skin: Skeleton_Skin;
     private skinProgramInfo: ShaderData;
-    private _renderDataArray:Array<SpineRenderData>;
+    private _renderDataArray:Array<syRender.SpineData>;
     constructor(mesh, skin:Skeleton_Skin, gl) {
         this.mesh = mesh;
         this.skin = skin;
         this.skinProgramInfo = G_ShaderFactory.createProgramInfo(skinVS, fs);
         this._renderDataArray = []
         for (const primitive of this.mesh.primitives) {
-            this._renderDataArray.push(RenderDataPool.get(RenderDataType.Spine) as SpineRenderData);
+            this._renderDataArray.push(syRender.DataPool.get(syRender.DataType.Spine) as syRender.SpineData);
         }
     }
     /**
@@ -104,15 +104,15 @@ export class Skeleton_SkinRenderer {
             var renderData = this._renderDataArray[j];
             renderData._shaderData = this.skinProgramInfo;
             renderData._uniformData.push({
-                u_MMatrix: worldMatrix,
+                u_Mmat: worldMatrix,
                 u_texture: this.skin._texture._glID,
                 u_texCoord1:this.skin._riverTexture._glID,
                 u_jointTexture: this.skin.jointTexture._glID,
                 u_numJoints: this.skin.jointNodes.length,
                 u_time:Device.Instance.triggerRenderTime,
             });
-            renderData._projKey = "u_PMatrix";
-            renderData._viewKey = "u_VMatrix";
+            renderData._projKey = "u_Pmat";
+            renderData._viewKey = "u_Vmat";
             renderData._uniformData.push(primitive.material.uniforms);
             renderData._uniformData.push(sharedUniforms);
             renderData._attrbufferData = primitive.bufferInfo;

@@ -62,6 +62,9 @@ const _default = {
 
 };
 
+/***
+ * 渲染状态
+ */
 export default class State {
 
     public vertexBuffers;
@@ -119,31 +122,8 @@ export default class State {
 
     public program;
 
-    public viewPort:any;
 
-    public isSameViewPort(x,y,width,height):boolean{
-         if(!this.viewPort)
-         {
-             return false;
-         }
-         if(this.viewPort.x==x&&this.viewPort.y == y&&this.viewPort.width == width&&this.viewPort.height == height)
-         {
-             return true;
-         }
-         return false;
-    }
-    public setViewPort(x,y,width,height):void{
-        this.viewPort = {};
-        this.viewPort.x = x;
-        this.viewPort.y = y;
-        this.viewPort.width = width;
-        this.viewPort.height = height;
-    }
-    public getViewPort():any{
-        return this.viewPort;
-    }
-
-    constructor(device) {
+    constructor() {
         
         this.set(_default);
     }
@@ -219,6 +199,5 @@ export default class State {
 
         this.program = cpy.program;
 
-        this.viewPort = cpy.viewPort;
     }
 }

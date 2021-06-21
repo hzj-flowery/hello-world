@@ -1,58 +1,6 @@
 import { SY } from "../base/Sprite";
 import { syGL } from "../gfx/syGLEnums";
 import GameMainCamera from "./GameMainCamera";
-
-/**
- * var vertextBaseCode =
-    'attribute vec3 a_position;' +
-    'attribute vec3 a_normal;' +
-    'attribute vec2 a_uv;' +
-
-    'uniform mat4 u_MVMatrix;' +
-    'uniform mat4 u_PMatrix;' +
-    'uniform mat4 u_MMatrix;' +
-    'uniform mat4 u_VMatrix;' +
-
-    'varying vec3 v_normal;' +
-    'varying vec2 v_uv;' +
-
-    'void main() {' +
-    'gl_Position = u_PMatrix * u_MVMatrix * vec4(a_position, 1.0);' +
-    'v_uv = a_uv;' +
-    '}'
-//基础的shader的片段着色器
-var fragBaseCode =
-    'precision mediump float;' +
-
-    'varying vec2 v_uv;' +
-    'uniform samplerCube u_skybox;'+
-    'uniform sampler2D u_texture;' +
-    'uniform mat4 u_PVMInverseMatrix;'+
-    'uniform vec4 u_color;' +
-    'uniform vec4 u_color_dir;' +
-    
-    'void main() {' +
-    'gl_FragColor = texture2D(u_texture, v_uv);' +
-    '}'
-
- */
-var solidcolorvertexshader =
-    'attribute vec4 a_position;' +
-    'uniform mat4 u_MMatrix;' +
-    'uniform mat4 u_VMatrix;' +
-    'uniform mat4 u_PMatrix;' +
-    'uniform mat4 u_PVMMatrix;' +
-    'void main() {' +
-    'gl_Position = u_PMatrix*u_VMatrix*u_MMatrix*a_position;' +
-    '}'
-
-var solidcolorfragmentshader =
-    'precision mediump float;' +
-    'uniform vec4 u_color;' +
-    'void main() {' +
-    'gl_FragColor = u_color;' +
-    '}'
-
 export default class CameraView extends SY.SpriteBase {
     constructor() {
         super();
@@ -61,8 +9,6 @@ export default class CameraView extends SY.SpriteBase {
         var result = this.createCameraBufferInfo(0.2);
         this.createVertexsBuffer(result.pos, 3);
         this.createIndexsBuffer(result.index);
-        this.shaderVert = solidcolorvertexshader;
-        this.shaderFrag = solidcolorfragmentshader;
 
         this._glPrimitiveType = syGL.PrimitiveType.LINES;
     }
@@ -72,10 +18,10 @@ export default class CameraView extends SY.SpriteBase {
 
     // create geometry for a camera
     private createCameraBufferInfo(scale = 1) {
-        // first let's add a cube. It goes from 1 to 3
+        // first lets add a cube. It goes from 1 to 3
         // because cameras look down -Z so we want
         // the camera to start at Z = 0.
-        // We'll put a cone in front of this cube opening
+        // Well put a cone in front of this cube opening
         // toward -Z
         var positions = [];
         var indices = [];
@@ -182,15 +128,15 @@ export default class CameraView extends SY.SpriteBase {
          */
     protected collectRenderData(time: number): void {
         //激活shader 并且给shader中的变量赋值
-        this._shader.active();
+        this.shader.active();
         var newMV = this._glMatrix.mat4.create();
         var v = GameMainCamera.instance.getCamera(this._cameraType).modelMatrix;
         var m = this.modelMatrix;
         this._glMatrix.mat4.mul(newMV,v,m)
-        this._shader.setUseModelViewMatrix(newMV);
-        this._shader.setUseProjectionMatrix(GameMainCamera.instance.getCamera(this._cameraType).getProjectionMatrix());
-        this._shader.setUseParallelLight([1, 0, 0, 1],[]);
-        this._shader.setUseVertexAttribPointerForVertex(this.getGLID(SY.GLID_TYPE.VERTEX), this.getBufferItemSize(SY.GLID_TYPE.VERTEX));
+        this.shader.setUseModelViewMatrix(newMV);
+        this.shader.setUseProjectionMatrix(GameMainCamera.instance.getCamera(this._cameraType).getProjectionMatrix());
+        this.shader.setUseParallelLight([1, 0, 0, 1],[]);
+        this.shader.setUseVertexAttribPointerForVertex(this.getGLID(SY.GLID_TYPE.VERTEX), this.getBufferItemSize(SY.GLID_TYPE.VERTEX));
         
         //绑定操作的索引缓冲
         this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.getGLID(SY.GLID_TYPE.INDEX));
@@ -200,16 +146,16 @@ export default class CameraView extends SY.SpriteBase {
         var head = 24;
         var ray = 2*3;
         var clip = 24;
-        this._shader.setUseParallelLight([0, 0, 0, 1],[]);
+        this.shader.setUseParallelLight([0, 0, 0, 1],[]);
         this.gl.drawElements(this._glPrimitiveType,body, this.gl.UNSIGNED_SHORT, 0);
 
-        this._shader.setUseParallelLight([0, 1, 0, 1],[]);
+        this.shader.setUseParallelLight([0, 1, 0, 1],[]);
         this.gl.drawElements(this._glPrimitiveType,head, this.gl.UNSIGNED_SHORT,body*2);
 
-        this._shader.setUseParallelLight([1, 0, 0, 1],[]);
+        this.shader.setUseParallelLight([1, 0, 0, 1],[]);
         this.gl.drawElements(this._glPrimitiveType,ray, this.gl.UNSIGNED_SHORT,(body+head)*2);
 
-        this._shader.setUseParallelLight([1, 1, 0, 1],[]);
+        this.shader.setUseParallelLight([1, 1, 0, 1],[]);
         this.gl.drawElements(this._glPrimitiveType,clip, this.gl.UNSIGNED_SHORT,(body+head+ray)*2);
 
         //解除缓冲区绑定

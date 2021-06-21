@@ -162,13 +162,16 @@ export default class Camera extends Node {
     /**
      * 弧度
      */
-    public set Fovy(fov: number) {
-        if(fov!=this._fovy)
+    public set Fovy(radians: number) {
+        if(radians!=this._fovy)
         {
             this._updateFlag = true;
-            this._fovy = fov;
+            this._fovy = radians;
         }
     }
+    /**
+     * 横纵比
+     */
     public set Aspect(aspect: number) {
         if(aspect!=this._aspect)
         {
@@ -176,6 +179,9 @@ export default class Camera extends Node {
             this._aspect = aspect;
         }
     }
+    /**
+     * 能看得见的最近距离
+     */
     public set Near(near: number) {
         if(near!=this._near)
         {
@@ -183,6 +189,9 @@ export default class Camera extends Node {
             this._near = near;
         }
     }
+    /**
+     * 能看得见的最远距离
+     */
     public set Far(far) {
         if(far!=this._far)
         {
@@ -190,10 +199,6 @@ export default class Camera extends Node {
             this._far = far;
         }
     }
-    
-    /**
-     * 弧度
-     */
     public get Fovy():number {
         
         return this._fovy;
@@ -390,7 +395,7 @@ export default class Camera extends Node {
      * Set the framebuffer of the camera
      * @param {FrameBuffer} framebuffer camera framebuffer
      */
-    setFrameBuffer(framebuffer) {
+    private setFrameBuffer(framebuffer) {
         this._framebuffer = framebuffer;
     }
    

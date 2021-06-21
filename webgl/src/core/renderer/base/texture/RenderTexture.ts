@@ -34,6 +34,12 @@ let DepthStencilFormat = {
     RB_FMT_D16: syGL.RenderBufferFormat.D16
 }
 
+enum AttachPlace {
+    Color = 1,
+    Depth,
+    MoreColor
+}
+
 /**
  * Render textures are textures that can be rendered to.
  * @class RenderTexture
@@ -55,22 +61,38 @@ export class RenderTexture extends Texture2D {
     }
     private _frameBuffer: WebGLFramebuffer;//帧缓冲的glID
     private _renderBuffer: WebGLRenderbuffer;//渲染缓冲的glID
-    private _depthTexture: WebGLTexture;
+    private _depthTexture: WebGLTexture;  //深度纹理
+    private _moreTexture:Array<WebGLTexture>;//多纹理
+    private _attachPlace:AttachPlace;
     public get frameBuffer(){
         return this._frameBuffer;
     }
     public get depthTexture(){
         return this._depthTexture;
     }
-    public attach(place:string,width:number,height:number) {
+    /**
+     * 
+     * @param place 
+     * @param width 
+     * @param height 
+     * @param nums 
+     */
+    public attach(place:string,width:number,height:number,nums:number=1) {
         if(place=="color")
         {
             this.renderTextureToColor(width,height);
+            this._attachPlace = AttachPlace.Color;
         }
         else if(place=="depth")
         {
             let isWebgl2 = this._gl instanceof WebGL2RenderingContext?true:false;
             isWebgl2?this.renderTextureToDepthWebgl2(width,height):this.renderTextureToDepthWebgl1(width,height);
+            this._attachPlace = AttachPlace.Depth;
+        }
+        else if(place=="more")
+        {
+            this.renderMoreTextureToColor(width,height,nums);
+            this._attachPlace = AttachPlace.MoreColor
         }
         this.checkAndUnbind();
         this.loaded = true;
@@ -90,6 +112,46 @@ export class RenderTexture extends Texture2D {
          gl.bindTexture(gl.TEXTURE_2D, null);
          gl.bindRenderbuffer(gl.RENDERBUFFER, null);
     }
+    /**
+     * 渲染多纹理到颜色附件
+     * @param dtWidth 
+     * @param dtHeight 
+     */
+     private renderMoreTextureToColor(dtWidth: number, dtHeight: number,nums:number):void{
+        let gl = this._gl;
+        gl.bindFramebuffer(gl.FRAMEBUFFER, this._frameBuffer);
+        gl.bindRenderbuffer(gl.RENDERBUFFER, this._renderBuffer);
+        gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, dtWidth, dtHeight);
+        
+        this._moreTexture = [];
+        let COLOR_ATTACHMENT = [];
+        for(let i = 0;i<nums;i++)
+        {
+            let textureID = gl.createTexture();
+            this._moreTexture.push(textureID)
+            //创建纹理
+            gl.bindTexture(gl.TEXTURE_2D, textureID);
+            // Y 轴取反
+            this._gl.pixelStorei(this._gl.UNPACK_FLIP_Y_WEBGL, false);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+            //设置纹理格式，作为帧缓冲的颜色附件
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, dtWidth, dtHeight, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+            //设置上面创建纹理作为颜色附件
+            gl.framebufferTexture2D(gl.FRAMEBUFFER, gl["COLOR_ATTACHMENT"+i], gl.TEXTURE_2D, textureID, 0);
+            COLOR_ATTACHMENT.push(gl["COLOR_ATTACHMENT"+i])
+        }
+
+
+        //设置渲染缓冲对象作为深度附件
+        gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, this._renderBuffer);
+
+        //采样到几个颜色附件(对应的几何纹理)
+        gl.drawBuffers(COLOR_ATTACHMENT);
+    }
+
     /**
      * 渲染纹理到颜色附件
      * @param dtWidth 
