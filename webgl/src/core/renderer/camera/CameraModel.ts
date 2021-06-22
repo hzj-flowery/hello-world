@@ -327,7 +327,10 @@ export class G_CameraModel{
             {
                 return;
             } 
-            var model = new CameraModel();
+            var model = this.modelMap.get(visualAngle);
+            if(!model){
+                model = new CameraModel();
+            }  
             model.draw(targetProjMatrix, targetCameraMatrix);
             model.setSceneCameraPosition(pos);
             this.modelMap.set(visualAngle,model)

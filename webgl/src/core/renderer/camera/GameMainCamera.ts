@@ -129,9 +129,31 @@ export class GameMainCamera {
     temp.index = CameraIndex.base3D;
     temp.viewPort = { x: 0.5, y: 0, w: 0.5, h: 1 }
     temp.isClear = false;
+    temp.visuialAnglePosition = [-70,10,10]
     temp.visualAngle = 1;
     temp.isRenderToScreen = true;
     this._renderData.push(temp);
+
+    // var temp = new CameraRenderData();
+    // temp.fb = this.getCameraIndex(CameraIndex.base3D).getFramebuffer()
+    // temp.index = CameraIndex.base3D;
+    // temp.viewPort = { x: 0.65, y: 0, w: 0.15, h: 1 }
+    // temp.isClear = false;
+    // temp.visuialAnglePosition = [70,10,10]
+    // temp.visualAngle = 2;
+    // temp.isRenderToScreen = true;
+    // this._renderData.push(temp);
+
+    // var temp = new CameraRenderData();
+    // temp.fb = this.getCameraIndex(CameraIndex.base3D).getFramebuffer()
+    // temp.index = CameraIndex.base3D;
+    // temp.viewPort = { x: 0.8, y: 0, w: 0.2, h: 1 }
+    // temp.isClear = false;
+    // temp.visuialAnglePosition = [10,10,10]
+    // temp.visualAngle = 3;
+    // temp.isRenderToScreen = true;
+    // this._renderData.push(temp);
+
 
 
     var temp = new CameraRenderData();
