@@ -3,7 +3,7 @@ import { glMatrix } from "./math/Matrix";
 import Scene2D from "./renderer/base/Scene2D";
 import Scene3D from "./renderer/base/Scene3D";
 import {G_CameraModel } from "./renderer/camera/CameraModel";
-import GameMainCamera from "./renderer/camera/GameMainCamera";
+import {GameMainCamera} from "./renderer/camera/GameMainCamera";
 import FrameBuffer from "./renderer/gfx/FrameBuffer";
 import { CameraData } from "./renderer/data/CameraData";
 import {syRender} from "./renderer/data/RenderData";
@@ -531,7 +531,7 @@ export default class Device {
         this._triggerRenderTime++;
 
         if (isScene) {
-            var cameraData = GameMainCamera.instance.getCamera(this._renderTreeData[0]._cameraType).getCameraData();
+            var cameraData = GameMainCamera.instance.getCamera(this._renderTreeData[0]._cameraIndex).getCameraData();
             G_CameraModel.draw(cameraData.projectMat, cameraData.modelMat);
         }
         //提交数据给GPU 立即绘制
@@ -564,7 +564,7 @@ export default class Device {
      */
     private draw(rData: syRender.BaseData, isUseScene: boolean = false): void {
 
-        var cameraData = GameMainCamera.instance.getCamera(rData._cameraType).getCameraData();
+        var cameraData = GameMainCamera.instance.getCamera(rData._cameraIndex).getCameraData();
         glMatrix.mat4.identity(this._temp1Matrix);
 
          //补一下光的数据

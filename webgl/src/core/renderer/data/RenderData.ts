@@ -205,7 +205,7 @@ export namespace syRender {
         public node: Node;//渲染的节点
         
       
-        public _cameraType: number;//相机的类型
+        public _cameraIndex: number;//相机的类型
         public _cameraPosition: Array<number>;//相机的位置
         private _pass:Pass;
         public light:Light.Center;
@@ -230,7 +230,7 @@ export namespace syRender {
         private _temp004_matrix;//
         public reset(): void {
             this._pass = null;
-            this._cameraType = 0;//默认情况下是透视投影
+            this._cameraIndex = 0;//默认情况下是透视投影
             this._cameraPosition = [];
             this.light.reset();
             this.primitive.reset();

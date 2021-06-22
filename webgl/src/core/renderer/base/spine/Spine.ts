@@ -10,7 +10,7 @@ export default class Spine extends SY.SpriteBase {
 
     constructor() {
         super();
-        this._cameraType = 0;
+        this._cameraIndex = 0;
         this.gltf = Skeleton_Parse.parseGLTF(this.gl);
         this._tempMatrix = glMatrix.mat4.identity(null);
         this._lightDirection = glMatrix.vec3.create() as Float32Array;

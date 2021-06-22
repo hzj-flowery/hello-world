@@ -6,7 +6,7 @@ import { Node } from "../base/Node";
 import { SY } from "../base/Sprite";
 import { G_Stage } from "../base/Stage";
 import enums from "../camera/enums";
-import GameMainCamera from "../camera/GameMainCamera";
+import {GameMainCamera} from "../camera/GameMainCamera";
 import { syPrimitives } from "../shader/Primitives";
 import { BufferAttribsData, ShaderData } from "../shader/Shader";
 import { G_ShaderFactory } from "../shader/ShaderFactory";

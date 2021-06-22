@@ -6,10 +6,12 @@ import enums from "./enums";
 import OrthoCamera from "./OrthoCamera";
 import PerspectiveCamera from "./PerspectiveCamera";
 
+
+
 /**
  * 游戏主相机
  */
-export default class GameMainCamera {
+export class GameMainCamera {
   private static _instance: GameMainCamera;
   public static get instance(): GameMainCamera {
     if (!this._instance) {

@@ -125,7 +125,7 @@ export namespace SY {
         private _renderData: Array<syRender.BaseData>;
         //参考glprimitive_type
         protected _glPrimitiveType: syGL.PrimitiveType;//绘制的类型
-        protected _cameraType: number = 0;//相机的类型(0表示透视1表示正交)
+        protected _cameraIndex: number = 0;//相机的类型(0表示透视1表示正交)
         protected _sizeMode: SpriteSizeMode;//节点的尺寸模式
         protected _shaderType: ShaderType;//shader的类型
         constructor() {
@@ -347,7 +347,7 @@ export namespace SY {
                     this._renderData.push(syRender.DataPool.get(syRender.DataType.Base));
                 }
                 this._renderData[i].node = this as Node;
-                this._renderData[i]._cameraType = this._cameraType;//默认情况下是透视投影
+                this._renderData[i]._cameraIndex = this._cameraIndex;//默认情况下是透视投影
                 this._renderData[i].pass = pass;
                 //顶点组
                 this._renderData[i].primitive.vert.glID = this.getGLID(SY.GLID_TYPE.VERTEX);
@@ -424,7 +424,7 @@ export namespace SY {
         public _uniformData: any;
         public _shaderData: ShaderData;
         private _renderData: syRender.NormalData;
-        protected _cameraType: number = 0;//相机的类型(0表示透视1表示正交)
+        protected _cameraIndex: number = 0;//相机的类型(0表示透视1表示正交)
         //参考glprimitive_type
         protected _glPrimitiveType: syGL.PrimitiveType;//绘制的类型
         private init(): void {
@@ -510,7 +510,7 @@ export namespace SY {
         private _rb: Array<number> = [];//右下
         constructor() {
             super();
-            this._cameraType = enums.PROJ_ORTHO;
+            this._cameraIndex = enums.PROJ_ORTHO;
             this._glPrimitiveType = this.gl.TRIANGLE_STRIP;
         }
         private updateUV(): void {

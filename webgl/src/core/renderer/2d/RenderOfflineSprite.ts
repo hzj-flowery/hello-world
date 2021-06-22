@@ -1,6 +1,6 @@
 import { SY } from "../base/Sprite";
 import Device from "../../Device";
-import GameMainCamera from "../camera/GameMainCamera";
+import {GameMainCamera} from "../camera/GameMainCamera";
 import { RenderTexture } from "../base/texture/RenderTexture";
 
 
