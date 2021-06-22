@@ -30,8 +30,14 @@ export class CameraRenderData{
    public index:CameraIndex;
    public viewPort:any;
    public isClear:boolean;
-   public isScene:boolean;
+   public visualAngle:number=0;//视角 0代表第一人称视角 1代表第二人称视角 
    public isRenderToScreen:boolean;
+   public isSecondVisualAngle():boolean{
+          return this.visualAngle==1;
+   }
+   public isFirstVisualAngle():boolean{
+    return this.visualAngle==0;
+}
 }
 /**
  * 游戏主相机
@@ -50,10 +56,10 @@ export class GameMainCamera {
   private init(): void {
     this.gl = Device.Instance.gl;
     //初始化2D相机
-    var camera2D = new OrthoCamera(this.gl.canvas.width / this.gl.canvas.height, 60, 0.1, 1000);
-    // this._2dCamera.lookAt([0, 0, 0]);
+    var camera2D = this.createCamera(1,this.gl.canvas.width / this.gl.canvas.height, 60, 0.1, 1000);
+   
     //初始化3D相机
-    var camera3D = new PerspectiveCamera(this.gl.canvas.width / this.gl.canvas.height, 60, 0.1, 50) as PerspectiveCamera;
+    var camera3D = this.createCamera(0,this.gl.canvas.width / this.gl.canvas.height, 60, 0.1, 50) as PerspectiveCamera;
 
     this._cameraMap.set(CameraIndex.base2D, camera2D);
     this._cameraMap.set(CameraIndex.base3D, camera3D)
@@ -100,7 +106,7 @@ export class GameMainCamera {
     temp.viewPort = { x: 0, y: 0, w: 1, h: 1 }
     temp.index = CameraIndex.base2D;
     temp.isClear = true;
-    temp.isScene = false;
+    temp.visualAngle = 0;
     temp.isRenderToScreen = false;
     this._renderData.push(temp);
 
@@ -109,7 +115,7 @@ export class GameMainCamera {
     temp.index = CameraIndex.base3D;
     temp.viewPort = { x: 0, y: 0, w: 0.5, h: 1 }
     temp.isClear = true;
-    temp.isScene = false;
+    temp.visualAngle = 0;
     temp.isRenderToScreen = true;
     this._renderData.push(temp);
 
@@ -118,7 +124,7 @@ export class GameMainCamera {
     temp.index = CameraIndex.base3D;
     temp.viewPort = { x: 0.5, y: 0, w: 0.5, h: 1 }
     temp.isClear = false;
-    temp.isScene = true;
+    temp.visualAngle = 1;
     temp.isRenderToScreen = true;
     this._renderData.push(temp);
   }

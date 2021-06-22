@@ -455,8 +455,7 @@ export default class Device {
         stage.visit(time);
     }
     private realDraw(data: CameraRenderData): void {
-        this.readyForOneFrame(data.fb, data.viewPort, data.isClear);
-        this.triggerRender(data.isScene, data.isRenderToScreen);
+        this.triggerRender(data);
         if (this._isCapture) {
             this._isCapture = false;
             this.capture();
@@ -502,24 +501,24 @@ export default class Device {
     public get triggerRenderTime() {
         return this._triggerRenderTime;
     }
-    private triggerRender(isUseScene: boolean = false, isRenderToScreen: boolean) {
-
+    private triggerRender(cData:CameraRenderData) {
+        this.readyForOneFrame(cData.fb, cData.viewPort, cData.isClear);
         //记录一下当前渲染的时间
         this._triggerRenderTime++;
-        if (isUseScene) {
+        if (cData.isSecondVisualAngle()) {
             var cameraData = GameMainCamera.instance.getCameraIndex(CameraIndex.base3D).getCameraData();
             G_CameraModel.draw(cameraData.projectMat, cameraData.modelMat);
         }
         //提交数据给GPU 立即绘制
         for (var j = 0; j < this._renderTreeData.length; j++) {
-            if (this._renderTreeData[j].isOffline && !isRenderToScreen) {
+            if (this._renderTreeData[j].isOffline && !cData.isRenderToScreen) {
                 //对于离屏渲染的数据 如果当前是离屏渲染的话 则不可以渲染它 否则会报错
                 //你想啊你把一堆显示数据渲染到一张纹理中，这张纹理本身就在这一堆渲染数据中 自然是会冲突的
                 //[.Offscreen-For-WebGL-07E77500]GL ERROR :GL_INVALID_OPERATION : glDrawElements: Source and destination textures of the draw are the same
                 continue;
             }
 
-            this.draw(this._renderTreeData[j], isUseScene);
+            this.draw(this._renderTreeData[j], cData);
         }
     }
     /**
@@ -537,7 +536,7 @@ export default class Device {
      * @param rData 
      * @param isUseScene 
      */
-    private draw(rData: syRender.BaseData, isUseScene: boolean = false): void {
+    private draw(rData: syRender.BaseData, cData:CameraRenderData): void {
 
         var cameraData = GameMainCamera.instance.getCameraIndex(rData._cameraIndex).getCameraData();
         glMatrix.mat4.identity(this._temp1Matrix);
@@ -562,37 +561,40 @@ export default class Device {
         switch (rData.type) {
             case syRender.DataType.Base:
                 this._commitRenderState(rData.pass.state);
-                if (isUseScene) {
+                if (cData.isSecondVisualAngle()) {
                     let projMatix = G_CameraModel.getSceneProjectMatrix();
                     glMatrix.mat4.invert(this._temp1Matrix, G_CameraModel.getSceneCameraMatrix());
                     this._drawBase(rData, projMatix, this._temp1Matrix);
                 }
-                else {
+                else if(cData.isFirstVisualAngle()) 
+                {
                     glMatrix.mat4.invert(this._temp1Matrix, cameraData.modelMat);
                     this._drawBase(rData, cameraData.projectMat, this._temp1Matrix);
                 };
                 break;
             case syRender.DataType.Normal:
                 this._commitRenderState((rData as syRender.NormalData)._state);
-                if (isUseScene) {
+                if (cData.isSecondVisualAngle()) {
                     let projMatix = G_CameraModel.getSceneProjectMatrix();
                     glMatrix.mat4.invert(this._temp1Matrix, G_CameraModel.getSceneCameraMatrix());
                     cameraData.projectMat = projMatix;
                     cameraData.modelMat = this._temp1Matrix;
                     this._drawNormal(rData as syRender.NormalData, cameraData);
                 }
-                else {
+                else if(cData.isFirstVisualAngle())  
+                {
                     this._drawNormal(rData as syRender.NormalData, cameraData);
                 }
                 break;
             case syRender.DataType.Spine:
                 this._commitRenderState((rData as syRender.SpineData)._state);
-                if (isUseScene) {
+                if (cData.isSecondVisualAngle()) {
                     let projMatix = G_CameraModel.getSceneProjectMatrix();
                     glMatrix.mat4.invert(this._temp1Matrix, G_CameraModel.getSceneCameraMatrix());
                     this._drawSpine(rData as syRender.SpineData, projMatix, this._temp1Matrix);
                 }
-                else {
+                else if(cData.isFirstVisualAngle()) 
+                {
                     glMatrix.mat4.invert(this._temp1Matrix, cameraData.modelMat);
                     this._drawSpine(rData as syRender.SpineData, cameraData.projectMat, this._temp1Matrix);
                 };
