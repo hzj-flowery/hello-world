@@ -320,6 +320,23 @@ export class CameraModel {
 
 }
 
-
-
-export var G_CameraModel = new CameraModel()
+export class G_CameraModel{
+       static modelMap:Map<number,CameraModel> = new Map()
+       static createCamera(visualAngle,targetProjMatrix, targetCameraMatrix,pos=[-70, 10, 10]):CameraModel{
+            if(visualAngle < 1)
+            {
+                return;
+            } 
+            var model = new CameraModel();
+            model.draw(targetProjMatrix, targetCameraMatrix);
+            model.setSceneCameraPosition(pos);
+            this.modelMap.set(visualAngle,model)
+            return model;
+       }
+       static getSceneProjectMatrix(visualAngle:number){
+            return this.modelMap.get(visualAngle).getSceneProjectMatrix()
+       }
+       static getSceneCameraMatrix(visualAngle:number){
+        return this.modelMap.get(visualAngle).getSceneCameraMatrix()
+       }
+}

@@ -1,6 +1,6 @@
 import { SY } from "../base/Sprite";
 import { RenderTexture } from "../base/texture/RenderTexture";
-import {GameMainCamera} from "../camera/GameMainCamera";
+import {CameraIndex, GameMainCamera} from "../camera/GameMainCamera";
 import { CubeData } from "../data/CubeData";
 
 /**
@@ -19,6 +19,6 @@ export class RenderOffline3DSprite extends SY.SpriteBase{
     }
     protected onSetTextureUrl():void{
         
-        GameMainCamera.instance.getBase2DCamera().targetTexture = this.texture as RenderTexture;
+        GameMainCamera.instance.getCameraIndex(CameraIndex.normal1).targetTexture = this.texture as RenderTexture;
     }
 }

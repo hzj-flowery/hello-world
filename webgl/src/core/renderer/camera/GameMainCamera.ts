@@ -30,7 +30,8 @@ export class CameraRenderData{
    public index:CameraIndex;
    public viewPort:any;
    public isClear:boolean;
-   public visualAngle:number=0;//视角 0代表第一人称视角 1代表第二人称视角 
+   public visualAngle:number=0;//视角 0代表玩家自己 1代表别人视角 2代表别人视角 3代表别人视角 依次类推
+   public visuialAnglePosition:Array<number>=[];
    public isRenderToScreen:boolean;
    public isSecondVisualAngle():boolean{
           return this.visualAngle==1;
@@ -61,8 +62,12 @@ export class GameMainCamera {
     //初始化3D相机
     var camera3D = this.createCamera(0,this.gl.canvas.width / this.gl.canvas.height, 60, 0.1, 50) as PerspectiveCamera;
 
+    var camera2DAdd = this.createCamera(1,this.gl.canvas.width / this.gl.canvas.height, 60, 0.1, 1000);
+
     this._cameraMap.set(CameraIndex.base2D, camera2D);
-    this._cameraMap.set(CameraIndex.base3D, camera3D)
+    this._cameraMap.set(CameraIndex.base3D, camera3D);
+    this._cameraMap.set(CameraIndex.normal1, camera2DAdd);
+
     this.initRenderData();
     G_UISetting.pushRenderCallBack(this.renderCallBack.bind(this));
   }
@@ -127,6 +132,17 @@ export class GameMainCamera {
     temp.visualAngle = 1;
     temp.isRenderToScreen = true;
     this._renderData.push(temp);
+
+
+    var temp = new CameraRenderData();
+    temp.fb = this.getCameraIndex(CameraIndex.normal1).getFramebuffer()
+    temp.viewPort = { x: 0, y: 0, w: 1, h: 1 }
+    temp.index = CameraIndex.normal1;
+    temp.isClear = true;
+    temp.visualAngle = 0;
+    temp.isRenderToScreen = false;
+    this._renderData.push(temp);
+
   }
   
   /**

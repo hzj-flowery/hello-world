@@ -12,7 +12,6 @@ import RobartTest from "./core/renderer/3d/test/RobartTest";
 import CaptureTest from "./core/renderer/3d/test/CaptureTest";
 import RampTextureTest from "./core/renderer/3d/test/RampTextureTest";
 import ObjTest from "./core/renderer/3d/test/ObjTest";
-import { CameraTest } from "./core/renderer/3d/test/CameraTest";
 import ThreeDLightTest from "./core/renderer/light/ThreeDLightTest";
 import ShaderShadowTest from "./core/renderer/3d/test/ShaderShadowTest";
 import SpotLightTest from "./core/renderer/light/SpotLightTest";

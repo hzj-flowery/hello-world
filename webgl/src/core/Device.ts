@@ -501,14 +501,12 @@ export default class Device {
     public get triggerRenderTime() {
         return this._triggerRenderTime;
     }
-    private triggerRender(cData:CameraRenderData) {
+    private triggerRender(cData: CameraRenderData) {
         this.readyForOneFrame(cData.fb, cData.viewPort, cData.isClear);
         //记录一下当前渲染的时间
         this._triggerRenderTime++;
-        if (cData.isSecondVisualAngle()) {
-            var cameraData = GameMainCamera.instance.getCameraIndex(CameraIndex.base3D).getCameraData();
-            G_CameraModel.draw(cameraData.projectMat, cameraData.modelMat);
-        }
+        var cameraData = GameMainCamera.instance.getCameraIndex(CameraIndex.base3D).getCameraData();
+        G_CameraModel.createCamera(cData.visualAngle, cameraData.projectMat, cameraData.modelMat);
         //提交数据给GPU 立即绘制
         for (var j = 0; j < this._renderTreeData.length; j++) {
             if (this._renderTreeData[j].isOffline && !cData.isRenderToScreen) {
@@ -536,7 +534,7 @@ export default class Device {
      * @param rData 
      * @param isUseScene 
      */
-    private draw(rData: syRender.BaseData, cData:CameraRenderData): void {
+    private draw(rData: syRender.BaseData, cData: CameraRenderData): void {
 
         var cameraData = GameMainCamera.instance.getCameraIndex(rData._cameraIndex).getCameraData();
         glMatrix.mat4.identity(this._temp1Matrix);
@@ -561,43 +559,39 @@ export default class Device {
         switch (rData.type) {
             case syRender.DataType.Base:
                 this._commitRenderState(rData.pass.state);
-                if (cData.isSecondVisualAngle()) {
-                    let projMatix = G_CameraModel.getSceneProjectMatrix();
-                    glMatrix.mat4.invert(this._temp1Matrix, G_CameraModel.getSceneCameraMatrix());
-                    this._drawBase(rData, projMatix, this._temp1Matrix);
-                }
-                else if(cData.isFirstVisualAngle()) 
-                {
+                if (cData.isFirstVisualAngle()) {
                     glMatrix.mat4.invert(this._temp1Matrix, cameraData.modelMat);
                     this._drawBase(rData, cameraData.projectMat, this._temp1Matrix);
-                };
+                }
+                else {
+                    let projMatix = G_CameraModel.getSceneProjectMatrix(cData.visualAngle);
+                    glMatrix.mat4.invert(this._temp1Matrix, G_CameraModel.getSceneCameraMatrix(cData.visualAngle));
+                    this._drawBase(rData, projMatix, this._temp1Matrix);
+                }
                 break;
             case syRender.DataType.Normal:
                 this._commitRenderState((rData as syRender.NormalData)._state);
-                if (cData.isSecondVisualAngle()) {
-                    let projMatix = G_CameraModel.getSceneProjectMatrix();
-                    glMatrix.mat4.invert(this._temp1Matrix, G_CameraModel.getSceneCameraMatrix());
-                    cameraData.projectMat = projMatix;
-                    cameraData.modelMat = this._temp1Matrix;
+                if (cData.isFirstVisualAngle()) {
                     this._drawNormal(rData as syRender.NormalData, cameraData);
                 }
-                else if(cData.isFirstVisualAngle())  
-                {
+                else {
+                    let projMatix = G_CameraModel.getSceneProjectMatrix(cData.visualAngle);
+                    glMatrix.mat4.invert(this._temp1Matrix, G_CameraModel.getSceneCameraMatrix(cData.visualAngle));
+                    cameraData.projectMat = projMatix;
+                    cameraData.modelMat = this._temp1Matrix;
                     this._drawNormal(rData as syRender.NormalData, cameraData);
                 }
                 break;
             case syRender.DataType.Spine:
                 this._commitRenderState((rData as syRender.SpineData)._state);
-                if (cData.isSecondVisualAngle()) {
-                    let projMatix = G_CameraModel.getSceneProjectMatrix();
-                    glMatrix.mat4.invert(this._temp1Matrix, G_CameraModel.getSceneCameraMatrix());
-                    this._drawSpine(rData as syRender.SpineData, projMatix, this._temp1Matrix);
-                }
-                else if(cData.isFirstVisualAngle()) 
-                {
+                if (cData.isFirstVisualAngle()) {
                     glMatrix.mat4.invert(this._temp1Matrix, cameraData.modelMat);
                     this._drawSpine(rData as syRender.SpineData, cameraData.projectMat, this._temp1Matrix);
-                };
+                } else {
+                    let projMatix = G_CameraModel.getSceneProjectMatrix(cData.visualAngle);
+                    glMatrix.mat4.invert(this._temp1Matrix, G_CameraModel.getSceneCameraMatrix(cData.visualAngle));
+                    this._drawSpine(rData as syRender.SpineData, projMatix, this._temp1Matrix);
+                }
                 break;
         }
 
