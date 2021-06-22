@@ -85,11 +85,11 @@ export default class MoreSprite extends SY.Sprite2D {
         this.shader.setUseVertexAttribPointerForVertex(this.getGLID(SY.GLID_TYPE.VERTEX), this.getBufferItemSize(SY.GLID_TYPE.VERTEX));
 
         var newMV = this._glMatrix.mat4.create();
-        var v = GameMainCamera.instance.getCamera(this._cameraIndex).getInversModelMatrix();
+        var v = GameMainCamera.instance.getCameraIndex(this._cameraIndex).getInversModelMatrix();
         var m = this.modelMatrix;
         this._glMatrix.mat4.mul(newMV, v, m)
         this.shader.setUseModelViewMatrix(newMV);
-        var pMatix = GameMainCamera.instance.getCamera(this._cameraIndex).getProjectionMatrix();
+        var pMatix = GameMainCamera.instance.getCameraIndex(this._cameraIndex).getProjectionMatrix();
         this.shader.setUseProjectionMatrix(pMatix);
 
         // update all the matrices
@@ -182,7 +182,7 @@ export default class MoreSprite extends SY.Sprite2D {
         this.shader.active();
         this.shader.setUseVertexAttribPointerForVertex(this.getGLID(SY.GLID_TYPE.VERTEX), this.getBufferItemSize(SY.GLID_TYPE.VERTEX));
         this.shader.setUseModelViewMatrix(this.modelMatrix);
-        var pMatrix = GameMainCamera.instance.getCamera(this._cameraIndex).getProjectionMatrix();
+        var pMatrix = GameMainCamera.instance.getCameraIndex(this._cameraIndex).getProjectionMatrix();
         this.shader.setUseProjectionMatrix(pMatrix);
 
         // update all the matrices

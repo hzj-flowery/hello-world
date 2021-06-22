@@ -2,11 +2,11 @@
 import { glMatrix } from "./math/Matrix";
 import Scene2D from "./renderer/base/Scene2D";
 import Scene3D from "./renderer/base/Scene3D";
-import {G_CameraModel } from "./renderer/camera/CameraModel";
-import {GameMainCamera} from "./renderer/camera/GameMainCamera";
+import { G_CameraModel } from "./renderer/camera/CameraModel";
+import { CameraRenderData, GameMainCamera } from "./renderer/camera/GameMainCamera";
 import FrameBuffer from "./renderer/gfx/FrameBuffer";
 import { CameraData } from "./renderer/data/CameraData";
-import {syRender} from "./renderer/data/RenderData";
+import { syRender } from "./renderer/data/RenderData";
 import State from "./renderer/gfx/State";
 import { G_ShaderFactory } from "./renderer/shader/ShaderFactory";
 import { glEnums } from "./renderer/gfx/GLapi";
@@ -104,22 +104,19 @@ gl.polygonOffset(1.0, 1.0);          // 设置偏移量
 gl.drawArrays(gl.TRIANGLES, n / 2, n / 2); // 黄色三角形
 
  */
-function _commitDepthState(gl:WebGLRenderingContext,cur:State,next:State):void{
+function _commitDepthState(gl: WebGLRenderingContext, cur: State, next: State): void {
     /**
      * 下面函数中，只对面消除，深度写入，深度比较函数这个三个进行操作
      */
-    if(cur.depthTest!=next.depthTest)
-    {
+    if (cur.depthTest != next.depthTest) {
         //是否开启深度测试
-        next.depthTest?gl.enable(gl.DEPTH_TEST):gl.disable(gl.DEPTH_TEST);
+        next.depthTest ? gl.enable(gl.DEPTH_TEST) : gl.disable(gl.DEPTH_TEST);
     }
-    if(cur.depthWrite!=next.depthWrite)
-    {
+    if (cur.depthWrite != next.depthWrite) {
         //深度值是否写入深度附件中
-        next.depthWrite?gl.depthMask(true):gl.depthMask(false);
+        next.depthWrite ? gl.depthMask(true) : gl.depthMask(false);
     }
-    if(cur.depthFunc!=next.depthFunc)
-    {
+    if (cur.depthFunc != next.depthFunc) {
         //比较函数
         gl.depthFunc(next.depthFunc);
     }
@@ -139,24 +136,24 @@ gl.FRONT_AND_BACK：前后两面
 function _commitCullState(gl: WebGLRenderingContext, cur: State, next: State): void {
     if (cur.cullMode === next.cullMode) {
         return;
-      }
-      if (next.cullMode === glEnums.CULL_NONE) {
+    }
+    if (next.cullMode === glEnums.CULL_NONE) {
         gl.disable(gl.CULL_FACE);
         return;
-      }
-      gl.enable(gl.CULL_FACE);
-      gl.cullFace(next.cullMode);
+    }
+    gl.enable(gl.CULL_FACE);
+    gl.cullFace(next.cullMode);
 }
 /**
  * 裁切状态
  * 剪裁测试用于限制绘制区域。区域内的像素，将被绘制修改。区域外的像素，将不会被修改。
  * 例子 比如我要在画布的某个区域做一些其他的事情，让其为纯色等
  */
-function _commitScissorState(gl:WebGLRenderingContext,cur:State,next:State):void{
-   
+function _commitScissorState(gl: WebGLRenderingContext, cur: State, next: State): void {
+
     gl.enable(gl.SCISSOR_TEST);
-    gl.scissor(0,0,200,50);
-    gl.clearColor(1.0, 0.0, 0.0,1.0);
+    gl.scissor(0, 0, 200, 50);
+    gl.clearColor(1.0, 0.0, 0.0, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     gl.disable(gl.SCISSOR_TEST);
 }
@@ -216,7 +213,7 @@ gl.FUNC_REVERSE_SUBSTRACT：反向相减处理，即 dest 减去 source
 下面这个函数可以对rgb和alpha
 gl.blendEquationSeparate(GLenum modeRGB, GLenum modeAlpha)
  */
-function _commitBlendState(gl:WebGLRenderingContext,cur:State,next:State):void{
+function _commitBlendState(gl: WebGLRenderingContext, cur: State, next: State): void {
     // gl.enable(gl.BLEND)
     // gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
     // gl.blendFunc(gl.ZERO, gl.ONE_MINUS_SRC_ALPHA)
@@ -230,12 +227,12 @@ export default class Device {
     private _height: number = 0;
     public canvas: HTMLCanvasElement;
 
-    private _curFrameS:State;//这个非常重要
-    private _nextFrameS:State;//这个非常重要
+    private _curFrameS: State;//这个非常重要
+    private _nextFrameS: State;//这个非常重要
 
     private static _instance: Device;
-    private _isDebugMode:boolean = true;
-    private _isDrawToUI:boolean = true;
+    private _isDebugMode: boolean = true;
+    private _isDrawToUI: boolean = true;
     public static get Instance(): Device {
         if (!this._instance) {
             this._instance = new Device();
@@ -250,7 +247,7 @@ export default class Device {
         this.canvas = canvas;
         this._nextFrameS = new State();
         this._curFrameS = new State();
-      
+
         // 
 
         this._width = canvas.clientWidth;
@@ -258,21 +255,21 @@ export default class Device {
         console.log("画布的尺寸----", this._width, this._height);
         this.initExt();
 
-       
+
         this.handleEvent(canvas);
         this.openStats();
     }
 
-    private handleEvent(canvas: HTMLCanvasElement):void{
-         //添加事件监听
-         canvas.addEventListener("webglcontextlost", this.contextLost.bind(this));
-         canvas.addEventListener("webglcontextrestored", this.resume.bind(this));
-         canvas.onmousedown = this.onMouseDown.bind(this);
-         canvas.onmousemove = this.onMouseMove.bind(this);
-         canvas.onmouseup = this.onMouseUp.bind(this);
-         canvas.onwheel = this.onWheel.bind(this);
-         canvas.onmouseout = this.onMouseOut.bind(this);
-         canvas.onkeydown = this.onKeyDown.bind(this);
+    private handleEvent(canvas: HTMLCanvasElement): void {
+        //添加事件监听
+        canvas.addEventListener("webglcontextlost", this.contextLost.bind(this));
+        canvas.addEventListener("webglcontextrestored", this.resume.bind(this));
+        canvas.onmousedown = this.onMouseDown.bind(this);
+        canvas.onmousemove = this.onMouseMove.bind(this);
+        canvas.onmouseup = this.onMouseUp.bind(this);
+        canvas.onwheel = this.onWheel.bind(this);
+        canvas.onmouseout = this.onMouseOut.bind(this);
+        canvas.onkeydown = this.onKeyDown.bind(this);
     }
 
     //
@@ -328,13 +325,13 @@ export default class Device {
         }
     }
 
-    private handleAntialias(canvas: HTMLCanvasElement,context):void{
+    private handleAntialias(canvas: HTMLCanvasElement, context): void {
         // canvas.width = canvas.width * window.devicePixelRatio;
         // canvas.height = canvas.height * window.devicePixelRatio;
         // context.scale(window.devicePixelRatio, window.devicePixelRatio);
-        let p = Math.sqrt(1080*1080+2340*2340)/6.5;
-        
-        console.log("我手机的物理像素的密度ppi----",window,p);
+        let p = Math.sqrt(1080 * 1080 + 2340 * 2340) / 6.5;
+
+        console.log("我手机的物理像素的密度ppi----", window, p);
     }
     //创建webgl画笔
     private createGLContext(canvas: HTMLCanvasElement): WebGL2RenderingContext {
@@ -351,9 +348,9 @@ export default class Device {
          */
         let options = {
             stencil: true, //开启模板功能
-            antialias:SYMacro.macro.ENABLE_WEBGL_ANTIALIAS,//关闭抗锯齿
-            depth:true,
-            alpha:SYMacro.macro.ENABLE_TRANSPARENT_CANVAS, //那么这个颜色还会进一步和 canvas 所覆盖的页面颜色进行进一步叠加混色
+            antialias: SYMacro.macro.ENABLE_WEBGL_ANTIALIAS,//关闭抗锯齿
+            depth: true,
+            alpha: SYMacro.macro.ENABLE_TRANSPARENT_CANVAS, //那么这个颜色还会进一步和 canvas 所覆盖的页面颜色进行进一步叠加混色
         }
         var names = ["webgl2", "webgl", "experimental-webgl"];
         var context = null;
@@ -374,66 +371,61 @@ export default class Device {
         } else {
             alert("Failed to create WebGL context!");
         }
-        
-        this.handleAntialias(canvas,context);
+
+        this.handleAntialias(canvas, context);
         return context;
     }
 
     private _isCapture: boolean = false;
-    private _press:boolean;
-    private _lastPressPos:Array<number> = [];
+    private _press: boolean;
+    private _lastPressPos: Array<number> = [];
     private onMouseDown(ev): void {
         //关闭截图功能
         // this._isCapture = true;
         this._press = true;
 
     }
-    private onMouseMove(ev:MouseEvent,value): void {
-        if(this._press)
-        {
+    private onMouseMove(ev: MouseEvent, value): void {
+        if (this._press) {
             //处理鼠标滑动逻辑
-            if(this._lastPressPos.length==0)
-            {
+            if (this._lastPressPos.length == 0) {
                 //本次不做任何操作
                 this._lastPressPos[0] = ev.x;
                 this._lastPressPos[1] = ev.y;
             }
-            else
-            {
+            else {
                 let detaX = ev.x - this._lastPressPos[0];
                 let detaY = ev.y - this._lastPressPos[1];
-                if(Math.abs(detaX)>Math.abs(detaY))
-                {
+                if (Math.abs(detaX) > Math.abs(detaY)) {
                     //处理x轴方向
-                    G_UISetting.updateCameraX(detaX>0)
+                    G_UISetting.updateCameraX(detaX > 0)
                 }
-                else
-                {
+                else {
                     //处理y轴方向
-                    G_UISetting.updateCameraY(detaY<0);
+                    G_UISetting.updateCameraY(detaY < 0);
                 }
                 this._lastPressPos[0] = ev.x;
                 this._lastPressPos[1] = ev.y;
             }
-    
+
         }
-        
+
     }
     private onMouseUp(ev): void {
         this._isCapture = false;
         this._press = false;
         this._lastPressPos = [];
     }
-    private onMouseOut():void{
+    private onMouseOut(): void {
         this._isCapture = false;
         this._press = false;
         this._lastPressPos = [];
     }
-    private onWheel(ev:WheelEvent):void{
-      G_UISetting.updateCameraZ(ev.deltaY>0);
+    private onWheel(ev: WheelEvent): void {
+        G_UISetting.updateCameraZ(ev.deltaY > 0);
     }
-    private onKeyDown(key):void{
-        console.log("key---------",key);
+    private onKeyDown(key): void {
+        console.log("key---------", key);
     }
     /**
      * 
@@ -442,13 +434,15 @@ export default class Device {
      * @param debug 
      * @param drawtoUI 
      */
-    public startDraw(time: number,stage:Node,debug:boolean = true,drawtoUI:boolean = true): void {
+    public startDraw(time: number, stage: Node, debug: boolean = true, drawtoUI: boolean = true): void {
         this._isDebugMode = debug;
         this._isDrawToUI = drawtoUI;
         this.onBeforeRender();
-        this.visitRenderTree(time,stage);
-        this._isDrawToUI?this.drawToUI():null;
-        this.draw2screen();
+        this.visitRenderTree(time, stage);
+        var cameraData = GameMainCamera.instance.getRenderData();
+        for (let k = 0; k < cameraData.length; k++) {
+            this.realDraw(cameraData[k])
+        }
         this.onAfterRender();
     }
     /**
@@ -457,29 +451,12 @@ export default class Device {
      * @param scene2D 
      * @param scene3D 
      */
-    private visitRenderTree(time: number, stage:Node): void {
+    private visitRenderTree(time: number, stage: Node): void {
         stage.visit(time);
     }
-    /**
-     * 将结果绘制到UI上
-     */
-    private drawToUI(): void {
-        let frameBuffer: WebGLFramebuffer = GameMainCamera.instance.get2DCamera().getFramebuffer();
-        this.readyForOneFrame(frameBuffer,{ x: 0, y: 0, w: 1, h: 1 });
-        this.triggerRender(false,false);
-    }
-    //将结果绘制到窗口
-    private draw2screen(): void {
-        if (this._isDebugMode) {
-            this.readyForOneFrame(null,{ x: 0, y: 0, w: 0.5, h: 1 });
-            this.triggerRender(false,true);
-            this.readyForOneFrame(null,{ x: 0.5, y: 0, w: 0.5, h: 1 },false);
-            this.triggerRender(true,true);
-        }
-        else {
-            this.readyForOneFrame(null,{ x: 0, y: 0, w: 1, h: 1 });
-            this.triggerRender(false,true);
-        }
+    private realDraw(data: CameraRenderData): void {
+        this.readyForOneFrame(data.fb, data.viewPort, data.isClear);
+        this.triggerRender(data.isScene, data.isRenderToScreen);
         if (this._isCapture) {
             this._isCapture = false;
             this.capture();
@@ -490,11 +467,11 @@ export default class Device {
         this.stats.begin();
         this._renderTreeData = [];
     }
-   
+
     /**
      * 提交渲染状态
      */
-    private _commitRenderState(state:State): void {
+    private _commitRenderState(state: State): void {
         let gl = this.gl;
 
         this._nextFrameS.depthTest = state.depthTest; //开启深度测试
@@ -505,10 +482,10 @@ export default class Device {
 
         this._nextFrameS.ScissorTest = true;//裁切测试
 
-        _commitDepthState(gl,this._curFrameS,this._nextFrameS);
-        _commitCullState(gl,this._curFrameS,this._nextFrameS);
-        _commitScissorState(gl,this._curFrameS,this._nextFrameS);
-        _commitBlendState(gl,this._curFrameS,this._nextFrameS);
+        _commitDepthState(gl, this._curFrameS, this._nextFrameS);
+        _commitCullState(gl, this._curFrameS, this._nextFrameS);
+        _commitScissorState(gl, this._curFrameS, this._nextFrameS);
+        _commitBlendState(gl, this._curFrameS, this._nextFrameS);
         //更新状态
         this._curFrameS.set(this._nextFrameS);
     }
@@ -517,33 +494,31 @@ export default class Device {
         this.stats.end();
         syRender.DataPool.return(this._renderTreeData);
     }
-    
+
     /**
      * 触发渲染的时间 
      */
-    private _triggerRenderTime:number=0;
-    public get triggerRenderTime(){
+    private _triggerRenderTime: number = 0;
+    public get triggerRenderTime() {
         return this._triggerRenderTime;
     }
-    private triggerRender(isScene: boolean = false,isRenderToScreen:boolean) {
-        
+    private triggerRender(isScene: boolean = false, isRenderToScreen: boolean) {
+
         //记录一下当前渲染的时间
         this._triggerRenderTime++;
-
         if (isScene) {
-            var cameraData = GameMainCamera.instance.getCamera(this._renderTreeData[0]._cameraIndex).getCameraData();
+            var cameraData = GameMainCamera.instance.getCameraIndex(this._renderTreeData[0]._cameraIndex).getCameraData();
             G_CameraModel.draw(cameraData.projectMat, cameraData.modelMat);
         }
         //提交数据给GPU 立即绘制
         for (var j = 0; j < this._renderTreeData.length; j++) {
-            if(this._renderTreeData[j].isOffline&&!isRenderToScreen)
-            {
+            if (this._renderTreeData[j].isOffline && !isRenderToScreen) {
                 //对于离屏渲染的数据 如果当前是离屏渲染的话 则不可以渲染它 否则会报错
                 //你想啊你把一堆显示数据渲染到一张纹理中，这张纹理本身就在这一堆渲染数据中 自然是会冲突的
                 //[.Offscreen-For-WebGL-07E77500]GL ERROR :GL_INVALID_OPERATION : glDrawElements: Source and destination textures of the draw are the same
                 continue;
             }
-            
+
             this.draw(this._renderTreeData[j], isScene);
         }
     }
@@ -553,8 +528,8 @@ export default class Device {
      * @param projMatix 投影矩阵
      * @param viewMatrix 视口矩阵
      */
-    private _drawBase(rData:syRender.BaseData, projMatix: Float32Array, viewMatrix: Float32Array): void {
-        G_DrawEngine.run(rData,viewMatrix,projMatix,rData.shader);
+    private _drawBase(rData: syRender.BaseData, projMatix: Float32Array, viewMatrix: Float32Array): void {
+        G_DrawEngine.run(rData, viewMatrix, projMatix, rData.shader);
     }
     private _temp1Matrix: Float32Array = glMatrix.mat4.identity(null);
     /**
@@ -564,10 +539,10 @@ export default class Device {
      */
     private draw(rData: syRender.BaseData, isUseScene: boolean = false): void {
 
-        var cameraData = GameMainCamera.instance.getCamera(rData._cameraIndex).getCameraData();
+        var cameraData = GameMainCamera.instance.getCameraIndex(rData._cameraIndex).getCameraData();
         glMatrix.mat4.identity(this._temp1Matrix);
 
-         //补一下光的数据
+        //补一下光的数据
         rData.light.parallel.color = G_LightCenter.lightData.parallelColor; //光的颜色
         rData.light.parallel.direction = G_LightCenter.lightData.parallelDirection;//光的方向
         rData._cameraPosition = cameraData.position;
@@ -611,7 +586,7 @@ export default class Device {
                 }
                 break;
             case syRender.DataType.Spine:
-                this._commitRenderState((rData  as syRender.SpineData)._state);
+                this._commitRenderState((rData as syRender.SpineData)._state);
                 if (isUseScene) {
                     let projMatix = G_CameraModel.getSceneProjectMatrix();
                     glMatrix.mat4.invert(this._temp1Matrix, G_CameraModel.getSceneCameraMatrix());
@@ -645,7 +620,7 @@ export default class Device {
     }
     private _drawNormal(sData: syRender.NormalData, cameraData: CameraData): void {
         this.gl.useProgram(sData._shaderData.spGlID);
-        (sData.node as SY.Sprite).updateUniformsData(cameraData,G_LightCenter.lightData);
+        (sData.node as SY.Sprite).updateUniformsData(cameraData, G_LightCenter.lightData);
         G_ShaderFactory.setBuffersAndAttributes(sData._shaderData.attrSetters, sData._attrbufferData);
         for (let j in sData._uniformData) {
             G_ShaderFactory.setUniforms(sData._shaderData.uniSetters, sData._uniformData[j]);
@@ -664,11 +639,11 @@ export default class Device {
      * @param viewPort 视口大小
      * @param isClear 是否清理缓冲区
      */
-    private readyForOneFrame(fb: WebGLFramebuffer,viewPort:any,isClear:boolean=true):void{
-          this.setFrameBuffer(fb);
-          this.setViewPort(viewPort);
-          if(isClear)
-          this.clear();
+    private readyForOneFrame(fb: WebGLFramebuffer, viewPort: any, isClear: boolean = true): void {
+        this.setFrameBuffer(fb);
+        this.setViewPort(viewPort);
+        if (isClear)
+            this.clear();
     }
     private _framebuffer: WebGLFramebuffer;//帧缓冲
     /**
@@ -680,7 +655,7 @@ export default class Device {
             return;
         }
         this._framebuffer = fb;
-        this.gl.bindFramebuffer(this.gl.FRAMEBUFFER,this._framebuffer);
+        this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this._framebuffer);
     }
     /**
      * 设置视口
@@ -692,20 +667,19 @@ export default class Device {
      * h:【0,1】
      * }
      */
-    private _curViewPort:any;
+    private _curViewPort: any;
     private setViewPort(object: any): void {
         let x = object.x * this.width;
         let y = object.y * this.height;
         let width = object.w * this.width;
         let height = object.h * this.height;
-       if(this._curViewPort==null||
-        !(this._curViewPort.x == x&&this._curViewPort.y == y&&this._curViewPort.width == width&&this._curViewPort.height == height))
-        {
+        if (this._curViewPort == null ||
+            !(this._curViewPort.x == x && this._curViewPort.y == y && this._curViewPort.width == width && this._curViewPort.height == height)) {
             this.gl.viewport(x, y, width, height);
             this.gl.scissor(x, y, width, height);
-            this._curViewPort = {x:x,y:y,width:width,height:height};
+            this._curViewPort = { x: x, y: y, width: width, height: height };
         }
-        
+
     }
     /**
      * 清理附件
@@ -713,26 +687,26 @@ export default class Device {
      * 深度
      * 模板
      */
-    public clear():void{
+    public clear(): void {
         let gl = this.gl;
         gl.clearColor(0.5, 0.5, 0.5, 1.0);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     }
     //---------------------------------------------------------------------------------------------end---------------------------------
 
-    public get width(){
+    public get width() {
         return this._width;
     }
-    public get height(){
+    public get height() {
         return this._height;
     }
-    public set width(width){
+    public set width(width) {
         this.width = width;
     }
-    public set height(height){
+    public set height(height) {
         this._height = height;
     }
-    
+
 
 
     /**
@@ -1008,7 +982,7 @@ export default class Device {
         gl.disable(gl.CULL_FACE);
     }
     //写入模板值
-    public writeStencil(ref: number = 1, mask: number = 1,isCloseColorWrite:boolean = true): void {
+    public writeStencil(ref: number = 1, mask: number = 1, isCloseColorWrite: boolean = true): void {
         /**
          * 可以把模板缓存想象成一个二维数组stencil[width][height]
          * 清空缓存，就是将这个数组的每一个元素设为0
@@ -1029,9 +1003,8 @@ export default class Device {
         gl.stencilFunc(gl.ALWAYS, ref, mask);
         // 设置模板值操作
         gl.stencilOp(gl.KEEP, gl.KEEP, gl.REPLACE);
-        
-        if(isCloseColorWrite)
-        {
+
+        if (isCloseColorWrite) {
             //关闭向颜色附件中写入颜色值
             gl.colorMask(false, false, false, false);
         }
@@ -1056,7 +1029,7 @@ export default class Device {
         // 关闭深度检测
         gl.disable(gl.DEPTH_TEST);
 
-        gl.colorMask(true, true,true,true);
+        gl.colorMask(true, true, true, true);
     }
     //关闭模板测试
     public closeStencil(): void {

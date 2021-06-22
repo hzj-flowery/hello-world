@@ -61,6 +61,7 @@ import { handler } from "../../../utils/handler";
 import { G_TextureManager } from "./texture/TextureManager";
 import { G_PassFactory } from "../shader/PassFactory";
 import { Pass } from "../shader/Pass";
+import { CameraIndex } from "../camera/GameMainCamera";
 
 /**
  * 显示节点
@@ -125,7 +126,7 @@ export namespace SY {
         private _renderData: Array<syRender.BaseData>;
         //参考glprimitive_type
         protected _glPrimitiveType: syGL.PrimitiveType;//绘制的类型
-        protected _cameraIndex: number = 0;//相机的类型(0表示透视1表示正交)
+        protected _cameraIndex: number = CameraIndex.base3D;//相机的类型(0表示透视1表示正交)
         protected _sizeMode: SpriteSizeMode;//节点的尺寸模式
         protected _shaderType: ShaderType;//shader的类型
         constructor() {
@@ -510,7 +511,7 @@ export namespace SY {
         private _rb: Array<number> = [];//右下
         constructor() {
             super();
-            this._cameraIndex = enums.PROJ_ORTHO;
+            this._cameraIndex = CameraIndex.base2D;
             this._glPrimitiveType = this.gl.TRIANGLE_STRIP;
         }
         private updateUV(): void {

@@ -19,6 +19,6 @@ export class RenderOffline3DSprite extends SY.SpriteBase{
     }
     protected onSetTextureUrl():void{
         
-        GameMainCamera.instance.get2DCamera().targetTexture = this.texture as RenderTexture;
+        GameMainCamera.instance.getBase2DCamera().targetTexture = this.texture as RenderTexture;
     }
 }

@@ -92,22 +92,22 @@ export default class Scene3D extends Scene {
         this._spineNode.y = 10;
         this.addChild(this._spineNode);
 
-        // this._customTexture = new CustomTextureCube();
-        // this._customTexture.spriteFrame = CustomTextureData.getRandomData(3, 5, syGL.TextureFormat.RGB8);
-        // this._customTexture.setPosition(0, 3.1, 0);
-        // this._centerNode.addChild(this._customTexture);
+        this._customTexture = new CustomTextureCube();
+        this._customTexture.spriteFrame = CustomTextureData.getRandomData(3, 5, syGL.TextureFormat.RGB8);
+        this._customTexture.setPosition(0, 3.1, 0);
+        this._centerNode.addChild(this._customTexture);
 
-        // this._tableNode = new Cube();
-        // this._tableNode.spriteFrame = "res/wood.jpg";
-        // this._tableNode.setPosition(0, 1, 0);
-        // this._tableNode.setScale(2.0, 0.1, 2.0);
-        // this._centerNode.addChild(this._tableNode);
+        this._tableNode = new Cube();
+        this._tableNode.spriteFrame = "res/wood.jpg";
+        this._tableNode.setPosition(0, 1, 0);
+        this._tableNode.setScale(2.0, 0.1, 2.0);
+        this._centerNode.addChild(this._tableNode);
 
-        // this._alphaNode = new AlphaCube();
-        // this._alphaNode.spriteFrame = "res/good.jpg";
-        // this._alphaNode.setPosition(0, 3, 0);
-        // this._alphaNode.setScale(2.0, 2.0, 2.0);
-        // this._centerNode.addChild(this._alphaNode);
+        this._alphaNode = new AlphaCube();
+        this._alphaNode.spriteFrame = "res/good.jpg";
+        this._alphaNode.setPosition(0, 3, 0);
+        this._alphaNode.setScale(2.0, 2.0, 2.0);
+        this._centerNode.addChild(this._alphaNode);
 
 
         
@@ -188,12 +188,12 @@ export default class Scene3D extends Scene {
         this._skybox.setDefaultUrl();
         this.addChild(this._skybox);
 
-        // let tempNode = new Node();
-        // tempNode.setPosition(-10,-3.0,0);
-        // this.addChild(tempNode);
-        // this._mirrorCube = new MirrorCube();
-        // this._mirrorCube.setDefaultUrl();
-        // tempNode.addChild(this._mirrorCube);
+        let tempNode = new Node();
+        tempNode.setPosition(-10,-3.0,0);
+        this.addChild(tempNode);
+        this._mirrorCube = new MirrorCube();
+        this._mirrorCube.setDefaultUrl();
+        tempNode.addChild(this._mirrorCube);
 
         this.setPosition(0, 0, 0);
         setTimeout(this.rotateCenterNode.bind(this), 20);

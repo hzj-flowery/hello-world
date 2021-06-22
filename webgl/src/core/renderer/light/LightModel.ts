@@ -6,7 +6,7 @@ import { Node } from "../base/Node";
 import { SY } from "../base/Sprite";
 import { G_Stage } from "../base/Stage";
 import enums from "../camera/enums";
-import {GameMainCamera} from "../camera/GameMainCamera";
+import {CameraIndex, GameMainCamera} from "../camera/GameMainCamera";
 import { syPrimitives } from "../shader/Primitives";
 import { BufferAttribsData, ShaderData } from "../shader/Shader";
 import { G_ShaderFactory } from "../shader/ShaderFactory";
@@ -133,7 +133,7 @@ class LightModel {
     public drawFrustum(projectionMatrix, cameraMatrix) {
 
         if (!projectionMatrix || !cameraMatrix) {
-            var cameraData = GameMainCamera.instance.getCamera(enums.PROJ_PERSPECTIVE).getCameraData();
+            var cameraData = GameMainCamera.instance.getCameraIndex(CameraIndex.base3D).getCameraData();
             projectionMatrix = cameraData.projectMat;
             cameraMatrix = cameraData.modelMat
         }
