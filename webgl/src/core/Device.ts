@@ -3,7 +3,7 @@ import { glMatrix } from "./math/Matrix";
 import Scene2D from "./renderer/base/Scene2D";
 import Scene3D from "./renderer/base/Scene3D";
 import { G_CameraModel } from "./renderer/camera/CameraModel";
-import { CameraRenderData, GameMainCamera } from "./renderer/camera/GameMainCamera";
+import { CameraIndex, CameraRenderData, GameMainCamera } from "./renderer/camera/GameMainCamera";
 import FrameBuffer from "./renderer/gfx/FrameBuffer";
 import { CameraData } from "./renderer/data/CameraData";
 import { syRender } from "./renderer/data/RenderData";
@@ -502,12 +502,12 @@ export default class Device {
     public get triggerRenderTime() {
         return this._triggerRenderTime;
     }
-    private triggerRender(isScene: boolean = false, isRenderToScreen: boolean) {
+    private triggerRender(isUseScene: boolean = false, isRenderToScreen: boolean) {
 
         //记录一下当前渲染的时间
         this._triggerRenderTime++;
-        if (isScene) {
-            var cameraData = GameMainCamera.instance.getCameraIndex(this._renderTreeData[0]._cameraIndex).getCameraData();
+        if (isUseScene) {
+            var cameraData = GameMainCamera.instance.getCameraIndex(CameraIndex.base3D).getCameraData();
             G_CameraModel.draw(cameraData.projectMat, cameraData.modelMat);
         }
         //提交数据给GPU 立即绘制
@@ -519,7 +519,7 @@ export default class Device {
                 continue;
             }
 
-            this.draw(this._renderTreeData[j], isScene);
+            this.draw(this._renderTreeData[j], isUseScene);
         }
     }
     /**

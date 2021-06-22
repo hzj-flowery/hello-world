@@ -3,6 +3,7 @@ import Device from "../../Device";
 import { G_UISetting } from "../../ui/UiSetting";
 import { RenderTexture } from "../base/texture/RenderTexture";
 import FrameBuffer from "../gfx/FrameBuffer";
+import { glEnums } from "../gfx/GLapi";
 import Camera from "./Camera";
 import enums from "./enums";
 import OrthoCamera from "./OrthoCamera";
@@ -69,7 +70,18 @@ export class GameMainCamera {
     camera.Near = near;
     camera.Far = far;
     return camera;
-
+  }
+  private createCamera(type:number,fovy:number,aspect:number,near:number,far:number):Camera{
+      if(type==0)
+      {
+         //透视相机
+         return new PerspectiveCamera(fovy,aspect,near,far);
+      }
+      else if(type==1)
+      {
+        //正交相机
+         return new OrthoCamera(fovy,aspect,near,far);
+      }
   }
   public getCameraIndex(index): Camera {
     return this._cameraMap.get(index)
