@@ -586,9 +586,54 @@ export namespace SY {
 
             var pos = [].concat(this._lb, this._rb, this._rt, this._lt);
             this.createVertexsBuffer(pos, 3);
-
             this.updateUV();
+        }
+        /**
+         * 特殊处理
+         * 传入的值是笛卡尔坐标 需要转为其次裁切坐标
+         * @param x 
+         * @param y 
+         * @param z 
+         */
+        public setPosition(x:number,y:number,z:number=0):void{
+             x = this.convertScreenSpaceToClipSpaceX(x);
+             y = this.convertScreenSpaceToClipSpaceY(y);
+             //2d显示 
+             super.setPosition(x,y,0);
+        }
+        // public set x(dd) {
+        //     super.setX(this.convertScreenSpaceToClipSpaceX(dd));
+        // }
+        // public set y(dd) {
+        //     super.setY(this.convertScreenSpaceToClipSpaceY(dd));
+        // }
+        // public set z(dd) {
+        //     super.setZ(0);
+        // }
 
+         /**
+         * 屏幕坐标转为齐次裁切坐标 x
+         */
+          public convertScreenSpaceToClipSpaceX(x:number):number{
+            var width = Device.Instance.width;
+            var centerX = width/2;//0
+            return (x-centerX)/centerX
+        }
+        /**
+         * 屏幕坐标转为齐次裁切坐标 y
+         */
+        public convertScreenSpaceToClipSpaceY(y:number):number{
+            var height = Device.Instance.height;
+            var centerY = height/2;//0
+            return (y-centerY)/centerY
+        }
+        /**
+         * 屏幕坐标转为齐次裁切坐标
+         * 笛卡尔坐标：左下角【0,0】=>【screenWidth,screenHeight】
+         * 齐次裁切坐标：左下角【-1,-1】=>中间【0,0】=>右上角[1,1]
+         */
+        public convertScreenSpaceToClipSpace(x:number,y:number):Array<number>{
+           return [this.convertScreenSpaceToClipSpaceX(x),this.convertScreenSpaceToClipSpaceY(y)]
         }
 
     }

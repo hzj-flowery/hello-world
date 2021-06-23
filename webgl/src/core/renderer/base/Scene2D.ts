@@ -21,10 +21,11 @@ export default class Scene2D extends Scene {
     public init(): void {
 
     
-        // this._rectangle = new Rectangle();
-        // this._rectangle.setPosition(0.5, 0, 0);
-        // this._rectangle.spriteFrame = "res/map1.png";
-        // this.addChild(this._rectangle);
+        this._rectangle = new Rectangle();
+        this._rectangle.setPosition(Device.Instance.width/2,Device.Instance.height/2, -100);
+        this._rectangle.spriteFrame = "res/map1.png";
+        // this._rectangle.x = 100;
+        this.addChild(this._rectangle);
 
 
         // this._uvSprite = new UvSprite();

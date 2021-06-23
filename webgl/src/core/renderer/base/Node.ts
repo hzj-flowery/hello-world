@@ -59,6 +59,12 @@ export class Node extends Ref {
             this._x = dd;
         }
     }
+    protected setX(dd) {
+        if (this._x != dd) {
+            this._updateModelMatrixFlag = true;
+            this._x = dd;
+        }
+    }
     public get y(): number {
         return this._y;
     }
@@ -68,10 +74,22 @@ export class Node extends Ref {
             this._y = dd;
         }
     }
+    protected setY(dd) {
+        if (this._y != dd) {
+            this._updateModelMatrixFlag = true;
+            this._y = dd;
+        }
+    }
     public get z(): number {
         return this._z;
     }
     public set z(dd) {
+        if (this._z != dd) {
+            this._updateModelMatrixFlag = true;
+            this._z = dd;
+        }
+    }
+    protected setZ(dd) {
         if (this._z != dd) {
             this._updateModelMatrixFlag = true;
             this._z = dd;
