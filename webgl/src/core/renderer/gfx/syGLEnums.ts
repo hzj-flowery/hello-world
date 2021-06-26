@@ -169,6 +169,11 @@ export namespace syGL {
         TEX_COORD6 = 'u_texCoord6',
         TEX_COORD7 = 'u_texCoord7',
         TEX_COORD8 = 'u_texCoord8',
+        //延迟渲染
+        TEX_GPosition = "gPosition",//位置信息
+        TEX_GNormal = "gNormal",//法线信息
+        TEX_GColor = "gColor",  //颜色信息
+
         SKYBOX = "u_skybox",
         Matrix = 'u_mat',      //万能矩阵
         VMMatrix = 'u_VMmat',  //视口矩阵*模型世界矩阵

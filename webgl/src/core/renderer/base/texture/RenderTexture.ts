@@ -70,6 +70,9 @@ export class RenderTexture extends Texture2D {
     public get depthTexture(){
         return this._depthTexture;
     }
+    public get moreTexture():Array<WebGLTexture>{
+        return this._moreTexture;
+    }
     /**
      * 
      * @param place 

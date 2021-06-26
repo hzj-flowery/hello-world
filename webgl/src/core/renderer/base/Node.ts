@@ -1,5 +1,6 @@
 import Ref from "./Ref";
 import { glMatrix } from "../../math/Matrix";
+import Device from "../../Device";
 
 
 export class Node extends Ref {
@@ -28,6 +29,7 @@ export class Node extends Ref {
 
     protected name: string;
     protected tag: number;
+    private __node__type:number=3;//2代表2d节点 3代表3d节点
 
     protected _glMatrix = glMatrix;//矩阵操作api
     /**
@@ -50,17 +52,26 @@ export class Node extends Ref {
         this._localMatrix = this._glMatrix.mat4.identity(null);
         this._updateModelMatrixFlag = true;
     }
+    /**
+     * 此函数不可以轻易调用
+     */
+    protected set _node__type(_ty:number){
+        if(_ty==2||_ty==3)
+        {
+           this.__node__type=_ty;
+        }
+        else
+        {
+            this.__node__type=3;
+            console.log("你传入的节点类型有问题---",_ty);
+        }
+    }
     public get x(): number {
         return this._x;
     }
     public set x(dd) {
         if (this._x != dd) {
-            this._updateModelMatrixFlag = true;
-            this._x = dd;
-        }
-    }
-    protected setX(dd) {
-        if (this._x != dd) {
+            dd = this.checkPosition(0,dd);
             this._updateModelMatrixFlag = true;
             this._x = dd;
         }
@@ -70,12 +81,7 @@ export class Node extends Ref {
     }
     public set y(dd) {
         if (this._y != dd) {
-            this._updateModelMatrixFlag = true;
-            this._y = dd;
-        }
-    }
-    protected setY(dd) {
-        if (this._y != dd) {
+            dd = this.checkPosition(1,dd);
             this._updateModelMatrixFlag = true;
             this._y = dd;
         }
@@ -89,12 +95,6 @@ export class Node extends Ref {
             this._z = dd;
         }
     }
-    protected setZ(dd) {
-        if (this._z != dd) {
-            this._updateModelMatrixFlag = true;
-            this._z = dd;
-        }
-    }
     public get scaleX(): number {
         return this._scaleX;
     }
@@ -103,6 +103,26 @@ export class Node extends Ref {
             this._updateModelMatrixFlag = true;
             this._scaleX = dd;
         }
+    }
+    /**
+     * 
+     * @param pos 0 代表x 1代表y 2代表z
+     * @param value 
+     */
+    private checkPosition(pos,value):number{
+       if(this.__node__type==3)
+       {
+           return value;
+       }
+       if(pos==0)
+       {
+           return this.convertScreenSpaceToClipSpaceX(value);
+       }
+       else if(pos==1)
+       {
+           return this.convertScreenSpaceToClipSpaceY(value);
+       }
+       return value;
     }
     public get scaleY(): number {
         return this._scaleY;
@@ -293,6 +313,31 @@ export class Node extends Ref {
         this.rotateX = this._rotateX + x;
         this.rotateY = this._rotateY + y;
         this.rotateZ = this._rotateZ + z;
+    }
+
+     /**
+         * 屏幕坐标转为齐次裁切坐标 x
+         */
+      public convertScreenSpaceToClipSpaceX(x:number):number{
+        var width = Device.Instance.width;
+        var centerX = width/2;//0
+        return (x-centerX)/centerX
+    }
+    /**
+     * 屏幕坐标转为齐次裁切坐标 y
+     */
+    public convertScreenSpaceToClipSpaceY(y:number):number{
+        var height = Device.Instance.height;
+        var centerY = height/2;//0
+        return (y-centerY)/centerY
+    }
+    /**
+     * 屏幕坐标转为齐次裁切坐标
+     * 笛卡尔坐标：左下角【0,0】=>【screenWidth,screenHeight】
+     * 齐次裁切坐标：左下角【-1,-1】=>中间【0,0】=>右上角[1,1]
+     */
+    public convertScreenSpaceToClipSpace(x:number,y:number):Array<number>{
+       return [this.convertScreenSpaceToClipSpaceX(x),this.convertScreenSpaceToClipSpaceY(y)]
     }
 
 }

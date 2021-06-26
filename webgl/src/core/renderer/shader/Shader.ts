@@ -90,6 +90,9 @@ export class Shader {
     private u_texCoord8_loc;//纹理属性8号位置
     private u_cubeCoord_loc;//立方体属性位置
     private u_skybox_loc;//天空盒属性位置
+    private u_gPosition_loc;//位置纹理信息
+    private u_gNormal_loc;//法线纹理信息
+    private u_gColor_loc;//颜色纹理信息
 
     private u_shadowMap_loc;//阴影贴图
     private u_shadowInfor_loc;//阴影信息
@@ -166,6 +169,9 @@ export class Shader {
         this.u_texCoord8_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.TEX_COORD8);
         this.u_cubeCoord_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.CUBE_COORD);
         this.u_skybox_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.SKYBOX);
+        this.u_gPosition_loc = gl.getAttribLocation(_glID, syGL.AttributeUniform.TEX_GPosition);
+        this.u_gNormal_loc = gl.getAttribLocation(_glID,syGL.AttributeUniform.TEX_GNormal);
+        this.u_gColor_loc = gl.getAttribLocation(_glID,syGL.AttributeUniform.TEX_GColor);
 
         this.u_shadowMap_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.SHADOW_MAP);
         this.u_shadowInfor_loc = gl.getUniformLocation(_glID, syGL.AttributeUniform.SHADOW_INFOR);
@@ -228,6 +234,9 @@ export class Shader {
         this.u_texCoord7_loc != null ? this.pushShaderVariant(ShaderUseVariantType.TEX_COORD7) : null;
         this.u_texCoord8_loc != null ? this.pushShaderVariant(ShaderUseVariantType.TEX_COORD8) : null;
         this.u_cubeCoord_loc != null ? this.pushShaderVariant(ShaderUseVariantType.CUBE_COORD) : null;
+        this.u_gPosition_loc!=null?this.pushShaderVariant(ShaderUseVariantType.GPosition):null;
+        this.u_gNormal_loc!=null?this.pushShaderVariant(ShaderUseVariantType.GNormal):null;
+        this.u_gColor_loc!=null?this.pushShaderVariant(ShaderUseVariantType.GColor):null;
         if (this.u_skybox_loc) {
             setTimeout(() => {
                 this.pushShaderVariant(ShaderUseVariantType.SKYBOX)
@@ -244,6 +253,7 @@ export class Shader {
         this.u_PVMatrix_inverse_loc != null ? this.pushShaderVariant(ShaderUseVariantType.ProjectionViewInverse) : null;
         this.u_camera_world_position_loc != null ? this.pushShaderVariant(ShaderUseVariantType.CameraWorldPosition) : null;
         this.u_light_world_position_loc != null ? this.pushShaderVariant(ShaderUseVariantType.LightWorldPosition) : null;
+
     }
     private pushShaderVariant(type: ShaderUseVariantType): void {
         if (type >= ShaderUseVariantType.UndefinedMax || type <= ShaderUseVariantType.UndefinedMin) {
@@ -438,6 +448,39 @@ export class Shader {
             if (this.checklocValid(this.u_cubeCoord_loc, "u_cubeCoord_loc")) {
                 G_DrawEngine.activeTexture(this._gl.TEXTURE_CUBE_MAP, glID, this.u_cubeCoord_loc, pos)
             }
+        }
+    }
+    /**
+     * 设置延迟渲染的位置纹理
+     * @param glID 
+     * @param pos 
+     */
+    public setUseDeferredPositionTexture(glID: WebGLTexture, pos:number):void{
+        if(this.checklocValid(this.u_gPosition_loc,"u_gPosition_loc"))
+        {
+            G_DrawEngine.activeTexture(this._gl.TEXTURE_2D, glID, this.u_gPosition_loc, pos)
+        }
+    }
+     /**
+     * 设置延迟渲染的法线纹理
+     * @param glID 
+     * @param pos 
+     */
+    public setUseDeferredNormalTexture(glID: WebGLTexture, pos:number):void{
+        if(this.checklocValid(this.u_gNormal_loc,"u_gNormal_loc"))
+        {
+            G_DrawEngine.activeTexture(this._gl.TEXTURE_2D, glID, this.u_gNormal_loc, pos)
+        }
+    }
+     /**
+     * 设置延迟渲染的颜色纹理
+     * @param glID 
+     * @param pos 
+     */
+      public setUseDeferredColorTexture(glID: WebGLTexture, pos:number):void{
+        if(this.checklocValid(this.u_gColor_loc,"u_gColor_loc"))
+        {
+            G_DrawEngine.activeTexture(this._gl.TEXTURE_2D, glID, this.u_gColor_loc, pos)
         }
     }
     public setUseSkyBox(glID: WebGLTexture, pos = 0): void {

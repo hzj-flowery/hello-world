@@ -127,10 +127,10 @@ export default class Scene3D extends Scene {
         this._renderSprite.setPosition(-3,10,0);
         this._centerNode.addChild(this._renderSprite);
 
-        // this._rtt = new RTT();
+        this._rtt = new RTT();
         // this._rtt.spriteFrame = "res/dragon.png";
-        // this._rtt.setPosition(-6,10,0);
-        // this._centerNode.addChild(this._rtt);
+        this._rtt.setPosition(-6,10,0);
+        this._centerNode.addChild(this._rtt);
 
         // this._cubeNode = new Cube();
         // this._cubeNode.spriteFrame = "res/wicker.jpg";

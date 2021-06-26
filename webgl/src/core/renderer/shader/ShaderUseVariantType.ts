@@ -18,6 +18,9 @@ export enum ShaderUseVariantType {
     TEX_COORD8, //纹理8号单元
     CUBE_COORD, //立方体纹理单元
     SKYBOX,//cube纹理单元
+    GPosition,//延迟渲染--位置纹理
+    GNormal,  //延迟渲染--法线纹理
+    GColor,   //延迟渲染--颜色纹理
 
 
     Model,  //模型世界矩阵

@@ -62,6 +62,7 @@ import { G_TextureManager } from "./texture/TextureManager";
 import { G_PassFactory } from "../shader/PassFactory";
 import { Pass } from "../shader/Pass";
 import { CameraIndex } from "../camera/GameMainCamera";
+import { RenderTexture } from "./texture/RenderTexture";
 
 /**
  * 显示节点
@@ -390,7 +391,28 @@ export namespace SY {
                 }
                 this._renderData[i].primitive.modelMatrix = this.modelMatrix;
                 this._renderData[i].time = time;
-                if (this._texture && this._texture._glID) {
+                if(this._texture instanceof RenderTexture && 
+                  (this._texture as RenderTexture).moreTexture &&
+                  (this._texture as RenderTexture).moreTexture.length>0)
+                {
+                    var texS = (this._texture as RenderTexture).moreTexture;
+                    for(let k=0;k<texS.length;k++)
+                    {
+                        if(k==0)
+                        {
+                            this._renderData[i].pushDeferredPositionTexture(texS[i])
+                        }
+                        else if(k==1)
+                        {
+                            this._renderData[i].pushDeferredNormalTexture(texS[i])
+                        }
+                        else if(k==2)
+                        {
+                            this._renderData[i].pushDeferredColorTexture(texS[i])
+                        }
+                    }
+                }
+                else if (this._texture && this._texture._glID) {
                     if (this._texture.isTexture2D)
                         this._renderData[i].push2DTexture(this.getGLID(SY.GLID_TYPE.TEXTURE_2D));
                     else if (this._texture.isTextureCube)
@@ -511,6 +533,7 @@ export namespace SY {
         private _rb: Array<number> = [];//右下
         constructor() {
             super();
+            this._node__type=2;
             this._cameraIndex = CameraIndex.base2D;
             this._glPrimitiveType = this.gl.TRIANGLE_STRIP;
         }
@@ -588,54 +611,6 @@ export namespace SY {
             this.createVertexsBuffer(pos, 3);
             this.updateUV();
         }
-        /**
-         * 特殊处理
-         * 传入的值是笛卡尔坐标 需要转为其次裁切坐标
-         * @param x 
-         * @param y 
-         * @param z 
-         */
-        public setPosition(x:number,y:number,z:number=0):void{
-             x = this.convertScreenSpaceToClipSpaceX(x);
-             y = this.convertScreenSpaceToClipSpaceY(y);
-             //2d显示 
-             super.setPosition(x,y,0);
-        }
-        // public set x(dd) {
-        //     super.setX(this.convertScreenSpaceToClipSpaceX(dd));
-        // }
-        // public set y(dd) {
-        //     super.setY(this.convertScreenSpaceToClipSpaceY(dd));
-        // }
-        // public set z(dd) {
-        //     super.setZ(0);
-        // }
-
-         /**
-         * 屏幕坐标转为齐次裁切坐标 x
-         */
-          public convertScreenSpaceToClipSpaceX(x:number):number{
-            var width = Device.Instance.width;
-            var centerX = width/2;//0
-            return (x-centerX)/centerX
-        }
-        /**
-         * 屏幕坐标转为齐次裁切坐标 y
-         */
-        public convertScreenSpaceToClipSpaceY(y:number):number{
-            var height = Device.Instance.height;
-            var centerY = height/2;//0
-            return (y-centerY)/centerY
-        }
-        /**
-         * 屏幕坐标转为齐次裁切坐标
-         * 笛卡尔坐标：左下角【0,0】=>【screenWidth,screenHeight】
-         * 齐次裁切坐标：左下角【-1,-1】=>中间【0,0】=>右上角[1,1]
-         */
-        public convertScreenSpaceToClipSpace(x:number,y:number):Array<number>{
-           return [this.convertScreenSpaceToClipSpaceX(x),this.convertScreenSpaceToClipSpaceY(y)]
-        }
-
     }
 
     /**

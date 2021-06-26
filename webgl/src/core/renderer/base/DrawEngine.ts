@@ -138,6 +138,7 @@ class DrawEngine {
      * @param matrix 矩阵数据
      */
     public setUniformMatrix(loc: number, matrix: Float32Array): void {
+        //false参数表示不需要转置（行变列，列变行）这个矩阵，WebGL要求这个参数必须设置为false
         this.gl.uniformMatrix4fv(loc, false, matrix);
     }
     /**
@@ -271,7 +272,7 @@ class DrawEngine {
     private enableVertexAttribArray(loc:number, itemSize:number, type:number, normalized: boolean = false, stride: number = 0, offset: number = 0): void {
         let gl = this.gl;
         gl.enableVertexAttribArray(loc);
-        gl.vertexAttribPointer(loc, itemSize, type, normalized, stride, offset);
+        gl.vertexAttribPointer(loc, itemSize, type,normalized, stride, offset);
     }
 
     /**

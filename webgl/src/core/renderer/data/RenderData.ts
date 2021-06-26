@@ -221,6 +221,9 @@ export namespace syRender {
         private _id: number;//每一个渲染数据都一个唯一的id
         private _texture2DGLIDArray: Array<WebGLTexture>;//2d纹理
         private _textureCubeGLIDArray: Array<WebGLTexture>;//立方体纹理
+        private _textureDeferredPosition:WebGLTexture;//延迟渲染之位置
+        private _textureDeferredNormal:WebGLTexture;//延迟渲染之法线
+        private _textureDeferredColor:WebGLTexture;//延迟渲染之颜色
         private _temp_model_view_matrix;//视口模型矩阵
         private _temp_model_inverse_matrix;//模型世界矩阵的逆矩阵
         private _temp_model_transform_matrix;//模型世界矩阵的转置矩阵
@@ -237,6 +240,9 @@ export namespace syRender {
             this.primitive.reset();
             this._texture2DGLIDArray = [];
             this._textureCubeGLIDArray = [];
+            this._textureDeferredPosition = null;
+            this._textureDeferredNormal = null;
+            this._textureDeferredColor = null;
             this.time = 0;
             this.useFlag = false;   
         }
@@ -268,6 +274,15 @@ export namespace syRender {
             if (this._textureCubeGLIDArray.indexOf(texture) < 0) {
                 this._textureCubeGLIDArray.push(texture);
             }
+        }
+        public pushDeferredPositionTexture(texture: WebGLTexture):void{
+            this._textureDeferredPosition = texture;
+        }
+        public pushDeferredNormalTexture(texture: WebGLTexture):void{
+            this._textureDeferredNormal = texture;
+        }
+        public pushDeferredColorTexture(texture: WebGLTexture):void{
+            this._textureDeferredColor = texture;
         }
         /**
          * 设置矩阵
@@ -340,6 +355,18 @@ export namespace syRender {
                         glMatrix.mat4.multiply(this._temp002_matrix, proj, this._temp001_matrix);
                         glMatrix.mat4.invert(this._temp001_matrix, this._temp002_matrix);
                         _shader.setUseProjectionViewInverseMatrix(this._temp001_matrix);
+                        useTextureAddres++;
+                        break;
+                    case ShaderUseVariantType.GPosition:
+                        _shader.setUseDeferredPositionTexture(this._textureDeferredPosition, useTextureAddres);
+                        useTextureAddres++;
+                        break;
+                    case ShaderUseVariantType.GNormal:
+                        _shader.setUseDeferredNormalTexture(this._textureDeferredNormal, useTextureAddres);
+                        useTextureAddres++;
+                        break;
+                    case ShaderUseVariantType.GColor:
+                        _shader.setUseDeferredColorTexture(this._textureDeferredColor, useTextureAddres);
                         useTextureAddres++;
                         break;
                     case ShaderUseVariantType.Projection:

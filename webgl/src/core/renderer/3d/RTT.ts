@@ -10,7 +10,7 @@ export class RTT extends SY.SpriteBase{
     constructor() {
         super();
     }
-    private renderTexture: RenderTexture;
+    // private renderTexture: RenderTexture;
     protected onInit() {
         var rd = CubeData.getData();
         this.createVertexsBuffer(rd.vertex, rd.dF.vertex_item_size);
@@ -19,7 +19,7 @@ export class RTT extends SY.SpriteBase{
         this.createNormalsBuffer(rd.normals,rd.dF.normal_item_size)
         this._glPrimitiveType = this.gl.TRIANGLE_STRIP;
 
-        this.renderTexture = new RenderTexture();
-        this.renderTexture.attach("more",500,500,3)
+        this._texture = new RenderTexture();
+        (this._texture as RenderTexture).attach("more",500,500,3)
     }
 }
