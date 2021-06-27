@@ -381,7 +381,7 @@ export default class Device {
     private _lastPressPos: Array<number> = [];
     private onMouseDown(ev): void {
         //关闭截图功能
-        // this._isCapture = true;
+        this._isCapture = false;
         this._press = true;
 
     }
@@ -441,7 +441,11 @@ export default class Device {
         this.visitRenderTree(time, stage);
         var cameraData = GameMainCamera.instance.getRenderData();
         for (let k = 0; k < cameraData.length; k++) {
-            this.realDraw(cameraData[k])
+            this.triggerRender(cameraData[k])
+        }
+        if (this._isCapture) {
+            this._isCapture = false;
+            this.capture();
         }
         this.onAfterRender();
     }
@@ -453,13 +457,6 @@ export default class Device {
      */
     private visitRenderTree(time: number, stage: Node): void {
         stage.visit(time);
-    }
-    private realDraw(data: CameraRenderData): void {
-        this.triggerRender(data);
-        if (this._isCapture) {
-            this._isCapture = false;
-            this.capture();
-        }
     }
     //渲染前
     private onBeforeRender() {
@@ -508,7 +505,7 @@ export default class Device {
         var cameraData = GameMainCamera.instance.getCameraIndex(CameraIndex.base3D).getCameraData();
         G_CameraModel.createCamera(cData.visualAngle, cameraData.projectMat, cameraData.modelMat,cData.visuialAnglePosition);
         //提交数据给GPU 立即绘制
-        for (var j = 0; j < this._renderTreeData.length; j++) {
+        for (var j = 0; j < this._renderTreeData.length; j++) {   
             if (this._renderTreeData[j].isOffline && !cData.isRenderToScreen) {
                 //对于离屏渲染的数据 如果当前是离屏渲染的话 则不可以渲染它 否则会报错
                 //你想啊你把一堆显示数据渲染到一张纹理中，这张纹理本身就在这一堆渲染数据中 自然是会冲突的
@@ -918,7 +915,7 @@ export default class Device {
         let ctx = Device.Instance.getCanvas2D();
         ctx.putImageData(imageData, 0, 0);
         //截图保存下来
-        // this.capture(window["canvas2d"]);
+        this.capture(window["canvas2d"]);
     }
 
     /**
