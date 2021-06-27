@@ -231,8 +231,6 @@ export default class Device {
     private _nextFrameS: State;//这个非常重要
 
     private static _instance: Device;
-    private _isDebugMode: boolean = true;
-    private _isDrawToUI: boolean = true;
     public static get Instance(): Device {
         if (!this._instance) {
             this._instance = new Device();
@@ -377,11 +375,11 @@ export default class Device {
     }
 
     private _isCapture: boolean = false;
+    private openCapture:boolean = false;//是否开启截图功能
     private _press: boolean;
     private _lastPressPos: Array<number> = [];
     private onMouseDown(ev): void {
-        //关闭截图功能
-        this._isCapture = false;
+        this._isCapture = true;
         this._press = true;
 
     }
@@ -434,18 +432,17 @@ export default class Device {
      * @param debug 
      * @param drawtoUI 
      */
-    public startDraw(time: number, stage: Node, debug: boolean = true, drawtoUI: boolean = true): void {
-        this._isDebugMode = debug;
-        this._isDrawToUI = drawtoUI;
+    public startDraw(time: number, stage: Node): void {
         this.onBeforeRender();
         this.visitRenderTree(time, stage);
         var cameraData = GameMainCamera.instance.getRenderData();
         for (let k = 0; k < cameraData.length; k++) {
             this.triggerRender(cameraData[k])
         }
-        if (this._isCapture) {
+        if (this.openCapture&&this._isCapture) {
             this._isCapture = false;
             this.capture();
+            // this.showCurFramerBufferOnCanvas();
         }
         this.onAfterRender();
     }

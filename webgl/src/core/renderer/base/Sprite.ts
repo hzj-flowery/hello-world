@@ -525,8 +525,20 @@ export namespace SY {
     }
 
     //2d显示节点
+    /**lt         rt
+     * ************
+     * *          *
+     * *          *
+     * *          *
+     * *          *
+     * ************
+     * lb         rb        
+     * 凡继承此类的显示节点，则默认会干以下几件事
+     * 1：根据尺寸，创建四个顶点坐标 组成一个顶点数组传送到GPU中
+     * 2：根据四个顶点坐标的索引来画两个三角形刚好可以组成一个四边形，这些索引就组成了一个索引数组发往GPU中
+     * 3：传四个顶点的UV坐标到GPU的显存中
+     */
     export class Sprite2D extends SpriteBase {
-
         private _lt: Array<number> = [];//左上
         private _lb: Array<number> = [];//左下
         private _rt: Array<number> = [];//右上

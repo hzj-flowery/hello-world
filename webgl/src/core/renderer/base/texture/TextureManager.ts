@@ -1,3 +1,4 @@
+import Device from "../../../Device";
 import { RenderTexture } from "./RenderTexture";
 import { Texture, TextureOpts } from "./Texture";
 import { Texture2D } from "./Texture2D";
@@ -26,6 +27,8 @@ class TextureManager{
      * @param data {type,place,width,height,nums}
      */
     private static createRenderTextureBuffer(data: any): Texture {
+        data.width = data.width!=null?data.width:Device.Instance.width;
+        data.height = data.height!=null?data.height:Device.Instance.height;
         let texture = new RenderTexture();
         (texture as RenderTexture).attach(data.place, data.width, data.height,data.nums?data.nums:1);
         return texture;

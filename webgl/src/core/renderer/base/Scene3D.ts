@@ -18,7 +18,7 @@ import SpotLightCube from "../3d/SpotLightCube";
 import { FogCube } from "../3d/FogCube";
 import { glMatrix } from "../../math/Matrix";
 import { syGL } from "../gfx/syGLEnums";
-import {GameMainCamera} from "../camera/GameMainCamera";
+import {CameraIndex, GameMainCamera} from "../camera/GameMainCamera";
 import { DeferredShading } from "../3d/DeferredShading";
 import { RTT } from "../3d/RTT";
 import AlphaCube from "../3d/AlphaCube";
@@ -33,6 +33,8 @@ export default class Scene3D extends Scene {
     private _cubeNode: Cube;
     private _deferredShading:DeferredShading;
     private _renderSprite:RenderOffline3DSprite;
+    private _renderSprite1:RenderOffline3DSprite;
+    private _renderSprite2:RenderOffline3DSprite;
     private _rtt:RTT;
     private _tableNode: Cube;
     private _alphaNode:AlphaCube;
@@ -118,14 +120,32 @@ export default class Scene3D extends Scene {
         // this._centerNode.addChild(this._deferredShading);
 
         this._renderSprite = new RenderOffline3DSprite();
+        this._renderSprite.setVirtualCameraIndex(CameraIndex.normal1);
         this._renderSprite.spriteFrame = {
             type:"RenderTexture",
             place:"color",
-            width:Device.Instance.width,
-            height:Device.Instance.height
         }
         this._renderSprite.setPosition(-3,10,0);
         this._centerNode.addChild(this._renderSprite);
+
+        this._renderSprite1 = new RenderOffline3DSprite();
+        this._renderSprite1.setVirtualCameraIndex(CameraIndex.normal2);
+        this._renderSprite1.spriteFrame = {
+            type:"RenderTexture",
+            place:"color",
+        }
+        this._renderSprite1.setPosition(3,10,0);
+        this._centerNode.addChild(this._renderSprite1);
+
+        this._renderSprite2 = new RenderOffline3DSprite();
+        this._renderSprite2.setVirtualCameraIndex(CameraIndex.normal3);
+        this._renderSprite2.spriteFrame = {
+            type:"RenderTexture",
+            place:"color",
+        }
+        this._renderSprite2.setPosition(-6,10,0);
+        this._centerNode.addChild(this._renderSprite2);
+
 
         this._rtt = new RTT();
         // this._rtt.spriteFrame = "res/dragon.png";

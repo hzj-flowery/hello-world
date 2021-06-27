@@ -10,7 +10,6 @@ export class RTT extends SY.SpriteBase{
     constructor() {
         super();
     }
-    // private renderTexture: RenderTexture;
     protected onInit() {
         var rd = CubeData.getData();
         this.createVertexsBuffer(rd.vertex, rd.dF.vertex_item_size);

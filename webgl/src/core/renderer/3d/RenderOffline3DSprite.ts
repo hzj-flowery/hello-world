@@ -10,6 +10,7 @@ export class RenderOffline3DSprite extends SY.SpriteBase{
     constructor() {
         super();
     }
+    private _virtualCameraIndex:CameraIndex = CameraIndex.normal1;
     protected onInit() {
         var rd = CubeData.getData();
         this.createVertexsBuffer(rd.vertex, rd.dF.vertex_item_size);
@@ -19,6 +20,10 @@ export class RenderOffline3DSprite extends SY.SpriteBase{
     }
     protected onSetTextureUrl():void{
         
-        GameMainCamera.instance.getCameraIndex(CameraIndex.normal1).targetTexture = this.texture as RenderTexture;
+        GameMainCamera.instance.getCameraIndex(this._virtualCameraIndex).targetTexture = this.texture as RenderTexture;
+    }
+    public setVirtualCameraIndex(index:CameraIndex):void{
+        this._virtualCameraIndex = index;
+        GameMainCamera.instance.createVituralCamera(0,index);
     }
 }

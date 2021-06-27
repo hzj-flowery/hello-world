@@ -1,6 +1,8 @@
 
 import Device from "../../Device";
+import { sy } from "../../Director";
 import { G_UISetting } from "../../ui/UiSetting";
+import { Node } from "../base/Node";
 import { RenderTexture } from "../base/texture/RenderTexture";
 import FrameBuffer from "../gfx/FrameBuffer";
 import { glEnums } from "../gfx/GLapi";
@@ -53,29 +55,65 @@ export class GameMainCamera {
     }
     return this._instance;
   }
+  
+  /**
+   * 注册相机 
+   * @param type 相机的类型 0表示透视相机 1表示正交相机 
+   * @param cameraIdex 
+   * @param node 挂载的节点
+   */
+  public registerCamera(type:number,cameraIdex:CameraIndex,node:Node):void{
+        var camera:Camera;
+        if(type==0) 
+        {
+          camera = this.createCamera(0,this.gl.canvas.width / this.gl.canvas.height, 60, 0.1, 100) as PerspectiveCamera;
+        }
+        else if(type==1)
+        {
+          camera = this.createCamera(1,this.gl.canvas.width / this.gl.canvas.height, 60, 0.1, 1000);
+        }
+        if(camera)
+        {
+            this.pushCamera(cameraIdex,camera);
+            node.addChild(camera)
+        }
+  }
+  /**
+   * 创建虚拟化相机
+   * 
+   * @param type 
+   * @param cameraIdex 
+   */
+  public createVituralCamera(type,cameraIdex:CameraIndex):void{
+    if(this._cameraMap.has(cameraIdex))
+    {
+      return;
+    }
+    var camera:Camera;
+    if(type==0) 
+    {
+      camera = this.createCamera(0,this.gl.canvas.width / this.gl.canvas.height, 60, 0.1, 100) as PerspectiveCamera;
+    }
+    else if(type==1)
+    {
+      camera = this.createCamera(1,this.gl.canvas.width / this.gl.canvas.height, 60, 0.1, 1000);
+    }
+    if(camera)
+    {
+        this.pushCamera(cameraIdex,camera);
+        this.pushVirtualCameraDataToRenderData(cameraIdex);
+    }
+  }
 
   private init(): void {
     this.gl = Device.Instance.gl;
-    //初始化2D相机
-    var camera2D = this.createCamera(1,this.gl.canvas.width / this.gl.canvas.height, 60, 0.1, 1000);
-   
-    //初始化3D相机
-    var camera3D = this.createCamera(0,this.gl.canvas.width / this.gl.canvas.height, 60, 0.1, 50) as PerspectiveCamera;
-
-    var camera2DAdd = this.createCamera(1,this.gl.canvas.width / this.gl.canvas.height, 60, 0.1, 1000);
-
-    this._cameraMap.set(CameraIndex.base2D, camera2D);
-    this._cameraMap.set(CameraIndex.base3D, camera3D);
-    this._cameraMap.set(CameraIndex.normal1, camera2DAdd);
-
-    this.initRenderData();
-    G_UISetting.pushRenderCallBack(this.renderCallBack.bind(this));
   }
   private _cameraMap: Map<number, Camera> = new Map();
   private _renderData:Array<CameraRenderData> = [];
   private gl: WebGLRenderingContext;
   private updateCameraData(index: CameraIndex, aspect: number, angle: number = 60, near: number = 0.1, far: number = 50): Camera {
     var camera = this._cameraMap.get(index)
+    if(!camera)return;
     camera.Fovy = angle * Math.PI / 180;
     camera.Aspect = aspect;
     camera.Near = near;
@@ -97,15 +135,18 @@ export class GameMainCamera {
   public getCameraIndex(index): Camera {
     return this._cameraMap.get(index)
   }
-  public getBase3DCamera(): PerspectiveCamera {
-    return this.getCameraIndex(CameraIndex.base3D) as PerspectiveCamera;
-  }
-  public getBase2DCamera(): OrthoCamera {
-    return this.getCameraIndex(CameraIndex.base2D);
+  private pushCamera(index:number,camera:Camera,forceReplace:boolean=false):void{
+    if(!this._cameraMap.has(index))
+    {
+       this._cameraMap.set(index,camera);
+    }
+    else if(forceReplace)
+    {
+       this._cameraMap.set(index,camera);
+    }
   }
 
   public initRenderData():void{
-    this._renderData = [];
     var temp = new CameraRenderData();
     temp.fb = this.getCameraIndex(CameraIndex.base2D).getFramebuffer()
     temp.viewPort = { x: 0, y: 0, w: 1, h: 1 }
@@ -153,18 +194,19 @@ export class GameMainCamera {
     // temp.visualAngle = 3;
     // temp.isRenderToScreen = true;
     // this._renderData.push(temp);
+    
+    G_UISetting.pushRenderCallBack(this.renderCallBack.bind(this));
+  }
 
-
-
+  private pushVirtualCameraDataToRenderData(index:CameraIndex):void{
     var temp = new CameraRenderData();
-    temp.fb = this.getCameraIndex(CameraIndex.normal1).getFramebuffer()
+    temp.fb = this.getCameraIndex(index).getFramebuffer()
     temp.viewPort = { x: 0, y: 0, w: 1, h: 1 }
-    temp.index = CameraIndex.normal1;
+    temp.index = index;
     temp.isClear = true;
     temp.visualAngle = 0;
     temp.isRenderToScreen = false;
     this._renderData.push(temp);
-
   }
   
   /**
@@ -181,11 +223,18 @@ export class GameMainCamera {
   private renderCallBack(settings: any): void {
     let gl = Device.Instance.gl;
     this.updateCameraData(CameraIndex.base3D, gl.canvas.width / gl.canvas.height, settings.cam3DFieldOfView, settings.cam3DNear, settings.cam3DFar);
-    this.getCameraIndex(CameraIndex.base3D).setPosition(settings.cam3DPosX, settings.cam3DPosY, settings.cam3DPosZ);
-    this.getCameraIndex(CameraIndex.base3D).setRotation(settings.cam3DRotX, settings.cam3DRotY, settings.cam3DRotZ);
-
-    this.getCameraIndex(CameraIndex.base2D).setPosition(settings.cam2DPosX, settings.cam2DPosY, settings.cam2DPosZ);
-    this.getCameraIndex(CameraIndex.base2D).setRotation(settings.cam2DRotX, settings.cam2DRotY, settings.cam2DRotZ)
+    var base3D = this.getCameraIndex(CameraIndex.base3D);
+    if(base3D)
+    {
+      base3D.setPosition(settings.cam3DPosX, settings.cam3DPosY, settings.cam3DPosZ);
+      base3D.setRotation(settings.cam3DRotX, settings.cam3DRotY, settings.cam3DRotZ);
+    }
+    var base2D = this.getCameraIndex(CameraIndex.base2D);
+    if(base2D)
+    {
+      base2D.setPosition(settings.cam2DPosX, settings.cam2DPosY, settings.cam2DPosZ);
+      base2D.setRotation(settings.cam2DRotX, settings.cam2DRotY, settings.cam2DRotZ);
+    }
   }
 
 }
