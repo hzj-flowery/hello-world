@@ -50,6 +50,10 @@ function main() {
         return d * Math.PI / 180;
     }
 
+    function cjzRiBen(){
+        return "dog dog dog"
+    }
+
     var cameraAngleRadians = degToRad(0);
     var fieldOfViewRadians = degToRad(60);
     var cameraHeight = 50;
