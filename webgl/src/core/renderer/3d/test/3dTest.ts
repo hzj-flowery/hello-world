@@ -24,6 +24,8 @@ import Device from "../../../Device";
        gl_FragColor = v_color * u_colorMult;
     }
     </script>
+
+
  */
 
 function main() {
@@ -48,6 +50,10 @@ function main() {
 
     function degToRad(d) {
         return d * Math.PI / 180;
+    }
+
+    function cjzRiBen(){
+        return "dog dog dog"
     }
 
     var cameraAngleRadians = degToRad(0);
