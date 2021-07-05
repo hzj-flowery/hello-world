@@ -66,6 +66,10 @@ function main() {
         return "dog dog dog"
     }
 
+    function cjzRiBen4(){
+        return "dog dog dog"
+    }
+
     var cameraAngleRadians = degToRad(0);
     var fieldOfViewRadians = degToRad(60);
     var cameraHeight = 50;
