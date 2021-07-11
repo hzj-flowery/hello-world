@@ -3,7 +3,11 @@ import State from "../gfx/State"
 import { Pass, PassType } from "./Pass"
 import { G_ShaderCenter, ShaderType } from "./ShaderCenter"
 
-
+export enum PassString{
+    offlineRender = "offlineRender", //离线渲染
+    drawInstanced = "drawInstanced", //实例化绘制
+    drawType = "drawType",//绘制类型
+}
 
 class PassFactory{
     constructor(){
@@ -97,16 +101,21 @@ class PassFactory{
             {
                 let key = customData[k]["key"];
                 let value = customData[k]["value"];
-                if(key=="offlineRender"&&typeof(value)=="boolean")
+                if(key==PassString.offlineRender&&typeof(value)=="boolean")
                 {
                     //离线渲染
                     pass.offlineRender = value;
                 }
-                if(key=="drawInstanced"&&typeof(value)=="boolean")
+                else if(key==PassString.drawInstanced&&typeof(value)=="boolean")
                 {
                     //实例化渲染
                     pass.drawInstanced = value;
-                } 
+                }
+                else if(key==PassString.drawType&&typeof(value)=="number")
+                {
+                    pass.drawType = value;
+                }
+
             }
         }
 

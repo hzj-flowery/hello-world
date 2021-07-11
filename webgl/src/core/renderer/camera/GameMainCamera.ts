@@ -4,6 +4,7 @@ import { sy } from "../../Director";
 import { G_UISetting } from "../../ui/UiSetting";
 import { Node } from "../base/Node";
 import { RenderTexture } from "../base/texture/RenderTexture";
+import { syRender } from "../data/RenderData";
 import FrameBuffer from "../gfx/FrameBuffer";
 import { glEnums } from "../gfx/GLapi";
 import Camera from "./Camera";
@@ -28,6 +29,9 @@ export enum CameraIndex {
   max
 }
 export class CameraRenderData{
+   constructor(){
+      this.drawType = syRender.DrawType.Normal
+   }
    public fb:FrameBuffer;
    public index:CameraIndex;
    public viewPort:any;
@@ -35,6 +39,7 @@ export class CameraRenderData{
    public visualAngle:number=0;//视角 0代表玩家自己 1代表别人视角 2代表别人视角 3代表别人视角 依次类推
    public visuialAnglePosition:Array<number>=[];
    public isRenderToScreen:boolean;
+   public drawType:syRender.DrawType;//绘制类型
    public isSecondVisualAngle():boolean{
           return this.visualAngle==1;
    }
@@ -159,21 +164,21 @@ export class GameMainCamera {
     var temp = new CameraRenderData();
     temp.fb = this.getCameraIndex(CameraIndex.base3D).getFramebuffer()
     temp.index = CameraIndex.base3D;
-    temp.viewPort = { x: 0, y: 0, w: 1, h: 1 }
+    temp.viewPort = { x: 0, y: 0, w: 0.5, h: 1 }
     temp.isClear = false;
     temp.visualAngle = 0;
     temp.isRenderToScreen = true;
     this._renderData.push(temp);
 
-    // var temp = new CameraRenderData();
-    // temp.fb = this.getCameraIndex(CameraIndex.base3D).getFramebuffer()
-    // temp.index = CameraIndex.base3D;
-    // temp.viewPort = { x: 0.5, y: 0, w: 0.5, h: 1 }
-    // temp.isClear = false;
-    // temp.visuialAnglePosition = [-70,10,10]
-    // temp.visualAngle = 1;
-    // temp.isRenderToScreen = true;
-    // this._renderData.push(temp);
+    var temp = new CameraRenderData();
+    temp.fb = this.getCameraIndex(CameraIndex.base3D).getFramebuffer()
+    temp.index = CameraIndex.base3D;
+    temp.viewPort = { x: 0.5, y: 0, w: 0.5, h: 1 }
+    temp.isClear = false;
+    temp.visuialAnglePosition = [-70,10,10]
+    temp.visualAngle = 1;
+    temp.isRenderToScreen = true;
+    this._renderData.push(temp);
 
     // var temp = new CameraRenderData();
     // temp.fb = this.getCameraIndex(CameraIndex.base3D).getFramebuffer()

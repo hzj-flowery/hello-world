@@ -17,10 +17,17 @@ export namespace syRender {
         Forward = 1,//前线渲染
         Deferred,   //延迟渲染
     }
+    //渲染数据的类型
     export enum DataType {
         Base = 1,
         Normal,
         Spine
+    }
+    
+    //绘制的类型
+    export enum DrawType{
+        Normal=0,//常规渲染
+        Single,//单独渲染
     }
     
     //bufferData
@@ -201,7 +208,11 @@ export namespace syRender {
         public get type(){
             return this._type
         }
-       
+
+        public get drawType(){
+            if(this._pass) return this._pass.drawType;
+            return syRender.DrawType.Normal;
+        }
 
         public node: Node;//渲染的节点
         

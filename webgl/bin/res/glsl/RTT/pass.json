@@ -26,6 +26,9 @@
                 "key": "blendDstAlpha",
                 "value": "glEnums.BLEND_ONE_MINUS_SRC_ALPHA"
             }
+        ],
+        "custom":[
+            {"key":"drawType","value":0}
         ]
     }
 ]

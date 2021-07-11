@@ -1,3 +1,4 @@
+import { syRender } from "../data/RenderData";
 import State from "../gfx/State";
 import { Shader } from "./Shader";
 
@@ -17,7 +18,8 @@ export enum PassType{
 //每一次渲染都需要一个渲染通道
 export class Pass {
     constructor(type:PassType){
-        this._type=type
+        this._type=type;
+        this.drawType = syRender.DrawType.Normal;
     }
     public code:Shader;
     public state:State;
@@ -26,6 +28,7 @@ export class Pass {
 
     public offlineRender:boolean = false; //是否是离线渲染
     public drawInstanced:boolean = false; //是否是实例化绘制
+    public drawType:syRender.DrawType;//绘制的类型
     public get type(){
         return this._type;
     } 

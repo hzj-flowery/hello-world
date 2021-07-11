@@ -1,6 +1,5 @@
 import { SY } from "../base/Sprite";
 import { RenderTexture } from "../base/texture/RenderTexture";
-import {GameMainCamera} from "../camera/GameMainCamera";
 import { CubeData } from "../data/CubeData";
 
 /**
@@ -17,8 +16,12 @@ export class RTT extends SY.SpriteBase{
         this.createIndexsBuffer(rd.indexs);
         this.createNormalsBuffer(rd.normals,rd.dF.normal_item_size)
         this._glPrimitiveType = this.gl.TRIANGLE_STRIP;
+    }
+    public onDrawBefore(time:number):void{
+        if((this._texture as RenderTexture).moreTexture)
+         console.log((this._texture as RenderTexture).moreTexture.length)
+    }
+    public onDrawAfter(time:number):void{
 
-        this._texture = new RenderTexture();
-        (this._texture as RenderTexture).attach("more",500,500,3)
     }
 }

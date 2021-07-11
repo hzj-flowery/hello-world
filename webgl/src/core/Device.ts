@@ -437,7 +437,14 @@ export default class Device {
         this.visitRenderTree(time, stage);
         var cameraData = GameMainCamera.instance.getRenderData();
         for (let k = 0; k < cameraData.length; k++) {
-            this.triggerRender(cameraData[k])
+            if(cameraData[k].drawType==syRender.DrawType.Normal)
+            {
+                this.triggerRender(this._mapRenderTreeData.get(syRender.DrawType.Normal),cameraData[k]);
+            }
+            else if(cameraData[k].drawType==syRender.DrawType.Single)
+            {
+                this.triggerRender(this._mapRenderTreeData.get(syRender.DrawType.Single),cameraData[k]);
+            }
         }
         if (this.openCapture&&this._isCapture) {
             this._isCapture = false;
@@ -458,7 +465,7 @@ export default class Device {
     //渲染前
     private onBeforeRender() {
         this.stats.begin();
-        this._renderTreeData = [];
+        this._mapRenderTreeData.clear();
     }
 
     /**
@@ -485,7 +492,9 @@ export default class Device {
     //渲染后
     private onAfterRender() {
         this.stats.end();
-        syRender.DataPool.return(this._renderTreeData);
+        this._mapRenderTreeData.forEach(function(value,key){
+            syRender.DataPool.return(value);
+        })
     }
 
     /**
@@ -495,25 +504,31 @@ export default class Device {
     public get triggerRenderTime() {
         return this._triggerRenderTime;
     }
-    private triggerRender(cData: CameraRenderData) {
-       
+    /**
+     * 触发常规渲染
+     * @param treeData 
+     * @param cData 
+     */
+    private triggerRender(treeData:Array<syRender.BaseData>,cData: CameraRenderData) {
+        if(!treeData||treeData.length<=0)
+        {
+            return;
+        }
         //设置帧缓冲区
         this.readyForOneFrame(cData.fb, cData.viewPort, cData.isClear);
-
         //记录一下当前渲染的时间
         this._triggerRenderTime++;
         var cameraData = GameMainCamera.instance.getCameraIndex(CameraIndex.base3D).getCameraData();
         G_CameraModel.createCamera(cData.visualAngle, cameraData.projectMat, cameraData.modelMat,cData.visuialAnglePosition);
         //提交数据给GPU 立即绘制
-        for (var j = 0; j < this._renderTreeData.length; j++) {   
-            if (this._renderTreeData[j].isOffline && !cData.isRenderToScreen) {
+        for (var j = 0; j < treeData.length; j++) {   
+            if (treeData[j].isOffline && !cData.isRenderToScreen) {
                 //对于离屏渲染的数据 如果当前是离屏渲染的话 则不可以渲染它 否则会报错
                 //你想啊你把一堆显示数据渲染到一张纹理中，这张纹理本身就在这一堆渲染数据中 自然是会冲突的
                 //[.Offscreen-For-WebGL-07E77500]GL ERROR :GL_INVALID_OPERATION : glDrawElements: Source and destination textures of the draw are the same
                 continue;
             }
-
-            this.draw(this._renderTreeData[j], cData);
+            this.draw(treeData[j], cData);
         }
     }
     /**
@@ -620,9 +635,13 @@ export default class Device {
         }
         G_ShaderFactory.drawBufferInfo(sData._attrbufferData, sData.primitive.type);
     }
-    private _renderTreeData: Array<syRender.BaseData> = [];//渲染树上的绘制数据
+    private _mapRenderTreeData:Map<syRender.DrawType,Array<syRender.BaseData>> = new Map();//渲染树上的绘制数据
     public collectData(rData: syRender.BaseData): void {
-        this._renderTreeData.push(rData);
+        if(!this._mapRenderTreeData.has(rData.drawType))
+        {
+            this._mapRenderTreeData.set(rData.drawType,[])
+        }
+        this._mapRenderTreeData.get(rData.drawType).push(rData);
     }
 
     //----------------------------------------------------------------------------------------------------------------start---------

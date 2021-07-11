@@ -292,6 +292,13 @@ export namespace SY {
             this.onSetTextureUrl();
         }
         /**
+         * 直接设置纹理
+         */
+        public set texture(tex:Texture){
+             this._texture = tex;
+             this.onSetTextureUrl();
+        }
+        /**
          * 设置完纹理之后调用
          */
         protected onSetTextureUrl(): void {

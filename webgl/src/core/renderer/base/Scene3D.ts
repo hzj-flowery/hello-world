@@ -89,10 +89,10 @@ export default class Scene3D extends Scene {
         // this._floorNode.spriteFrame = "res/ground.jpg";
         // this.addChild(this._floorNode);
 
-        // this._spineNode = new Spine();
-        // this._spineNode.x = -5;
-        // this._spineNode.y = 10;
-        // this.addChild(this._spineNode);
+        this._spineNode = new Spine();
+        this._spineNode.x = -5;
+        this._spineNode.y = 10;
+        this.addChild(this._spineNode);
 
         this._customTexture = new CustomTextureCube();
         this._customTexture.spriteFrame = CustomTextureData.getRandomData(3, 5, syGL.TextureFormat.RGB8);
@@ -119,14 +119,14 @@ export default class Scene3D extends Scene {
         // this._deferredShading.setPosition(-3,10,0);
         // this._centerNode.addChild(this._deferredShading);
 
-        // this._renderSprite = new RenderOffline3DSprite();
-        // this._renderSprite.setVirtualCameraIndex(CameraIndex.normal1);
-        // this._renderSprite.spriteFrame = {
-        //     type:"RenderTexture",
-        //     place:"color",
-        // }
-        // this._renderSprite.setPosition(-3,10,0);
-        // this._centerNode.addChild(this._renderSprite);
+        this._renderSprite = new RenderOffline3DSprite();
+        this._renderSprite.setVirtualCameraIndex(CameraIndex.normal1);
+        this._renderSprite.spriteFrame = {
+            type:"RenderTexture",
+            place:"color",
+        }
+        this._renderSprite.setPosition(-3,10,0);
+        this._centerNode.addChild(this._renderSprite);
 
         // this._renderSprite1 = new RenderOffline3DSprite();
         // this._renderSprite1.setVirtualCameraIndex(CameraIndex.normal2);
@@ -147,10 +147,14 @@ export default class Scene3D extends Scene {
         // this._centerNode.addChild(this._renderSprite2);
 
 
-        // this._rtt = new RTT();
-        // // this._rtt.spriteFrame = "res/dragon.png";
-        // this._rtt.setPosition(-6,10,0);
-        // this._centerNode.addChild(this._rtt);
+        this._rtt = new RTT();
+        this._rtt.spriteFrame = {
+            type:"RenderTexture",
+            place:"more",
+            nums:3
+        }
+        this._rtt.setPosition(-6,10,0);
+        this._centerNode.addChild(this._rtt);
 
         // this._cubeNode = new Cube();
         // this._cubeNode.spriteFrame = "res/wicker.jpg";

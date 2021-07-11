@@ -88,16 +88,7 @@ export default class TextureCube extends Texture {
 
             }.bind(this));
         });
-
         gl.generateMipmap(gl.TEXTURE_CUBE_MAP);
-
-        //放大
-        gl.texParameteri(this._target, gl.TEXTURE_MAG_FILTER, syGL.TexFilter.LINEAR);
-        //缩小
-        gl.texParameteri(this._target, gl.TEXTURE_MIN_FILTER, syGL.TexFilter.LINEAR);
-        //水平方向
-        gl.texParameteri(this._target, gl.TEXTURE_WRAP_S, syGL.TextureWrap.MIRROR);
-        //垂直方向
-        gl.texParameteri(this._target, gl.TEXTURE_WRAP_T, syGL.TextureWrap.MIRROR);
+        this.texParameteri(syGL.TexFilter.LINEAR,syGL.TexFilter.LINEAR,syGL.TextureWrap.MIRROR,syGL.TextureWrap.MIRROR)
     }
 }
