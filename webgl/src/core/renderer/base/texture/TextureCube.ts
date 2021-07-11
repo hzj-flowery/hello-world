@@ -53,7 +53,7 @@ export default class TextureCube extends Texture {
     //加载各个面信息
     private loadFaceInfor(): void {
         var gl = this._gl;
-        var texture = this._glID;
+        var texture = this.glID;
         gl.bindTexture(this._target, texture);
         var loadedCount = 0;
         this.faceInfos.forEach((faceInfo) => {

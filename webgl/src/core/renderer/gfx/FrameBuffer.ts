@@ -20,7 +20,7 @@ export default class FrameBuffer {
       this._stencil = options.stencil || null;
       this._depthStencil = options.depthStencil || null;
   
-      this._glID = gl.createFramebuffer();
+      this.glID = gl.createFramebuffer();
     }
 
     private _gl:any;
@@ -30,23 +30,23 @@ export default class FrameBuffer {
     private _depth:any;
     private _stencil:any;
     private _depthStencil:any;
-    private _glID:any;
+    private glID:any;
   
     /**
      * @method destroy
      */
     destroy() {
-      if (this._glID === null) {
+      if (this.glID === null) {
         console.error('The frame-buffer already destroyed');
         return;
       }
   
       const gl = this._gl;
-      gl.deleteFramebuffer(this._glID);
-      this._glID = null;
+      gl.deleteFramebuffer(this.glID);
+      this.glID = null;
     }
   
     getHandle() {
-      return this._glID;
+      return this.glID;
     }
   }

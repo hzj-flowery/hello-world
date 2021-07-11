@@ -318,7 +318,7 @@ class ShadowLight {
       u_projection: pMatrix,
       u_bias: G_LightCenter.lightData.bias,
       u_textureMatrix: texMatrix,
-      u_shadowMap: this.renderTexture._glID,
+      u_shadowMap: this.renderTexture.glID,
       u_lightWorldPosition: lightPos,
       u_cameraWorldPosition: cameraPos,
       u_shininess: 150,
@@ -358,17 +358,17 @@ class ShadowLight {
     // Uniforms for each object.
     this.planeUniforms = {
       u_lightColor: [0.5, 0.5, 1, 1],  // lightblue
-      u_texture: this.checkerboardTexture._glID,
+      u_texture: this.checkerboardTexture.glID,
       u_world: glMatrix.mat4.translation(null, 0, 0, 0),
     };
     this.sphereUniforms = {
       u_lightColor: [1, 0.5, 0.5, 1],  // pink
-      u_texture: this.checkerboardTexture._glID,
+      u_texture: this.checkerboardTexture.glID,
       u_world: glMatrix.mat4.translation(null, 2, 6, 4),
     };
     this.cubeUniforms = {
       u_lightColor: [0.5, 1, 0.5, 1],  // lightgreen
-      u_texture: this.checkerboardTexture._glID,
+      u_texture: this.checkerboardTexture.glID,
       u_world: glMatrix.mat4.translation(null, 3, 1, 0),
     };
   }

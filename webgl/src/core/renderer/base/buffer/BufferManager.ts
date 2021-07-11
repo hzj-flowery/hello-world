@@ -54,7 +54,7 @@ export abstract class glBaseBuffer {
      * @param preAllocateLen  预先分配的长度 一般默认为0 否则第一次只是在显存中分配内存 后边才会更新和赋值到这块内存区域
      */
     constructor(gl: WebGLRenderingContext, data: Array<number>, itemSize: number, arrbufferType: number, itemBytes: number, preAllocateLen: number) {
-        this._glID = gl.createBuffer();
+        this.glID = gl.createBuffer();
         this._itemSize = itemSize;
         this.gl = gl;
         this._arrayBufferType = arrbufferType;
@@ -108,17 +108,20 @@ export abstract class glBaseBuffer {
     public get glID(): WebGLBuffer {
         return this._glID;
     }
+    public set glID(glID:WebGLBuffer) {
+        this._glID = glID;
+    }
     private uploadData2GPU(data: Array<number>) {
         this._curMapTotalBytes = data.length * this._itemBytes;
         this._itemNums = data.length / this._itemSize;
         this._sourceData = data;
         this.bufferSet();
         let Arr = this.getBytesArray();
-        this.gl.bindBuffer(this._arrayBufferType, this._glID),
+        this.gl.bindBuffer(this._arrayBufferType, this.glID),
         this.gl.bufferData(this._arrayBufferType, new Arr(this._sourceData), this._usage)
     }
     public updateSubData(data: Float32Array): void {
-        this.gl.bindBuffer(this._arrayBufferType, this._glID);
+        this.gl.bindBuffer(this._arrayBufferType, this.glID);
         let curByteLen = data.byteLength;
         if (this._hasAllocateByteLen < curByteLen) {
             //说明当前显存中对于这块数据的存储内存不够用了，需要加
@@ -134,7 +137,7 @@ export abstract class glBaseBuffer {
      */
     private preAllocateBuffer(): void {
         this._hasAllocateByteLen = this._preAllocateLen;
-        this.gl.bindBuffer(this._arrayBufferType, this._glID);
+        this.gl.bindBuffer(this._arrayBufferType, this.glID);
         this.gl.bufferData(this._arrayBufferType, this._preAllocateLen, this._usage);
     }
     /**
@@ -154,12 +157,12 @@ export abstract class glBaseBuffer {
    * @method destroy
    */
     destroy() {
-        if (this._glID === -1) {
+        if (this.glID === -1) {
             console.error('The buffer already destroyed');
             return;
         }
-        this.gl.deleteBuffer(this._glID);
-        this._glID = -1;
+        this.gl.deleteBuffer(this.glID);
+        this.glID = -1;
     }
 }
 

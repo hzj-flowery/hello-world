@@ -4,7 +4,7 @@ export default class RenderBuffer {
     public _width:number;
     public _height:number;
     private _format:any;
-    private _glID:any;
+    private glID:any;
 
     /**
      * 
@@ -17,7 +17,7 @@ export default class RenderBuffer {
       this._gl = gl;
       this._format = format;
       
-      this._glID = gl.createRenderbuffer();
+      this.glID = gl.createRenderbuffer();
       this.update(width, height);
     }
   
@@ -26,7 +26,7 @@ export default class RenderBuffer {
       this._height = height;
   
       const gl = this._gl;
-      gl.bindRenderbuffer(gl.RENDERBUFFER, this._glID);
+      gl.bindRenderbuffer(gl.RENDERBUFFER, this.glID);
       gl.renderbufferStorage(gl.RENDERBUFFER, this._format, width, height);
       gl.bindRenderbuffer(gl.RENDERBUFFER, null);
     }
@@ -35,7 +35,7 @@ export default class RenderBuffer {
      * @method destroy
      */
     destroy() {
-      if (this._glID === null) {
+      if (this.glID === null) {
         console.error('The render-buffer already destroyed');
         return;
       }
@@ -43,8 +43,8 @@ export default class RenderBuffer {
       const gl = this._gl;
   
       gl.bindRenderbuffer(gl.RENDERBUFFER, null);
-      gl.deleteRenderbuffer(this._glID);
+      gl.deleteRenderbuffer(this.glID);
   
-      this._glID = null;
+      this.glID = null;
     }
   }

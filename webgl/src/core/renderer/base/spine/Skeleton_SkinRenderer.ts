@@ -105,9 +105,9 @@ export class Skeleton_SkinRenderer {
             renderData._shaderData = this.skinProgramInfo;
             renderData._uniformData.push({
                 u_Mmat: worldMatrix,
-                u_texture: this.skin._texture._glID,
-                u_texCoord1:this.skin._riverTexture._glID,
-                u_jointTexture: this.skin.jointTexture._glID,
+                u_texture: this.skin._texture.glID,
+                u_texCoord1:this.skin._riverTexture.glID,
+                u_jointTexture: this.skin.jointTexture.glID,
                 u_numJoints: this.skin.jointNodes.length,
                 u_time:Device.Instance.triggerRenderTime,
             });

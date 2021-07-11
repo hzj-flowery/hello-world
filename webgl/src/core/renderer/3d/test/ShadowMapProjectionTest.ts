@@ -197,12 +197,12 @@ function main() {
     // Uniforms for each object.
     const planeUniforms = {
         u_colorMult: [0.5, 0.5, 1, 1],  // lightblue
-        u_texture: checkerboardTexture._glID,
+        u_texture: checkerboardTexture.glID,
         u_world: m4.translation(null, 0, 0, 0),
     };
     const sphereUniforms = {
         u_colorMult: [1, 0.5, 0.5, 1],  // pink
-        u_texture: checkerboardTexture._glID,
+        u_texture: checkerboardTexture.glID,
         u_world: m4.translation(null, 2, 3, 4),
     };
 

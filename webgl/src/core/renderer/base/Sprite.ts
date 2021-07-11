@@ -299,8 +299,8 @@ export namespace SY {
         }
         protected getGLID(type: GLID_TYPE): any {
             switch (type) {
-                case GLID_TYPE.TEXTURE_2D: return this._texture ? this._texture._glID : -1;
-                case GLID_TYPE.TEXTURE_CUBE: return this._texture ? this._texture._glID : -1;
+                case GLID_TYPE.TEXTURE_2D: return this._texture ? this._texture.glID : -1;
+                case GLID_TYPE.TEXTURE_CUBE: return this._texture ? this._texture.glID : -1;
                 default: var buffer = this.getBuffer(type); return buffer ? buffer.glID : -1;
             }
         }
@@ -412,7 +412,7 @@ export namespace SY {
                         }
                     }
                 }
-                else if (this._texture && this._texture._glID) {
+                else if (this._texture && this._texture.glID) {
                     if (this._texture.isTexture2D)
                         this._renderData[i].push2DTexture(this.getGLID(SY.GLID_TYPE.TEXTURE_2D));
                     else if (this._texture.isTextureCube)

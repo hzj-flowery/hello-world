@@ -166,6 +166,13 @@ export class Texture {
 
     protected _bites: number = 0;//纹理在GPU端所占的内存
 
+    public get glID():WebGLTexture{
+        return this._glID
+    }
+    public set glID(glID:WebGLTexture){
+        this._glID = glID
+    }
+
     
     /**
      * 是否是2d纹理图片
@@ -185,7 +192,7 @@ export class Texture {
         this._gl = Device.Instance.gl;
         this._target = -1;
         this._id = _textureID++;
-        this._glID = this._gl.createTexture();
+        this.glID = this._gl.createTexture();
         this._bites = 0;
         this.loaded = false;
     }
@@ -297,7 +304,7 @@ export class Texture {
      * 上传纹理到显存中
      */
     private uploadTextureToGPU(): void {
-        this._gl.bindTexture(this._target, this._glID);
+        this._gl.bindTexture(this._target, this.glID);
         this._gl.texImage2D(
             this._target,
             this._level,
@@ -347,11 +354,11 @@ export class Texture {
      * @method destroy
      */
     public destroy() {
-        if (this._glID === _nullWebGLTexture) {
+        if (this.glID === _nullWebGLTexture) {
             console.error('The texture already destroyed');
             return;
         }
-        this._gl.deleteTexture(this._glID);
-        this._glID = _nullWebGLTexture;
+        this._gl.deleteTexture(this.glID);
+        this.glID = _nullWebGLTexture;
     }
 }

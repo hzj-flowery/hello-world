@@ -263,7 +263,7 @@ class skeleton_SkinRenderer {
                 u_projection: projection,
                 u_view: view,
                 u_world: node.worldMatrix,
-                u_texture:this.skin._texture._glID,
+                u_texture:this.skin._texture.glID,
                 u_jointTexture: this.skin.jointTexture,
                 u_numJoints: this.skin.joints.length,
             });

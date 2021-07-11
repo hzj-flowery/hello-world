@@ -41,7 +41,7 @@ function _attach(gl, location, attachment, face = 0) {
     //         gl.FRAMEBUFFER,
     //         location,
     //         gl.TEXTURE_2D,
-    //         attachment._glID,
+    //         attachment.glID,
     //         0
     //     );
     // } 
@@ -50,7 +50,7 @@ function _attach(gl, location, attachment, face = 0) {
     //         gl.FRAMEBUFFER,
     //         location,
     //         gl.TEXTURE_CUBE_MAP_POSITIVE_X + face,
-    //         attachment._glID,
+    //         attachment.glID,
     //         0
     //     );
     // } else {
@@ -58,7 +58,7 @@ function _attach(gl, location, attachment, face = 0) {
     //         gl.FRAMEBUFFER,
     //         location,
     //         gl.RENDERBUFFER,
-    //         attachment._glID
+    //         attachment.glID
     //     );
     // }
 }

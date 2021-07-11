@@ -37,7 +37,7 @@ export default class Program {
     private _linked: any;
     private _vertSource: any;
     private _fragSource: any;
-    private _glID: any;
+    private glID: any;
     private _id: any;
     
     /**
@@ -72,7 +72,7 @@ export default class Program {
         this._linked = false;
         this._vertSource = options.vert;
         this._fragSource = options.frag;
-        this._glID = null;
+        this.glID = null;
         this._id = _genID++;
     }
 
@@ -120,7 +120,7 @@ export default class Program {
             return errors;
         }
 
-        this._glID = program;
+        this.glID = program;
 
         // parse attribute
         let numAttributes = gl.getProgramParameter(program, gl.ACTIVE_ATTRIBUTES);
@@ -160,10 +160,10 @@ export default class Program {
 
     destroy() {
         let gl = this._device._gl;
-        gl.deleteProgram(this._glID);
+        gl.deleteProgram(this.glID);
 
         this._linked = false;
-        this._glID = null;
+        this.glID = null;
         this._attributes = [];
         this._uniforms = [];
         this._samplers = [];

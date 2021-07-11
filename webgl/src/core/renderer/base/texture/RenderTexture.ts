@@ -166,7 +166,7 @@ export class RenderTexture extends Texture2D {
         let gl = this._gl;
         gl.bindFramebuffer(gl.FRAMEBUFFER, this._frameBuffer);
         //创建纹理
-        gl.bindTexture(gl.TEXTURE_2D, this._glID);
+        gl.bindTexture(gl.TEXTURE_2D, this.glID);
         // Y 轴取反
         this._gl.pixelStorei(this._gl.UNPACK_FLIP_Y_WEBGL, false);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
@@ -177,7 +177,7 @@ export class RenderTexture extends Texture2D {
         //设置上面创建纹理作为颜色附件
         //参数attachment是gl.COLOR_ATTACHMENT0表示纹理缓冲区作为帧缓冲区的颜色缓冲区，接收片元像素数据，
         //如果是gl.DEPTH_ATTACHMENT表示纹理缓冲区作为帧缓冲区的深度缓冲区，接收片元深度值Z
-        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this._glID, 0);
+        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.glID, 0);
 
 
         //设置渲染缓冲对象作为深度附件
@@ -199,7 +199,7 @@ export class RenderTexture extends Texture2D {
         var gl = this._gl as WebGLRenderingContext;
         gl.bindFramebuffer(gl.FRAMEBUFFER, this._frameBuffer);
         //深度纹理附件
-        gl.bindTexture(gl.TEXTURE_2D, this._glID);
+        gl.bindTexture(gl.TEXTURE_2D, this.glID);
         gl.texImage2D(
             gl.TEXTURE_2D,      // target
             0,                  // mip level
@@ -218,7 +218,7 @@ export class RenderTexture extends Texture2D {
             gl.FRAMEBUFFER,       // target
             gl.DEPTH_ATTACHMENT,  // attachment point 将指定的纹理绑定到帧缓冲的深度附件中
             gl.TEXTURE_2D,        // texture target
-            this._glID,    // texture
+            this.glID,    // texture
             0);                   // mip level
 
         //颜色纹理附件
@@ -256,8 +256,8 @@ export class RenderTexture extends Texture2D {
         //颜色纹理附件
         // create a color texture of the same size as the depth texture
         // see article why this is needed_
-        this._glID = gl.createTexture();
-        gl.bindTexture(gl.TEXTURE_2D, this._glID);
+        this.glID = gl.createTexture();
+        gl.bindTexture(gl.TEXTURE_2D, this.glID);
         gl.texImage2D(
             gl.TEXTURE_2D,
             0,
@@ -279,7 +279,7 @@ export class RenderTexture extends Texture2D {
             gl.FRAMEBUFFER,        // target
             gl.COLOR_ATTACHMENT0,  // attachment point 将指定的纹理绑定到帧缓冲的颜色附件中
             gl.TEXTURE_2D,         // texture target
-            this._glID,         // texture
+            this.glID,         // texture
             0);                    // mip level
         
         //创建渲染缓冲并绑定以及初始化存储
