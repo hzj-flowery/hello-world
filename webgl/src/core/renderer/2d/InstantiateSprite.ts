@@ -13,7 +13,7 @@ export default class InstantiateSprite extends SY.SpriteInstance {
     private _posArray: Array<Array<number>>;
     protected onInitFinish():void{
         this.setContentSize(100, 200);
-        this.numInstances = 12;
+        this.numInstances = 3;
         this.InstanceVertNums = 4;
         this.pushDivisor("a_color", false);
         this.pushDivisor("a_matrix", true);

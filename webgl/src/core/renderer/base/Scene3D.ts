@@ -89,10 +89,10 @@ export default class Scene3D extends Scene {
         // this._floorNode.spriteFrame = "res/ground.jpg";
         // this.addChild(this._floorNode);
 
-        this._spineNode = new Spine();
-        this._spineNode.x = -5;
-        this._spineNode.y = 10;
-        this.addChild(this._spineNode);
+        // this._spineNode = new Spine();
+        // this._spineNode.x = -5;
+        // this._spineNode.y = 10;
+        // this.addChild(this._spineNode);
 
         this._customTexture = new CustomTextureCube();
         this._customTexture.spriteFrame = CustomTextureData.getRandomData(3, 5, syGL.TextureFormat.RGB8);
@@ -119,38 +119,38 @@ export default class Scene3D extends Scene {
         // this._deferredShading.setPosition(-3,10,0);
         // this._centerNode.addChild(this._deferredShading);
 
-        this._renderSprite = new RenderOffline3DSprite();
-        this._renderSprite.setVirtualCameraIndex(CameraIndex.normal1);
-        this._renderSprite.spriteFrame = {
-            type:"RenderTexture",
-            place:"color",
-        }
-        this._renderSprite.setPosition(-3,10,0);
-        this._centerNode.addChild(this._renderSprite);
+        // this._renderSprite = new RenderOffline3DSprite();
+        // this._renderSprite.setVirtualCameraIndex(CameraIndex.normal1);
+        // this._renderSprite.spriteFrame = {
+        //     type:"RenderTexture",
+        //     place:"color",
+        // }
+        // this._renderSprite.setPosition(-3,10,0);
+        // this._centerNode.addChild(this._renderSprite);
 
-        this._renderSprite1 = new RenderOffline3DSprite();
-        this._renderSprite1.setVirtualCameraIndex(CameraIndex.normal2);
-        this._renderSprite1.spriteFrame = {
-            type:"RenderTexture",
-            place:"color",
-        }
-        this._renderSprite1.setPosition(3,10,0);
-        this._centerNode.addChild(this._renderSprite1);
+        // this._renderSprite1 = new RenderOffline3DSprite();
+        // this._renderSprite1.setVirtualCameraIndex(CameraIndex.normal2);
+        // this._renderSprite1.spriteFrame = {
+        //     type:"RenderTexture",
+        //     place:"color",
+        // }
+        // this._renderSprite1.setPosition(3,10,0);
+        // this._centerNode.addChild(this._renderSprite1);
 
-        this._renderSprite2 = new RenderOffline3DSprite();
-        this._renderSprite2.setVirtualCameraIndex(CameraIndex.normal3);
-        this._renderSprite2.spriteFrame = {
-            type:"RenderTexture",
-            place:"color",
-        }
-        this._renderSprite2.setPosition(-6,10,0);
-        this._centerNode.addChild(this._renderSprite2);
+        // this._renderSprite2 = new RenderOffline3DSprite();
+        // this._renderSprite2.setVirtualCameraIndex(CameraIndex.normal3);
+        // this._renderSprite2.spriteFrame = {
+        //     type:"RenderTexture",
+        //     place:"color",
+        // }
+        // this._renderSprite2.setPosition(-6,10,0);
+        // this._centerNode.addChild(this._renderSprite2);
 
 
-        this._rtt = new RTT();
-        // this._rtt.spriteFrame = "res/dragon.png";
-        this._rtt.setPosition(-6,10,0);
-        this._centerNode.addChild(this._rtt);
+        // this._rtt = new RTT();
+        // // this._rtt.spriteFrame = "res/dragon.png";
+        // this._rtt.setPosition(-6,10,0);
+        // this._centerNode.addChild(this._rtt);
 
         // this._cubeNode = new Cube();
         // this._cubeNode.spriteFrame = "res/wicker.jpg";
@@ -208,12 +208,12 @@ export default class Scene3D extends Scene {
         this._skybox.setDefaultUrl();
         this.addChild(this._skybox);
 
-        let tempNode = new Node();
-        tempNode.setPosition(-10,-3.0,0);
-        this.addChild(tempNode);
-        this._mirrorCube = new MirrorCube();
-        this._mirrorCube.setDefaultUrl();
-        tempNode.addChild(this._mirrorCube);
+        // let tempNode = new Node();
+        // tempNode.setPosition(-10,-3.0,0);
+        // this.addChild(tempNode);
+        // this._mirrorCube = new MirrorCube();
+        // this._mirrorCube.setDefaultUrl();
+        // tempNode.addChild(this._mirrorCube);
 
         this.setPosition(0, 0, 0);
         setTimeout(this.rotateCenterNode.bind(this), 20);

@@ -25,7 +25,7 @@ var server = http.createServer(function (req, res) {
   var ext = path.extname(realPath);
   ext = ext ? ext.slice(1) : 'unknown';
   
-  var result = analysisURL(req.url)
+  var result = analysisURL(req.url) 
 
   handleListenDownloadFile(req,res)
 

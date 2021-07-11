@@ -282,7 +282,7 @@ class ShadowLight {
   private depthTextureSize: number = 512;
   private renderTexture: RenderTexture;
   private createTexture(): void {
-    this.checkerboardTexture = new TextureCustom();
+    this.checkerboardTexture = new TextureCustom(); 
     this.checkerboardTexture.url = CustomTextureData.getBoardData(8, 8);
     this.renderTexture = new RenderTexture();
     this.renderTexture.attach("depth", this.depthTextureSize, this.depthTextureSize)
@@ -318,7 +318,7 @@ class ShadowLight {
       u_projection: pMatrix,
       u_bias: G_LightCenter.lightData.bias,
       u_textureMatrix: texMatrix,
-      u_shadowMap: this.renderTexture.depthTexture,
+      u_shadowMap: this.renderTexture._glID,
       u_lightWorldPosition: lightPos,
       u_cameraWorldPosition: cameraPos,
       u_shininess: 150,

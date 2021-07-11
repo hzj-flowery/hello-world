@@ -37,7 +37,7 @@ import { G_LightModel } from "./renderer/light/LightModel";
 */
 function _attach(gl, location, attachment, face = 0) {
     // if (attachment instanceof Texture2D) {
-    //     gl.framebufferTexture2D(
+    //     gl.framebufferTexture2D( 
     //         gl.FRAMEBUFFER,
     //         location,
     //         gl.TEXTURE_2D,
@@ -134,15 +134,15 @@ gl.FRONT：前面
 gl.FRONT_AND_BACK：前后两面
  */
 function _commitCullState(gl: WebGLRenderingContext, cur: State, next: State): void {
-    if (cur.cullMode === next.cullMode) {
-        return;
-    }
-    if (next.cullMode === glEnums.CULL_NONE) {
-        gl.disable(gl.CULL_FACE);
-        return;
-    }
-    gl.enable(gl.CULL_FACE);
-    gl.cullFace(next.cullMode);
+    // if (cur.cullMode === next.cullMode) {
+    //     return;
+    // }
+    // if (next.cullMode === glEnums.CULL_NONE) {
+    //     gl.disable(gl.CULL_FACE);
+    //     return;
+    // }
+    // gl.enable(gl.CULL_FACE);
+    // gl.cullFace(next.cullMode);
 }
 /**
  * 裁切状态
@@ -151,11 +151,11 @@ function _commitCullState(gl: WebGLRenderingContext, cur: State, next: State): v
  */
 function _commitScissorState(gl: WebGLRenderingContext, cur: State, next: State): void {
 
-    gl.enable(gl.SCISSOR_TEST);
-    gl.scissor(0, 0, 200, 50);
-    gl.clearColor(1.0, 0.0, 0.0, 1.0);
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-    gl.disable(gl.SCISSOR_TEST);
+    // gl.enable(gl.SCISSOR_TEST);
+    // gl.scissor(0, 0, 200, 50);
+    // gl.clearColor(1.0, 0.0, 0.0, 1.0);
+    // gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    // gl.disable(gl.SCISSOR_TEST);
 }
 /**
  * 
@@ -380,8 +380,8 @@ export default class Device {
     private _lastPressPos: Array<number> = [];
     private onMouseDown(ev): void {
         this._isCapture = true;
-        this._press = true;
 
+        this._press = true;
     }
     private onMouseMove(ev: MouseEvent, value): void {
         if (this._press) {
@@ -496,7 +496,10 @@ export default class Device {
         return this._triggerRenderTime;
     }
     private triggerRender(cData: CameraRenderData) {
+       
+        //设置帧缓冲区
         this.readyForOneFrame(cData.fb, cData.viewPort, cData.isClear);
+
         //记录一下当前渲染的时间
         this._triggerRenderTime++;
         var cameraData = GameMainCamera.instance.getCameraIndex(CameraIndex.base3D).getCameraData();
@@ -630,10 +633,12 @@ export default class Device {
      * @param isClear 是否清理缓冲区
      */
     private readyForOneFrame(fb: WebGLFramebuffer, viewPort: any, isClear: boolean = true): void {
+        
         this.setFrameBuffer(fb);
         this.setViewPort(viewPort);
         if (isClear)
             this.clear();
+        
     }
     private _framebuffer: WebGLFramebuffer;//帧缓冲
     /**
@@ -666,7 +671,7 @@ export default class Device {
         if (this._curViewPort == null ||
             !(this._curViewPort.x == x && this._curViewPort.y == y && this._curViewPort.width == width && this._curViewPort.height == height)) {
             this.gl.viewport(x, y, width, height);
-            this.gl.scissor(x, y, width, height);
+            // this.gl.scissor(x, y, width, height);
             this._curViewPort = { x: x, y: y, width: width, height: height };
         }
 
@@ -680,7 +685,7 @@ export default class Device {
     public clear(): void {
         let gl = this.gl;
         gl.clearColor(0.5, 0.5, 0.5, 1.0);
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT|gl.STENCIL_BUFFER_BIT);
     }
     //---------------------------------------------------------------------------------------------end---------------------------------
 
@@ -903,6 +908,10 @@ export default class Device {
      * @param height 
      */
     public showCurFramerBufferOnCanvas(width?: number, height?: number): void {
+        if(!this.openCapture)
+        {
+            return;
+        }
         let gl = this.gl;
         height = height || 512;
         width = width || 512;

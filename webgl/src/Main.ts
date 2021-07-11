@@ -7,24 +7,16 @@ import Device from "./core/Device";
 import LoaderManager from "./core/LoaderManager";
 import PointLightTest from "./core/renderer/light/PointLightTest";
 import RenderFlow from "./core/RenderFlow";
-import EarthSunTest from "./core/renderer/3d/test/EarthSunTest";
-import RobartTest from "./core/renderer/3d/test/RobartTest";
-import CaptureTest from "./core/renderer/3d/test/CaptureTest";
-import RampTextureTest from "./core/renderer/3d/test/RampTextureTest";
-import ObjTest from "./core/renderer/3d/test/ObjTest";
 import ThreeDLightTest from "./core/renderer/light/ThreeDLightTest";
-import ShaderShadowTest from "./core/renderer/3d/test/ShaderShadowTest";
 import SpotLightTest from "./core/renderer/light/SpotLightTest";
-import { StencilTest } from "./core/renderer/3d/test/StencilTest";
-import { RenderTargetTexture } from "./core/renderer/3d/test/RenderTargetTexture";
 import { G_ShaderFactory } from "./core/renderer/shader/ShaderFactory";
 import { G_BufferManager } from "./core/renderer/base/buffer/BufferManager";
-import { ShadowMapProjectionTest } from "./core/renderer/3d/test/ShadowMapProjectionTest";
 import { G_DrawEngine } from "./core/renderer/base/DrawEngine";
 import { G_ShaderCenter } from "./core/renderer/shader/ShaderCenter";
 import { G_LightCenter } from "./core/renderer/light/LightCenter";
 import { G_LightModel } from "./core/renderer/light/LightModel";
 import { G_UISetting } from "./core/ui/UiSetting";
+import ShaderShadowTest from "./core/renderer/3d/test/ShaderShadowTest";
 
 
 
@@ -108,7 +100,7 @@ LoaderManager.instance.load(arr,null,function(){
     let str = `#define ${name} ${value}`;
     console.log("---hzj------",str);
 
-    new RenderFlow().startup();
+    // new RenderFlow().startup();
     // RampTextureTest.run();
     // CameraTest.run();
     // RobartTest.run();
@@ -120,7 +112,7 @@ LoaderManager.instance.load(arr,null,function(){
     // PointLightTest.run();
     // ThreeDLightTest.run();
 
-    // ShaderShadowTest.run();
+    ShaderShadowTest.run();
 
     // StencilTest.run();
 
