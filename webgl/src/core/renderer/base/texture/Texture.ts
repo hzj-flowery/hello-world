@@ -59,7 +59,13 @@ export class TextureOpts {
      * 
      */
     premultiplyAlpha:boolean = false;
+    /**
+     * 默认值为0
+     */
     level: number = 0;
+    /**
+     * 默认值为0
+     */
     border: number = 0;
     /**
      * 纹理的宽度 有多少个像素点
@@ -197,6 +203,12 @@ export class Texture {
         this.loaded = false;
     }
     protected updateOptions(options: TextureOpts): void {
+        if(!options)
+        {
+            console.log("传入值为空------",options);
+            return;
+        }
+        options.checkValid();
         this._width = options.width;
         this._height = options.height;
         this._genMipmaps = options.genMipmaps;
@@ -265,8 +277,12 @@ export class Texture {
             console.log("生成多远渐进纹理");
             gl.generateMipmap(this._target);
         }
-        /**
-         * MIN_FILTER 和 MAG_FILTER
+        this.texParameteri()
+    }
+    
+    /**
+     * 设置纹理过滤
+     *  * MIN_FILTER 和 MAG_FILTER
          * -------------对于纹理的放大
          * 一个纹理是由离散的数据组成的，比如一个 2x2 的纹理是由 4 个像素组成的，使用 (0,0)、(0, 1) 等四个坐标去纹理上取样，自然可以取到对应的像素颜色；
          * 但是，如果使用非整数坐标到这个纹理上去取色。比如，当这个纹理被「拉近」之后，在屏幕上占据了 4x4 一共 16 个像素，
@@ -292,13 +308,22 @@ export class Texture {
          * 实时进行计算的开销是很大的，所有有一种称为 MIPMAP（金字塔）的技术。
          * 在纹理创建之初，就为纹理创建好 MIPMAP，比如对 512x512 的纹理，依次建立 256x256（称为 1 级 Mipmap）、128x128（称为 2 级 Mipmap） 乃至 2x2、1x1 的纹理。
          * 实时渲染时，根据采样密度选择其中的某一级纹理，以此避免运行时的大量计算
-         */
-        
-        // set the filtering so we don't need mips and it's not filtered
-        gl.texParameteri(this._target, gl.TEXTURE_MIN_FILTER, this._minFilter);
-        gl.texParameteri(this._target, gl.TEXTURE_MAG_FILTER, this._magFilter);
-        gl.texParameteri(this._target, gl.TEXTURE_WRAP_S,this._wrapS);
-        gl.texParameteri(this._target, gl.TEXTURE_WRAP_T,this._wrapT);
+     * @param minFilter 
+     * @param magFilter 
+     * @param wrapS 
+     * @param wrapT 
+     */
+    protected texParameteri(minFilter?:number,magFilter?:number,wrapS?:number,wrapT?:number){
+        minFilter = minFilter? minFilter:this._minFilter;
+        magFilter = magFilter? magFilter:this._magFilter;
+        wrapS = wrapS? wrapS:this._wrapS;
+        wrapT = wrapT? wrapT:this._wrapT;
+         let gl = this._gl
+         // set the filtering so we don't need mips and it's not filtered
+        gl.texParameteri(this._target, gl.TEXTURE_MIN_FILTER, minFilter);
+        gl.texParameteri(this._target, gl.TEXTURE_MAG_FILTER, magFilter);
+        gl.texParameteri(this._target, gl.TEXTURE_WRAP_S,wrapS);
+        gl.texParameteri(this._target, gl.TEXTURE_WRAP_T,wrapT);
     }
     /**
      * 上传纹理到显存中

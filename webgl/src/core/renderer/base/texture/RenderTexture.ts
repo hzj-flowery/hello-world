@@ -1,6 +1,7 @@
 
 import { Texture2D } from "./Texture2D";
 import { syGL } from "../../gfx/syGLEnums";
+import { TextureOpts } from "./Texture";
 
 /**
  * 帧缓冲
@@ -62,8 +63,6 @@ export class RenderTexture extends Texture2D {
         var gl = this._gl;
         //创建帧缓冲
         this._frameBuffer = gl.createFramebuffer();
-        //创建渲染缓冲区
-        this._renderBuffer = gl.createRenderbuffer();
     }
     private _frameBuffer: WebGLFramebuffer;//帧缓冲的glID
     private _renderBuffer: WebGLRenderbuffer;//渲染缓冲的glID
@@ -136,10 +135,7 @@ export class RenderTexture extends Texture2D {
             gl.bindTexture(gl.TEXTURE_2D, textureID);
             // Y 轴取反
             this._gl.pixelStorei(this._gl.UNPACK_FLIP_Y_WEBGL, false);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+            this.texParameteri(gl.LINEAR,gl.LINEAR,gl.REPEAT,gl.REPEAT)
             //设置纹理格式，作为帧缓冲的颜色附件
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, dtWidth, dtHeight, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
             //设置上面创建纹理作为颜色附件
@@ -147,11 +143,7 @@ export class RenderTexture extends Texture2D {
             COLOR_ATTACHMENT.push(gl["COLOR_ATTACHMENT"+i])
         }
 
-
-        //设置渲染缓冲对象作为深度附件
-        gl.bindRenderbuffer(gl.RENDERBUFFER, this._renderBuffer);
-        gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, dtWidth, dtHeight);
-        gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, this._renderBuffer);
+        this.addRenderBufferToDepth(dtWidth, dtHeight)
 
         //采样到几个颜色附件(对应的几何纹理)
         gl.drawBuffers(COLOR_ATTACHMENT);
@@ -165,55 +157,41 @@ export class RenderTexture extends Texture2D {
     private renderTextureToColor(dtWidth: number, dtHeight: number):void{
         let gl = this._gl;
         gl.bindFramebuffer(gl.FRAMEBUFFER, this._frameBuffer);
-        //创建纹理
-        gl.bindTexture(gl.TEXTURE_2D, this.glID);
-        // Y 轴取反
-        this._gl.pixelStorei(this._gl.UNPACK_FLIP_Y_WEBGL, false);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, dtWidth, dtHeight, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+        var options = new TextureOpts();
+        options.data = null;
+        options.width = dtWidth;
+        options.height = dtHeight;
+        options.unpackFlipY = false;
+        options.magFilter = syGL.TexFilter.LINEAR;
+        options.minFilter = syGL.TexFilter.LINEAR;
+        options.wrapS = syGL.TextureWrap.REPEAT;
+        options.wrapT = syGL.TextureWrap.REPEAT;
+        options.configFormat = syGL.TextureFormat.RGBA8
+        this.updateOptions(options);
+        this.upload();
         //设置上面创建纹理作为颜色附件
         //参数attachment是gl.COLOR_ATTACHMENT0表示纹理缓冲区作为帧缓冲区的颜色缓冲区，接收片元像素数据，
         //如果是gl.DEPTH_ATTACHMENT表示纹理缓冲区作为帧缓冲区的深度缓冲区，接收片元深度值Z
         gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.glID, 0);
 
-
-        //设置渲染缓冲对象作为深度附件
-        gl.bindRenderbuffer(gl.RENDERBUFFER, this._renderBuffer);
-        /**
-         * 指定为颜色缓冲区就可以接收帧缓冲区的片元的像素数据（rgb），指定为深度缓冲区就可以接收片元的深度值Z数据
-         *  gl.DEPTH_COMPONENT16	深度缓冲区
-         *  gl.DEPTH_COMPONENT24    深度缓冲区
-            gl.DEPTH_COMPONENT32F   深度缓冲区
-            gl.STENCIL_INDEX8	    模板缓冲区
-            gl.RGBA4	            颜色缓冲区，4个分量都是4比特
-            gl.RGB5_A1          	颜色缓冲区，RGB分量5比特，A分量1比特
-            gl.RGB565	            颜色缓冲区，RGB分量分别5、6、5比特
-         */
-        gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, dtWidth, dtHeight);
-        gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, this._renderBuffer);
+        this.addRenderBufferToDepth(dtWidth, dtHeight)
     }
     private renderTextureToDepthWebgl1(dtWidth: number, dtHeight: number): void {
         var gl = this._gl as WebGLRenderingContext;
         gl.bindFramebuffer(gl.FRAMEBUFFER, this._frameBuffer);
         //深度纹理附件
-        gl.bindTexture(gl.TEXTURE_2D, this.glID);
-        gl.texImage2D(
-            gl.TEXTURE_2D,      // target
-            0,                  // mip level
-            gl.DEPTH_COMPONENT, // internal format
-            dtWidth,   // width
-            dtHeight,   // height
-            0,                  // border
-            gl.DEPTH_COMPONENT, // format
-            gl.UNSIGNED_INT,    // type  //通道数是4 每一位大小是1个字节
-            null);              // data
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        var options = new TextureOpts();
+        options.data = null;
+        options.width = dtWidth;
+        options.height = dtHeight;
+        options.magFilter = syGL.TexFilter.NEAREST;
+        options.minFilter = syGL.TexFilter.NEAREST;
+        options.wrapS = syGL.TextureWrap.CLAMP;
+        options.wrapT = syGL.TextureWrap.CLAMP;
+        options.configFormat = syGL.TextureFormat.D32
+        this.updateOptions(options);
+        this.upload();
+
         gl.framebufferTexture2D(
             gl.FRAMEBUFFER,       // target
             gl.DEPTH_ATTACHMENT,  // attachment point 将指定的纹理绑定到帧缓冲的深度附件中
@@ -237,10 +215,7 @@ export class RenderTexture extends Texture2D {
             gl.UNSIGNED_BYTE,
             null,
         );
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        this.texParameteri(gl.NEAREST,gl.NEAREST,gl.CLAMP_TO_EDGE,gl.CLAMP_TO_EDGE)
         // attach it to the framebuffer
         //将颜色纹理附件附加到帧缓存
         gl.framebufferTexture2D(
@@ -254,25 +229,17 @@ export class RenderTexture extends Texture2D {
         var gl = (this._gl) as WebGL2RenderingContext;
         gl.bindFramebuffer(gl.FRAMEBUFFER, this._frameBuffer);
         //颜色纹理附件
-        // create a color texture of the same size as the depth texture
-        // see article why this is needed_
-        this.glID = gl.createTexture();
-        gl.bindTexture(gl.TEXTURE_2D, this.glID);
-        gl.texImage2D(
-            gl.TEXTURE_2D,
-            0,
-            gl.RGBA,
-            dtWidth,
-            dtHeight,
-            0,
-            gl.RGBA,
-            gl.UNSIGNED_BYTE,
-            null,
-        );
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        var options = new TextureOpts();
+        options.data = null;
+        options.width = dtWidth;
+        options.height = dtHeight;
+        options.magFilter = syGL.TexFilter.NEAREST;
+        options.minFilter = syGL.TexFilter.NEAREST;
+        options.wrapS = syGL.TextureWrap.CLAMP;
+        options.wrapT = syGL.TextureWrap.CLAMP;
+        options.configFormat = syGL.TextureFormat.RGBA8
+        this.updateOptions(options);
+        this.upload();
         // attach it to the framebuffer
         //将颜色纹理附件附加到帧缓存
         gl.framebufferTexture2D(
@@ -281,12 +248,35 @@ export class RenderTexture extends Texture2D {
             gl.TEXTURE_2D,         // texture target
             this.glID,         // texture
             0);                    // mip level
-        
-        //创建渲染缓冲并绑定以及初始化存储
-        gl.bindRenderbuffer(gl.RENDERBUFFER, this._renderBuffer);
-        //深度附件尺寸，每一个深度附件使用24位来表示
-        gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT24, dtWidth, dtHeight);
+
+        this.addRenderBufferToDepth(dtWidth, dtHeight)
+    }
+    
+    /**
+     * 添加渲染缓冲充当深度附件
+     * @param dtWidth 
+     * @param dtHeight 
+     */
+    private addRenderBufferToDepth(dtWidth:number, dtHeight:number):void{
+        var gl = this._gl
+
+        //创建渲染缓冲区
+        if(!this._renderBuffer)
+        this._renderBuffer = gl.createRenderbuffer();
+
         //设置渲染缓冲对象作为深度附件
+        gl.bindRenderbuffer(gl.RENDERBUFFER, this._renderBuffer);
+        /**
+         * 指定为颜色缓冲区就可以接收帧缓冲区的片元的像素数据（rgb），指定为深度缓冲区就可以接收片元的深度值Z数据
+         *  gl.DEPTH_COMPONENT16	深度缓冲区
+         *  gl.DEPTH_COMPONENT24    深度缓冲区
+            gl.DEPTH_COMPONENT32F   深度缓冲区
+            gl.STENCIL_INDEX8	    模板缓冲区
+            gl.RGBA4	            颜色缓冲区，4个分量都是4比特
+            gl.RGB5_A1          	颜色缓冲区，RGB分量5比特，A分量1比特
+            gl.RGB565	            颜色缓冲区，RGB分量分别5、6、5比特
+         */
+        gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, dtWidth, dtHeight);
         gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, this._renderBuffer);
     }
 
