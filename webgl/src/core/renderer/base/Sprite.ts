@@ -295,6 +295,16 @@ export namespace SY {
          * 直接设置纹理
          */
         public set texture(tex:Texture){
+             if(this._texture==tex)
+             {
+                 //纹理相同 无需重新设置
+                 return;
+             }
+             if(this._texture)
+             {
+                 //之前存在纹理 需要将其销毁
+                 this._texture.destroy();
+             }
              this._texture = tex;
              this.onSetTextureUrl();
         }
@@ -407,15 +417,15 @@ export namespace SY {
                     {
                         if(k==0)
                         {
-                            this._renderData[i].pushDeferredPositionTexture(texS[i])
+                            this._renderData[i].push2DTexture(texS[i],syRender.DeferredTexture.Position)
                         }
                         else if(k==1)
                         {
-                            this._renderData[i].pushDeferredNormalTexture(texS[i])
+                            this._renderData[i].push2DTexture(texS[i],syRender.DeferredTexture.Normal)
                         }
                         else if(k==2)
                         {
-                            this._renderData[i].pushDeferredColorTexture(texS[i])
+                            this._renderData[i].push2DTexture(texS[i],syRender.DeferredTexture.Color)
                         }
                     }
                 }

@@ -13,7 +13,7 @@ import { ShaderUseVariantType } from "../shader/ShaderUseVariantType";
 
 let renderDataId: number = 0;
 export namespace syRender {
-    export enum Type{
+    export enum Type {
         Forward = 1,//前线渲染
         Deferred,   //延迟渲染
     }
@@ -23,23 +23,33 @@ export namespace syRender {
         Normal,
         Spine
     }
-    
+
     //绘制的类型
-    export enum DrawType{
-        Normal=0,//常规渲染
+    export enum DrawType {
+        Normal = 0,//常规渲染
         Single,//单独渲染
     }
-    
+
+    /**
+     * 延迟渲染纹理
+     */
+    export enum DeferredTexture {
+        Position = 1,
+        Normal,
+        Color,
+        None
+    }
+
     //bufferData
-    export class WebGLBufferData{
+    export class WebGLBufferData {
         public glID: WebGLBuffer;//显存地址
         public itemSize: number;//单个buffer单元的数据数目
         public itemNums: number;//所有buffer单元数目
     }
-    
+
     //绘制信息
-    export class Primitive{
-        constructor(){
+    export class Primitive {
+        constructor() {
             this.nodeVertColor = new WebGLBufferData()
             this.vertMatrix = new WebGLBufferData()
             this.vert = new WebGLBufferData()
@@ -49,35 +59,35 @@ export namespace syRender {
             this.type = syGL.PrimitiveType.TRIANGLE_FAN;
             this.customMatrix = glMatrix.mat4.identity(null);
         }
-        public nodeVertColor:WebGLBufferData;//节点自定义顶点颜色
-        public vertMatrix:WebGLBufferData;//节点自定义矩阵
-        public vert:WebGLBufferData;//顶点buffer
-        public index:WebGLBufferData;//索引buffer
-        public uv:WebGLBufferData;//uv buffer
-        public normal:WebGLBufferData;//法线buffer
+        public nodeVertColor: WebGLBufferData;//节点自定义顶点颜色
+        public vertMatrix: WebGLBufferData;//节点自定义矩阵
+        public vert: WebGLBufferData;//顶点buffer
+        public index: WebGLBufferData;//索引buffer
+        public uv: WebGLBufferData;//uv buffer
+        public normal: WebGLBufferData;//法线buffer
 
         public color: Array<number>;//节点自定义颜色
-        public alpha:number;        //节点自定义透明度
+        public alpha: number;        //节点自定义透明度
         public customMatrix: Float32Array;//自定义矩阵
         public modelMatrix: Float32Array;//模型矩阵
-        public type:syGL.PrimitiveType; //绘制类型
+        public type: syGL.PrimitiveType; //绘制类型
 
         public instancedNums: number = 0;//实例的数目
         public instancedVertNums: number = 0;//每个实例的顶点数目
 
-        public reset(){
+        public reset() {
             glMatrix.mat4.identity(this.customMatrix);
             this.modelMatrix = null;
         }
     }
-    
+
     //光的数据
-    export namespace Light{
-        export class Spot{
-            constructor(){
+    export namespace Light {
+        export class Spot {
+            constructor() {
                 this.reset();
             }
-            public reset():void{
+            public reset(): void {
                 this.color = [];
                 this.direction = [];
                 this.innerLimit = 0;
@@ -88,23 +98,23 @@ export namespace syRender {
             public innerLimit: number;//聚光的内部限制
             public outerLimit: number;//聚光的外部限制
         }
-        export class Fog{
-            constructor(){
-               this.reset();
+        export class Fog {
+            constructor() {
+                this.reset();
             }
             public color: Array<number>;//雾的颜色
             public density: number;//雾的密度
-            public reset(){
-               this.color = []
-               this.density = 0;
+            public reset() {
+                this.color = []
+                this.density = 0;
             }
         }
         //平行光
-        export class Parallel{
-            constructor(){
+        export class Parallel {
+            constructor() {
                 this.reset()
             }
-            public reset():void{
+            public reset(): void {
                 this.color = [];
                 this.direction = [];
             }
@@ -112,40 +122,40 @@ export namespace syRender {
             public direction: Array<number>;//平行光的方向
         }
         //聚光灯
-        export class Specular{
-            constructor(){
+        export class Specular {
+            constructor() {
                 this.reset()
             }
             public color: Array<number>;//高光的颜色
             public shiness: number;//高光指数
-            public reset():void{
+            public reset(): void {
                 this.color = [];
                 this.shiness = 0;
             }
         }
         //点光
-        export class Point{
-            constructor(){
+        export class Point {
+            constructor() {
                 this.reset()
             }
             public color: Array<number>;//光的颜色
-            public reset():void{
+            public reset(): void {
                 this.color = [];
             }
         }
         //幻境光
-        export class Ambient{
-            constructor(){
+        export class Ambient {
+            constructor() {
                 this.reset()
             }
             public color: Array<number>;//光的颜色
-            public reset():void{
+            public reset(): void {
                 this.color = [];
             }
         }
         //外界取数据接口
-        export class Center{
-            constructor(){
+        export class Center {
+            constructor() {
                 this.spot = new Light.Spot();
                 this.fog = new Light.Fog();
                 this.parallel = new Light.Parallel();
@@ -154,15 +164,15 @@ export namespace syRender {
                 this.ambient = new Light.Ambient();
                 this.position = []
             }
-            public spot:Light.Spot;    //聚光灯
-            public fog:Light.Fog;     //雾
-            public parallel:Light.Parallel;//平行光
-            public specular:Light.Specular;//高光
-            public point:Light.Point;     //点光
-            public ambient:Light.Ambient;//环境光
+            public spot: Light.Spot;    //聚光灯
+            public fog: Light.Fog;     //雾
+            public parallel: Light.Parallel;//平行光
+            public specular: Light.Specular;//高光
+            public point: Light.Point;     //点光
+            public ambient: Light.Ambient;//环境光
 
-            public position:Array<number>; //光的位置
-            public reset():void{
+            public position: Array<number>; //光的位置
+            public reset(): void {
                 this.spot.reset();
                 this.fog.reset();
                 this.parallel.reset();
@@ -173,14 +183,14 @@ export namespace syRender {
             }
         }
     }
-    
+
 
     /**
      * 定义渲染数据
      */
     export class BaseData {
         constructor() {
-            
+
             this._id = renderDataId++;
             this._type = syRender.DataType.Base;
             this._temp_model_view_matrix = glMatrix.mat4.identity(null);
@@ -197,33 +207,33 @@ export namespace syRender {
 
             this.reset();
         }
-         
+
         /**
          * 唯一id
          */
-        public get id(){
+        public get id() {
             return this._id
         }
 
-        public get type(){
+        public get type() {
             return this._type
         }
 
-        public get drawType(){
-            if(this._pass) return this._pass.drawType;
+        public get drawType() {
+            if (this._pass) return this._pass.drawType;
             return syRender.DrawType.Normal;
         }
 
         public node: Node;//渲染的节点
-        
-      
+
+
         public _cameraIndex: number;//相机的类型
         public _cameraPosition: Array<number>;//相机的位置
-        private _pass:Pass;
-        public light:Light.Center;
-        public primitive:Primitive;
+        private _pass: Pass;
+        public light: Light.Center;
+        public primitive: Primitive;
 
-       
+
         public time: number;
         public useFlag: boolean = false;//使用状态
 
@@ -232,9 +242,7 @@ export namespace syRender {
         private _id: number;//每一个渲染数据都一个唯一的id
         private _texture2DGLIDArray: Array<WebGLTexture>;//2d纹理
         private _textureCubeGLIDArray: Array<WebGLTexture>;//立方体纹理
-        private _textureDeferredPosition:WebGLTexture;//延迟渲染之位置
-        private _textureDeferredNormal:WebGLTexture;//延迟渲染之法线
-        private _textureDeferredColor:WebGLTexture;//延迟渲染之颜色
+        private _texture2DGLIDMap: Map<DeferredTexture, WebGLTexture> = new Map()
         private _temp_model_view_matrix;//视口模型矩阵
         private _temp_model_inverse_matrix;//模型世界矩阵的逆矩阵
         private _temp_model_transform_matrix;//模型世界矩阵的转置矩阵
@@ -249,51 +257,45 @@ export namespace syRender {
             this._cameraPosition = [];
             this.light.reset();
             this.primitive.reset();
+            this._texture2DGLIDMap.clear();
             this._texture2DGLIDArray = [];
             this._textureCubeGLIDArray = [];
-            this._textureDeferredPosition = null;
-            this._textureDeferredNormal = null;
-            this._textureDeferredColor = null;
             this.time = 0;
-            this.useFlag = false;   
+            this.useFlag = false;
         }
 
-        public set pass(pass:Pass){
+        public set pass(pass: Pass) {
             this._pass = pass
         }
-        public get pass(){
+        public get pass() {
             return this._pass
         }
-        public get shader(){
+        public get shader() {
             return this._pass.code
         }
-        public get isOffline(){
-            if(this._pass)return this._pass.offlineRender
+        public get isOffline() {
+            if (this._pass) return this._pass.offlineRender
             return false
         }
-        public get isDrawInstanced(){
-            if(this._pass)return this._pass.drawInstanced
-            return  false
+        public get isDrawInstanced() {
+            if (this._pass) return this._pass.drawInstanced
+            return false
         }
 
-        public push2DTexture(texture: WebGLTexture): void {
-            if (this._texture2DGLIDArray.indexOf(texture) < 0) {
-                this._texture2DGLIDArray.push(texture);
+        public push2DTexture(texture: WebGLTexture, deferredTex: DeferredTexture = DeferredTexture.None): void {
+            if (deferredTex == DeferredTexture.None) {
+                if (this._texture2DGLIDArray.indexOf(texture) < 0) {
+                    this._texture2DGLIDArray.push(texture);
+                }
+            }
+            else {
+                this._texture2DGLIDMap.set(deferredTex, texture);
             }
         }
         public pushCubeTexture(texture: WebGLTexture): void {
             if (this._textureCubeGLIDArray.indexOf(texture) < 0) {
                 this._textureCubeGLIDArray.push(texture);
             }
-        }
-        public pushDeferredPositionTexture(texture: WebGLTexture):void{
-            this._textureDeferredPosition = texture;
-        }
-        public pushDeferredNormalTexture(texture: WebGLTexture):void{
-            this._textureDeferredNormal = texture;
-        }
-        public pushDeferredColorTexture(texture: WebGLTexture):void{
-            this._textureDeferredColor = texture;
         }
         /**
          * 设置矩阵
@@ -353,7 +355,7 @@ export namespace syRender {
                     case ShaderUseVariantType.CUBE_COORD:
                         //立方体纹理数据
                         //-****-------------
-                        _shader.setUseTexture(this._textureCubeGLIDArray[0], useTextureAddres,false);
+                        _shader.setUseTexture(this._textureCubeGLIDArray[0], useTextureAddres, false);
                         useTextureAddres++;
                         break;
                     //天空盒
@@ -369,15 +371,15 @@ export namespace syRender {
                         useTextureAddres++;
                         break;
                     case ShaderUseVariantType.GPosition:
-                        _shader.setUseDeferredPositionTexture(this._textureDeferredPosition, useTextureAddres);
+                        _shader.setUseDeferredTexture(this._texture2DGLIDMap.get(DeferredTexture.Position), useTextureAddres,DeferredTexture.Position);
                         useTextureAddres++;
                         break;
                     case ShaderUseVariantType.GNormal:
-                        _shader.setUseDeferredNormalTexture(this._textureDeferredNormal, useTextureAddres);
+                        _shader.setUseDeferredTexture(this._texture2DGLIDMap.get(DeferredTexture.Normal), useTextureAddres,DeferredTexture.Normal);
                         useTextureAddres++;
                         break;
                     case ShaderUseVariantType.GColor:
-                        _shader.setUseDeferredColorTexture(this._textureDeferredColor, useTextureAddres);
+                        _shader.setUseDeferredTexture(this._texture2DGLIDMap.get(DeferredTexture.Color), useTextureAddres,DeferredTexture.Color);
                         useTextureAddres++;
                         break;
                     case ShaderUseVariantType.Projection:
@@ -480,10 +482,10 @@ export namespace syRender {
             this._type = syRender.DataType.Normal;
             this._state = new State();
 
-             //渲染状态
-             this._state.depthFunc = glEnums.DS_FUNC_LESS;
-             this._state.depthTest = true;
-             this._state.depthWrite = true;
+            //渲染状态
+            this._state.depthFunc = glEnums.DS_FUNC_LESS;
+            this._state.depthTest = true;
+            this._state.depthWrite = true;
 
         }
         public reset() {
@@ -496,10 +498,10 @@ export namespace syRender {
             this.primitive.type = syGL.PrimitiveType.TRIANGLES;
             glMatrix.mat4.identity(this._tempMatrix1);
         }
-         /**
-         * 渲染状态
-         */
-        public _state:State;
+        /**
+        * 渲染状态
+        */
+        public _state: State;
 
         public _shaderData: ShaderData;
         //顶点着色器属性数据

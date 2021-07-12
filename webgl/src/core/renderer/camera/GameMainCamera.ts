@@ -165,7 +165,7 @@ export class GameMainCamera {
     temp.fb = this.getCameraIndex(CameraIndex.base3D).getFramebuffer()
     temp.index = CameraIndex.base3D;
     temp.viewPort = { x: 0, y: 0, w: 0.5, h: 1 }
-    temp.isClear = false;
+    temp.isClear = true;
     temp.visualAngle = 0;
     temp.isRenderToScreen = true;
     this._renderData.push(temp);

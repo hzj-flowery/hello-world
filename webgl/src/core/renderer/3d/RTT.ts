@@ -18,8 +18,8 @@ export class RTT extends SY.SpriteBase{
         this._glPrimitiveType = this.gl.TRIANGLE_STRIP;
     }
     public onDrawBefore(time:number):void{
-        if((this._texture as RenderTexture).moreTexture)
-         console.log((this._texture as RenderTexture).moreTexture.length)
+        // if((this._texture as RenderTexture).moreTexture)
+        //  console.log((this._texture as RenderTexture).moreTexture.length)
     }
     public onDrawAfter(time:number):void{
 

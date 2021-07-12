@@ -169,7 +169,8 @@ export namespace syGL {
         TEX_COORD6 = 'u_texCoord6',
         TEX_COORD7 = 'u_texCoord7',
         TEX_COORD8 = 'u_texCoord8',
-        //延迟渲染
+
+        //延迟渲染  第一次应该是从属性变量获取 第二次是uniform变量
         TEX_GPosition = "gPosition",//位置信息
         TEX_GNormal = "gNormal",//法线信息
         TEX_GColor = "gColor",  //颜色信息

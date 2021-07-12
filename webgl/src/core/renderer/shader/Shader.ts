@@ -1,5 +1,6 @@
 
 import { G_DrawEngine } from "../base/DrawEngine";
+import { syRender } from "../data/RenderData";
 import { syGL } from "../gfx/syGLEnums";
 import { ShaderUseVariantType } from "./ShaderUseVariantType";
 
@@ -90,6 +91,7 @@ export class Shader {
     private u_texCoord8_loc;//纹理属性8号位置
     private u_cubeCoord_loc;//立方体属性位置
     private u_skybox_loc;//天空盒属性位置
+
     private u_gPosition_loc;//位置纹理信息
     private u_gNormal_loc;//法线纹理信息
     private u_gColor_loc;//颜色纹理信息
@@ -169,9 +171,11 @@ export class Shader {
         this.u_texCoord8_loc = gl.getUniformLocation(glID, syGL.AttributeUniform.TEX_COORD8);
         this.u_cubeCoord_loc = gl.getUniformLocation(glID, syGL.AttributeUniform.CUBE_COORD);
         this.u_skybox_loc = gl.getUniformLocation(glID, syGL.AttributeUniform.SKYBOX);
-        this.u_gPosition_loc = gl.getAttribLocation(glID, syGL.AttributeUniform.TEX_GPosition);
-        this.u_gNormal_loc = gl.getAttribLocation(glID,syGL.AttributeUniform.TEX_GNormal);
-        this.u_gColor_loc = gl.getAttribLocation(glID,syGL.AttributeUniform.TEX_GColor);
+        //uniform
+        this.u_gPosition_loc = gl.getUniformLocation(glID, syGL.AttributeUniform.TEX_GPosition);
+        this.u_gNormal_loc = gl.getUniformLocation(glID,syGL.AttributeUniform.TEX_GNormal);
+        this.u_gColor_loc = gl.getUniformLocation(glID,syGL.AttributeUniform.TEX_GColor);
+
 
         this.u_shadowMap_loc = gl.getUniformLocation(glID, syGL.AttributeUniform.SHADOW_MAP);
         this.u_shadowInfor_loc = gl.getUniformLocation(glID, syGL.AttributeUniform.SHADOW_INFOR);
@@ -234,6 +238,8 @@ export class Shader {
         this.u_texCoord7_loc != null ? this.pushShaderVariant(ShaderUseVariantType.TEX_COORD7) : null;
         this.u_texCoord8_loc != null ? this.pushShaderVariant(ShaderUseVariantType.TEX_COORD8) : null;
         this.u_cubeCoord_loc != null ? this.pushShaderVariant(ShaderUseVariantType.CUBE_COORD) : null;
+
+        //输出
         this.u_gPosition_loc!=null?this.pushShaderVariant(ShaderUseVariantType.GPosition):null;
         this.u_gNormal_loc!=null?this.pushShaderVariant(ShaderUseVariantType.GNormal):null;
         this.u_gColor_loc!=null?this.pushShaderVariant(ShaderUseVariantType.GColor):null;
@@ -454,33 +460,21 @@ export class Shader {
      * 设置延迟渲染的位置纹理
      * @param glID 
      * @param pos 
+     * @param locType  a代表属性变量 u代表uniform变量
      */
-    public setUseDeferredPositionTexture(glID: WebGLTexture, pos:number):void{
-        if(this.checklocValid(this.u_gPosition_loc,"u_gPosition_loc"))
-        {
-            G_DrawEngine.activeTexture(this._gl.TEXTURE_2D, glID, this.u_gPosition_loc, pos)
+    public setUseDeferredTexture(glID: WebGLTexture, pos: number, texType: syRender.DeferredTexture): void {
+        var loc = ""
+        if (texType == syRender.DeferredTexture.Position) {
+            loc ="u_gPosition_loc";
         }
-    }
-     /**
-     * 设置延迟渲染的法线纹理
-     * @param glID 
-     * @param pos 
-     */
-    public setUseDeferredNormalTexture(glID: WebGLTexture, pos:number):void{
-        if(this.checklocValid(this.u_gNormal_loc,"u_gNormal_loc"))
-        {
-            G_DrawEngine.activeTexture(this._gl.TEXTURE_2D, glID, this.u_gNormal_loc, pos)
+        else if (texType == syRender.DeferredTexture.Normal) {
+            loc ="u_gNormal_loc"; //设置延迟渲染的法线纹理
         }
-    }
-     /**
-     * 设置延迟渲染的颜色纹理
-     * @param glID 
-     * @param pos 
-     */
-      public setUseDeferredColorTexture(glID: WebGLTexture, pos:number):void{
-        if(this.checklocValid(this.u_gColor_loc,"u_gColor_loc"))
-        {
-            G_DrawEngine.activeTexture(this._gl.TEXTURE_2D, glID, this.u_gColor_loc, pos)
+        else if (texType == syRender.DeferredTexture.Color) {
+            loc ="u_gColor_loc"; //设置延迟渲染的颜色纹理
+        }
+        if (this.checklocValid(this[loc], loc)) {
+            G_DrawEngine.activeTexture(this._gl.TEXTURE_2D, glID, this[loc], pos)
         }
     }
     public setUseSkyBox(glID: WebGLTexture, pos = 0): void {
