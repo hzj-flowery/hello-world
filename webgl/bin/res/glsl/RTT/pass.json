@@ -28,7 +28,7 @@
             }
         ],
         "custom":[
-            {"key":"drawType","value":0}
+            {"key":"drawType","value":1}
         ]
     },
     {

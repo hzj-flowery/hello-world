@@ -1,6 +1,8 @@
 import { SY } from "../base/Sprite";
 import { RenderTexture } from "../base/texture/RenderTexture";
+import { CameraIndex, GameMainCamera } from "../camera/GameMainCamera";
 import { CubeData } from "../data/CubeData";
+import { syRender } from "../data/RenderData";
 
 /**
  * 延迟渲染
@@ -9,6 +11,7 @@ export class RTT extends SY.SpriteBase{
     constructor() {
         super();
     }
+    private _virtualCameraIndex:CameraIndex = CameraIndex.normal1;
     protected onInit() {
         var rd = CubeData.getData();
         this.createVertexsBuffer(rd.vertex, rd.dF.vertex_item_size);
@@ -23,5 +26,13 @@ export class RTT extends SY.SpriteBase{
     }
     public onDrawAfter(time:number):void{
 
+    }
+    protected onSetTextureUrl():void{
+        
+        GameMainCamera.instance.getCameraIndex(this._virtualCameraIndex).targetTexture = this.texture as RenderTexture;
+    }
+    public setVirtualCameraIndex(index:CameraIndex):void{
+        this._virtualCameraIndex = index;
+        GameMainCamera.instance.createVituralCamera(0,index,syRender.DrawType.Single);
     }
 }

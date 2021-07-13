@@ -89,7 +89,7 @@ export class GameMainCamera {
    * @param type 
    * @param cameraIdex 
    */
-  public createVituralCamera(type,cameraIdex:CameraIndex):void{
+  public createVituralCamera(type,cameraIdex:CameraIndex,drawType:syRender.DrawType=syRender.DrawType.Normal):void{
     if(this._cameraMap.has(cameraIdex))
     {
       return;
@@ -106,7 +106,7 @@ export class GameMainCamera {
     if(camera)
     {
         this.pushCamera(cameraIdex,camera);
-        this.pushVirtualCameraDataToRenderData(cameraIdex);
+        this.pushVirtualCameraDataToRenderData(cameraIdex,drawType);
     }
   }
 
@@ -203,7 +203,7 @@ export class GameMainCamera {
     G_UISetting.pushRenderCallBack(this.renderCallBack.bind(this));
   }
 
-  private pushVirtualCameraDataToRenderData(index:CameraIndex):void{
+  private pushVirtualCameraDataToRenderData(index:CameraIndex,drawType:syRender.DrawType=syRender.DrawType.Normal):void{
     var temp = new CameraRenderData();
     temp.fb = this.getCameraIndex(index).getFramebuffer()
     temp.viewPort = { x: 0, y: 0, w: 1, h: 1 }
@@ -211,6 +211,7 @@ export class GameMainCamera {
     temp.isClear = true;
     temp.visualAngle = 0;
     temp.isRenderToScreen = false;
+    temp.drawType = drawType;
     this._renderData.push(temp);
   }
   
