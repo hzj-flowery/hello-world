@@ -23,8 +23,8 @@ export class RTT extends SY.SpriteBase{
     }
     public onDrawBefore(time:number):void{
         let gl = Device.Instance.gl
-        if((this._texture as RenderTexture).moreTexture.length>0)
-        gl.drawBuffers([gl.COLOR_ATTACHMENT0, gl.COLOR_ATTACHMENT1, gl.COLOR_ATTACHMENT2]);
+        // if((this._texture as RenderTexture).moreTexture.length>0)
+        // gl.drawBuffers([gl.COLOR_ATTACHMENT0, gl.COLOR_ATTACHMENT1, gl.COLOR_ATTACHMENT2]);
     }
     public onDrawAfter(time:number):void{
 

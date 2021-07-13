@@ -41,6 +41,7 @@ import ShaderShadowTest from "./core/renderer/3d/test/ShaderShadowTest";
     "res/dragon.png",
     "res/light.jpg",
     "res/dragon.jpg",
+    "res/dragon.png",
     "res/caustics.png",
     "res/models/killer_whale/whale.CYCLES.bin",
     "res/models/killer_whale/whale.CYCLES.gltf",
