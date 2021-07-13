@@ -30,7 +30,7 @@ class TextureManager{
         data.width = data.width!=null?data.width:Device.Instance.width;
         data.height = data.height!=null?data.height:Device.Instance.height;
         let texture = new RenderTexture();
-        (texture as RenderTexture).attach(data.place, data.width, data.height,data.nums?data.nums:1);
+        (texture as RenderTexture).attach(data.place, data.width, data.height,data.nums?data.nums:1,data.param);
         return texture;
     }
     static createTexture(url: string | Array<string> | TextureOpts | Object):Texture{

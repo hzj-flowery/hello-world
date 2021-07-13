@@ -152,7 +152,8 @@ export default class Scene3D extends Scene {
         this._rtt.spriteFrame = {
             type:"RenderTexture",
             place:"more",
-            nums:3
+            nums:3,
+            param:{url:"res/dragon.png"}
         }
         this._rtt.setPosition(-6,10,0);
         this._centerNode.addChild(this._rtt);

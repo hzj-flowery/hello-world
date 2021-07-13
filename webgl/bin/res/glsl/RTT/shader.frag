@@ -13,10 +13,8 @@ in vec3 vNormal;
 in vec2 v_uv;
 
 void main() {
-  // gPosition = vPosition;
-  // gNormal = normalize(vNormal);
-  // gColor = vec4(texture(u_texture, v_uv).rgb,1.0);
-  gColor = vec4(0.0,1.0,0.0,1.0);
-  gNormal = vec3(1.0,0.0,0.0);
-  gPosition = vec3(1.0,0.0,1.0);
+  gPosition = vPosition;
+  gNormal = vec3(0.0, 0.102, 1.0);
+  gColor = vec4(texture(u_texture, v_uv).rgb,1.0);
+  
 }

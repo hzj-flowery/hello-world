@@ -417,13 +417,18 @@ export namespace SY {
                     {
                         if(k==0)
                         {
-                            this._renderData[i].push2DTexture(texS[i],syRender.DeferredTexture.Position)
+                            //普通的2d图片
+                            this._renderData[i].push2DTexture(texS[i])
                         }
                         else if(k==1)
                         {
-                            this._renderData[i].push2DTexture(texS[i],syRender.DeferredTexture.Normal)
+                            this._renderData[i].push2DTexture(texS[i],syRender.DeferredTexture.Position)
                         }
                         else if(k==2)
+                        {
+                            this._renderData[i].push2DTexture(texS[i],syRender.DeferredTexture.Normal)
+                        }
+                        else if(k==3)
                         {
                             this._renderData[i].push2DTexture(texS[i],syRender.DeferredTexture.Color)
                         }

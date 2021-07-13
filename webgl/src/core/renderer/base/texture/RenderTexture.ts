@@ -2,6 +2,7 @@
 import { Texture2D } from "./Texture2D";
 import { syGL } from "../../gfx/syGLEnums";
 import { TextureOpts } from "./Texture";
+import { G_TextureManager } from "./TextureManager";
 
 /**
  * 帧缓冲
@@ -81,7 +82,7 @@ export class RenderTexture extends Texture2D {
      * @param height 
      * @param nums 
      */
-    public attach(place:string,width:number,height:number,nums:number=1) {
+    public attach(place:string,width:number,height:number,nums:number=1,param?:any) {
         if(place=="color")
         {
             this.renderTextureToColor(width,height);
@@ -95,7 +96,7 @@ export class RenderTexture extends Texture2D {
         }
         else if(place=="more")
         {
-            this.renderMoreTextureToColor(width,height,nums);
+            this.renderMoreTextureToColor(width,height,nums,param);
             this._attachPlace = AttachPlace.MoreColor
         }
         this.checkAndUnbind();
@@ -121,11 +122,18 @@ export class RenderTexture extends Texture2D {
      * @param dtWidth 
      * @param dtHeight 
      */
-     private renderMoreTextureToColor(dtWidth: number, dtHeight: number,nums:number):void{
+     private renderMoreTextureToColor(dtWidth: number, dtHeight: number,nums:number,param?:any):void{
         let gl = this._gl;
         gl.bindFramebuffer(gl.FRAMEBUFFER, this._frameBuffer);
-      
-        this._moreTexture = [];
+        
+        if(param&&param.url&&param.url!="")
+        {
+            //删除本身的纹理显存
+            this._gl.deleteTexture(this.glID);
+            var tempTex = G_TextureManager.createTexture(param.url);
+            this.glID = tempTex.glID;
+        }
+        this._moreTexture = [this.glID];
         let COLOR_ATTACHMENT = [];
         for(let i = 0;i<nums;i++)
         {

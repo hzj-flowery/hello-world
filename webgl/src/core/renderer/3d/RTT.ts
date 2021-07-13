@@ -1,3 +1,4 @@
+import Device from "../../Device";
 import { SY } from "../base/Sprite";
 import { RenderTexture } from "../base/texture/RenderTexture";
 import { CameraIndex, GameMainCamera } from "../camera/GameMainCamera";
@@ -21,8 +22,9 @@ export class RTT extends SY.SpriteBase{
         this._glPrimitiveType = this.gl.TRIANGLE_STRIP;
     }
     public onDrawBefore(time:number):void{
-        // if((this._texture as RenderTexture).moreTexture)
-        //  console.log((this._texture as RenderTexture).moreTexture.length)
+        let gl = Device.Instance.gl
+        if((this._texture as RenderTexture).moreTexture.length>0)
+        gl.drawBuffers([gl.COLOR_ATTACHMENT0, gl.COLOR_ATTACHMENT1, gl.COLOR_ATTACHMENT2]);
     }
     public onDrawAfter(time:number):void{
 
