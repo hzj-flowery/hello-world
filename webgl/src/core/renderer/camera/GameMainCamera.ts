@@ -30,12 +30,21 @@ export enum CameraIndex {
 }
 export class CameraRenderData{
    constructor(){
-      this.drawType = syRender.DrawType.Normal
+      this.drawType = syRender.DrawType.Normal;
+      this.clearColor = [0.5,0.5,0.5,1.0];
+      this.viewPort = { x: 0, y: 0, w: 1, h: 1 };
+      this.cColor = true;
+      this.cDepth = true;
+      this.cStencil = true;
    }
    public fb:FrameBuffer;
    public index:CameraIndex;
    public viewPort:any;
    public isClear:boolean;     //清除缓冲区的数据
+   public clearColor:Array<number>;
+   public cColor:boolean;//清除颜色缓存
+   public cDepth:boolean;//清除深度缓存
+   public cStencil:boolean;//清除模板缓存
    public visualAngle:number=0;//视角 0代表玩家自己 1代表别人视角 2代表别人视角 3代表别人视角 依次类推
    public visuialAnglePosition:Array<number>=[];
    public isRenderToScreen:boolean;
@@ -86,8 +95,9 @@ export class GameMainCamera {
   /**
    * 创建虚拟化相机
    * 
-   * @param type 
+   * @param type  0透视 1正交
    * @param cameraIdex 
+   * @param drawType 
    */
   public createVituralCamera(type,cameraIdex:CameraIndex,drawType:syRender.DrawType=syRender.DrawType.Normal):void{
     if(this._cameraMap.has(cameraIdex))
@@ -209,6 +219,7 @@ export class GameMainCamera {
     temp.viewPort = { x: 0, y: 0, w: 1, h: 1 }
     temp.index = index;
     temp.isClear = true;
+    temp.clearColor = [0.3,0.3,0.3,1.0]
     temp.visualAngle = 0;
     temp.isRenderToScreen = false;
     temp.drawType = drawType;

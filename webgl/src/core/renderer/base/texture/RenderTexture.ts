@@ -124,36 +124,36 @@ export class RenderTexture extends Texture2D {
      */
      private renderMoreTextureToColor(dtWidth: number, dtHeight: number,nums:number,param?:any):void{
     
-            let gl = this._gl;
-            gl.bindFramebuffer(gl.FRAMEBUFFER, this._frameBuffer);
-            
-            if(param&&param.url&&param.url!="")
-            {
-                //删除本身的纹理显存
-                this._gl.deleteTexture(this.glID);
-                var tempTex = G_TextureManager.createTexture(param.url);
-                this.glID = tempTex.glID;
-            }
-            this._moreTexture = [this.glID];
-            let COLOR_ATTACHMENT = [];
-            for(let i = 0;i<nums;i++)
-            {
-                let textureID = gl.createTexture();
-                this._moreTexture.push(textureID)
-                //创建纹理
-                gl.bindTexture(gl.TEXTURE_2D, textureID);
-                // Y 轴取反
-                this._gl.pixelStorei(this._gl.UNPACK_FLIP_Y_WEBGL, false);
-                this.texParameteri(gl.LINEAR,gl.LINEAR,gl.REPEAT,gl.REPEAT)
-                //设置纹理格式，作为帧缓冲的颜色附件
-                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, dtWidth, dtHeight, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
-                //设置上面创建纹理作为颜色附件
-                gl.framebufferTexture2D(gl.FRAMEBUFFER, gl["COLOR_ATTACHMENT"+i], gl.TEXTURE_2D, textureID, 0);
-                COLOR_ATTACHMENT.push(gl["COLOR_ATTACHMENT"+i])
-            }
-            this.addRenderBufferToDepth(dtWidth, dtHeight);
-             //采样到几个颜色附件(对应的几何纹理)
-            gl.drawBuffers(COLOR_ATTACHMENT);
+        let gl = this._gl;
+        gl.bindFramebuffer(gl.FRAMEBUFFER, this._frameBuffer);
+        
+        if(param&&param.url&&param.url!="")
+        {
+            //删除本身的纹理显存
+            this._gl.deleteTexture(this.glID);
+            var tempTex = G_TextureManager.createTexture(param.url);
+            this.glID = tempTex.glID;
+        }
+        this._moreTexture = [this.glID];
+        let COLOR_ATTACHMENT = [];
+        for(let i = 0;i<nums;i++)
+        {
+            let textureID = gl.createTexture();
+            this._moreTexture.push(textureID)
+            //创建纹理
+            gl.bindTexture(gl.TEXTURE_2D, textureID);
+            // Y 轴取反
+            this._gl.pixelStorei(this._gl.UNPACK_FLIP_Y_WEBGL, false);
+            this.texParameteri(gl.LINEAR,gl.LINEAR,gl.REPEAT,gl.REPEAT)
+            //设置纹理格式，作为帧缓冲的颜色附件
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, dtWidth, dtHeight, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+            //设置上面创建纹理作为颜色附件
+            gl.framebufferTexture2D(gl.FRAMEBUFFER, gl["COLOR_ATTACHMENT"+i], gl.TEXTURE_2D, textureID, 0);
+            COLOR_ATTACHMENT.push(gl["COLOR_ATTACHMENT"+i])
+        }
+        this.addRenderBufferToDepth(dtWidth, dtHeight);
+            //采样到几个颜色附件(对应的几何纹理)
+        gl.drawBuffers(COLOR_ATTACHMENT);
     }
 
     /**

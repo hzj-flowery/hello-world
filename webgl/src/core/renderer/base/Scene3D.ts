@@ -153,6 +153,8 @@ export default class Scene3D extends Scene {
             type:"RenderTexture",
             place:"more",
             nums:3,
+            width:Device.Instance.width,
+            height:Device.Instance.height,
             param:{url:"res/dragon.png"}
         }
         this._rtt.setPosition(-6,10,0);

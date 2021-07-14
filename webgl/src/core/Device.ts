@@ -515,7 +515,7 @@ export default class Device {
             return;
         }
         //设置帧缓冲区
-        this.readyForOneFrame(cData.fb, cData.viewPort, cData.isClear);
+        this.readyForOneFrame(cData);
         //记录一下当前渲染的时间
         this._triggerRenderTime++;
         var cameraData = GameMainCamera.instance.getCameraIndex(CameraIndex.base3D).getCameraData();
@@ -651,12 +651,12 @@ export default class Device {
      * @param viewPort 视口大小
      * @param isClear 是否清理缓冲区
      */
-    private readyForOneFrame(fb: WebGLFramebuffer, viewPort: any, isClear: boolean = true): void {
+    private readyForOneFrame(cdData:CameraRenderData): void {
         
-        this.setFrameBuffer(fb);
-        this.setViewPort(viewPort);
-        if (isClear)
-            this.clear();
+        this.setFrameBuffer(cdData.fb);
+        this.setViewPort(cdData.viewPort);
+        if (cdData.isClear)
+            this.clear(cdData.clearColor,cdData.cColor,cdData.cDepth,cdData.cStencil);
         
     }
     private _framebuffer: WebGLFramebuffer;//帧缓冲
@@ -701,10 +701,13 @@ export default class Device {
      * 深度
      * 模板
      */
-    public clear(): void {
+    public clear(cColor:Array<number>=[0.5,0.5,0.5,1.0],cBuffer:boolean=true,dBuffer:boolean=true,sBuffer:boolean=true): void {
         let gl = this.gl;
-        gl.clearColor(0.5, 0.5, 0.5, 1.0);
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT|gl.STENCIL_BUFFER_BIT);
+        gl.clearColor(cColor[0],cColor[1],cColor[2],cColor[3]);
+        var value=cBuffer?gl.COLOR_BUFFER_BIT:null;
+        value = dBuffer?(value?value|gl.DEPTH_BUFFER_BIT:gl.DEPTH_BUFFER_BIT):null;
+        value = sBuffer?(value?value|gl.STENCIL_BUFFER_BIT:gl.STENCIL_BUFFER_BIT):null;
+        gl.clear(value);
     }
     //---------------------------------------------------------------------------------------------end---------------------------------
 
