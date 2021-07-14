@@ -75,7 +75,7 @@ class DrawEngine {
         let gl = this.gl;
         rd.bindGPUBufferData(view, proj, shader);
         //绘制前
-        rd.node ? rd.node.onDrawBefore(rd.time) : null;
+        rd.node ? rd.node.onDrawBefore(rd.time,rd) : null;
         if (!rd.isDrawInstanced) {
             var indexglID = rd.primitive.index.glID;
             indexglID != -1 ? (

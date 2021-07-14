@@ -1,6 +1,7 @@
 import Ref from "./Ref";
 import { glMatrix } from "../../math/Matrix";
 import Device from "../../Device";
+import { syRender } from "../data/RenderData";
 
 
 export class Node extends Ref {
@@ -205,7 +206,7 @@ export class Node extends Ref {
         this.updateMatrixData();
     }
     //绘制之前
-    public onDrawBefore(time: number): void {
+    public onDrawBefore(time: number,rd:syRender.BaseData): void {
 
     }
     public onDrawAfter(time: number): void {
