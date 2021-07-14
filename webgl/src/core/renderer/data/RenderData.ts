@@ -34,10 +34,10 @@ export namespace syRender {
      * 延迟渲染纹理
      */
     export enum DeferredTexture {
-        Position = 1,
-        Normal,
-        Color,
-        None
+        Position = 1, //位置纹理
+        Normal,  //法线纹理
+        Color,  //颜色纹理
+        None   //非延迟渲染输出的纹理 
     }
 
     //bufferData

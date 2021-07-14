@@ -22,19 +22,19 @@ export class RTT extends SY.SpriteBase {
         this._glPrimitiveType = this.gl.TRIANGLE_STRIP;
     }
     public onDrawBefore(time: number, rd: syRender.BaseData): void {
-        let gl = Device.Instance.gl;
-        if (rd.pass && rd.pass.drawType == syRender.DrawType.Single) {
-            if ((this._texture as RenderTexture).moreTexture&&(this._texture as RenderTexture).moreTexture.length > 1) {
-                //删除一个自定义tex
-                var nums = (this._texture as RenderTexture).moreTexture.length-1;
-                var COLOR_ATTACHMENT = []
-                for(let k=0;k<nums;k++)
-                {
-                    COLOR_ATTACHMENT.push(gl["COLOR_ATTACHMENT"+k]);
-                }
-                gl.drawBuffers(COLOR_ATTACHMENT);
-            }
-        }
+        // let gl = Device.Instance.gl;
+        // if (rd.pass && rd.pass.drawType == syRender.DrawType.Single) {
+        //     if ((this._texture as RenderTexture).isDeferred()) {
+        //         //删除一个自定义tex
+        //         var nums = (this._texture as RenderTexture).getDeferredTexSize();
+        //         var COLOR_ATTACHMENT = []
+        //         for(let k=0;k<nums;k++)
+        //         {
+        //             COLOR_ATTACHMENT.push(gl["COLOR_ATTACHMENT"+k]);
+        //         }
+        //         gl.drawBuffers([gl.COLOR_ATTACHMENT0,gl.COLOR_ATTACHMENT1,gl.COLOR_ATTACHMENT2]);
+        //     }
+        // }
     }
     public onDrawAfter(time: number): void {
 

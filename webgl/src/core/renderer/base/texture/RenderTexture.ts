@@ -3,6 +3,7 @@ import { Texture2D } from "./Texture2D";
 import { syGL } from "../../gfx/syGLEnums";
 import { TextureOpts } from "./Texture";
 import { G_TextureManager } from "./TextureManager";
+import { syRender } from "../../data/RenderData";
 
 /**
  * 帧缓冲
@@ -67,13 +68,10 @@ export class RenderTexture extends Texture2D {
     }
     private _frameBuffer: WebGLFramebuffer;//帧缓冲的glID
     private _renderBuffer: WebGLRenderbuffer;//渲染缓冲的glID
-    private _moreTexture:Array<WebGLTexture>;//多纹理
+    private _deferredTexMap:Map<syRender.DeferredTexture,WebGLTexture>;
     private _attachPlace:AttachPlace;
     public get frameBuffer(){
         return this._frameBuffer;
-    }
-    public get moreTexture():Array<WebGLTexture>{
-        return this._moreTexture;
     }
     /**
      * 
@@ -123,7 +121,8 @@ export class RenderTexture extends Texture2D {
      * @param dtHeight 
      */
      private renderMoreTextureToColor(dtWidth: number, dtHeight: number,nums:number,param?:any):void{
-    
+        
+        this._deferredTexMap = new Map();
         let gl = this._gl;
         gl.bindFramebuffer(gl.FRAMEBUFFER, this._frameBuffer);
         
@@ -133,13 +132,12 @@ export class RenderTexture extends Texture2D {
             this._gl.deleteTexture(this.glID);
             var tempTex = G_TextureManager.createTexture(param.url);
             this.glID = tempTex.glID;
+            this._deferredTexMap.set(syRender.DeferredTexture.None,this.glID)
         }
-        this._moreTexture = [this.glID];
         let COLOR_ATTACHMENT = [];
         for(let i = 0;i<nums;i++)
         {
             let textureID = gl.createTexture();
-            this._moreTexture.push(textureID)
             //创建纹理
             gl.bindTexture(gl.TEXTURE_2D, textureID);
             // Y 轴取反
@@ -149,11 +147,49 @@ export class RenderTexture extends Texture2D {
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, dtWidth, dtHeight, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
             //设置上面创建纹理作为颜色附件
             gl.framebufferTexture2D(gl.FRAMEBUFFER, gl["COLOR_ATTACHMENT"+i], gl.TEXTURE_2D, textureID, 0);
-            COLOR_ATTACHMENT.push(gl["COLOR_ATTACHMENT"+i])
+            COLOR_ATTACHMENT.push(gl["COLOR_ATTACHMENT"+i]);
+            
+            if(i==1)
+            {
+                this._deferredTexMap.set(syRender.DeferredTexture.Position,textureID)
+            }
+            else if(i==2)
+            {
+                this._deferredTexMap.set(syRender.DeferredTexture.Normal,textureID)
+            }
+            else if(i==0)
+            {
+                this._deferredTexMap.set(syRender.DeferredTexture.Color,textureID)
+            }
+
         }
         this.addRenderBufferToDepth(dtWidth, dtHeight);
             //采样到几个颜色附件(对应的几何纹理)
         gl.drawBuffers(COLOR_ATTACHMENT);
+
+    }
+    
+    /**
+     * 获取延迟渲染的纹理
+     * @param ty 
+     * @returns 
+     */
+    public getDeferredTex(ty:syRender.DeferredTexture):WebGLTexture{
+        return this._deferredTexMap.get(ty)
+    }
+    
+    /**
+     * 获取延迟渲染纹理的数量
+     * @returns 
+     */
+    public getDeferredTexSize():number{
+        return this._deferredTexMap?(this._deferredTexMap.size-1):0;
+    }
+    /**
+     * 判断是否事离线渲染
+     */
+    public isDeferred():boolean{
+       return this._deferredTexMap && this._deferredTexMap.size >=2;
     }
 
     /**

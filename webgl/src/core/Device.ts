@@ -380,7 +380,6 @@ export default class Device {
     private _lastPressPos: Array<number> = [];
     private onMouseDown(ev): void {
         this._isCapture = true;
-
         this._press = true;
     }
     private onMouseMove(ev: MouseEvent, value): void {
@@ -450,6 +449,7 @@ export default class Device {
             this._isCapture = false;
             this.capture();
             // this.showCurFramerBufferOnCanvas();
+            // this.autoCapture()
         }
         this.onAfterRender();
     }
@@ -922,6 +922,21 @@ export default class Device {
         console.log("this._caps---", this._caps);
 
         localStorage.setItem("zm", "nihaoa");
+    }
+
+    public autoCapture():void{
+        var x = this._lastPressPos[0];
+        var y = this._lastPressPos[1];
+        var gl = this.gl;
+        var width = 512;
+        var height = 512;
+        var pixels = new Uint8Array(width * height * 4);
+        gl.readPixels(x,y, width, height, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+        let imageData = new ImageData(new Uint8ClampedArray(pixels), width, height);
+        let ctx = Device.Instance.getCanvas2D();
+        ctx.putImageData(imageData, 0,0);
+        //截图保存下来
+        this.capture(window["canvas2d"]);
     }
 
     /**

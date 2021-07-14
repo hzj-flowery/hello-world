@@ -408,31 +408,19 @@ export namespace SY {
                 }
                 this._renderData[i].primitive.modelMatrix = this.modelMatrix;
                 this._renderData[i].time = time;
-                if(this._texture instanceof RenderTexture && 
-                  (this._texture as RenderTexture).moreTexture &&
-                  (this._texture as RenderTexture).moreTexture.length>0)
+                if(this._texture instanceof RenderTexture && (this._texture as RenderTexture).isDeferred())
                 {
-                    var texS = (this._texture as RenderTexture).moreTexture;
-                    for(let k=0;k<texS.length;k++)
-                    {
-                        if(k==0)
-                        {
-                            //普通的2d图片
-                            this._renderData[i].push2DTexture(texS[i])
-                        }
-                        else if(k==1)
-                        {
-                            this._renderData[i].push2DTexture(texS[i],syRender.DeferredTexture.Position)
-                        }
-                        else if(k==2)
-                        {
-                            this._renderData[i].push2DTexture(texS[i],syRender.DeferredTexture.Normal)
-                        }
-                        else if(k==3)
-                        {
-                            this._renderData[i].push2DTexture(texS[i],syRender.DeferredTexture.Color)
-                        }
-                    }
+                    var texS = (this._texture as RenderTexture).getDeferredTex(syRender.DeferredTexture.None);
+                    texS?this._renderData[i].push2DTexture(texS):null;
+
+                    var texS = (this._texture as RenderTexture).getDeferredTex(syRender.DeferredTexture.Position);
+                    texS?this._renderData[i].push2DTexture(texS,syRender.DeferredTexture.Position):null;
+
+                    var texS = (this._texture as RenderTexture).getDeferredTex(syRender.DeferredTexture.Normal);
+                    texS?this._renderData[i].push2DTexture(texS,syRender.DeferredTexture.Normal):null;
+
+                    var texS = (this._texture as RenderTexture).getDeferredTex(syRender.DeferredTexture.Color);
+                    texS?this._renderData[i].push2DTexture(texS,syRender.DeferredTexture.Color):null;
                 }
                 else if (this._texture && this._texture.glID) {
                     if (this._texture.isTexture2D)
