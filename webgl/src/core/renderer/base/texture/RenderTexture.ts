@@ -128,7 +128,7 @@ export class RenderTexture extends Texture2D {
         
         if(param&&param.url&&param.url!="")
         {
-            //删除本身的纹理显存
+            //删除本身的纹理显存 
             this._gl.deleteTexture(this.glID);
             var tempTex = G_TextureManager.createTexture(param.url);
             this.glID = tempTex.glID;
@@ -142,7 +142,7 @@ export class RenderTexture extends Texture2D {
             gl.bindTexture(gl.TEXTURE_2D, textureID);
             // Y 轴取反
             this._gl.pixelStorei(this._gl.UNPACK_FLIP_Y_WEBGL, false);
-            this.texParameteri(gl.LINEAR,gl.LINEAR,gl.REPEAT,gl.REPEAT)
+            this.texParameteri(gl.LINEAR,gl.LINEAR,gl.REPEAT,gl.REPEAT);
             //设置纹理格式，作为帧缓冲的颜色附件
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, dtWidth, dtHeight, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
             //设置上面创建纹理作为颜色附件

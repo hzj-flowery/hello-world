@@ -155,7 +155,7 @@ export default class Scene3D extends Scene {
             nums:3,
             width:Device.Instance.width,
             height:Device.Instance.height,
-            param:{url:"res/dragon.png"}
+            param:{url:"res/deferred.png"}
         }
         this._rtt.setPosition(-6,10,0);
         this._centerNode.addChild(this._rtt);

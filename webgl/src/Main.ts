@@ -39,6 +39,7 @@ import ShaderShadowTest from "./core/renderer/3d/test/ShaderShadowTest";
     "res/friend.png",
     "res/map1.png",
     "res/dragon.png",
+    "res/deferred.png",
     "res/light.jpg",
     "res/dragon.jpg",
     "res/dragon.png",
