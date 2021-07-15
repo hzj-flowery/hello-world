@@ -3,6 +3,7 @@ import { pseudoRandom } from "../../value-types/utils";
 import Device from "../../Device";
 import {GameMainCamera} from "../camera/GameMainCamera";
 import enums from "../camera/enums";
+import { syGL } from "../gfx/syGLEnums";
 
 export default class MoreSprite extends SY.Sprite2D {
     constructor() {
@@ -88,9 +89,9 @@ export default class MoreSprite extends SY.Sprite2D {
         var v = GameMainCamera.instance.getCameraIndex(this._cameraIndex).getInversModelMatrix();
         var m = this.modelMatrix;
         this._glMatrix.mat4.mul(newMV, v, m)
-        this.shader.setUseModelViewMatrix(newMV);
+        this.shader.bindMatrixToShader(syGL.AttributeUniform.VMMatrix,newMV);
         var pMatix = GameMainCamera.instance.getCameraIndex(this._cameraIndex).getProjectionMatrix();
-        this.shader.setUseProjectionMatrix(pMatix);
+        this.shader.bindMatrixToShader(syGL.AttributeUniform.PMatrix,pMatix);
 
         // update all the matrices
         this.matrices.forEach((mat, ndx) => {
@@ -181,9 +182,9 @@ export default class MoreSprite extends SY.Sprite2D {
 
         this.shader.active();
         this.shader.setUseVertexAttribPointerForVertex(this.getGLID(SY.GLID_TYPE.VERTEX), this.getBufferItemSize(SY.GLID_TYPE.VERTEX));
-        this.shader.setUseModelViewMatrix(this.modelMatrix);
+        this.shader.bindMatrixToShader(syGL.AttributeUniform.VMMatrix,this.modelMatrix);
         var pMatrix = GameMainCamera.instance.getCameraIndex(this._cameraIndex).getProjectionMatrix();
-        this.shader.setUseProjectionMatrix(pMatrix);
+        this.shader.bindMatrixToShader(syGL.AttributeUniform.PMatrix,pMatrix);
 
         // update all the matrices
         this.matrices.forEach((mat, ndx) => {

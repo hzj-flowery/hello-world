@@ -450,75 +450,20 @@ export class Shader {
             G_DrawEngine.setUniformFloatVec4(this.u_shadowInfor_loc, mapInfor)
         }
     }
-    //设置使用投影视口模型矩阵
-    public setUseProjectViewModelMatrix(pvmMatrix): void {
-        if (this.checklocValid(this.u_PVMMatrix_loc)) {
-            G_DrawEngine.setUniformMatrix(this.u_PVMMatrix_loc, pvmMatrix);
-        }
-    }
-    public setUseProjectionViewMatrix(mat): void {
-        if (this.checklocValid(this.u_PVMatrix_loc)) {
-            G_DrawEngine.setUniformMatrix(this.u_PVMatrix_loc, mat)
-        }
-    }
-    //设置使用万能矩阵
-    public setUseMatrix(mat): void {
-        if (this.checklocValid(this.u_Matrix_loc)) {
-            G_DrawEngine.setUniformMatrix(this.u_Matrix_loc, mat)
-        }
-    }
-    public setUseProjectionViewInverseMatrix(mat): void {
-        if (this.checklocValid(this.u_PVMatrix_inverse_loc)) {
-            G_DrawEngine.setUniformMatrix(this.u_PVMatrix_inverse_loc, mat);
-        }
-    }
-    //设置使用投影视口模型矩阵的逆矩阵
-    public setUseProjectViewModelInverseMatrix(matrix): void {
-        if (this.checklocValid(this.u_PVMMatrix_inverse_loc)) {
-            G_DrawEngine.setUniformMatrix(this.u_PVMMatrix_inverse_loc, matrix)
-        }
-    }
-    //设置视口矩阵
-    public setUseViewMatrix(vMatrix): void {
-        if (this.checklocValid(this.u_VMatrix_loc)) {
-            G_DrawEngine.setUniformMatrix(this.u_VMatrix_loc, vMatrix);
-        }
-    }
-    //设置模型视口矩阵
-    public setUseModelViewMatrix(mvMatrix): void {
-        if (this.checklocValid(this.u_VMMatrix_loc)) {
-            G_DrawEngine.setUniformMatrix(this.u_VMMatrix_loc, mvMatrix);
-        }
-    }
-    //设置透视投影矩阵
-    public setUseProjectionMatrix(projMatrix): void {
-        if (this.checklocValid(this.u_PMatrix_loc)) {
-            G_DrawEngine.setUniformMatrix(this.u_PMatrix_loc, projMatrix);
-        }
-    }
-    //设置模型世界矩阵
-    public setUseModelWorldMatrix(wMatrix): void {
-        if (this.checklocValid(this.u_MMatrix_loc)) {
-            G_DrawEngine.setUniformMatrix(this.u_MMatrix_loc, wMatrix)
-        }
-    }
-    //设置模型世界矩阵的逆矩阵
-    public setUseModelWorldInverseMatrix(wiMatrix): void {
-        if (this.checklocValid(this.u_MIMatrix_loc)) {
-            G_DrawEngine.setUniformMatrix(this.u_MIMatrix_loc, wiMatrix)
-        }
-    }
-    //设置模型世界矩阵的转置矩阵
-    public setUseModelTransformWorldMatrix(wtMatrix): void {
-        if (this.checklocValid(this.u_MTMatrix_loc)) {
-            G_DrawEngine.setUniformMatrix(this.u_MTMatrix_loc, wtMatrix);
-        }
-    }
-    //设置模型世界矩阵的逆矩阵的转置矩阵
-    public setUseModelInverseTransformWorldMatrix(witMatrix): void {
-        if (this.checklocValid(this.u_MITMatrix_loc)) {
-            G_DrawEngine.setUniformMatrix(this.u_MITMatrix_loc, witMatrix);
-        }
+    /**
+     * 
+     * @param attrUni 
+     * @param mat 
+     */
+    public bindMatrixToShader(attrUni:syGL.AttributeUniform,mat:Float32Array|any):void{
+           var value = mapTree_u.get(attrUni);
+           if(value)
+           {
+               var loc = value[0];
+               if (this.checklocValid(this[loc])) {
+                G_DrawEngine.setUniformMatrix(this[loc], mat);
+            }
+           }
     }
     //设置顶点值
     public setUseVertexAttribPointerForVertex(glID, itemSize: number): void {
@@ -541,8 +486,8 @@ export class Shader {
 
     public disableVertexAttribArray(): void {
         mapTree_a.forEach((value,key)=>{
-             var loc = value[1];
-             var suvtype = value[2];
+             var loc = value[0];
+             var suvtype = value[1];
              var searchStr = key;
              if(this._useVariantType.indexOf(suvtype)>=0&&this.checklocValid(this[loc]))
              {

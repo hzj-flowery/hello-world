@@ -133,8 +133,8 @@ export default class CameraView extends SY.SpriteBase {
         var v = GameMainCamera.instance.getCameraIndex(this._cameraIndex).modelMatrix;
         var m = this.modelMatrix;
         this._glMatrix.mat4.mul(newMV,v,m)
-        this.shader.setUseModelViewMatrix(newMV);
-        this.shader.setUseProjectionMatrix(GameMainCamera.instance.getCameraIndex(this._cameraIndex).getProjectionMatrix());
+        this.shader.bindMatrixToShader(syGL.AttributeUniform.VMMatrix,newMV);
+        this.shader.bindMatrixToShader(syGL.AttributeUniform.PMatrix,GameMainCamera.instance.getCameraIndex(this._cameraIndex).getProjectionMatrix());
         this.shader.setUseParallelLight([1, 0, 0, 1],[]);
         this.shader.setUseVertexAttribPointerForVertex(this.getGLID(SY.GLID_TYPE.VERTEX), this.getBufferItemSize(SY.GLID_TYPE.VERTEX));
         

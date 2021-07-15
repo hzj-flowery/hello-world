@@ -367,7 +367,7 @@ export namespace syRender {
                         this._temp001_matrix[14] = 0;
                         glMatrix.mat4.multiply(this._temp002_matrix, proj, this._temp001_matrix);
                         glMatrix.mat4.invert(this._temp001_matrix, this._temp002_matrix);
-                        _shader.setUseProjectionViewInverseMatrix(this._temp001_matrix);
+                        _shader.bindMatrixToShader(syGL.AttributeUniform.PVMatrix_INVERSE,this._temp001_matrix);
                         useTextureAddres++;
                         break;
                     case ShaderUseVariantType.GPosition:
@@ -383,40 +383,40 @@ export namespace syRender {
                         useTextureAddres++;
                         break;
                     case ShaderUseVariantType.Projection:
-                        _shader.setUseProjectionMatrix(proj);
+                        _shader.bindMatrixToShader(syGL.AttributeUniform.PMatrix,proj);
                         break;
                     case ShaderUseVariantType.Model:
-                        _shader.setUseModelWorldMatrix(this.primitive.modelMatrix);
+                        _shader.bindMatrixToShader(syGL.AttributeUniform.MMatrix,this.primitive.modelMatrix);
                         break;
                     case ShaderUseVariantType.View:
-                        _shader.setUseViewMatrix(view);
+                        _shader.bindMatrixToShader(syGL.AttributeUniform.VMatrix,view);
                         break;
                     case ShaderUseVariantType.CustomMatrix:
-                        _shader.setUseMatrix(this.primitive.customMatrix);
+                        _shader.bindMatrixToShader(syGL.AttributeUniform.Matrix,this.primitive.customMatrix);
                         break;
                     case ShaderUseVariantType.ViewModel:
                         glMatrix.mat4.mul(this._temp_model_view_matrix, view, this.primitive.modelMatrix);
-                        _shader.setUseModelViewMatrix(this._temp_model_view_matrix);
+                        _shader.bindMatrixToShader(syGL.AttributeUniform.VMMatrix,this._temp_model_view_matrix);
                         break;
                     case ShaderUseVariantType.ModelInverseTransform:
                         glMatrix.mat4.invert(this._temp_model_inverse_matrix, this.primitive.modelMatrix);
                         glMatrix.mat4.transpose(this._temp_model_inverse_transform_matrix, this._temp_model_inverse_matrix);
-                        _shader.setUseModelInverseTransformWorldMatrix(this._temp_model_inverse_transform_matrix);
+                        _shader.bindMatrixToShader(syGL.AttributeUniform.MITMatrix,this._temp_model_inverse_transform_matrix);
                         break;
                     case ShaderUseVariantType.ProjectionViewModelInverse:
                         glMatrix.mat4.multiply(this._temp001_matrix, view, this.primitive.modelMatrix);
                         glMatrix.mat4.multiply(this._temp002_matrix, proj, this._temp001_matrix);
                         glMatrix.mat4.invert(this._temp003_matrix, this._temp002_matrix);
-                        _shader.setUseProjectViewModelInverseMatrix(this._temp003_matrix);
+                        _shader.bindMatrixToShader(syGL.AttributeUniform.PVM_MATRIX_INVERSE,this._temp003_matrix);
                         break;
                     case ShaderUseVariantType.ProjectionView:
                         glMatrix.mat4.multiply(this._temp001_matrix, proj, view);
-                        _shader.setUseProjectionViewMatrix(this._temp001_matrix);
+                        _shader.bindMatrixToShader(syGL.AttributeUniform.PVMatrix,this._temp001_matrix);
                         break;
                     case ShaderUseVariantType.ProjectionViewInverse:
                         glMatrix.mat4.multiply(this._temp001_matrix, proj, view);
                         glMatrix.mat4.invert(this._temp002_matrix, this._temp001_matrix);
-                        _shader.setUseProjectionViewInverseMatrix(this._temp002_matrix);
+                        _shader.bindMatrixToShader(syGL.AttributeUniform.PVMatrix_INVERSE,this._temp002_matrix);
                         break;
                     case ShaderUseVariantType.CameraWorldPosition:
                         _shader.setUseCameraWorldPosition(this._cameraPosition);

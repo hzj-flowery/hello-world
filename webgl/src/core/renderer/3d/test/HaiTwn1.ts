@@ -10,6 +10,7 @@ import {GameMainCamera} from "../../camera/GameMainCamera";
 import { Texture } from "../../base/texture/Texture";
 import {ShaderData } from "../../shader/Shader";
 import { G_ShaderFactory } from "../../shader/ShaderFactory";
+import { syGL } from "../../gfx/syGLEnums";
 
 var skinVS =
     'attribute vec4 a_POSITION;' +  //顶点位置
@@ -577,7 +578,7 @@ class Spine extends SY.SpriteBase {
         var v = GameMainCamera.instance.getCameraIndex(this._cameraIndex).getInversModelMatrix();
         var m = this.modelMatrix;
         this._glMatrix.mat4.mul(newMV,v,m)
-        this.shader.setUseModelViewMatrix(newMV);
+        this.shader.bindMatrixToShader(syGL.AttributeUniform.VMMatrix,newMV);
         var pMatix = GameMainCamera.instance.getCameraIndex(this._cameraIndex).getProjectionMatrix();
         
         var projection = pMatix;
