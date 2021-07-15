@@ -149,7 +149,11 @@ export class RenderTexture extends Texture2D {
             gl.framebufferTexture2D(gl.FRAMEBUFFER, gl["COLOR_ATTACHMENT"+i], gl.TEXTURE_2D, textureID, 0);
             COLOR_ATTACHMENT.push(gl["COLOR_ATTACHMENT"+i]);
             
-            if(i==1)
+            if(i==0)
+            {
+                this._deferredTexMap.set(syRender.DeferredTexture.Color,textureID)
+            }
+            else if(i==1)
             {
                 this._deferredTexMap.set(syRender.DeferredTexture.Position,textureID)
             }
@@ -157,9 +161,9 @@ export class RenderTexture extends Texture2D {
             {
                 this._deferredTexMap.set(syRender.DeferredTexture.Normal,textureID)
             }
-            else if(i==0)
+            else if(i==3)
             {
-                this._deferredTexMap.set(syRender.DeferredTexture.Color,textureID)
+                this._deferredTexMap.set(syRender.DeferredTexture.UV,textureID)
             }
 
         }

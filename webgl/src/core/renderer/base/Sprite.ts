@@ -421,6 +421,9 @@ export namespace SY {
 
                     var texS = (this._texture as RenderTexture).getDeferredTex(syRender.DeferredTexture.Color);
                     texS?this._renderData[i].push2DTexture(texS,syRender.DeferredTexture.Color):null;
+
+                    var texS = (this._texture as RenderTexture).getDeferredTex(syRender.DeferredTexture.UV);
+                    texS?this._renderData[i].push2DTexture(texS,syRender.DeferredTexture.UV):null;
                 }
                 else if (this._texture && this._texture.glID) {
                     if (this._texture.isTexture2D)

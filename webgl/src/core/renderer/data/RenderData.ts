@@ -37,6 +37,7 @@ export namespace syRender {
         Position = 1, //位置纹理
         Normal,  //法线纹理
         Color,  //颜色纹理
+        UV,     //uv纹理
         None   //非延迟渲染输出的纹理 
     }
 
@@ -371,15 +372,19 @@ export namespace syRender {
                         useTextureAddres++;
                         break;
                     case ShaderUseVariantType.GPosition:
-                        _shader.setUseDeferredTexture(this._texture2DGLIDMap.get(DeferredTexture.Position), useTextureAddres,DeferredTexture.Position);
+                        _shader.setUseDeferredTexture(this._texture2DGLIDMap.get(DeferredTexture.Position), useTextureAddres,syGL.AttributeUniform.TEX_GPosition);
                         useTextureAddres++;
                         break;
                     case ShaderUseVariantType.GNormal:
-                        _shader.setUseDeferredTexture(this._texture2DGLIDMap.get(DeferredTexture.Normal), useTextureAddres,DeferredTexture.Normal);
+                        _shader.setUseDeferredTexture(this._texture2DGLIDMap.get(DeferredTexture.Normal), useTextureAddres,syGL.AttributeUniform.TEX_GNormal);
                         useTextureAddres++;
                         break;
                     case ShaderUseVariantType.GColor:
-                        _shader.setUseDeferredTexture(this._texture2DGLIDMap.get(DeferredTexture.Color), useTextureAddres,DeferredTexture.Color);
+                        _shader.setUseDeferredTexture(this._texture2DGLIDMap.get(DeferredTexture.Color), useTextureAddres,syGL.AttributeUniform.TEX_GColor);
+                        useTextureAddres++;
+                        break;
+                    case ShaderUseVariantType.GUv:
+                        _shader.setUseDeferredTexture(this._texture2DGLIDMap.get(DeferredTexture.UV), useTextureAddres,syGL.AttributeUniform.TEX_GUv);
                         useTextureAddres++;
                         break;
                     case ShaderUseVariantType.Projection:

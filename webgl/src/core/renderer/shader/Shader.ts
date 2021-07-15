@@ -96,6 +96,8 @@ mapTree_u.set(syGL.AttributeUniform.CUBE_COORD,["u_cubeCoord_loc",ShaderUseVaria
 mapTree_u.set(syGL.AttributeUniform.TEX_GPosition,["u_gPosition_loc",ShaderUseVariantType.GPosition]);
 mapTree_u.set(syGL.AttributeUniform.TEX_GNormal,["u_gNormal_loc",ShaderUseVariantType.GNormal]);
 mapTree_u.set(syGL.AttributeUniform.TEX_GColor,["u_gColor_loc",ShaderUseVariantType.GColor]);
+mapTree_u.set(syGL.AttributeUniform.TEX_GUv,["u_gUv_loc",ShaderUseVariantType.GUv]);
+ 
 mapTree_u.set(syGL.AttributeUniform.SHADOW_MAP,["u_shadowMap_loc",ShaderUseVariantType.Shadow]);
 mapTree_u.set(syGL.AttributeUniform.SHADOW_INFOR,["u_shadowInfor_loc",ShaderUseVariantType.Shadow]);
 mapTree_u.set(syGL.AttributeUniform.PVM_MATRIX,["u_PVMMatrix_loc",ShaderUseVariantType.ProjectionViewModel]);
@@ -152,6 +154,7 @@ export class Shader {
     private u_gPosition_loc;//位置纹理信息
     private u_gNormal_loc;//法线纹理信息
     private u_gColor_loc;//颜色纹理信息
+    private u_gUv_loc;//uv纹理
 
     private u_shadowMap_loc;//阴影贴图
     private u_shadowInfor_loc;//阴影信息
@@ -412,17 +415,13 @@ export class Shader {
      * @param pos 
      * @param locType  a代表属性变量 u代表uniform变量
      */
-    public setUseDeferredTexture(glID: WebGLTexture, pos: number, texType: syRender.DeferredTexture): void {
-        var loc = ""
-        if (texType == syRender.DeferredTexture.Position) {
-            loc ="u_gPosition_loc";
+    public setUseDeferredTexture(glID: WebGLTexture, pos: number, attibuteUniform: syGL.AttributeUniform): void {
+        var value = mapTree_u.get(attibuteUniform)
+        if(!value)
+        {
+            return
         }
-        else if (texType == syRender.DeferredTexture.Normal) {
-            loc ="u_gNormal_loc"; //设置延迟渲染的法线纹理
-        }
-        else if (texType == syRender.DeferredTexture.Color) {
-            loc ="u_gColor_loc"; //设置延迟渲染的颜色纹理
-        }
+        var loc = value[0];
         if (this.checklocValid(this[loc])) {
             G_DrawEngine.activeTexture(this._gl.TEXTURE_2D, glID, this[loc], pos)
         }
