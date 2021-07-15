@@ -3,7 +3,7 @@
 
 import Device from "../../../Device";
 import { glMatrix } from "../../../math/Matrix";
-import { G_UISetting } from "../../../ui/UiSetting";
+import { G_UISetting, UIStatusData } from "../../../ui/UiSetting";
 import { MathUtils } from "../../../utils/MathUtils";
 import { G_DrawEngine } from "../../base/DrawEngine";
 import { RenderTexture } from "../../base/texture/RenderTexture";
@@ -422,7 +422,7 @@ class ShadowLight {
     let texMatrix = glMatrix.mat4.identity(null);
     this.drawScene(lightData.project, lightData.mat, texMatrix, lightData.reverseDir, this.colorProgramInfo);
 
-    Device.Instance.showCurFramerBufferOnCanvas(this.depthTextureSize, this.depthTextureSize);
+    // Device.Instance.showCurFramerBufferOnCanvas(this.depthTextureSize, this.depthTextureSize);
 
     // now draw scene to the canvas projecting the depth texture into the scene
     gl.bindFramebuffer(gl.FRAMEBUFFER, null); //将结果绘制到窗口中

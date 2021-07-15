@@ -102,7 +102,7 @@ LoaderManager.instance.load(arr,null,function(){
     let str = `#define ${name} ${value}`;
     console.log("---hzj------",str);
 
-    new RenderFlow().startup();
+    // new RenderFlow().startup();
     // RampTextureTest.run();
     // CameraTest.run();
     // RobartTest.run();
@@ -114,7 +114,7 @@ LoaderManager.instance.load(arr,null,function(){
     // PointLightTest.run();
     // ThreeDLightTest.run();
 
-    // ShaderShadowTest.run();
+    ShaderShadowTest.run();
 
     // StencilTest.run();
 
