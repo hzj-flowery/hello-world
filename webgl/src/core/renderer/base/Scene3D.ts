@@ -152,7 +152,7 @@ export default class Scene3D extends Scene {
         this._rtt.spriteFrame = {
             type:"RenderTexture",
             place:"more",
-            nums:3,
+            nums:4,
             width:Device.Instance.width,
             height:Device.Instance.height,
             param:{url:"res/deferred.png"}
