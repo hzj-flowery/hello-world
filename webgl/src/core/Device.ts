@@ -435,6 +435,9 @@ export default class Device {
         this.onBeforeRender();
         this.visitRenderTree(time, stage);
         var cameraData = GameMainCamera.instance.getRenderData();
+        cameraData.sort(function(a,b){
+            return b.drawType - a.drawType
+        })
         for (let k = 0; k < cameraData.length; k++) {
             if(cameraData[k].drawType==syRender.DrawType.Normal)
             {

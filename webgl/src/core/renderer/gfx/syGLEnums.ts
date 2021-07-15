@@ -160,7 +160,7 @@ export namespace syGL {
         UV6 = 'a_uv6',
         UV7 = 'a_uv7',
         CUBE_COORD = 'u_cubeTexture',//立方体纹理单元
-        TEX_COORD = 'u_texture',    //使用的纹理单元
+        TEX_COORD0 = 'u_texture',    //使用的纹理单元
         TEX_COORD1 = 'u_texCoord1',
         TEX_COORD2 = 'u_texCoord2',
         TEX_COORD3 = 'u_texCoord3',
