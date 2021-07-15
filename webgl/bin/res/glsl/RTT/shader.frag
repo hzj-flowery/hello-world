@@ -19,3 +19,7 @@ void main() {
   gColor = vec4(texture(u_texture, v_uv).rgb,1.0);
   gUv = v_uv;
 }
+/*
+感悟：
+
+*/

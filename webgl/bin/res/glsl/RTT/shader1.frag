@@ -5,7 +5,6 @@ uniform sampler2D gPosition;
 uniform sampler2D gNormal;
 uniform sampler2D gColor;
 uniform sampler2D gUv;
-uniform sampler2D u_texture;
 varying vec2 v_uv;
 varying vec4 v_position;
 
