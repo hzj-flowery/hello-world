@@ -17,6 +17,7 @@ export enum CameraIndex {
   min = 0,
   base2D,
   base3D,
+  Deferred,//用于延迟渲染
   normal1,
   normal2,
   normal3,

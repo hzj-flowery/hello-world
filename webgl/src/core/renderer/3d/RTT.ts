@@ -12,39 +12,16 @@ export class RTT extends SY.SpriteBase {
     constructor() {
         super();
     }
-    private _virtualCameraIndex: CameraIndex = CameraIndex.normal1;
     protected onInit() {
         var rd = CubeData.getData();
         this.createVertexsBuffer(rd.vertex, rd.dF.vertex_item_size);
         this.createUVsBuffer(rd.uvData, rd.dF.uv_item_size);
-        this.createIndexsBuffer(rd.indexs);
+        this.createIndexsBuffer(rd.indexs); 
         this.createNormalsBuffer(rd.normals, rd.dF.normal_item_size)
         this._glPrimitiveType = this.gl.TRIANGLE_STRIP;
-    }
-    public onDrawBefore(time: number, rd: syRender.BaseData): void {
-        // let gl = Device.Instance.gl;
-        // if (rd.pass && rd.pass.drawType == syRender.DrawType.Single) {
-        //     if ((this._texture as RenderTexture).isDeferred()) {
-        //         //删除一个自定义tex
-        //         var nums = (this._texture as RenderTexture).getDeferredTexSize();
-        //         var COLOR_ATTACHMENT = []
-        //         for(let k=0;k<nums;k++)
-        //         {
-        //             COLOR_ATTACHMENT.push(gl["COLOR_ATTACHMENT"+k]);
-        //         }
-        //         gl.drawBuffers([gl.COLOR_ATTACHMENT0,gl.COLOR_ATTACHMENT1,gl.COLOR_ATTACHMENT2]);
-        //     }
-        // }
-    }
-    public onDrawAfter(time: number): void {
-
+        GameMainCamera.instance.createVituralCamera(0, CameraIndex.Deferred, syRender.DrawType.Single);
     }
     protected onSetTextureUrl(): void {
-
-        GameMainCamera.instance.getCameraIndex(this._virtualCameraIndex).targetTexture = this.texture as RenderTexture;
-    }
-    public setVirtualCameraIndex(index: CameraIndex): void {
-        this._virtualCameraIndex = index;
-        GameMainCamera.instance.createVituralCamera(0, index, syRender.DrawType.Single);
+        GameMainCamera.instance.getCameraIndex(CameraIndex.Deferred).targetTexture = this.texture as RenderTexture;
     }
 }

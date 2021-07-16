@@ -149,7 +149,6 @@ export default class Scene3D extends Scene {
 
 
         this._rtt = new RTT();
-        this._rtt.setVirtualCameraIndex(CameraIndex.normal1);
         this._rtt.spriteFrame = {
             type: "RenderTexture",
             place: "more",
