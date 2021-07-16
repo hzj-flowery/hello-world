@@ -24,6 +24,7 @@ import { RTT } from "../3d/RTT";
 import AlphaCube from "../3d/AlphaCube";
 import Device from "../../Device";
 import { RenderOffline3DSprite } from "../3d/RenderOffline3DSprite";
+import { syRender } from "../data/RenderData";
 
 export default class Scene3D extends Scene {
 
@@ -152,10 +153,10 @@ export default class Scene3D extends Scene {
         this._rtt.spriteFrame = {
             type:"RenderTexture",
             place:"more",
-            nums:4,
-            width:Device.Instance.width,
-            height:Device.Instance.height,
-            param:{url:"res/deferred.png"}
+            param:{url:"res/deferred.png",texArr:[syRender.DeferredTexture.Color,
+                syRender.DeferredTexture.Position,
+                syRender.DeferredTexture.Normal,
+                syRender.DeferredTexture.UV]}
         }
         this._rtt.setPosition(-6,10,0);
         this._centerNode.addChild(this._rtt);

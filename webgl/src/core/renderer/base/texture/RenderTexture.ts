@@ -114,7 +114,7 @@ export class RenderTexture extends Texture2D {
      * @param height 
      * @param nums 
      */
-    public attach(place:string,width:number,height:number,nums:number=1,param?:any) {
+    public attach(place:string,width:number,height:number,param?:any) {
         if(place=="color")
         {
             this.renderTextureToColor(width,height);
@@ -128,7 +128,7 @@ export class RenderTexture extends Texture2D {
         }
         else if(place=="more")
         {
-            this.renderMoreTextureToColor(width,height,nums,param);
+            this.renderMoreTextureToColor(width,height,param);
             this._attachPlace = AttachPlace.MoreColor
         }
         this.checkAndUnbind();
@@ -154,7 +154,12 @@ export class RenderTexture extends Texture2D {
      * @param dtWidth 
      * @param dtHeight 
      */
-     private renderMoreTextureToColor(dtWidth: number, dtHeight: number,nums:number,param?:any):void{
+     private renderMoreTextureToColor(dtWidth: number, dtHeight: number,param:any):void{
+
+        if(!param||!param.texArr||param.texArr.length<=0)
+        {
+            return
+        }
         
         this._deferredTexMap = new Map();
         let gl = this._gl;
@@ -168,8 +173,9 @@ export class RenderTexture extends Texture2D {
             this.glID = tempTex.glID;
             this._deferredTexMap.set(syRender.DeferredTexture.None,this.glID)
         }
+        let bindTexArr = param.texArr as Array<syRender.DeferredTexture>;
         let COLOR_ATTACHMENT = [];
-        for(let i = 0;i<nums;i++)
+        for(let i = 0;i<bindTexArr.length;i++)
         {
             let textureID = gl.createTexture();
             //创建纹理
@@ -182,24 +188,7 @@ export class RenderTexture extends Texture2D {
             //设置上面创建纹理作为颜色附件
             gl.framebufferTexture2D(gl.FRAMEBUFFER, gl["COLOR_ATTACHMENT"+i], gl.TEXTURE_2D, textureID, 0);
             COLOR_ATTACHMENT.push(gl["COLOR_ATTACHMENT"+i]);
-            
-            if(i==0)
-            {
-                this._deferredTexMap.set(syRender.DeferredTexture.Color,textureID)
-            }
-            else if(i==1)
-            {
-                this._deferredTexMap.set(syRender.DeferredTexture.Position,textureID)
-            }
-            else if(i==2)
-            {
-                this._deferredTexMap.set(syRender.DeferredTexture.Normal,textureID)
-            }
-            else if(i==3)
-            {
-                this._deferredTexMap.set(syRender.DeferredTexture.UV,textureID)
-            }
-
+            this._deferredTexMap.set(bindTexArr[i],textureID)
         }
         this.addRenderBufferToDepth(dtWidth, dtHeight);
             //采样到几个颜色附件(对应的几何纹理)
