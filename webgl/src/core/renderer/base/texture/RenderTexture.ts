@@ -43,6 +43,15 @@ import { syRender } from "../../data/RenderData";
  * 
  * 第七步：将结果输出到帧缓冲中
  * ----------------------------------------------------------------------------end
+ * 
+ * --深刻理解以下几个变量
+ * gl_FragCoord：片元在窗口的坐标位置：x, y, z, 1/w，只读, x和y是片段的窗口空间坐标，原点为窗口的左下角, z为深度值
+ * 对于这个变量我们可以直接在片元着色器中使用 何为窗口坐标？就是屏幕坐标啊
+ * 这里就一个特别大的误区：写入到帧缓冲的各个附件的位置坐标是标准的ndc坐标，比如我们要从上一次生成的纹理中指定位置取数据，应该用ndc的坐标
+ * 那如何取到这个ndc坐标呢？两种方案：
+ * 方案1：将顶点着色器中最后的gl_position,传到片元着色器中，然后在片元着色器中执行齐次除法，再将齐次裁切坐标转为标准的ndc坐标，即可
+ * 方案2：拿到gl_FragCoord这个值，执行屏幕坐标转为ndc坐标，即x除以屏幕的宽度，y除以屏幕的高度，最后就算出标准的ndc的坐标
+ * 
  */
 
 /**
@@ -154,9 +163,9 @@ export class RenderTexture extends Texture2D {
      * @param dtWidth 
      * @param dtHeight 
      */
-     private renderMoreTextureToColor(dtWidth: number, dtHeight: number,param:any):void{
+     private renderMoreTextureToColor(dtWidth: number, dtHeight: number,texData:Array<any>):void{
 
-        if(!param||!param.texArr||param.texArr.length<=0)
+        if(!texData||texData.length<=0)
         {
             return
         }
@@ -165,18 +174,19 @@ export class RenderTexture extends Texture2D {
         let gl = this._gl;
         gl.bindFramebuffer(gl.FRAMEBUFFER, this._frameBuffer);
         
-        if(param&&param.url&&param.url!="")
-        {
-            //删除本身的纹理显存 
-            this._gl.deleteTexture(this.glID);
-            var tempTex = G_TextureManager.createTexture(param.url);
-            this.glID = tempTex.glID;
-            this._deferredTexMap.set(syRender.DeferredTexture.None,this.glID)
-        }
-        let bindTexArr = param.texArr as Array<syRender.DeferredTexture>;
         let COLOR_ATTACHMENT = [];
-        for(let i = 0;i<bindTexArr.length;i++)
+        let startCount = 0;
+        for(let i = 0;i<texData.length;i++)
         {
+            var texType = texData[i].type;
+            if(texType==syRender.DeferredTexture.None)
+            {
+                this._gl.deleteTexture(this.glID);
+                var tempTex = G_TextureManager.createTexture(texData[i].value);
+                this.glID = tempTex.glID;
+                this._deferredTexMap.set(syRender.DeferredTexture.None,this.glID)
+                continue;
+            }
             let textureID = gl.createTexture();
             //创建纹理
             gl.bindTexture(gl.TEXTURE_2D, textureID);
@@ -186,9 +196,10 @@ export class RenderTexture extends Texture2D {
             //设置纹理格式，作为帧缓冲的颜色附件
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, dtWidth, dtHeight, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
             //设置上面创建纹理作为颜色附件
-            gl.framebufferTexture2D(gl.FRAMEBUFFER, gl["COLOR_ATTACHMENT"+i], gl.TEXTURE_2D, textureID, 0);
-            COLOR_ATTACHMENT.push(gl["COLOR_ATTACHMENT"+i]);
-            this._deferredTexMap.set(bindTexArr[i],textureID)
+            gl.framebufferTexture2D(gl.FRAMEBUFFER, gl["COLOR_ATTACHMENT"+startCount], gl.TEXTURE_2D, textureID, 0);
+            COLOR_ATTACHMENT.push(gl["COLOR_ATTACHMENT"+startCount]);
+            this._deferredTexMap.set(texType,textureID)
+            startCount++;
         }
         this.addRenderBufferToDepth(dtWidth, dtHeight);
             //采样到几个颜色附件(对应的几何纹理)
@@ -210,13 +221,22 @@ export class RenderTexture extends Texture2D {
      * @returns 
      */
     public getDeferredTexSize():number{
-        return this._deferredTexMap?(this._deferredTexMap.size-1):0;
+        if(!this._deferredTexMap)
+        {
+           return 0;
+        }
+        if(this._deferredTexMap.get(syRender.DeferredTexture.None))
+        {
+            //普通的纹理不能包含在里面
+            return this._deferredTexMap.size-1;
+        }
+         return this._deferredTexMap.size
     }
     /**
      * 判断是否事离线渲染
      */
     public isDeferred():boolean{
-       return this._deferredTexMap && this._deferredTexMap.size >=2;
+       return this._deferredTexMap && this._deferredTexMap.size >=1;
     }
 
     /**

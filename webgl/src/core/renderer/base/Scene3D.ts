@@ -18,7 +18,7 @@ import SpotLightCube from "../3d/SpotLightCube";
 import { FogCube } from "../3d/FogCube";
 import { glMatrix } from "../../math/Matrix";
 import { syGL } from "../gfx/syGLEnums";
-import {CameraIndex, GameMainCamera} from "../camera/GameMainCamera";
+import { CameraIndex, GameMainCamera } from "../camera/GameMainCamera";
 import { DeferredShading } from "../3d/DeferredShading";
 import { RTT } from "../3d/RTT";
 import AlphaCube from "../3d/AlphaCube";
@@ -32,28 +32,28 @@ export default class Scene3D extends Scene {
     private _skybox: SkyBox;
     private _floorNode: Ground;
     private _cubeNode: Cube;
-    private _deferredShading:DeferredShading;
-    private _renderSprite:RenderOffline3DSprite;
-    private _renderSprite1:RenderOffline3DSprite;
-    private _renderSprite2:RenderOffline3DSprite;
-    private _rtt:RTT;
+    private _deferredShading: DeferredShading;
+    private _renderSprite: RenderOffline3DSprite;
+    private _renderSprite1: RenderOffline3DSprite;
+    private _renderSprite2: RenderOffline3DSprite;
+    private _rtt: RTT;
     private _tableNode: Cube;
-    private _alphaNode:AlphaCube;
+    private _alphaNode: AlphaCube;
     private _spineNode: Spine;
-    private _pointLightCube:PointLightCube;
-    private _spotLightCube:SpotLightCube;
-    private _fogCubeArr:Array<FogCube>;
+    private _pointLightCube: PointLightCube;
+    private _spotLightCube: SpotLightCube;
+    private _fogCubeArr: Array<FogCube>;
     private _customTexture: CustomTextureCube;
     private _centerNode: Node;
-    private _mirrorCube:MirrorCube;
-    private _FLightSpot:SpotLight;
-    private _FLightThreeD:ThreeDLight;
+    private _mirrorCube: MirrorCube;
+    private _FLightSpot: SpotLight;
+    private _FLightThreeD: ThreeDLight;
     private _sphere: Sphere;
     constructor() {
         super();
     }
     public init(): void {
-        
+
         // let lightNode = new Node();
         // this.addChild(lightNode);
         // this._FLightPoint = new PointLightFCube();
@@ -72,13 +72,13 @@ export default class Scene3D extends Scene {
         // this.addChild(this._FLightThreeD);
         // this._FLightThreeD.Url = "res/models/char/F.json";
 
-        
+
         this._centerNode = new Node();
         this._centerNode.setPosition(0, 1.1, 0);
         this.addChild(this._centerNode);
-        
 
-       
+
+
 
         // var spNode = new Node();
         // this._sphere = new Sphere();
@@ -113,7 +113,7 @@ export default class Scene3D extends Scene {
         // this._centerNode.addChild(this._alphaNode);
 
 
-        
+
 
         // this._deferredShading = new DeferredShading();
         // this._deferredShading.spriteFrame = "res/dragon.png";
@@ -151,14 +151,16 @@ export default class Scene3D extends Scene {
         this._rtt = new RTT();
         this._rtt.setVirtualCameraIndex(CameraIndex.normal1);
         this._rtt.spriteFrame = {
-            type:"RenderTexture",
-            place:"more",
-            param:{url:"res/deferred.png",texArr:[syRender.DeferredTexture.Color,
-                syRender.DeferredTexture.Position,
-                syRender.DeferredTexture.Normal,
-                syRender.DeferredTexture.UV]}
+            type: "RenderTexture",
+            place: "more",
+            param: [
+                { type: syRender.DeferredTexture.None, value: "res/deferred.png" },
+                { type: syRender.DeferredTexture.Color, value: null },
+                { type: syRender.DeferredTexture.Position, value: null },
+                { type: syRender.DeferredTexture.Normal, value: null },
+                { type: syRender.DeferredTexture.UV, value: null }]
         }
-        this._rtt.setPosition(-6,10,0);
+        this._rtt.setPosition(-6, 10, 0);
         this._centerNode.addChild(this._rtt);
 
         // this._cubeNode = new Cube();
@@ -192,7 +194,7 @@ export default class Scene3D extends Scene {
 
         // }
 
-        
+
 
         // // 绘制 4 个腿
         // for (var i = -1; i <= 1; i += 2) {
@@ -210,8 +212,8 @@ export default class Scene3D extends Scene {
         // this._lightCube.setPosition(-5, 2.7, 0);
         // this._lightCube.setScale(0.5, 0.5, 0.5);
         // this._centerNode.addChild(this._lightCube);
-        
-        
+
+
 
         this._skybox = new SkyBox();
         this._skybox.setDefaultUrl();
@@ -229,13 +231,13 @@ export default class Scene3D extends Scene {
 
     }
 
-    protected collectRenderData(time):void{
+    protected collectRenderData(time): void {
         // this._fogCubeArr.forEach((fog,index)=>{
         //     fog.rotate(0,1,0)
         // })
         super.collectRenderData(time);
     }
-    
+
     public rotateCenterNode() {
         // this._centerNode.rotate(0, 1, 0);
         // this._mirrorCube.rotate(1,-1,-0.2);
