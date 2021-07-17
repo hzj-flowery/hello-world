@@ -21,8 +21,8 @@ export class Pass {
         this._type=type;
         this.drawType = syRender.DrawType.Normal;
     }
-    public code:Shader;
-    public state:State;
+    public code:Shader; //shader 代码
+    public state:State; //渲染状态
     private _type:PassType;
     public order:number = 0;
 

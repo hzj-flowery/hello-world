@@ -202,11 +202,11 @@ export default class Scene3D extends Scene {
         //     }
         // }
 
-        // this._lightCube = new LightCube();
-        // this._lightCube.spriteFrame = "res/wicker.jpg";
-        // this._lightCube.setPosition(-5, 2.7, 0);
-        // this._lightCube.setScale(0.5, 0.5, 0.5);
-        // this._centerNode.addChild(this._lightCube);
+        this._lightCube = new LightCube();
+        this._lightCube.spriteFrame = "res/wicker.jpg";
+        this._lightCube.setPosition(-5, 2.7, 0);
+        this._lightCube.setScale(0.5, 0.5, 0.5);
+        this._centerNode.addChild(this._lightCube);
 
 
 
