@@ -86,12 +86,6 @@ let DepthStencilFormat = {
     RB_FMT_D16: syGL.RenderBufferFormat.D16
 }
 
-enum AttachPlace {
-    Color = 1,
-    Depth,
-    MoreColor
-}
-
 /**
  * Render textures are textures that can be rendered to.
  * @class RenderTexture
@@ -112,7 +106,6 @@ export class RenderTexture extends Texture2D {
     private _frameBuffer: WebGLFramebuffer;//帧缓冲的glID
     private _renderBuffer: WebGLRenderbuffer;//渲染缓冲的glID
     private _deferredTexMap:Map<syRender.DeferredTexture,WebGLTexture>;
-    private _attachPlace:AttachPlace;
     public get frameBuffer(){
         return this._frameBuffer;
     }
@@ -123,22 +116,19 @@ export class RenderTexture extends Texture2D {
      * @param height 
      * @param nums 
      */
-    public attach(place:string,width:number,height:number,param?:any) {
-        if(place=="color")
+    public attach(attachPlace:syRender.AttachPlace,width:number,height:number,param?:any) {
+        if(attachPlace == syRender.AttachPlace.Color)
         {
             this.renderTextureToColor(width,height);
-            this._attachPlace = AttachPlace.Color;
         }
-        else if(place=="depth")
+        else if(attachPlace == syRender.AttachPlace.Depth)
         {
             let isWebgl2 = this._gl instanceof WebGL2RenderingContext?true:false;
             isWebgl2?this.renderTextureToDepthWebgl2(width,height):this.renderTextureToDepthWebgl1(width,height);
-            this._attachPlace = AttachPlace.Depth;
         }
-        else if(place=="more")
+        else if(attachPlace == syRender.AttachPlace.MoreColor)
         {
             this.renderMoreTextureToColor(width,height,param);
-            this._attachPlace = AttachPlace.MoreColor
         }
         this.checkAndUnbind();
         this.loaded = true;

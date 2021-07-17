@@ -6,6 +6,7 @@ import { RenderOfflineSprite } from "../2d/RenderOfflineSprite";
 import Scene from "./Scene";
 import InstantiateSprite from "../2d/InstantiateSprite";
 import { UvSprite } from "../2d/UvSprite";
+import { syRender } from "../data/RenderData";
 
 export default class Scene2D extends Scene {
     
@@ -40,10 +41,7 @@ export default class Scene2D extends Scene {
         this._renderSprite = new RenderOfflineSprite();
         this._renderSprite.setPosition(Device.Instance.width/2+200,Device.Instance.height/2+200, -100);
         this._renderSprite.spriteFrame = {
-            type:"RenderTexture",
-            place:"color",
-            width:Device.Instance.width,
-            height:Device.Instance.height
+            place:syRender.AttachPlace.Color
         }
         this.addChild(this._renderSprite);
 

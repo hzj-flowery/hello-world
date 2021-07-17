@@ -46,7 +46,7 @@ class TextureManager{
         else if (url instanceof TextureOpts) {
             return this.createCustomTextureBuffer(url);
         }
-        else if (url instanceof Object && url["type"] == "RenderTexture") {
+        else if (url instanceof Object && url["place"] ) {
             return this.createRenderTextureBuffer(url);
         }
     }

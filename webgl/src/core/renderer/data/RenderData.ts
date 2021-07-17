@@ -30,6 +30,12 @@ export namespace syRender {
         Single,//单独渲染
     }
 
+    export enum AttachPlace {
+        Color = 1,          //将结果渲染到颜色附件中
+        Depth,              //将结果渲染到深度附件中
+        MoreColor           //将结果渲染到更多的颜色附件中
+    }
+
     /**
      * 延迟渲染纹理
      */

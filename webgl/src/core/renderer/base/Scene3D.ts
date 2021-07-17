@@ -123,8 +123,7 @@ export default class Scene3D extends Scene {
         // this._renderSprite = new RenderOffline3DSprite();
         // this._renderSprite.setVirtualCameraIndex(CameraIndex.normal1);
         // this._renderSprite.spriteFrame = {
-        //     type:"RenderTexture",
-        //     place:"color",
+        //     place:syRender.AttachPlace.Color,
         // }
         // this._renderSprite.setPosition(-3,10,0);
         // this._centerNode.addChild(this._renderSprite);
@@ -132,8 +131,7 @@ export default class Scene3D extends Scene {
         // this._renderSprite1 = new RenderOffline3DSprite();
         // this._renderSprite1.setVirtualCameraIndex(CameraIndex.normal2);
         // this._renderSprite1.spriteFrame = {
-        //     type:"RenderTexture",
-        //     place:"color",
+        //     place:syRender.AttachPlace.Color,
         // }
         // this._renderSprite1.setPosition(3,10,0);
         // this._centerNode.addChild(this._renderSprite1);
@@ -141,8 +139,7 @@ export default class Scene3D extends Scene {
         // this._renderSprite2 = new RenderOffline3DSprite();
         // this._renderSprite2.setVirtualCameraIndex(CameraIndex.normal3);
         // this._renderSprite2.spriteFrame = {
-        //     type:"RenderTexture",
-        //     place:"color",
+        //     place:syRender.AttachPlace.Color,
         // }
         // this._renderSprite2.setPosition(-6,10,0);
         // this._centerNode.addChild(this._renderSprite2);
@@ -150,8 +147,7 @@ export default class Scene3D extends Scene {
 
         this._rtt = new RTT();
         this._rtt.spriteFrame = {
-            type: "RenderTexture",
-            place: "more",
+            place: syRender.AttachPlace.MoreColor,
             param: [
                 { type: syRender.DeferredTexture.None, value: "res/deferred.png" },
                 { type: syRender.DeferredTexture.Color, value: null },

@@ -9,6 +9,7 @@ import { G_DrawEngine } from "../../base/DrawEngine";
 import { RenderTexture } from "../../base/texture/RenderTexture";
 import TextureCustom from "../../base/texture/TextureCustom";
 import CustomTextureData from "../../data/CustomTextureData";
+import { syRender } from "../../data/RenderData";
 import { G_LightCenter } from "../../light/LightCenter";
 import { G_LightModel } from "../../light/LightModel";
 import { syPrimitives } from "../../shader/Primitives";
@@ -285,7 +286,7 @@ class ShadowLight {
     this.checkerboardTexture = new TextureCustom(); 
     this.checkerboardTexture.url = CustomTextureData.getBoardData(8, 8);
     this.renderTexture = new RenderTexture();
-    this.renderTexture.attach("depth", this.depthTextureSize, this.depthTextureSize)
+    this.renderTexture.attach(syRender.AttachPlace.Depth, this.depthTextureSize, this.depthTextureSize)
   }
 
 
