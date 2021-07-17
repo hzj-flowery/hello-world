@@ -191,28 +191,59 @@ export class Shader {
     protected onCreateShader(): void {
         var glID = this._spGLID;
         var gl = this._gl;
-        mapTree_a.forEach((value,key)=>{
-            var loc = value[0];
-            var SUVType = value[1];
-            var searchStr = key;
-            //attribute变量
-            this[loc]=gl.getAttribLocation(glID, searchStr);
-            this[loc] >= 0 ? this.pushShaderVariant(SUVType) : null;
-        })
-        mapTree_u.forEach((value,key)=>{
-            var loc = value[0];
-            var SUVType = value[1];
-            var searchStr = key;
-             //uniform变量
-             this[loc]=gl.getUniformLocation(glID, searchStr);
-             this[loc]!=null? this.pushShaderVariant(SUVType) : null;
-        })
-        this.u_skybox_loc = gl.getUniformLocation(glID, syGL.AttributeUniform.SKYBOX);
-        if (this.u_skybox_loc) {
-            setTimeout(() => {
-                this.pushShaderVariant(ShaderUseVariantType.SKYBOX)
-            }, 1000);
+        //-----------------------------------------------
+        const numUniforms = gl.getProgramParameter(glID, gl.ACTIVE_UNIFORMS);
+        for (let ii = 0; ii < numUniforms; ++ii) {
+            const uniformInfo = gl.getActiveUniform(glID, ii);
+            if (!uniformInfo) {
+                break;
+            }
+            // let name  = uniformInfo.name;
+            // // remove the array suffix.
+            // if (name.substr(-3) === '[0]') {
+            //     name = name.substr(0, name.length - 3);
+            // }
+            let value = mapTree_u.get(uniformInfo.name as any)
+            if(value)
+            {
+                //合法
+                 let loc = value[0];
+                 let SUVType = value[1];
+                 let searchStr = uniformInfo.name;
+                 //uniform变量
+                 this[loc]=gl.getUniformLocation(glID, searchStr);
+                 this[loc]!=null? this.pushShaderVariant(SUVType) : null;
+            }
+            else if(uniformInfo.name==syGL.AttributeUniform.SKYBOX)
+            {
+                //天空盒特殊处理
+                this.u_skybox_loc = gl.getUniformLocation(glID, syGL.AttributeUniform.SKYBOX);
+                if (this.u_skybox_loc) {
+                    setTimeout(() => {
+                        this.pushShaderVariant(ShaderUseVariantType.SKYBOX)
+                    }, 10);
+                }
+            }
         }
+        //-----------------------------------------------
+        const numAttribs = gl.getProgramParameter(glID, gl.ACTIVE_ATTRIBUTES);
+        for (let ii = 0; ii < numAttribs; ++ii) {
+            const attribInfo = gl.getActiveAttrib(glID, ii);
+            if (!attribInfo) {
+                break;
+            }
+            let value = mapTree_a.get(attribInfo.name as any);
+            if(value)
+            {
+                let loc = value[0];
+                let SUVType = value[1];
+                let searchStr = attribInfo.name;
+                //attribute变量
+                this[loc]=gl.getAttribLocation(glID, searchStr);
+                this[loc] >= 0 ? this.pushShaderVariant(SUVType) : null;
+            }
+        }
+       
     }
     private pushShaderVariant(type: ShaderUseVariantType): void {
         if (type >= ShaderUseVariantType.UndefinedMax || type <= ShaderUseVariantType.UndefinedMin) {
