@@ -315,5 +315,48 @@ class DrawEngine {
         }
         gl.disableVertexAttribArray(loc);
     }
+    
+    /**
+     * 获取shader中的一些参数
+     * 
+     * @param program 
+     * @param pname 
+     * gl.ACTIVE_UNIFORMS ：获取shader中有效的uniform变量的数量 return 数量 
+     * gl.ACTIVE_ATTRIBUTES : 获取shader中有效的attribute变量的数量 return 数量
+     * @returns 
+     */
+    public getProgramParameter(program:WebGLProgram,pname:number):any{
+        let gl = this.gl as WebGL2RenderingContext;
+        return gl.getProgramParameter(program,pname)
+    }
+    /**
+     * 获取shader中指定位置激活的uniform变量的信息
+     * @param program 
+     * @param index 
+     */
+    public getActiveUniform(program: WebGLProgram, index: number):any{
+        let gl = this.gl as WebGL2RenderingContext;
+        return gl.getActiveUniform(program, index);
+    }
+    /**
+     * 获取shader中指定位置激活的attribute变量的信息
+     * @param program 
+     * @param index 
+     */
+    public getActiveAttrib(program: WebGLProgram, index: number):any{
+        let gl = this.gl as WebGL2RenderingContext;
+        return gl.getActiveAttrib(program, index);
+    }
+    
+    /**
+     * 获取shader中uniform变量的位置
+     * @param program 
+     * @param name shader代码中相关变量的名字
+     * @returns 
+     */
+    public getUniformLocation(program: WebGLProgram, name: string):WebGLUniformLocation{
+
+        return this.gl.getUniformLocation(program,name)
+    }
 }
 export var G_DrawEngine = new DrawEngine();

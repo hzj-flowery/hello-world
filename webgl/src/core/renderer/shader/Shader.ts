@@ -54,63 +54,63 @@ export class BufferAttribsData {
     public readonly attribs: Object;
 }
 
-var mapTree_a:Map<syGL.AttributeUniform,Array<any>> = new Map();
-var mapTree_u:Map<syGL.AttributeUniform,Array<any>> = new Map();
-mapTree_a.set(syGL.AttributeUniform.POSITION,["a_position_loc",ShaderUseVariantType.Vertex]);
-mapTree_a.set(syGL.AttributeUniform.NORMAL,["a_normal_loc",ShaderUseVariantType.Normal]);
-mapTree_a.set(syGL.AttributeUniform.UV,["a_uv_loc",ShaderUseVariantType.UVs]);
-mapTree_a.set(syGL.AttributeUniform.TANGENT,["a_tangent_loc",ShaderUseVariantType.Tangent]);
-mapTree_a.set(syGL.AttributeUniform.VERT_COLOR,["a_vert_color_loc",ShaderUseVariantType.VertColor]);
-mapTree_a.set(syGL.AttributeUniform.VERT_Matrix,["a_vert_matrix_loc",ShaderUseVariantType.VertMatrix]);
+var mapTree_a: Map<syGL.AttributeUniform, Array<any>> = new Map();
+var mapTree_u: Map<syGL.AttributeUniform, Array<any>> = new Map();
+mapTree_a.set(syGL.AttributeUniform.POSITION, ["a_position_loc", ShaderUseVariantType.Vertex]);
+mapTree_a.set(syGL.AttributeUniform.NORMAL, ["a_normal_loc", ShaderUseVariantType.Normal]);
+mapTree_a.set(syGL.AttributeUniform.UV, ["a_uv_loc", ShaderUseVariantType.UVs]);
+mapTree_a.set(syGL.AttributeUniform.TANGENT, ["a_tangent_loc", ShaderUseVariantType.Tangent]);
+mapTree_a.set(syGL.AttributeUniform.VERT_COLOR, ["a_vert_color_loc", ShaderUseVariantType.VertColor]);
+mapTree_a.set(syGL.AttributeUniform.VERT_Matrix, ["a_vert_matrix_loc", ShaderUseVariantType.VertMatrix]);
 
-mapTree_u.set(syGL.AttributeUniform.TIME,["u_time_loc",ShaderUseVariantType.Time]);
-mapTree_u.set(syGL.AttributeUniform.COLOR,["u_color_loc",ShaderUseVariantType.Color]);
-mapTree_u.set(syGL.AttributeUniform.ALPHA,["u_alpha_loc",ShaderUseVariantType.Alpha]);
-mapTree_u.set(syGL.AttributeUniform.LIGHT_AMBIENT_COLOR,["u_ambientColor_loc",ShaderUseVariantType.AmbientLight]);
-mapTree_u.set(syGL.AttributeUniform.LIGHT_POINT_COLOR,["u_pointColor_loc",ShaderUseVariantType.PointLight]);
-mapTree_u.set(syGL.AttributeUniform.LIGHT_COLOR,["u_light_color_loc",ShaderUseVariantType.ParallelLight]);
-mapTree_u.set(syGL.AttributeUniform.LIGHT_COLOR_DIR,["u_light_color_dir_loc",ShaderUseVariantType.ParallelLight]);
-mapTree_u.set(syGL.AttributeUniform.LIGHT_SPECULAR_COLOR,["u_light_specular_color_loc",ShaderUseVariantType.SpecularLight]);
-mapTree_u.set(syGL.AttributeUniform.LIGHT_SPECULAR_SHININESS,["u_light_specular_shininess_loc",ShaderUseVariantType.SpecularLight]);
-mapTree_u.set(syGL.AttributeUniform.LIGHT_SPOT_DIRECTION,["u_light_spotDirection_loc",ShaderUseVariantType.SpotLight]);
-mapTree_u.set(syGL.AttributeUniform.LIGHT_SPOT_COLOR,["u_light_spotColor_loc",ShaderUseVariantType.SpotLight]);
-mapTree_u.set(syGL.AttributeUniform.LIGHT_SPOT_INNER_LIMIT,["u_light_spotInnerLimit_loc",ShaderUseVariantType.SpotLight]);
-mapTree_u.set(syGL.AttributeUniform.LIGHT_SPOT_OUTER_LIMIT,["u_light_spotOuterLimit_loc",ShaderUseVariantType.SpotLight]);
-mapTree_u.set(syGL.AttributeUniform.VMMatrix,["u_VMMatrix_loc",ShaderUseVariantType.ViewModel]);
-mapTree_u.set(syGL.AttributeUniform.PMatrix,["u_PMatrix_loc",ShaderUseVariantType.Projection]);
-mapTree_u.set(syGL.AttributeUniform.Matrix,["u_Matrix_loc",ShaderUseVariantType.CustomMatrix]);
-mapTree_u.set(syGL.AttributeUniform.FOG_COLOR,["u_fogColor_loc",ShaderUseVariantType.Fog]);
-mapTree_u.set(syGL.AttributeUniform.FOG_DENSITY,["u_fogDensity_loc",ShaderUseVariantType.Fog]);
-mapTree_u.set(syGL.AttributeUniform.TEX_COORD0,["u_texCoord0_loc",ShaderUseVariantType.TEX_COORD]);
-mapTree_u.set(syGL.AttributeUniform.TEX_COORD1,["u_texCoord1_loc",ShaderUseVariantType.TEX_COORD1]);
-mapTree_u.set(syGL.AttributeUniform.TEX_COORD2,["u_texCoord2_loc",ShaderUseVariantType.TEX_COORD2]);
-mapTree_u.set(syGL.AttributeUniform.TEX_COORD3,["u_texCoord3_loc",ShaderUseVariantType.TEX_COORD3]);
-mapTree_u.set(syGL.AttributeUniform.TEX_COORD4,["u_texCoord4_loc",ShaderUseVariantType.TEX_COORD4]);
-mapTree_u.set(syGL.AttributeUniform.TEX_COORD5,["u_texCoord5_loc",ShaderUseVariantType.TEX_COORD5]);
-mapTree_u.set(syGL.AttributeUniform.TEX_COORD6,["u_texCoord6_loc",ShaderUseVariantType.TEX_COORD6]);
-mapTree_u.set(syGL.AttributeUniform.TEX_COORD7,["u_texCoord7_loc",ShaderUseVariantType.TEX_COORD7]);
-mapTree_u.set(syGL.AttributeUniform.TEX_COORD8,["u_texCoord8_loc",ShaderUseVariantType.TEX_COORD8]);
-mapTree_u.set(syGL.AttributeUniform.CUBE_COORD,["u_cubeCoord_loc",ShaderUseVariantType.CUBE_COORD]);
+mapTree_u.set(syGL.AttributeUniform.TIME, ["u_time_loc", ShaderUseVariantType.Time]);
+mapTree_u.set(syGL.AttributeUniform.COLOR, ["u_color_loc", ShaderUseVariantType.Color]);
+mapTree_u.set(syGL.AttributeUniform.ALPHA, ["u_alpha_loc", ShaderUseVariantType.Alpha]);
+mapTree_u.set(syGL.AttributeUniform.LIGHT_AMBIENT_COLOR, ["u_ambientColor_loc", ShaderUseVariantType.AmbientLight]);
+mapTree_u.set(syGL.AttributeUniform.LIGHT_POINT_COLOR, ["u_pointColor_loc", ShaderUseVariantType.PointLight]);
+mapTree_u.set(syGL.AttributeUniform.LIGHT_COLOR, ["u_light_color_loc", ShaderUseVariantType.ParallelLight]);
+mapTree_u.set(syGL.AttributeUniform.LIGHT_COLOR_DIR, ["u_light_color_dir_loc", ShaderUseVariantType.ParallelLight]);
+mapTree_u.set(syGL.AttributeUniform.LIGHT_SPECULAR_COLOR, ["u_light_specular_color_loc", ShaderUseVariantType.SpecularLight]);
+mapTree_u.set(syGL.AttributeUniform.LIGHT_SPECULAR_SHININESS, ["u_light_specular_shininess_loc", ShaderUseVariantType.SpecularLight]);
+mapTree_u.set(syGL.AttributeUniform.LIGHT_SPOT_DIRECTION, ["u_light_spotDirection_loc", ShaderUseVariantType.SpotLight]);
+mapTree_u.set(syGL.AttributeUniform.LIGHT_SPOT_COLOR, ["u_light_spotColor_loc", ShaderUseVariantType.SpotLight]);
+mapTree_u.set(syGL.AttributeUniform.LIGHT_SPOT_INNER_LIMIT, ["u_light_spotInnerLimit_loc", ShaderUseVariantType.SpotLight]);
+mapTree_u.set(syGL.AttributeUniform.LIGHT_SPOT_OUTER_LIMIT, ["u_light_spotOuterLimit_loc", ShaderUseVariantType.SpotLight]);
+mapTree_u.set(syGL.AttributeUniform.VMMatrix, ["u_VMMatrix_loc", ShaderUseVariantType.ViewModel]);
+mapTree_u.set(syGL.AttributeUniform.PMatrix, ["u_PMatrix_loc", ShaderUseVariantType.Projection]);
+mapTree_u.set(syGL.AttributeUniform.Matrix, ["u_Matrix_loc", ShaderUseVariantType.CustomMatrix]);
+mapTree_u.set(syGL.AttributeUniform.FOG_COLOR, ["u_fogColor_loc", ShaderUseVariantType.Fog]);
+mapTree_u.set(syGL.AttributeUniform.FOG_DENSITY, ["u_fogDensity_loc", ShaderUseVariantType.Fog]);
+mapTree_u.set(syGL.AttributeUniform.TEX_COORD0, ["u_texCoord0_loc", ShaderUseVariantType.TEX_COORD]);
+mapTree_u.set(syGL.AttributeUniform.TEX_COORD1, ["u_texCoord1_loc", ShaderUseVariantType.TEX_COORD1]);
+mapTree_u.set(syGL.AttributeUniform.TEX_COORD2, ["u_texCoord2_loc", ShaderUseVariantType.TEX_COORD2]);
+mapTree_u.set(syGL.AttributeUniform.TEX_COORD3, ["u_texCoord3_loc", ShaderUseVariantType.TEX_COORD3]);
+mapTree_u.set(syGL.AttributeUniform.TEX_COORD4, ["u_texCoord4_loc", ShaderUseVariantType.TEX_COORD4]);
+mapTree_u.set(syGL.AttributeUniform.TEX_COORD5, ["u_texCoord5_loc", ShaderUseVariantType.TEX_COORD5]);
+mapTree_u.set(syGL.AttributeUniform.TEX_COORD6, ["u_texCoord6_loc", ShaderUseVariantType.TEX_COORD6]);
+mapTree_u.set(syGL.AttributeUniform.TEX_COORD7, ["u_texCoord7_loc", ShaderUseVariantType.TEX_COORD7]);
+mapTree_u.set(syGL.AttributeUniform.TEX_COORD8, ["u_texCoord8_loc", ShaderUseVariantType.TEX_COORD8]);
+mapTree_u.set(syGL.AttributeUniform.CUBE_COORD, ["u_cubeCoord_loc", ShaderUseVariantType.CUBE_COORD]);
 // mapTree_u.set(syGL.AttributeUniform.SKYBOX,["u_skybox_loc",ShaderUseVariantType.SKYBOX]);  --天空盒异常手动处理
 //uniform
-mapTree_u.set(syGL.AttributeUniform.TEX_GPosition,["u_gPosition_loc",ShaderUseVariantType.GPosition]);
-mapTree_u.set(syGL.AttributeUniform.TEX_GNormal,["u_gNormal_loc",ShaderUseVariantType.GNormal]);
-mapTree_u.set(syGL.AttributeUniform.TEX_GColor,["u_gColor_loc",ShaderUseVariantType.GColor]);
-mapTree_u.set(syGL.AttributeUniform.TEX_GUv,["u_gUv_loc",ShaderUseVariantType.GUv]);
- 
-mapTree_u.set(syGL.AttributeUniform.SHADOW_MAP,["u_shadowMap_loc",ShaderUseVariantType.Shadow]);
-mapTree_u.set(syGL.AttributeUniform.SHADOW_INFOR,["u_shadowInfor_loc",ShaderUseVariantType.Shadow]);
-mapTree_u.set(syGL.AttributeUniform.PVM_MATRIX,["u_PVMMatrix_loc",ShaderUseVariantType.ProjectionViewModel]);
-mapTree_u.set(syGL.AttributeUniform.PVM_MATRIX_INVERSE,["u_PVMMatrix_inverse_loc",ShaderUseVariantType.ProjectionViewModelInverse]);
-mapTree_u.set(syGL.AttributeUniform.MMatrix,["u_MMatrix_loc",ShaderUseVariantType.Model]);
-mapTree_u.set(syGL.AttributeUniform.VMatrix,["u_VMatrix_loc",ShaderUseVariantType.View]);
-mapTree_u.set(syGL.AttributeUniform.MIMatrix,["u_MIMatrix_loc",ShaderUseVariantType.ModelInverse]);
-mapTree_u.set(syGL.AttributeUniform.MTMatrix,["u_MTMatrix_loc",ShaderUseVariantType.ModelTransform]);
-mapTree_u.set(syGL.AttributeUniform.MITMatrix,["u_MITMatrix_loc",ShaderUseVariantType.ModelInverseTransform]);
-mapTree_u.set(syGL.AttributeUniform.PVMatrix,["u_PVMatrix_loc",ShaderUseVariantType.ProjectionView]);
-mapTree_u.set(syGL.AttributeUniform.PVMatrix_INVERSE,["u_PVMatrix_inverse_loc",ShaderUseVariantType.ProjectionViewInverse]);
-mapTree_u.set(syGL.AttributeUniform.CameraWorldPosition,["u_camera_world_position_loc",ShaderUseVariantType.CameraWorldPosition]);
-mapTree_u.set(syGL.AttributeUniform.LightWorldPosition,["u_light_world_position_loc",ShaderUseVariantType.LightWorldPosition]);
+mapTree_u.set(syGL.AttributeUniform.TEX_GPosition, ["u_gPosition_loc", ShaderUseVariantType.GPosition]);
+mapTree_u.set(syGL.AttributeUniform.TEX_GNormal, ["u_gNormal_loc", ShaderUseVariantType.GNormal]);
+mapTree_u.set(syGL.AttributeUniform.TEX_GColor, ["u_gColor_loc", ShaderUseVariantType.GColor]);
+mapTree_u.set(syGL.AttributeUniform.TEX_GUv, ["u_gUv_loc", ShaderUseVariantType.GUv]);
+
+mapTree_u.set(syGL.AttributeUniform.SHADOW_MAP, ["u_shadowMap_loc", ShaderUseVariantType.Shadow]);
+mapTree_u.set(syGL.AttributeUniform.SHADOW_INFOR, ["u_shadowInfor_loc", ShaderUseVariantType.Shadow]);
+mapTree_u.set(syGL.AttributeUniform.PVM_MATRIX, ["u_PVMMatrix_loc", ShaderUseVariantType.ProjectionViewModel]);
+mapTree_u.set(syGL.AttributeUniform.PVM_MATRIX_INVERSE, ["u_PVMMatrix_inverse_loc", ShaderUseVariantType.ProjectionViewModelInverse]);
+mapTree_u.set(syGL.AttributeUniform.MMatrix, ["u_MMatrix_loc", ShaderUseVariantType.Model]);
+mapTree_u.set(syGL.AttributeUniform.VMatrix, ["u_VMatrix_loc", ShaderUseVariantType.View]);
+mapTree_u.set(syGL.AttributeUniform.MIMatrix, ["u_MIMatrix_loc", ShaderUseVariantType.ModelInverse]);
+mapTree_u.set(syGL.AttributeUniform.MTMatrix, ["u_MTMatrix_loc", ShaderUseVariantType.ModelTransform]);
+mapTree_u.set(syGL.AttributeUniform.MITMatrix, ["u_MITMatrix_loc", ShaderUseVariantType.ModelInverseTransform]);
+mapTree_u.set(syGL.AttributeUniform.PVMatrix, ["u_PVMatrix_loc", ShaderUseVariantType.ProjectionView]);
+mapTree_u.set(syGL.AttributeUniform.PVMatrix_INVERSE, ["u_PVMatrix_inverse_loc", ShaderUseVariantType.ProjectionViewInverse]);
+mapTree_u.set(syGL.AttributeUniform.CameraWorldPosition, ["u_camera_world_position_loc", ShaderUseVariantType.CameraWorldPosition]);
+mapTree_u.set(syGL.AttributeUniform.LightWorldPosition, ["u_light_world_position_loc", ShaderUseVariantType.LightWorldPosition]);
 
 
 export class Shader {
@@ -189,12 +189,11 @@ export class Shader {
         this.onCreateShader();
     }
     protected onCreateShader(): void {
-        var glID = this._spGLID;
         var gl = this._gl;
         //-----------------------------------------------
-        const numUniforms = gl.getProgramParameter(glID, gl.ACTIVE_UNIFORMS);
+        const numUniforms = G_DrawEngine.getProgramParameter(this._spGLID, gl.ACTIVE_UNIFORMS);
         for (let ii = 0; ii < numUniforms; ++ii) {
-            const uniformInfo = gl.getActiveUniform(glID, ii);
+            const uniformInfo = G_DrawEngine.getActiveUniform(this._spGLID, ii);
             if (!uniformInfo) {
                 break;
             }
@@ -204,20 +203,18 @@ export class Shader {
             //     name = name.substr(0, name.length - 3);
             // }
             let value = mapTree_u.get(uniformInfo.name as any)
-            if(value)
-            {
+            if (value) {
                 //合法
-                 let loc = value[0];
-                 let SUVType = value[1];
-                 let searchStr = uniformInfo.name;
-                 //uniform变量
-                 this[loc]=gl.getUniformLocation(glID, searchStr);
-                 this[loc]!=null? this.pushShaderVariant(SUVType) : null;
+                let loc = value[0];
+                let SUVType = value[1];
+                let searchStr = uniformInfo.name;
+                //uniform变量
+                this[loc] = G_DrawEngine.getUniformLocation(this._spGLID, searchStr);
+                this[loc] != null ? this.pushShaderVariant(SUVType) : null;
             }
-            else if(uniformInfo.name==syGL.AttributeUniform.SKYBOX)
-            {
+            else if (uniformInfo.name == syGL.AttributeUniform.SKYBOX) {
                 //天空盒特殊处理
-                this.u_skybox_loc = gl.getUniformLocation(glID, syGL.AttributeUniform.SKYBOX);
+                this.u_skybox_loc = G_DrawEngine.getUniformLocation(this._spGLID, syGL.AttributeUniform.SKYBOX);
                 if (this.u_skybox_loc) {
                     setTimeout(() => {
                         this.pushShaderVariant(ShaderUseVariantType.SKYBOX)
@@ -226,24 +223,23 @@ export class Shader {
             }
         }
         //-----------------------------------------------
-        const numAttribs = gl.getProgramParameter(glID, gl.ACTIVE_ATTRIBUTES);
+        const numAttribs = G_DrawEngine.getProgramParameter(this._spGLID, gl.ACTIVE_ATTRIBUTES);
         for (let ii = 0; ii < numAttribs; ++ii) {
-            const attribInfo = gl.getActiveAttrib(glID, ii);
+            const attribInfo = G_DrawEngine.getActiveAttrib(this._spGLID, ii);
             if (!attribInfo) {
                 break;
             }
             let value = mapTree_a.get(attribInfo.name as any);
-            if(value)
-            {
+            if (value) {
                 let loc = value[0];
                 let SUVType = value[1];
                 let searchStr = attribInfo.name;
                 //attribute变量
-                this[loc]=gl.getAttribLocation(glID, searchStr);
+                this[loc] = G_DrawEngine.getAttribLocation(this._spGLID, searchStr);
                 this[loc] >= 0 ? this.pushShaderVariant(SUVType) : null;
             }
         }
-       
+
     }
     private pushShaderVariant(type: ShaderUseVariantType): void {
         if (type >= ShaderUseVariantType.UndefinedMax || type <= ShaderUseVariantType.UndefinedMin) {
@@ -363,7 +359,7 @@ export class Shader {
      * 设置使用节点的透明度
      * @param alpha 
      */
-    public setUseNodeAlpha(alpha:number):void{
+    public setUseNodeAlpha(alpha: number): void {
         if (this.checklocValid(this.u_alpha_loc)) {
             G_DrawEngine.setUniform1f(this.u_alpha_loc, alpha);
         }
@@ -448,8 +444,7 @@ export class Shader {
      */
     public setUseDeferredTexture(glID: WebGLTexture, pos: number, attibuteUniform: syGL.AttributeUniform): void {
         var value = mapTree_u.get(attibuteUniform)
-        if(!value)
-        {
+        if (!value) {
             return
         }
         var loc = value[0];
@@ -485,15 +480,14 @@ export class Shader {
      * @param attrUni 
      * @param mat 
      */
-    public bindMatrixToShader(attrUni:syGL.AttributeUniform,mat:Float32Array|any):void{
-           var value = mapTree_u.get(attrUni);
-           if(value)
-           {
-               var loc = value[0];
-               if (this.checklocValid(this[loc])) {
+    public bindMatrixToShader(attrUni: syGL.AttributeUniform, mat: Float32Array | any): void {
+        var value = mapTree_u.get(attrUni);
+        if (value) {
+            var loc = value[0];
+            if (this.checklocValid(this[loc])) {
                 G_DrawEngine.setUniformMatrix(this[loc], mat);
             }
-           }
+        }
     }
     //设置顶点值
     public setUseVertexAttribPointerForVertex(glID, itemSize: number): void {
@@ -515,14 +509,13 @@ export class Shader {
     }
 
     public disableVertexAttribArray(): void {
-        mapTree_a.forEach((value,key)=>{
-             var loc = value[0];
-             var suvtype = value[1];
-             var searchStr = key;
-             if(this._useVariantType.indexOf(suvtype)>=0&&this.checklocValid(this[loc]))
-             {
+        mapTree_a.forEach((value, key) => {
+            var loc = value[0];
+            var suvtype = value[1];
+            var searchStr = key;
+            if (this._useVariantType.indexOf(suvtype) >= 0 && this.checklocValid(this[loc])) {
                 G_DrawEngine.disableVertexAttribArray(this[loc]);
-             }
+            }
         })
     }
 }
