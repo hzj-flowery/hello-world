@@ -531,7 +531,16 @@ export default class Device {
                 //[.Offscreen-For-WebGL-07E77500]GL ERROR :GL_INVALID_OPERATION : glDrawElements: Source and destination textures of the draw are the same
                 continue;
             }
-            this.draw(treeData[j], cData);
+            let rData = treeData[j];
+            //相机 一般只有两种 要么是3d透视相机 要么是2d正交相机
+            var cammerauuid = CameraUUid.base2D;
+            if(rData.node.is3DNode())
+            {
+                cammerauuid = CameraUUid.base3D;
+            }
+            var cameraData = GameMainCamera.instance.getCameraIndex(cammerauuid).getCameraData();
+
+            this.draw(rData, cData,cameraData);
         }
     }
     /**
@@ -547,23 +556,19 @@ export default class Device {
     /**
      * 此函数每调用一次就有可能产生一次drawcall
      * @param rData 
+     * @param crData
+     * @param cData
      * @param isUseScene 
      */
-    private draw(rData: syRender.BaseData, cData: CameraRenderData): void {
+    private draw(rData: syRender.BaseData, crData: CameraRenderData,cData:CameraData): void {
         
-        //相机 一般只有两种 要么是3d透视相机 要么是2d正交相机
-        var cammerauuid = CameraUUid.base2D;
-        if(rData.node.is3DNode())
-        {
-            cammerauuid = CameraUUid.base3D;
-        }
-        var cameraData = GameMainCamera.instance.getCameraIndex(cammerauuid).getCameraData();
+        
         glMatrix.mat4.identity(this._temp1Matrix);
 
         //补一下光的数据
         rData.light.parallel.color = G_LightCenter.lightData.parallelColor; //光的颜色
         rData.light.parallel.direction = G_LightCenter.lightData.parallelDirection;//光的方向
-        rData._cameraPosition = cameraData.position;
+        rData._cameraPosition = cData.position;
         rData.light.ambient.color = G_LightCenter.lightData.ambientColor;//环境光
         rData.light.point.color = G_LightCenter.lightData.pointColor;//点光
         rData.light.specular.shiness = G_LightCenter.lightData.specularShininess;
@@ -580,37 +585,37 @@ export default class Device {
         switch (rData.type) {
             case syRender.DataType.Base:
                 this._commitRenderState(rData.pass.state);
-                if (cData.isFirstVisualAngle()) {
-                    glMatrix.mat4.invert(this._temp1Matrix, cameraData.modelMat);
-                    this._drawBase(rData, cameraData.projectMat, this._temp1Matrix);
+                if (crData.isFirstVisualAngle()) {
+                    glMatrix.mat4.invert(this._temp1Matrix, cData.modelMat);
+                    this._drawBase(rData, cData.projectMat, this._temp1Matrix);
                 }
                 else {
-                    let projMatix = G_CameraModel.getSceneProjectMatrix(cData.visualAngle);
-                    glMatrix.mat4.invert(this._temp1Matrix, G_CameraModel.getSceneCameraMatrix(cData.visualAngle));
+                    let projMatix = G_CameraModel.getSceneProjectMatrix(crData.visualAngle);
+                    glMatrix.mat4.invert(this._temp1Matrix, G_CameraModel.getSceneCameraMatrix(crData.visualAngle));
                     this._drawBase(rData, projMatix, this._temp1Matrix);
                 }
                 break;
             case syRender.DataType.Normal:
                 this._commitRenderState((rData as syRender.NormalData)._state);
-                if (cData.isFirstVisualAngle()) {
-                    this._drawNormal(rData as syRender.NormalData, cameraData);
+                if (crData.isFirstVisualAngle()) {
+                    this._drawNormal(rData as syRender.NormalData, cData);
                 }
                 else {
-                    let projMatix = G_CameraModel.getSceneProjectMatrix(cData.visualAngle);
-                    glMatrix.mat4.invert(this._temp1Matrix, G_CameraModel.getSceneCameraMatrix(cData.visualAngle));
-                    cameraData.projectMat = projMatix;
-                    cameraData.modelMat = this._temp1Matrix;
-                    this._drawNormal(rData as syRender.NormalData, cameraData);
+                    let projMatix = G_CameraModel.getSceneProjectMatrix(crData.visualAngle);
+                    glMatrix.mat4.invert(this._temp1Matrix, G_CameraModel.getSceneCameraMatrix(crData.visualAngle));
+                    cData.projectMat = projMatix;
+                    cData.modelMat = this._temp1Matrix;
+                    this._drawNormal(rData as syRender.NormalData, cData);
                 }
                 break;
             case syRender.DataType.Spine:
                 this._commitRenderState((rData as syRender.SpineData)._state);
-                if (cData.isFirstVisualAngle()) {
-                    glMatrix.mat4.invert(this._temp1Matrix, cameraData.modelMat);
-                    this._drawSpine(rData as syRender.SpineData, cameraData.projectMat, this._temp1Matrix);
+                if (crData.isFirstVisualAngle()) {
+                    glMatrix.mat4.invert(this._temp1Matrix, cData.modelMat);
+                    this._drawSpine(rData as syRender.SpineData, cData.projectMat, this._temp1Matrix);
                 } else {
-                    let projMatix = G_CameraModel.getSceneProjectMatrix(cData.visualAngle);
-                    glMatrix.mat4.invert(this._temp1Matrix, G_CameraModel.getSceneCameraMatrix(cData.visualAngle));
+                    let projMatix = G_CameraModel.getSceneProjectMatrix(crData.visualAngle);
+                    glMatrix.mat4.invert(this._temp1Matrix, G_CameraModel.getSceneCameraMatrix(crData.visualAngle));
                     this._drawSpine(rData as syRender.SpineData, projMatix, this._temp1Matrix);
                 }
                 break;
