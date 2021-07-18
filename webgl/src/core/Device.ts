@@ -18,6 +18,7 @@ import enums from "./renderer/camera/enums";
 import { G_UISetting } from "./ui/UiSetting";
 import { SYMacro } from "./platform/SYMacro";
 import { G_LightModel } from "./renderer/light/LightModel";
+import { G_ShaderCenter, ShaderType } from "./renderer/shader/ShaderCenter";
 
 /**
  渲染流程：
@@ -510,22 +511,22 @@ export default class Device {
     /**
      * 触发常规渲染
      * @param treeData 
-     * @param cData 
+     * @param crData 
      */
-    private triggerRender(treeData:Array<syRender.BaseData>,cData: CameraRenderData) {
+    private triggerRender(treeData:Array<syRender.BaseData>,crData: CameraRenderData) {
         if(!treeData||treeData.length<=0)
         {
             return;
         }
         //设置帧缓冲区
-        this.readyForOneFrame(cData);
+        this.readyForOneFrame(crData);
         //记录一下当前渲染的时间
         this._triggerRenderTime++;
         var cameraData = GameMainCamera.instance.getCameraIndex(CameraUUid.base3D).getCameraData();
-        G_CameraModel.createCamera(cData.visualAngle, cameraData.projectMat, cameraData.modelMat,cData.visuialAnglePosition);
+        G_CameraModel.createCamera(crData.visualAngle, cameraData.projectMat, cameraData.modelMat,crData.visuialAnglePosition);
         //提交数据给GPU 立即绘制
         for (var j = 0; j < treeData.length; j++) {   
-            if (treeData[j].isOffline && !cData.isRenderToScreen) {
+            if (treeData[j].isOffline && !crData.isRenderToScreen) {
                 //对于离屏渲染的数据 如果当前是离屏渲染的话 则不可以渲染它 否则会报错
                 //你想啊你把一堆显示数据渲染到一张纹理中，这张纹理本身就在这一堆渲染数据中 自然是会冲突的
                 //[.Offscreen-For-WebGL-07E77500]GL ERROR :GL_INVALID_OPERATION : glDrawElements: Source and destination textures of the draw are the same
@@ -540,7 +541,7 @@ export default class Device {
             }
             var cameraData = GameMainCamera.instance.getCameraIndex(cammerauuid).getCameraData();
 
-            this.draw(rData, cData,cameraData);
+            this.draw(rData, crData,cameraData);
         }
     }
     /**
@@ -549,8 +550,18 @@ export default class Device {
      * @param projMatix 投影矩阵
      * @param viewMatrix 视口矩阵
      */
-    private _drawBase(rData: syRender.BaseData, projMatix: Float32Array, viewMatrix: Float32Array): void {
-        G_DrawEngine.run(rData, viewMatrix, projMatix, rData.shader);
+    private _drawBase(rData: syRender.BaseData, projMatix: Float32Array, viewMatrix: Float32Array,crData: CameraRenderData): void {
+        if(crData.uuid==CameraUUid.Depth&&GameMainCamera.instance.getShader())
+        {
+            //更换为深度 shader
+            // G_DrawEngine.run(rData, viewMatrix, projMatix,G_ShaderCenter.getShader(ShaderType.ShadowMap));
+            G_DrawEngine.run(rData, viewMatrix, projMatix, GameMainCamera.instance.getShader());
+        }
+        else
+        {
+            //正常渲染
+            G_DrawEngine.run(rData, viewMatrix, projMatix, rData.shader);
+        }
     }
     private _temp1Matrix: Float32Array = glMatrix.mat4.identity(null);
     /**
@@ -587,12 +598,12 @@ export default class Device {
                 this._commitRenderState(rData.pass.state);
                 if (crData.isFirstVisualAngle()) {
                     glMatrix.mat4.invert(this._temp1Matrix, cData.modelMat);
-                    this._drawBase(rData, cData.projectMat, this._temp1Matrix);
+                    this._drawBase(rData, cData.projectMat, this._temp1Matrix,crData);
                 }
                 else {
                     let projMatix = G_CameraModel.getSceneProjectMatrix(crData.visualAngle);
                     glMatrix.mat4.invert(this._temp1Matrix, G_CameraModel.getSceneCameraMatrix(crData.visualAngle));
-                    this._drawBase(rData, projMatix, this._temp1Matrix);
+                    this._drawBase(rData, projMatix, this._temp1Matrix,crData);
                 }
                 break;
             case syRender.DataType.Normal:

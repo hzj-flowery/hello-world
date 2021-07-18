@@ -33,10 +33,14 @@ class ShaderCenter {
                 return "spine";
             case ShaderType.ShadowMap:
                 return "shadowMap";
-            default: console.log("您输入的shader类型非法,", type);
+            default: 
+            {
+                console.log("您输入的shader类型非法,", type);
+            }
         }
     }
     public init(): void {
+        //预先初始化一些shader
         this.createShader(ShaderType.ShadowMap, ShaderCode.shadowMap.vert, ShaderCode.shadowMap.frag);
         this.createShader(ShaderType.Line,ShaderCode.line.vert,ShaderCode.line.frag);
     }
@@ -46,7 +50,17 @@ class ShaderCenter {
      * @param vert 
      * @param frag 
      */
-    public createShader(type: ShaderType, vert: string, frag: string): Shader {
+    public createShader(type: ShaderType, vert?: string, frag?: string): Shader {
+        var oldShader = this.getShader(type);
+        if(oldShader)
+        {
+            //之前shader就已经创建好了啊
+            return oldShader;
+        }
+        if(!vert||!frag||vert==""||frag=="")
+        {
+            return ;
+        }
         var glID = G_ShaderFactory.createShader(vert, frag);
         let name = this.createShaderName(type);
         let shader = new Shader(Device.Instance.gl, glID, name)
@@ -74,7 +88,13 @@ class ShaderCenter {
             case ShaderType.ShadowMap:
                 name = "shadowMap";
                 break;
-            default: console.log("您输入的shader类型非法,", type);
+            default: 
+            {
+                if(type!=ShaderType.Custom)
+                {
+                    console.log("您输入的shader类型非法,", type);
+                }
+            }
         }
         if (name != "")
             return this._shaderMap.get(name);

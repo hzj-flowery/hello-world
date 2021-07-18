@@ -7,6 +7,7 @@ import { RenderTexture } from "../base/texture/RenderTexture";
 import { syRender } from "../data/RenderData";
 import FrameBuffer from "../gfx/FrameBuffer";
 import { glEnums } from "../gfx/GLapi";
+import { Shader } from "../shader/Shader";
 import Camera from "./Camera";
 import enums from "./enums";
 import OrthoCamera from "./OrthoCamera";
@@ -162,12 +163,30 @@ export class GameMainCamera {
        this._cameraMap.set(index,camera);
     }
   }
+  
+  private _depthShader:Shader;
+  public setShader(sd:Shader):void{
+      this._depthShader=sd;
+  }
+  public getShader():Shader{
+   
+     return this._depthShader;
+  }
 
   public initRenderData():void{
+    // var temp = new CameraRenderData();
+    // temp.fb = this.getCameraIndex(CameraUUid.base2D).getFramebuffer()
+    // temp.viewPort = { x: 0, y: 0, w: 1, h: 1 }
+    // temp.uuid = CameraUUid.base2D;
+    // temp.isClear = true;
+    // temp.visualAngle = 0;
+    // temp.isRenderToScreen = false;
+    // this._renderData.push(temp);
+
     var temp = new CameraRenderData();
-    temp.fb = this.getCameraIndex(CameraUUid.base2D).getFramebuffer()
+    temp.fb = this.getCameraIndex(CameraUUid.Depth).getFramebuffer()
     temp.viewPort = { x: 0, y: 0, w: 1, h: 1 }
-    temp.uuid = CameraUUid.base2D;
+    temp.uuid = CameraUUid.Depth;
     temp.isClear = true;
     temp.visualAngle = 0;
     temp.isRenderToScreen = false;
@@ -184,7 +203,7 @@ export class GameMainCamera {
 
     // var temp = new CameraRenderData();
     // temp.fb = this.getCameraIndex(CameraUUid.base3D).getFramebuffer()
-    // temp.index = CameraUUid.base3D;
+    // temp.uuid = CameraUUid.base3D;
     // temp.viewPort = { x: 0.5, y: 0, w: 0.5, h: 1 }
     // temp.isClear = false;
     // temp.visuialAnglePosition = [-70,10,10]
@@ -194,7 +213,7 @@ export class GameMainCamera {
 
     // var temp = new CameraRenderData();
     // temp.fb = this.getCameraIndex(CameraUUid.base3D).getFramebuffer()
-    // temp.index = CameraUUid.base3D;
+    // temp.uuid = CameraUUid.base3D;
     // temp.viewPort = { x: 0.65, y: 0, w: 0.15, h: 1 }
     // temp.isClear = false;
     // temp.visuialAnglePosition = [70,10,10]
@@ -204,7 +223,7 @@ export class GameMainCamera {
 
     // var temp = new CameraRenderData();
     // temp.fb = this.getCameraIndex(CameraUUid.base3D).getFramebuffer()
-    // temp.index = CameraUUid.base3D;
+    // temp.uuid = CameraUUid.base3D;
     // temp.viewPort = { x: 0.8, y: 0, w: 0.2, h: 1 }
     // temp.isClear = false;
     // temp.visuialAnglePosition = [10,10,10]

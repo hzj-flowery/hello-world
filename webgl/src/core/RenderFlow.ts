@@ -17,6 +17,7 @@ export default class RenderFlow {
 
         GameMainCamera.instance.registerCamera(0,CameraUUid.base3D,G_Stage)
         GameMainCamera.instance.registerCamera(1,CameraUUid.base2D,G_Stage)
+        GameMainCamera.instance.registerCamera(0,CameraUUid.Depth,G_Stage)
         GameMainCamera.instance.initRenderData();
 
         this._3dScene = new Scene3D();

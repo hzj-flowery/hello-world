@@ -27,8 +27,9 @@ export namespace ShaderCode {
         ,
         frag: `precision mediump float;
     void main() {
-    gl_FragColor =  vec4(gl_FragCoord.z,0.0,0.0,1.0);  //将深度值存在帧缓冲的颜色缓冲中 如果帧缓冲和窗口绑定 那么就显示出来 如果帧缓冲和纹理绑定就存储在纹理中
-    }`
+    //gl_FragColor =  vec4(gl_FragCoord.z,0.0,0.0,1.0);  //将深度值存在帧缓冲的颜色缓冲中 如果帧缓冲和窗口绑定 那么就显示出来 如果帧缓冲和纹理绑定就存储在纹理中
+    gl_FragColor =  vec4(1.0,0.0,0.0,1.0);    
+}`
     }
     export var line = {
         vert: `attribute vec4 a_position;

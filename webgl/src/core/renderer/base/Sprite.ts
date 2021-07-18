@@ -344,7 +344,7 @@ export namespace SY {
 
         }
         //采集数据之前的行为
-        protected onCollectRenderDataBefore(passArray:Array<Pass>){
+        protected onCollectRenderDataBefore(){
 
         }
         /**
@@ -356,7 +356,7 @@ export namespace SY {
                 //说明使用了纹理 但纹理还没有被加载完成
                 return;
             }
-            this.onCollectRenderDataBefore(this._pass);
+            this.onCollectRenderDataBefore();
             if (!this._pass || this._pass.length == 0) {
                 //一次渲染shader是必不可少的
                 return
@@ -371,73 +371,76 @@ export namespace SY {
                 }
                 this._renderData[i].node = this as Node;
                 this._renderData[i].pass = pass;
-                //顶点组
-                this._renderData[i].primitive.vert.glID = this.getGLID(SY.GLID_TYPE.VERTEX);
-                this._renderData[i].primitive.vert.itemSize = this.getBufferItemSize(SY.GLID_TYPE.VERTEX);
-                this._renderData[i].primitive.vert.itemNums = this.getBuffer(SY.GLID_TYPE.VERTEX).itemNums;
-                //索引组
-                this._renderData[i].primitive.index.glID = this.getGLID(SY.GLID_TYPE.INDEX);
-                if (this._renderData[i].primitive.index.glID != -1) {
-                    this._renderData[i].primitive.index.itemSize = this.getBuffer(SY.GLID_TYPE.INDEX).itemSize;
-                    this._renderData[i].primitive.index.itemNums = this.getBuffer(SY.GLID_TYPE.INDEX).itemNums;
-                }
-                //uv组
-                this._renderData[i].primitive.uv.glID = this.getGLID(SY.GLID_TYPE.UV);
-                this._renderData[i].primitive.uv.itemSize = this.getBufferItemSize(SY.GLID_TYPE.UV);
-                //法线组
-                this._renderData[i].primitive.normal.glID = this.getGLID(SY.GLID_TYPE.NORMAL);
-                this._renderData[i].primitive.normal.itemSize = this.getBufferItemSize(SY.GLID_TYPE.NORMAL);
-
-                //节点自定义顶点颜色组
-                this._renderData[i].primitive.nodeVertColor.glID = this.getGLID(SY.GLID_TYPE.VERT_COLOR);
-                if (this._renderData[i].primitive.nodeVertColor.glID != -1) {
-                    this._renderData[i].primitive.nodeVertColor.itemSize = this.getBuffer(SY.GLID_TYPE.VERT_COLOR).itemSize;
-                    this._renderData[i].primitive.nodeVertColor.itemNums = this.getBuffer(SY.GLID_TYPE.VERT_COLOR).itemNums;
-                }
-
-                //节点的颜色
-                this._renderData[i].primitive.color = this._color;
-                //节点的透明度
-                this._renderData[i].primitive.alpha = this._alpha;
-                //自定义的矩阵
-                this._renderData[i].primitive.customMatrix = this._customMatrix;
-
-
-                //节点自定义矩阵组
-                this._renderData[i].primitive.vertMatrix.glID = this.getGLID(SY.GLID_TYPE.VERT_MATRIX);
-                if (this._renderData[i].primitive.vertMatrix.glID != -1) {
-                    this._renderData[i].primitive.vertMatrix.itemSize = this.getBuffer(SY.GLID_TYPE.VERT_MATRIX).itemSize;
-                    this._renderData[i].primitive.vertMatrix.itemNums = this.getBuffer(SY.GLID_TYPE.VERT_MATRIX).itemNums;
-                }
-                this._renderData[i].primitive.modelMatrix = this.modelMatrix;
                 this._renderData[i].time = time;
-                if(this._texture instanceof RenderTexture && (this._texture as RenderTexture).isDeferred())
-                {
-                    var texS = (this._texture as RenderTexture).getDeferredTex(syRender.DeferredTexture.None);
-                    texS?this._renderData[i].push2DTexture(texS):null;
-
-                    var texS = (this._texture as RenderTexture).getDeferredTex(syRender.DeferredTexture.Position);
-                    texS?this._renderData[i].push2DTexture(texS,syRender.DeferredTexture.Position):null;
-
-                    var texS = (this._texture as RenderTexture).getDeferredTex(syRender.DeferredTexture.Normal);
-                    texS?this._renderData[i].push2DTexture(texS,syRender.DeferredTexture.Normal):null;
-
-                    var texS = (this._texture as RenderTexture).getDeferredTex(syRender.DeferredTexture.Color);
-                    texS?this._renderData[i].push2DTexture(texS,syRender.DeferredTexture.Color):null;
-
-                    var texS = (this._texture as RenderTexture).getDeferredTex(syRender.DeferredTexture.UV);
-                    texS?this._renderData[i].push2DTexture(texS,syRender.DeferredTexture.UV):null;
-                }
-                else if (this._texture && this._texture.glID) {
-                    if (this._texture.isTexture2D)
-                        this._renderData[i].push2DTexture(this.getGLID(SY.GLID_TYPE.TEXTURE_2D));
-                    else if (this._texture.isTextureCube)
-                        this._renderData[i].pushCubeTexture(this.getGLID(SY.GLID_TYPE.TEXTURE_CUBE));
-                }
-                this._renderData[i].primitive.type = this._glPrimitiveType;
+                this.updateRenderData(this._renderData[i]);
                 this.onCollectRenderDataAfter(this._renderData[i])
                 Device.Instance.collectData(this._renderData[i]);
             }
+        }
+        private updateRenderData(rData:syRender.BaseData):void{
+            //顶点组----------------------------------------------------------------------
+            rData.primitive.vert.glID = this.getGLID(SY.GLID_TYPE.VERTEX);
+            rData.primitive.vert.itemSize = this.getBufferItemSize(SY.GLID_TYPE.VERTEX);
+            rData.primitive.vert.itemNums = this.getBuffer(SY.GLID_TYPE.VERTEX).itemNums;
+            //索引组----------------------------------------------------------------------
+            rData.primitive.index.glID = this.getGLID(SY.GLID_TYPE.INDEX);
+            if (rData.primitive.index.glID != -1) {
+                rData.primitive.index.itemSize = this.getBuffer(SY.GLID_TYPE.INDEX).itemSize;
+                rData.primitive.index.itemNums = this.getBuffer(SY.GLID_TYPE.INDEX).itemNums;
+            }
+            //uv组-------------------------------------------------------------------------
+            rData.primitive.uv.glID = this.getGLID(SY.GLID_TYPE.UV);
+            rData.primitive.uv.itemSize = this.getBufferItemSize(SY.GLID_TYPE.UV);
+            //法线组-----------------------------------------------------------------------
+            rData.primitive.normal.glID = this.getGLID(SY.GLID_TYPE.NORMAL);
+            rData.primitive.normal.itemSize = this.getBufferItemSize(SY.GLID_TYPE.NORMAL);
+
+            //节点自定义顶点颜色组----------------------------------------------------------
+            rData.primitive.nodeVertColor.glID = this.getGLID(SY.GLID_TYPE.VERT_COLOR);
+            if (rData.primitive.nodeVertColor.glID != -1) {
+                rData.primitive.nodeVertColor.itemSize = this.getBuffer(SY.GLID_TYPE.VERT_COLOR).itemSize;
+                rData.primitive.nodeVertColor.itemNums = this.getBuffer(SY.GLID_TYPE.VERT_COLOR).itemNums;
+            }
+
+            //节点的颜色
+            rData.primitive.color = this._color;
+            //节点的透明度
+            rData.primitive.alpha = this._alpha;
+            //自定义的矩阵
+            rData.primitive.customMatrix = this._customMatrix;
+
+
+            //节点自定义矩阵组------------------------------------------------------------------------
+            rData.primitive.vertMatrix.glID = this.getGLID(SY.GLID_TYPE.VERT_MATRIX);
+            if (rData.primitive.vertMatrix.glID != -1) {
+                rData.primitive.vertMatrix.itemSize = this.getBuffer(SY.GLID_TYPE.VERT_MATRIX).itemSize;
+                rData.primitive.vertMatrix.itemNums = this.getBuffer(SY.GLID_TYPE.VERT_MATRIX).itemNums;
+            }
+            rData.primitive.modelMatrix = this.modelMatrix;
+            if(this._texture instanceof RenderTexture && (this._texture as RenderTexture).isDeferred())
+            {
+                var texS = (this._texture as RenderTexture).getDeferredTex(syRender.DeferredTexture.None);
+                texS?rData.push2DTexture(texS):null;
+
+                var texS = (this._texture as RenderTexture).getDeferredTex(syRender.DeferredTexture.Position);
+                texS?rData.push2DTexture(texS,syRender.DeferredTexture.Position):null;
+
+                var texS = (this._texture as RenderTexture).getDeferredTex(syRender.DeferredTexture.Normal);
+                texS?rData.push2DTexture(texS,syRender.DeferredTexture.Normal):null;
+
+                var texS = (this._texture as RenderTexture).getDeferredTex(syRender.DeferredTexture.Color);
+                texS?rData.push2DTexture(texS,syRender.DeferredTexture.Color):null;
+
+                var texS = (this._texture as RenderTexture).getDeferredTex(syRender.DeferredTexture.UV);
+                texS?rData.push2DTexture(texS,syRender.DeferredTexture.UV):null;
+            }
+            else if (this._texture && this._texture.glID) {
+                if (this._texture.isTexture2D)
+                    rData.push2DTexture(this.getGLID(SY.GLID_TYPE.TEXTURE_2D));
+                else if (this._texture.isTextureCube)
+                    rData.pushCubeTexture(this.getGLID(SY.GLID_TYPE.TEXTURE_CUBE));
+            }
+            rData.primitive.type = this._glPrimitiveType;
         }
         public get texture(): Texture {
             return this._texture;
