@@ -30,7 +30,7 @@ export class Node extends Ref {
 
     protected name: string;
     protected tag: number;
-    private __node__type:number=3;//2代表2d节点 3代表3d节点
+    private __node__type:syRender.NodeType=syRender.NodeType.D3;//2代表2d节点 3代表3d节点
 
     protected _glMatrix = glMatrix;//矩阵操作api
     /**
@@ -54,18 +54,29 @@ export class Node extends Ref {
         this._updateModelMatrixFlag = true;
     }
     /**
-     * 此函数不可以轻易调用
+     * 此函数不可以轻易调用,除非你知道你想干啥
      */
-    protected set _node__type(_ty:number){
-        if(_ty==2||_ty==3)
+    protected set _node__type(_ty:syRender.NodeType){
+        if(_ty==syRender.NodeType.D2||_ty==syRender.NodeType.D3)
         {
            this.__node__type=_ty;
         }
         else
         {
-            this.__node__type=3;
+            this.__node__type=syRender.NodeType.D3;
             console.log("你传入的节点类型有问题---",_ty);
         }
+    }
+    /**
+     * 判断是否为3d节点
+     * @returns 
+     */
+    public is3DNode():boolean
+    {
+        return this.__node__type==syRender.NodeType.D3;
+    }
+    public is2DNode():boolean{
+        return this.__node__type==syRender.NodeType.D2;
     }
     public get x(): number {
         return this._x;
@@ -111,7 +122,7 @@ export class Node extends Ref {
      * @param value 
      */
     private checkPosition(pos,value):number{
-       if(this.__node__type==3)
+       if(this.__node__type==syRender.NodeType.D3)
        {
            return value;
        }

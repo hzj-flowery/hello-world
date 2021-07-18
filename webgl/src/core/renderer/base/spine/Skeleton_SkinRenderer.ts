@@ -97,7 +97,7 @@ export class Skeleton_SkinRenderer {
      * @param worldMatrix 当前3d模型的世界矩阵
      * @param sharedUniforms 
      */
-    render(worldMatrix:Float32Array, sharedUniforms) {
+    render(node: Skeleton_Node,worldMatrix:Float32Array, sharedUniforms) {
         this.skin.update();
         let j = 0;
         for (const primitive of this.mesh.primitives) {
@@ -116,6 +116,7 @@ export class Skeleton_SkinRenderer {
             renderData._uniformData.push(primitive.material.uniforms);
             renderData._uniformData.push(sharedUniforms);
             renderData._attrbufferData = primitive.bufferInfo;
+            renderData.node = node as any;
             Device.Instance.collectData(renderData);
             j++;
         }

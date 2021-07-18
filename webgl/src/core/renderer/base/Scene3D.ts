@@ -95,22 +95,22 @@ export default class Scene3D extends Scene {
         this._spineNode.y = 10;
         this.addChild(this._spineNode);
 
-        this._customTexture = new CustomTextureCube();
-        this._customTexture.spriteFrame = CustomTextureData.getRandomData(3, 5, syGL.TextureFormat.RGB8);
-        this._customTexture.setPosition(0, 3.1, 0);
-        this._centerNode.addChild(this._customTexture);
+        // this._customTexture = new CustomTextureCube();
+        // this._customTexture.spriteFrame = CustomTextureData.getRandomData(3, 5, syGL.TextureFormat.RGB8);
+        // this._customTexture.setPosition(0, 3.1, 0);
+        // this._centerNode.addChild(this._customTexture);
 
-        this._tableNode = new Cube();
-        this._tableNode.spriteFrame = "res/wood.jpg";
-        this._tableNode.setPosition(0, 1, 0);
-        this._tableNode.setScale(2.0, 0.1, 2.0);
-        this._centerNode.addChild(this._tableNode);
+        // this._tableNode = new Cube();
+        // this._tableNode.spriteFrame = "res/wood.jpg";
+        // this._tableNode.setPosition(0, 1, 0);
+        // this._tableNode.setScale(2.0, 0.1, 2.0);
+        // this._centerNode.addChild(this._tableNode);
 
-        this._alphaNode = new AlphaCube();
-        this._alphaNode.spriteFrame = "res/good.jpg";
-        this._alphaNode.setPosition(0, 3, 0);
-        this._alphaNode.setScale(2.0, 2.0, 2.0);
-        this._centerNode.addChild(this._alphaNode);
+        // this._alphaNode = new AlphaCube();
+        // this._alphaNode.spriteFrame = "res/good.jpg";
+        // this._alphaNode.setPosition(0, 3, 0);
+        // this._alphaNode.setScale(2.0, 2.0, 2.0);
+        // this._centerNode.addChild(this._alphaNode);
 
 
 
@@ -164,16 +164,16 @@ export default class Scene3D extends Scene {
         this._cubeNode.setScale(0.5, 0.5, 0.5);
         this._centerNode.addChild(this._cubeNode);
 
-        this._pointLightCube = new PointLightCube();
-        this._pointLightCube.setScale(100,50,10.0);
-        this._pointLightCube.setPosition(0, 0, -10);
-        this._pointLightCube.spriteFrame = "res/dragon.jpg";
-        this._centerNode.addChild(this._pointLightCube);
-        this._spotLightCube = new SpotLightCube();
-        this._spotLightCube.setScale(100,50.0,10.0);
-        this._spotLightCube.setPosition(0, 0, -10);
-        this._spotLightCube.spriteFrame = "res/dragon.jpg";
-        this._centerNode.addChild(this._spotLightCube);
+        // this._pointLightCube = new PointLightCube();
+        // this._pointLightCube.setScale(100,50,10.0);
+        // this._pointLightCube.setPosition(0, 0, -10);
+        // this._pointLightCube.spriteFrame = "res/dragon.jpg";
+        // this._centerNode.addChild(this._pointLightCube);
+        // this._spotLightCube = new SpotLightCube();
+        // this._spotLightCube.setScale(100,50.0,10.0);
+        // this._spotLightCube.setPosition(0, 0, -10);
+        // this._spotLightCube.spriteFrame = "res/dragon.jpg";
+        // this._centerNode.addChild(this._spotLightCube);
 
         this._fogCubeArr = [];
         let fogCubeNums = 40;

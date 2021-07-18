@@ -54,6 +54,10 @@ export class Skeleton_Node {
         this.mesh_Drawables = [];
         this.skin_Drawables = [];
     }
+    public is3DNode():boolean
+    {
+        return true;
+    }
     setParent(parent: Skeleton_Node) {
         if (this.parent) {
             this.parent._removeChild(this);

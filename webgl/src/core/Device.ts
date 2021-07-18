@@ -550,8 +550,14 @@ export default class Device {
      * @param isUseScene 
      */
     private draw(rData: syRender.BaseData, cData: CameraRenderData): void {
-
-        var cameraData = GameMainCamera.instance.getCameraIndex(rData._cameraIndex).getCameraData();
+        
+        //相机 一般只有两种 要么是3d透视相机 要么是2d正交相机
+        var cammerauuid = CameraUUid.base2D;
+        if(rData.node.is3DNode())
+        {
+            cammerauuid = CameraUUid.base3D;
+        }
+        var cameraData = GameMainCamera.instance.getCameraIndex(cammerauuid).getCameraData();
         glMatrix.mat4.identity(this._temp1Matrix);
 
         //补一下光的数据

@@ -6,7 +6,7 @@ import { Texture2D } from "../../base/texture/Texture2D";
 import LoaderManager from "../../../LoaderManager";
 import { sy } from "../../../Director";
 import { SY } from "../../base/Sprite";
-import {GameMainCamera} from "../../camera/GameMainCamera";
+import {CameraUUid, GameMainCamera} from "../../camera/GameMainCamera";
 import { Texture } from "../../base/texture/Texture";
 import {ShaderData } from "../../shader/Shader";
 import { G_ShaderFactory } from "../../shader/ShaderFactory";
@@ -575,11 +575,11 @@ class Spine extends SY.SpriteBase {
         };
 
         var newMV = this._glMatrix.mat4.create();
-        var v = GameMainCamera.instance.getCameraIndex(this._cameraIndex).getInversModelMatrix();
+        var v = GameMainCamera.instance.getCameraIndex(CameraUUid.base3D).getInversModelMatrix();
         var m = this.modelMatrix;
         this._glMatrix.mat4.mul(newMV,v,m)
         this.shader.bindMatrixToShader(syGL.AttributeUniform.VMMatrix,newMV);
-        var pMatix = GameMainCamera.instance.getCameraIndex(this._cameraIndex).getProjectionMatrix();
+        var pMatix = GameMainCamera.instance.getCameraIndex(CameraUUid.base3D).getProjectionMatrix();
         
         var projection = pMatix;
         var view = newMV;

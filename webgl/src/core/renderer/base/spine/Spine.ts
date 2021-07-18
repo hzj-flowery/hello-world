@@ -11,7 +11,6 @@ export default class Spine extends SY.SpriteBase {
 
     constructor() {
         super();
-        this._cameraIndex = CameraUUid.base3D;
         this.gltf = Skeleton_Parse.parseGLTF(this.gl);
         this._tempMatrix = glMatrix.mat4.identity(null);
         this._lightDirection = glMatrix.vec3.create() as Float32Array;
@@ -49,7 +48,7 @@ export default class Spine extends SY.SpriteBase {
         }
         for (const drawable of node.skin_Drawables) {
             //渲染皮肤
-            drawable.render(this.modelMatrix,this.sharedUniforms);
+            drawable.render(node,this.modelMatrix,this.sharedUniforms);
         }
     }
 
