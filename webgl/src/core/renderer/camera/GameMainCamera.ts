@@ -13,11 +13,12 @@ import OrthoCamera from "./OrthoCamera";
 import PerspectiveCamera from "./PerspectiveCamera";
 
 
-export enum CameraIndex {
+export enum CameraUUid {
   min = 0,
   base2D,
   base3D,
   Deferred,//用于延迟渲染
+  Depth, //用于深度纹理
   normal1,
   normal2,
   normal3,
@@ -39,7 +40,7 @@ export class CameraRenderData{
       this.cStencil = true;
    }
    public fb:FrameBuffer;
-   public index:CameraIndex;
+   public uuid:CameraUUid; //相机的uuid
    public viewPort:any;
    public isClear:boolean;     //清除缓冲区的数据
    public clearColor:Array<number>;
@@ -77,7 +78,7 @@ export class GameMainCamera {
    * @param cameraIdex 
    * @param node 挂载的节点
    */
-  public registerCamera(type:number,cameraIdex:CameraIndex,node:Node):void{
+  public registerCamera(type:number,cameraIdex:CameraUUid,node:Node):void{
         var camera:Camera;
         if(type==0) 
         {
@@ -100,7 +101,7 @@ export class GameMainCamera {
    * @param cameraIdex 
    * @param drawType 
    */
-  public createVituralCamera(type,cameraIdex:CameraIndex,drawType:syRender.DrawType=syRender.DrawType.Normal):void{
+  public createVituralCamera(type,cameraIdex:CameraUUid,drawType:syRender.DrawType=syRender.DrawType.Normal):void{
     if(this._cameraMap.has(cameraIdex))
     {
       return;
@@ -127,7 +128,7 @@ export class GameMainCamera {
   private _cameraMap: Map<number, Camera> = new Map();
   private _renderData:Array<CameraRenderData> = [];
   private gl: WebGLRenderingContext;
-  private updateCameraData(index: CameraIndex, aspect: number, angle: number = 60, near: number = 0.1, far: number = 50): Camera {
+  private updateCameraData(index: CameraUUid, aspect: number, angle: number = 60, near: number = 0.1, far: number = 50): Camera {
     var camera = this._cameraMap.get(index)
     if(!camera)return;
     camera.Fovy = angle * Math.PI / 180;
@@ -164,17 +165,17 @@ export class GameMainCamera {
 
   public initRenderData():void{
     var temp = new CameraRenderData();
-    temp.fb = this.getCameraIndex(CameraIndex.base2D).getFramebuffer()
+    temp.fb = this.getCameraIndex(CameraUUid.base2D).getFramebuffer()
     temp.viewPort = { x: 0, y: 0, w: 1, h: 1 }
-    temp.index = CameraIndex.base2D;
+    temp.uuid = CameraUUid.base2D;
     temp.isClear = true;
     temp.visualAngle = 0;
     temp.isRenderToScreen = false;
     this._renderData.push(temp);
 
     var temp = new CameraRenderData();
-    temp.fb = this.getCameraIndex(CameraIndex.base3D).getFramebuffer()
-    temp.index = CameraIndex.base3D;
+    temp.fb = this.getCameraIndex(CameraUUid.base3D).getFramebuffer()
+    temp.uuid = CameraUUid.base3D;
     temp.viewPort = { x: 0, y: 0, w: 1, h: 1 }
     temp.isClear = true;
     temp.visualAngle = 0;
@@ -182,8 +183,8 @@ export class GameMainCamera {
     this._renderData.push(temp);
 
     // var temp = new CameraRenderData();
-    // temp.fb = this.getCameraIndex(CameraIndex.base3D).getFramebuffer()
-    // temp.index = CameraIndex.base3D;
+    // temp.fb = this.getCameraIndex(CameraUUid.base3D).getFramebuffer()
+    // temp.index = CameraUUid.base3D;
     // temp.viewPort = { x: 0.5, y: 0, w: 0.5, h: 1 }
     // temp.isClear = false;
     // temp.visuialAnglePosition = [-70,10,10]
@@ -192,8 +193,8 @@ export class GameMainCamera {
     // this._renderData.push(temp);
 
     // var temp = new CameraRenderData();
-    // temp.fb = this.getCameraIndex(CameraIndex.base3D).getFramebuffer()
-    // temp.index = CameraIndex.base3D;
+    // temp.fb = this.getCameraIndex(CameraUUid.base3D).getFramebuffer()
+    // temp.index = CameraUUid.base3D;
     // temp.viewPort = { x: 0.65, y: 0, w: 0.15, h: 1 }
     // temp.isClear = false;
     // temp.visuialAnglePosition = [70,10,10]
@@ -202,8 +203,8 @@ export class GameMainCamera {
     // this._renderData.push(temp);
 
     // var temp = new CameraRenderData();
-    // temp.fb = this.getCameraIndex(CameraIndex.base3D).getFramebuffer()
-    // temp.index = CameraIndex.base3D;
+    // temp.fb = this.getCameraIndex(CameraUUid.base3D).getFramebuffer()
+    // temp.index = CameraUUid.base3D;
     // temp.viewPort = { x: 0.8, y: 0, w: 0.2, h: 1 }
     // temp.isClear = false;
     // temp.visuialAnglePosition = [10,10,10]
@@ -214,11 +215,11 @@ export class GameMainCamera {
     G_UISetting.pushRenderCallBack(this.renderCallBack.bind(this));
   }
 
-  private pushVirtualCameraDataToRenderData(index:CameraIndex,drawType:syRender.DrawType=syRender.DrawType.Normal):void{
+  private pushVirtualCameraDataToRenderData(index:CameraUUid,drawType:syRender.DrawType=syRender.DrawType.Normal):void{
     var temp = new CameraRenderData();
     temp.fb = this.getCameraIndex(index).getFramebuffer()
     temp.viewPort = { x: 0, y: 0, w: 1, h: 1 }
-    temp.index = index;
+    temp.uuid = index;
     temp.isClear = true;
     temp.clearColor = [0.3,0.3,0.3,1.0]
     temp.visualAngle = 0;
@@ -233,21 +234,21 @@ export class GameMainCamera {
   public getRenderData():Array<CameraRenderData>{
         for(var k=0;k<this._renderData.length;k++)
         {
-          this._renderData[k].fb = this.getCameraIndex(this._renderData[k].index).getFramebuffer()
+          this._renderData[k].fb = this.getCameraIndex(this._renderData[k].uuid).getFramebuffer()
         }
         return this._renderData;
   }
 
   private renderCallBack(settings: any): void {
     let gl = Device.Instance.gl;
-    this.updateCameraData(CameraIndex.base3D, gl.canvas.width / gl.canvas.height, settings.cam3DFieldOfView, settings.cam3DNear, settings.cam3DFar);
-    var base3D = this.getCameraIndex(CameraIndex.base3D);
+    this.updateCameraData(CameraUUid.base3D, gl.canvas.width / gl.canvas.height, settings.cam3DFieldOfView, settings.cam3DNear, settings.cam3DFar);
+    var base3D = this.getCameraIndex(CameraUUid.base3D);
     if(base3D)
     {
       base3D.setPosition(settings.cam3DPosX, settings.cam3DPosY, settings.cam3DPosZ);
       base3D.setRotation(settings.cam3DRotX, settings.cam3DRotY, settings.cam3DRotZ);
     }
-    var base2D = this.getCameraIndex(CameraIndex.base2D);
+    var base2D = this.getCameraIndex(CameraUUid.base2D);
     if(base2D)
     {
       base2D.setPosition(settings.cam2DPosX, settings.cam2DPosY, settings.cam2DPosZ);

@@ -3,7 +3,7 @@ import { glMatrix } from "./math/Matrix";
 import Scene2D from "./renderer/base/Scene2D";
 import Scene3D from "./renderer/base/Scene3D";
 import { G_CameraModel } from "./renderer/camera/CameraModel";
-import { CameraIndex, CameraRenderData, GameMainCamera } from "./renderer/camera/GameMainCamera";
+import { CameraUUid, CameraRenderData, GameMainCamera } from "./renderer/camera/GameMainCamera";
 import FrameBuffer from "./renderer/gfx/FrameBuffer";
 import { CameraData } from "./renderer/data/CameraData";
 import { syRender } from "./renderer/data/RenderData";
@@ -521,7 +521,7 @@ export default class Device {
         this.readyForOneFrame(cData);
         //记录一下当前渲染的时间
         this._triggerRenderTime++;
-        var cameraData = GameMainCamera.instance.getCameraIndex(CameraIndex.base3D).getCameraData();
+        var cameraData = GameMainCamera.instance.getCameraIndex(CameraUUid.base3D).getCameraData();
         G_CameraModel.createCamera(cData.visualAngle, cameraData.projectMat, cameraData.modelMat,cData.visuialAnglePosition);
         //提交数据给GPU 立即绘制
         for (var j = 0; j < treeData.length; j++) {   

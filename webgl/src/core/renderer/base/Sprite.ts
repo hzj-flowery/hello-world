@@ -61,7 +61,7 @@ import { handler } from "../../../utils/handler";
 import { G_TextureManager } from "./texture/TextureManager";
 import { G_PassFactory } from "../shader/PassFactory";
 import { Pass } from "../shader/Pass";
-import { CameraIndex } from "../camera/GameMainCamera";
+import { CameraUUid } from "../camera/GameMainCamera";
 import { RenderTexture } from "./texture/RenderTexture";
 
 /**
@@ -127,7 +127,7 @@ export namespace SY {
         private _renderData: Array<syRender.BaseData>;
         //参考glprimitive_type
         protected _glPrimitiveType: syGL.PrimitiveType;//绘制的类型
-        protected _cameraIndex: number = CameraIndex.base3D;//相机的类型(0表示透视1表示正交)
+        protected _cameraIndex: number = CameraUUid.base3D;//相机的类型(0表示透视1表示正交)
         protected _sizeMode: SpriteSizeMode;//节点的尺寸模式
         protected _shaderType: ShaderType;//shader的类型
         constructor() {
@@ -340,8 +340,12 @@ export namespace SY {
             var buffer = this.getBuffer(type);
             return buffer ? buffer.itemSize : -1
         }
-        //实例化绘制
-        protected onCollectRenderData(data:syRender.BaseData){
+        //采集数据以后的行为
+        protected onCollectRenderDataAfter(data:syRender.BaseData){
+
+        }
+        //采集数据之前的行为
+        protected onCollectRenderDataBefore(passArray:Array<Pass>){
 
         }
         /**
@@ -353,6 +357,7 @@ export namespace SY {
                 //说明使用了纹理 但纹理还没有被加载完成
                 return;
             }
+            this.onCollectRenderDataBefore(this._pass);
             if (!this._pass || this._pass.length == 0) {
                 //一次渲染shader是必不可少的
                 return
@@ -432,7 +437,7 @@ export namespace SY {
                         this._renderData[i].pushCubeTexture(this.getGLID(SY.GLID_TYPE.TEXTURE_CUBE));
                 }
                 this._renderData[i].primitive.type = this._glPrimitiveType;
-                this.onCollectRenderData(this._renderData[i])
+                this.onCollectRenderDataAfter(this._renderData[i])
                 Device.Instance.collectData(this._renderData[i]);
             }
         }
@@ -559,7 +564,7 @@ export namespace SY {
         constructor() {
             super();
             this._node__type=2;
-            this._cameraIndex = CameraIndex.base2D;
+            this._cameraIndex = CameraUUid.base2D;
             this._glPrimitiveType = this.gl.TRIANGLE_STRIP;
         }
         private updateUV(): void {
@@ -696,7 +701,7 @@ export namespace SY {
                 this._divisorLocData.set(loc, value)
             })
         }
-        protected onCollectRenderData(renderData:syRender.BaseData):void{
+        protected onCollectRenderDataAfter(renderData:syRender.BaseData):void{
             renderData.primitive.instancedNums = this._numInstances
             renderData.primitive.instancedVertNums = this._InstanceVertNums
         }

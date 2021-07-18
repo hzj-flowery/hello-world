@@ -1,6 +1,6 @@
 import { SY } from "../base/Sprite";
 import Device from "../../Device";
-import {CameraIndex, GameMainCamera} from "../camera/GameMainCamera";
+import {CameraUUid, GameMainCamera} from "../camera/GameMainCamera";
 import { RenderTexture } from "../base/texture/RenderTexture";
 
 
@@ -13,6 +13,6 @@ export class RenderOfflineSprite extends SY.Sprite2D{
     }
     protected onSetTextureUrl():void{
         
-        GameMainCamera.instance.getCameraIndex(CameraIndex.base2D).targetTexture = this.texture as RenderTexture;
+        GameMainCamera.instance.getCameraIndex(CameraUUid.base2D).targetTexture = this.texture as RenderTexture;
     }
 }

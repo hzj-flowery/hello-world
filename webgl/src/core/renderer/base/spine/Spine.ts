@@ -5,13 +5,13 @@ import { Skeleton_Node } from "./Skeleton_Node";
 import { Skeleton_Skin } from "./Skeleton_Skin";
 import { glMatrix } from "../../../math/Matrix";
 import { ShaderType } from "../../shader/ShaderCenter";
-import { CameraIndex } from "../../camera/GameMainCamera";
+import { CameraUUid } from "../../camera/GameMainCamera";
 //骨骼节点
 export default class Spine extends SY.SpriteBase {
 
     constructor() {
         super();
-        this._cameraIndex = CameraIndex.base3D;
+        this._cameraIndex = CameraUUid.base3D;
         this.gltf = Skeleton_Parse.parseGLTF(this.gl);
         this._tempMatrix = glMatrix.mat4.identity(null);
         this._lightDirection = glMatrix.vec3.create() as Float32Array;

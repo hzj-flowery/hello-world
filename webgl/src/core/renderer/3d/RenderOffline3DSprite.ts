@@ -1,6 +1,6 @@
 import { SY } from "../base/Sprite";
 import { RenderTexture } from "../base/texture/RenderTexture";
-import {CameraIndex, GameMainCamera} from "../camera/GameMainCamera";
+import {CameraUUid, GameMainCamera} from "../camera/GameMainCamera";
 import { CubeData } from "../data/CubeData";
 
 /**
@@ -10,7 +10,7 @@ export class RenderOffline3DSprite extends SY.SpriteBase{
     constructor() {
         super();
     }
-    private _virtualCameraIndex:CameraIndex = CameraIndex.normal1;
+    private _virtualCameraIndex:CameraUUid = CameraUUid.normal1;
     protected onInit() {
         var rd = CubeData.getData();
         this.createVertexsBuffer(rd.vertex, rd.dF.vertex_item_size);
@@ -22,7 +22,7 @@ export class RenderOffline3DSprite extends SY.SpriteBase{
         
         GameMainCamera.instance.getCameraIndex(this._virtualCameraIndex).targetTexture = this.texture as RenderTexture;
     }
-    public setVirtualCameraIndex(index:CameraIndex):void{
+    public setVirtualCameraIndex(index:CameraUUid):void{
         this._virtualCameraIndex = index;
         GameMainCamera.instance.createVituralCamera(0,index);
     }

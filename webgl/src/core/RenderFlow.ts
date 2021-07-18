@@ -4,7 +4,7 @@ import Scene2D from "./renderer/base/Scene2D";
 import Scene3D from "./renderer/base/Scene3D";
 import { G_Stage } from "./renderer/base/Stage";
 import enums from "./renderer/camera/enums";
-import {CameraIndex, GameMainCamera} from "./renderer/camera/GameMainCamera";
+import {CameraUUid, GameMainCamera} from "./renderer/camera/GameMainCamera";
 import PerspectiveCamera from "./renderer/camera/PerspectiveCamera";
 
 
@@ -15,8 +15,8 @@ export default class RenderFlow {
     private _2dScene:Scene2D;
     public startup() {
 
-        GameMainCamera.instance.registerCamera(0,CameraIndex.base3D,G_Stage)
-        GameMainCamera.instance.registerCamera(1,CameraIndex.base2D,G_Stage)
+        GameMainCamera.instance.registerCamera(0,CameraUUid.base3D,G_Stage)
+        GameMainCamera.instance.registerCamera(1,CameraUUid.base2D,G_Stage)
         GameMainCamera.instance.initRenderData();
 
         this._3dScene = new Scene3D();

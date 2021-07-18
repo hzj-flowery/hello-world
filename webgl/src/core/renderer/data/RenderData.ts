@@ -2,7 +2,7 @@ import { isThisTypeNode } from "typescript";
 import Device from "../../Device";
 import { glMatrix } from "../../math/Matrix";
 import { Node } from "../base/Node";
-import { CameraIndex } from "../camera/GameMainCamera";
+import { CameraUUid } from "../camera/GameMainCamera";
 import { glEnums } from "../gfx/GLapi";
 import State from "../gfx/State";
 import { syGL } from "../gfx/syGLEnums";
@@ -260,7 +260,7 @@ export namespace syRender {
         private _temp004_matrix;//
         public reset(): void {
             this._pass = null;
-            this._cameraIndex = CameraIndex.base3D;//默认情况下是透视投影
+            this._cameraIndex = CameraUUid.base3D;//默认情况下是透视投影
             this._cameraPosition = [];
             this.light.reset();
             this.primitive.reset();
