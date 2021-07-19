@@ -14,6 +14,14 @@ export enum PassType{
     Middle,
     High
 }
+
+/**
+ * 
+ */
+export enum PassTag{
+    Normal=1,    //普通的标记
+    Depth,       //深度pass
+}
 //渲染通道
 //每一次渲染都需要一个渲染通道
 export class Pass {
@@ -25,7 +33,7 @@ export class Pass {
     public state:State; //渲染状态
     private _type:PassType;
     public order:number = 0;
-
+    public tag:PassTag=PassTag.Normal;     //标记
     public offlineRender:boolean = false; //是否是离线渲染
     public drawInstanced:boolean = false; //是否是实例化绘制
     public drawType:syRender.DrawType;//绘制的类型

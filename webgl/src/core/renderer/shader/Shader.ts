@@ -97,6 +97,7 @@ mapTree_u.set(syGL.AttributeUniform.TEX_GPosition, ["u_gPosition_loc", ShaderUse
 mapTree_u.set(syGL.AttributeUniform.TEX_GNormal, ["u_gNormal_loc", ShaderUseVariantType.GNormal]);
 mapTree_u.set(syGL.AttributeUniform.TEX_GColor, ["u_gColor_loc", ShaderUseVariantType.GColor]);
 mapTree_u.set(syGL.AttributeUniform.TEX_GUv, ["u_gUv_loc", ShaderUseVariantType.GUv]);
+mapTree_u.set(syGL.AttributeUniform.TEX_GDepth, ["u_gDepth_loc", ShaderUseVariantType.GDepth]);
 
 mapTree_u.set(syGL.AttributeUniform.SHADOW_MAP, ["u_shadowMap_loc", ShaderUseVariantType.Shadow]);
 mapTree_u.set(syGL.AttributeUniform.SHADOW_INFOR, ["u_shadowInfor_loc", ShaderUseVariantType.Shadow]);
@@ -155,6 +156,7 @@ export class Shader {
     private u_gNormal_loc;//法线纹理信息
     private u_gColor_loc;//颜色纹理信息
     private u_gUv_loc;//uv纹理
+    private u_gDepth_loc;//深度纹理
 
     private u_shadowMap_loc;//阴影贴图
     private u_shadowInfor_loc;//阴影信息

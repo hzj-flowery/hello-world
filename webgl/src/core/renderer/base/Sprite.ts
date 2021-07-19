@@ -419,20 +419,18 @@ export namespace SY {
             rData.primitive.modelMatrix = this.modelMatrix;
             if(this._texture instanceof RenderTexture && (this._texture as RenderTexture).isDeferred())
             {
-                var texS = (this._texture as RenderTexture).getDeferredTex(syRender.DeferredTexture.None);
-                texS?rData.push2DTexture(texS):null;
-
-                var texS = (this._texture as RenderTexture).getDeferredTex(syRender.DeferredTexture.Position);
-                texS?rData.push2DTexture(texS,syRender.DeferredTexture.Position):null;
-
-                var texS = (this._texture as RenderTexture).getDeferredTex(syRender.DeferredTexture.Normal);
-                texS?rData.push2DTexture(texS,syRender.DeferredTexture.Normal):null;
-
-                var texS = (this._texture as RenderTexture).getDeferredTex(syRender.DeferredTexture.Color);
-                texS?rData.push2DTexture(texS,syRender.DeferredTexture.Color):null;
-
-                var texS = (this._texture as RenderTexture).getDeferredTex(syRender.DeferredTexture.UV);
-                texS?rData.push2DTexture(texS,syRender.DeferredTexture.UV):null;
+                var derTexArr = [
+                    syRender.DeferredTexture.None,
+                    syRender.DeferredTexture.Position,
+                    syRender.DeferredTexture.Normal,
+                    syRender.DeferredTexture.Color,
+                    syRender.DeferredTexture.UV,
+                    syRender.DeferredTexture.Depth
+                ]
+                derTexArr.forEach((value,index)=>{
+                    var texS = (this._texture as RenderTexture).getDeferredTex(value);
+                    texS?rData.push2DTexture(texS,value):null;
+                })
             }
             else if (this._texture && this._texture.glID) {
                 if (this._texture.isTexture2D)

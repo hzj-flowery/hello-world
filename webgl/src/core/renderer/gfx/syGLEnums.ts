@@ -175,6 +175,7 @@ export namespace syGL {
         TEX_GNormal = "gNormal",//法线信息
         TEX_GColor = "gColor",  //颜色信息
         TEX_GUv = "gUv",  //uv信息
+        TEX_GDepth="gDepth",//深度纹理
 
         SKYBOX = "u_skybox",
         Matrix = 'u_mat',      //万能矩阵

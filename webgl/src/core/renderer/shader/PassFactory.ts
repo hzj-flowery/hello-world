@@ -42,6 +42,10 @@ class PassFactory{
         pass.order = ret[1]
         pass.code = code
         pass.state = new State();
+        if(passJson.tag)
+        {
+            pass.tag= passJson.tag;
+        }
         if(passJson&&passJson.state) 
         {
             let stateData = passJson.state;

@@ -22,6 +22,7 @@ export enum ShaderUseVariantType {
     GNormal,  //延迟渲染--法线纹理
     GColor,   //延迟渲染--颜色纹理
     GUv,      //延迟渲染--uv纹理
+    GDepth,   //延迟渲染--深度纹理
 
     Model,  //模型世界矩阵
     View,       //视口矩阵

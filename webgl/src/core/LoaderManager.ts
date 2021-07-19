@@ -337,26 +337,6 @@ export default class LoaderManager {
     public getRes(url: string): any {
         return this._cache.get(url);
     }
-    
-    /**
-     * 获取着色器代码
-     * @param spriteName 
-     */
-    private getGlslRes(spriteName:string,seq:number=0):Array<string>{
-        let shaderName = this.getShaderNameBySeq(seq)
-        let vs = "res/glsl/"+spriteName+"/"+shaderName+".vert";
-        let fs = "res/glsl/"+spriteName+"/"+shaderName+".frag";
-         return [this.getRes(vs),this.getRes(fs)]
-    }
-    private getShaderNameBySeq(seq):string{
-        if(seq>0)
-        {
-            console.log("aaaaa")
-        }
-        let shaderName = seq==0?"shader":"shader"+seq;
-        console.log("shaderName-------",shaderName)
-        return shaderName;
-    }
     /**
      * 加载着色器代码
      * @param spriteName 
@@ -365,6 +345,7 @@ export default class LoaderManager {
     public loadGlsl(spriteName: string, progressBack?: Function, finishBack?: Function): void {
 
         let fatherPath = "res/glsl/" + spriteName + "/";
+        let standardTemplate = "res/glsl/StandardTemplate/";//模板库目录
         let passName = fatherPath + "pass.json";
         let vertExtName = ".vert";
         let fragExtName = ".frag";
@@ -373,6 +354,11 @@ export default class LoaderManager {
         let runRealLoad = function (passJson: any) {
             let vs = fatherPath + passJson.name + vertExtName;
             let fs = fatherPath + passJson.name + fragExtName;
+            if(passJson.template)
+            {
+                vs = standardTemplate + passJson.name + vertExtName;
+                fs = standardTemplate + passJson.name + fragExtName;
+            }
             let vsData = this.getRes(vs);
             let fsData = this.getRes(fs);
             loadCount--;

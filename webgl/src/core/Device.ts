@@ -19,6 +19,7 @@ import { G_UISetting } from "./ui/UiSetting";
 import { SYMacro } from "./platform/SYMacro";
 import { G_LightModel } from "./renderer/light/LightModel";
 import { G_ShaderCenter, ShaderType } from "./renderer/shader/ShaderCenter";
+import { PassTag } from "./renderer/shader/Pass";
 
 /**
  渲染流程：
@@ -425,6 +426,24 @@ export default class Device {
     private onKeyDown(key): void {
         console.log("key---------", key);
     }
+
+    private getTreeData(drawType:syRender.DrawType,tag:PassTag=PassTag.Normal):syRender.BaseData[]{
+        //深度渲染pass
+        var treeData = this._mapRenderTreeData.get(syRender.DrawType.Normal);
+        var retData = []
+        for(let j in treeData)
+        {
+           if(treeData[j].pass&&treeData[j].pass.tag==tag)
+           {
+              retData.push(treeData[j]);
+           }
+           else if(!treeData[j].pass&&tag==PassTag.Normal)
+           {
+              retData.push(treeData[j]);
+           }
+        }
+        return retData;
+    }
     /**
      * 
      * @param time 
@@ -442,7 +461,17 @@ export default class Device {
         for (let k = 0; k < cameraData.length; k++) {
             if(cameraData[k].drawType==syRender.DrawType.Normal)
             {
-                this.triggerRender(this._mapRenderTreeData.get(syRender.DrawType.Normal),cameraData[k]);
+                //获取要求一次性渲染的所有数据
+                var treeData = this._mapRenderTreeData.get(syRender.DrawType.Normal);
+                if(cameraData[k].uuid==CameraUUid.Depth)
+                {
+                    //深度渲染pass
+                    this.triggerRender(this.getTreeData(syRender.DrawType.Normal,PassTag.Depth),cameraData[k]);
+                }
+                else
+                {
+                    this.triggerRender(this.getTreeData(syRender.DrawType.Normal),cameraData[k]);
+                }
             }
             else if(cameraData[k].drawType==syRender.DrawType.Single)
             {
@@ -551,17 +580,19 @@ export default class Device {
      * @param viewMatrix 视口矩阵
      */
     private _drawBase(rData: syRender.BaseData, projMatix: Float32Array, viewMatrix: Float32Array,crData: CameraRenderData): void {
-        if(crData.uuid==CameraUUid.Depth&&GameMainCamera.instance.getShader())
-        {
-            //更换为深度 shader
-            // G_DrawEngine.run(rData, viewMatrix, projMatix,G_ShaderCenter.getShader(ShaderType.ShadowMap));
-            G_DrawEngine.run(rData, viewMatrix, projMatix, GameMainCamera.instance.getShader());
-        }
-        else
-        {
-            //正常渲染
-            G_DrawEngine.run(rData, viewMatrix, projMatix, rData.shader);
-        }
+        // if(crData.uuid==CameraUUid.Depth&&GameMainCamera.instance.getShader())
+        // {
+        //     //更换为深度 shader
+        //     // G_DrawEngine.run(rData, viewMatrix, projMatix,G_ShaderCenter.getShader(ShaderType.ShadowMap));
+        //     G_DrawEngine.run(rData, viewMatrix, projMatix, GameMainCamera.instance.getShader());
+        // }
+        // else
+        // {
+        //     //正常渲染
+        //     G_DrawEngine.run(rData, viewMatrix, projMatix, rData.shader);
+        // }
+
+        G_DrawEngine.run(rData, viewMatrix, projMatix, rData.shader);
     }
     private _temp1Matrix: Float32Array = glMatrix.mat4.identity(null);
     /**

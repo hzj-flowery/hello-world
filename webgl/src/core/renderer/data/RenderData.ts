@@ -52,6 +52,7 @@ export namespace syRender {
         Normal,  //法线纹理
         Color,  //颜色纹理
         UV,     //uv纹理
+        Depth,  //深度纹理
         None   //非延迟渲染输出的纹理 
     }
 
@@ -395,6 +396,10 @@ export namespace syRender {
                         break;
                     case ShaderUseVariantType.GUv:
                         _shader.setUseDeferredTexture(this._texture2DGLIDMap.get(DeferredTexture.UV), useTextureAddres, syGL.AttributeUniform.TEX_GUv);
+                        useTextureAddres++;
+                        break;
+                    case ShaderUseVariantType.GDepth:
+                        _shader.setUseDeferredTexture(this._texture2DGLIDMap.get(DeferredTexture.Depth), useTextureAddres, syGL.AttributeUniform.TEX_GDepth);
                         useTextureAddres++;
                         break;
                     case ShaderUseVariantType.Projection:

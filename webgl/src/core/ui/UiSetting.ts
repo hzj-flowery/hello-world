@@ -107,7 +107,7 @@ class UISetting {
             { type: 'checkbox', key: 'ahead', min: 0, max: 1, change: this.render.bind(this, "ahead") },
             { type: 'checkbox', key: 'back', min: 0, max: 1, change: this.render.bind(this, "back") }
         ]
-        this.widgets = this.UI.setupUI(document.querySelector('#ui'), UIStatusData, [].concat(light,camera3D));
+        this.widgets = this.UI.setupUI(document.querySelector('#ui'), UIStatusData, [].concat(camera3D,camera2D));
         this.render();
     }
 
