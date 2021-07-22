@@ -88,6 +88,7 @@ export default class Scene3D extends Scene {
 
         this._floorNode = new Ground();
         this._floorNode.spriteFrame = "res/ground.jpg";
+        this._floorNode.z = 100;
         this.addChild(this._floorNode);
 
         this._spineNode = new Spine();
@@ -100,17 +101,17 @@ export default class Scene3D extends Scene {
         // this._customTexture.setPosition(0, 3.1, 0);
         // this._centerNode.addChild(this._customTexture);
 
-        // this._tableNode = new Cube();
-        // this._tableNode.spriteFrame = "res/wood.jpg";
-        // this._tableNode.setPosition(0, 1, 0);
-        // this._tableNode.setScale(2.0, 0.1, 2.0);
-        // this._centerNode.addChild(this._tableNode);
+        this._tableNode = new Cube();
+        this._tableNode.spriteFrame = "res/wood.jpg";
+        this._tableNode.setPosition(0, 1, 0);
+        this._tableNode.setScale(2.0, 0.1, 2.0);
+        this._centerNode.addChild(this._tableNode);
 
-        // this._alphaNode = new AlphaCube();
-        // this._alphaNode.spriteFrame = "res/good.jpg";
-        // this._alphaNode.setPosition(0, 3, 0);
-        // this._alphaNode.setScale(2.0, 2.0, 2.0);
-        // this._centerNode.addChild(this._alphaNode);
+        this._alphaNode = new AlphaCube();
+        this._alphaNode.spriteFrame = "res/good.jpg";
+        this._alphaNode.setPosition(0, 3, 0);
+        this._alphaNode.setScale(2.0, 2.0, 2.0);
+        this._centerNode.addChild(this._alphaNode);
 
 
 
@@ -160,7 +161,7 @@ export default class Scene3D extends Scene {
 
         this._cubeNode = new Cube();
         this._cubeNode.spriteFrame = "res/wicker.jpg";
-        this._cubeNode.setPosition(0, 1.7, 0);
+        this._cubeNode.setPosition(0, 1.7, -300);
         this._cubeNode.setScale(0.5, 0.5, 0.5);
         this._centerNode.addChild(this._cubeNode);
 
@@ -175,32 +176,32 @@ export default class Scene3D extends Scene {
         // this._spotLightCube.spriteFrame = "res/dragon.jpg";
         // this._centerNode.addChild(this._spotLightCube);
 
-        // this._fogCubeArr = [];
-        // let fogCubeNums = 40;
-        // let fogNode = new Node();
-        // this._centerNode.addChild(fogNode);
-        // for(let j = 0;j<fogCubeNums;j++)
-        // {
-        //     let fog = new FogCube();
-        //     fog.spriteFrame = "resources/f-texture.png";
-        //     fog.setPosition(-2+j*1.1,0, j*2);
-        //     fogNode.addChild(fog);
-        //     this._fogCubeArr.push(fog);
+        this._fogCubeArr = [];
+        let fogCubeNums = 40;
+        let fogNode = new Node();
+        this._centerNode.addChild(fogNode);
+        for(let j = 0;j<fogCubeNums;j++)
+        {
+            let fog = new FogCube();
+            fog.spriteFrame = "resources/f-texture.png";
+            fog.setPosition(-2+j*1.1,0, j*2);
+            fogNode.addChild(fog);
+            this._fogCubeArr.push(fog);
 
-        // }
+        }
 
 
 
         // // 绘制 4 个腿
-        // for (var i = -1; i <= 1; i += 2) {
-        //     for (var j = -1; j <= 1; j += 2) {
-        //         var node = new Cube();
-        //         node.setPosition(i * 19, -0.1, j * 19);
-        //         node.setScale(0.1, 1.0, 0.1);
-        //         node.spriteFrame = "res/wood.jpg";
-        //         this._centerNode.addChild(node);
-        //     }
-        // }
+        for (var i = -1; i <= 1; i += 2) {
+            for (var j = -1; j <= 1; j += 2) {
+                var node = new Cube();
+                node.setPosition(i * 19, -0.1, j * 19);
+                node.setScale(0.1, 1.0, 0.1);
+                node.spriteFrame = "res/wood.jpg";
+                this._centerNode.addChild(node);
+            }
+        }
 
         // this._lightCube = new LightCube();
         // this._lightCube.spriteFrame = "res/wicker.jpg";
@@ -227,9 +228,9 @@ export default class Scene3D extends Scene {
     }
 
     protected collectRenderData(time): void {
-        // this._fogCubeArr.forEach((fog,index)=>{
-        //     fog.rotate(0,1,0)
-        // })
+        this._fogCubeArr.forEach((fog,index)=>{
+            fog.rotate(0,1,0)
+        })
         super.collectRenderData(time);
     }
 

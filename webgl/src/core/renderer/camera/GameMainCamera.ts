@@ -162,26 +162,17 @@ export class GameMainCamera {
     {
        this._cameraMap.set(index,camera);
     }
-  }
-  
-  private _depthShader:Shader;
-  public setShader(sd:Shader):void{
-      this._depthShader=sd;
-  }
-  public getShader():Shader{
-   
-     return this._depthShader;
-  }
+  }v
 
   public initRenderData():void{
-    // var temp = new CameraRenderData();
-    // temp.fb = this.getCameraIndex(CameraUUid.base2D).getFramebuffer()
-    // temp.viewPort = { x: 0, y: 0, w: 1, h: 1 }
-    // temp.uuid = CameraUUid.base2D;
-    // temp.isClear = true;
-    // temp.visualAngle = 0;
-    // temp.isRenderToScreen = false;
-    // this._renderData.push(temp);
+    var temp = new CameraRenderData();
+    temp.fb = this.getCameraIndex(CameraUUid.base2D).getFramebuffer()
+    temp.viewPort = { x: 0, y: 0, w: 1, h: 1 }
+    temp.uuid = CameraUUid.base2D;
+    temp.isClear = true;
+    temp.visualAngle = 0;
+    temp.isRenderToScreen = false;
+    this._renderData.push(temp);
 
     var temp = new CameraRenderData();
     temp.fb = this.getCameraIndex(CameraUUid.Depth).getFramebuffer()

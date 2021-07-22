@@ -19,7 +19,4 @@ export class DepthSprite extends SY.Sprite2D{
         GameMainCamera.instance.getCameraIndex(CameraUUid.Depth).targetTexture = this.texture as RenderTexture;
         
     }
-    protected onInitFinish():void{
-        GameMainCamera.instance.setShader(this.shader);
-    }
 }

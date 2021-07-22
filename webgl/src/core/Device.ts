@@ -456,7 +456,9 @@ export default class Device {
         this.visitRenderTree(time, stage);
         var cameraData = GameMainCamera.instance.getRenderData();
         cameraData.sort(function(a,b){
-            return b.drawType - a.drawType
+            if (a.drawType!=b.drawType)
+            return b.drawType - a.drawType;
+            return b.uuid-a.uuid;
         })
         for (let k = 0; k < cameraData.length; k++) {
             if(cameraData[k].drawType==syRender.DrawType.Normal)
@@ -580,18 +582,6 @@ export default class Device {
      * @param viewMatrix 视口矩阵
      */
     private _drawBase(rData: syRender.BaseData, projMatix: Float32Array, viewMatrix: Float32Array,crData: CameraRenderData): void {
-        // if(crData.uuid==CameraUUid.Depth&&GameMainCamera.instance.getShader())
-        // {
-        //     //更换为深度 shader
-        //     // G_DrawEngine.run(rData, viewMatrix, projMatix,G_ShaderCenter.getShader(ShaderType.ShadowMap));
-        //     G_DrawEngine.run(rData, viewMatrix, projMatix, GameMainCamera.instance.getShader());
-        // }
-        // else
-        // {
-        //     //正常渲染
-        //     G_DrawEngine.run(rData, viewMatrix, projMatix, rData.shader);
-        // }
-
         G_DrawEngine.run(rData, viewMatrix, projMatix, rData.shader);
     }
     private _temp1Matrix: Float32Array = glMatrix.mat4.identity(null);
