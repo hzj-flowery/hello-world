@@ -463,8 +463,6 @@ export default class Device {
         for (let k = 0; k < cameraData.length; k++) {
             if(cameraData[k].drawType==syRender.DrawType.Normal)
             {
-                //获取要求一次性渲染的所有数据
-                var treeData = this._mapRenderTreeData.get(syRender.DrawType.Normal);
                 if(cameraData[k].uuid==CameraUUid.Depth)
                 {
                     //深度渲染pass
