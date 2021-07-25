@@ -3,9 +3,8 @@ import Device from "./Device";
 import Scene2D from "./renderer/base/Scene2D";
 import Scene3D from "./renderer/base/Scene3D";
 import { G_Stage } from "./renderer/base/Stage";
-import enums from "./renderer/camera/enums";
-import {CameraUUid, GameMainCamera} from "./renderer/camera/GameMainCamera";
-import PerspectiveCamera from "./renderer/camera/PerspectiveCamera";
+import { GameMainCamera} from "./renderer/camera/GameMainCamera";
+import { syRender } from "./renderer/data/RenderData";
 
 
 
@@ -15,9 +14,9 @@ export default class RenderFlow {
     private _2dScene:Scene2D;
     public startup() {
 
-        GameMainCamera.instance.registerCamera(0,CameraUUid.base3D,G_Stage)
-        GameMainCamera.instance.registerCamera(1,CameraUUid.base2D,G_Stage)
-        GameMainCamera.instance.registerCamera(0,CameraUUid.Depth,G_Stage)
+        GameMainCamera.instance.registerCamera(0,syRender.CameraUUid.base3D,G_Stage)
+        GameMainCamera.instance.registerCamera(1,syRender.CameraUUid.base2D,G_Stage)
+        GameMainCamera.instance.registerCamera(0,syRender.CameraUUid.Depth,G_Stage)
         GameMainCamera.instance.initRenderData();
 
         this._3dScene = new Scene3D();

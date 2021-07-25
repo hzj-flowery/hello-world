@@ -61,7 +61,6 @@ import { handler } from "../../../utils/handler";
 import { G_TextureManager } from "./texture/TextureManager";
 import { G_PassFactory } from "../shader/PassFactory";
 import { Pass } from "../shader/Pass";
-import { CameraUUid } from "../camera/GameMainCamera";
 import { RenderTexture } from "./texture/RenderTexture";
 
 /**

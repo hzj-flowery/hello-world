@@ -2,7 +2,6 @@ import { isThisTypeNode } from "typescript";
 import Device from "../../Device";
 import { glMatrix } from "../../math/Matrix";
 import { Node } from "../base/Node";
-import { CameraUUid } from "../camera/GameMainCamera";
 import { glEnums } from "../gfx/GLapi";
 import State from "../gfx/State";
 import { syGL } from "../gfx/syGLEnums";
@@ -13,6 +12,24 @@ import { ShaderUseVariantType } from "../shader/ShaderUseVariantType";
 
 let renderDataId: number = 0;
 export namespace syRender {
+
+    export enum CameraUUid {
+        min = 0,
+        base2D,
+        base3D,
+        Deferred,//用于延迟渲染
+        Depth, //用于深度纹理
+        normal1,
+        normal2,
+        normal3,
+        normal4,
+        normal5,
+        normal6,
+        normal7,
+        normal8,
+        normal9,
+        max
+    }
 
     /**
      * 节点的类型

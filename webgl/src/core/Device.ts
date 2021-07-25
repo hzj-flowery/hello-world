@@ -3,7 +3,7 @@ import { glMatrix } from "./math/Matrix";
 import Scene2D from "./renderer/base/Scene2D";
 import Scene3D from "./renderer/base/Scene3D";
 import { G_CameraModel } from "./renderer/camera/CameraModel";
-import { CameraUUid, CameraRenderData, GameMainCamera } from "./renderer/camera/GameMainCamera";
+import { CameraRenderData, GameMainCamera } from "./renderer/camera/GameMainCamera";
 import FrameBuffer from "./renderer/gfx/FrameBuffer";
 import { CameraData } from "./renderer/data/CameraData";
 import { syRender } from "./renderer/data/RenderData";
@@ -463,7 +463,7 @@ export default class Device {
         for (let k = 0; k < cameraData.length; k++) {
             if(cameraData[k].drawType==syRender.DrawType.Normal)
             {
-                if(cameraData[k].uuid==CameraUUid.Depth)
+                if(cameraData[k].uuid==syRender.CameraUUid.Depth)
                 {
                     //深度渲染pass
                     this.triggerRender(this.getTreeData(syRender.DrawType.Normal,PassTag.Depth),cameraData[k]);
@@ -551,11 +551,11 @@ export default class Device {
         this.readyForOneFrame(crData);
         //记录一下当前渲染的时间
         this._triggerRenderTime++;
-        var cameraData = GameMainCamera.instance.getCameraIndex(CameraUUid.base3D).getCameraData();
-        G_CameraModel.createCamera(crData.visualAngle, cameraData.projectMat, cameraData.modelMat,crData.visuialAnglePosition);
+        var cameraData = GameMainCamera.instance.getCameraIndex(syRender.CameraUUid.base3D).getCameraData();
+        G_CameraModel.createCamera(crData.VA, cameraData.projectMat, cameraData.modelMat,crData.VAPos);
         //提交数据给GPU 立即绘制
         for (var j = 0; j < treeData.length; j++) {   
-            if (treeData[j].isOffline && !crData.isRenderToScreen) {
+            if (treeData[j].isOffline && crData.fb) {
                 //对于离屏渲染的数据 如果当前是离屏渲染的话 则不可以渲染它 否则会报错
                 //你想啊你把一堆显示数据渲染到一张纹理中，这张纹理本身就在这一堆渲染数据中 自然是会冲突的
                 //[.Offscreen-For-WebGL-07E77500]GL ERROR :GL_INVALID_OPERATION : glDrawElements: Source and destination textures of the draw are the same
@@ -563,10 +563,10 @@ export default class Device {
             }
             let rData = treeData[j];
             //相机 一般只有两种 要么是3d透视相机 要么是2d正交相机
-            var cammerauuid = CameraUUid.base2D;
+            var cammerauuid = syRender.CameraUUid.base2D;
             if(rData.node.is3DNode())
             {
-                cammerauuid = CameraUUid.base3D;
+                cammerauuid = syRender.CameraUUid.base3D;
             }
             var cameraData = GameMainCamera.instance.getCameraIndex(cammerauuid).getCameraData();
 
@@ -620,8 +620,8 @@ export default class Device {
                     this._drawBase(rData, cData.projectMat, this._temp1Matrix,crData);
                 }
                 else {
-                    let projMatix = G_CameraModel.getSceneProjectMatrix(crData.visualAngle);
-                    glMatrix.mat4.invert(this._temp1Matrix, G_CameraModel.getSceneCameraMatrix(crData.visualAngle));
+                    let projMatix = G_CameraModel.getSceneProjectMatrix(crData.VA);
+                    glMatrix.mat4.invert(this._temp1Matrix, G_CameraModel.getSceneCameraMatrix(crData.VA));
                     this._drawBase(rData, projMatix, this._temp1Matrix,crData);
                 }
                 break;
@@ -631,8 +631,8 @@ export default class Device {
                     this._drawNormal(rData as syRender.NormalData, cData);
                 }
                 else {
-                    let projMatix = G_CameraModel.getSceneProjectMatrix(crData.visualAngle);
-                    glMatrix.mat4.invert(this._temp1Matrix, G_CameraModel.getSceneCameraMatrix(crData.visualAngle));
+                    let projMatix = G_CameraModel.getSceneProjectMatrix(crData.VA);
+                    glMatrix.mat4.invert(this._temp1Matrix, G_CameraModel.getSceneCameraMatrix(crData.VA));
                     cData.projectMat = projMatix;
                     cData.modelMat = this._temp1Matrix;
                     this._drawNormal(rData as syRender.NormalData, cData);
@@ -644,8 +644,8 @@ export default class Device {
                     glMatrix.mat4.invert(this._temp1Matrix, cData.modelMat);
                     this._drawSpine(rData as syRender.SpineData, cData.projectMat, this._temp1Matrix);
                 } else {
-                    let projMatix = G_CameraModel.getSceneProjectMatrix(crData.visualAngle);
-                    glMatrix.mat4.invert(this._temp1Matrix, G_CameraModel.getSceneCameraMatrix(crData.visualAngle));
+                    let projMatix = G_CameraModel.getSceneProjectMatrix(crData.VA);
+                    glMatrix.mat4.invert(this._temp1Matrix, G_CameraModel.getSceneCameraMatrix(crData.VA));
                     this._drawSpine(rData as syRender.SpineData, projMatix, this._temp1Matrix);
                 }
                 break;

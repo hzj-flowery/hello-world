@@ -18,7 +18,6 @@ import SpotLightCube from "../3d/SpotLightCube";
 import { FogCube } from "../3d/FogCube";
 import { glMatrix } from "../../math/Matrix";
 import { syGL } from "../gfx/syGLEnums";
-import { CameraUUid, GameMainCamera } from "../camera/GameMainCamera";
 import { DeferredShading } from "../3d/DeferredShading";
 import { RTT } from "../3d/RTT";
 import AlphaCube from "../3d/AlphaCube";

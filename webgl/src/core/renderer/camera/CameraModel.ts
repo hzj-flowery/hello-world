@@ -322,24 +322,24 @@ export class CameraModel {
 
 export class G_CameraModel{
        static modelMap:Map<number,CameraModel> = new Map()
-       static createCamera(visualAngle,targetProjMatrix, targetCameraMatrix,pos=[-70, 10, 10]):CameraModel{
-            if(visualAngle < 1)
+       static createCamera(VA,targetProjMatrix, targetCameraMatrix,pos=[-70, 10, 10]):CameraModel{
+            if(VA < 1)
             {
                 return;
             } 
-            var model = this.modelMap.get(visualAngle);
+            var model = this.modelMap.get(VA);
             if(!model){
                 model = new CameraModel();
             }  
             model.draw(targetProjMatrix, targetCameraMatrix);
             model.setSceneCameraPosition(pos);
-            this.modelMap.set(visualAngle,model)
+            this.modelMap.set(VA,model)
             return model;
        }
-       static getSceneProjectMatrix(visualAngle:number){
-            return this.modelMap.get(visualAngle).getSceneProjectMatrix()
+       static getSceneProjectMatrix(VA:number){
+            return this.modelMap.get(VA).getSceneProjectMatrix()
        }
-       static getSceneCameraMatrix(visualAngle:number){
-        return this.modelMap.get(visualAngle).getSceneCameraMatrix()
+       static getSceneCameraMatrix(VA:number){
+        return this.modelMap.get(VA).getSceneCameraMatrix()
        }
 }

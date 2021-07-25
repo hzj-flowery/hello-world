@@ -1,9 +1,10 @@
 import { SY } from "../base/Sprite";
 import { pseudoRandom } from "../../value-types/utils";
 import Device from "../../Device";
-import {CameraUUid, GameMainCamera} from "../camera/GameMainCamera";
+import {GameMainCamera} from "../camera/GameMainCamera";
 import enums from "../camera/enums";
 import { syGL } from "../gfx/syGLEnums";
+import { syRender } from "../data/RenderData";
 
 export default class MoreSprite extends SY.Sprite2D {
     constructor() {
@@ -86,11 +87,11 @@ export default class MoreSprite extends SY.Sprite2D {
         this.shader.setUseVertexAttribPointerForVertex(this.getGLID(SY.GLID_TYPE.VERTEX), this.getBufferItemSize(SY.GLID_TYPE.VERTEX));
 
         var newMV = this._glMatrix.mat4.create();
-        var v = GameMainCamera.instance.getCameraIndex(CameraUUid.base2D).getInversModelMatrix();
+        var v = GameMainCamera.instance.getCameraIndex(syRender.CameraUUid.base2D).getInversModelMatrix();
         var m = this.modelMatrix;
         this._glMatrix.mat4.mul(newMV, v, m)
         this.shader.bindMatrixToShader(syGL.AttributeUniform.VMMatrix,newMV);
-        var pMatix = GameMainCamera.instance.getCameraIndex(CameraUUid.base2D).getProjectionMatrix();
+        var pMatix = GameMainCamera.instance.getCameraIndex(syRender.CameraUUid.base2D).getProjectionMatrix();
         this.shader.bindMatrixToShader(syGL.AttributeUniform.PMatrix,pMatix);
 
         // update all the matrices
@@ -183,7 +184,7 @@ export default class MoreSprite extends SY.Sprite2D {
         this.shader.active();
         this.shader.setUseVertexAttribPointerForVertex(this.getGLID(SY.GLID_TYPE.VERTEX), this.getBufferItemSize(SY.GLID_TYPE.VERTEX));
         this.shader.bindMatrixToShader(syGL.AttributeUniform.VMMatrix,this.modelMatrix);
-        var pMatrix = GameMainCamera.instance.getCameraIndex(CameraUUid.base2D).getProjectionMatrix();
+        var pMatrix = GameMainCamera.instance.getCameraIndex(syRender.CameraUUid.base2D).getProjectionMatrix();
         this.shader.bindMatrixToShader(syGL.AttributeUniform.PMatrix,pMatrix);
 
         // update all the matrices

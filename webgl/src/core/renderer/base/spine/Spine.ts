@@ -5,7 +5,6 @@ import { Skeleton_Node } from "./Skeleton_Node";
 import { Skeleton_Skin } from "./Skeleton_Skin";
 import { glMatrix } from "../../../math/Matrix";
 import { ShaderType } from "../../shader/ShaderCenter";
-import { CameraUUid } from "../../camera/GameMainCamera";
 //骨骼节点
 export default class Spine extends SY.SpriteBase {
 

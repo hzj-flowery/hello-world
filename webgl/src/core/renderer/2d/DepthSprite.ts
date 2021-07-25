@@ -1,7 +1,8 @@
 import { SY } from "../base/Sprite";
 import Device from "../../Device";
-import {CameraUUid, GameMainCamera} from "../camera/GameMainCamera";
+import { GameMainCamera} from "../camera/GameMainCamera";
 import { RenderTexture } from "../base/texture/RenderTexture";
+import { syRender } from "../data/RenderData";
 
 
 /**
@@ -16,7 +17,7 @@ export class DepthSprite extends SY.Sprite2D{
     }
     protected onSetTextureUrl():void{
         
-        GameMainCamera.instance.getCameraIndex(CameraUUid.Depth).targetTexture = this.texture as RenderTexture;
+        GameMainCamera.instance.getCameraIndex(syRender.CameraUUid.Depth).targetTexture = this.texture as RenderTexture;
         
     }
 }
