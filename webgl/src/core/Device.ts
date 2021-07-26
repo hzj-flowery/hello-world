@@ -20,6 +20,7 @@ import { SYMacro } from "./platform/SYMacro";
 import { G_LightModel } from "./renderer/light/LightModel";
 import { G_ShaderCenter, ShaderType } from "./renderer/shader/ShaderCenter";
 import { PassTag } from "./renderer/shader/Pass";
+import { G_InputControl } from "./InputControl";
 
 /**
  渲染流程：
@@ -264,12 +265,7 @@ export default class Device {
         //添加事件监听
         canvas.addEventListener("webglcontextlost", this.contextLost.bind(this));
         canvas.addEventListener("webglcontextrestored", this.resume.bind(this));
-        canvas.onmousedown = this.onMouseDown.bind(this);
-        canvas.onmousemove = this.onMouseMove.bind(this);
-        canvas.onmouseup = this.onMouseUp.bind(this);
-        canvas.onwheel = this.onWheel.bind(this);
-        canvas.onmouseout = this.onMouseOut.bind(this);
-        canvas.onkeydown = this.onKeyDown.bind(this);
+        G_InputControl.handleEvent(canvas);
     }
 
     //
@@ -376,56 +372,8 @@ export default class Device {
         return context;
     }
 
-    private _isCapture: boolean = false;
-    private openCapture:boolean = false;//是否开启截图功能
-    private _press: boolean;
-    private _lastPressPos: Array<number> = [];
-    private onMouseDown(ev): void {
-        this._isCapture = true;
-        this._press = true;
-    }
-    private onMouseMove(ev: MouseEvent, value): void {
-        if (this._press) {
-            //处理鼠标滑动逻辑
-            if (this._lastPressPos.length == 0) {
-                //本次不做任何操作
-                this._lastPressPos[0] = ev.x;
-                this._lastPressPos[1] = ev.y;
-            }
-            else {
-                let detaX = ev.x - this._lastPressPos[0];
-                let detaY = ev.y - this._lastPressPos[1];
-                if (Math.abs(detaX) > Math.abs(detaY)) {
-                    //处理x轴方向
-                    G_UISetting.updateCameraX(detaX > 0)
-                }
-                else {
-                    //处理y轴方向
-                    G_UISetting.updateCameraY(detaY < 0);
-                }
-                this._lastPressPos[0] = ev.x;
-                this._lastPressPos[1] = ev.y;
-            }
-
-        }
-
-    }
-    private onMouseUp(ev): void {
-        this._isCapture = false;
-        this._press = false;
-        this._lastPressPos = [];
-    }
-    private onMouseOut(): void {
-        this._isCapture = false;
-        this._press = false;
-        this._lastPressPos = [];
-    }
-    private onWheel(ev: WheelEvent): void {
-        G_UISetting.updateCameraZ(ev.deltaY > 0);
-    }
-    private onKeyDown(key): void {
-        console.log("key---------", key);
-    }
+   
+    
 
     private getTreeData(drawType:syRender.DrawType,tag:PassTag=PassTag.Normal):syRender.BaseData[]{
         //深度渲染pass
@@ -478,8 +426,8 @@ export default class Device {
                 this.triggerRender(this._mapRenderTreeData.get(syRender.DrawType.Single),cameraData[k]);
             }
         }
-        if (this.openCapture&&this._isCapture) {
-            this._isCapture = false;
+        if (G_InputControl.openCapture&&G_InputControl.isCapture) {
+            G_InputControl.isCapture = false;
             this.capture();
             // this.showCurFramerBufferOnCanvas();
             // this.autoCapture()
@@ -969,8 +917,8 @@ export default class Device {
     }
 
     public autoCapture():void{
-        var x = this._lastPressPos[0];
-        var y = this._lastPressPos[1];
+        var x = G_InputControl.getLastPressPos()[0];
+        var y = G_InputControl.getLastPressPos()[1];
         var gl = this.gl;
         var width = 512;
         var height = 512;
@@ -989,7 +937,7 @@ export default class Device {
      * @param height 
      */
     public showCurFramerBufferOnCanvas(width?: number, height?: number): void {
-        if(!this.openCapture)
+        if(!G_InputControl.openCapture)
         {
             return;
         }

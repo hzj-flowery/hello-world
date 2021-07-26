@@ -109,7 +109,7 @@ gl_FragColor = vec4(1,1,1, 1); // white
 
 而在GLSL 300 es中，需要自己定义一个输出颜色的变量，并在main函数中设置颜色值，代码如下：
 
-```c
+```c 
 out vec4 myOutputColor;
  ......
 void main() {
