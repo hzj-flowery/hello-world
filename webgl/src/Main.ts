@@ -102,7 +102,12 @@ LoaderManager.instance.load(arr,null,function(){
     let str = `#define ${name} ${value}`;
     console.log("---hzj------",str);
 
-    new RenderFlow().startup();
+    LoaderManager.instance.loadGlsl("StandardTemplate",null,function(){
+        //启动游戏
+        new RenderFlow().startup();
+    })
+
+   
     // RampTextureTest.run();
     // CameraTest.run();
     // RobartTest.run();

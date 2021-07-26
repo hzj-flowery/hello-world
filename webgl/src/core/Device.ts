@@ -137,15 +137,15 @@ gl.FRONT：前面
 gl.FRONT_AND_BACK：前后两面
  */
 function _commitCullState(gl: WebGLRenderingContext, cur: State, next: State): void {
-    // if (cur.cullMode === next.cullMode) {
-    //     return;
-    // }
-    // if (next.cullMode === glEnums.CULL_NONE) {
-    //     gl.disable(gl.CULL_FACE);
-    //     return;
-    // }
-    // gl.enable(gl.CULL_FACE);
-    // gl.cullFace(next.cullMode);
+    if (cur.cullMode === next.cullMode) {
+        return;
+    }
+    if (next.cullMode === glEnums.CULL_NONE) {
+        gl.disable(gl.CULL_FACE);
+        return;
+    }
+    gl.enable(gl.CULL_FACE);
+    gl.cullFace(next.cullMode);
 }
 /**
  * 裁切状态
@@ -377,7 +377,7 @@ export default class Device {
 
     private getTreeData(drawType:syRender.DrawType,tag:PassTag=PassTag.Normal):syRender.BaseData[]{
         //深度渲染pass
-        var treeData = this._mapRenderTreeData.get(syRender.DrawType.Normal);
+        var treeData = this._mapRenderTreeData.get(drawType);
         var retData = []
         for(let j in treeData)
         {
@@ -423,7 +423,7 @@ export default class Device {
             }
             else if(cameraData[k].drawType==syRender.DrawType.Single)
             {
-                this.triggerRender(this._mapRenderTreeData.get(syRender.DrawType.Single),cameraData[k]);
+                this.triggerRender(this.getTreeData(syRender.DrawType.Single),cameraData[k]);
             }
         }
         if (G_InputControl.openCapture&&G_InputControl.isCapture) {

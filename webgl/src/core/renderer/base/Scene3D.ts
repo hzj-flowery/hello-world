@@ -87,18 +87,18 @@ export default class Scene3D extends Scene {
 
         this._floorNode = new Ground();
         this._floorNode.spriteFrame = "res/ground.jpg";
-        this._floorNode.z = 100;
+        this._floorNode.z = -20;
         this.addChild(this._floorNode);
 
-        this._spineNode = new Spine();
-        this._spineNode.x = -5;
-        this._spineNode.y = 10;
-        this.addChild(this._spineNode);
+        // this._spineNode = new Spine();
+        // this._spineNode.x = -5;
+        // this._spineNode.y = 10;
+        // this.addChild(this._spineNode);
 
-        // this._customTexture = new CustomTextureCube();
-        // this._customTexture.spriteFrame = CustomTextureData.getRandomData(3, 5, syGL.TextureFormat.RGB8);
-        // this._customTexture.setPosition(0, 3.1, 0);
-        // this._centerNode.addChild(this._customTexture);
+        this._customTexture = new CustomTextureCube();
+        this._customTexture.spriteFrame = CustomTextureData.getRandomData(3, 5, syGL.TextureFormat.RGB8);
+        this._customTexture.setPosition(0, 3.1, 0);
+        this._centerNode.addChild(this._customTexture);
 
         this._tableNode = new Cube();
         this._tableNode.spriteFrame = "res/wood.jpg";
@@ -160,7 +160,7 @@ export default class Scene3D extends Scene {
 
         this._cubeNode = new Cube();
         this._cubeNode.spriteFrame = "res/wicker.jpg";
-        this._cubeNode.setPosition(0, 1.7, -300);
+        this._cubeNode.setPosition(0, 1.7, -10);
         this._cubeNode.setScale(0.5, 0.5, 0.5);
         this._centerNode.addChild(this._cubeNode);
 

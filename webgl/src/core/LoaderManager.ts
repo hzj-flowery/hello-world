@@ -2,6 +2,8 @@
  * 加载管理员
  */
 
+import { PassTag } from "./renderer/shader/Pass";
+
 /**
  var myHeaders = new Headers();
 var myInit:any = { method: 'GET',
@@ -154,8 +156,8 @@ export default class LoaderManager {
             }
         }
     }
-     //加载可以转化为json的数据
-     private loadTextData(path: string, callBackProgress?, callBackFinish?): void {
+    //加载可以转化为json的数据
+    private loadTextData(path: string, callBackProgress?, callBackFinish?): void {
         var request = new XMLHttpRequest();
         request.open("get", path);
         request.send(null);
@@ -165,10 +167,9 @@ export default class LoaderManager {
                 let content = request.responseText;
                 let arr = content.split("&&");
                 let last = [];
-                for(let i = 0;i<arr.length;i = i+3)
-                {
-                     //0 1 2
-                     last.push({content:arr[i],type:arr[i+2]});
+                for (let i = 0; i < arr.length; i = i + 3) {
+                    //0 1 2
+                    last.push({ content: arr[i], type: arr[i + 2] });
                 }
                 console.log(last);
                 if (callBackFinish) callBackFinish.call(null, request.responseText, path);
@@ -217,7 +218,7 @@ export default class LoaderManager {
 
     //加载图片数据
     private loadImageData(path: string, callBackProgress?, callBackFinish?): void {
-        console.log("path------",path);
+        console.log("path------", path);
         let isHttp = path.indexOf("http") >= 0;
         if (!isHttp) {
             //本地
@@ -252,15 +253,15 @@ export default class LoaderManager {
             // })
 
             var request = new XMLHttpRequest();
-            request.open("get", path,true);
+            request.open("get", path, true);
             request.send();
             request.responseType = "blob";
             request.onload = function () {
                 var objectURL = URL.createObjectURL(request.response);
                 var img = new Image();
-                img.crossOrigin = "anonymous"; 
+                img.crossOrigin = "anonymous";
                 img.src = objectURL;
-                if (callBackFinish) callBackFinish.call(null, img, path); 
+                if (callBackFinish) callBackFinish.call(null, img, path);
             }
         }
     }
@@ -307,7 +308,7 @@ export default class LoaderManager {
                 if (count == length) {
                     this.onLoadFinish();
                     //任何加载成功图片的逻辑 都必须等到下一帧再返回结果
-                    requestAnimationFrame(()=>{
+                    requestAnimationFrame(() => {
                         if (callBackFinish) callBackFinish(resRet.length == 1 ? resRet[0] : resRet);
                     });
                     return;
@@ -326,7 +327,7 @@ export default class LoaderManager {
                 if (count == length) {
                     this.onLoadFinish();
                     //任何加载成功图片的逻辑 都必须等到下一帧再返回结果
-                    requestAnimationFrame(()=>{
+                    requestAnimationFrame(() => {
                         if (callBackFinish) callBackFinish(resRet.length == 1 ? resRet[0] : resRet);
                     });
                 }
@@ -354,8 +355,7 @@ export default class LoaderManager {
         let runRealLoad = function (passJson: any) {
             let vs = fatherPath + passJson.name + vertExtName;
             let fs = fatherPath + passJson.name + fragExtName;
-            if(passJson.template)
-            {
+            if (passJson.template) {
                 vs = standardTemplate + passJson.name + vertExtName;
                 fs = standardTemplate + passJson.name + fragExtName;
             }
@@ -364,26 +364,26 @@ export default class LoaderManager {
             loadCount--;
             if (vsData && fsData) {
                 if (progressBack) progressBack([vsData, fsData, passJson]);
-                if(loadCount <=0&&finishBack)
-                {
+                if (loadCount <= 0 && finishBack) {
                     finishBack();
-                } 
+                }
             }
             else {
                 this.load([vs, fs], null, (res) => {
+                    if (!res) {
+                        console.log("加载出错");
+                    }
                     let vsData = this.getRes(vs);
                     let fsData = this.getRes(fs);
                     if (!vsData || !fsData) {
                         console.log("当前要加载的shader源码不存在------", spriteName);
-                        if(loadCount <=0&&finishBack)
-                        {
+                        if (loadCount <= 0 && finishBack) {
                             finishBack();
                         }
                         return;
                     }
                     if (progressBack) progressBack([vsData, fsData, passJson]);
-                    if(loadCount <=0&&finishBack)
-                    {
+                    if (loadCount <= 0 && finishBack) {
                         finishBack();
                     }
                 })
@@ -392,19 +392,45 @@ export default class LoaderManager {
         }.bind(this)
 
         //先加载pass
-        this.load(passName, () => { }, (res) => {
+        this.load(passName, () => { }, (res: any[]) => {
             if (res && res.length > 0) {
+
+                //追加额外的pass
+                for (let k = 0; k < res.length; k++) {
+                    var extraTag = res[k].extraTemplateTag;
+                    if (extraTag && extraTag.length > 0) {
+                        for (let j = 0; j < extraTag.length; j++) {
+                            if ( extraTag[j] == PassTag.Depth) {
+                                var depthP = this.getRes("res/glsl/StandardTemplate/pass.json");
+                                res = res.concat(depthP);
+                            }
+                        }
+                    }
+                }
                 //加载pass成功啦
                 loadCount = res.length
                 for (let k = 0; k < res.length; k++) {
                     runRealLoad(res[k])
                 }
             }
-            else
-            {
-                console.log("配置pass出错啦------",res);
+            else {
+                console.log("配置pass出错啦------", res);
             }
         })
+    }
+    
+    public getStandardTemplatePass(tag:PassTag):any{
+        var depthP = this.getRes("res/glsl/StandardTemplate/pass.json");
+        if(depthP)
+        {
+            for(let k=0;k<depthP.length;k++)
+            {
+                if(depthP[k].tag==tag)
+                {
+                    return depthP[k]
+                }
+            }
+        }
     }
     /**
      * 移除CPU端内存中的图片缓存

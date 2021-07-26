@@ -16,6 +16,7 @@ export enum PassType{
 }
 
 /**
+ * 标记可以确定一个pass的作用
  * 
  */
 export enum PassTag{
