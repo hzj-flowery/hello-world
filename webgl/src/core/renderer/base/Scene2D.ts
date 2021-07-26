@@ -55,6 +55,7 @@ export default class Scene2D extends Scene {
                 { type: syRender.DeferredTexture.None, value: "res/deferred.png" },
                 { type: syRender.DeferredTexture.Depth, value: null },
                 { type: syRender.DeferredTexture.UV, value: null },
+                { type: syRender.DeferredTexture.Color, value: null },
                 ]
         }
         this.addChild(this._depthSprite);
