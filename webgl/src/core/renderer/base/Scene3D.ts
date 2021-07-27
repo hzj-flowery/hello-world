@@ -201,14 +201,24 @@ export default class Scene3D extends Scene {
                 this._centerNode.addChild(node);
             }
         }
-
+        
+        // var tempLightNode = new Node()
+        // tempLightNode.setPosition(-5, 6, 25);
+        // tempLightNode.setScale(0.5, 0.5, 0.5);
+        // this._centerNode.addChild(tempLightNode);
+        // this._lightCube = new LightCube();
+        // this._lightCube.spriteFrame = "res/wicker.jpg";
+        // tempLightNode.addChild(this._lightCube);
+        
         this._lightCube = new LightCube();
         this._lightCube.spriteFrame = "res/wicker.jpg";
         this._lightCube.setPosition(-5, 6, 25);
         this._lightCube.setScale(0.5, 0.5, 0.5);
         this._centerNode.addChild(this._lightCube);
 
-
+        G_UISetting.pushRenderCallBack((data)=>{
+            this._lightCube.setRotation(50,data.customValue?data.customValue:0,10)
+        })
 
         this._skybox = new SkyBox();
         this._skybox.setDefaultUrl();
