@@ -66,18 +66,17 @@ class LightCenter {
 
     public render(setting: any): void {
 
-        this._posX =  this._lightData.posX = setting.lightPosX;
-        this._posY = this._lightData.posY = setting.lightPosY;
-        this._posZ =  this._lightData.posZ = setting.lightPosZ;
+        this._posX =  this._lightData.eyeX = setting.lightPosX;
+        this._posY = this._lightData.eyeY = setting.lightPosY;
+        this._posZ =  this._lightData.eyeZ = setting.lightPosZ;
 
-        this._lightData.colR = setting.lightColorR;
-        this._lightData.colG = setting.lightColorG;
-        this._lightData.colB = setting.lightColorB;
-        this._lightData.colA = setting.lightColorA;
-
-        this._lightData.dirX = setting.lightDirX;
-        this._lightData.dirY = setting.lightDirY;
-        this._lightData.dirZ = setting.lightDirZ;
+        this._lightData.parallelColR = setting.parallelColR;
+        this._lightData.parallelColG = setting.parallelColG;
+        this._lightData.parallelColB = setting.parallelColB;
+        this._lightData.parallelColA = setting.parallelColA;
+        this._lightData.parallelDirX = setting.parallelDirX;
+        this._lightData.parallelDirY = setting.parallelDirY;
+        this._lightData.parallelDirZ = setting.parallelDirZ;
 
         this._lightData.spotInnerLimit = setting.spotInnerLimit;
         this._lightData.spotOuterLimit = setting.spotOuterLimit;

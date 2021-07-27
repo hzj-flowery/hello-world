@@ -66,8 +66,8 @@ mapTree_a.set(syGL.AttributeUniform.VERT_Matrix, ["a_vert_matrix_loc", ShaderUse
 mapTree_u.set(syGL.AttributeUniform.TIME, ["u_time_loc", ShaderUseVariantType.Time]);
 mapTree_u.set(syGL.AttributeUniform.COLOR, ["u_color_loc", ShaderUseVariantType.Color]);
 mapTree_u.set(syGL.AttributeUniform.ALPHA, ["u_alpha_loc", ShaderUseVariantType.Alpha]);
-mapTree_u.set(syGL.AttributeUniform.LIGHT_AMBIENT_COLOR, ["u_ambientColor_loc", ShaderUseVariantType.AmbientLight]);
-mapTree_u.set(syGL.AttributeUniform.LIGHT_POINT_COLOR, ["u_pointColor_loc", ShaderUseVariantType.PointLight]);
+mapTree_u.set(syGL.AttributeUniform.LIGHT_AMBIENT_COLOR, ["u_ambient_loc", ShaderUseVariantType.AmbientLight]);
+mapTree_u.set(syGL.AttributeUniform.LIGHT_POINT_COLOR, ["u_point_loc", ShaderUseVariantType.PointLight]);
 mapTree_u.set(syGL.AttributeUniform.LIGHT_COLOR, ["u_light_color_loc", ShaderUseVariantType.ParallelLight]);
 mapTree_u.set(syGL.AttributeUniform.LIGHT_COLOR_DIR, ["u_light_color_dir_loc", ShaderUseVariantType.ParallelLight]);
 mapTree_u.set(syGL.AttributeUniform.LIGHT_SPECULAR_COLOR, ["u_light_specular_color_loc", ShaderUseVariantType.SpecularLight]);
@@ -79,7 +79,7 @@ mapTree_u.set(syGL.AttributeUniform.LIGHT_SPOT_OUTER_LIMIT, ["u_light_spotOuterL
 mapTree_u.set(syGL.AttributeUniform.VMMatrix, ["u_VMMatrix_loc", ShaderUseVariantType.ViewModel]);
 mapTree_u.set(syGL.AttributeUniform.PMatrix, ["u_PMatrix_loc", ShaderUseVariantType.Projection]);
 mapTree_u.set(syGL.AttributeUniform.Matrix, ["u_Matrix_loc", ShaderUseVariantType.CustomMatrix]);
-mapTree_u.set(syGL.AttributeUniform.FOG_COLOR, ["u_fogColor_loc", ShaderUseVariantType.Fog]);
+mapTree_u.set(syGL.AttributeUniform.FOG_COLOR, ["u_fog_loc", ShaderUseVariantType.Fog]);
 mapTree_u.set(syGL.AttributeUniform.FOG_DENSITY, ["u_fogDensity_loc", ShaderUseVariantType.Fog]);
 mapTree_u.set(syGL.AttributeUniform.TEX_COORD0, ["u_texCoord0_loc", ShaderUseVariantType.TEX_COORD]);
 mapTree_u.set(syGL.AttributeUniform.TEX_COORD1, ["u_texCoord1_loc", ShaderUseVariantType.TEX_COORD1]);
@@ -127,8 +127,8 @@ export class Shader {
     private u_alpha_loc;//节点透明度
     private u_light_color_loc;//光照属性位置
     private u_light_color_dir_loc;//光照方向属性位置
-    private u_pointColor_loc;//点光的颜色
-    private u_ambientColor_loc;//环境光属性位置
+    private u_point_loc;//点光的颜色
+    private u_ambient_loc;//环境光属性位置
     private u_light_specular_color_loc;//高光属性的位置
     private u_light_specular_shininess_loc;//高光属性的位置
     private u_light_spotDirection_loc;//聚光灯的方向
@@ -136,7 +136,7 @@ export class Shader {
     private u_light_spotOuterLimit_loc;//聚光灯的外部限制
     private u_light_spotInnerLimit_loc;//聚光灯的内部限制
 
-    private u_fogColor_loc;//雾的颜色
+    private u_fog_loc;//雾的颜色
     private u_fogDensity_loc;//雾的密度
 
 
@@ -287,8 +287,8 @@ export class Shader {
      * @param density 
      */
     public setUseFog(color: Array<number>, density: number): void {
-        if (this.checklocValid(this.u_fogColor_loc)) {
-            G_DrawEngine.setUniformFloatVec4(this.u_fogColor_loc, color)
+        if (this.checklocValid(this.u_fog_loc)) {
+            G_DrawEngine.setUniformFloatVec4(this.u_fog_loc, color)
         }
         if (this.checklocValid(this.u_fogDensity_loc)) {
             G_DrawEngine.setUniform1f(this.u_fogDensity_loc, density)
@@ -371,8 +371,8 @@ export class Shader {
      * @param color 
      */
     public setUseAmbientLightColor(color: Array<number>): void {
-        if (this.checklocValid(this.u_ambientColor_loc)) {
-            G_DrawEngine.setUniformFloatVec4(this.u_ambientColor_loc, color);
+        if (this.checklocValid(this.u_ambient_loc)) {
+            G_DrawEngine.setUniformFloatVec4(this.u_ambient_loc, color);
         }
     }
 
@@ -381,8 +381,8 @@ export class Shader {
      * @param color 
      */
     public setUsePointLightColor(color: Array<number>): void {
-        if (this.checklocValid(this.u_pointColor_loc)) {
-            G_DrawEngine.setUniformFloatVec4(this.u_pointColor_loc, color);
+        if (this.checklocValid(this.u_point_loc)) {
+            G_DrawEngine.setUniformFloatVec4(this.u_point_loc, color);
         }
     }
 

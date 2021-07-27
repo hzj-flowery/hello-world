@@ -30,8 +30,8 @@ var fragmentshader3d =
   'varying vec3 v_surfaceToView;' +    //物体表面到摄像机位置的方向
   'uniform vec4 u_color;' +            //物体表面的颜色
   'uniform float u_shininess;' +       //高光的指数
-  'uniform vec3 u_lightColor;'+        //光的颜色
-  'uniform vec3 u_specularColor;'+     //高光的颜色
+  'uniform vec3 u_light;'+        //光的颜色
+  'uniform vec3 u_specular;'+     //高光的颜色
   'void main() {' +
   'vec3 normal = normalize(v_normal);' +  //法线
   'vec3 surfaceToLightDirection = normalize(v_surfaceToLight);' +
@@ -46,10 +46,10 @@ var fragmentshader3d =
 
   // Lets multiply just the color portion (not the alpha)
   // by the light
-  'vec3 lightColor = light * u_lightColor;'+   //光的强度*光的颜色
+  'vec3 lightColor = light * u_light;'+   //光的强度*光的颜色
   'gl_FragColor.rgb *= lightColor;'+           //光的颜色和点的颜色混合
   // Just add in the specular
-  'gl_FragColor.rgb += specular * u_specularColor;'+ //加上高光的颜色
+  'gl_FragColor.rgb += specular * u_specular;'+ //加上高光的颜色
 
   '}'
 
@@ -64,8 +64,8 @@ export class PointLight extends SY.Sprite {
       u_worldInverseTranspose: {},
       u_color: {},
       u_shininess: {},
-      u_lightColor:{},
-      u_specularColor:{},
+      u_light:{},
+      u_specular:{},
       u_lightWorldPosition: {},
       u_viewWorldPosition: {},
       u_world: {}
@@ -107,8 +107,8 @@ export class PointLight extends SY.Sprite {
     this._uniformData.u_lightWorldPosition = lightData.position;//光的位置
     this._uniformData.u_viewWorldPosition = cData.position;//摄像机的位置
     this._uniformData.u_shininess = lightData.specularShininess;//高光的指数
-    this._uniformData.u_lightColor = lightData.parallelColor;
-    this._uniformData.u_specularColor = lightData.specularColor;
+    this._uniformData.u_light = lightData.parallelColor;
+    this._uniformData.u_specular = lightData.specularColor;
     super.updateRenderData();
     return this._uniformData;
   }

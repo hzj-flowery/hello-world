@@ -50,6 +50,11 @@ export namespace syRender {
     }
 
     //绘制的类型
+    /**
+     * 目前只能想到两种
+     * 要么是和大家一起渲染
+     * 要么是自己单独渲染
+     */
     export enum DrawType {
         Normal = 0,//常规渲染
         Single,//单独渲染

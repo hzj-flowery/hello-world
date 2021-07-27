@@ -21,13 +21,15 @@ export class UIStatusData {
     public static lightPosX: number = 2.5; //光照摄像机的x轴坐标
     public static lightPosY: number = 4.8; //光照摄像机的y轴坐标
     public static lightPosZ: number = 7;   //光照摄像机的z轴坐标
-    public static lightDirX: number = 8; //光照摄像机的x轴坐标
-    public static lightDirY: number = 5; //光照摄像机的y轴坐标
-    public static lightDirZ: number = -10;   //光照摄像机的z轴坐标
-    public static lightColorR: number = 0.1; //光的颜色
-    public static lightColorG: number = 0.1; //光的颜色
-    public static lightColorB: number = 0.1;   //光的颜色
-    public static lightColorA: number = 1.0;   //光颜色的透明通道
+
+    public static parallelDirX: number = 8; //光照摄像机的x轴坐标
+    public static parallelDirY: number = 5; //光照摄像机的y轴坐标
+    public static parallelDirZ: number = -10;   //光照摄像机的z轴坐标
+    public static parallelColR: number = 0.1; //光的颜色
+    public static parallelColG: number = 0.1; //光的颜色
+    public static parallelColB: number = 0.1;   //光的颜色
+    public static parallelColA: number = 1.0;   //光颜色的透明通道
+
     public static lightTargetX: number = 3.5; //光照摄像机看向的目标的x轴坐标
     public static lightTargetY: number = 0;   //光照摄像机看向的目标的y轴坐标
     public static lightTargetZ: number = 3.5; //光照摄像机看向的目标的z轴坐标
@@ -80,15 +82,16 @@ class UISetting {
             { type: 'slider', key: 'lightPosX', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
             { type: 'slider', key: 'lightPosY', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
             { type: 'slider', key: 'lightPosZ', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
+             
+            //平行光
+            { type: 'slider', key: 'parallelDirX', min: -10, max: 10, change: this.render.bind(this), precision: 2, step: 1, },
+            { type: 'slider', key: 'parallelDirY', min: -10, max: 10, change: this.render.bind(this), precision: 2, step: 1, },
+            { type: 'slider', key: 'parallelDirZ', min: -10, max: 10, change: this.render.bind(this), precision: 2, step: 1, },
+            { type: 'slider', key: 'parallelColR', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            { type: 'slider', key: 'parallelColG', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            { type: 'slider', key: 'parallelColB', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            { type: 'slider', key: 'parallelColA', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
 
-            // { type: 'slider', key: 'lightDirX', min: -10, max: 10, change: this.render.bind(this), precision: 2, step: 1, },
-            // { type: 'slider', key: 'lightDirY', min: -10, max: 10, change: this.render.bind(this), precision: 2, step: 1, },
-            // { type: 'slider', key: 'lightDirZ', min: -10, max: 10, change: this.render.bind(this), precision: 2, step: 1, },
-
-            // { type: 'slider', key: 'lightColorR', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
-            // { type: 'slider', key: 'lightColorG', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
-            // { type: 'slider', key: 'lightColorB', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
-            // { type: 'slider', key: 'lightColorA', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
             { type: 'slider', key: 'spotInnerLimit', min: 0, max: 180, change: this.render.bind(this), precision: 2, step: 1, },
             { type: 'slider', key: 'spotOuterLimit', min: 0, max: 180, change: this.render.bind(this), precision: 2, step: 1, },
             { type: 'slider', key: 'lightTargetX', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
@@ -107,7 +110,7 @@ class UISetting {
             { type: 'checkbox', key: 'ahead', min: 0, max: 1, change: this.render.bind(this, "ahead") },
             { type: 'checkbox', key: 'back', min: 0, max: 1, change: this.render.bind(this, "back") }
         ]
-        this.widgets = this.UI.setupUI(document.querySelector('#ui'), UIStatusData, [].concat(camera3D,camera2D));
+        this.widgets = this.UI.setupUI(document.querySelector('#ui'), UIStatusData, [].concat(light,camera3D));
         this.render();
     }
 

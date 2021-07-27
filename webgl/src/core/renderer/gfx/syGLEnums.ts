@@ -126,21 +126,21 @@ export namespace syGL {
         ALPHA = 'u_alpha',//节点透明度
         //现阶段场景中只支持三束平行光VERT_
         //平行光只有方向和颜色没有位置
-        LIGHT_COLOR = 'u_lightColor',     //平行光的颜色
-        LIGHT_COLOR_DIR = 'u_lightColorDir',//平行光的方向
-        LIGHT_COLOR1 = 'u_lightColor1',
-        LIGHT_COLOR_DIR1 = 'u_lightColorDir1',
-        LIGHT_COLOR2 = 'u_lightColor2',
-        LIGHT_COLOR_DIR2 = 'u_lightColorDir2',
-        LIGHT_POINT_COLOR = 'u_pointColor',//点光
-        LIGHT_AMBIENT_COLOR = "u_ambientColor",//环境光
-        LIGHT_SPECULAR_COLOR = 'u_specularColor', //高光
+        LIGHT_COLOR = 'u_light',     //平行光的颜色
+        LIGHT_COLOR_DIR = 'u_lightDir',//平行光的方向
+        LIGHT_COLOR1 = 'u_light1',
+        LIGHT_COLOR_DIR1 = 'u_lightDir1',
+        LIGHT_COLOR2 = 'u_light2',
+        LIGHT_COLOR_DIR2 = 'u_lightDir2',
+        LIGHT_POINT_COLOR = 'u_point',//点光
+        LIGHT_AMBIENT_COLOR = "u_ambient",//环境光
+        LIGHT_SPECULAR_COLOR = 'u_specular', //高光
         LIGHT_SPECULAR_SHININESS = 'u_shininess',//高光指数
         LIGHT_SPOT_INNER_LIMIT = "u_spotInnerLimit",//聚光灯内部限制
         LIGHT_SPOT_OUTER_LIMIT = "u_spotOuterLimit",//聚光灯内部限制
-        LIGHT_SPOT_COLOR = "u_spotColor",//聚光灯的颜色
+        LIGHT_SPOT_COLOR = "u_spot",//聚光灯的颜色
         LIGHT_SPOT_DIRECTION = "u_spotDirection",//聚光灯的方向
-        FOG_COLOR = 'u_fogColor',//雾的颜色
+        FOG_COLOR = 'u_fog',//雾的颜色
         FOG_DENSITY = 'u_fogDensity',//雾的密度
         SHADOW_MAP = 'u_shadowMap',//阴影贴图
         /**

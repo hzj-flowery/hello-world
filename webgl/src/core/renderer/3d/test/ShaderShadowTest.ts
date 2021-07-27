@@ -144,7 +144,7 @@ class ShadowLight {
     varying vec2 v_texcoord;
     varying vec4 v_projectedTexcoord;
     varying vec3 v_normal;
-    uniform vec4 u_lightColor;            //光的颜色
+    uniform vec4 u_light;            //光的颜色
     uniform sampler2D u_texture;
     uniform sampler2D u_shadowMap; //投影纹理，第一次站在光的位置进行绘制，将结果存在这里，这个纹理只用于存储深度
     uniform float u_bias;
@@ -234,7 +234,7 @@ class ShadowLight {
     float light = clamp(dot(normal, u_reverseLightDirection),0.0,1.0);    //算出光照强度
     float shadowLight = getShadowLightRYY(v_projectedTexcoord);
     //通过uv贴图找出当前片元的颜色 该颜色常被称为自发光颜色或是当前顶点的颜色
-    vec4 texColor = texture2D(u_texture, v_texcoord) * u_lightColor;
+    vec4 texColor = texture2D(u_texture, v_texcoord) * u_light;
     //漫反射光  顶点颜色* 光照强度 * 阴影bool值
     vec3 diffuse = texColor.rgb * light * shadowLight; 
     //环境光 （它的值rgb最好都限定在0.2以下）
@@ -358,17 +358,17 @@ class ShadowLight {
     this.fieldOfViewRadians = MathUtils.degToRad(60);
     // Uniforms for each object.
     this.planeUniforms = {
-      u_lightColor: [0.5, 0.5, 1, 1],  // lightblue
+      u_light: [0.5, 0.5, 1, 1],  // lightblue
       u_texture: this.checkerboardTexture.glID,
       u_world: glMatrix.mat4.translation(null, 0, 0, 0),
     };
     this.sphereUniforms = {
-      u_lightColor: [1, 0.5, 0.5, 1],  // pink
+      u_light: [1, 0.5, 0.5, 1],  // pink
       u_texture: this.checkerboardTexture.glID,
       u_world: glMatrix.mat4.translation(null, 2, 6, 4),
     };
     this.cubeUniforms = {
-      u_lightColor: [0.5, 1, 0.5, 1],  // lightgreen
+      u_light: [0.5, 1, 0.5, 1],  // lightgreen
       u_texture: this.checkerboardTexture.glID,
       u_world: glMatrix.mat4.translation(null, 3, 1, 0),
     };
