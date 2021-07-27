@@ -400,9 +400,9 @@ export default class LoaderManager {
                     var extraTag = res[k].extraTemplateTag;
                     if (extraTag && extraTag.length > 0) {
                         for (let j = 0; j < extraTag.length; j++) {
-                            if ( extraTag[j] == PassTag.Depth) {
-                                var depthP = this.getRes("res/glsl/StandardTemplate/pass.json");
-                                res = res.concat(depthP);
+                            var depthP = this.getStandardTemplatePass(extraTag[j]);
+                            if (depthP) {
+                                res.push(depthP);
                             }
                         }
                     }

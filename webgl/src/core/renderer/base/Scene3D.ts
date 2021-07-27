@@ -90,10 +90,10 @@ export default class Scene3D extends Scene {
         this._floorNode.z = -20;
         this.addChild(this._floorNode);
 
-        // this._spineNode = new Spine();
-        // this._spineNode.x = -5;
-        // this._spineNode.y = 10;
-        // this.addChild(this._spineNode);
+        this._spineNode = new Spine();
+        this._spineNode.x = -5;
+        this._spineNode.y = 10;
+        this.addChild(this._spineNode);
 
         this._customTexture = new CustomTextureCube();
         this._customTexture.spriteFrame = CustomTextureData.getRandomData(3, 5, syGL.TextureFormat.RGB8);

@@ -24,21 +24,21 @@ export default class Scene2D extends Scene {
     public init(): void {
 
     
-        // this._rectangle = new Rectangle();
-        // this._rectangle.setPosition(Device.Instance.width/2,Device.Instance.height/2, -100);
-        // this._rectangle.spriteFrame = "res/map1.png";
-        // this.addChild(this._rectangle);
+        this._rectangle = new Rectangle();
+        this._rectangle.setPosition(Device.Instance.width/2,Device.Instance.height/2, -100);
+        this._rectangle.spriteFrame = "res/map1.png";
+        this.addChild(this._rectangle);
 
 
-        // this._uvSprite = new UvSprite();
-        // this._uvSprite.setPosition(Device.Instance.width/2,0.5,0);
-        // this._uvSprite.spriteFrame = "res/tree.png";
-        // this.addChild(this._uvSprite);
+        this._uvSprite = new UvSprite();
+        this._uvSprite.setPosition(Device.Instance.width/2,0.5,0);
+        this._uvSprite.spriteFrame = "res/tree.png";
+        this.addChild(this._uvSprite);
 
-        // this._instantiateSprite = new InstantiateSprite();
-        // this._instantiateSprite.setScale(0.5,0.5,0.5);
-        // this._instantiateSprite.setPosition(0.2,0.2,0);
-        // this.addChild(this._instantiateSprite);
+        this._instantiateSprite = new InstantiateSprite();
+        this._instantiateSprite.setScale(0.5,0.5,0.5);
+        this._instantiateSprite.setPosition(0.2,0.2,0);
+        this.addChild(this._instantiateSprite);
 
         this._renderSprite = new RenderOfflineSprite();
         this._renderSprite.setPosition(Device.Instance.width/2+200,Device.Instance.height/2+200, -100);
@@ -62,10 +62,10 @@ export default class Scene2D extends Scene {
 
         
 
-        // this._label = new Label();
-        // this._label.setPosition(0.0,0.0,0);
-        // this._label.spriteFrame = "res/8x8-font.png";
-        // this._label.content = "czj520"
-        // this.addChild(this._label);
+        this._label = new Label();
+        this._label.setPosition(0.0,0.0,0);
+        this._label.spriteFrame = "res/8x8-font.png";
+        this._label.content = "czj520"
+        this.addChild(this._label);
     }
 }

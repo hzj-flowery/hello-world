@@ -1,6 +1,7 @@
 [
     {
         "name":"shader",
+        "extraTemplateTag":[2],
         "state":[
             {
                 "key":"depthFunc",
