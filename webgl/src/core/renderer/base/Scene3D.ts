@@ -169,11 +169,11 @@ export default class Scene3D extends Scene {
         // this._pointLightCube.setPosition(0, 0, -10);
         // this._pointLightCube.spriteFrame = "res/dragon.jpg";
         // this._centerNode.addChild(this._pointLightCube);
-        // this._spotLightCube = new SpotLightCube();
-        // this._spotLightCube.setScale(100,50.0,10.0);
-        // this._spotLightCube.setPosition(0, 0, -10);
-        // this._spotLightCube.spriteFrame = "res/dragon.jpg";
-        // this._centerNode.addChild(this._spotLightCube);
+        this._spotLightCube = new SpotLightCube();
+        this._spotLightCube.setScale(100,50.0,10.0);
+        this._spotLightCube.setPosition(0, 0, -10);
+        this._spotLightCube.spriteFrame = "res/dragon.jpg";
+        this._centerNode.addChild(this._spotLightCube);
 
         this._fogCubeArr = [];
         let fogCubeNums = 40;
@@ -202,14 +202,6 @@ export default class Scene3D extends Scene {
             }
         }
         
-        // var tempLightNode = new Node()
-        // tempLightNode.setPosition(-5, 6, 25);
-        // tempLightNode.setScale(0.5, 0.5, 0.5);
-        // this._centerNode.addChild(tempLightNode);
-        // this._lightCube = new LightCube();
-        // this._lightCube.spriteFrame = "res/wicker.jpg";
-        // tempLightNode.addChild(this._lightCube);
-        
         this._lightCube = new LightCube();
         this._lightCube.spriteFrame = "res/wicker.jpg";
         this._lightCube.setPosition(0,5,5);
@@ -217,9 +209,10 @@ export default class Scene3D extends Scene {
         this._centerNode.addChild(this._lightCube);
 
         G_UISetting.pushRenderCallBack((data)=>{
-            this._lightCube.setRotation(0,data.customValue?data.customValue:0,0)
-            this._lightCube.setPosition(0,data.customValue1?data.customValue1:0,5)
-            this._lightCube.setScale(data.customValue2?data.customValue2:1,data.customValue2?data.customValue2:1,data.customValue2?data.customValue2:1)
+            this._spotLightCube.setPosition(0,0,data.customValue?-data.customValue:0)
+            // this._lightCube.setRotation(0,data.customValue?data.customValue:0,0)
+            // this._lightCube.setPosition(0,data.customValue1?data.customValue1:0,5)
+            // this._lightCube.setScale(data.customValue2?data.customValue2:1,data.customValue2?data.customValue2:1,data.customValue2?data.customValue2:1)
         })
 
         this._skybox = new SkyBox();

@@ -66,9 +66,9 @@ class LightCenter {
 
     public render(setting: any): void {
 
-        this._posX =  this._lightData.eyeX = setting.lightPosX;
-        this._posY = this._lightData.eyeY = setting.lightPosY;
-        this._posZ =  this._lightData.eyeZ = setting.lightPosZ;
+        this._posX =  this._lightData.eyeX = setting.eyeX;
+        this._posY = this._lightData.eyeY = setting.eyeY;
+        this._posZ =  this._lightData.eyeZ = setting.eyeZ;
 
         this._lightData.parallelColR = setting.parallelColR;
         this._lightData.parallelColG = setting.parallelColG;

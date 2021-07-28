@@ -117,11 +117,11 @@ class LightModel {
         0, 0, 0, 0, 0, 20    //z轴
     ];//坐标轴
     private render(setting): void {
-        this._lightNode.x = setting.lightPosX;
-        this._lightNode.y = setting.lightPosY;
-        this._lightNode.z = setting.lightPosZ;
-        this._lightLine.updateLinePos(this._coordPos.concat([0, 0, 0, setting.lightDirX, setting.lightDirY, setting.lightDirZ]));
-        this._lightLine.color = [setting.lightColorR, setting.lightColorG, setting.lightColorB, setting.lightColorA];
+        this._lightNode.x = setting.eyeX;
+        this._lightNode.y = setting.eyeY;
+        this._lightNode.z = setting.eyeZ;
+        this._lightLine.updateLinePos(this._coordPos.concat([0, 0, 0, setting.parallelDirX, setting.parallelDirY, setting.parallelDirZ]));
+        this._lightLine.color = [setting.parallelColR, setting.parallelColG, setting.parallelColB, setting.parallelColA];
     }
 
 

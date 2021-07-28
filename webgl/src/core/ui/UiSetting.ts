@@ -18,18 +18,44 @@ export class UIStatusData {
     public static cam3DNear: number = 1;
     public static cam3DFar: number = 200;
 
-    public static lightPosX: number = 2.5; //光照摄像机的x轴坐标
-    public static lightPosY: number = 4.8; //光照摄像机的y轴坐标
-    public static lightPosZ: number = 7;   //光照摄像机的z轴坐标
+   
+    //平行光
+    public static parallelDirX: number = 8; //
+    public static parallelDirY: number = 5; //
+    public static parallelDirZ: number = -10;   //
+    public static parallelColR: number = 0.1; //
+    public static parallelColG: number = 0.1; //
+    public static parallelColB: number = 0.1;   //
+    public static parallelColA: number = 1.0;   //
 
-    public static parallelDirX: number = 8; //光照摄像机的x轴坐标
-    public static parallelDirY: number = 5; //光照摄像机的y轴坐标
-    public static parallelDirZ: number = -10;   //光照摄像机的z轴坐标
-    public static parallelColR: number = 0.1; //光的颜色
-    public static parallelColG: number = 0.1; //光的颜色
-    public static parallelColB: number = 0.1;   //光的颜色
-    public static parallelColA: number = 1.0;   //光颜色的透明通道
+     //聚光
+     public static spotInnerLimit: number = 10;//点光内围
+     public static spotOuterLimit: number = 20;//点光外围
+     public static spotDirX: number = 0; //
+     public static spotDirY: number = 0; //
+     public static spotDirZ: number = 1;   //
+     public static spotColR: number = 0; //
+     public static spotColG: number = 1; //
+     public static spotColB: number = 0;   //
+     public static spotColA: number = 1;   //
+    
+     //高光
+     public static specularShininess:number = 140;
+     public static specularColR: number = 1; //
+     public static specularColG: number = 0; //
+     public static specularColB: number = 0;   //
+     public static specularColA: number = 1.0;   //
+     
+     //环境光
+     public static ambientColR: number = 0.1; //
+     public static ambientColG: number = 0.1; //
+     public static ambientColB: number = 0.1;   //
+     public static ambientColA: number = 1.0;   //
 
+    
+    public static eyeX: number = 2.5; //光照摄像机的x轴坐标
+    public static eyeY: number = 4.8; //光照摄像机的y轴坐标
+    public static eyeZ: number = 7;   //光照摄像机的z轴坐标 
     public static lightTargetX: number = 3.5; //光照摄像机看向的目标的x轴坐标
     public static lightTargetY: number = 0;   //光照摄像机看向的目标的y轴坐标
     public static lightTargetZ: number = 3.5; //光照摄像机看向的目标的z轴坐标
@@ -37,8 +63,8 @@ export class UIStatusData {
     public static lightProjHeight: number = 2; //光照摄像机渲染的屏幕高度
     public static lightFieldOfView: number = 120;   //视角fov
     public static lightBias: number = 0.005;
-    public static spotInnerLimit: number = 10;//点光内围
-    public static spotOuterLimit: number = 20;//点光外围
+    
+   
 
     public static up: boolean = false;
     public static down: boolean = false;
@@ -84,21 +110,29 @@ class UISetting {
             { type: 'slider', key: 'cam3DFar', min: 1, max: 300, change: render, },
         ]
         let light = [
-            { type: 'slider', key: 'lightPosX', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
-            { type: 'slider', key: 'lightPosY', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
-            { type: 'slider', key: 'lightPosZ', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
-             
             //平行光
-            { type: 'slider', key: 'parallelDirX', min: -10, max: 10, change: this.render.bind(this), precision: 2, step: 1, },
-            { type: 'slider', key: 'parallelDirY', min: -10, max: 10, change: this.render.bind(this), precision: 2, step: 1, },
-            { type: 'slider', key: 'parallelDirZ', min: -10, max: 10, change: this.render.bind(this), precision: 2, step: 1, },
-            { type: 'slider', key: 'parallelColR', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
-            { type: 'slider', key: 'parallelColG', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
-            { type: 'slider', key: 'parallelColB', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
-            { type: 'slider', key: 'parallelColA', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
-
-            { type: 'slider', key: 'spotInnerLimit', min: 0, max: 180, change: this.render.bind(this), precision: 2, step: 1, },
-            { type: 'slider', key: 'spotOuterLimit', min: 0, max: 180, change: this.render.bind(this), precision: 2, step: 1, },
+            // { type: 'slider', key: 'parallelDirX', min: -10, max: 10, change: this.render.bind(this), precision: 2, step: 1, },
+            // { type: 'slider', key: 'parallelDirY', min: -10, max: 10, change: this.render.bind(this), precision: 2, step: 1, },
+            // { type: 'slider', key: 'parallelDirZ', min: -10, max: 10, change: this.render.bind(this), precision: 2, step: 1, },
+            // { type: 'slider', key: 'parallelColR', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'parallelColG', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'parallelColB', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'parallelColA', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            
+            //聚光
+            // { type: 'slider', key: 'spotInnerLimit', min: 0, max: 180, change: this.render.bind(this), precision: 2, step: 1, },
+            // { type: 'slider', key: 'spotOuterLimit', min: 0, max: 180, change: this.render.bind(this), precision: 2, step: 1, },
+            // { type: 'slider', key: 'spotDirX', min: -10, max: 10, change: this.render.bind(this), precision: 2, step: 1, },
+            // { type: 'slider', key: 'spotDirY', min: -10, max: 10, change: this.render.bind(this), precision: 2, step: 1, },
+            // { type: 'slider', key: 'spotDirZ', min: -10, max: 10, change: this.render.bind(this), precision: 2, step: 1, },
+            // { type: 'slider', key: 'spotColR', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'spotColG', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'spotColB', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'spotColA', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            
+            { type: 'slider', key: 'eyeX', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
+            { type: 'slider', key: 'eyeY', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
+            { type: 'slider', key: 'eyeZ', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
             { type: 'slider', key: 'lightTargetX', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
             { type: 'slider', key: 'lightTargetY', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
             { type: 'slider', key: 'lightTargetZ', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
@@ -115,7 +149,7 @@ class UISetting {
             { type: 'checkbox', key: 'ahead', min: 0, max: 1, change: this.render.bind(this, "ahead") },
             { type: 'checkbox', key: 'back', min: 0, max: 1, change: this.render.bind(this, "back") }
         ]
-        this.widgets = this.UI.setupUI(document.querySelector('#ui'), UIStatusData, [].concat(custom,camera3D));
+        this.widgets = this.UI.setupUI(document.querySelector('#ui'), UIStatusData, [].concat(custom,light));
         this.render();
     }
 

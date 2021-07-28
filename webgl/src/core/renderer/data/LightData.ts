@@ -247,6 +247,9 @@ export class LightData {
     public get specularShininess(): number {
         return this._specularShininess;
     }
+    public set specularShininess(p:number) {
+        this._specularShininess = p;
+    }
 
     //环境光
     private _ambientColR: number = 0;

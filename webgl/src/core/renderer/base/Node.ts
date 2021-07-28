@@ -12,7 +12,7 @@ export class Node extends Ref {
     /**
      * 基于父节点中心进行变换
      */
-    private _baseWorldOriginTransform:boolean = false;
+    private _baseFatherOriginTransform:boolean = false;
     private _x: number = 0;
     private _y: number = 0;
     private _z: number = 0;
@@ -52,6 +52,14 @@ export class Node extends Ref {
     private _translateMatrix: Float32Array;//平移矩阵
     private _parent: Node;//父亲
     private _children: Array<Node>;//孩子节点
+    
+    /**
+     * 设置节点是否基于父节点进行旋转变换
+     * 只有两个选择：要么基于父节点，要么基于自己节点
+     */
+    protected set baseFatherOriginTransform(b:boolean){
+        this._baseFatherOriginTransform = b
+    }
 
     private initBaseNode(): void {
         this.name = this.constructor.name;
@@ -274,9 +282,9 @@ export class Node extends Ref {
             this.translateModelMatrix();
             this._updateModelMatrixFlag = false;
         }
-        //将本地矩阵拷贝过来
-        if(this._baseWorldOriginTransform)
+        if(this._baseFatherOriginTransform)
         {
+            //将本地矩阵拷贝过来
             glMatrix.mat4.copy(this._modelMatrix, this._localMatrix);
             glMatrix.mat4.multiply(this._modelMatrix, this._worldMatrix, this._modelMatrix);
         }
@@ -291,7 +299,7 @@ export class Node extends Ref {
     }
     //缩放模型矩阵
     private scaleModelMatrix(): void {
-        if(this._baseWorldOriginTransform)
+        if(this._baseFatherOriginTransform)
         {
             glMatrix.mat4.scale(this._localMatrix, this._localMatrix, [this.scaleX, this.scaleY, this.scaleZ]);
         }
@@ -304,7 +312,7 @@ export class Node extends Ref {
     }
     //旋转模型矩阵
     private rotateModelMatrix(): void {
-        if(this._baseWorldOriginTransform)
+        if(this._baseFatherOriginTransform)
         {
             glMatrix.mat4.rotateX(this._localMatrix, this._localMatrix, this.rotateX * (Math.PI / 180));
             glMatrix.mat4.rotateY(this._localMatrix, this._localMatrix, this.rotateY * (Math.PI / 180));
@@ -322,7 +330,7 @@ export class Node extends Ref {
     }
     //平移模型矩阵
     private translateModelMatrix(): void {
-        if(this._baseWorldOriginTransform)
+        if(this._baseFatherOriginTransform)
         {
             glMatrix.mat4.translate(this._localMatrix, this._localMatrix, [this.x, this.y, this.z]);
         }
