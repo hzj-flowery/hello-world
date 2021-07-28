@@ -9,6 +9,10 @@ export class Node extends Ref {
         super();
         this.initBaseNode();
     }
+    /**
+     * 基于父节点中心进行变换
+     */
+    private _baseWorldOriginTransform:boolean = false;
     private _x: number = 0;
     private _y: number = 0;
     private _z: number = 0;
@@ -30,7 +34,7 @@ export class Node extends Ref {
 
     protected name: string;
     protected tag: number;
-    private __node__type:syRender.NodeType=syRender.NodeType.D3;//2代表2d节点 3代表3d节点
+    private __node__type: syRender.NodeType = syRender.NodeType.D3;//2代表2d节点 3代表3d节点
 
     protected _glMatrix = glMatrix;//矩阵操作api
     /**
@@ -42,48 +46,53 @@ export class Node extends Ref {
     private _modelMatrix: Float32Array; //模型世界矩阵
     private _worldMatrix: any[] | Float32Array;//父节点矩阵
     private _localMatrix: Float32Array;//本地矩阵，该矩阵只负责管理缩放旋转平移，不受父节点矩阵影响
+
+    private _scaleMatrix: Float32Array;//缩放矩阵
+    private _rotateMatrix: Float32Array;//旋转矩阵
+    private _translateMatrix: Float32Array;//平移矩阵
     private _parent: Node;//父亲
     private _children: Array<Node>;//孩子节点
 
     private initBaseNode(): void {
         this.name = this.constructor.name;
         this._children = [];
-        this._worldMatrix = this._glMatrix.mat4.identity(null);
-        this._modelMatrix = this._glMatrix.mat4.identity(null);
-        this._localMatrix = this._glMatrix.mat4.identity(null);
+        this._worldMatrix = glMatrix.mat4.identity(null);
+        this._modelMatrix = glMatrix.mat4.identity(null);
+        this._localMatrix = glMatrix.mat4.identity(null);
+
+        this._scaleMatrix = glMatrix.mat4.identity(null);
+        this._rotateMatrix = glMatrix.mat4.identity(null);
+        this._translateMatrix = glMatrix.mat4.identity(null);
         this._updateModelMatrixFlag = true;
     }
     /**
      * 此函数不可以轻易调用,除非你知道你想干啥
      */
-    protected set _node__type(_ty:syRender.NodeType){
-        if(_ty==syRender.NodeType.D2||_ty==syRender.NodeType.D3)
-        {
-           this.__node__type=_ty;
+    protected set _node__type(_ty: syRender.NodeType) {
+        if (_ty == syRender.NodeType.D2 || _ty == syRender.NodeType.D3) {
+            this.__node__type = _ty;
         }
-        else
-        {
-            this.__node__type=syRender.NodeType.D3;
-            console.log("你传入的节点类型有问题---",_ty);
+        else {
+            this.__node__type = syRender.NodeType.D3;
+            console.log("你传入的节点类型有问题---", _ty);
         }
     }
     /**
      * 判断是否为3d节点
      * @returns 
      */
-    public is3DNode():boolean
-    {
-        return this.__node__type==syRender.NodeType.D3;
+    public is3DNode(): boolean {
+        return this.__node__type == syRender.NodeType.D3;
     }
-    public is2DNode():boolean{
-        return this.__node__type==syRender.NodeType.D2;
+    public is2DNode(): boolean {
+        return this.__node__type == syRender.NodeType.D2;
     }
     public get x(): number {
         return this._x;
     }
     public set x(dd) {
         if (this._x != dd) {
-            dd = this.checkPosition(0,dd);
+            dd = this.checkPosition(0, dd);
             this._updateModelMatrixFlag = true;
             this._x = dd;
         }
@@ -93,7 +102,7 @@ export class Node extends Ref {
     }
     public set y(dd) {
         if (this._y != dd) {
-            dd = this.checkPosition(1,dd);
+            dd = this.checkPosition(1, dd);
             this._updateModelMatrixFlag = true;
             this._y = dd;
         }
@@ -121,20 +130,17 @@ export class Node extends Ref {
      * @param pos 0 代表x 1代表y 2代表z
      * @param value 
      */
-    private checkPosition(pos,value):number{
-       if(this.__node__type==syRender.NodeType.D3)
-       {
-           return value;
-       }
-       if(pos==0)
-       {
-           return this.convertScreenSpaceToClipSpaceX(value);
-       }
-       else if(pos==1)
-       {
-           return this.convertScreenSpaceToClipSpaceY(value);
-       }
-       return value;
+    private checkPosition(pos, value): number {
+        if (this.__node__type == syRender.NodeType.D3) {
+            return value;
+        }
+        if (pos == 0) {
+            return this.convertScreenSpaceToClipSpaceX(value);
+        }
+        else if (pos == 1) {
+            return this.convertScreenSpaceToClipSpaceY(value);
+        }
+        return value;
     }
     public get scaleY(): number {
         return this._scaleY;
@@ -217,13 +223,13 @@ export class Node extends Ref {
         this.updateMatrixData();
     }
     //绘制之前
-    public onDrawBefore(time: number,rd:syRender.BaseData): void {
+    public onDrawBefore(time: number, rd: syRender.BaseData): void {
 
     }
     public onDrawAfter(time: number): void {
 
     }
-    
+
     //开启绘制
     public visit(time: number): void {
         //更新世界节点
@@ -243,7 +249,7 @@ export class Node extends Ref {
      * @param mvMatrix 设置父节点矩阵
      */
     private setFatherMatrix(mvMatrix): void {
-        this._worldMatrix = this._glMatrix.mat4.clone(mvMatrix);
+        this._worldMatrix = glMatrix.mat4.clone(mvMatrix);
     }
     /**
     * 更新2D矩阵
@@ -258,8 +264,8 @@ export class Node extends Ref {
     private updateMatrixData(): void {
         if (this._updateModelMatrixFlag) {
             //初始化模型矩阵
-            this._glMatrix.mat4.identity(this._modelMatrix);
-            this._glMatrix.mat4.identity(this._localMatrix);
+            glMatrix.mat4.identity(this._modelMatrix);
+            glMatrix.mat4.identity(this._localMatrix);
             //先缩放
             this.scaleModelMatrix();
             //再旋转
@@ -269,22 +275,63 @@ export class Node extends Ref {
             this._updateModelMatrixFlag = false;
         }
         //将本地矩阵拷贝过来
-        this._glMatrix.mat4.copy(this._modelMatrix, this._localMatrix);
-        this._glMatrix.mat4.multiply(this._modelMatrix, this._worldMatrix, this._modelMatrix);
+        if(this._baseWorldOriginTransform)
+        {
+            glMatrix.mat4.copy(this._modelMatrix, this._localMatrix);
+            glMatrix.mat4.multiply(this._modelMatrix, this._worldMatrix, this._modelMatrix);
+        }
+        else
+        {
+            glMatrix.mat4.multiply(this._modelMatrix,this._rotateMatrix,this._scaleMatrix)
+            glMatrix.mat4.multiply(this._modelMatrix,this._translateMatrix,this._modelMatrix)
+            glMatrix.mat4.multiply(this._modelMatrix, this._worldMatrix, this._modelMatrix);
+        }
+
+       
     }
     //缩放模型矩阵
     private scaleModelMatrix(): void {
-        this._glMatrix.mat4.scale(this._localMatrix, this._localMatrix, [this.scaleX, this.scaleY, this.scaleZ]);
+        if(this._baseWorldOriginTransform)
+        {
+            glMatrix.mat4.scale(this._localMatrix, this._localMatrix, [this.scaleX, this.scaleY, this.scaleZ]);
+        }
+        else
+        {
+            glMatrix.mat4.identity(this._scaleMatrix);
+            glMatrix.mat4.scale(this._scaleMatrix, this._scaleMatrix, [this.scaleX, this.scaleY, this.scaleZ]);
+        }
+        
     }
     //旋转模型矩阵
     private rotateModelMatrix(): void {
-        this._glMatrix.mat4.rotateX(this._localMatrix, this._localMatrix, this.rotateX * (Math.PI / 180));
-        this._glMatrix.mat4.rotateY(this._localMatrix, this._localMatrix, this.rotateY * (Math.PI / 180));
-        this._glMatrix.mat4.rotateZ(this._localMatrix, this._localMatrix, this.rotateZ * (Math.PI / 180));
+        if(this._baseWorldOriginTransform)
+        {
+            glMatrix.mat4.rotateX(this._localMatrix, this._localMatrix, this.rotateX * (Math.PI / 180));
+            glMatrix.mat4.rotateY(this._localMatrix, this._localMatrix, this.rotateY * (Math.PI / 180));
+            glMatrix.mat4.rotateZ(this._localMatrix, this._localMatrix, this.rotateZ * (Math.PI / 180));
+        }
+        else
+        {
+            glMatrix.mat4.identity(this._rotateMatrix);
+            glMatrix.mat4.rotateX(this._rotateMatrix, this._rotateMatrix, this.rotateX * (Math.PI / 180));
+            glMatrix.mat4.rotateY(this._rotateMatrix, this._rotateMatrix, this.rotateY * (Math.PI / 180));
+            glMatrix.mat4.rotateZ(this._rotateMatrix, this._rotateMatrix, this.rotateZ * (Math.PI / 180));
+        }
+
+        
     }
     //平移模型矩阵
     private translateModelMatrix(): void {
-        this._glMatrix.mat4.translate(this._localMatrix, this._localMatrix, [this.x, this.y, this.z]);
+        if(this._baseWorldOriginTransform)
+        {
+            glMatrix.mat4.translate(this._localMatrix, this._localMatrix, [this.x, this.y, this.z]);
+        }
+        else
+        {
+            glMatrix.mat4.identity(this._translateMatrix);
+            glMatrix.mat4.translate(this._translateMatrix, this._translateMatrix, [this.x, this.y, this.z]);
+        }
+        
     }
     /**
      * 模型世界矩阵
@@ -296,8 +343,8 @@ export class Node extends Ref {
      * 模型世界的逆矩阵
      */
     public getInversModelMatrix(): any {
-        var invers = this._glMatrix.mat4.create();
-        this._glMatrix.mat4.invert(invers, this._modelMatrix)
+        var invers = glMatrix.mat4.create();
+        glMatrix.mat4.invert(invers, this._modelMatrix)
         return invers;
     }
     public setPosition(x: number, y: number, z: number): void {
@@ -327,29 +374,29 @@ export class Node extends Ref {
         this.rotateZ = this._rotateZ + z;
     }
 
-     /**
-         * 屏幕坐标转为齐次裁切坐标 x
-         */
-      public convertScreenSpaceToClipSpaceX(x:number):number{
+    /**
+        * 屏幕坐标转为齐次裁切坐标 x
+        */
+    public convertScreenSpaceToClipSpaceX(x: number): number {
         var width = Device.Instance.width;
-        var centerX = width/2;//0
-        return (x-centerX)/centerX
+        var centerX = width / 2;//0
+        return (x - centerX) / centerX
     }
     /**
      * 屏幕坐标转为齐次裁切坐标 y
      */
-    public convertScreenSpaceToClipSpaceY(y:number):number{
+    public convertScreenSpaceToClipSpaceY(y: number): number {
         var height = Device.Instance.height;
-        var centerY = height/2;//0
-        return (y-centerY)/centerY
+        var centerY = height / 2;//0
+        return (y - centerY) / centerY
     }
     /**
      * 屏幕坐标转为齐次裁切坐标
      * 笛卡尔坐标：左下角【0,0】=>【screenWidth,screenHeight】
      * 齐次裁切坐标：左下角【-1,-1】=>中间【0,0】=>右上角[1,1]
      */
-    public convertScreenSpaceToClipSpace(x:number,y:number):Array<number>{
-       return [this.convertScreenSpaceToClipSpaceX(x),this.convertScreenSpaceToClipSpaceY(y)]
+    public convertScreenSpaceToClipSpace(x: number, y: number): Array<number> {
+        return [this.convertScreenSpaceToClipSpaceX(x), this.convertScreenSpaceToClipSpaceY(y)]
     }
 
 }

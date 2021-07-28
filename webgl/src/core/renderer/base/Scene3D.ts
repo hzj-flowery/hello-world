@@ -175,19 +175,19 @@ export default class Scene3D extends Scene {
         // this._spotLightCube.spriteFrame = "res/dragon.jpg";
         // this._centerNode.addChild(this._spotLightCube);
 
-        // this._fogCubeArr = [];
-        // let fogCubeNums = 40;
-        // let fogNode = new Node();
-        // this._centerNode.addChild(fogNode);
-        // for(let j = 0;j<fogCubeNums;j++)
-        // {
-        //     let fog = new FogCube();
-        //     fog.spriteFrame = "resources/f-texture.png";
-        //     fog.setPosition(-2+j*1.1,0, j*2);
-        //     fogNode.addChild(fog);
-        //     this._fogCubeArr.push(fog);
+        this._fogCubeArr = [];
+        let fogCubeNums = 40;
+        let fogNode = new Node();
+        this._centerNode.addChild(fogNode);
+        for(let j = 0;j<fogCubeNums;j++)
+        {
+            let fog = new FogCube();
+            fog.spriteFrame = "resources/f-texture.png";
+            fog.setPosition(-2+j*1.1,0, j*2);
+            fogNode.addChild(fog);
+            this._fogCubeArr.push(fog);
 
-        // }
+        }
 
 
 
@@ -212,12 +212,14 @@ export default class Scene3D extends Scene {
         
         this._lightCube = new LightCube();
         this._lightCube.spriteFrame = "res/wicker.jpg";
-        this._lightCube.setPosition(-5, 6, 25);
+        this._lightCube.setPosition(0,5,5);
         this._lightCube.setScale(0.5, 0.5, 0.5);
         this._centerNode.addChild(this._lightCube);
 
         G_UISetting.pushRenderCallBack((data)=>{
-            this._lightCube.setRotation(50,data.customValue?data.customValue:0,10)
+            this._lightCube.setRotation(0,data.customValue?data.customValue:0,0)
+            this._lightCube.setPosition(0,data.customValue1?data.customValue1:0,5)
+            this._lightCube.setScale(data.customValue2?data.customValue2:1,data.customValue2?data.customValue2:1,data.customValue2?data.customValue2:1)
         })
 
         this._skybox = new SkyBox();
@@ -237,9 +239,9 @@ export default class Scene3D extends Scene {
     }
 
     protected collectRenderData(time): void {
-        // this._fogCubeArr.forEach((fog,index)=>{
-        //     fog.rotate(0,1,0)
-        // })
+        this._fogCubeArr.forEach((fog,index)=>{
+            fog.rotate(0,1,0)
+        })
         super.collectRenderData(time);
     }
 

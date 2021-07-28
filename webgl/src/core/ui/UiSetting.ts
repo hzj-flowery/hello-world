@@ -59,6 +59,8 @@ class UISetting {
         this.UI = window["webglLessonsUI"];
         let custom = [
             { type: 'slider', key: 'customValue', min: 0, max: 360, change: render, },
+            { type: 'slider', key: 'customValue1', min: 0, max: 360, change: render, },
+            { type: 'slider', key: 'customValue2', min: 0, max: 10, change: render, },
         ]
         let camera2D = [
             //2d相机
@@ -113,7 +115,7 @@ class UISetting {
             { type: 'checkbox', key: 'ahead', min: 0, max: 1, change: this.render.bind(this, "ahead") },
             { type: 'checkbox', key: 'back', min: 0, max: 1, change: this.render.bind(this, "back") }
         ]
-        this.widgets = this.UI.setupUI(document.querySelector('#ui'), UIStatusData, [].concat(custom,light,camera3D));
+        this.widgets = this.UI.setupUI(document.querySelector('#ui'), UIStatusData, [].concat(custom,camera3D));
         this.render();
     }
 
