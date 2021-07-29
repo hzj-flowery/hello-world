@@ -51,6 +51,19 @@ export class UIStatusData {
      public static ambientColG: number = 0.1; //
      public static ambientColB: number = 0.1;   //
      public static ambientColA: number = 1.0;   //
+     
+     //点光
+     public static pointColR: number = 0.1; //
+     public static pointColG: number = 0.1; //
+     public static pointColB: number = 0.1;   //
+     public static pointColA: number = 1.0;   //
+     
+     //雾
+     public static fogColR: number = 0.1; //
+     public static fogColG: number = 0.1; //
+     public static fogColB: number = 0.1;   //
+     public static fogColA: number = 1.0;   //
+     public static fogDensity:number = 0.095;
 
     
     public static eyeX: number = 2.5; //光照摄像机的x轴坐标
@@ -129,6 +142,33 @@ class UISetting {
             // { type: 'slider', key: 'spotColG', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
             // { type: 'slider', key: 'spotColB', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
             // { type: 'slider', key: 'spotColA', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+
+            //环境光
+            // { type: 'slider', key: 'ambientColR', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'ambientColG', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'ambientColB', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'ambientColA', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+
+            //高光
+            // { type: 'slider', key: 'specularColR', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'specularColG', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'specularColB', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'specularColA', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'specularShininess', min: 0, max: 200, change: this.render.bind(this), precision: 2, step: 0.01, },
+            
+            //点光
+            // { type: 'slider', key: 'pointColR', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'pointColG', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'pointColB', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'pointColA', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+
+            //雾
+            // { type: 'slider', key: 'fogColR', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'fogColG', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'fogColB', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'fogColA', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'fogDensity', min: 0, max: 0.1, change: this.render.bind(this), precision: 3, step: 0.001, },
+            
             
             { type: 'slider', key: 'eyeX', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
             { type: 'slider', key: 'eyeY', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },

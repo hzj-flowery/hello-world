@@ -66,10 +66,8 @@ class LightCenter {
 
     public render(setting: any): void {
 
-        this._posX =  this._lightData.eyeX = setting.eyeX;
-        this._posY = this._lightData.eyeY = setting.eyeY;
-        this._posZ =  this._lightData.eyeZ = setting.eyeZ;
-
+        
+        //平行光
         this._lightData.parallelColR = setting.parallelColR;
         this._lightData.parallelColG = setting.parallelColG;
         this._lightData.parallelColB = setting.parallelColB;
@@ -77,10 +75,48 @@ class LightCenter {
         this._lightData.parallelDirX = setting.parallelDirX;
         this._lightData.parallelDirY = setting.parallelDirY;
         this._lightData.parallelDirZ = setting.parallelDirZ;
-
+        
+        //聚光
         this._lightData.spotInnerLimit = setting.spotInnerLimit;
         this._lightData.spotOuterLimit = setting.spotOuterLimit;
+        this._lightData.spotDirX = setting.spotDirX;
+        this._lightData.spotDirY = setting.spotDirY;
+        this._lightData.spotDirZ = setting.spotDirZ;
+        this._lightData.spotColR = setting.spotColR;
+        this._lightData.spotColG = setting.spotColG;
+        this._lightData.spotColB = setting.spotColB;
+        this._lightData.spotColA = setting.spotColA;
 
+        //高光
+        this._lightData.specularColR = setting.specularColR;
+        this._lightData.specularColG = setting.specularColG;
+        this._lightData.specularColB = setting.specularColB;
+        this._lightData.specularColA = setting.specularColA;
+        this.lightData.specularShininess = setting.specularShininess;
+
+        //环境光
+        this._lightData.ambientColR = setting.ambientColR;
+        this._lightData.ambientColG = setting.ambientColG;
+        this._lightData.ambientColB = setting.ambientColB;
+        this._lightData.ambientColA = setting.ambientColA;
+        
+        //雾
+        this._lightData.fogColR = setting.fogColR;
+        this._lightData.fogColG = setting.fogColG;
+        this._lightData.fogColB = setting.fogColB;
+        this._lightData.fogColA = setting.fogColA;
+        this._lightData.fogDensity = setting.fogDensity;
+
+        //点光
+        this._lightData.pointColR = setting.pointColR;
+        this._lightData.pointColG = setting.pointColG;
+        this._lightData.pointColB = setting.pointColB;
+        this._lightData.pointColA = setting.pointColA;
+
+
+        this._posX =  this._lightData.eyeX = setting.eyeX;
+        this._posY = this._lightData.eyeY = setting.eyeY;
+        this._posZ =  this._lightData.eyeZ = setting.eyeZ;
         this._targetX = this._lightData.targetX = setting.lightTargetX;
         this._targetY =  this._lightData.targetY = setting.lightTargetY;
         this._targetZ =  this._lightData.targetZ = setting.lightTargetZ;

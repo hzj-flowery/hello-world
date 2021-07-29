@@ -209,7 +209,7 @@ export default class Scene3D extends Scene {
         this._centerNode.addChild(this._lightCube);
 
         G_UISetting.pushRenderCallBack((data)=>{
-            this._spotLightCube.setPosition(0,0,data.customValue?-data.customValue:0)
+            this._spotLightCube.setPosition(0,0,data.customValue?-data.customValue:-80)
             // this._lightCube.setRotation(0,data.customValue?data.customValue:0,0)
             // this._lightCube.setPosition(0,data.customValue1?data.customValue1:0,5)
             // this._lightCube.setScale(data.customValue2?data.customValue2:1,data.customValue2?data.customValue2:1,data.customValue2?data.customValue2:1)
