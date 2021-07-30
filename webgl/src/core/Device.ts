@@ -544,18 +544,18 @@ export default class Device {
         glMatrix.mat4.identity(this._temp1Matrix);
 
         //补一下光的数据
-        rData.light.parallel.color = G_LightCenter.lightData.parallelColor; //光的颜色
-        rData.light.parallel.direction = G_LightCenter.lightData.parallelDirection;//光的方向
+        rData.light.parallel.color = G_LightCenter.lightData.parallel.color; //光的颜色
+        rData.light.parallel.direction = G_LightCenter.lightData.parallel.direction;//光的方向
         rData._cameraPosition = cData.position;
-        rData.light.ambient.color = G_LightCenter.lightData.ambientColor;//环境光
-        rData.light.point.color = G_LightCenter.lightData.pointColor;//点光
-        rData.light.specular.shiness = G_LightCenter.lightData.specularShininess;
-        rData.light.specular.color = G_LightCenter.lightData.specularColor;
+        rData.light.ambient.color = G_LightCenter.lightData.ambient.color;//环境光
+        rData.light.point.color = G_LightCenter.lightData.point.color;//点光
+        rData.light.specular.shiness = G_LightCenter.lightData.specular.specularShininess;
+        rData.light.specular.color = G_LightCenter.lightData.specular.color;
         rData.light.position = G_LightCenter.lightData.position;
         rData.light.spot.direction = G_LightCenter.getPosLightDir();
-        rData.light.spot.color = G_LightCenter.lightData.spotColor;
-        rData.light.spot.innerLimit = G_LightCenter.lightData.spotInnerLimit;
-        rData.light.spot.outerLimit = G_LightCenter.lightData.spotOuterLimit;
+        rData.light.spot.color = G_LightCenter.lightData.spot.color;
+        rData.light.spot.innerLimit = G_LightCenter.lightData.spot.spotInnerLimit;
+        rData.light.spot.outerLimit = G_LightCenter.lightData.spot.spotOuterLimit;
 
         rData.light.fog.color = G_LightCenter.lightData.fogColor;
         rData.light.fog.density = G_LightCenter.lightData.fogDensity;
