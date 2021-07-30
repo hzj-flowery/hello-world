@@ -77,8 +77,8 @@ class LightCenter {
         this._lightData.parallel.dirZ = setting.parallelDirZ;
         
         //聚光
-        this._lightData.spot.spotInnerLimit = setting.spotInnerLimit;
-        this._lightData.spot.spotOuterLimit = setting.spotOuterLimit;
+        this._lightData.spot.innerLimit = setting.spotInnerLimit;
+        this._lightData.spot.outerLimit = setting.spotOuterLimit;
         this._lightData.spot.dirX = setting.spotDirX;
         this._lightData.spot.dirY = setting.spotDirY;
         this._lightData.spot.dirZ = setting.spotDirZ;
@@ -92,7 +92,7 @@ class LightCenter {
         this._lightData.specular.colG = setting.specularColG;
         this._lightData.specular.colB = setting.specularColB;
         this._lightData.specular.colA = setting.specularColA;
-        this.lightData.specular.specularShininess = setting.specularShininess;
+        this.lightData.specular.shininess = setting.specularShininess;
 
         //环境光
         this._lightData.ambient.colR = setting.ambientColR;
@@ -101,11 +101,11 @@ class LightCenter {
         this._lightData.ambient.colA = setting.ambientColA;
         
         //雾
-        this._lightData.fogColR = setting.fogColR;
-        this._lightData.fogColG = setting.fogColG;
-        this._lightData.fogColB = setting.fogColB;
-        this._lightData.fogColA = setting.fogColA;
-        this._lightData.fogDensity = setting.fogDensity;
+        this._lightData.fog.colR = setting.fogColR;
+        this._lightData.fog.colG = setting.fogColG;
+        this._lightData.fog.colB = setting.fogColB;
+        this._lightData.fog.colA = setting.fogColA;
+        this._lightData.fog.density = setting.fogDensity;
 
         //点光
         this._lightData.point.colR = setting.pointColR;

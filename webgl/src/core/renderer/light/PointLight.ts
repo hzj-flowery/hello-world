@@ -106,7 +106,7 @@ export class PointLight extends SY.Sprite {
     this._uniformData.u_color = [0.2, 1, 0.2, 1];//点的颜色
     this._uniformData.u_lightWorldPosition = lightData.position;//光的位置
     this._uniformData.u_viewWorldPosition = cData.position;//摄像机的位置
-    this._uniformData.u_shininess = lightData.specular.specularShininess;//高光的指数
+    this._uniformData.u_shininess = lightData.specular.shininess;//高光的指数
     this._uniformData.u_light = lightData.parallel.color;
     this._uniformData.u_specular = lightData.specular.color;
     super.updateRenderData();

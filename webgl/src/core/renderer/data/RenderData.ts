@@ -1,6 +1,7 @@
 import { isThisTypeNode } from "typescript";
 import Device from "../../Device";
 import { glMatrix } from "../../math/Matrix";
+import { MathUtils } from "../../utils/MathUtils";
 import { Node } from "../base/Node";
 import { glEnums } from "../gfx/GLapi";
 import State from "../gfx/State";
@@ -121,74 +122,151 @@ export namespace syRender {
 
     //光的数据
     export namespace Light {
-        export class Spot {
+
+        /**
+ * 光照的基础数据
+ */
+        export class BaseData {
             constructor() {
+
+            }
+            private _colR: number = 0;
+            private _colG: number = 0;
+            private _colB: number = 0;
+            private _colA: number = 1.0;//透明通道
+            public get colR(): number { return this._colR };
+            public set colR(p: number) { this._colR = p };
+            public get colG(): number { return this._colG };
+            public set colG(p: number) { this._colG = p };
+            public get colB(): number { return this._colB };
+            public set colB(p: number) { this._colB = p };
+            public get colA(): number { return this._colA };
+            public set colA(p: number) { this._colA = p };
+            public get color(): Array<number> {
+                return [this._colR, this._colG, this._colB, this._colA];
+            }
+            public set color(p: Array<number>) {
+                this.colR = p[0] != null ? p[0] : this._colR;
+                this.colG = p[1] != null ? p[1] : this._colG;
+                this.colB = p[2] != null ? p[2] : this._colB;
+                this.colA = p[3] != null ? p[3] : this._colA;
+            }
+            private _posX: number = 0;
+            private _posY: number = 0;
+            private _posZ: number = 0;
+            public get posX(): number { return this._posX };
+            public set posX(p: number) { this._posX = p };
+            public get posY(): number { return this._posY };
+            public set posY(p: number) { this._posY = p };
+            public get posZ(): number { return this._posZ };
+            public set posZ(p: number) { this._posZ = p };
+            public get position(): Array<number> {
+                return [this._posX, this._posY, this._posZ];
+            }
+            public set position(p: Array<number>) {
+                this.posX = p[0] != null ? p[0] : this._posX;
+                this.posY = p[1] != null ? p[1] : this._posY;
+                this.posZ = p[2] != null ? p[2] : this._posZ;
+            }
+            private _dirX: number = 0;
+            private _dirY: number = 0;
+            private _dirZ: number = 0;
+            public get dirX(): number { return this._dirX };
+            public set dirX(p: number) { this._dirX = p };
+            public get dirY(): number { return this._dirY };
+            public set dirY(p: number) { this._dirY = p };
+            public get dirZ(): number { return this._dirZ };
+            public set dirZ(p: number) { this._dirZ = p };
+            public get direction(): Array<number> {
+                return [this._dirX, this._dirY, this._dirZ];
+            }
+            public set direction(p: Array<number>) {
+                this.dirX = p[0] != null ? p[0] : this._dirX;
+                this.dirY = p[1] != null ? p[1] : this._dirY;
+                this.dirZ = p[2] != null ? p[2] : this._dirZ;
+            }
+            public reset(): void {
+                this.color = [1, 0, 0, 1]; //默认的颜色
+                this.direction = [1, 1, 1]; //默认的方向
+            }
+        }
+        export class Spot extends BaseData {
+            constructor() {
+                super();
                 this.reset();
             }
             public reset(): void {
-                this.color = [];
-                this.direction = [];
-                this.innerLimit = 0;
+                super.reset();
                 this.outerLimit = 0;
+                this.innerLimit = 0;
             }
-            public color: Array<number>;//聚光的颜色
-            public direction: Array<number>;//聚光的方向
-            public innerLimit: number;//聚光的内部限制
-            public outerLimit: number;//聚光的外部限制
+            //聚光
+            private _innerLimit: number;//聚光的内圈
+            private _outerLimit: number;//聚光的外圈
+            public get innerLimit(): number {
+                return this._innerLimit;
+            }
+            public set innerLimit(angle: number) {
+                this._innerLimit = Math.cos(MathUtils.degToRad(angle));
+            }
+            public get outerLimit(): number {
+                return this._outerLimit;
+            }
+            public set outerLimit(angle: number) {
+                this._outerLimit = Math.cos(MathUtils.degToRad(angle));
+            }
         }
-        export class Fog {
+        export class Fog extends BaseData {
             constructor() {
+                super()
                 this.reset();
             }
-            public color: Array<number>;//雾的颜色
             public density: number;//雾的密度
             public reset() {
-                this.color = []
+                super.reset();
                 this.density = 0;
             }
         }
         //平行光
-        export class Parallel {
+        export class Parallel extends BaseData {
             constructor() {
+                super()
                 this.reset()
             }
-            public reset(): void {
-                this.color = [];
-                this.direction = [];
-            }
-            public color: Array<number>;//平行光的颜色
-            public direction: Array<number>;//平行光的方向
         }
         //聚光灯
-        export class Specular {
+        export class Specular extends BaseData {
             constructor() {
+                super();
                 this.reset()
             }
-            public color: Array<number>;//高光的颜色
-            public shiness: number;//高光指数
             public reset(): void {
-                this.color = [];
-                this.shiness = 0;
+                super.reset();
+                this.shininess = 0;
             }
+
+            //高光的时候使用
+            private _shininess: number;//高光的指数(值越大光越小，值越小光越大)
+            public get shininess(): number {
+                return this._shininess;
+            }
+            public set shininess(p: number) {
+                this._shininess = p;
+            }
+
         }
         //点光
-        export class Point {
+        export class Point extends BaseData {
             constructor() {
+                super()
                 this.reset()
-            }
-            public color: Array<number>;//光的颜色
-            public reset(): void {
-                this.color = [];
             }
         }
         //幻境光
-        export class Ambient {
+        export class Ambient extends BaseData {
             constructor() {
+                super()
                 this.reset()
-            }
-            public color: Array<number>;//光的颜色
-            public reset(): void {
-                this.color = [];
             }
         }
         //外界取数据接口
@@ -467,7 +545,7 @@ export namespace syRender {
                         _shader.setUseLightWorldPosition(this.light.position);
                         break;
                     case ShaderUseVariantType.SpecularLight:
-                        _shader.setUseSpecularLightColor(this.light.specular.color, this.light.specular.shiness);
+                        _shader.setUseSpecularLightColor(this.light.specular.color, this.light.specular.shininess);
                         break;
                     case ShaderUseVariantType.AmbientLight:
                         _shader.setUseAmbientLightColor(this.light.ambient.color);

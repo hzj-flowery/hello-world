@@ -549,16 +549,16 @@ export default class Device {
         rData._cameraPosition = cData.position;
         rData.light.ambient.color = G_LightCenter.lightData.ambient.color;//环境光
         rData.light.point.color = G_LightCenter.lightData.point.color;//点光
-        rData.light.specular.shiness = G_LightCenter.lightData.specular.specularShininess;
+        rData.light.specular.shininess = G_LightCenter.lightData.specular.shininess;
         rData.light.specular.color = G_LightCenter.lightData.specular.color;
         rData.light.position = G_LightCenter.lightData.position;
         rData.light.spot.direction = G_LightCenter.getPosLightDir();
         rData.light.spot.color = G_LightCenter.lightData.spot.color;
-        rData.light.spot.innerLimit = G_LightCenter.lightData.spot.spotInnerLimit;
-        rData.light.spot.outerLimit = G_LightCenter.lightData.spot.spotOuterLimit;
+        rData.light.spot.innerLimit = G_LightCenter.lightData.spot.innerLimit;
+        rData.light.spot.outerLimit = G_LightCenter.lightData.spot.outerLimit;
 
-        rData.light.fog.color = G_LightCenter.lightData.fogColor;
-        rData.light.fog.density = G_LightCenter.lightData.fogDensity;
+        rData.light.fog.color = G_LightCenter.lightData.fog.color;
+        rData.light.fog.density = G_LightCenter.lightData.fog.density;
 
         switch (rData.type) {
             case syRender.DataType.Base:
