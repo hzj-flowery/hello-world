@@ -8,7 +8,7 @@ import FrameBuffer from "./renderer/gfx/FrameBuffer";
 import { CameraData } from "./renderer/data/CameraData";
 import { syRender } from "./renderer/data/RenderData";
 import State from "./renderer/gfx/State";
-import { G_ShaderFactory } from "./renderer/shader/ShaderFactory";
+import { G_ShaderFactory } from "./renderer/shader/ShaderFactory"; 
 import { glEnums } from "./renderer/gfx/GLapi";
 import { Node } from "./renderer/base/Node";
 import { SY } from "./renderer/base/Sprite";
@@ -552,7 +552,7 @@ export default class Device {
         rData.light.specular.shininess = G_LightCenter.lightData.specular.shininess;
         rData.light.specular.color = G_LightCenter.lightData.specular.color;
         rData.light.position = G_LightCenter.lightData.position;
-        rData.light.spot.direction = G_LightCenter.getPosLightDir();
+        rData.light.spot.direction = G_LightCenter.lightData.spot.direction;
         rData.light.spot.color = G_LightCenter.lightData.spot.color;
         rData.light.spot.innerLimitAngle = G_LightCenter.lightData.spot.innerLimitAngle;
         rData.light.spot.outerLimitAngle = G_LightCenter.lightData.spot.outerLimitAngle;

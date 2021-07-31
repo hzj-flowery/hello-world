@@ -13,7 +13,7 @@ import { BufferAttribsData, ShaderData } from "../shader/Shader";
 import { G_ShaderFactory } from "../shader/ShaderFactory";
 import { ShaderUseVariantType } from "../shader/ShaderUseVariantType";
 import { G_LightCenter } from "./LightCenter";
-import { LineFrumstum } from "./LineFrumstum";
+import { LightCamera } from "../3d/LightCamera";
 
 
 let vertBase =
@@ -43,7 +43,7 @@ class LightModel {
     private _lightProjectInverseMatrix: Float32Array;
     private gl: WebGLRenderingContext;
     private _sunSprite: SY.sySprite;
-    private _cameraLight:LineFrumstum;//相机光
+    private _lightCamera:LightCamera;//相机光
     private _lightLine: Line;
     private _lightNode: Node;
     public init() {
@@ -101,8 +101,8 @@ class LightModel {
         this._lightLine.updateLinePos(this._coordPos.concat([0, 0, 0, 1, 1, 1]));
         this._lightNode.addChild(this._lightLine);
 
-        this._cameraLight = new LineFrumstum();
-        this._lightNode.addChild(this._cameraLight);
+        this._lightCamera = new LightCamera();
+        this._lightNode.addChild(this._lightCamera);
 
         
     }

@@ -173,14 +173,5 @@ class LightCenter {
             pos: [this._posX, this._posY, this._posZ]
         }
     }
-    
-    /**
-     * 获取位置光的方向
-     */
-    public getPosLightDir():Array<number>
-    {
-        return [this._lightReverseDir[0],this._lightReverseDir[1],this._lightReverseDir[2]];
-    }
-
 }
 export var G_LightCenter = new LightCenter();

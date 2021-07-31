@@ -290,6 +290,7 @@ export class Node extends Ref {
         }
         else
         {
+            // m = t*r*s
             glMatrix.mat4.multiply(this._modelMatrix,this._rotateMatrix,this._scaleMatrix)
             glMatrix.mat4.multiply(this._modelMatrix,this._translateMatrix,this._modelMatrix)
             glMatrix.mat4.multiply(this._modelMatrix, this._worldMatrix, this._modelMatrix);
