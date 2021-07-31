@@ -418,15 +418,7 @@ export namespace SY {
             rData.primitive.modelMatrix = this.modelMatrix;
             if(this._texture instanceof RenderTexture && (this._texture as RenderTexture).isDeferred())
             {
-                var derTexArr = [
-                    syRender.DeferredTexture.None,
-                    syRender.DeferredTexture.Position,
-                    syRender.DeferredTexture.Normal,
-                    syRender.DeferredTexture.Color,
-                    syRender.DeferredTexture.UV,
-                    syRender.DeferredTexture.Depth
-                ]
-                derTexArr.forEach((value,index)=>{
+                syRender.DeferredAllTypeTexture.forEach((value,index)=>{
                     var texS = (this._texture as RenderTexture).getDeferredTex(value);
                     texS?rData.push2DTexture(texS,value):null;
                 })

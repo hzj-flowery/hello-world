@@ -78,6 +78,17 @@ export namespace syRender {
         Depth,  //深度纹理
         None   //非延迟渲染输出的纹理 
     }
+    /**
+     * 延迟渲染所有类型的纹理
+     */
+    export var  DeferredAllTypeTexture = [
+        DeferredTexture.None,
+        DeferredTexture.Position,
+        DeferredTexture.Normal,
+        DeferredTexture.Color,
+        DeferredTexture.UV,
+        DeferredTexture.Depth
+    ];
 
     //bufferData
     export class WebGLBufferData {
