@@ -42,19 +42,12 @@ class LightModel {
     private _lightWorldMatrix: Float32Array;
     private _lightProjectInverseMatrix: Float32Array;
     private gl: WebGLRenderingContext;
-    private _sunSprite: SY.sySprite;
-    private _lightCamera:LightCamera;//相机光
-    private _lightLine: Line;
-    private _lightNode: Node;
     public init() {
         this._lightWorldMatrix = glMatrix.mat4.identity(null);
         this._lightProjectInverseMatrix = glMatrix.mat4.identity(null);
         this._lightViewMatrix = glMatrix.mat4.identity(null);
-        this._lightNode = new Node();
-        G_Stage.addChild(this._lightNode);
         this._colorProgramInfo = G_ShaderFactory.createProgramInfo(vertBase, fragBase);
         this.gl = Device.Instance.gl;
-        this.createSun();
         this._cubeLinesBufferInfo = G_ShaderFactory.createBufferInfoFromArrays({
             position: [
                 -1, -1, -1,
@@ -85,31 +78,7 @@ class LightModel {
         });
         G_UISetting.pushRenderCallBack(this.render.bind(this))
     }
-    private createSun(): void {
-        this._sunSprite = new SY.sySprite();
-        let vertexData = syPrimitives.createSphereVertices(1, 24, 24);
-        this._sunSprite.createIndexsBuffer(vertexData.indices);
-        this._sunSprite.createNormalsBuffer(vertexData.normal, 3);
-        this._sunSprite.createUVsBuffer(vertexData.texcoord, 2);
-        this._sunSprite.createVertexsBuffer(vertexData.position, 3);
-        this._sunSprite.setScale(0.3,0.3,0.3);
-        this._sunSprite.spriteFrame = "res/light.jpg";
-        this._lightNode.addChild(this._sunSprite);
-        setTimeout(this.autoRotateSun.bind(this), 17);
-
-        this._lightLine = new Line();
-        this._lightLine.updateLinePos(this._coordPos.concat([0, 0, 0, 1, 1, 1]));
-        this._lightNode.addChild(this._lightLine);
-
-        this._lightCamera = new LightCamera();
-        this._lightNode.addChild(this._lightCamera);
-
-        
-    }
-    private autoRotateSun(): void {
-        this._sunSprite.rotate(1, 1, 1);
-        setTimeout(this.autoRotateSun.bind(this), 17);
-    }
+    
 
     private _coordPos: Array<number> = [
         0, 0, 0, 20, 0, 0,   //x轴
@@ -117,11 +86,14 @@ class LightModel {
         0, 0, 0, 0, 0, 20    //z轴
     ];//坐标轴
     private render(setting): void {
-        this._lightNode.x = setting.eyeX;
-        this._lightNode.y = setting.eyeY;
-        this._lightNode.z = setting.eyeZ;
-        this._lightLine.updateLinePos(this._coordPos.concat([0, 0, 0, setting.parallelDirX, setting.parallelDirY, setting.parallelDirZ]));
-        this._lightLine.color = [setting.parallelColR, setting.parallelColG, setting.parallelColB, setting.parallelColA];
+        // this._lightCamera.x = setting.eyeX;
+        // this._lightCamera.y = setting.eyeY;
+        // this._lightCamera.z = setting.eyeZ;
+        // this._lightCamera.targetX = setting.lightTargetX;
+        // this._lightCamera.targetY = setting.lightTargetY;
+        // this._lightCamera.targetZ = setting.lightTargetZ;
+        // this._lightCamera.projWidth = setting.lightProjWidth
+        // this._lightCamera.projHeight = setting.lightProjHeight
     }
 
 
