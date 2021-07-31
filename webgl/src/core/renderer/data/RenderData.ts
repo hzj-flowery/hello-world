@@ -197,23 +197,30 @@ export namespace syRender {
             }
             public reset(): void {
                 super.reset();
-                this.outerLimit = 0;
-                this.innerLimit = 0;
+                this.outerLimitAngle = 0;
+                this.innerLimitAngle = 0;
             }
             //聚光
-            private _innerLimit: number;//聚光的内圈
-            private _outerLimit: number;//聚光的外圈
-            public get innerLimit(): number {
-                return this._innerLimit;
+            private _innerLimitAngle: number;//聚光的内圈
+            private _outerLimitAngle: number;//聚光的外圈
+            public get innerLimitAngle(): number {
+                return  this._innerLimitAngle;
             }
-            public set innerLimit(angle: number) {
-                this._innerLimit = Math.cos(MathUtils.degToRad(angle));
+            public set innerLimitAngle(angle: number) {
+                this._innerLimitAngle =angle;
+            }
+            public get outerLimitAngle(): number {
+                return this._outerLimitAngle;
+            }
+            public set outerLimitAngle(angle: number) {
+                this._outerLimitAngle = angle;
+            }
+
+            public get innerLimit(): number {
+                return  Math.cos(MathUtils.degToRad(this._innerLimitAngle));
             }
             public get outerLimit(): number {
-                return this._outerLimit;
-            }
-            public set outerLimit(angle: number) {
-                this._outerLimit = Math.cos(MathUtils.degToRad(angle));
+                return Math.cos(MathUtils.degToRad(this._outerLimitAngle));
             }
         }
         export class Fog extends BaseData {

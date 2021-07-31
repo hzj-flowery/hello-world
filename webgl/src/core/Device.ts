@@ -554,8 +554,8 @@ export default class Device {
         rData.light.position = G_LightCenter.lightData.position;
         rData.light.spot.direction = G_LightCenter.getPosLightDir();
         rData.light.spot.color = G_LightCenter.lightData.spot.color;
-        rData.light.spot.innerLimit = G_LightCenter.lightData.spot.innerLimit;
-        rData.light.spot.outerLimit = G_LightCenter.lightData.spot.outerLimit;
+        rData.light.spot.innerLimitAngle = G_LightCenter.lightData.spot.innerLimitAngle;
+        rData.light.spot.outerLimitAngle = G_LightCenter.lightData.spot.outerLimitAngle;
 
         rData.light.fog.color = G_LightCenter.lightData.fog.color;
         rData.light.fog.density = G_LightCenter.lightData.fog.density;

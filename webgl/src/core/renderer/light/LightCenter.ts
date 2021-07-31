@@ -77,8 +77,8 @@ class LightCenter {
         this._lightData.parallel.dirZ = setting.parallelDirZ;
         
         //聚光
-        this._lightData.spot.innerLimit = setting.spotInnerLimit;
-        this._lightData.spot.outerLimit = setting.spotOuterLimit;
+        this._lightData.spot.innerLimitAngle = setting.spotInnerLimit;
+        this._lightData.spot.outerLimitAngle = setting.spotOuterLimit;
         this._lightData.spot.dirX = setting.spotDirX;
         this._lightData.spot.dirY = setting.spotDirY;
         this._lightData.spot.dirZ = setting.spotDirZ;

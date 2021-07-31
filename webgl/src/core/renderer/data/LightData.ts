@@ -28,8 +28,8 @@ export class LightData {
         this.ambient.color = [0.1, 0.1, 0.1, 1.0];//环境光
         this.point.color = [1.0, 1.0, 1.0, 1.0];//默认点光的颜色为红色
 
-        this.spot.innerLimit = 20;
-        this.spot.outerLimit = 30;
+        this.spot.innerLimitAngle = 20;
+        this.spot.outerLimitAngle = 30;
         this.spot.direction = [0, 0, 1];
         this.spot.color = [1, 0, 0, 1];
 
