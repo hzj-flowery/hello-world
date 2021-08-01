@@ -222,10 +222,10 @@ export default class Scene3D extends Scene {
         // this._mirrorCube.setDefaultUrl();
         // tempNode.addChild(this._mirrorCube);
 
-        this.addChild(new LightCamera());
+        this._centerNode.addChild(new LightCamera());
 
         G_UISetting.pushRenderCallBack((data)=>{
-            this._centerNode.setPosition(0,1.1,0)
+            this._centerNode.setPosition(0,data.customValue?-data.customValue:0,0)
             // this._spotLightCube.setPosition(0,0,data.customValue?-data.customValue:-130)
         //     this._lightCube.setRotation(0,data.customValue?data.customValue:0,0)
         //     this._lightCube.setPosition(0,data.customValue1?data.customValue1:0,5)
