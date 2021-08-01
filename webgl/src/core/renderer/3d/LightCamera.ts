@@ -2,6 +2,7 @@ import { sy } from "../../Director";
 import { glMatrix } from "../../math/Matrix";
 import { G_UISetting } from "../../ui/UiSetting";
 import { MathUtils } from "../../utils/MathUtils";
+import { Node } from "../base/Node";
 import { SY } from "../base/Sprite";
 import Camera from "../camera/Camera";
 import { LightData } from "../data/LightData";
@@ -24,7 +25,11 @@ var VertData = {
 /**
  * 光照摄像机
  */
-export class LightCamera extends SY.SpriteBase {
+export class LightCamera extends Node {
+    constructor(){
+        super();
+        this.onInit();
+    }
     private _frustum: LineFrustum;
     onInit(): void {
         this._cameraMatrix = glMatrix.mat4.identity(null);
@@ -37,7 +42,7 @@ export class LightCamera extends SY.SpriteBase {
     }
     protected collectRenderData(time): void {
         this._sunSprite.rotate(1, 1, 1);
-       
+
         super.collectRenderData(time);
     }
 
@@ -170,7 +175,7 @@ export class LightCamera extends SY.SpriteBase {
 
         this._sunSprite.setPosition(this.eyeX, this.eyeY, this.eyeZ);
         this._lightLine.setPosition(this.eyeX, this.eyeY, this.eyeZ);
-        
-        
+
+
     }
 }
