@@ -10,7 +10,7 @@ import { CubeData } from "../data/CubeData";
 /**
  * 光照立方体
  */
-export default class LightCube extends SY.SpriteBase {
+export default class ParallelLightCube extends SY.SpriteBase {
     constructor() {
         super();
     }

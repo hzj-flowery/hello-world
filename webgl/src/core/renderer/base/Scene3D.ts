@@ -1,7 +1,7 @@
 import Scene from "./Scene";
 import Ground from "../3d/Ground";
 import Cube from "../3d/Cube";
-import LightCube from "../3d/LightCube";
+import LightCube from "../3d/ParallelLightCube";
 import SkyBox from "../3d/SkyBox";
 import { Node } from "./Node";
 import CustomTextureCube from "../3d/CustomTextureCube";
