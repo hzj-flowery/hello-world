@@ -78,13 +78,6 @@ class LightModel {
         });
         G_UISetting.pushRenderCallBack(this.render.bind(this))
     }
-    
-
-    private _coordPos: Array<number> = [
-        0, 0, 0, 20, 0, 0,   //x轴
-        0, 0, 0, 0, 20, 0,   //y轴
-        0, 0, 0, 0, 0, 20    //z轴
-    ];//坐标轴
     private render(setting): void {
         // this._lightCamera.x = setting.eyeX;
         // this._lightCamera.y = setting.eyeY;

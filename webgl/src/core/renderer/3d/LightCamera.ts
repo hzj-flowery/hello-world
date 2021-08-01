@@ -78,6 +78,10 @@ export class LightCamera extends SY.SpriteBase {
         glMatrix.mat4.invert(this._lightProjectInverseMatrix, this._projectMatrix)
         glMatrix.mat4.multiply(this._lightWorldMatrix, this._cameraMatrix, this._lightProjectInverseMatrix);
         this.createCustomMatrix(this._lightWorldMatrix);
+
+        this._sunSprite.setPosition(this.x,this.y,this.z);
+        this._lightLine.setPosition(this.x,this.y,this.z);
+        
         super.collectRenderData(time);
     }
 

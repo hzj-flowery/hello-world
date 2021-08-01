@@ -20,7 +20,7 @@ export default class RenderFlow {
         GameMainCamera.instance.registerCamera(0,syRender.CameraUUid.Depth,G_Stage)
         GameMainCamera.instance.initRenderData();
         
-        G_Stage.addChild(new LightCamera());
+       
 
         this._3dScene = new Scene3D();
         this._3dScene.init();
@@ -29,6 +29,8 @@ export default class RenderFlow {
         
         G_Stage.addChild(this._3dScene);
         G_Stage.addChild(this._2dScene);
+
+        G_Stage.addChild(new LightCamera());
 
         this.loopScale();
     }
