@@ -13,7 +13,6 @@ import { BufferAttribsData, ShaderData } from "../shader/Shader";
 import { G_ShaderFactory } from "../shader/ShaderFactory";
 import { ShaderUseVariantType } from "../shader/ShaderUseVariantType";
 import { G_LightCenter } from "./LightCenter";
-import { LightCamera } from "../3d/LightCamera";
 
 
 let vertBase =

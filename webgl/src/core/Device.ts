@@ -339,7 +339,7 @@ export default class Device {
             failIfMajorPerformanceCaveat?: boolean;
             powerPreference?: WebGLPowerPreference;
             premultipliedAlpha?: boolean;
-            preserveDrawingBuffer?: boolean;
+            preserveDrawingBuffer?: boolean; //这让 WebGL 在将画布和页面其它内容合成后不清除画布
             stencil?: boolean;
          */
         let options = {

@@ -55,9 +55,9 @@ export class LightCamera extends SY.SpriteBase {
         super();
         this._glPrimitiveType = syGL.PrimitiveType.LINES;
     }
-
     private _lightWorldMatrix: Float32Array;
     private _lightProjectInverseMatrix: Float32Array;
+
     onInit(): void {
         this.createVertexsBuffer(VertData.frustum_position, 3);
         this.createIndexsBuffer(VertData.frustum_indices);
@@ -78,10 +78,9 @@ export class LightCamera extends SY.SpriteBase {
         glMatrix.mat4.invert(this._lightProjectInverseMatrix, this._projectMatrix)
         glMatrix.mat4.multiply(this._lightWorldMatrix, this._cameraMatrix, this._lightProjectInverseMatrix);
         this.createCustomMatrix(this._lightWorldMatrix);
+        this._sunSprite.setPosition(this.eyeX, this.eyeY, this.eyeZ);
+        this._lightLine.setPosition(this.eyeX, this.eyeY, this.eyeZ);
 
-        this._sunSprite.setPosition(this.x,this.y,this.z);
-        this._lightLine.setPosition(this.x,this.y,this.z);
-        
         super.collectRenderData(time);
     }
 
@@ -89,32 +88,33 @@ export class LightCamera extends SY.SpriteBase {
     private _projectMatrix: Float32Array;  //投影矩阵
     private _lightReverseDir: Float32Array;
     private _near: number = 0.1;
-    private _far: number = 50;
+    private _far: number = 500;
     private _projWidth: number = 10;
     private _projHeight: number = 10;
+    private _fieldOfView: number = 60;//光张开的视角
+    private _perspective: boolean = false;//是否为透视
+    
+    //看向的目标位置
     private _targetX: number = 0;
     private _targetY: number = 0;
     private _targetZ: number = 0;
-    private _fieldOfView: number = 120;//光张开的视角
-    private _perspective: boolean = false;//是否为透视
-    public set targetX(p: number) {
-        this._targetX = p;
-    }
-    public set targetY(p: number) {
-        this._targetY = p;
-    }
-    public set targetZ(p: number) {
-        this._targetZ = p;
-    }
-    public get targetX(): number {
-        return this._targetX;
-    }
-    public get targetY(): number {
-        return this._targetY;
-    }
-    public get targetZ(): number {
-        return this._targetZ;
-    }
+    public set targetX(p: number) {this._targetX = p;}
+    public set targetY(p: number) {this._targetY = p;}
+    public set targetZ(p: number) {this._targetZ = p;}
+    public get targetX(): number  {return this._targetX;}
+    public get targetY(): number  {return this._targetY;}
+    public get targetZ(): number  {return this._targetZ;}
+    //眼睛的位置
+    private _eyeX: number = 0;
+    private _eyeY: number = 0;
+    private _eyeZ: number = 0;
+    public set eyeX(p: number) {this._eyeX = p;}
+    public set eyeY(p: number) {this._eyeY = p;}
+    public set eyeZ(p: number) {this._eyeZ = p;}
+    public get eyeX(): number  {return this._eyeX;}
+    public get eyeY(): number  {return this._eyeY;}
+    public get eyeZ(): number  {return this._eyeZ;}
+
     public get perspective(): boolean {
         return this._perspective;
     }
@@ -146,7 +146,7 @@ export class LightCamera extends SY.SpriteBase {
          * 0  0  0  1 
          */
         glMatrix.mat4.lookAt2(this._cameraMatrix,
-            [this.x, this.y, this.z],          // position
+            [this._eyeX, this._eyeY, this._eyeZ],          // position
             [this._targetX, this._targetY, this._targetZ], // target
             [0, 1, 0],                                              // up
         )
@@ -192,9 +192,9 @@ export class LightCamera extends SY.SpriteBase {
     }
 
     private render(setting): void {
-        this.x = setting.eyeX;
-        this.y = setting.eyeY;
-        this.z = setting.eyeZ;
+        this.eyeX = setting.eyeX;
+        this.eyeY = setting.eyeY;
+        this.eyeZ = setting.eyeZ;
         this.targetX = setting.lightTargetX;
         this.targetY = setting.lightTargetY;
         this.targetZ = setting.lightTargetZ;

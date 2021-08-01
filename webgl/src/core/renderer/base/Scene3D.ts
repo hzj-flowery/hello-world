@@ -24,6 +24,7 @@ import AlphaCube from "../3d/AlphaCube";
 import Device from "../../Device";
 import { RenderOffline3DSprite } from "../3d/RenderOffline3DSprite";
 import { syRender } from "../data/RenderData";
+import { LightCamera } from "../3d/LightCamera";
 
 export default class Scene3D extends Scene {
 
@@ -171,7 +172,7 @@ export default class Scene3D extends Scene {
         // this._centerNode.addChild(this._pointLightCube);
         this._spotLightCube = new SpotLightCube();
         this._spotLightCube.setScale(100,50.0,10.0);
-        this._spotLightCube.setPosition(0, 0, -10);
+        this._spotLightCube.setPosition(0, 0, -130);
         this._spotLightCube.spriteFrame = "res/dragon.jpg";
         this._centerNode.addChild(this._spotLightCube);
 
@@ -208,12 +209,7 @@ export default class Scene3D extends Scene {
         this._lightCube.setScale(0.5, 0.5, 0.5);
         this._centerNode.addChild(this._lightCube);
 
-        G_UISetting.pushRenderCallBack((data)=>{
-            this._spotLightCube.setPosition(0,0,data.customValue?-data.customValue:-130)
-        //     this._lightCube.setRotation(0,data.customValue?data.customValue:0,0)
-        //     this._lightCube.setPosition(0,data.customValue1?data.customValue1:0,5)
-        //     this._lightCube.setScale(data.customValue2?data.customValue2:1,data.customValue2?data.customValue2:1,data.customValue2?data.customValue2:1)
-        })
+        
 
         this._skybox = new SkyBox();
         this._skybox.setDefaultUrl();
@@ -226,6 +222,15 @@ export default class Scene3D extends Scene {
         // this._mirrorCube.setDefaultUrl();
         // tempNode.addChild(this._mirrorCube);
 
+        this.addChild(new LightCamera());
+
+        G_UISetting.pushRenderCallBack((data)=>{
+            this._centerNode.setPosition(0,1.1,0)
+            // this._spotLightCube.setPosition(0,0,data.customValue?-data.customValue:-130)
+        //     this._lightCube.setRotation(0,data.customValue?data.customValue:0,0)
+        //     this._lightCube.setPosition(0,data.customValue1?data.customValue1:0,5)
+        //     this._lightCube.setScale(data.customValue2?data.customValue2:1,data.customValue2?data.customValue2:1,data.customValue2?data.customValue2:1)
+        })
         this.setPosition(0, 0, 0);
         setTimeout(this.rotateCenterNode.bind(this), 20);
 

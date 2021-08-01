@@ -1,6 +1,5 @@
 
 import Device from "./Device";
-import { LightCamera } from "./renderer/3d/LightCamera";
 import Scene2D from "./renderer/base/Scene2D";
 import Scene3D from "./renderer/base/Scene3D";
 import { G_Stage } from "./renderer/base/Stage";
@@ -30,8 +29,7 @@ export default class RenderFlow {
         G_Stage.addChild(this._3dScene);
         G_Stage.addChild(this._2dScene);
 
-        G_Stage.addChild(new LightCamera());
-
+        
         this.loopScale();
     }
 
