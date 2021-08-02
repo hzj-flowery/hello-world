@@ -438,13 +438,13 @@ export namespace syRender {
             useVariantType.forEach((value: ShaderUseVariantType) => {
                 switch (value) {
                     case ShaderUseVariantType.Vertex:
-                        _shader.setUseVertexAttribPointerForVertex(this.primitive.vert.glID, this.primitive.vert.itemSize);
+                        _shader.setUseVertexAttribPointer(this.primitive.vert.glID, this.primitive.vert.itemSize,syGL.AttributeUniform.POSITION);
                         break;
                     case ShaderUseVariantType.Normal:
-                        _shader.setUseVertexAttriPointerForNormal(this.primitive.normal.glID, this.primitive.normal.itemSize);
+                        _shader.setUseVertexAttribPointer(this.primitive.normal.glID, this.primitive.normal.itemSize,syGL.AttributeUniform.NORMAL);
                         break;
                     case ShaderUseVariantType.UVs:
-                        _shader.setUseVertexAttribPointerForUV(this.primitive.uv.glID, this.primitive.uv.itemSize);
+                        _shader.setUseVertexAttribPointer(this.primitive.uv.glID, this.primitive.uv.itemSize,syGL.AttributeUniform.UV);
                         break;
                     case ShaderUseVariantType.TEX_COORD:
                         _shader.setUseTexture(this._texture2DGLIDArray[0], useTextureAddres);
@@ -557,45 +557,51 @@ export namespace syRender {
                         _shader.bindMatrixToShader(syGL.AttributeUniform.PVMatrix_INVERSE, this._temp002_matrix);
                         break;
                     case ShaderUseVariantType.CameraWorldPosition:
-                        _shader.setUseCameraWorldPosition(this._cameraPosition);
+                        _shader.setCustomUniformFloatVec3(syGL.AttributeUniform.CameraWorldPosition,this._cameraPosition);
                         break;
                     case ShaderUseVariantType.LightWorldPosition:
-                        _shader.setUseLightWorldPosition(this.light.position);
+                        _shader.setCustomUniformFloatVec3(syGL.AttributeUniform.LightWorldPosition,this.light.position);
                         break;
                     case ShaderUseVariantType.SpecularLight:
-                        _shader.setUseSpecularLightColor(this.light.specular.color, this.light.specular.shininess);
+                        _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.LIGHT_SPECULAR_COLOR,this.light.specular.color)
+                        _shader.setCustomUniformFloat(syGL.AttributeUniform.LIGHT_SPECULAR_SHININESS,this.light.specular.shininess)
                         break;
                     case ShaderUseVariantType.AmbientLight:
-                        _shader.setUseAmbientLightColor(this.light.ambient.color);
+                        _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.LIGHT_AMBIENT_COLOR,this.light.ambient.color);
                         break;
                     case ShaderUseVariantType.PointLight:
-                        _shader.setUsePointLightColor(this.light.point.color);
+                        _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.LIGHT_POINT_COLOR,this.light.point.color);
                         break;
                     //平行光
                     case ShaderUseVariantType.ParallelLight:
-                        _shader.setUseParallelLight(this.light.parallel.color, this.light.parallel.direction);
+                        _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.LIGHT_COLOR,this.light.parallel.color)
+                        _shader.setCustomUniformFloatVec3(syGL.AttributeUniform.LIGHT_COLOR_DIR,this.light.parallel.direction)
                         break;
                     //聚光灯
                     case ShaderUseVariantType.SpotLight:
-                        _shader.setUseSpotLight(this.light.spot.color, this.light.spot.direction, this.light.spot.innerLimit, this.light.spot.outerLimit);
+                        _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.LIGHT_SPOT_COLOR,this.light.spot.color);
+                        _shader.setCustomUniformFloatVec3(syGL.AttributeUniform.LIGHT_SPOT_DIRECTION,this.light.spot.direction)
+                        _shader.setCustomUniformFloat(syGL.AttributeUniform.LIGHT_SPOT_INNER_LIMIT,this.light.spot.innerLimit)
+                        _shader.setCustomUniformFloat(syGL.AttributeUniform.LIGHT_SPOT_OUTER_LIMIT,this.light.spot.outerLimit);
                         break;
                     case ShaderUseVariantType.Fog:
-                        _shader.setUseFog(this.light.fog.color, this.light.fog.density);
+                        _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.FOG_COLOR,this.light.fog.color);
+                        _shader.setCustomUniformFloat(syGL.AttributeUniform.FOG_DENSITY,this.light.fog.density);
                         break;
                     case ShaderUseVariantType.Color:
-                        _shader.setUseNodeColor(this.primitive.color);
+                        _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.COLOR,this.primitive.color);
                         break;
                     case ShaderUseVariantType.Alpha:
-                        _shader.setUseNodeAlpha(this.primitive.alpha);
+                        _shader.setCustomUniformFloat(syGL.AttributeUniform.ALPHA,this.primitive.alpha);
                         break;
                     case ShaderUseVariantType.VertColor:
-                        _shader.setUseNodeVertColor(this.primitive.nodeVertColor.glID, this.primitive.nodeVertColor.itemSize);
+                        _shader.setUseVertexAttribPointer(this.primitive.nodeVertColor.glID, this.primitive.nodeVertColor.itemSize,syGL.AttributeUniform.VERT_COLOR);
                         break;
                     case ShaderUseVariantType.VertMatrix:
                         _shader.setUseVertMatrix(this.primitive.vertMatrix.glID, this.primitive.vertMatrix.itemSize);
                         break;
                     case ShaderUseVariantType.Time:
-                        _shader.setUseTime(Device.Instance.triggerRenderTime);
+                        _shader.setCustomUniformFloat(syGL.AttributeUniform.TIME,Device.Instance.triggerRenderTime);
                     default:
                     // console.log("目前还没有处理这个矩阵类型");
                 }

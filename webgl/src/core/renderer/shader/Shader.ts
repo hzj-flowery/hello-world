@@ -113,6 +113,9 @@ mapTree_u.set(syGL.AttributeUniform.PVMatrix_INVERSE, ["u_PVMatrix_inverse_loc",
 mapTree_u.set(syGL.AttributeUniform.CameraWorldPosition, ["u_camera_world_position_loc", ShaderUseVariantType.CameraWorldPosition]);
 mapTree_u.set(syGL.AttributeUniform.LightWorldPosition, ["u_light_world_position_loc", ShaderUseVariantType.LightWorldPosition]);
 
+mapTree_u.set(syGL.AttributeUniform.MOUSE,["u_mouse_loc",ShaderUseVariantType.Mouse]);
+mapTree_u.set(syGL.AttributeUniform.RESOLUTION,["u_resolution_loc",ShaderUseVariantType.Resolution])
+
 
 export class Shader {
     private a_position_loc;//顶点属性位置
@@ -282,119 +285,54 @@ export class Shader {
         G_DrawEngine.useProgram(this._spGLID);
     }
     /**
-     * 设置使用雾
-     * @param color 
-     * @param density 
+     * 设置自定义使用的统一变量
+     * @param uniforName shader代码中变量的名字
+     * @param data 数组中包含四个元素 shader那边是一个vec4
      */
-    public setUseFog(color: Array<number>, density: number): void {
-        if (this.checklocValid(this.u_fog_loc)) {
-            G_DrawEngine.setUniformFloatVec4(this.u_fog_loc, color)
+    public setCustomUniformFloatVec4(uniforName:syGL.AttributeUniform,data:Array<number>):void{
+        var value = mapTree_u.get(uniforName)
+        if (!value) {
+            return
         }
-        if (this.checklocValid(this.u_fogDensity_loc)) {
-            G_DrawEngine.setUniform1f(this.u_fogDensity_loc, density)
-        }
-    }
-    /**
-     * 设置使用时间
-     * @param time 
-     */
-    public setUseTime(time: number): void {
-        if (this.checklocValid(this.u_time_loc)) {
-            G_DrawEngine.setUniform1f(this.u_time_loc, time)
-        }
-    }
-    /**
-     * 设置使用高光的颜色
-     * @param color 
-     */
-    public setUseSpecularLightColor(color: Array<number>, shininess: number): void {
-        if (this.checklocValid(this.u_light_specular_color_loc)) {
-            G_DrawEngine.setUniformFloatVec4(this.u_light_specular_color_loc, color);
-        }
-        if (this.checklocValid(this.u_light_specular_shininess_loc)) {
-            G_DrawEngine.setUniform1f(this.u_light_specular_shininess_loc, shininess)
-        }
-    }
-    //设置使用平行光
-    public setUseParallelLight(color: Array<number>, direction: Array<number>): void {
-        if (this.checklocValid(this.u_light_color_loc)) {
-            G_DrawEngine.setUniformFloatVec4(this.u_light_color_loc, color);
-        }
-        if (this.checklocValid(this.u_light_color_dir_loc)) {
-            G_DrawEngine.setUniformFloatVec3(this.u_light_color_dir_loc, direction);
+        var loc = value[0];
+        if (this.checklocValid(this[loc])) {
+            G_DrawEngine.setUniformFloatVec4(this[loc], data);
         }
     }
 
     /**
-     * 设置使用聚光灯
-     * @param color 
-     * @param dir 
-     * @param inner 
-     * @param outer 
+     * 设置自定义使用的统一变量
+     * @param uniforName shader代码中变量的名字
+     * @param data 数组中包含三个元素 shader那边是一个vec3
      */
-    public setUseSpotLight(color: Array<number>, dir: Array<number>, inner: number, outer: number): void {
-        if (this.checklocValid(this.u_light_spotColor_loc)) {
-            G_DrawEngine.setUniformFloatVec4(this.u_light_spotColor_loc, color);
+     public setCustomUniformFloatVec3(uniforName:syGL.AttributeUniform,data:Array<number>):void{
+        var value = mapTree_u.get(uniforName)
+        if (!value) {
+            return
         }
-        if (this.checklocValid(this.u_light_spotDirection_loc)) {
-            G_DrawEngine.setUniformFloatVec3(this.u_light_spotDirection_loc, dir);
-        }
-        if (this.checklocValid(this.u_light_spotInnerLimit_loc)) {
-            G_DrawEngine.setUniform1f(this.u_light_spotInnerLimit_loc, inner);
-        }
-        if (this.checklocValid(this.u_light_spotOuterLimit_loc)) {
-            G_DrawEngine.setUniform1f(this.u_light_spotOuterLimit_loc, outer);
-        }
-    }
-
-
-    /**
-   * 设置使用节点自定义颜色
-   * @param color 
-   */
-    public setUseNodeColor(color: Array<number>): void {
-        if (this.checklocValid(this.u_color_loc)) {
-            G_DrawEngine.setUniformFloatVec4(this.u_color_loc, color);
-        }
-    }
-    /**
-     * 设置使用节点的透明度
-     * @param alpha 
-     */
-    public setUseNodeAlpha(alpha: number): void {
-        if (this.checklocValid(this.u_alpha_loc)) {
-            G_DrawEngine.setUniform1f(this.u_alpha_loc, alpha);
-        }
-    }
-    /**
-     * 设置使用环境光的颜色
-     * @param color 
-     */
-    public setUseAmbientLightColor(color: Array<number>): void {
-        if (this.checklocValid(this.u_ambient_loc)) {
-            G_DrawEngine.setUniformFloatVec4(this.u_ambient_loc, color);
+        var loc = value[0];
+        if (this.checklocValid(this[loc])) {
+            G_DrawEngine.setUniformFloatVec3(this[loc], data);
         }
     }
 
     /**
-     * 设置使用点光的颜色
-     * @param color 
+     * 设置自定义使用的统一变量
+     * @param uniforName shader代码中变量的名字
+     * @param data  shader那边是一个float
      */
-    public setUsePointLightColor(color: Array<number>): void {
-        if (this.checklocValid(this.u_point_loc)) {
-            G_DrawEngine.setUniformFloatVec4(this.u_point_loc, color);
+     public setCustomUniformFloat(uniforName:syGL.AttributeUniform,data:number):void{
+        var value = mapTree_u.get(uniforName)
+        if (!value) {
+            return
+        }
+        var loc = value[0];
+        if (this.checklocValid(this[loc])) {
+            G_DrawEngine.setUniform1f(this[loc], data);
         }
     }
 
-    /**
-     * 设置使用自定义定点颜色
-     * @param color 
-     */
-    public setUseNodeVertColor(glID, itemSize: number): void {
-        if (this.checklocValid(this.a_vert_color_loc)) {
-            G_DrawEngine.activeVertexAttribArray(glID, this.a_vert_color_loc, itemSize);
-        }
-    }
+
     /**
      * 设置使用顶点矩阵
      * @param glID 
@@ -403,24 +341,6 @@ export class Shader {
     public setUseVertMatrix(glID, itemSize: number): void {
         if (this.checklocValid(this.a_vert_matrix_loc)) {
             G_DrawEngine.activeMatrixVertexAttribArray(glID, this.a_vert_matrix_loc, itemSize)
-        }
-    }
-    /**
-     * 设置使用相机的世界位置
-     * @param pos 
-     */
-    public setUseCameraWorldPosition(pos: Array<number>): void {
-        if (this.checklocValid(this.u_camera_world_position_loc)) {
-            G_DrawEngine.setUniformFloatVec3(this.u_camera_world_position_loc, pos);
-        }
-    }
-    /**
-     * 设置使用光的世界位置
-     * @param pos 
-     */
-    public setUseLightWorldPosition(pos: Array<number>): void {
-        if (this.checklocValid(this.u_light_world_position_loc)) {
-            G_DrawEngine.setUniformFloatVec3(this.u_light_world_position_loc, pos);
         }
     }
     //设置使用的纹理
@@ -492,24 +412,16 @@ export class Shader {
         }
     }
     //设置顶点值
-    public setUseVertexAttribPointerForVertex(glID, itemSize: number): void {
-        if (this.checklocValid(this.a_position_loc)) {
-            G_DrawEngine.activeVertexAttribArray(glID, this.a_position_loc, itemSize);
+    public setUseVertexAttribPointer(glID, itemSize: number,attributeName: syGL.AttributeUniform): void {
+        var value = mapTree_a.get(attributeName)
+        if(value)
+        {
+            var loc = value[0];
+            if (this.checklocValid(this[loc])) {
+                G_DrawEngine.activeVertexAttribArray(glID, this[loc], itemSize);
+            }
         }
     }
-    //设置法线值
-    public setUseVertexAttriPointerForNormal(glID, itemSize: number): void {
-        if (this.checklocValid(this.a_normal_loc)) {
-            G_DrawEngine.activeVertexAttribArray(glID, this.a_normal_loc, itemSize);
-        }
-    }
-    //设置uv值
-    public setUseVertexAttribPointerForUV(glID, itemSize: number): void {
-        if (this.checklocValid(this.a_uv_loc)) {
-            G_DrawEngine.activeVertexAttribArray(glID, this.a_uv_loc, itemSize);
-        }
-    }
-
     public disableVertexAttribArray(): void {
         mapTree_a.forEach((value, key) => {
             var loc = value[0];

@@ -136,8 +136,9 @@ export default class CameraView extends SY.SpriteBase {
         this._glMatrix.mat4.mul(newMV,v,m)
         this.shader.bindMatrixToShader(syGL.AttributeUniform.VMMatrix,newMV);
         this.shader.bindMatrixToShader(syGL.AttributeUniform.PMatrix,GameMainCamera.instance.getCameraIndex(syRender.CameraUUid.base3D).getProjectionMatrix());
-        this.shader.setUseParallelLight([1, 0, 0, 1],[]);
-        this.shader.setUseVertexAttribPointerForVertex(this.getGLID(SY.GLID_TYPE.VERTEX), this.getBufferItemSize(SY.GLID_TYPE.VERTEX));
+        this.shader.setCustomUniformFloatVec4(syGL.AttributeUniform.LIGHT_COLOR,[1, 0, 0, 1])
+        this.shader.setCustomUniformFloatVec3(syGL.AttributeUniform.LIGHT_COLOR_DIR,[])
+        this.shader.setUseVertexAttribPointer(this.getGLID(SY.GLID_TYPE.VERTEX), this.getBufferItemSize(SY.GLID_TYPE.VERTEX),syGL.AttributeUniform.POSITION);
         
         //绑定操作的索引缓冲
         this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.getGLID(SY.GLID_TYPE.INDEX));
@@ -147,16 +148,20 @@ export default class CameraView extends SY.SpriteBase {
         var head = 24;
         var ray = 2*3;
         var clip = 24;
-        this.shader.setUseParallelLight([0, 0, 0, 1],[]);
+        this.shader.setCustomUniformFloatVec4(syGL.AttributeUniform.LIGHT_COLOR,[0, 0, 0, 1])
+        this.shader.setCustomUniformFloatVec3(syGL.AttributeUniform.LIGHT_COLOR_DIR,[])
         this.gl.drawElements(this._glPrimitiveType,body, this.gl.UNSIGNED_SHORT, 0);
 
-        this.shader.setUseParallelLight([0, 1, 0, 1],[]);
+        this.shader.setCustomUniformFloatVec4(syGL.AttributeUniform.LIGHT_COLOR,[0, 1, 0, 1])
+        this.shader.setCustomUniformFloatVec3(syGL.AttributeUniform.LIGHT_COLOR_DIR,[])
         this.gl.drawElements(this._glPrimitiveType,head, this.gl.UNSIGNED_SHORT,body*2);
 
-        this.shader.setUseParallelLight([1, 0, 0, 1],[]);
+        this.shader.setCustomUniformFloatVec4(syGL.AttributeUniform.LIGHT_COLOR,[1, 0, 0, 1])
+        this.shader.setCustomUniformFloatVec3(syGL.AttributeUniform.LIGHT_COLOR_DIR,[])
         this.gl.drawElements(this._glPrimitiveType,ray, this.gl.UNSIGNED_SHORT,(body+head)*2);
 
-        this.shader.setUseParallelLight([1, 1, 0, 1],[]);
+        this.shader.setCustomUniformFloatVec4(syGL.AttributeUniform.LIGHT_COLOR,[1, 1, 0, 1])
+        this.shader.setCustomUniformFloatVec3(syGL.AttributeUniform.LIGHT_COLOR_DIR,[])
         this.gl.drawElements(this._glPrimitiveType,clip, this.gl.UNSIGNED_SHORT,(body+head+ray)*2);
 
         //解除缓冲区绑定

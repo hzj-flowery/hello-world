@@ -170,6 +170,7 @@ export namespace syGL {
         TEX_COORD7 = 'u_texCoord7',
         TEX_COORD8 = 'u_texCoord8',
 
+
         //延迟渲染  第一次应该是从属性变量获取 第二次是uniform变量
         TEX_GPosition = "gPosition",//位置信息
         TEX_GNormal = "gNormal",//法线信息
@@ -191,7 +192,10 @@ export namespace syGL {
         PVM_MATRIX = "u_PVMmat",//投影矩阵*视口矩阵*模型世界矩阵
         PVM_MATRIX_INVERSE = "u_PVMmat_I", //(投影矩阵*视口矩阵*模型世界矩阵)的逆矩阵
         LightWorldPosition = "u_lightWorldPosition", //光的位置
-        CameraWorldPosition = "u_cameraWorldPosition" //相机的位置
+        CameraWorldPosition = "u_cameraWorldPosition" ,//相机的位置
+
+        MOUSE = "u_mouse",//鼠标位置数据
+        RESOLUTION= "u_resolution",//屏幕的设计分辨率
     }
     // cull
     export const Cull = {
