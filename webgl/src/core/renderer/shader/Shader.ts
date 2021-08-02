@@ -56,7 +56,7 @@ export class BufferAttribsData {
 
 var mapTree_a: Map<syGL.AttributeUniform, Array<any>> = new Map();
 var mapTree_u: Map<syGL.AttributeUniform, Array<any>> = new Map();
-mapTree_a.set(syGL.AttributeUniform.POSITION, ["a_position_loc", ShaderUseVariantType.Vertex]);
+mapTree_a.set(syGL.AttributeUniform.POSITION, ["a_position_loc", ShaderUseVariantType.Position]);
 mapTree_a.set(syGL.AttributeUniform.NORMAL, ["a_normal_loc", ShaderUseVariantType.Normal]);
 mapTree_a.set(syGL.AttributeUniform.UV, ["a_uv_loc", ShaderUseVariantType.UVs]);
 mapTree_a.set(syGL.AttributeUniform.TANGENT, ["a_tangent_loc", ShaderUseVariantType.Tangent]);
@@ -118,67 +118,7 @@ mapTree_u.set(syGL.AttributeUniform.RESOLUTION,["u_resolution_loc",ShaderUseVari
 
 
 export class Shader {
-    private a_position_loc;//顶点属性位置
-    private a_normal_loc;//法线属性的位置
-    private a_uv_loc;//uv属性位置
-    private a_tangent_loc;//切线属性位置
-    private a_vert_color_loc;//节点颜色的位置
-    private a_vert_matrix_loc;//顶点自定义矩阵位置
-
-    private u_time_loc;//时间
-    private u_color_loc;//节点颜色（该变量针对节点下的所有顶点）
-    private u_alpha_loc;//节点透明度
-    private u_light_color_loc;//光照属性位置
-    private u_light_color_dir_loc;//光照方向属性位置
-    private u_point_loc;//点光的颜色
-    private u_ambient_loc;//环境光属性位置
-    private u_light_specular_color_loc;//高光属性的位置
-    private u_light_specular_shininess_loc;//高光属性的位置
-    private u_light_spotDirection_loc;//聚光灯的方向
-    private u_light_spotColor_loc;//聚光灯颜色位置
-    private u_light_spotOuterLimit_loc;//聚光灯的外部限制
-    private u_light_spotInnerLimit_loc;//聚光灯的内部限制
-
-    private u_fog_loc;//雾的颜色
-    private u_fogDensity_loc;//雾的密度
-
-
-    private u_texCoord0_loc;//纹理属性0号位置
-    private u_texCoord1_loc;//纹理属性1号位置
-    private u_texCoord2_loc;//纹理属性2号位置
-    private u_texCoord3_loc;//纹理属性3号位置
-    private u_texCoord4_loc;//纹理属性4号位置
-    private u_texCoord5_loc;//纹理属性5号位置
-    private u_texCoord6_loc;//纹理属性6号位置
-    private u_texCoord7_loc;//纹理属性7号位置
-    private u_texCoord8_loc;//纹理属性8号位置
-    private u_cubeCoord_loc;//立方体属性位置
     private u_skybox_loc;//天空盒属性位置
-
-    private u_gPosition_loc;//位置纹理信息
-    private u_gNormal_loc;//法线纹理信息
-    private u_gColor_loc;//颜色纹理信息
-    private u_gUv_loc;//uv纹理
-    private u_gDepth_loc;//深度纹理
-
-    private u_shadowMap_loc;//阴影贴图
-    private u_shadowInfor_loc;//阴影信息
-
-    private u_Matrix_loc;//万能矩阵属性的位置
-    private u_VMMatrix_loc;//模型视口矩阵属性位置
-    private u_PMatrix_loc;//透视投影矩阵属性位置
-    private u_MMatrix_loc;//模型矩阵属性位置
-    private u_MIMatrix_loc;//模型矩阵的逆矩阵属性位置
-    private u_MTMatrix_loc;//模型矩阵的转置矩阵属性位置u_
-    private u_MITMatrix_loc;//模型矩阵的逆矩阵的转置矩阵属性位置
-    private u_VMatrix_loc;//视口矩阵属性位置
-    private u_PVMMatrix_loc;//投影视口模型矩阵
-    private u_PVMatrix_loc;//投影视口矩阵的位置
-    private u_PVMatrix_inverse_loc;//投影视口矩阵的逆矩阵的位置
-    private u_PVMMatrix_inverse_loc;//模型视图投影的逆矩阵
-    private u_light_world_position_loc;//光的世界位置
-    private u_camera_world_position_loc;//相机的世界位置
-
     protected _gl: WebGLRenderingContext;
     protected _spGLID: WebGLProgram;
     public readonly name: string;
@@ -315,7 +255,6 @@ export class Shader {
             G_DrawEngine.setUniformFloatVec3(this[loc], data);
         }
     }
-
     /**
      * 设置自定义使用的统一变量
      * @param uniforName shader代码中变量的名字
@@ -338,9 +277,14 @@ export class Shader {
      * @param glID 
      * @param itemSize 
      */
-    public setUseVertMatrix(glID, itemSize: number): void {
-        if (this.checklocValid(this.a_vert_matrix_loc)) {
-            G_DrawEngine.activeMatrixVertexAttribArray(glID, this.a_vert_matrix_loc, itemSize)
+    public setUseVertMatrix(uniforName:syGL.AttributeUniform,glID, itemSize: number): void {
+        var value = mapTree_u.get(uniforName)
+        if (!value) {
+            return
+        }
+        var loc = value[0];
+        if (this.checklocValid(this[loc])) {
+            G_DrawEngine.activeMatrixVertexAttribArray(glID, this[loc], itemSize)
         }
     }
     //设置使用的纹理
@@ -353,8 +297,13 @@ export class Shader {
             }
         }
         else {
-            if (this.checklocValid(this.u_cubeCoord_loc)) {
-                G_DrawEngine.activeTexture(this._gl.TEXTURE_CUBE_MAP, glID, this.u_cubeCoord_loc, pos)
+            var value = mapTree_u.get(syGL.AttributeUniform.CUBE_COORD)
+            if (!value) {
+                return
+            }
+            var loc = value[0]
+            if (this.checklocValid(this[loc])) {
+                G_DrawEngine.activeTexture(this._gl.TEXTURE_CUBE_MAP, glID, this[loc], pos)
             }
         }
     }
@@ -390,11 +339,21 @@ export class Shader {
      * MapInfor[3]:shadowSize
      */
     public setUseShadow(shaderMap: WebGLTexture, mapInfor: Array<number>, pos = 0): void {
-        if (this.checklocValid(this.u_shadowMap_loc)) {
-            G_DrawEngine.activeTexture(this._gl.TEXTURE_2D, shaderMap, this.u_shadowMap_loc, pos)
+        var value = mapTree_u.get(syGL.AttributeUniform.SHADOW_MAP)
+        if (!value) {
+            return
         }
-        if (this.checklocValid(this.u_shadowInfor_loc)) {
-            G_DrawEngine.setUniformFloatVec4(this.u_shadowInfor_loc, mapInfor)
+        var loc = value[0]
+        if (this.checklocValid(this[loc])) {
+            G_DrawEngine.activeTexture(this._gl.TEXTURE_2D, shaderMap, this[loc], pos)
+        }
+        var value = mapTree_u.get(syGL.AttributeUniform.SHADOW_INFOR)
+        if (!value) {
+            return
+        }
+        var loc = value[0]
+        if (this.checklocValid(this[loc])) {
+            G_DrawEngine.setUniformFloatVec4(this[loc], mapInfor)
         }
     }
     /**
@@ -412,7 +371,7 @@ export class Shader {
         }
     }
     //设置顶点值
-    public setUseVertexAttribPointer(glID, itemSize: number,attributeName: syGL.AttributeUniform): void {
+    public setUseVertexAttribPointer(attributeName: syGL.AttributeUniform,glID, itemSize: number): void {
         var value = mapTree_a.get(attributeName)
         if(value)
         {

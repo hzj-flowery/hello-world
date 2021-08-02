@@ -170,11 +170,11 @@ export default class Scene3D extends Scene {
         this._pointLightCube.setPosition(0, -10, 0);
         this._pointLightCube.spriteFrame = "res/dragon.jpg";
         this._centerNode.addChild(this._pointLightCube);
-        // this._spotLightCube = new SpotLightCube();
-        // this._spotLightCube.setScale(100,50.0,10.0);
-        // this._spotLightCube.setPosition(0, 0, -130);
-        // this._spotLightCube.spriteFrame = "res/dragon.jpg";
-        // this._centerNode.addChild(this._spotLightCube);
+        this._spotLightCube = new SpotLightCube();
+        this._spotLightCube.setScale(100,50.0,10.0);
+        this._spotLightCube.setPosition(0, 0, -130);
+        this._spotLightCube.spriteFrame = "res/dragon.jpg";
+        this._centerNode.addChild(this._spotLightCube);
 
         this._fogCubeArr = [];
         let fogCubeNums = 40;
@@ -215,12 +215,12 @@ export default class Scene3D extends Scene {
         this._skybox.setDefaultUrl();
         this.addChild(this._skybox);
 
-        // let tempNode = new Node();
-        // tempNode.setPosition(-10,-3.0,0);
-        // this.addChild(tempNode);
-        // this._mirrorCube = new MirrorCube();
-        // this._mirrorCube.setDefaultUrl();
-        // tempNode.addChild(this._mirrorCube);
+        let tempNode = new Node();
+        tempNode.setPosition(-10,-3.0,0);
+        this.addChild(tempNode);
+        this._mirrorCube = new MirrorCube();
+        this._mirrorCube.setDefaultUrl();
+        tempNode.addChild(this._mirrorCube);
 
         this._centerNode.addChild(new LightCamera());
 

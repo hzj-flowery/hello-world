@@ -138,7 +138,7 @@ export default class CameraView extends SY.SpriteBase {
         this.shader.bindMatrixToShader(syGL.AttributeUniform.PMatrix,GameMainCamera.instance.getCameraIndex(syRender.CameraUUid.base3D).getProjectionMatrix());
         this.shader.setCustomUniformFloatVec4(syGL.AttributeUniform.LIGHT_COLOR,[1, 0, 0, 1])
         this.shader.setCustomUniformFloatVec3(syGL.AttributeUniform.LIGHT_COLOR_DIR,[])
-        this.shader.setUseVertexAttribPointer(this.getGLID(SY.GLID_TYPE.VERTEX), this.getBufferItemSize(SY.GLID_TYPE.VERTEX),syGL.AttributeUniform.POSITION);
+        this.shader.setUseVertexAttribPointer(syGL.AttributeUniform.POSITION,this.getGLID(SY.GLID_TYPE.VERTEX), this.getBufferItemSize(SY.GLID_TYPE.VERTEX));
         
         //绑定操作的索引缓冲
         this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.getGLID(SY.GLID_TYPE.INDEX));

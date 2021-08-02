@@ -1,7 +1,7 @@
 export enum ShaderUseVariantType {
     UndefinedMin = 0,
 
-    Vertex,  //顶点缓冲
+    Position,  //顶点缓冲
     Normal, //法线缓冲
     Tangent, //切线
     UVs,    //uv坐标缓冲

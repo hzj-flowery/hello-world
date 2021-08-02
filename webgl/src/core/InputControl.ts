@@ -9,7 +9,7 @@ class InputControl {
     }
     
     private _press: boolean;
-    private _lastPressPos: Array<number> = [];
+    private _lastPressPos: Array<number> = [0,0];
     public isCapture: boolean = false;
     public openCapture:boolean = false;//是否开启截图功能
 

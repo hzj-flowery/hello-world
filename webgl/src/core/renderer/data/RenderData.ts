@@ -1,5 +1,6 @@
 import { isThisTypeNode } from "typescript";
 import Device from "../../Device";
+import { G_InputControl } from "../../InputControl";
 import { glMatrix } from "../../math/Matrix";
 import { MathUtils } from "../../utils/MathUtils";
 import { Node } from "../base/Node";
@@ -437,14 +438,14 @@ export namespace syRender {
             let useVariantType = _shader.useVariantType;
             useVariantType.forEach((value: ShaderUseVariantType) => {
                 switch (value) {
-                    case ShaderUseVariantType.Vertex:
-                        _shader.setUseVertexAttribPointer(this.primitive.vert.glID, this.primitive.vert.itemSize,syGL.AttributeUniform.POSITION);
+                    case ShaderUseVariantType.Position:
+                        _shader.setUseVertexAttribPointer(syGL.AttributeUniform.POSITION,this.primitive.vert.glID, this.primitive.vert.itemSize);
                         break;
                     case ShaderUseVariantType.Normal:
-                        _shader.setUseVertexAttribPointer(this.primitive.normal.glID, this.primitive.normal.itemSize,syGL.AttributeUniform.NORMAL);
+                        _shader.setUseVertexAttribPointer(syGL.AttributeUniform.NORMAL,this.primitive.normal.glID, this.primitive.normal.itemSize);
                         break;
                     case ShaderUseVariantType.UVs:
-                        _shader.setUseVertexAttribPointer(this.primitive.uv.glID, this.primitive.uv.itemSize,syGL.AttributeUniform.UV);
+                        _shader.setUseVertexAttribPointer(syGL.AttributeUniform.UV,this.primitive.uv.glID, this.primitive.uv.itemSize);
                         break;
                     case ShaderUseVariantType.TEX_COORD:
                         _shader.setUseTexture(this._texture2DGLIDArray[0], useTextureAddres);
@@ -595,13 +596,21 @@ export namespace syRender {
                         _shader.setCustomUniformFloat(syGL.AttributeUniform.ALPHA,this.primitive.alpha);
                         break;
                     case ShaderUseVariantType.VertColor:
-                        _shader.setUseVertexAttribPointer(this.primitive.nodeVertColor.glID, this.primitive.nodeVertColor.itemSize,syGL.AttributeUniform.VERT_COLOR);
+                        _shader.setUseVertexAttribPointer(syGL.AttributeUniform.VERT_COLOR,this.primitive.nodeVertColor.glID, this.primitive.nodeVertColor.itemSize);
                         break;
                     case ShaderUseVariantType.VertMatrix:
-                        _shader.setUseVertMatrix(this.primitive.vertMatrix.glID, this.primitive.vertMatrix.itemSize);
+                        _shader.setUseVertMatrix(syGL.AttributeUniform.VERT_Matrix,this.primitive.vertMatrix.glID, this.primitive.vertMatrix.itemSize);
                         break;
                     case ShaderUseVariantType.Time:
                         _shader.setCustomUniformFloat(syGL.AttributeUniform.TIME,Device.Instance.triggerRenderTime);
+                        break;
+                    case ShaderUseVariantType.Resolution:
+                        _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.RESOLUTION,[Device.Instance.width,Device.Instance.height,0,0]);
+                        break;
+                    case ShaderUseVariantType.Mouse:
+                         var p = G_InputControl.getLastPressPos();
+                        _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.MOUSE,[p[0],p[1],0,0]);
+                        break
                     default:
                     // console.log("目前还没有处理这个矩阵类型");
                 }
