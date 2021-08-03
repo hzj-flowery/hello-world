@@ -19,9 +19,9 @@ export class RTT extends SY.SpriteBase {
         this.createIndexsBuffer(rd.indexs); 
         this.createNormalsBuffer(rd.normals, rd.dF.normal_item_size)
         this._glPrimitiveType = this.gl.TRIANGLE_STRIP;
-        GameMainCamera.instance.createVituralCamera(0, syRender.CameraUUid.Deferred, syRender.DrawType.Single);
+        GameMainCamera.instance.createVituralCamera(0, syRender.CameraUUid.Deferred, syRender.DrawingOrder.Middle);
     }
     protected onSetTextureUrl(): void {
-        GameMainCamera.instance.getCameraIndex(syRender.CameraUUid.Deferred).targetTexture = this.texture as RenderTexture;
+        GameMainCamera.instance.getCameraByUUid(syRender.CameraUUid.Deferred).targetTexture = this.texture as RenderTexture;
     }
 }

@@ -131,11 +131,11 @@ export default class CameraView extends SY.SpriteBase {
         //激活shader 并且给shader中的变量赋值
         this.shader.active();
         var newMV = this._glMatrix.mat4.create();
-        var v = GameMainCamera.instance.getCameraIndex(syRender.CameraUUid.base3D).modelMatrix;
+        var v = GameMainCamera.instance.getCameraByUUid(syRender.CameraUUid.base3D).modelMatrix;
         var m = this.modelMatrix;
         this._glMatrix.mat4.mul(newMV,v,m)
         this.shader.bindMatrixToShader(syGL.AttributeUniform.VMMatrix,newMV);
-        this.shader.bindMatrixToShader(syGL.AttributeUniform.PMatrix,GameMainCamera.instance.getCameraIndex(syRender.CameraUUid.base3D).getProjectionMatrix());
+        this.shader.bindMatrixToShader(syGL.AttributeUniform.PMatrix,GameMainCamera.instance.getCameraByUUid(syRender.CameraUUid.base3D).getProjectionMatrix());
         this.shader.setCustomUniformFloatVec4(syGL.AttributeUniform.LIGHT_PARALLEL,[1, 0, 0, 1])
         this.shader.setCustomUniformFloatVec3(syGL.AttributeUniform.LIGHT_PARALLEL_DIR,[])
         this.shader.setUseVertexAttribPointer(syGL.AttributeUniform.POSITION,this.getGLID(SY.GLID_TYPE.VERTEX), this.getBufferItemSize(SY.GLID_TYPE.VERTEX));

@@ -1,8 +1,8 @@
 /**
  * 加载管理员
  */
-
-import { PassTag } from "./renderer/shader/Pass";
+import { syRender } from "./renderer/data/RenderData";
+import { PassCustomString } from "./renderer/shader/PassFactory";
 
 /**
  var myHeaders = new Headers();
@@ -397,7 +397,7 @@ export default class LoaderManager {
 
                 //追加额外的pass
                 for (let k = 0; k < res.length; k++) {
-                    var extraTag = res[k].extraTemplateTag;
+                    var extraTag = res[k].TemplatePassTag;
                     if (extraTag && extraTag.length > 0) {
                         for (let j = 0; j < extraTag.length; j++) {
                             var depthP = this.getStandardTemplatePass(extraTag[j]);
@@ -419,15 +419,22 @@ export default class LoaderManager {
         })
     }
     
-    public getStandardTemplatePass(tag:PassTag):any{
+    public getStandardTemplatePass(tag:syRender.TemplatePassTag):any{
         var depthP = this.getRes("res/glsl/StandardTemplate/pass.json");
         if(depthP)
         {
             for(let k=0;k<depthP.length;k++)
             {
-                if(depthP[k].tag==tag)
+                var customData = depthP[k].custom;
+                if(customData&&customData.length>0)
                 {
-                    return depthP[k]
+                    for(let j=0;j<customData.length;j++)
+                    {
+                        if(customData[k].key==PassCustomString.TemplatePassTag&&customData[k].value==tag)
+                        {
+                            return depthP[k];
+                        }
+                    }
                 }
             }
         }

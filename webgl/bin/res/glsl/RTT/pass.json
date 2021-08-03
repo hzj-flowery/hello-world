@@ -28,7 +28,7 @@
             }
         ],
         "custom":[
-            {"key":"drawType","value":1}
+            {"key":"DrawingOrder","value":1}
         ]
     },
     {
@@ -60,7 +60,7 @@
             }
         ],
         "custom":[
-            {"key":"drawType","value":0}
+            {"key":"DrawingOrder","value":0}
         ]
     }
 ]

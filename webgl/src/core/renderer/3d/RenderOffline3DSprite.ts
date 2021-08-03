@@ -21,7 +21,7 @@ export class RenderOffline3DSprite extends SY.SpriteBase{
     }
     protected onSetTextureUrl():void{
         
-        GameMainCamera.instance.getCameraIndex(this._virtualCameraIndex).targetTexture = this.texture as RenderTexture;
+        GameMainCamera.instance.getCameraByUUid(this._virtualCameraIndex).targetTexture = this.texture as RenderTexture;
     }
     public setVirtualCameraIndex(index:syRender.CameraUUid):void{
         this._virtualCameraIndex = index;

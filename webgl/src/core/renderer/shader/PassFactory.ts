@@ -3,10 +3,11 @@ import State from "../gfx/State"
 import { Pass, PassType } from "./Pass"
 import { G_ShaderCenter, ShaderType } from "./ShaderCenter"
 
-export enum PassString{
+export enum PassCustomString{
     offlineRender = "offlineRender", //离线渲染
     drawInstanced = "drawInstanced", //实例化绘制
-    drawType = "drawType",//绘制类型
+    DrawingOrder = "DrawingOrder",//绘制顺序
+    TemplatePassTag= "TemplatePassTag",    //通道tag
 }
 
 class PassFactory{
@@ -44,7 +45,7 @@ class PassFactory{
         pass.state = new State();
         if(passJson.tag)
         {
-            pass.tag= passJson.tag;
+            pass.templatePassTag = passJson.tag;
         }
         if(passJson&&passJson.state) 
         {
@@ -105,19 +106,23 @@ class PassFactory{
             {
                 let key = customData[k]["key"];
                 let value = customData[k]["value"];
-                if(key==PassString.offlineRender&&typeof(value)=="boolean")
+                if(key==PassCustomString.offlineRender&&typeof(value)=="boolean")
                 {
                     //离线渲染
                     pass.offlineRender = value;
                 }
-                else if(key==PassString.drawInstanced&&typeof(value)=="boolean")
+                else if(key==PassCustomString.drawInstanced&&typeof(value)=="boolean")
                 {
                     //实例化渲染
                     pass.drawInstanced = value;
                 }
-                else if(key==PassString.drawType&&typeof(value)=="number")
+                else if(key==PassCustomString.DrawingOrder&&typeof(value)=="number")
                 {
-                    pass.drawType = value;
+                    pass.drawingOrder = value;
+                }
+                else if(key==PassCustomString.TemplatePassTag&&typeof(value)=="number")
+                {
+                    pass.templatePassTag = value;
                 }
 
             }

@@ -17,7 +17,7 @@ import PerspectiveCamera from "./PerspectiveCamera";
 
 export class CameraRenderData {
   constructor() {
-    this.drawType = syRender.DrawType.Normal;
+    this.drawingOrder = syRender.DrawingOrder.Normal;
     this.clearColor = [0.5, 0.5, 0.5, 1.0];
     this.viewPort = { x: 0, y: 0, w: 1, h: 1 };
     this.cColor = true;
@@ -34,7 +34,7 @@ export class CameraRenderData {
   public cStencil: boolean;//清除模板缓存
   public VA: number = 0;//视角 0代表玩家自己 1代表别人视角 2代表别人视角 3代表别人视角 依次类推
   public VAPos: Array<number> = []; //视角的位置
-  public drawType: syRender.DrawType;//绘制类型
+  public drawingOrder: syRender.DrawingOrder;//绘制类型
   public isSecondVisualAngle(): boolean {
     return this.VA == 1;
   }
@@ -80,10 +80,10 @@ export class GameMainCamera {
    * 
    * @param type  0透视 1正交
    * @param cameraIdex 
-   * @param drawType 
+   * @param drawOrder 
    */
-  public createVituralCamera(type, cameraIdex: syRender.CameraUUid, drawType: syRender.DrawType = syRender.DrawType.Normal): void {
-    if (this._cameraMap.has(cameraIdex)) {
+  public createVituralCamera(type, uuid: syRender.CameraUUid, drawOrder: syRender.DrawingOrder = syRender.DrawingOrder.Normal): void {
+    if (this._cameraMap.has(uuid)) {
       return;
     }
     var camera: Camera;
@@ -94,19 +94,19 @@ export class GameMainCamera {
       camera = this.createCamera(1, this.gl.canvas.width / this.gl.canvas.height, 60, 0.1, 1000);
     }
     if (camera) {
-      this.pushCamera(cameraIdex, camera);
-      this.pushVirtualCameraDataToRenderData(cameraIdex, drawType);
+      this.pushCamera(uuid, camera);
+      this.pushVirtualCameraDataToRenderData(uuid, drawOrder);
     }
   }
 
   private init(): void {
     this.gl = Device.Instance.gl;
   }
-  private _cameraMap: Map<number, Camera> = new Map();
+  private _cameraMap: Map<syRender.CameraUUid, Camera> = new Map();
   private _renderData: Array<CameraRenderData> = [];
   private gl: WebGLRenderingContext;
-  private updateCameraData(index: syRender.CameraUUid, aspect: number, angle: number = 60, near: number = 0.1, far: number = 50): Camera {
-    var camera = this._cameraMap.get(index)
+  private updateCameraData(uuid: syRender.CameraUUid, aspect: number, angle: number = 60, near: number = 0.1, far: number = 50): Camera {
+    var camera = this._cameraMap.get(uuid)
     if (!camera) return;
     camera.Fovy = angle * Math.PI / 180;
     camera.Aspect = aspect;
@@ -124,21 +124,21 @@ export class GameMainCamera {
       return new OrthoCamera(fovy, aspect, near, far);
     }
   }
-  public getCameraIndex(index): Camera {
-    return this._cameraMap.get(index)
+  public getCameraByUUid(uuid:syRender.CameraUUid): Camera {
+    return this._cameraMap.get(uuid)
   }
-  private pushCamera(index: number, camera: Camera, forceReplace: boolean = false): void {
-    if (!this._cameraMap.has(index)) {
-      this._cameraMap.set(index, camera);
+  private pushCamera(uuid:syRender.CameraUUid, camera: Camera, forceReplace: boolean = false): void {
+    if (!this._cameraMap.has(uuid)) {
+      this._cameraMap.set(uuid, camera);
     }
     else if (forceReplace) {
-      this._cameraMap.set(index, camera);
+      this._cameraMap.set(uuid, camera);
     }
   }
 
   public initRenderData(): void {
     var temp = new CameraRenderData();
-    temp.fb = this.getCameraIndex(syRender.CameraUUid.base2D).getFramebuffer()
+    temp.fb = this.getCameraByUUid(syRender.CameraUUid.base2D).getFramebuffer()
     temp.viewPort = { x: 0, y: 0, w: 1, h: 1 }
     temp.uuid = syRender.CameraUUid.base2D;
     temp.isClear = true;
@@ -146,7 +146,7 @@ export class GameMainCamera {
     this._renderData.push(temp);
 
     var temp = new CameraRenderData();
-    temp.fb = this.getCameraIndex(syRender.CameraUUid.Depth).getFramebuffer()
+    temp.fb = this.getCameraByUUid(syRender.CameraUUid.Depth).getFramebuffer()
     temp.viewPort = { x: 0, y: 0, w: 1, h: 1 }
     temp.uuid = syRender.CameraUUid.Depth;
     temp.isClear = true;
@@ -154,7 +154,7 @@ export class GameMainCamera {
     this._renderData.push(temp);
 
     var temp = new CameraRenderData();
-    temp.fb = this.getCameraIndex(syRender.CameraUUid.base3D).getFramebuffer()
+    temp.fb = this.getCameraByUUid(syRender.CameraUUid.base3D).getFramebuffer()
     temp.uuid = syRender.CameraUUid.base3D;
     temp.viewPort = { x: 0, y: 0, w: 0.5, h: 1 }
     temp.isClear = true;
@@ -162,7 +162,7 @@ export class GameMainCamera {
     this._renderData.push(temp);
 
     var temp = new CameraRenderData();
-    temp.fb = this.getCameraIndex(syRender.CameraUUid.base3D).getFramebuffer()
+    temp.fb = this.getCameraByUUid(syRender.CameraUUid.base3D).getFramebuffer()
     temp.uuid = syRender.CameraUUid.base3D;
     temp.viewPort = { x: 0.5, y: 0, w: 0.5, h: 1 }
     temp.isClear = false;
@@ -191,15 +191,15 @@ export class GameMainCamera {
     G_UISetting.pushRenderCallBack(this.renderCallBack.bind(this));
   }
 
-  private pushVirtualCameraDataToRenderData(index: syRender.CameraUUid, drawType: syRender.DrawType = syRender.DrawType.Normal): void {
+  private pushVirtualCameraDataToRenderData(uuid: syRender.CameraUUid, drawingOrder: syRender.DrawingOrder = syRender.DrawingOrder.Normal): void {
     var temp = new CameraRenderData();
-    temp.fb = this.getCameraIndex(index).getFramebuffer()
+    temp.fb = this.getCameraByUUid(uuid).getFramebuffer()
     temp.viewPort = { x: 0, y: 0, w: 1, h: 1 }
-    temp.uuid = index;
+    temp.uuid = uuid;
     temp.isClear = true;
     temp.clearColor = [0.3, 0.3, 0.3, 1.0]
     temp.VA = 0;
-    temp.drawType = drawType;
+    temp.drawingOrder = drawingOrder;
     this._renderData.push(temp);
   }
 
@@ -208,7 +208,7 @@ export class GameMainCamera {
    */
   public getRenderData(): Array<CameraRenderData> {
     for (var k = 0; k < this._renderData.length; k++) {
-      this._renderData[k].fb = this.getCameraIndex(this._renderData[k].uuid).getFramebuffer()
+      this._renderData[k].fb = this.getCameraByUUid(this._renderData[k].uuid).getFramebuffer()
     }
     return this._renderData;
   }
@@ -216,12 +216,12 @@ export class GameMainCamera {
   private renderCallBack(settings: any): void {
     let gl = Device.Instance.gl;
     this.updateCameraData(syRender.CameraUUid.base3D, gl.canvas.width / gl.canvas.height, settings.cam3DFieldOfView, settings.cam3DNear, settings.cam3DFar);
-    var base3D = this.getCameraIndex(syRender.CameraUUid.base3D);
+    var base3D = this.getCameraByUUid(syRender.CameraUUid.base3D);
     if (base3D) {
       base3D.setPosition(settings.cam3DPosX, settings.cam3DPosY, settings.cam3DPosZ);
       base3D.setRotation(settings.cam3DRotX, settings.cam3DRotY, settings.cam3DRotZ);
     }
-    var base2D = this.getCameraIndex(syRender.CameraUUid.base2D);
+    var base2D = this.getCameraByUUid(syRender.CameraUUid.base2D);
     if (base2D) {
       base2D.setPosition(settings.cam2DPosX, settings.cam2DPosY, settings.cam2DPosZ);
       base2D.setRotation(settings.cam2DRotX, settings.cam2DRotY, settings.cam2DRotZ);

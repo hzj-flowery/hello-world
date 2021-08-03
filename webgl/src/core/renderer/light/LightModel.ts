@@ -98,7 +98,7 @@ class LightModel {
     public drawFrustum(projectionMatrix, cameraMatrix) {
 
         if (!projectionMatrix || !cameraMatrix) {
-            var cameraData = GameMainCamera.instance.getCameraIndex(syRender.CameraUUid.base3D).getCameraData();
+            var cameraData = GameMainCamera.instance.getCameraByUUid(syRender.CameraUUid.base3D).getCameraData();
             projectionMatrix = cameraData.projectMat;
             cameraMatrix = cameraData.modelMat
         }

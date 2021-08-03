@@ -19,7 +19,6 @@ import { G_UISetting } from "./ui/UiSetting";
 import { SYMacro } from "./platform/SYMacro";
 import { G_LightModel } from "./renderer/light/LightModel";
 import { G_ShaderCenter, ShaderType } from "./renderer/shader/ShaderCenter";
-import { PassTag } from "./renderer/shader/Pass";
 import { G_InputControl } from "./InputControl";
 
 /**
@@ -375,17 +374,17 @@ export default class Device {
    
     
 
-    private getTreeData(drawType:syRender.DrawType,tag:PassTag=PassTag.Normal):syRender.BaseData[]{
+    private getTreeData(drawOrder:syRender.DrawingOrder,tag:syRender.TemplatePassTag):syRender.BaseData[]{
         //深度渲染pass
-        var treeData = this._mapRenderTreeData.get(drawType);
+        var treeData = this._mapRenderTreeData.get(drawOrder);
         var retData = []
         for(let j in treeData)
         {
-           if(treeData[j].pass&&treeData[j].pass.tag==tag)
+           if(treeData[j].pass&&treeData[j].pass.templatePassTag==tag)
            {
               retData.push(treeData[j]);
            }
-           else if(!treeData[j].pass&&tag==PassTag.Normal)
+           else if(!treeData[j].pass&&tag==syRender.TemplatePassTag.Normal)
            {
               retData.push(treeData[j]);
            }
@@ -404,26 +403,27 @@ export default class Device {
         this.visitRenderTree(time, stage);
         var cameraData = GameMainCamera.instance.getRenderData();
         cameraData.sort(function(a,b){
-            if (a.drawType!=b.drawType)
-            return b.drawType - a.drawType;
+            if (a.drawingOrder!=b.drawingOrder)
+            return b.drawingOrder - a.drawingOrder;
             return b.uuid-a.uuid;
         })
         for (let k = 0; k < cameraData.length; k++) {
-            if(cameraData[k].drawType==syRender.DrawType.Normal)
+            if(cameraData[k].drawingOrder==syRender.DrawingOrder.Normal)
             {
                 if(cameraData[k].uuid==syRender.CameraUUid.Depth)
                 {
                     //深度渲染pass
-                    this.triggerRender(this.getTreeData(syRender.DrawType.Normal,PassTag.Depth),cameraData[k]);
+                    this.triggerRender(this.getTreeData(syRender.DrawingOrder.Normal,syRender.TemplatePassTag.Depth),cameraData[k]);
                 }
                 else
                 {
-                    this.triggerRender(this.getTreeData(syRender.DrawType.Normal),cameraData[k]);
+                    this.triggerRender(this.getTreeData(syRender.DrawingOrder.Normal,syRender.TemplatePassTag.Normal),cameraData[k]);
                 }
             }
-            else if(cameraData[k].drawType==syRender.DrawType.Single)
+            else if(cameraData[k].drawingOrder==syRender.DrawingOrder.Middle)
             {
-                this.triggerRender(this.getTreeData(syRender.DrawType.Single),cameraData[k]);
+                //傻逼为啥要单独绘制？？？？？？
+                this.triggerRender(this.getTreeData(syRender.DrawingOrder.Middle,syRender.TemplatePassTag.Normal),cameraData[k]);
             }
         }
         if (G_InputControl.openCapture&&G_InputControl.isCapture) {
@@ -499,7 +499,7 @@ export default class Device {
         this.readyForOneFrame(crData);
         //记录一下当前渲染的时间
         this._triggerRenderTime++;
-        var cameraData = GameMainCamera.instance.getCameraIndex(syRender.CameraUUid.base3D).getCameraData();
+        var cameraData = GameMainCamera.instance.getCameraByUUid(syRender.CameraUUid.base3D).getCameraData();
         G_CameraModel.createCamera(crData.VA, cameraData.projectMat, cameraData.modelMat,crData.VAPos);
         //提交数据给GPU 立即绘制
         for (var j = 0; j < treeData.length; j++) {   
@@ -516,7 +516,7 @@ export default class Device {
             {
                 cammerauuid = syRender.CameraUUid.base3D;
             }
-            var cameraData = GameMainCamera.instance.getCameraIndex(cammerauuid).getCameraData();
+            var cameraData = GameMainCamera.instance.getCameraByUUid(cammerauuid).getCameraData();
 
             this.draw(rData, crData,cameraData);
         }
@@ -567,7 +567,7 @@ export default class Device {
         rData.light.shadowSize = G_LightCenter.lightData.shadowSize;
         rData.light.shadowMin = G_LightCenter.lightData.shadowMin;
         rData.light.shadowOpacity = G_LightCenter.lightData.shadowOpacity;
-        
+
         switch (rData.type) {
             case syRender.DataType.Base:
                 this._commitRenderState(rData.pass.state);
@@ -635,13 +635,13 @@ export default class Device {
         }
         G_ShaderFactory.drawBufferInfo(sData._attrbufferData, sData.primitive.type);
     }
-    private _mapRenderTreeData:Map<syRender.DrawType,Array<syRender.BaseData>> = new Map();//渲染树上的绘制数据
+    private _mapRenderTreeData:Map<syRender.DrawingOrder,Array<syRender.BaseData>> = new Map();//渲染树上的绘制数据
     public collectData(rData: syRender.BaseData): void {
-        if(!this._mapRenderTreeData.has(rData.drawType))
+        if(!this._mapRenderTreeData.has(rData.drawingOrder))
         {
-            this._mapRenderTreeData.set(rData.drawType,[])
+            this._mapRenderTreeData.set(rData.drawingOrder,[])
         }
-        this._mapRenderTreeData.get(rData.drawType).push(rData);
+        this._mapRenderTreeData.get(rData.drawingOrder).push(rData);
     }
 
     //----------------------------------------------------------------------------------------------------------------start---------

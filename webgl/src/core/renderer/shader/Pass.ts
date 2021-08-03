@@ -15,29 +15,22 @@ export enum PassType{
     High
 }
 
-/**
- * 标记可以确定一个pass的作用
- * 
- */
-export enum PassTag{
-    Normal=1,    //普通的标记
-    Depth,       //深度pass
-}
+
 //渲染通道
 //每一次渲染都需要一个渲染通道
 export class Pass {
     constructor(type:PassType){
         this._type=type;
-        this.drawType = syRender.DrawType.Normal;
+        this.drawingOrder = syRender.DrawingOrder.Normal;
     }
     public code:Shader; //shader 代码
     public state:State; //渲染状态
     private _type:PassType;
     public order:number = 0;
-    public tag:PassTag=PassTag.Normal;     //标记
+    public templatePassTag:syRender.TemplatePassTag=syRender.TemplatePassTag.Normal;     //标记
     public offlineRender:boolean = false; //是否是离线渲染
     public drawInstanced:boolean = false; //是否是实例化绘制
-    public drawType:syRender.DrawType;//绘制的类型
+    public drawingOrder:syRender.DrawingOrder;//绘制的类型
     public get type(){
         return this._type;
     } 
