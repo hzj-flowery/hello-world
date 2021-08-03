@@ -15,10 +15,13 @@ export class LightData {
         this.reset();
     }
     private _fieldOfView: number = 120;//光张开的视角
-    private _bias: number = 0.005;
     private _projWidth: number = 10;
     private _projHeight: number = 10;
     private _perspective: boolean = false;//是否为透视
+
+    public viewMatrix:Float32Array;//光照摄像机的视口
+    public projectionMatrix:Float32Array;//光照摄像机的投影
+
     public reset(): void {
         this.position = [0, 0, 0];
         this.parallel.direction = [8, 5, -10];      //平行光的方向
@@ -48,8 +51,6 @@ export class LightData {
     public set projWidth(p: number) { this._projWidth = p };
     public get projHeight(): number { return this._projHeight };
     public set projHeight(p: number) { this._projHeight = p };
-    public get bias(): number { return this._bias };
-    public set bias(p: number) { this._bias = p };
     public get fieldOfView(): number { return this._fieldOfView };
     public set fieldOfView(p: number) { this._fieldOfView = p };
 
@@ -91,6 +92,22 @@ export class LightData {
         this.eyeX = p[0] ? p[0] : this._eyeX;
         this.eyeY = p[1] ? p[1] : this._eyeY;
         this.eyeZ = p[2] ? p[2] : this._eyeZ;
+    }
+
+    private _shadowBias: number = 0.005; //阴影贴图的马赫带
+    private _shadowSize: number = 1/1024;//阴影的像素尺寸 值越小 阴影越逼真
+    private _shadowOpacity:number = 0.1; //阴影的alpha值 值越小暗度越深
+    private _shadowMin:number = 0;       //阴影最小值
+    public get shadowBias(): number { return this._shadowBias };
+    public set shadowBias(p: number) { this._shadowBias = p };
+    public get shadowSize(): number { return this._shadowSize };
+    public set shadowSize(p: number) { this._shadowSize = p };
+    public get shadowOpacity(): number { return this._shadowOpacity };
+    public set shadowOpacity(p: number) { this._shadowOpacity = p };
+    public get shadowMin(): number { return this._shadowMin };
+    public set shadowMin(p: number) { this._shadowMin = p };
+    public get shadowInfo(){
+        return [this._shadowBias,this._shadowSize,this._shadowMin,this._shadowOpacity]
     }
 
     //雾

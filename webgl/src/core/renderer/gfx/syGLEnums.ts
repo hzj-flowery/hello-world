@@ -126,30 +126,29 @@ export namespace syGL {
         ALPHA = 'u_alpha',//节点透明度
         //现阶段场景中只支持三束平行光VERT_
         //平行光只有方向和颜色没有位置
-        LIGHT_COLOR = 'u_light',     //平行光的颜色
-        LIGHT_COLOR_DIR = 'u_lightDir',//平行光的方向
+        LIGHT_PARALLEL = 'u_parallel',     //平行光的颜色
+        LIGHT_PARALLEL_DIR = 'u_parallelDir',//平行光的方向
         LIGHT_COLOR1 = 'u_light1',
         LIGHT_COLOR_DIR1 = 'u_lightDir1',
         LIGHT_COLOR2 = 'u_light2',
         LIGHT_COLOR_DIR2 = 'u_lightDir2',
-        LIGHT_POINT_COLOR = 'u_point',//点光
-        LIGHT_AMBIENT_COLOR = "u_ambient",//环境光
-        LIGHT_SPECULAR_COLOR = 'u_specular', //高光
-        LIGHT_SPECULAR_SHININESS = 'u_shininess',//高光指数
+        LIGHT_POINT = 'u_point',//点光
+        LIGHT_AMBIENT = "u_ambient",//环境光
+        LIGHT_SPECULAR = 'u_specular', //高光
+        LIGHT_SPECULAR_SHININESS = 'u_specular_shininess',//高光亮度 光泽度
         LIGHT_SPOT_INNER_LIMIT = "u_spotInnerLimit",//聚光灯内部限制
         LIGHT_SPOT_OUTER_LIMIT = "u_spotOuterLimit",//聚光灯内部限制
-        LIGHT_SPOT_COLOR = "u_spot",//聚光灯的颜色
+        LIGHT_SPOT = "u_spot",//聚光灯的颜色
         LIGHT_SPOT_DIRECTION = "u_spotDirection",//聚光灯的方向
         FOG_COLOR = 'u_fog',//雾的颜色
         FOG_DENSITY = 'u_fogDensity',//雾的密度
-        SHADOW_MAP = 'u_shadowMap',//阴影贴图
         /**
-         * mapInfor[0]:shadowMin  阴影的最小值
-         * mapInfor[1]:shadowMax   阴影的最大值
-         * mapInfor[2]:shadowBias  阴影的马赫带
-         * MapInfor[3]:shadowSize  阴影的像素尺寸
+         * u_shadowInfo[0]:shadowBias  阴影的马赫带
+         * u_shadowInfo[1]:shadowSize  阴影的像素尺寸
+         * u_shadowInfo[2]:shadowMin   阴影的最小值
+         * u_shadowInfo[3]:shadowOpacity  阴影的alpha值,值越小暗度越深
          */
-        SHADOW_INFOR = 'u_shadowInfor',//阴影信息
+        SHADOW_INFO = 'u_shadowInfo',//阴影信息
         UV = 'a_uv',
         UV0 = 'a_uv0',
         UV1 = 'a_uv1',

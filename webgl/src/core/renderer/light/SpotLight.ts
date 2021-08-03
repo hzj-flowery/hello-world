@@ -31,7 +31,7 @@ var fragmentshader3d =
     varying vec3 v_surfaceToLight;
     varying vec3 v_surfaceToView;
     uniform vec4 u_color;
-    uniform float u_shininess;
+    uniform float u_specular_shininess;
     uniform vec3 u_lightDirection;
     uniform float u_innerLimit;          // in dot space
     uniform float u_outerLimit;        // in dot space
@@ -45,7 +45,7 @@ var fragmentshader3d =
     float limitRange = u_innerLimit - u_outerLimit;
     float inLight = clamp((dotFromDirection - u_outerLimit) / limitRange, 0.0, 1.0);
     float light = inLight * dot(normal, surfaceToLightDirection);
-    float specular = inLight * pow(dot(normal, halfVector), u_shininess);
+    float specular = inLight * pow(dot(normal, halfVector), u_specular_shininess);
     gl_FragColor = u_color;
     gl_FragColor.rgb *= light;
     gl_FragColor.rgb += specular;
@@ -57,7 +57,7 @@ export class SpotLight extends SY.Sprite {
             u_worldViewProjection: {},
             u_worldInverseTranspose: {},
             u_color: {},
-            u_shininess: {},
+            u_specular_shininess: {},
             u_lightDirection: {},
             u_innerLimit: {},
             u_outerLimit: {},
@@ -114,7 +114,7 @@ export class SpotLight extends SY.Sprite {
         const lightPosition = [40, 60, 120];
         this._uniformData.u_lightWorldPosition = lightPosition;
         this._uniformData.u_viewWorldPosition = cameraData.position;
-        this._uniformData.u_shininess = shininess;
+        this._uniformData.u_specular_shininess = shininess;
 
         // since we don't have a plane like most spotlight examples
         // let's point the spot light at the F

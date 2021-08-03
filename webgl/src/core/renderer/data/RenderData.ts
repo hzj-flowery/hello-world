@@ -30,6 +30,7 @@ export namespace syRender {
         normal7,
         normal8,
         normal9,
+        light,//光照摄像机
         max
     }
 
@@ -305,8 +306,28 @@ export namespace syRender {
             public specular: Light.Specular;//高光
             public point: Light.Point;     //点光
             public ambient: Light.Ambient;//环境光
-
             public position: Array<number>; //光的位置
+       
+            public viewMatrix:Float32Array;//光照摄像机的视口
+            public projectionMatrix:Float32Array;//光照摄像机的投影
+            
+            //阴影贴图
+            private _shadowBias: number = 0.005; //阴影贴图的马赫带
+            private _shadowSize: number = 1/1024;//阴影的像素尺寸 值越小 阴影越逼真
+            private _shadowOpacity:number = 0.1; //阴影的alpha值 值越小暗度越深
+            private _shadowMin:number = 0;       //阴影最小值
+            public get shadowBias(): number { return this._shadowBias };
+            public set shadowBias(p: number) { this._shadowBias = p };
+            public get shadowSize(): number { return this._shadowSize };
+            public set shadowSize(p: number) { this._shadowSize = p };
+            public get shadowOpacity(): number { return this._shadowOpacity };
+            public set shadowOpacity(p: number) { this._shadowOpacity = p };
+            public get shadowMin(): number { return this._shadowMin };
+            public set shadowMin(p: number) { this._shadowMin = p };
+            public get shadowInfo(){
+                return [this._shadowBias,this._shadowSize,this._shadowMin,this._shadowOpacity]
+            }
+
             public reset(): void {
                 this.spot.reset();
                 this.fog.reset();
@@ -564,23 +585,23 @@ export namespace syRender {
                         _shader.setCustomUniformFloatVec3(syGL.AttributeUniform.LightWorldPosition,this.light.position);
                         break;
                     case ShaderUseVariantType.SpecularLight:
-                        _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.LIGHT_SPECULAR_COLOR,this.light.specular.color)
+                        _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.LIGHT_SPECULAR,this.light.specular.color)
                         _shader.setCustomUniformFloat(syGL.AttributeUniform.LIGHT_SPECULAR_SHININESS,this.light.specular.shininess)
                         break;
                     case ShaderUseVariantType.AmbientLight:
-                        _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.LIGHT_AMBIENT_COLOR,this.light.ambient.color);
+                        _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.LIGHT_AMBIENT,this.light.ambient.color);
                         break;
                     case ShaderUseVariantType.PointLight:
-                        _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.LIGHT_POINT_COLOR,this.light.point.color);
+                        _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.LIGHT_POINT,this.light.point.color);
                         break;
                     //平行光
                     case ShaderUseVariantType.ParallelLight:
-                        _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.LIGHT_COLOR,this.light.parallel.color)
-                        _shader.setCustomUniformFloatVec3(syGL.AttributeUniform.LIGHT_COLOR_DIR,this.light.parallel.direction)
+                        _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.LIGHT_PARALLEL,this.light.parallel.color)
+                        _shader.setCustomUniformFloatVec3(syGL.AttributeUniform.LIGHT_PARALLEL_DIR,this.light.parallel.direction)
                         break;
                     //聚光灯
                     case ShaderUseVariantType.SpotLight:
-                        _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.LIGHT_SPOT_COLOR,this.light.spot.color);
+                        _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.LIGHT_SPOT,this.light.spot.color);
                         _shader.setCustomUniformFloatVec3(syGL.AttributeUniform.LIGHT_SPOT_DIRECTION,this.light.spot.direction)
                         _shader.setCustomUniformFloat(syGL.AttributeUniform.LIGHT_SPOT_INNER_LIMIT,this.light.spot.innerLimit)
                         _shader.setCustomUniformFloat(syGL.AttributeUniform.LIGHT_SPOT_OUTER_LIMIT,this.light.spot.outerLimit);
@@ -610,7 +631,10 @@ export namespace syRender {
                     case ShaderUseVariantType.Mouse:
                          var p = G_InputControl.getLastPressPos();
                         _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.MOUSE,[p[0],p[1],0,0]);
-                        break
+                        break;
+                    case ShaderUseVariantType.ShadowInfo:
+                        _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.SHADOW_INFO,this.light.shadowInfo);
+                        break;
                     default:
                     // console.log("目前还没有处理这个矩阵类型");
                 }

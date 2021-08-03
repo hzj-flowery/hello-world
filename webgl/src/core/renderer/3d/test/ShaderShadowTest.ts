@@ -139,12 +139,12 @@ class ShadowLight {
 
     varying vec3 v_surfaceToLight; 
     varying vec3 v_surfaceToView;
-    uniform float u_shininess;//光照因子
+    uniform float u_specular_shininess;//光照因子
 
     varying vec2 v_texcoord;
     varying vec4 v_projectedTexcoord;
     varying vec3 v_normal;
-    uniform vec4 u_light;            //光的颜色
+    uniform vec4 u_parallel;            //光的颜色
     uniform sampler2D u_texture;
     uniform sampler2D u_shadowMap; //投影纹理，第一次站在光的位置进行绘制，将结果存在这里，这个纹理只用于存储深度
     uniform float u_bias;
@@ -201,7 +201,7 @@ class ShadowLight {
       vec3 surfaceToViewDirection = normalize(v_surfaceToView);
       vec3 specularColor =vec3(1.0,1.0,1.0);
       vec3 halfVector = normalize(surfaceToLightDirection + surfaceToViewDirection); //算出高光的方向
-      float specularWeighting = pow(dot(normal, halfVector), u_shininess);
+      float specularWeighting = pow(dot(normal, halfVector), u_specular_shininess);
       vec3 specular = specularColor.rgb * specularWeighting;
       return specular;
     }
@@ -213,7 +213,7 @@ class ShadowLight {
       vec3 surfaceToViewDirection = normalize(v_surfaceToView);
       vec3 specularColor =vec3(1.0,1.0,1.0);
       vec3 halfVector = normalize(surfaceToLightDirection + surfaceToViewDirection); //算出高光的方向
-      float specularWeighting = pow(dot(normal, halfVector), u_shininess);
+      float specularWeighting = pow(dot(normal, halfVector), u_specular_shininess);
       vec3 specular = specularColor.rgb * specularWeighting * step(cosTheta,0.0);
       return specular;
     }
@@ -225,7 +225,7 @@ class ShadowLight {
       // 计算法向量和光线的点积
       float cosTheta = max(dot(normal,u_reverseLightDirection), 0.0);
       vec3 reflectionDirection = reflect(-surfaceToLightDirection, normal);
-      float specularWeighting = pow(max(dot(reflectionDirection, surfaceToViewDirection), 0.0), u_shininess);
+      float specularWeighting = pow(max(dot(reflectionDirection, surfaceToViewDirection), 0.0), u_specular_shininess);
       vec3 specular = specularColor.rgb * specularWeighting * step(cosTheta,0.0);
       return specular;
     }
@@ -234,7 +234,7 @@ class ShadowLight {
     float light = clamp(dot(normal, u_reverseLightDirection),0.0,1.0);    //算出光照强度
     float shadowLight = getShadowLightRYY(v_projectedTexcoord);
     //通过uv贴图找出当前片元的颜色 该颜色常被称为自发光颜色或是当前顶点的颜色
-    vec4 texColor = texture2D(u_texture, v_texcoord) * u_light;
+    vec4 texColor = texture2D(u_texture, v_texcoord) * u_parallel;
     //漫反射光  顶点颜色* 光照强度 * 阴影bool值
     vec3 diffuse = texColor.rgb * light * shadowLight; 
     //环境光 （它的值rgb最好都限定在0.2以下）
@@ -317,12 +317,12 @@ class ShadowLight {
     G_ShaderFactory.setUniforms(programInfo.uniSetters, {
       u_view: viewMatrix,
       u_projection: pMatrix,
-      u_bias: G_LightCenter.lightData.bias,
+      u_bias: G_LightCenter.lightData.shadowBias,
       u_textureMatrix: texMatrix,
       u_shadowMap: this.renderTexture.glID,
       u_lightWorldPosition: lightPos,
       u_cameraWorldPosition: cameraPos,
-      u_shininess: 150,
+      u_specular_shininess: 150,
       u_reverseLightDirection: lightReverseDir,
     });
 
@@ -358,17 +358,17 @@ class ShadowLight {
     this.fieldOfViewRadians = MathUtils.degToRad(60);
     // Uniforms for each object.
     this.planeUniforms = {
-      u_light: [0.5, 0.5, 1, 1],  // lightblue
+      u_parallel: [0.5, 0.5, 1, 1],  // lightblue
       u_texture: this.checkerboardTexture.glID,
       u_world: glMatrix.mat4.translation(null, 0, 0, 0),
     };
     this.sphereUniforms = {
-      u_light: [1, 0.5, 0.5, 1],  // pink
+      u_parallel: [1, 0.5, 0.5, 1],  // pink
       u_texture: this.checkerboardTexture.glID,
       u_world: glMatrix.mat4.translation(null, 2, 6, 4),
     };
     this.cubeUniforms = {
-      u_light: [0.5, 1, 0.5, 1],  // lightgreen
+      u_parallel: [0.5, 1, 0.5, 1],  // lightgreen
       u_texture: this.checkerboardTexture.glID,
       u_world: glMatrix.mat4.translation(null, 3, 1, 0),
     };

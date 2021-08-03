@@ -124,7 +124,7 @@ class LightCenter {
         this._projHeight = this._lightData.projHeight = setting.lightProjHeight;
         this._projWidth =  this._lightData.projWidth = setting.lightProjWidth;
         this._lightData.fieldOfView = setting.lightFieldOfView;
-        this._lightData.bias = setting.lightBias;
+        this._lightData.shadowBias = setting.lightBias;
     }
     
     private _cameraMatrix:Float32Array;

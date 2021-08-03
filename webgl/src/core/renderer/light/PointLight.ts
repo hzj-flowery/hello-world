@@ -29,8 +29,8 @@ var fragmentshader3d =
   'varying vec3 v_surfaceToLight;' +   //物体表面到光位置的方向
   'varying vec3 v_surfaceToView;' +    //物体表面到摄像机位置的方向
   'uniform vec4 u_color;' +            //物体表面的颜色
-  'uniform float u_shininess;' +       //高光的指数
-  'uniform vec3 u_light;'+        //光的颜色
+  'uniform float u_specular_shininess;' +       //高光的指数
+  'uniform vec3 u_parallel;'+        //光的颜色
   'uniform vec3 u_specular;'+     //高光的颜色
   'void main() {' +
   'vec3 normal = normalize(v_normal);' +  //法线
@@ -39,14 +39,14 @@ var fragmentshader3d =
   'vec3 halfVector = normalize(surfaceToLightDirection + surfaceToViewDirection);' + //高光的方向
   'float light = dot(normal, surfaceToLightDirection);' + //法线*光的方向 算出光的反射强度
   'float specular = 0.0;' +
-  'if (light > 0.0) {specular = pow(dot(normal, halfVector), u_shininess);}' +//法线*高光方向 算出高光的反射强度
+  'if (light > 0.0) {specular = pow(dot(normal, halfVector), u_specular_shininess);}' +//法线*高光方向 算出高光的反射强度
   'gl_FragColor = u_color;' +        //顶点颜色
   // 'gl_FragColor.rgb *= light;' +     //反射的颜色
   // 'gl_FragColor.rgb += specular;' +  //加上高光
 
   // Lets multiply just the color portion (not the alpha)
   // by the light
-  'vec3 lightColor = light * u_light;'+   //光的强度*光的颜色
+  'vec3 lightColor = light * u_parallel;'+   //光的强度*光的颜色
   'gl_FragColor.rgb *= lightColor;'+           //光的颜色和点的颜色混合
   // Just add in the specular
   'gl_FragColor.rgb += specular * u_specular;'+ //加上高光的颜色
@@ -63,8 +63,8 @@ export class PointLight extends SY.Sprite {
       u_worldViewProjection: {},
       u_worldInverseTranspose: {},
       u_color: {},
-      u_shininess: {},
-      u_light:{},
+      u_specular_shininess: {},
+      u_parallel:{},
       u_specular:{},
       u_lightWorldPosition: {},
       u_viewWorldPosition: {},
@@ -106,8 +106,8 @@ export class PointLight extends SY.Sprite {
     this._uniformData.u_color = [0.2, 1, 0.2, 1];//点的颜色
     this._uniformData.u_lightWorldPosition = lightData.position;//光的位置
     this._uniformData.u_viewWorldPosition = cData.position;//摄像机的位置
-    this._uniformData.u_shininess = lightData.specular.shininess;//高光的指数
-    this._uniformData.u_light = lightData.parallel.color;
+    this._uniformData.u_specular_shininess = lightData.specular.shininess;//高光的指数
+    this._uniformData.u_parallel = lightData.parallel.color;
     this._uniformData.u_specular = lightData.specular.color;
     super.updateRenderData();
     return this._uniformData;

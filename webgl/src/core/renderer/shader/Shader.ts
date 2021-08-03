@@ -66,14 +66,14 @@ mapTree_a.set(syGL.AttributeUniform.VERT_Matrix,ShaderUseVariantType.VertMatrix)
 mapTree_u.set(syGL.AttributeUniform.TIME,ShaderUseVariantType.Time);
 mapTree_u.set(syGL.AttributeUniform.COLOR,ShaderUseVariantType.Color);
 mapTree_u.set(syGL.AttributeUniform.ALPHA,ShaderUseVariantType.Alpha);
-mapTree_u.set(syGL.AttributeUniform.LIGHT_AMBIENT_COLOR,ShaderUseVariantType.AmbientLight);
-mapTree_u.set(syGL.AttributeUniform.LIGHT_POINT_COLOR,ShaderUseVariantType.PointLight);
-mapTree_u.set(syGL.AttributeUniform.LIGHT_COLOR,ShaderUseVariantType.ParallelLight);
-mapTree_u.set(syGL.AttributeUniform.LIGHT_COLOR_DIR,ShaderUseVariantType.ParallelLight);
-mapTree_u.set(syGL.AttributeUniform.LIGHT_SPECULAR_COLOR,ShaderUseVariantType.SpecularLight);
+mapTree_u.set(syGL.AttributeUniform.LIGHT_AMBIENT,ShaderUseVariantType.AmbientLight);
+mapTree_u.set(syGL.AttributeUniform.LIGHT_POINT,ShaderUseVariantType.PointLight);
+mapTree_u.set(syGL.AttributeUniform.LIGHT_PARALLEL,ShaderUseVariantType.ParallelLight);
+mapTree_u.set(syGL.AttributeUniform.LIGHT_PARALLEL_DIR,ShaderUseVariantType.ParallelLight);
+mapTree_u.set(syGL.AttributeUniform.LIGHT_SPECULAR,ShaderUseVariantType.SpecularLight);
 mapTree_u.set(syGL.AttributeUniform.LIGHT_SPECULAR_SHININESS,ShaderUseVariantType.SpecularLight);
 mapTree_u.set(syGL.AttributeUniform.LIGHT_SPOT_DIRECTION,ShaderUseVariantType.SpotLight);
-mapTree_u.set(syGL.AttributeUniform.LIGHT_SPOT_COLOR,ShaderUseVariantType.SpotLight);
+mapTree_u.set(syGL.AttributeUniform.LIGHT_SPOT,ShaderUseVariantType.SpotLight);
 mapTree_u.set(syGL.AttributeUniform.LIGHT_SPOT_INNER_LIMIT,ShaderUseVariantType.SpotLight);
 mapTree_u.set(syGL.AttributeUniform.LIGHT_SPOT_OUTER_LIMIT,ShaderUseVariantType.SpotLight);
 mapTree_u.set(syGL.AttributeUniform.VMMatrix,ShaderUseVariantType.ViewModel);
@@ -99,8 +99,7 @@ mapTree_u.set(syGL.AttributeUniform.TEX_GColor,ShaderUseVariantType.GColor);
 mapTree_u.set(syGL.AttributeUniform.TEX_GUv,ShaderUseVariantType.GUv);
 mapTree_u.set(syGL.AttributeUniform.TEX_GDepth,ShaderUseVariantType.GDepth);
 
-mapTree_u.set(syGL.AttributeUniform.SHADOW_MAP,ShaderUseVariantType.Shadow);
-mapTree_u.set(syGL.AttributeUniform.SHADOW_INFOR,ShaderUseVariantType.Shadow);
+mapTree_u.set(syGL.AttributeUniform.SHADOW_INFO,ShaderUseVariantType.ShadowInfo);
 mapTree_u.set(syGL.AttributeUniform.PVM_MATRIX,ShaderUseVariantType.ProjectionViewModel);
 mapTree_u.set(syGL.AttributeUniform.PVM_MATRIX_INVERSE,ShaderUseVariantType.ProjectionViewModelInverse);
 mapTree_u.set(syGL.AttributeUniform.MMatrix,ShaderUseVariantType.Model);
@@ -321,25 +320,6 @@ export class Shader {
         if (this.checklocValid(this.u_skybox_loc)) {
             var gl = this._gl;
             G_DrawEngine.activeTexture(gl.TEXTURE_CUBE_MAP, glID, this.u_skybox_loc, pos)
-        }
-    }
-    /**
-     * 设置使用阴影
-     * @param shaderMap 
-     * @param mapInfor 
-     * mapInfor[0]:shadowMin
-     * mapInfor[1]:shadowMax
-     * mapInfor[2]:shadowBias
-     * MapInfor[3]:shadowSize
-     */
-    public setUseShadow(shaderMap: WebGLTexture, mapInfor: Array<number>, pos = 0): void {
-        var loc = getLocName(syGL.AttributeUniform.SHADOW_MAP,true)
-        if (this.checklocValid(this[loc])) {
-            G_DrawEngine.activeTexture(this._gl.TEXTURE_2D, shaderMap, this[loc], pos)
-        }
-        var loc = getLocName(syGL.AttributeUniform.SHADOW_INFOR,true)
-        if (this.checklocValid(this[loc])) {
-            G_DrawEngine.setUniformFloatVec4(this[loc], mapInfor)
         }
     }
     /**

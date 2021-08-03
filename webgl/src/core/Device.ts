@@ -560,6 +560,14 @@ export default class Device {
         rData.light.fog.color = G_LightCenter.lightData.fog.color;
         rData.light.fog.density = G_LightCenter.lightData.fog.density;
 
+        rData.light.viewMatrix = G_LightCenter.lightData.viewMatrix;
+        rData.light.projectionMatrix = G_LightCenter.lightData.projectionMatrix;
+        
+        rData.light.shadowBias = G_LightCenter.lightData.shadowBias;
+        rData.light.shadowSize = G_LightCenter.lightData.shadowSize;
+        rData.light.shadowMin = G_LightCenter.lightData.shadowMin;
+        rData.light.shadowOpacity = G_LightCenter.lightData.shadowOpacity;
+        
         switch (rData.type) {
             case syRender.DataType.Base:
                 this._commitRenderState(rData.pass.state);

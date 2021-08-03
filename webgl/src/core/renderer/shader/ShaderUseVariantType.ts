@@ -50,7 +50,7 @@ export enum ShaderUseVariantType {
     Alpha,                  //节点的透明度
     VertColor,          //顶点颜色
     VertMatrix,         //顶点矩阵
-    Shadow,             //阴影
+    ShadowInfo,             //阴影信息
 
     Mouse,             //鼠标按下的位置信息
     Resolution,       //设计分辨率
