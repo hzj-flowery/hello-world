@@ -25,6 +25,6 @@ export class RenderOffline3DSprite extends SY.SpriteBase{
     }
     public setVirtualCameraIndex(index:syRender.CameraUUid):void{
         this._virtualCameraIndex = index;
-        GameMainCamera.instance.createVituralCamera(0,index);
+        GameMainCamera.instance.createBaseVituralCamera(0,index);
     }
 }

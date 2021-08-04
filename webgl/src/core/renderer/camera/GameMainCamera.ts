@@ -24,7 +24,7 @@ export class CameraRenderData {
     this.cDepth = true;
     this.cStencil = true;
   }
-  public fb: FrameBuffer;   //帧缓冲 null表示渲染到屏幕 否则渲染到其它缓冲
+  public fb: WebGLFramebuffer;   //帧缓冲 null表示渲染到屏幕 否则渲染到其它缓冲
   public uuid: syRender.CameraUUid; //相机的uuid
   public viewPort: any;
   public isClear: boolean;     //清除缓冲区的数据
@@ -59,10 +59,10 @@ export class GameMainCamera {
   /**
    * 注册相机 
    * @param type 相机的类型 0表示透视相机 1表示正交相机 
-   * @param cameraIdex 
+   * @param uuid 
    * @param node 挂载的节点
    */
-  public registerCamera(type: number, cameraIdex: syRender.CameraUUid, node: Node): void {
+  public registerCamera(type: number, uuid: syRender.CameraUUid, node: Node): void {
     var camera: Camera;
     if (type == 0) {
       camera = this.createCamera(0, this.gl.canvas.width / this.gl.canvas.height, 60, 0.1, 100) as PerspectiveCamera;
@@ -71,26 +71,29 @@ export class GameMainCamera {
       camera = this.createCamera(1, this.gl.canvas.width / this.gl.canvas.height, 60, 0.1, 1000);
     }
     if (camera) {
-      this.pushCamera(cameraIdex, camera);
+      this.pushCamera(uuid, camera);
       node.addChild(camera)
     }
   }
   /**
-   * 创建虚拟化相机
-   * 
+   * 创建虚拟化摄像机
+   * 所谓虚拟化 就是指该相机并不是真实存在 而是搭载在已有的基础相机身上去完成一些特殊的渲染
+   * 系统自带的相机:base2d base3d
    * @param type  0透视 1正交
-   * @param cameraIdex 
+   * @param uuid 
    * @param drawOrder 
    */
-  public createVituralCamera(type, uuid: syRender.CameraUUid, drawOrder: syRender.DrawingOrder = syRender.DrawingOrder.Normal): void {
+  public createBaseVituralCamera(type, uuid: syRender.CameraUUid, drawOrder: syRender.DrawingOrder = syRender.DrawingOrder.Normal): void {
     if (this._cameraMap.has(uuid)) {
       return;
     }
     var camera: Camera;
     if (type == 0) {
-      camera = this.createCamera(0, this.gl.canvas.width / this.gl.canvas.height, 60, 0.1, 100) as PerspectiveCamera;
+       //透视
+       camera = this.createCamera(0, this.gl.canvas.width / this.gl.canvas.height, 60, 0.1, 100) as PerspectiveCamera;
     }
     else if (type == 1) {
+      //正交
       camera = this.createCamera(1, this.gl.canvas.width / this.gl.canvas.height, 60, 0.1, 1000);
     }
     if (camera) {

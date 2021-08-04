@@ -157,7 +157,6 @@ export default class Camera extends Node {
     protected _far: number;//相机最远能看到的位置
     private _updateFlag:boolean;//更新标志
     private _targetTexture: RenderTexture;//目标渲染纹理
-    private _framebuffer: FrameBuffer;//渲染buffer
     
     /**
      * 弧度
@@ -375,28 +374,17 @@ export default class Camera extends Node {
      */
     set targetTexture(targetTexture: RenderTexture) {
         this._targetTexture = targetTexture;
-        this._updateTargetTexture();
     }
     get targetTexture(): RenderTexture {
         return this._targetTexture
-    }
-    private _updateTargetTexture() {
-        let texture = this._targetTexture;
-        this.setFrameBuffer(texture ? texture.frameBuffer : null);
     }
     /**
     * Get the framebuffer of the camera
     * @returns {FrameBuffer} camera framebuffer
     */
     getFramebuffer() {
-        return this._framebuffer;
-    }
-    /**
-     * Set the framebuffer of the camera
-     * @param {FrameBuffer} framebuffer camera framebuffer
-     */
-    private setFrameBuffer(framebuffer) {
-        this._framebuffer = framebuffer;
+        if(this._targetTexture)return this._targetTexture.frameBuffer;
+        return null;
     }
    
     /**

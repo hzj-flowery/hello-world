@@ -42,6 +42,22 @@ export namespace syRender {
         light,//光照摄像机
         max
     }
+    /**
+     * 一个相机最多允许搭配10个渲染纹理
+      渲染纹理的UUid
+     */
+    export enum RenderTextureUUid {
+        tex1 = 1,
+        tex2,
+        tex3,
+        tex4,
+        tex5,
+        tex6,
+        tex7,
+        tex8,
+        tex9,
+        tex10
+    }
 
     /**
      * 节点的类型
