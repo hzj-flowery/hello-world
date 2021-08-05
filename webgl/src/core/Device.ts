@@ -510,10 +510,18 @@ export default class Device {
             }
             let rData = treeData[j];
             //相机 一般只有两种 要么是3d透视相机 要么是2d正交相机
-            var cammerauuid = syRender.CameraUUid.base2D;
-            if(rData.node.is3DNode())
+            var cammerauuid = crData.uuid;
+            if(cammerauuid==syRender.CameraUUid.adapt)
             {
-                cammerauuid = syRender.CameraUUid.base3D;
+                //自适应的相机 就是2d的节点使用2d相机 3d节点使用3d相机
+                if(rData.node.is3DNode())
+                {
+                    cammerauuid = syRender.CameraUUid.base3D;
+                }
+                else
+                {
+                    cammerauuid = syRender.CameraUUid.base2D;
+                }
             }
             var cameraData = GameMainCamera.instance.getCameraByUUid(cammerauuid).getCameraData();
 

@@ -1,11 +1,12 @@
 import Device from "../../Device";
 import { glMatrix } from "../../math/Matrix";
+import { syRender } from "../data/RenderData";
 import Camera from "./Camera";
 import enums from "./enums";
 
 export default class PerspectiveCamera extends Camera {
     constructor(fovy, aspect, near, far) {
-        super(fovy, aspect, near, far, enums.PROJ_PERSPECTIVE);
+        super(fovy, aspect, near, far,syRender.CameraType.Projection);
         this.test();
     }
 

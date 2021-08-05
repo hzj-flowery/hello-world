@@ -3,7 +3,10 @@ import { glMatrix } from "../../math/Matrix";
 import Device from "../../Device";
 import { syRender } from "../data/RenderData";
 
-
+/**
+ * 递归渲染
+ * 从根节点依次往下找 更新数据
+ */
 export class Node extends Ref {
     constructor() {
         super();

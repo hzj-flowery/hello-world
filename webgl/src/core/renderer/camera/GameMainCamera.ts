@@ -19,6 +19,7 @@ import PerspectiveCamera from "./PerspectiveCamera";
 export class CameraRenderData {
   constructor() {
     this.drawingOrder = syRender.DrawingOrder.Normal;
+    this.uuid = syRender.CameraUUid.adapt;
     this.clearColor = [0.5, 0.5, 0.5, 1.0];
     this.viewPort = { x: 0, y: 0, w: 1, h: 1 };
     this.cColor = true;
@@ -27,6 +28,7 @@ export class CameraRenderData {
   }
   public fb: WebGLFramebuffer;   //帧缓冲 null表示渲染到屏幕 否则渲染到其它缓冲
   public rtuuid:syRender.RenderTextureUUid;//渲染纹理的uuid
+  public uuid:syRender.CameraUUid;//相机的uuid        
   public viewPort: any;
   public isClear: boolean;     //清除缓冲区的数据
   public clearColor: Array<number>;

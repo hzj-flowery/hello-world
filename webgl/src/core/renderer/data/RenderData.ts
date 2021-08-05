@@ -28,7 +28,7 @@ export namespace syRender {
     }
 
     export enum CameraUUid {
-        min = 0,
+        adapt = 0, //自适应 他没有任何相机与之唯一对应 当节点是2d的时候，就是2d相机，当节点是3d的时候，就是3d相机
         base2D,
         base3D,
         light,//光照摄像机

@@ -5,6 +5,7 @@ import FrameBuffer from "../gfx/FrameBuffer";
 import { Node } from "../base/Node";
 import { glMatrix } from "../../math/Matrix";
 import { CameraData } from "../data/CameraData";
+import { syRender } from "../data/RenderData";
 
 /**
  * 
@@ -129,7 +130,7 @@ export default class Camera extends Node {
      * @param far    //最远能看到的距离
      * @param type   //相机的类型    
      */
-    constructor(fovy, aspect, near, far, type: number) {
+    constructor(fovy, aspect, near, far, type: syRender.CameraType) {
         super();
         this.Fovy = fovy;
         this.Aspect = aspect;
@@ -300,7 +301,7 @@ export default class Camera extends Node {
     }
 
 
-    private _type: number = enums.PROJ_PERSPECTIVE;
+    private _type: syRender.CameraType = syRender.CameraType.Projection;
 
     /**
      * 更新投影矩阵
@@ -313,7 +314,7 @@ export default class Camera extends Node {
         }
         this._updateFlag = false;
 
-        if (this._type == enums.PROJ_PERSPECTIVE) {
+        if (this._type == syRender.CameraType.Projection) {
             this._glMatrix.mat4.perspective(this._projectionMatrix, this._fovy, this._aspect, this._near, this._far);
         }
         else {
