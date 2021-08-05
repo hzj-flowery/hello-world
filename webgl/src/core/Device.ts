@@ -523,6 +523,10 @@ export default class Device {
                     cammerauuid = syRender.CameraUUid.base2D;
                 }
             }
+            else
+            {
+                cammerauuid = syRender.CameraUUid.light;
+            }
             var cameraData = GameMainCamera.instance.getCameraByUUid(cammerauuid).getCameraData();
 
             this.draw(rData, crData,cameraData);

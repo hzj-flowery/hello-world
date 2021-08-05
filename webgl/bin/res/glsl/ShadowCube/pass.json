@@ -1,6 +1,7 @@
 [
     {
         "name": "shader",
+        "TemplatePassTag":[2],
         "state": [
             {
                 "key": "depthFunc",

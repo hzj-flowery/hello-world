@@ -237,6 +237,11 @@ export class Node extends Ref {
         //更新当前节点的矩阵数据
         this.updateMatrixData();
     }
+    
+    //绑定GPU数据之前
+    public onBindGPUBufferDataBefore(rd:syRender.BaseData,view:Float32Array,proj:Float32Array):void{
+
+    }
     //绘制之前
     public onDrawBefore(time: number, rd: syRender.BaseData): void {
 

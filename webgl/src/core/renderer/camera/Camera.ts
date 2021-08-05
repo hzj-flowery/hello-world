@@ -156,15 +156,14 @@ export default class Camera extends Node {
     protected _aspect: number;//相机的横纵比(width/height)
     protected _near: number;//相机最近能看到的位置
     protected _far: number;//相机最远能看到的位置
-    private _updateFlag:boolean;//更新标志
+    private _updateFlag: boolean;//更新标志
     private _targetTexture: RenderTexture;//目标渲染纹理
-    
+
     /**
      * 弧度
      */
     public set Fovy(radians: number) {
-        if(radians!=this._fovy)
-        {
+        if (radians != this._fovy) {
             this._updateFlag = true;
             this._fovy = radians;
         }
@@ -173,8 +172,7 @@ export default class Camera extends Node {
      * 横纵比
      */
     public set Aspect(aspect: number) {
-        if(aspect!=this._aspect)
-        {
+        if (aspect != this._aspect) {
             this._updateFlag = true;
             this._aspect = aspect;
         }
@@ -183,8 +181,7 @@ export default class Camera extends Node {
      * 能看得见的最近距离
      */
     public set Near(near: number) {
-        if(near!=this._near)
-        {
+        if (near != this._near) {
             this._updateFlag = true;
             this._near = near;
         }
@@ -193,24 +190,23 @@ export default class Camera extends Node {
      * 能看得见的最远距离
      */
     public set Far(far) {
-        if(far!=this._far)
-        {
+        if (far != this._far) {
             this._updateFlag = true;
             this._far = far;
         }
     }
-    public get Fovy():number {
-        
+    public get Fovy(): number {
+
         return this._fovy;
     }
-    public get Aspect():number {
-        
+    public get Aspect(): number {
+
         return this._aspect;
     }
-    public get Near():number{
+    public get Near(): number {
         return this._near;
     }
-    public get Far():number {
+    public get Far(): number {
         return this._far;
     }
 
@@ -247,22 +243,20 @@ export default class Camera extends Node {
      * 非常重要，相当于视口的高和屏幕高的比例
      */
     private _orthoWidth = 1;
-    public get OrthoHeight():number {
+    public get OrthoHeight(): number {
         return this._orthoHeight;
     }
     public set OrthoHeight(p: number) {
-        if(p!=this._orthoHeight)
-        {
+        if (p != this._orthoHeight) {
             this._updateFlag = true;
             this._orthoHeight = p;
         }
     }
-    public get OrthoWidth():number {
+    public get OrthoWidth(): number {
         return this._orthoWidth;
     }
     public set OrthoWidth(p: number) {
-        if(p!=this._orthoWidth)
-        {
+        if (p != this._orthoWidth) {
             this._updateFlag = true;
             this._orthoWidth = p;
         }
@@ -323,18 +317,17 @@ export default class Camera extends Node {
 
 
     private _type: syRender.CameraType = syRender.CameraType.Projection;
-    
+
     //强制更新一下投影矩阵
-    public forceUpdateProjectMatrix():Float32Array{
-       this.updateProjectMatrix();
-       return this._projectionMatrix;
+    public forceUpdateProjectMatrix(): Float32Array {
+        this.updateProjectMatrix();
+        return this._projectionMatrix;
     }
     /**
      * 更新投影矩阵
      */
     private updateProjectMatrix(): void {
-        if(!this._updateFlag)
-        {
+        if (!this._updateFlag) {
             //不需要更新
             return;
         }
@@ -371,9 +364,10 @@ export default class Camera extends Node {
         }
     }
 
-    public visit(time:number):void{
-         this.updateProjectMatrix();
-         super.visit(time);
+    public visit(time: number): void {
+        this.updateProjectMatrix();
+        if (!this._lockLookAt)
+            super.visit(time);
     }
     /**
      * 此函数务必调用
@@ -387,19 +381,25 @@ export default class Camera extends Node {
      * eye.z<0,背面看屏幕的中心
      */
     public lookAt(eye: Array<number>, center: Array<number> = [0, 0, 0], up: Array<number> = [0, 1, 0]): void {
+        this._lockLookAt = true;
         // //摄像机的位置
-        this._glMatrix.mat4.lookAt2(this.modelMatrix, eye, center,up);
+        this._glMatrix.mat4.lookAt2(this.modelMatrix, eye, center, up);
     }
-   
+    
+    /**
+     * 当调用lookat这个函数的时候 创建的模型矩阵不一样 所以需要锁住
+     */
+    private _lockLookAt: boolean = false;
+
     /**
      * 获取相机数据
      */
-    private _cameraData:CameraData;//相机数据
-    public getCameraData():CameraData{
-         this._cameraData.modelMat = this.modelMatrix;
-         this._cameraData.projectMat = this._projectionMatrix;
-         this._cameraData.position = [this.x,this.y,this.z];
-         return this._cameraData;
+    private _cameraData: CameraData;//相机数据
+    public getCameraData(): CameraData {
+        this._cameraData.modelMat = this.modelMatrix;
+        this._cameraData.projectMat = this._projectionMatrix;
+        this._cameraData.position = [this.x, this.y, this.z];
+        return this._cameraData;
     }
 
 

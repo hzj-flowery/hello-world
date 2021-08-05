@@ -25,6 +25,7 @@ import Device from "../../Device";
 import { RenderOffline3DSprite } from "../3d/RenderOffline3DSprite";
 import { syRender } from "../data/RenderData";
 import { LightCamera } from "../3d/LightCamera";
+import ShadowCube from "../3d/ShadowCube";
 
 export default class Scene3D extends Scene {
 
@@ -45,6 +46,7 @@ export default class Scene3D extends Scene {
     private _fogCubeArr: Array<FogCube>;
     private _customTexture: CustomTextureCube;
     private _centerNode: Node;
+    private _shadowCube:ShadowCube;
     private _mirrorCube: MirrorCube;
     private _FLightSpot: SpotLight;
     private _FLightThreeD: ThreeDLight;
@@ -157,16 +159,16 @@ export default class Scene3D extends Scene {
         // this._cubeNode.setScale(0.5, 0.5, 0.5);
         // this._centerNode.addChild(this._cubeNode);
 
-        this._pointLightCube = new PointLightCube();
-        this._pointLightCube.setScale(100,0.1,100.0);
-        this._pointLightCube.setPosition(0, -10, 0);
-        this._pointLightCube.spriteFrame = "res/dragon.jpg";
-        this._centerNode.addChild(this._pointLightCube);
-        this._spotLightCube = new SpotLightCube();
-        this._spotLightCube.setScale(100,50.0,10.0);
-        this._spotLightCube.setPosition(0, 0, -130);
-        this._spotLightCube.spriteFrame = "res/dragon.jpg";
-        this._centerNode.addChild(this._spotLightCube);
+        // this._pointLightCube = new PointLightCube();
+        // this._pointLightCube.setScale(100,0.1,100.0);
+        // this._pointLightCube.setPosition(0, -10, 0);
+        // this._pointLightCube.spriteFrame = "res/dragon.jpg";
+        // this._centerNode.addChild(this._pointLightCube);
+        // this._spotLightCube = new SpotLightCube();
+        // this._spotLightCube.setScale(100,50.0,10.0);
+        // this._spotLightCube.setPosition(0, 0, -130);
+        // this._spotLightCube.spriteFrame = "res/dragon.jpg";
+        // this._centerNode.addChild(this._spotLightCube);
 
         this._fogCubeArr = [];
         let fogCubeNums = 40;
@@ -179,8 +181,12 @@ export default class Scene3D extends Scene {
             fog.setPosition(-2+j*1.1,0, j*2);
             fogNode.addChild(fog);
             this._fogCubeArr.push(fog);
-
         }
+
+        this._shadowCube = new ShadowCube();
+        this._shadowCube.spriteFrame = "res/tree.png";
+        this._shadowCube.setPosition(6,10,0);
+        this._centerNode.addChild(this._shadowCube);
 
 
 
@@ -217,7 +223,7 @@ export default class Scene3D extends Scene {
         this._centerNode.addChild(new LightCamera());
 
         G_UISetting.pushRenderCallBack((data)=>{
-            this._pointLightCube.setPosition(0,data.customValue?-data.customValue:0,0)
+            // this._pointLightCube.setPosition(0,data.customValue?-data.customValue:0,0)
             // this._spotLightCube.setPosition(0,0,data.customValue?-data.customValue:-130)
         //     this._lightCube.setRotation(0,data.customValue?data.customValue:0,0)
         //     this._lightCube.setPosition(0,data.customValue1?data.customValue1:0,5)
