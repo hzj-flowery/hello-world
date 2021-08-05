@@ -14,9 +14,8 @@ export default class RenderFlow {
     private _2dScene:Scene2D;
     public startup() {
 
-        GameMainCamera.instance.registerCamera(0,syRender.CameraUUid.base3D,G_Stage)
-        GameMainCamera.instance.registerCamera(1,syRender.CameraUUid.base2D,G_Stage)
-        GameMainCamera.instance.registerCamera(0,syRender.CameraUUid.Depth,G_Stage)
+        GameMainCamera.instance.registerCamera(syRender.CameraType.Projection,syRender.CameraUUid.base3D,G_Stage)
+        GameMainCamera.instance.registerCamera(syRender.CameraType.Ortho,syRender.CameraUUid.base2D,G_Stage)
         GameMainCamera.instance.initRenderData();
         
        

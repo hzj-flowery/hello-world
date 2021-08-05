@@ -1,4 +1,5 @@
 
+import { isNoSubstitutionTemplateLiteral } from "typescript";
 import Device from "../../Device";
 import { sy } from "../../Director";
 import { G_UISetting } from "../../ui/UiSetting";
@@ -25,7 +26,7 @@ export class CameraRenderData {
     this.cStencil = true;
   }
   public fb: WebGLFramebuffer;   //帧缓冲 null表示渲染到屏幕 否则渲染到其它缓冲
-  public uuid: syRender.CameraUUid; //相机的uuid
+  public rtuuid:syRender.RenderTextureUUid;//渲染纹理的uuid
   public viewPort: any;
   public isClear: boolean;     //清除缓冲区的数据
   public clearColor: Array<number>;
@@ -55,21 +56,30 @@ export class GameMainCamera {
     }
     return this._instance;
   }
-
+  
+  /**
+   * 渲染纹理
+   */
+  private _renderTextureMap:Map<syRender.RenderTextureUUid,RenderTexture> = new Map();
+  public  pushRenderTexture(uuid:syRender.RenderTextureUUid,tex:RenderTexture):void{
+       if(this._renderTextureMap.has(uuid))
+       {
+         console.log("该渲染纹理已经加了啊");
+         return;
+       }
+       this._renderTextureMap.set(uuid,tex)
+  }
+  public getRenderTexture(uuid:syRender.RenderTextureUUid){
+      return this._renderTextureMap.get(uuid);
+  }
   /**
    * 注册相机 
    * @param type 相机的类型 0表示透视相机 1表示正交相机 
    * @param uuid 
    * @param node 挂载的节点
    */
-  public registerCamera(type: number, uuid: syRender.CameraUUid, node: Node): void {
-    var camera: Camera;
-    if (type == 0) {
-      camera = this.createCamera(0, this.gl.canvas.width / this.gl.canvas.height, 60, 0.1, 100) as PerspectiveCamera;
-    }
-    else if (type == 1) {
-      camera = this.createCamera(1, this.gl.canvas.width / this.gl.canvas.height, 60, 0.1, 1000);
-    }
+  public registerCamera(type: syRender.CameraType, uuid: syRender.CameraUUid, node: Node): void {
+    var camera: Camera = this.createCamera(type, this.gl.canvas.width / this.gl.canvas.height, 60, 0.1, 1000);
     if (camera) {
       this.pushCamera(uuid, camera);
       node.addChild(camera)
@@ -83,27 +93,21 @@ export class GameMainCamera {
    * @param uuid 
    * @param drawOrder 
    */
-  public createBaseVituralCamera(type, uuid: syRender.CameraUUid, drawOrder: syRender.DrawingOrder = syRender.DrawingOrder.Normal): void {
-    if (this._cameraMap.has(uuid)) {
-      return;
-    }
-    var camera: Camera;
-    if (type == 0) {
-       //透视
-       camera = this.createCamera(0, this.gl.canvas.width / this.gl.canvas.height, 60, 0.1, 100) as PerspectiveCamera;
-    }
-    else if (type == 1) {
-      //正交
-      camera = this.createCamera(1, this.gl.canvas.width / this.gl.canvas.height, 60, 0.1, 1000);
-    }
-    if (camera) {
-      this.pushCamera(uuid, camera);
-      this.pushVirtualCameraDataToRenderData(uuid, drawOrder);
-    }
+  public createBaseVituralCamera(uuid: syRender.RenderTextureUUid, drawingOrder: syRender.DrawingOrder = syRender.DrawingOrder.Normal): void {
+    var temp = new CameraRenderData();
+    temp.fb = null;
+    temp.rtuuid = uuid;
+    temp.viewPort = { x: 0, y: 0, w: 1, h: 1 };
+    temp.isClear = true;
+    temp.clearColor = [0.3, 0.3, 0.3, 1.0]
+    temp.VA = 0;
+    temp.drawingOrder = drawingOrder;
+    this._renderData.push(temp);
   }
 
   private init(): void {
     this.gl = Device.Instance.gl;
+    this._renderTextureMap.set(syRender.RenderTextureUUid.screen,null)
   }
   private _cameraMap: Map<syRender.CameraUUid, Camera> = new Map();
   private _renderData: Array<CameraRenderData> = [];
@@ -117,20 +121,26 @@ export class GameMainCamera {
     camera.Far = far;
     return camera;
   }
-  private createCamera(type: number, fovy: number, aspect: number, near: number, far: number): Camera {
-    if (type == 0) {
+  private createCamera(type: syRender.CameraType, fovy: number, aspect: number, near: number, far: number): Camera {
+    if (type == syRender.CameraType.Projection) {
       //透视相机
       return new PerspectiveCamera(fovy, aspect, near, far);
     }
-    else if (type == 1) {
+    else if (type == syRender.CameraType.Ortho) {
       //正交相机
       return new OrthoCamera(fovy, aspect, near, far);
     }
   }
-  public getCameraByUUid(uuid:syRender.CameraUUid): Camera {
+  public getCameraByUUid(uuid: syRender.CameraUUid): Camera {
     return this._cameraMap.get(uuid)
   }
-  private pushCamera(uuid:syRender.CameraUUid, camera: Camera, forceReplace: boolean = false): void {
+  /**
+   * 压入一个相机
+   * @param uuid 
+   * @param camera 
+   * @param forceReplace 
+   */
+  private pushCamera(uuid: syRender.CameraUUid, camera: Camera, forceReplace: boolean = false): void {
     if (!this._cameraMap.has(uuid)) {
       this._cameraMap.set(uuid, camera);
     }
@@ -140,78 +150,54 @@ export class GameMainCamera {
   }
 
   public initRenderData(): void {
+
+    //离线渲染
     var temp = new CameraRenderData();
-    temp.fb = this.getCameraByUUid(syRender.CameraUUid.base2D).getFramebuffer()
+    temp.fb = null;
     temp.viewPort = { x: 0, y: 0, w: 1, h: 1 }
-    temp.uuid = syRender.CameraUUid.base2D;
+    temp.rtuuid = syRender.RenderTextureUUid.offline2D;
     temp.isClear = true;
     temp.VA = 0;
     this._renderData.push(temp);
-
+    
+    //绘制深度
     var temp = new CameraRenderData();
-    temp.fb = this.getCameraByUUid(syRender.CameraUUid.Depth).getFramebuffer()
+    temp.fb = null;
     temp.viewPort = { x: 0, y: 0, w: 1, h: 1 }
-    temp.uuid = syRender.CameraUUid.Depth;
+    temp.rtuuid = syRender.RenderTextureUUid.Depth;
     temp.isClear = true;
     temp.VA = 0;
     this._renderData.push(temp);
-
+    
+    //绘制左边
     var temp = new CameraRenderData();
-    temp.fb = this.getCameraByUUid(syRender.CameraUUid.base3D).getFramebuffer()
-    temp.uuid = syRender.CameraUUid.base3D;
+    temp.fb = null;
+    temp.rtuuid = syRender.RenderTextureUUid.screen;
     temp.viewPort = { x: 0, y: 0, w: 0.5, h: 1 }
     temp.isClear = true;
     temp.VA = 0;
     this._renderData.push(temp);
-
+    
+    //绘制右边
     var temp = new CameraRenderData();
-    temp.fb = this.getCameraByUUid(syRender.CameraUUid.base3D).getFramebuffer()
-    temp.uuid = syRender.CameraUUid.base3D;
+    temp.fb = null;
+    temp.rtuuid = syRender.RenderTextureUUid.screen;
     temp.viewPort = { x: 0.5, y: 0, w: 0.5, h: 1 }
     temp.isClear = false;
-    temp.VAPos = [-70,10,10]
+    temp.VAPos = [-70, 10, 10]
     temp.VA = 1;
     this._renderData.push(temp);
 
-    // var temp = new CameraRenderData();
-    // temp.fb = this.getCameraIndex(syRender.CameraUUid.base3D).getFramebuffer()
-    // temp.uuid = syRender.CameraUUid.base3D;
-    // temp.viewPort = { x: 0.65, y: 0, w: 0.15, h: 1 }
-    // temp.isClear = false;
-    // temp.VAPos = [70,10,10]
-    // temp.VA = 2;
-    // this._renderData.push(temp);
-
-    // var temp = new CameraRenderData();
-    // temp.fb = this.getCameraIndex(syRender.CameraUUid.base3D).getFramebuffer()
-    // temp.uuid = syRender.CameraUUid.base3D;
-    // temp.viewPort = { x: 0.8, y: 0, w: 0.2, h: 1 }
-    // temp.isClear = false;
-    // temp.VAPos = [10,10,10]
-    // temp.VA = 3;
-    // this._renderData.push(temp);
 
     G_UISetting.pushRenderCallBack(this.renderCallBack.bind(this));
   }
-
-  private pushVirtualCameraDataToRenderData(uuid: syRender.CameraUUid, drawingOrder: syRender.DrawingOrder = syRender.DrawingOrder.Normal): void {
-    var temp = new CameraRenderData();
-    temp.fb = this.getCameraByUUid(uuid).getFramebuffer()
-    temp.viewPort = { x: 0, y: 0, w: 1, h: 1 }
-    temp.uuid = uuid;
-    temp.isClear = true;
-    temp.clearColor = [0.3, 0.3, 0.3, 1.0]
-    temp.VA = 0;
-    temp.drawingOrder = drawingOrder;
-    this._renderData.push(temp);
-  }
-
   /**
    * 
    */
   public getRenderData(): Array<CameraRenderData> {
     for (var k = 0; k < this._renderData.length; k++) {
-      this._renderData[k].fb = this.getCameraByUUid(this._renderData[k].uuid).getFramebuffer()
+      var rt = this.getRenderTexture(this._renderData[k].rtuuid)
+      this._renderData[k].fb = rt?rt.frameBuffer:null;
     }
     return this._renderData;
   }

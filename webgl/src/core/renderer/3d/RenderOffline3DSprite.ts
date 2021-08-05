@@ -11,7 +11,7 @@ export class RenderOffline3DSprite extends SY.SpriteBase{
     constructor() {
         super();
     }
-    private _virtualCameraIndex:syRender.CameraUUid = syRender.CameraUUid.normal1;
+    private _rtuuid:syRender.RenderTextureUUid = syRender.RenderTextureUUid.screen;
     protected onInit() {
         var rd = CubeData.getData();
         this.createVertexsBuffer(rd.vertex, rd.dF.vertex_item_size);
@@ -20,11 +20,10 @@ export class RenderOffline3DSprite extends SY.SpriteBase{
         this._glPrimitiveType = this.gl.TRIANGLE_STRIP;
     }
     protected onSetTextureUrl():void{
-        
-        GameMainCamera.instance.getCameraByUUid(this._virtualCameraIndex).targetTexture = this.texture as RenderTexture;
+        GameMainCamera.instance.pushRenderTexture(this._rtuuid,this.texture as RenderTexture)
     }
-    public setVirtualCameraIndex(index:syRender.CameraUUid):void{
-        this._virtualCameraIndex = index;
-        GameMainCamera.instance.createBaseVituralCamera(0,index);
+    public setRenderTextureUUid(uuid:syRender.RenderTextureUUid):void{
+        this._rtuuid = uuid;
+        GameMainCamera.instance.createBaseVituralCamera(uuid);
     }
 }

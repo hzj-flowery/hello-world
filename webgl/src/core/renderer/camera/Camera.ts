@@ -363,29 +363,6 @@ export default class Camera extends Node {
         // //摄像机的位置
         this._glMatrix.mat4.lookAt2(this.modelMatrix, eye, center,up);
     }
-    /**
-     * !#en
-     * Destination render texture.
-     * Usually cameras render directly to screen, but for some effects it is useful to make a camera render into a texture.
-     * !#zh
-     * 摄像机渲染的目标 RenderTexture。
-     * 一般摄像机会直接渲染到屏幕上，但是有一些效果可以使用摄像机渲染到 RenderTexture 上再对 RenderTexture 进行处理来实现。
-     * @property {RenderTexture} targetTexture
-     */
-    set targetTexture(targetTexture: RenderTexture) {
-        this._targetTexture = targetTexture;
-    }
-    get targetTexture(): RenderTexture {
-        return this._targetTexture
-    }
-    /**
-    * Get the framebuffer of the camera
-    * @returns {FrameBuffer} camera framebuffer
-    */
-    getFramebuffer() {
-        if(this._targetTexture)return this._targetTexture.frameBuffer;
-        return null;
-    }
    
     /**
      * 获取相机数据

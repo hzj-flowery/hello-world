@@ -15,7 +15,10 @@ import { ShaderUseVariantType } from "../shader/ShaderUseVariantType";
 let renderDataId: number = 0;
 export namespace syRender {
 
-
+    export enum CameraType{
+        Projection=0, //透视
+        Ortho         //正交
+    }
     /**
      * 模板通道tag
      */
@@ -28,17 +31,6 @@ export namespace syRender {
         min = 0,
         base2D,
         base3D,
-        Deferred,//用于延迟渲染
-        Depth, //用于深度纹理
-        normal1,
-        normal2,
-        normal3,
-        normal4,
-        normal5,
-        normal6,
-        normal7,
-        normal8,
-        normal9,
         light,//光照摄像机
         max
     }
@@ -47,16 +39,17 @@ export namespace syRender {
       渲染纹理的UUid
      */
     export enum RenderTextureUUid {
-        tex1 = 1,
-        tex2,
-        tex3,
-        tex4,
-        tex5,
-        tex6,
-        tex7,
-        tex8,
-        tex9,
-        tex10
+        screen = 1,  //将结果渲染到屏幕，此为正常渲染
+        offline2D,   //将结果渲染到一张纹理上，这张纹理对应的是一个2d节点
+        offline3D,   //将结果渲染到一张纹理上，这张纹理对应的是一个3d节点
+        Depth,       //将深度信息渲染到一张纹理上
+        RTT,         //多目标渲染
+        other1,
+        other2,
+        other3,
+        other4,
+        other5,
+        other6,
     }
 
     /**

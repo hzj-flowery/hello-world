@@ -13,7 +13,6 @@ export class RenderOfflineSprite extends SY.Sprite2D{
         this.setContentSize(Device.Instance.width/4,Device.Instance.height/4);
     }
     protected onSetTextureUrl():void{
-        
-        GameMainCamera.instance.getCameraByUUid(syRender.CameraUUid.base2D).targetTexture = this.texture as RenderTexture;
+        GameMainCamera.instance.pushRenderTexture(syRender.RenderTextureUUid.offline2D,this.texture as RenderTexture)
     }
 }

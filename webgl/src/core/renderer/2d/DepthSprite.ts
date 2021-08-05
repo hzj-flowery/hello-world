@@ -15,9 +15,7 @@ export class DepthSprite extends SY.Sprite2D{
     protected onInit(): void {
         this.setContentSize(Device.Instance.width/4,Device.Instance.height/4);
     }
-    protected onSetTextureUrl():void{
-        
-        GameMainCamera.instance.getCameraByUUid(syRender.CameraUUid.Depth).targetTexture = this.texture as RenderTexture;
-        
+    protected onSetTextureUrl():void{ 
+        GameMainCamera.instance.pushRenderTexture(syRender.RenderTextureUUid.Depth,this.texture as RenderTexture); 
     }
 }

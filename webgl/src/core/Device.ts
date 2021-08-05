@@ -405,12 +405,11 @@ export default class Device {
         cameraData.sort(function(a,b){
             if (a.drawingOrder!=b.drawingOrder)
             return b.drawingOrder - a.drawingOrder;
-            return b.uuid-a.uuid;
         })
         for (let k = 0; k < cameraData.length; k++) {
             if(cameraData[k].drawingOrder==syRender.DrawingOrder.Normal)
             {
-                if(cameraData[k].uuid==syRender.CameraUUid.Depth)
+                if(cameraData[k].rtuuid == syRender.RenderTextureUUid.Depth)
                 {
                     //深度渲染pass
                     this.triggerRender(this.getTreeData(syRender.DrawingOrder.Normal,syRender.TemplatePassTag.Depth),cameraData[k]);
