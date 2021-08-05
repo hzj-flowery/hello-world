@@ -80,12 +80,13 @@ export class GameMainCamera {
    * @param uuid 
    * @param node 挂载的节点
    */
-  public registerCamera(type: syRender.CameraType, uuid: syRender.CameraUUid, node: Node): void {
-    var camera: Camera = this.createCamera(type, this.gl.canvas.width / this.gl.canvas.height, 60, 0.1, 1000);
+  public registerCamera(type: syRender.CameraType, uuid: syRender.CameraUUid, node: Node): Camera {
+    var camera: Camera = this.createCamera(type, 60,this.gl.canvas.width / this.gl.canvas.height, 0.1, 1000);
     if (camera) {
       this.pushCamera(uuid, camera);
       node.addChild(camera)
     }
+    return camera;
   }
   /**
    * 创建虚拟化摄像机

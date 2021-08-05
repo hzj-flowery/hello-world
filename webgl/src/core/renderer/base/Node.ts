@@ -213,6 +213,8 @@ export class Node extends Ref {
         }
         this._children.push(node);
         node._parent = this;
+        //节点被添加到父节点上了
+        this.onEnter();
     }
     /**
      * 移除孩子节点
@@ -221,6 +223,8 @@ export class Node extends Ref {
     public removeChild(node: Node): void {
         var index = this._children.indexOf(node);
         if (index >= 0) {
+            //节点被移除了
+            this.onEixt();
             this._children.splice(index, 1);
             node._parent = null;
         }
@@ -237,6 +241,7 @@ export class Node extends Ref {
     public onDrawBefore(time: number, rd: syRender.BaseData): void {
 
     }
+    //绘制之后
     public onDrawAfter(time: number): void {
 
     }

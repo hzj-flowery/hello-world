@@ -232,7 +232,7 @@ export default class Camera extends Node {
      */
     _clearColor: Array<number> = [];
 
-    // ortho properties
+    // 正交相机的属性
     /**
      * 下面这个值将会影响齐次裁切空间的高度的范围大小
      * 【-_orthoHeight,_orthoHeight】
@@ -247,6 +247,27 @@ export default class Camera extends Node {
      * 非常重要，相当于视口的高和屏幕高的比例
      */
     private _orthoWidth = 1;
+    public get OrthoHeight():number {
+        return this._orthoHeight;
+    }
+    public set OrthoHeight(p: number) {
+        if(p!=this._orthoHeight)
+        {
+            this._updateFlag = true;
+            this._orthoHeight = p;
+        }
+    }
+    public get OrthoWidth():number {
+        return this._orthoWidth;
+    }
+    public set OrthoWidth(p: number) {
+        if(p!=this._orthoWidth)
+        {
+            this._updateFlag = true;
+            this._orthoWidth = p;
+        }
+    }
+
 
     // priority. the smaller one will be rendered first
     //当场景有多个相机时，决定那个相机先渲染
@@ -302,7 +323,12 @@ export default class Camera extends Node {
 
 
     private _type: syRender.CameraType = syRender.CameraType.Projection;
-
+    
+    //强制更新一下投影矩阵
+    public forceUpdateProjectMatrix():Float32Array{
+       this.updateProjectMatrix();
+       return this._projectionMatrix;
+    }
     /**
      * 更新投影矩阵
      */

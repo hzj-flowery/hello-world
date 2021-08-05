@@ -5,7 +5,10 @@ import { MathUtils } from "../../utils/MathUtils";
 import { Node } from "../base/Node";
 import { SY } from "../base/Sprite";
 import Camera from "../camera/Camera";
+import { GameMainCamera } from "../camera/GameMainCamera";
+import OrthoCamera from "../camera/OrthoCamera";
 import { LightData } from "../data/LightData";
+import { syRender } from "../data/RenderData";
 import { syGL } from "../gfx/syGLEnums";
 import { G_LightCenter } from "../light/LightCenter";
 import { syPrimitives } from "../shader/Primitives";
@@ -30,11 +33,12 @@ export class LightCamera extends Node {
         super();
         this.onInit();
     }
-    private _frustum: LineFrustum;
+   
     onInit(): void {
         this._cameraMatrix = glMatrix.mat4.identity(null);
         this._projectMatrix = glMatrix.mat4.identity(null);
         this._lightReverseDir = new Float32Array(3);
+        this._camera = GameMainCamera.instance.registerCamera(syRender.CameraType.Ortho,syRender.CameraUUid.light,this);
         this.addFrustum()
         this.addSmallSun();
         this.addLine();
@@ -45,97 +49,13 @@ export class LightCamera extends Node {
 
         super.collectRenderData(time);
     }
-
+    private _camera:OrthoCamera;
     private _cameraMatrix: Float32Array;   //相机矩阵
     private _projectMatrix: Float32Array;  //投影矩阵
     private _lightReverseDir: Float32Array;
-    private _near: number = 0.1;
-    private _far: number = 50;
-    private _projWidth: number = 10;
-    private _projHeight: number = 10;
-    private _fieldOfView: number = 60;//光张开的视角
-    private _perspective: boolean = false;//是否为透视
-
-    //看向的目标位置
-    private _targetX: number = 0;
-    private _targetY: number = 0;
-    private _targetZ: number = 0;
-    public set targetX(p: number) { this._targetX = p; }
-    public set targetY(p: number) { this._targetY = p; }
-    public set targetZ(p: number) { this._targetZ = p; }
-    public get targetX(): number { return this._targetX; }
-    public get targetY(): number { return this._targetY; }
-    public get targetZ(): number { return this._targetZ; }
-    //眼睛的位置
-    private _eyeX: number = 0;
-    private _eyeY: number = 0;
-    private _eyeZ: number = 0;
-    public set eyeX(p: number) { this._eyeX = p; }
-    public set eyeY(p: number) { this._eyeY = p; }
-    public set eyeZ(p: number) { this._eyeZ = p; }
-    public get eyeX(): number { return this._eyeX; }
-    public get eyeY(): number { return this._eyeY; }
-    public get eyeZ(): number { return this._eyeZ; }
-
-    public get perspective(): boolean {
-        return this._perspective;
-    }
-    public set perspective(p: boolean) {
-        this._perspective = p;
-    }
-    public get fieldOfView(): number { return this._fieldOfView };
-    public set fieldOfView(p: number) { this._fieldOfView = p };
-    public get projWidth(): number { return this._projWidth };
-    public set projWidth(p: number) { this._projWidth = p };
-    public get projHeight(): number { return this._projHeight };
-    public set projHeight(p: number) { this._projHeight = p };
-    /**
-     * 获取光照摄像机数据
-     */
-    public updateLightCameraData() {
-        // first draw from the POV of the light
-        /**
-         * lightWorldMatrix是光照摄像机的视野坐标系
-         * x  y  z  p
-         * 0  4  8  12
-         * 1  5  9  13
-         * 2  6  10 14 这个其实是光照方向
-         * 3  7  11 15 
-         * 
-         * 1  0  0  0
-         * 0  1  0  0
-         * 0  0  1  0 这个其实是光照方向
-         * 0  0  0  1 
-         */
-        glMatrix.mat4.lookAt2(this._cameraMatrix,
-            [this._eyeX, this._eyeY, this._eyeZ],          // position
-            [this._targetX, this._targetY, this._targetZ], // target
-            [0, 1, 0],                                              // up
-        )
-        glMatrix.vec3.normalize(this._lightReverseDir, this._cameraMatrix.slice(8, 11));
-        this.perspective ? glMatrix.mat4.perspective(this._projectMatrix,
-            MathUtils.degToRad(this.fieldOfView),
-            this._projWidth / this._projHeight,
-            this._near,  // near
-            this._far)   // far
-            : glMatrix.mat4.ortho(this._projectMatrix,
-                -this._projWidth / 2,   // left
-                this._projWidth / 2,   // right
-                -this._projHeight / 2,  // bottom
-                this._projHeight / 2,  // top
-                this._near,                      // near
-                this._far);                      // far
-
-        var lightData = G_LightCenter.lightData;
-        //取摄像机的中心方向作为聚光灯的方向
-        lightData.spot.direction = [this._lightReverseDir[0], this._lightReverseDir[1], this._lightReverseDir[2]];
-        this._lightLine.updateLinePos(VertData.position.concat([0, 0, 0, lightData.parallel.dirX, lightData.parallel.dirY, lightData.parallel.dirZ]));
-        this._lightLine.color = [lightData.parallel.colR, lightData.parallel.colG, lightData.parallel.colB, lightData.parallel.colA];
-
-    }
-
     private _sunSprite: SY.sySprite;
     private _lightLine: Line;
+    private _frustum: LineFrustum;
     private addSmallSun(): void {
         this._sunSprite = new SY.sySprite();
         let vertexData = syPrimitives.createSphereVertices(1, 24, 24);
@@ -161,20 +81,42 @@ export class LightCamera extends Node {
     }
 
     private render(setting): void {
-        this.eyeX = setting.eyeX;
-        this.eyeY = setting.eyeY;
-        this.eyeZ = setting.eyeZ;
-        this.targetX = setting.lightTargetX;
-        this.targetY = setting.lightTargetY;
-        this.targetZ = setting.lightTargetZ;
-        this.projWidth = setting.lightProjWidth
-        this.projHeight = setting.lightProjHeight
+        this._camera.OrthoHeight = setting.lightProjHeight/2;
+        this._camera.OrthoWidth = setting.lightProjWidth/2;
+        this._camera.Near = 0.1;
+        this._camera.Far = 50;
+        this._camera.Fovy = 60;
+        /**
+         * lightWorldMatrix是光照摄像机的视野坐标系
+         * x  y  z  p
+         * 0  4  8  12
+         * 1  5  9  13
+         * 2  6  10 14 这个其实是光照方向
+         * 3  7  11 15 
+         * 
+         * 1  0  0  0
+         * 0  1  0  0
+         * 0  0  1  0 这个其实是光照方向
+         * 0  0  0  1 
+         */
+        this._camera.lookAt([setting.eyeX, setting.eyeY, setting.eyeZ],
+            [setting.lightTargetX, setting.lightTargetY, setting.lightTargetZ],
+            [0, 1, 0]);
+        glMatrix.mat4.copy(this._cameraMatrix,this._camera.modelMatrix);
+        glMatrix.vec3.normalize(this._lightReverseDir, this._cameraMatrix.slice(8, 11));
+        this._camera.forceUpdateProjectMatrix()
+        glMatrix.mat4.copy(this._projectMatrix,this._camera.getProjectionMatrix())
 
-        this.updateLightCameraData();
+        
+        var lightData = G_LightCenter.lightData;
+        //取摄像机的中心方向作为聚光灯的方向
+        lightData.spot.direction = [this._lightReverseDir[0], this._lightReverseDir[1], this._lightReverseDir[2]];
+        this._lightLine.updateLinePos(VertData.position.concat([0, 0, 0, lightData.parallel.dirX, lightData.parallel.dirY, lightData.parallel.dirZ]));
+        this._lightLine.color = [lightData.parallel.colR, lightData.parallel.colG, lightData.parallel.colB, lightData.parallel.colA];
+
         this._frustum.updateProjView(this._projectMatrix, this._cameraMatrix);
-
-        this._sunSprite.setPosition(this.eyeX, this.eyeY, this.eyeZ);
-        this._lightLine.setPosition(this.eyeX, this.eyeY, this.eyeZ);
+        this._sunSprite.setPosition(setting.eyeX, setting.eyeY, setting.eyeZ);
+        this._lightLine.setPosition(setting.eyeX, setting.eyeY, setting.eyeZ);
 
 
     }
