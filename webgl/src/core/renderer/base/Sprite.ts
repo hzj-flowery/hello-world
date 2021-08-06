@@ -187,7 +187,7 @@ export namespace SY {
                 console.log("传入未知的类型shader 请检查---", this.name);
             }
             LoaderManager.instance.loadGlsl(name, (res) => {
-                this._pass.push(G_PassFactory.createPass(ShaderType.Custom, res[0], res[1],res[2]));
+                this._pass.push(G_PassFactory.createPass(res[0], res[1],res[2]));
             }, () => {
                 this.onInitFinish();
             });

@@ -10,6 +10,9 @@ export enum ShaderType {
     Label,
     Spine,
     ShadowMap,
+    Spot,         //7聚光灯
+    Depth,        //8深度
+    Rtt,          //9多目标渲染
     NULL          //不用shader渲染
 }
 class ShaderCenter {
@@ -31,6 +34,10 @@ class ShaderCenter {
                 return "sprite";
             case ShaderType.Spine:
                 return "spine";
+            case ShaderType.Spot:
+                return "spot";
+            case ShaderType.Depth:
+                return "depth";
             case ShaderType.ShadowMap:
                 return "shadowMap";
             default: 
@@ -87,6 +94,12 @@ class ShaderCenter {
                 break;
             case ShaderType.ShadowMap:
                 name = "shadowMap";
+                break;
+            case ShaderType.Depth:
+                name = "depth";
+                break;
+            case ShaderType.Spot:
+                name = "spot";
                 break;
             default: 
             {

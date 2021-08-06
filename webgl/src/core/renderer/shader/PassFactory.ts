@@ -8,6 +8,7 @@ export enum PassCustomString{
     drawInstanced = "drawInstanced", //实例化绘制
     DrawingOrder = "DrawingOrder",//绘制顺序
     TemplatePassTag= "TemplatePassTag",    //通道tag
+    ShaderType="ShaderType",//shader的类型
 }
 
 class PassFactory{
@@ -31,17 +32,16 @@ class PassFactory{
        }
        return [];
     }
-    public createPass(type:ShaderType,vert:string,frag:string,passJson?:any,ptype:PassType=PassType.Normal){
-        var ret = this.checkPassType(type)
+    public createPass(vert:string,frag:string,passJson?:any,ptype:PassType=PassType.Normal){
+        var ret = this.checkPassType(ptype)
         if(ret.length==0)
         {
             console.log("传入无效的pass类型-------",ptype)
             return null
         }
-        var code = G_ShaderCenter.createShader(type, vert, frag)
+        
         var pass = new Pass(ptype)
         pass.order = ret[1]
-        pass.code = code
         pass.state = new State();
         if(passJson.tag)
         {
@@ -124,12 +124,19 @@ class PassFactory{
                 {
                     pass.templatePassTag = value;
                 }
+                else if(key==PassCustomString.ShaderType&&typeof(value)=="number")
+                {
+                    pass.shaderType = value;
+                }
 
             }
         }
+       
+        //创建shader
+        var code = G_ShaderCenter.createShader(pass.shaderType, vert, frag)
+        pass.code = code
+        this._pass.push(pass);
 
-
-        this._pass.push(pass)
         return pass
     }
 } 
