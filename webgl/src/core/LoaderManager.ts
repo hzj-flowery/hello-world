@@ -394,16 +394,14 @@ export default class LoaderManager {
         //先加载pass
         this.load(passName, () => { }, (res: any[]) => {
             if (res && res.length > 0) {
-
                 //追加额外的pass
-                for (let k = 0; k < res.length; k++) {
-                    var extraTag = res[k].TemplatePassTag;
-                    if (extraTag && extraTag.length > 0) {
-                        for (let j = 0; j < extraTag.length; j++) {
-                            var depthP = this.getStandardTemplatePass(extraTag[j]);
-                            if (depthP) {
-                                res.push(depthP);
-                            }
+                var passLen = res.length;
+                for (let k = 0; k < passLen; k++) {
+                    if (res[k].name == "TemplatePass") {
+                        var depthP = this.getStandardTemplatePass(res[k].tag);
+                        if (depthP) {
+                            //更新为真实的模板pass
+                            res[k] = depthP;
                         }
                     }
                 }
@@ -418,20 +416,15 @@ export default class LoaderManager {
             }
         })
     }
-    
-    public getStandardTemplatePass(tag:syRender.TemplatePassTag):any{
+
+    public getStandardTemplatePass(tag: syRender.TemplatePassTag): any {
         var depthP = this.getRes("res/glsl/StandardTemplate/pass.json");
-        if(depthP)
-        {
-            for(let k=0;k<depthP.length;k++)
-            {
+        if (depthP) {
+            for (let k = 0; k < depthP.length; k++) {
                 var customData = depthP[k].custom;
-                if(customData&&customData.length>0)
-                {
-                    for(let j=0;j<customData.length;j++)
-                    {
-                        if(customData[k].key==PassCustomString.TemplatePassTag&&customData[k].value==tag)
-                        {
+                if (customData && customData.length > 0) {
+                    for (let j = 0; j < customData.length; j++) {
+                        if (customData[j].key == PassCustomString.TemplatePassTag && customData[j].value == tag) {
                             return depthP[k];
                         }
                     }

@@ -1,7 +1,10 @@
 [
     {
+        "name":"TemplatePass",
+        "tag":2
+    },
+    {
         "name":"shader",
-        "TemplatePassTag":[2],
         "state":[
             {
                 "key":"depthFunc",

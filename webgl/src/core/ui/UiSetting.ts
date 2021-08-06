@@ -34,9 +34,9 @@ export class UIStatusData {
      public static spotDirX: number = 0; //
      public static spotDirY: number = 0; //
      public static spotDirZ: number = 1;   //
-     public static spotColR: number = 0; //
+     public static spotColR: number = 1; //
      public static spotColG: number = 1; //
-     public static spotColB: number = 0;   //
+     public static spotColB: number = 1;   //
      public static spotColA: number = 1;   //
     
      //高光

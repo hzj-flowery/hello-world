@@ -25,6 +25,7 @@ export namespace syRender {
     export enum TemplatePassTag {
         Normal = 1,    //普通,表示该pass没有关联任何的模板pass
         Depth,       //深度pass
+        Spot,        //聚光灯
     }
 
     export enum CameraUUid {

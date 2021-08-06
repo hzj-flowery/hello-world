@@ -416,7 +416,9 @@ export default class Device {
                 }
                 else
                 {
-                    this.triggerRender(this.getTreeData(syRender.DrawingOrder.Normal,syRender.TemplatePassTag.Normal),cameraData[k]);
+                    var tree1 = this.getTreeData(syRender.DrawingOrder.Normal,syRender.TemplatePassTag.Normal)
+                    var tree2 = this.getTreeData(syRender.DrawingOrder.Normal,syRender.TemplatePassTag.Spot)
+                    this.triggerRender(tree1.concat(tree2),cameraData[k]);
                 }
             }
             else if(cameraData[k].drawingOrder==syRender.DrawingOrder.Middle)

@@ -3,12 +3,10 @@ import CustomTextureData from "../data/CustomTextureData";
 import { syPrimitives } from "../shader/Primitives";
 
 export class Plane extends SY.SpriteBase{
-    constructor(planeWidth:number,planeHeight:number,subdivisionAcross:number=1,subdivisionDown:number=1){
+    constructor(planeWidth:number,planeHeight:number){
         super();
         this._planeHeight = planeHeight;
         this._planeWidth = planeWidth;
-        this._subdivisionAcross = subdivisionAcross;
-        this._subdivisionDown = subdivisionDown;
         this.onLocalInit();
     }
     private _planeWidth:number = 20;//地形宽度
@@ -30,9 +28,23 @@ export class Plane extends SY.SpriteBase{
         this.createVertexsBuffer(vertexData.position, 3);
     }
 
+    protected onInitFinish():void{
+        console.log(this.shader);
+    }
+
+    protected collectRenderData(time:number):void{
+        super.collectRenderData(time)
+    }
+
+    public onDrawBefore():void{
+        var a = 10;
+    }
+
     public setCellCounts(widthCount:number,heightCount:number):void{
         this._widthCount = widthCount;
         this._heightCount = heightCount;
-        this.spriteFrame = CustomTextureData.getBoardData(this._widthCount,this._heightCount);
+        this.spriteFrame = CustomTextureData.getBoardData(this._widthCount,this._heightCount,[0xFF,0xCC]);
     }
 }
+
+

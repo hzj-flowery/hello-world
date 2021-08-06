@@ -33,7 +33,7 @@ export default class CustomTextureData {
      * @param width 
      * @param height 
      */
-    static getBoardData(width:number,height:number):TextureOpts{
+    static getBoardData(width:number,height:number,colorKinds:Array<number> = [0xFF,0xCC]):TextureOpts{
          let cformat = syGL.TextureFormat.L8;
          var urlData: TextureOpts = new TextureOpts();
          urlData.configFormat = cformat;
@@ -43,7 +43,6 @@ export default class CustomTextureData {
          urlData.minFilter = syGL.TexFilter.NEAREST_MIPMAP_NEAREST;
          urlData.genMipmaps = true;
          var colorData = [];
-         var colorKinds = [0xFF,0xCC];
          for(let i=1;i<=width;i++)
          {
              for(let j = 1;j<=height;j++)

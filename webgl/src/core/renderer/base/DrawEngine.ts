@@ -70,7 +70,10 @@ class DrawEngine {
         gl.drawElementsInstanced(mode, count, type, offset, instanceCount)
     }
     public run(rd: syRender.BaseData, view, proj, shader: Shader): void {
-        if (!shader) return;
+        if (!shader) 
+        {
+            return;
+        }
 
         let gl = this.gl;
         
