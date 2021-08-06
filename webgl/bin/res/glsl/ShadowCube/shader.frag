@@ -2,16 +2,16 @@ precision mediump float;
 
 varying vec3 v_surfaceToLight;
 varying vec3 v_surfaceToView;
-uniform float u_specular_shininess;//光照因子
-
 varying vec2 v_uv;                  //uv坐标
 varying vec4 v_projectedTexcoord;
 varying vec3 v_normal;
+
 uniform vec4 u_spot;//聚光的颜色
 uniform sampler2D u_texture;
 uniform sampler2D gDepth;//投影纹理，第一次站在光的位置进行绘制，将结果存在这里，这个纹理只用于存储深度
 uniform vec4 u_shadowInfo;  
 uniform vec3  u_spotDirection;//聚光的方向
+uniform float u_specular_shininess;//光照因子
 
 bool inRange(vec3 coordP){
     return coordP.x>=0.&&coordP.x<=1.&&coordP.y>=0.&&coordP.y<=1.;//uv纹理坐标必须处于【0，1】

@@ -11,9 +11,11 @@ uniform mat4 u_Pmat;
 uniform mat4 u_Vmat;
 uniform mat4 u_Mmat;
 uniform mat4 u_mat;//纹理矩阵 主要作用就是去算出投影的uv坐标 上一次光照的投影矩阵*视口矩阵 自定义矩阵
+
 varying vec2 v_uv;//当前顶点的uv坐标
 varying vec4 v_projectedTexcoord;
 varying vec3 v_normal;
+
 void main(){
         vec4 worldPosition=u_Mmat*a_position;//将当前顶点的坐标转换到世界空间坐标系中
         gl_Position=u_Pmat*u_Vmat*worldPosition;//将顶点转换到其次裁切空间下

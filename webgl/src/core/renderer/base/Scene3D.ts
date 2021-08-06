@@ -26,12 +26,14 @@ import { RenderOffline3DSprite } from "../3d/RenderOffline3DSprite";
 import { syRender } from "../data/RenderData";
 import { LightCamera } from "../3d/LightCamera";
 import ShadowCube from "../3d/ShadowCube";
+import { Plane } from "../3d/Plane";
 
 export default class Scene3D extends Scene {
 
     private _lightCube: LightCube;
     private _skybox: SkyBox;
     private _floorNode: Ground;
+    private _plane:Plane;
     private _cubeNode: Cube;
     private _deferredShading: DeferredShading;
     private _renderSprite: RenderOffline3DSprite;
@@ -88,10 +90,14 @@ export default class Scene3D extends Scene {
         spNode.addChild(this._sphere);
         this._centerNode.addChild(spNode);
 
-        this._floorNode = new Ground();
-        this._floorNode.spriteFrame = "res/ground.jpg";
-        this._floorNode.z = -20;
-        this.addChild(this._floorNode);
+        // this._floorNode = new Ground();
+        // this._floorNode.spriteFrame = "res/ground.jpg";
+        // this._floorNode.z = -20;
+        // this.addChild(this._floorNode);
+
+        this._plane = new Plane(100,100);
+        this._plane.setCellCounts(40,40);
+        this.addChild(this._plane);
 
         this._spineNode = new Spine();
         this._spineNode.x = -5;
