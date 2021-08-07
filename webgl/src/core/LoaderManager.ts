@@ -417,14 +417,14 @@ export default class LoaderManager {
         })
     }
 
-    public getStandardTemplatePass(tag: syRender.TemplatePassTag): any {
+    public getStandardTemplatePass(tag: syRender.ShaderType): any {
         var depthP = this.getRes("res/glsl/StandardTemplate/pass.json");
         if (depthP) {
             for (let k = 0; k < depthP.length; k++) {
                 var customData = depthP[k].custom;
                 if (customData && customData.length > 0) {
                     for (let j = 0; j < customData.length; j++) {
-                        if (customData[j].key == PassCustomString.TemplatePassTag && customData[j].value == tag) {
+                        if (customData[j].key == PassCustomString.ShaderType && customData[j].value == tag) {
                             return depthP[k];
                         }
                     }

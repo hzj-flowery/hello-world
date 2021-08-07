@@ -1,13 +1,12 @@
 import { glEnums } from "../gfx/GLapi"
 import State from "../gfx/State"
 import { Pass, PassType } from "./Pass"
-import { G_ShaderCenter, ShaderType } from "./ShaderCenter"
+import { G_ShaderCenter } from "./ShaderCenter"
 
 export enum PassCustomString{
     offlineRender = "offlineRender", //离线渲染
     drawInstanced = "drawInstanced", //实例化绘制
     DrawingOrder = "DrawingOrder",//绘制顺序
-    TemplatePassTag= "TemplatePassTag",    //通道tag
     ShaderType="ShaderType",//shader的类型
 }
 
@@ -43,10 +42,6 @@ class PassFactory{
         var pass = new Pass(ptype)
         pass.order = ret[1]
         pass.state = new State();
-        if(passJson.tag)
-        {
-            pass.templatePassTag = passJson.tag;
-        }
         if(passJson&&passJson.state) 
         {
             let stateData = passJson.state;
@@ -119,10 +114,6 @@ class PassFactory{
                 else if(key==PassCustomString.DrawingOrder&&typeof(value)=="number")
                 {
                     pass.drawingOrder = value;
-                }
-                else if(key==PassCustomString.TemplatePassTag&&typeof(value)=="number")
-                {
-                    pass.templatePassTag = value;
                 }
                 else if(key==PassCustomString.ShaderType&&typeof(value)=="number")
                 {

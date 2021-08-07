@@ -1,44 +1,34 @@
 import Device from "../../Device";
+import { syRender } from "../data/RenderData";
 import { Shader } from "./Shader";
 import { ShaderCode } from "./ShaderCode";
 import { G_ShaderFactory } from "./ShaderFactory";
 
-export enum ShaderType {
-    Custom = 1,
-    Line,
-    Sprite,
-    Label,
-    Spine,
-    ShadowMap,
-    Spot,         //7聚光灯
-    Depth,        //8深度
-    Rtt,          //9多目标渲染
-    NULL          //不用shader渲染
-}
+
 class ShaderCenter {
     private _shaderMap: Map<string, Shader> = new Map();
     private _shaderCount: number;
     constructor() {
         this._shaderCount = 0;
     }
-    private createShaderName(type: ShaderType): string {
+    private createShaderName(type: syRender.ShaderType): string {
         switch (type) {
-            case ShaderType.Custom:
+            case syRender.ShaderType.Custom:
                 this._shaderCount++;
                 return "custom" + this._shaderCount;
-            case ShaderType.Label:
+            case syRender.ShaderType.Label:
                 return "label";
-            case ShaderType.Line:
+            case syRender.ShaderType.Line:
                 return "line";
-            case ShaderType.Sprite:
+            case syRender.ShaderType.Sprite:
                 return "sprite";
-            case ShaderType.Spine:
+            case syRender.ShaderType.Spine:
                 return "spine";
-            case ShaderType.Spot:
+            case syRender.ShaderType.Spot:
                 return "spot";
-            case ShaderType.Depth:
+            case syRender.ShaderType.Depth:
                 return "depth";
-            case ShaderType.ShadowMap:
+            case syRender.ShaderType.ShadowMap:
                 return "shadowMap";
             default: 
             {
@@ -48,8 +38,8 @@ class ShaderCenter {
     }
     public init(): void {
         //预先初始化一些shader
-        this.createShader(ShaderType.ShadowMap, ShaderCode.shadowMap.vert, ShaderCode.shadowMap.frag);
-        this.createShader(ShaderType.Line,ShaderCode.line.vert,ShaderCode.line.frag);
+        this.createShader(syRender.ShaderType.ShadowMap, ShaderCode.shadowMap.vert, ShaderCode.shadowMap.frag);
+        this.createShader(syRender.ShaderType.Line,ShaderCode.line.vert,ShaderCode.line.frag);
     }
     /**
      * 创建shader
@@ -57,7 +47,7 @@ class ShaderCenter {
      * @param vert 
      * @param frag 
      */
-    public createShader(type: ShaderType, vert?: string, frag?: string): Shader {
+    public createShader(type: syRender.ShaderType, vert?: string, frag?: string): Shader {
         var oldShader = this.getShader(type);
         if(oldShader)
         {
@@ -77,33 +67,33 @@ class ShaderCenter {
     public getCustomShader(name: string): Shader {
         return this._shaderMap.get(name);
     }
-    public getShader(type: ShaderType): Shader {
+    public getShader(type: syRender.ShaderType): Shader {
         let name = "";
         switch (type) {
-            case ShaderType.Label:
+            case syRender.ShaderType.Label:
                 name = "label";
                 break;
-            case ShaderType.Sprite:
+            case syRender.ShaderType.Sprite:
                 name = "sprite";
                 break;
-            case ShaderType.Spine:
+            case syRender.ShaderType.Spine:
                 name = "spine";
                 break;
-            case ShaderType.Line:
+            case syRender.ShaderType.Line:
                 name = "line";
                 break;
-            case ShaderType.ShadowMap:
+            case syRender.ShaderType.ShadowMap:
                 name = "shadowMap";
                 break;
-            case ShaderType.Depth:
+            case syRender.ShaderType.Depth:
                 name = "depth";
                 break;
-            case ShaderType.Spot:
+            case syRender.ShaderType.Spot:
                 name = "spot";
                 break;
             default: 
             {
-                if(type!=ShaderType.Custom)
+                if(type!=syRender.ShaderType.Custom)
                 {
                     console.log("您输入的shader类型非法,", type);
                 }

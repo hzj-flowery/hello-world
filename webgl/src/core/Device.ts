@@ -18,7 +18,7 @@ import enums from "./renderer/camera/enums";
 import { G_UISetting } from "./ui/UiSetting";
 import { SYMacro } from "./platform/SYMacro";
 import { G_LightModel } from "./renderer/light/LightModel";
-import { G_ShaderCenter, ShaderType } from "./renderer/shader/ShaderCenter";
+import { G_ShaderCenter } from "./renderer/shader/ShaderCenter";
 import { G_InputControl } from "./InputControl";
 
 /**
@@ -374,17 +374,17 @@ export default class Device {
    
     
 
-    private getTreeData(drawOrder:syRender.DrawingOrder,tag:syRender.TemplatePassTag):syRender.BaseData[]{
+    private getTreeData(drawOrder:syRender.DrawingOrder,tag:syRender.ShaderType):syRender.BaseData[]{
         //深度渲染pass
         var treeData = this._mapRenderTreeData.get(drawOrder);
         var retData = []
         for(let j in treeData)
         {
-           if(treeData[j].pass&&treeData[j].pass.templatePassTag==tag)
+           if(treeData[j].pass&&treeData[j].pass.shaderType==tag)
            {
               retData.push(treeData[j]);
            }
-           else if(!treeData[j].pass&&tag==syRender.TemplatePassTag.Normal)
+           else if(!treeData[j].pass&&tag==syRender.ShaderType.Custom)
            {
               retData.push(treeData[j]);
            }
@@ -412,19 +412,19 @@ export default class Device {
                 if(cameraData[k].rtuuid == syRender.RenderTextureUUid.Depth)
                 {
                     //深度渲染pass
-                    this.triggerRender(this.getTreeData(syRender.DrawingOrder.Normal,syRender.TemplatePassTag.Depth),cameraData[k]);
+                    this.triggerRender(this.getTreeData(syRender.DrawingOrder.Normal,syRender.ShaderType.Depth),cameraData[k]);
                 }
                 else
                 {
-                    var tree1 = this.getTreeData(syRender.DrawingOrder.Normal,syRender.TemplatePassTag.Normal)
-                    var tree2 = this.getTreeData(syRender.DrawingOrder.Normal,syRender.TemplatePassTag.Spot)
+                    var tree1 = this.getTreeData(syRender.DrawingOrder.Normal,syRender.ShaderType.Custom)
+                    var tree2 = this.getTreeData(syRender.DrawingOrder.Normal,syRender.ShaderType.Spot)
                     this.triggerRender(tree1.concat(tree2),cameraData[k]);
                 }
             }
             else if(cameraData[k].drawingOrder==syRender.DrawingOrder.Middle)
             {
                 //傻逼为啥要单独绘制？？？？？？
-                this.triggerRender(this.getTreeData(syRender.DrawingOrder.Middle,syRender.TemplatePassTag.Normal),cameraData[k]);
+                this.triggerRender(this.getTreeData(syRender.DrawingOrder.Middle,syRender.ShaderType.Custom),cameraData[k]);
             }
         }
         if (G_InputControl.openCapture&&G_InputControl.isCapture) {

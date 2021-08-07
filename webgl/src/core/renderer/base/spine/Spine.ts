@@ -4,7 +4,7 @@ import { Skeleton_Parse } from "./Skeleton_Parse";
 import { Skeleton_Node } from "./Skeleton_Node";
 import { Skeleton_Skin } from "./Skeleton_Skin";
 import { glMatrix } from "../../../math/Matrix";
-import { ShaderType } from "../../shader/ShaderCenter";
+import { syRender } from "../../data/RenderData";
 //骨骼节点
 export default class Spine extends SY.SpriteBase {
 
@@ -16,7 +16,7 @@ export default class Spine extends SY.SpriteBase {
         this._glMatrix.vec3.normalize(this._lightDirection, [-1, 3, 5]);
     }
     protected onInit(){
-        this._shaderType = ShaderType.NULL;
+        this._shaderType = syRender.ShaderType.NULL;
     }
     private gltf;
     private sharedUniforms;

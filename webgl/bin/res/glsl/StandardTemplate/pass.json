@@ -29,7 +29,6 @@
             }
         ],
         "custom":[
-            {"key":"TemplatePassTag","value":2},
             {"key":"ShaderType","value":8}
         ]
     },
@@ -63,7 +62,6 @@
             }
         ],
         "custom":[
-            {"key":"TemplatePassTag","value":3},
             {"key":"ShaderType","value":7}
         ]
     }

@@ -52,7 +52,7 @@ import TextureCube from "./texture/TextureCube";
 import TextureCustom from "./texture/TextureCustom";
 import { glBaseBuffer, G_BufferManager, IndexsBuffer, VertColorBuffer, VertMatrixBuffer, NormalBuffer, UVsBuffer, VertexsBuffer } from "./buffer/BufferManager";
 import enums from "../camera/enums";
-import { G_ShaderCenter, ShaderType } from "../shader/ShaderCenter";
+import { G_ShaderCenter } from "../shader/ShaderCenter";
 import { LightData } from "../data/LightData";
 import { ShaderCode } from "../shader/ShaderCode";
 import { syGL } from "../gfx/syGLEnums";
@@ -127,7 +127,7 @@ export namespace SY {
         //参考glprimitive_type
         protected _glPrimitiveType: syGL.PrimitiveType;//绘制的类型
         protected _sizeMode: SpriteSizeMode;//节点的尺寸模式
-        protected _shaderType: ShaderType;//shader的类型
+        protected _shaderType: syRender.ShaderType;//shader的类型
         constructor() {
             super();
             materialId++;
@@ -137,7 +137,7 @@ export namespace SY {
             this._renderData = []
             this._color = [1.0, 1.0, 1.0, 1.0];//默认颜色为白色
             this._sizeMode = SpriteSizeMode.CUSTOM;//默认加载图片的尺寸大小为自定义
-            this._shaderType = ShaderType.Custom;
+            this._shaderType = syRender.ShaderType.Custom;
             this.init();
         }
         private init(): void {
@@ -170,16 +170,16 @@ export namespace SY {
          */
         private handleShader() {
             this._pass = []
-            if (this._shaderType == ShaderType.NULL) {
+            if (this._shaderType == syRender.ShaderType.NULL) {
                 //此节点不需要shader
                 return;
             }
             let name = this.name;
-            if (this._shaderType == ShaderType.Custom) {
+            if (this._shaderType == syRender.ShaderType.Custom) {
                 //自定义shader
                 name = this.name;
             }
-            else if (this._shaderType == ShaderType.Sprite) {
+            else if (this._shaderType == syRender.ShaderType.Sprite) {
                 //默认的sprite
                 name = "Sprite";
             }
@@ -443,7 +443,7 @@ export namespace SY {
             super();
         }
         protected onInit(): void {
-            this._shaderType = ShaderType.Sprite;
+            this._shaderType = syRender.ShaderType.Sprite;
         }
     }
     export class Sprite extends Node {

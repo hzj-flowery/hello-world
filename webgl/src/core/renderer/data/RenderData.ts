@@ -14,20 +14,25 @@ import { ShaderUseVariantType } from "../shader/ShaderUseVariantType";
 
 let renderDataId: number = 0;
 export namespace syRender {
+    
+    //着色器的类型
+    export enum ShaderType {
+        Custom = 1,
+        Line,
+        Sprite,
+        Label,
+        Spine,
+        ShadowMap,
+        Spot,         //7聚光灯
+        Depth,        //8深度
+        Rtt,          //9多目标渲染
+        NULL          //不用shader渲染
+    }
 
     export enum CameraType{
         Projection=0, //透视
         Ortho         //正交
     }
-    /**
-     * 模板通道tag
-     */
-    export enum TemplatePassTag {
-        Normal = 1,    //普通,表示该pass没有关联任何的模板pass
-        Depth,       //深度pass
-        Spot,        //聚光灯
-    }
-
     export enum CameraUUid {
         adapt = 0, //自适应 他没有任何相机与之唯一对应 当节点是2d的时候，就是2d相机，当节点是3d的时候，就是3d相机
         base2D,
