@@ -27,6 +27,7 @@ import { syRender } from "../data/RenderData";
 import { LightCamera } from "../3d/LightCamera";
 import ShadowCube from "../3d/ShadowCube";
 import { Plane } from "../3d/Plane";
+import { ThreeDF } from "../3d/ThreeDF";
 
 export default class Scene3D extends Scene {
 
@@ -52,6 +53,7 @@ export default class Scene3D extends Scene {
     private _mirrorCube: MirrorCube;
     private _FLightSpot: SpotLight;
     private _FLightThreeD: ThreeDLight;
+    private _threeDF:ThreeDF
     private _sphere: Sphere;
     constructor() {
         super();
@@ -123,7 +125,10 @@ export default class Scene3D extends Scene {
 
 
 
-
+         this._threeDF = new ThreeDF();
+         this._threeDF.spriteFrame="res/dragon.png";
+         this._threeDF.setPosition(0,0,-200);
+         this._centerNode.addChild(this._threeDF);
         // this._deferredShading = new DeferredShading();
         // this._deferredShading.spriteFrame = "res/dragon.png";
         // this._deferredShading.setPosition(-3,10,0);
@@ -165,11 +170,11 @@ export default class Scene3D extends Scene {
         this._cubeNode.setScale(0.5, 0.5, 0.5);
         this._centerNode.addChild(this._cubeNode);
 
-        this._pointLightCube = new PointLightCube();
-        this._pointLightCube.setScale(100,0.1,100.0);
-        this._pointLightCube.setPosition(0, -10, 0);
-        this._pointLightCube.spriteFrame = "res/dragon.jpg";
-        this._centerNode.addChild(this._pointLightCube);
+        // this._pointLightCube = new PointLightCube();
+        // this._pointLightCube.setScale(100,0.1,100.0);
+        // this._pointLightCube.setPosition(0, -10, 0);
+        // this._pointLightCube.spriteFrame = "res/dragon.jpg";
+        // this._centerNode.addChild(this._pointLightCube);
         // this._spotLightCube = new SpotLightCube();
         // this._spotLightCube.setScale(100,50.0,10.0);
         // this._spotLightCube.setPosition(0, 0, -130);
