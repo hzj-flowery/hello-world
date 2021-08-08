@@ -1,7 +1,7 @@
 [
     {
         "name":"TemplatePass",
-        "tag":8
+        "tag":"Depth"
     },
     {
         "name": "shader",

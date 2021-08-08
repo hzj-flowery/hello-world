@@ -195,6 +195,8 @@ export namespace syGL {
 
         MOUSE = "u_mouse",//鼠标位置数据
         RESOLUTION= "u_resolution",//屏幕的设计分辨率
+
+        DefineUsePng="u_use_png",//宏 bool值 判断是否使用png
     }
     // cull
     export const Cull = {

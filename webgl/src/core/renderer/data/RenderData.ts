@@ -14,23 +14,46 @@ import { ShaderUseVariantType } from "../shader/ShaderUseVariantType";
 
 let renderDataId: number = 0;
 export namespace syRender {
-    
+
     //着色器的类型
     export enum ShaderType {
-        Custom = 1,
+        Custom = 0,
         Line,
+        LineFrustum,
         Sprite,
         Label,
         Spine,
         ShadowMap,
-        Spot,         //7聚光灯
-        Depth,        //8深度
-        Rtt,          //9多目标渲染
+        Parallel,      //平行光
+        Spot,         //聚光灯
+        Point,        //点光
+        Depth,        //深度
+        Rtt,          //多目标渲染
+        Fog,          //雾
+        Test,         //只是测试使用
         NULL          //不用shader渲染
     }
 
-    export enum CameraType{
-        Projection=0, //透视
+    export var ShaderTypeString:Array<string> = [
+        "Custom",
+        "Line",
+        "LineFrustum",
+        "Sprite",
+        "Label",
+        "Spine",
+        "ShadowMap",
+        "Parallel",
+        "Spot",         //7聚光灯
+        "Point",        //点光
+        "Depth",        //8深度
+        "Rtt",          //9多目标渲染
+        "Fog",
+        "Test",
+        "NULL"          //不用shader渲染
+    ]
+
+    export enum CameraType {
+        Projection = 0, //透视
         Ortho         //正交
     }
     export enum CameraUUid {
@@ -123,6 +146,11 @@ export namespace syRender {
         public glID: WebGLBuffer;//显存地址
         public itemSize: number;//单个buffer单元的数据数目
         public itemNums: number;//所有buffer单元数目
+    }
+    
+    //shader 中使用的宏
+    export class DefineUse{
+         public PNG:number=0;
     }
 
     //绘制信息
@@ -386,7 +414,7 @@ export namespace syRender {
 
             this.light = new Light.Center();
             this.primitive = new Primitive()
-
+            this._defineUse = new DefineUse();
             this.reset();
         }
 
@@ -430,6 +458,7 @@ export namespace syRender {
         private _temp002_matrix;//
         private _temp003_matrix;//
         private _temp004_matrix;//
+        private _defineUse:DefineUse;
         public reset(): void {
             this._pass = null;
             this._cameraPosition = [];
@@ -441,7 +470,14 @@ export namespace syRender {
             this.time = 0;
             this.useFlag = false;
         }
-
+        
+        /**
+         * 设置是否使用宏
+         * @param p 
+         */
+        public setDefinePngUse(p:number):void{
+             this._defineUse.PNG = p;
+        }
         public set pass(pass: Pass) {
             this._pass = pass
         }
@@ -660,6 +696,9 @@ export namespace syRender {
                         break;
                     case ShaderUseVariantType.ShadowInfo:
                         _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.SHADOW_INFO, this.light.shadowInfo);
+                        break;
+                    case ShaderUseVariantType.Define_UsePng:
+                        _shader.setCustomUniformFloat(syGL.AttributeUniform.DefineUsePng,this._defineUse.PNG)
                         break;
                     default:
                     // console.log("目前还没有处理这个矩阵类型");

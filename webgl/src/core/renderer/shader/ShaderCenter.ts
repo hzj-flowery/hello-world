@@ -12,25 +12,20 @@ class ShaderCenter {
         this._shaderCount = 0;
     }
     private createShaderName(type: syRender.ShaderType): string {
-        switch (type) {
-            case syRender.ShaderType.Custom:
-                this._shaderCount++;
-                return "custom" + this._shaderCount;
-            case syRender.ShaderType.Label:
-                return "label";
-            case syRender.ShaderType.Line:
-                return "line";
-            case syRender.ShaderType.Sprite:
-                return "sprite";
-            case syRender.ShaderType.Spine:
-                return "spine";
-            case syRender.ShaderType.Spot:
-                return "spot";
-            case syRender.ShaderType.Depth:
-                return "depth";
-            case syRender.ShaderType.ShadowMap:
-                return "shadowMap";
-            default: 
+
+        if(type==syRender.ShaderType.Custom)
+        {
+            this._shaderCount++;
+            return syRender.ShaderTypeString[type]+this._shaderCount;
+        }
+        else
+        {
+            var str = syRender.ShaderTypeString[type];
+            if(str&&str!="NULL")
+            {
+               return str;
+            }
+            else
             {
                 console.log("您输入的shader类型非法,", type);
             }
@@ -68,35 +63,12 @@ class ShaderCenter {
         return this._shaderMap.get(name);
     }
     public getShader(type: syRender.ShaderType): Shader {
-        let name = "";
-        switch (type) {
-            case syRender.ShaderType.Label:
-                name = "label";
-                break;
-            case syRender.ShaderType.Sprite:
-                name = "sprite";
-                break;
-            case syRender.ShaderType.Spine:
-                name = "spine";
-                break;
-            case syRender.ShaderType.Line:
-                name = "line";
-                break;
-            case syRender.ShaderType.ShadowMap:
-                name = "shadowMap";
-                break;
-            case syRender.ShaderType.Depth:
-                name = "depth";
-                break;
-            case syRender.ShaderType.Spot:
-                name = "spot";
-                break;
-            default: 
+        var name = syRender.ShaderTypeString[type];
+        if(!name||name=="NULL")
+        {
+            if(type!=syRender.ShaderType.Custom)
             {
-                if(type!=syRender.ShaderType.Custom)
-                {
-                    console.log("您输入的shader类型非法,", type);
-                }
+                console.log("您输入的shader类型非法,", type);
             }
         }
         if (name != "")

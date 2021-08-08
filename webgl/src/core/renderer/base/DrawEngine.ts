@@ -169,6 +169,17 @@ class DrawEngine {
     public setUniformFloatVec4(loc: number, arr: Array<number>): void {
         this.gl.uniform4fv(loc, arr);
     }
+
+       /**
+     * 设置shader中Uniform变量的值
+     * 在着色器中此值相当于const 不可以修改
+     * 另外在顶点和片段着色器中如果同时声明一样，则都可以使用
+     * @param loc shader中变量的位置
+     * @param matrix 矩阵数据
+     */
+        public setUniform1i(loc: number, p:number): void {
+            this.gl.uniform1i(loc, p);
+        }
     
     /**
      * 此函数的作用是激活纹理单元

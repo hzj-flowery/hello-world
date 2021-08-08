@@ -1,3 +1,4 @@
+import { syRender } from "../data/RenderData";
 import { glEnums } from "../gfx/GLapi"
 import State from "../gfx/State"
 import { Pass, PassType } from "./Pass"
@@ -115,9 +116,15 @@ class PassFactory{
                 {
                     pass.drawingOrder = value;
                 }
-                else if(key==PassCustomString.ShaderType&&typeof(value)=="number")
+                else if(key==PassCustomString.ShaderType&&typeof(value)=="string")
                 {
-                    pass.shaderType = value;
+                    var st = syRender.ShaderTypeString.indexOf(value);
+                    if(st<0)
+                    {
+                        console.log("非法变量------",value);
+                        return;
+                    }
+                    pass.shaderType = st;
                 }
 
             }

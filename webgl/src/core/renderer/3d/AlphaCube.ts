@@ -12,6 +12,7 @@ export default class AlphaCube extends SY.SpriteBase {
         this.createUVsBuffer(rd.uvData, rd.dF.uv_item_size);
         this.createIndexsBuffer(rd.indexs);
         this._glPrimitiveType = this.gl.TRIANGLE_STRIP;
-        this.alpha = 0.95;
+        this.alpha = 0.5;
+        this.setSupportPng(0.1);
     }
 }

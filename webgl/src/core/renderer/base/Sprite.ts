@@ -128,6 +128,7 @@ export namespace SY {
         protected _glPrimitiveType: syGL.PrimitiveType;//绘制的类型
         protected _sizeMode: SpriteSizeMode;//节点的尺寸模式
         protected _shaderType: syRender.ShaderType;//shader的类型
+        private _isSupportPng:number=0; //是否支持png 
         constructor() {
             super();
             materialId++;
@@ -144,8 +145,15 @@ export namespace SY {
             this.onInit();
             this.handleShader();
         }
-
-
+        
+        /**
+         * 是否支持png
+         * 支持png 模式 则p的值处于(0,1]
+         * @param p 
+         */
+        public setSupportPng(p:number):void{
+             this._isSupportPng = p;
+        }
         /**
          * 设置精灵图片的尺寸模式
          */
@@ -407,6 +415,10 @@ export namespace SY {
             rData.primitive.alpha = this._alpha;
             //自定义的矩阵
             rData.primitive.customMatrix = this._customMatrix;
+
+            //宏-------------------------------------------------------------------------------------
+            //是否支持png的使用
+            rData.setDefinePngUse(this._isSupportPng)
 
 
             //节点自定义矩阵组------------------------------------------------------------------------

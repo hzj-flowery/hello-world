@@ -54,5 +54,7 @@ export enum ShaderUseVariantType {
 
     Mouse,             //鼠标按下的位置信息
     Resolution,       //设计分辨率
+
+    Define_UsePng,   //宏 bool值 判断是否使用png图片
     UndefinedMax,//无效
 }

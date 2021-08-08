@@ -1,25 +1,18 @@
-#version 300 es
+
 precision highp float;
-/*
-惊喜发现：
-location=0 最好会默认输出到显示的帧缓冲中去 无论这个变量的名字叫啥
-*/
-layout (location = 0) out vec4 gColor;   // 颜色
-layout (location = 1) out vec3 gPosition;// 位置
-layout (location = 2) out vec3 gNormal;  // 法向量
-layout (location = 3) out vec2 gUv;      //uv纹理
-uniform sampler2D u_texture;
-in vec3 vPosition;
-in vec3 vNormal;
-in vec2 v_uv;
+
+uniform sampler2D gPosition;
+uniform sampler2D gNormal;
+uniform sampler2D gColor;
+uniform sampler2D gUv;
+varying vec2 v_uv;
+varying vec4 v_position;
 
 void main() {
-  gPosition = vPosition;
-  gNormal =normalize(vNormal);
-  gColor = vec4(texture(u_texture, v_uv).rgb,1.0);
-  gUv = v_uv;
+ vec3 homogeneousDivisionPos = v_position.xyz/v_position.w; //齐次除法
+ vec2 screenPos = homogeneousDivisionPos.xy*0.5+vec2(0.5);  //转换到屏幕坐标系下
+ vec4 cor = texture2D(gColor,screenPos.xy);
+//  vec4 cor = texture2D(gColor,vec2(gl_FragCoord.x/960.0,gl_FragCoord.y/640.0));
+ 
+ gl_FragColor = cor;
 }
-/*
-感悟：
-
-*/

@@ -361,8 +361,9 @@ export default class LoaderManager {
             }
             let vsData = this.getRes(vs);
             let fsData = this.getRes(fs);
-            loadCount--;
+            
             if (vsData && fsData) {
+                loadCount--;
                 if (progressBack) progressBack([vsData, fsData, passJson]);
                 if (loadCount <= 0 && finishBack) {
                     finishBack();
@@ -373,6 +374,7 @@ export default class LoaderManager {
                     if (!res) {
                         console.log("加载出错");
                     }
+                    loadCount--;
                     let vsData = this.getRes(vs);
                     let fsData = this.getRes(fs);
                     if (!vsData || !fsData) {

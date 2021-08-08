@@ -191,7 +191,8 @@ export class Label extends SY.Sprite2D {
         this.createIndexsBuffer(floorVertexIndices);
 
         this._glPrimitiveType = syGL.PrimitiveType.TRIANGLES;
-
+        
+        this.setSupportPng(0.1);
     }
 }
 

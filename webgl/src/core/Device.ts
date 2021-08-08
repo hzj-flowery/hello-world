@@ -392,6 +392,39 @@ export default class Device {
         return retData;
     }
     /**
+     * 获取常规渲染的data
+     * @param drawOrder 
+     * @param tagArr 
+     * @returns 
+     */
+    private getNormalTreeData():syRender.BaseData[]{
+        var drawOrder = syRender.DrawingOrder.Normal;
+        var tagArr:Array<syRender.ShaderType> = [syRender.ShaderType.Custom,
+            syRender.ShaderType.Spot,
+            syRender.ShaderType.Point,
+            syRender.ShaderType.Line,
+            syRender.ShaderType.LineFrustum,
+            syRender.ShaderType.Parallel,
+            syRender.ShaderType.Sprite,
+            syRender.ShaderType.Fog,
+            syRender.ShaderType.Test]
+        //深度渲染pass
+        var treeData = this._mapRenderTreeData.get(drawOrder);
+        var retData = []
+        for(let j in treeData)
+        {
+           if(treeData[j].pass&&tagArr.indexOf(treeData[j].pass.shaderType)>=0)
+           {
+              retData.push(treeData[j]);
+           }
+           else if(!treeData[j].pass&&tagArr.indexOf(syRender.ShaderType.Custom)>=0)
+           {
+              retData.push(treeData[j]);
+           }
+        }
+        return retData;
+    }
+    /**
      * 
      * @param time 
      * @param stage 
@@ -416,15 +449,15 @@ export default class Device {
                 }
                 else
                 {
-                    var tree1 = this.getTreeData(syRender.DrawingOrder.Normal,syRender.ShaderType.Custom)
-                    var tree2 = this.getTreeData(syRender.DrawingOrder.Normal,syRender.ShaderType.Spot)
-                    this.triggerRender(tree1.concat(tree2),cameraData[k]);
+                    this.triggerRender(this.getNormalTreeData(),cameraData[k]);
                 }
             }
             else if(cameraData[k].drawingOrder==syRender.DrawingOrder.Middle)
             {
-                //傻逼为啥要单独绘制？？？？？？
-                this.triggerRender(this.getTreeData(syRender.DrawingOrder.Middle,syRender.ShaderType.Custom),cameraData[k]);
+                //优先绘制
+                var tree1 = this.getTreeData(syRender.DrawingOrder.Middle,syRender.ShaderType.Custom)
+                var tree2 = this.getTreeData(syRender.DrawingOrder.Middle,syRender.ShaderType.Rtt)
+                this.triggerRender(tree1.concat(tree2),cameraData[k]);
             }
         }
         if (G_InputControl.openCapture&&G_InputControl.isCapture) {

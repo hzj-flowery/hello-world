@@ -1,31 +1,10 @@
 [
     {
-        "name": "shader",
-        "state": [
-            {
-                "key": "depthFunc",
-                "value": "glEnums.DS_FUNC_LESS"
-            },
-            {
-                "key": "depthTest",
-                "value": true
-            },
-            {
-                "key": "depthWrite",
-                "value": true
-            },
-            {
-                "key": "blend",
-                "value": true
-            },
-            {
-                "key": "blendSrcAlpha",
-                "value": "glEnums.BLEND_SRC_ALPHA"
-            },
-            {
-                "key": "blendDstAlpha",
-                "value": "glEnums.BLEND_ONE_MINUS_SRC_ALPHA"
-            }
-        ]
+        "name":"TemplatePass",
+        "tag":"Depth"
+    },
+    {
+        "name":"TemplatePass",
+        "tag":"Sprite"
     }
 ]
