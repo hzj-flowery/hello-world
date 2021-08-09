@@ -127,7 +127,6 @@ export namespace SY {
         //参考glprimitive_type
         protected _glPrimitiveType: syGL.PrimitiveType;//绘制的类型
         protected _sizeMode: SpriteSizeMode;//节点的尺寸模式
-        protected _shaderType: syRender.ShaderType;//shader的类型
         private _isSupportPng:number=0; //是否支持png 
         constructor() {
             super();
@@ -138,7 +137,6 @@ export namespace SY {
             this._renderData = []
             this._color = [1.0, 1.0, 1.0, 1.0];//默认颜色为白色
             this._sizeMode = SpriteSizeMode.CUSTOM;//默认加载图片的尺寸大小为自定义
-            this._shaderType = syRender.ShaderType.Custom;
             this.init();
         }
         private init(): void {
@@ -178,22 +176,7 @@ export namespace SY {
          */
         private handleShader() {
             this._pass = []
-            if (this._shaderType == syRender.ShaderType.NULL) {
-                //此节点不需要shader
-                return;
-            }
             let name = this.name;
-            if (this._shaderType == syRender.ShaderType.Custom) {
-                //自定义shader
-                name = this.name;
-            }
-            else if (this._shaderType == syRender.ShaderType.Sprite) {
-                //默认的sprite
-                name = "Sprite";
-            }
-            else {
-                console.log("传入未知的类型shader 请检查---", this.name);
-            }
             LoaderManager.instance.loadGlsl(name, (res) => {
                 this._pass.push(G_PassFactory.createPass(res[0], res[1],res[2]));
             }, () => {
@@ -453,9 +436,6 @@ export namespace SY {
     export class sySprite extends SpriteBase {
         constructor() {
             super();
-        }
-        protected onInit(): void {
-            this._shaderType = syRender.ShaderType.Sprite;
         }
     }
     export class Sprite extends Node {

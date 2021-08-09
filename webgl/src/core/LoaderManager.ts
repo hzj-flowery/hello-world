@@ -3,6 +3,7 @@
  */
 import { syRender } from "./renderer/data/RenderData";
 import { PassCustomString } from "./renderer/shader/PassFactory";
+import { MathUtils } from "./utils/MathUtils";
 
 /**
  var myHeaders = new Headers();
@@ -338,6 +339,63 @@ export default class LoaderManager {
     public getRes(url: string): any {
         return this._cache.get(url);
     }
+    
+    /**
+     * 调整模板pass
+     */
+    public adjustTemplatePass():void{
+        let passName = "res/glsl/StandardTemplate/pass.json";
+        let passData = this.getRes(passName);
+        let baseData:any = {};
+        for(let k=0;k<passData.length;k++)
+        {
+            if(passData[k].name=="baseAttribute")
+            baseData=passData[k];
+        }
+        //追加
+        for(let k in passData)
+        {
+            let v = passData[k]
+            if(v.name=="baseAttribute")
+            continue;
+
+            
+            if(v.template==null)
+            {
+                v.template=baseData.template
+            }
+            //copy state
+            var baseState:Array<any> = baseData.state;
+            if(v.state==null)
+            {
+                v.state=MathUtils.clone(baseState)
+            }
+            else
+            {
+                baseState.forEach((value,index)=>{
+                    let isExist:boolean = false;
+                    v.state.forEach((svalue,sindex)=>{
+                         if(svalue.key==value.key)
+                         {
+                            isExist= true;
+                         }
+                    })
+                    if(!isExist)
+                    {
+                        v.state.push(value);
+                    }
+                })
+            }
+        }
+        console.log(passData);
+    }
+
+    public loadTemplate(cb):void{
+        LoaderManager.instance.loadGlsl("StandardTemplate",null,function(){
+            LoaderManager.instance.adjustTemplatePass();
+            if(cb)cb();
+        })
+    }
     /**
      * 加载着色器代码
      * @param spriteName 
@@ -398,6 +456,7 @@ export default class LoaderManager {
             if (res && res.length > 0) {
                 //追加额外的pass
                 var passLen = res.length;
+                var reduceLen=0;
                 for (let k = 0; k < passLen; k++) {
                     if (res[k].name == "TemplatePass") {
                         var depthP = this.getStandardTemplatePass(res[k].tag);
@@ -406,10 +465,14 @@ export default class LoaderManager {
                             res[k] = depthP;
                         }
                     }
+                    else if(res[k].name == "baseAttribute")
+                    {
+                        reduceLen=1;
+                    }
                 }
                 //加载pass成功啦
-                loadCount = res.length
-                for (let k = 0; k < res.length; k++) {
+                loadCount = res.length - reduceLen
+                for (let k = reduceLen; k < res.length; k++) {
                     runRealLoad(res[k])
                 }
             }

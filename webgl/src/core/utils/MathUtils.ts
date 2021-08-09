@@ -1,7 +1,7 @@
-const  _lut = [];
-for ( let i = 0; i < 256; i ++ ) {
+const _lut = [];
+for (let i = 0; i < 256; i++) {
 
-	_lut[ i ] = ( i < 16 ? '0' : '' ) + ( i ).toString( 16 );
+  _lut[i] = (i < 16 ? '0' : '') + (i).toString(16);
 
 }
 
@@ -10,6 +10,8 @@ let _seed = 1234567;
  * 数学库工具类
  */
 export namespace MathUtils {
+
+
   export function px(v) {
     return `${v | 0}px`;
   }
@@ -233,6 +235,27 @@ export namespace MathUtils {
 
     }
 
+  }
+
+  export function clone(Obj) {
+    var buf;
+    if (Obj instanceof Array) {
+      buf = [];
+      var i = Obj.length;
+      while (i--) {
+        buf[i] = clone(Obj[i]);
+      }
+      return buf;
+    }
+    else if (Obj instanceof Object) {
+      buf = {};
+      for (var k in Obj) {
+        buf[k] = clone(Obj[k]);
+      }
+      return buf;
+    } else {
+      return Obj;
+    }
   }
 
 }

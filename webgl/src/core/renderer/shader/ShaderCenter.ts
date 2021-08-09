@@ -7,16 +7,16 @@ import { G_ShaderFactory } from "./ShaderFactory";
 
 class ShaderCenter {
     private _shaderMap: Map<string, Shader> = new Map();
-    private _shaderCount: number;
+    private _shaderCustomUUid: number;
     constructor() {
-        this._shaderCount = 0;
+        this._shaderCustomUUid = 0;
     }
     private createShaderName(type: syRender.ShaderType): string {
 
         if(type==syRender.ShaderType.Custom)
         {
-            this._shaderCount++;
-            return syRender.ShaderTypeString[type]+this._shaderCount;
+            this._shaderCustomUUid++;
+            return syRender.ShaderTypeString[type]+this._shaderCustomUUid;
         }
         else
         {
@@ -30,11 +30,6 @@ class ShaderCenter {
                 console.log("您输入的shader类型非法,", type);
             }
         }
-    }
-    public init(): void {
-        //预先初始化一些shader
-        this.createShader(syRender.ShaderType.ShadowMap, ShaderCode.shadowMap.vert, ShaderCode.shadowMap.frag);
-        this.createShader(syRender.ShaderType.Line,ShaderCode.line.vert,ShaderCode.line.frag);
     }
     /**
      * 创建shader

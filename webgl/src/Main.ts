@@ -12,7 +12,6 @@ import SpotLightTest from "./core/renderer/light/SpotLightTest";
 import { G_ShaderFactory } from "./core/renderer/shader/ShaderFactory";
 import { G_BufferManager } from "./core/renderer/base/buffer/BufferManager";
 import { G_DrawEngine } from "./core/renderer/base/DrawEngine";
-import { G_ShaderCenter } from "./core/renderer/shader/ShaderCenter";
 import { G_LightCenter } from "./core/renderer/light/LightCenter";
 import { G_LightModel } from "./core/renderer/light/LightModel";
 import { G_UISetting } from "./core/ui/UiSetting";
@@ -87,7 +86,6 @@ function runBeforeInit(){
     G_DrawEngine.init(Device.Instance.gl);
     G_ShaderFactory.init(Device.Instance.gl);
     G_BufferManager.init(Device.Instance.gl);
-    G_ShaderCenter.init();
     G_LightCenter.init();
     G_LightModel.init();
     G_UISetting.setUI();
@@ -102,9 +100,9 @@ LoaderManager.instance.load(arr,null,function(){
     let str = `#define ${name} ${value}`;
     console.log("---hzj------",str);
 
-    LoaderManager.instance.loadGlsl("StandardTemplate",null,function(){
-        //启动游戏
-        new RenderFlow().startup();
+    LoaderManager.instance.loadTemplate(function(){
+         //启动游戏
+         new RenderFlow().startup();
     })
 
    

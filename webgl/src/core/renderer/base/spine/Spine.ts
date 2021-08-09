@@ -15,9 +15,6 @@ export default class Spine extends SY.SpriteBase {
         this._lightDirection = glMatrix.vec3.create() as Float32Array;
         this._glMatrix.vec3.normalize(this._lightDirection, [-1, 3, 5]);
     }
-    protected onInit(){
-        this._shaderType = syRender.ShaderType.NULL;
-    }
     private gltf;
     private sharedUniforms;
     private origMatrices: Map<Skeleton_Node, Float32Array> = new Map();

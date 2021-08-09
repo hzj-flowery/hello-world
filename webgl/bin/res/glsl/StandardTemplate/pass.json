@@ -1,6 +1,6 @@
 [
     {
-        "name": "Depth/shader",
+        "name": "baseAttribute",
         "template":true,
         "state": [
             {
@@ -27,7 +27,11 @@
                 "key": "blendDstAlpha",
                 "value": "glEnums.BLEND_ONE_MINUS_SRC_ALPHA"
             }
-        ],
+        ]
+    },
+    {
+        "name": "Depth/shader",
+        "template":true,
         "custom":[
             {"key":"ShaderType","value":"Depth"}
         ]
@@ -35,32 +39,6 @@
     {
         "name": "Spot/shader",
         "template":true,
-        "state": [
-            {
-                "key": "depthFunc",
-                "value": "glEnums.DS_FUNC_LESS"
-            },
-            {
-                "key": "depthTest",
-                "value": true
-            },
-            {
-                "key": "depthWrite",
-                "value": true
-            },
-            {
-                "key":"blend",
-                "value":true
-            },
-            {
-                "key": "blendSrcAlpha",
-                "value": "glEnums.BLEND_SRC_ALPHA"
-            },
-            {
-                "key": "blendDstAlpha",
-                "value": "glEnums.BLEND_ONE_MINUS_SRC_ALPHA"
-            }
-        ],
         "custom":[
             {"key":"ShaderType","value":"Spot"}
         ]
@@ -68,32 +46,6 @@
     {
         "name": "Point/shader",
         "template":true,
-        "state": [
-            {
-                "key": "depthFunc",
-                "value": "glEnums.DS_FUNC_LESS"
-            },
-            {
-                "key": "depthTest",
-                "value": true
-            },
-            {
-                "key": "depthWrite",
-                "value": true
-            },
-            {
-                "key":"blend",
-                "value":true
-            },
-            {
-                "key": "blendSrcAlpha",
-                "value": "glEnums.BLEND_SRC_ALPHA"
-            },
-            {
-                "key": "blendDstAlpha",
-                "value": "glEnums.BLEND_ONE_MINUS_SRC_ALPHA"
-            }
-        ],
         "custom":[
             {"key":"ShaderType","value":"Point"}
         ]
@@ -101,32 +53,6 @@
     {
         "name": "Rtt/shader",
         "template":true,
-        "state": [
-            {
-                "key": "depthFunc",
-                "value": "glEnums.DS_FUNC_LESS"
-            },
-            {
-                "key": "depthTest",
-                "value": true
-            },
-            {
-                "key": "depthWrite",
-                "value": true
-            },
-            {
-                "key": "blend",
-                "value": true
-            },
-            {
-                "key": "blendSrcAlpha",
-                "value": "glEnums.BLEND_SRC_ALPHA"
-            },
-            {
-                "key": "blendDstAlpha",
-                "value": "glEnums.BLEND_ONE_MINUS_SRC_ALPHA"
-            }
-        ],
         "custom":[
             {"key":"DrawingOrder","value":1},
             {"key":"ShaderType","value":"Rtt"}
@@ -135,32 +61,6 @@
     {
         "name": "Line/shader",
         "template":true,
-        "state": [
-            {
-                "key": "depthFunc",
-                "value": "glEnums.DS_FUNC_LESS"
-            },
-            {
-                "key": "depthTest",
-                "value": true
-            },
-            {
-                "key": "depthWrite",
-                "value": true
-            },
-            {
-                "key":"blend",
-                "value":true
-            },
-            {
-                "key": "blendSrcAlpha",
-                "value": "glEnums.BLEND_SRC_ALPHA"
-            },
-            {
-                "key": "blendDstAlpha",
-                "value": "glEnums.BLEND_ONE_MINUS_SRC_ALPHA"
-            }
-        ],
         "custom":[
             {"key":"ShaderType","value":"Line"}
         ]
@@ -168,32 +68,6 @@
     {
         "name": "LineFrustum/shader",
         "template":true,
-        "state": [
-            {
-                "key": "depthFunc",
-                "value": "glEnums.DS_FUNC_LESS"
-            },
-            {
-                "key": "depthTest",
-                "value": true
-            },
-            {
-                "key": "depthWrite",
-                "value": true
-            },
-            {
-                "key":"blend",
-                "value":true
-            },
-            {
-                "key": "blendSrcAlpha",
-                "value": "glEnums.BLEND_SRC_ALPHA"
-            },
-            {
-                "key": "blendDstAlpha",
-                "value": "glEnums.BLEND_ONE_MINUS_SRC_ALPHA"
-            }
-        ],
         "custom":[
             {"key":"ShaderType","value":"LineFrustum"}
         ]
@@ -201,32 +75,6 @@
     {
         "name": "Parallel/shader",
         "template":true,
-        "state": [
-            {
-                "key": "depthFunc",
-                "value": "glEnums.DS_FUNC_LESS"
-            },
-            {
-                "key": "depthTest",
-                "value": true
-            },
-            {
-                "key": "depthWrite",
-                "value": true
-            },
-            {
-                "key":"blend",
-                "value":true
-            },
-            {
-                "key": "blendSrcAlpha",
-                "value": "glEnums.BLEND_SRC_ALPHA"
-            },
-            {
-                "key": "blendDstAlpha",
-                "value": "glEnums.BLEND_ONE_MINUS_SRC_ALPHA"
-            }
-        ],
         "custom":[
             {"key":"ShaderType","value":"Parallel"}
         ]
@@ -234,32 +82,6 @@
     {
         "name": "Sprite/shader",
         "template":true,
-        "state": [
-            {
-                "key": "depthFunc",
-                "value": "glEnums.DS_FUNC_LESS"
-            },
-            {
-                "key": "depthTest",
-                "value": true
-            },
-            {
-                "key": "depthWrite",
-                "value": true
-            },
-            {
-                "key":"blend",
-                "value":true
-            },
-            {
-                "key": "blendSrcAlpha",
-                "value": "glEnums.BLEND_SRC_ALPHA"
-            },
-            {
-                "key": "blendDstAlpha",
-                "value": "glEnums.BLEND_ONE_MINUS_SRC_ALPHA"
-            }
-        ],
         "custom":[
             {"key":"ShaderType","value":"Sprite"}
         ]
@@ -267,32 +89,6 @@
     {
         "name": "Fog/shader",
         "template":true,
-        "state": [
-            {
-                "key": "depthFunc",
-                "value": "glEnums.DS_FUNC_LESS"
-            },
-            {
-                "key": "depthTest",
-                "value": true
-            },
-            {
-                "key": "depthWrite",
-                "value": true
-            },
-            {
-                "key":"blend",
-                "value":true
-            },
-            {
-                "key": "blendSrcAlpha",
-                "value": "glEnums.BLEND_SRC_ALPHA"
-            },
-            {
-                "key": "blendDstAlpha",
-                "value": "glEnums.BLEND_ONE_MINUS_SRC_ALPHA"
-            }
-        ],
         "custom":[
             {"key":"ShaderType","value":"Fog"}
         ]
@@ -300,32 +96,6 @@
     {
         "name": "Test/shader",
         "template":true,
-        "state": [
-            {
-                "key": "depthFunc",
-                "value": "glEnums.DS_FUNC_LESS"
-            },
-            {
-                "key": "depthTest",
-                "value": true
-            },
-            {
-                "key": "depthWrite",
-                "value": true
-            },
-            {
-                "key":"blend",
-                "value":true
-            },
-            {
-                "key": "blendSrcAlpha",
-                "value": "glEnums.BLEND_SRC_ALPHA"
-            },
-            {
-                "key": "blendDstAlpha",
-                "value": "glEnums.BLEND_ONE_MINUS_SRC_ALPHA"
-            }
-        ],
         "custom":[
             {"key":"ShaderType","value":"Test"}
         ]
