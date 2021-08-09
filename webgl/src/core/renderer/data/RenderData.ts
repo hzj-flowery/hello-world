@@ -23,7 +23,7 @@ export namespace syRender {
         Sprite,
         Label,
         Spine,
-        ShadowMap,
+        Shadow,        //绘制阴影
         Parallel,      //平行光
         Spot,         //聚光灯
         Point,        //点光
@@ -43,7 +43,7 @@ export namespace syRender {
         "Sprite",
         "Label",
         "Spine",
-        "ShadowMap",
+        "Shadow",
         "Parallel",
         "Spot",         //7聚光灯
         "Point",        //点光

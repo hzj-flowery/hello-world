@@ -155,10 +155,10 @@ class UISetting {
             // { type: 'slider', key: 'specularShininess', min: 0, max: 200, change: this.render.bind(this), precision: 2, step: 0.01, },
             
             //点光
-            { type: 'slider', key: 'pointColR', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
-            { type: 'slider', key: 'pointColG', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
-            { type: 'slider', key: 'pointColB', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
-            { type: 'slider', key: 'pointColA', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'pointColR', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'pointColG', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'pointColB', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'pointColA', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
 
             //雾
             // { type: 'slider', key: 'fogColR', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
@@ -174,8 +174,8 @@ class UISetting {
             { type: 'slider', key: 'lightTargetX', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
             { type: 'slider', key: 'lightTargetY', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
             { type: 'slider', key: 'lightTargetZ', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
-            { type: 'slider', key: 'lightProjWidth', min: 0, max: 10, change: this.render.bind(this), precision: 2, step: 0.1, },
-            { type: 'slider', key: 'lightProjHeight', min: 0, max: 10, change: this.render.bind(this), precision: 2, step: 0.1, },
+            { type: 'slider', key: 'lightProjWidth', min: 1, max: 10, change: this.render.bind(this), precision: 2, step: 0.1, },
+            { type: 'slider', key: 'lightProjHeight', min: 1, max: 10, change: this.render.bind(this), precision: 2, step: 0.1, },
             // { type: 'slider', key: 'lightFieldOfView', min: 1, max: 179, change: this.render.bind(this), },
             // { type: 'slider', key: 'lightBias', min: 0.005, max: 0.001, change: this.render.bind(this), precision: 3, step: 0.001, },
         ]

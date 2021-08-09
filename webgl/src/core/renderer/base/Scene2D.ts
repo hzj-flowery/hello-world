@@ -47,18 +47,18 @@ export default class Scene2D extends Scene {
         }
         this.addChild(this._renderSprite);
 
-        // this._depthSprite = new DepthSprite();
-        // this._depthSprite.setPosition(Device.Instance.width/2-200,Device.Instance.height/2+200, -100);
-        // this._depthSprite.spriteFrame = {
-        //     place:syRender.AttachPlace.MoreColor,
-        //          param: [
-        //         { type: syRender.DeferredTexture.None, value: "res/deferred.png" },
-        //         { type: syRender.DeferredTexture.Depth, value: null },
-        //         { type: syRender.DeferredTexture.UV, value: null },
-        //         { type: syRender.DeferredTexture.Color, value: null },
-        //         ]
-        // }
-        // this.addChild(this._depthSprite);
+        this._depthSprite = new DepthSprite();
+        this._depthSprite.setPosition(Device.Instance.width/2-200,Device.Instance.height/2+200, -100);
+        this._depthSprite.spriteFrame = {
+            place:syRender.AttachPlace.MoreColor,
+                 param: [
+                { type: syRender.DeferredTexture.None, value: "res/deferred.png" },
+                { type: syRender.DeferredTexture.Depth, value: null },
+                { type: syRender.DeferredTexture.UV, value: null },
+                { type: syRender.DeferredTexture.Color, value: null },
+                ]
+        }
+        this.addChild(this._depthSprite);
 
         
 

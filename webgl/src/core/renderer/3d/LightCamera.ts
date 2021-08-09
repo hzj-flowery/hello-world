@@ -114,6 +114,7 @@ export class LightCamera extends Node {
         this._sunSprite.setPosition(setting.eyeX, setting.eyeY, setting.eyeZ);
         this._lightLine.setPosition(setting.eyeX, setting.eyeY, setting.eyeZ);
 
-
+        lightData.viewMatrix = this._cameraMatrix;
+        lightData.projectionMatrix = this._projectMatrix;
     }
 }

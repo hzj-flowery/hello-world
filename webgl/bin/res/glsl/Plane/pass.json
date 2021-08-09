@@ -1,6 +1,10 @@
 [
     {
         "name":"TemplatePass",
-        "tag":"Spot"
+        "tag":"Depth"
+    },
+    {
+        "name":"TemplatePass",
+        "tag":"Shadow"
     }
 ]

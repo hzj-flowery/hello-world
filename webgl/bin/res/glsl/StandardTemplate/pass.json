@@ -114,6 +114,13 @@
         ]
     },
     {
+        "name": "Shadow/shader",
+        "template":true,
+        "custom":[
+            {"key":"ShaderType","value":"Shadow"}
+        ]
+    },
+    {
         "name": "Test/shader",
         "template":true,
         "custom":[

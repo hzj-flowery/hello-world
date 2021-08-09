@@ -10,7 +10,6 @@ export default class ShadowCube extends SY.SpriteBase {
 
   private _customTempMatrix: Float32Array;
   private _tempMatrix: Float32Array;
-
   protected onInit() {
     var rd = CubeData.getData();
     this.createVertexsBuffer(rd.vertex, rd.dF.vertex_item_size);
@@ -37,8 +36,8 @@ export default class ShadowCube extends SY.SpriteBase {
    * @param view 
    */
   public onBindGPUBufferDataBefore(rd:syRender.BaseData,proj: Float32Array, view: Float32Array): void {
-    glMatrix.mat4.copy(this._customTempMatrix, proj);
-    glMatrix.mat4.multiply(this._customTempMatrix, this._customTempMatrix, glMatrix.mat4.invert(null, view));
+    glMatrix.mat4.copy(this._customTempMatrix, rd.light.projectionMatrix);
+    glMatrix.mat4.multiply(this._customTempMatrix, this._customTempMatrix, glMatrix.mat4.invert(null, rd.light.viewMatrix));
   }
 
 }

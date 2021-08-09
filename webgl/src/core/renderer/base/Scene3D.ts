@@ -86,12 +86,12 @@ export default class Scene3D extends Scene {
 
 
 
-        var spNode = new Node();
-        this._sphere = new Sphere();
-        this._sphere.spriteFrame="res/earth.png";
-        spNode.setPosition(0, 0, 0);
-        spNode.addChild(this._sphere);
-        this._centerNode.addChild(spNode);
+        // var spNode = new Node();
+        // this._sphere = new Sphere();
+        // this._sphere.spriteFrame="res/earth.png";
+        // spNode.setPosition(0, 0, 0);
+        // spNode.addChild(this._sphere);
+        // this._centerNode.addChild(spNode);
 
         // this._floorNode = new Ground();
         // this._floorNode.spriteFrame = "res/ground.jpg";
@@ -197,10 +197,10 @@ export default class Scene3D extends Scene {
         //     this._fogCubeArr.push(fog);
         // }
 
-        // this._shadowCube = new ShadowCube();
-        // this._shadowCube.spriteFrame = "res/tree.png";
-        // this._shadowCube.setPosition(6,10,0);
-        // this._centerNode.addChild(this._shadowCube);
+        this._shadowCube = new ShadowCube();
+        this._shadowCube.spriteFrame = "res/tree.png";
+        this._shadowCube.setPosition(0,0,0);
+        this._centerNode.addChild(this._shadowCube);
 
 
 
