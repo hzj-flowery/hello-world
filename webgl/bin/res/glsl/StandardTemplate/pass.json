@@ -94,6 +94,26 @@
         ]
     },
     {
+        "name": "SkyBox/shader",
+        "template":true,
+        "state": [
+            {
+                "key": "depthFunc",
+                "value": "glEnums.DS_FUNC_LEQUAL"
+            }
+        ],
+        "custom":[
+            {"key":"ShaderType","value":"SkyBox"}
+        ]
+    },
+    {
+        "name": "Mirror/shader",
+        "template":true,
+        "custom":[
+            {"key":"ShaderType","value":"Mirror"}
+        ]
+    },
+    {
         "name": "Test/shader",
         "template":true,
         "custom":[

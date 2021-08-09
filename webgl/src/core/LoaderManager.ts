@@ -387,7 +387,6 @@ export default class LoaderManager {
                 })
             }
         }
-        console.log(passData);
     }
 
     public loadTemplate(cb):void{
@@ -459,10 +458,10 @@ export default class LoaderManager {
                 var reduceLen=0;
                 for (let k = 0; k < passLen; k++) {
                     if (res[k].name == "TemplatePass") {
-                        var depthP = this.getStandardTemplatePass(res[k].tag);
-                        if (depthP) {
+                        var templatePass = this.getStandardTemplatePass(res[k].tag);
+                        if (templatePass) {
                             //更新为真实的模板pass
-                            res[k] = depthP;
+                            res[k] = templatePass;
                         }
                     }
                     else if(res[k].name == "baseAttribute")

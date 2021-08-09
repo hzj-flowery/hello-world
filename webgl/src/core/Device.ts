@@ -407,6 +407,8 @@ export default class Device {
             syRender.ShaderType.Parallel,
             syRender.ShaderType.Sprite,
             syRender.ShaderType.Fog,
+            syRender.ShaderType.SkyBox,
+            syRender.ShaderType.Mirror,
             syRender.ShaderType.Test]
         //深度渲染pass
         var treeData = this._mapRenderTreeData.get(drawOrder);

@@ -38,5 +38,9 @@ export default class SkyBox extends SY.SpriteBase {
           this.spriteFrame = this.defaultPath;
      }
 
+     public onDrawBefore():void{
+          let a = 10;
+     }
+
 
 }

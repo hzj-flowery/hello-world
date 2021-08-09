@@ -29,6 +29,8 @@ export namespace syRender {
         Point,        //点光
         Depth,        //深度
         Rtt,          //多目标渲染
+        SkyBox,       //天空盒
+        Mirror,       //镜子
         Fog,          //雾
         Test,         //只是测试使用
         NULL          //不用shader渲染
@@ -47,6 +49,8 @@ export namespace syRender {
         "Point",        //点光
         "Depth",        //8深度
         "Rtt",          //9多目标渲染
+        "SkyBox",
+        "Mirror",
         "Fog",
         "Test",
         "NULL"          //不用shader渲染

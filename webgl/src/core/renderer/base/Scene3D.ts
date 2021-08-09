@@ -129,40 +129,42 @@ export default class Scene3D extends Scene {
          this._threeDF.spriteFrame="res/dragon.png";
          this._threeDF.setPosition(0,0,-200);
          this._centerNode.addChild(this._threeDF);
-        // this._deferredShading = new DeferredShading();
-        // this._deferredShading.spriteFrame = "res/dragon.png";
-        // this._deferredShading.setPosition(-3,10,0);
-        // this._centerNode.addChild(this._deferredShading);
-
-        this._renderSprite = new RenderOffline3DSprite();
-        this._renderSprite.setRenderTextureUUid(syRender.RenderTextureUUid.other1);
-        this._renderSprite.spriteFrame = {
-            place:syRender.AttachPlace.Color,
-        }
-        this._renderSprite.setPosition(-3,10,0);
-        this._centerNode.addChild(this._renderSprite);
-
-        this._renderSprite1 = new RenderOffline3DSprite();
-        this._renderSprite1.setRenderTextureUUid(syRender.RenderTextureUUid.other2);
-        this._renderSprite1.spriteFrame = {
-            place:syRender.AttachPlace.Color,
-        }
-        this._renderSprite1.setPosition(3,10,0);
-        this._centerNode.addChild(this._renderSprite1);
 
 
-        this._rtt = new RTT();
-        this._rtt.spriteFrame = {
-            place: syRender.AttachPlace.MoreColor,
-            param: [
-                { type: syRender.DeferredTexture.None, value: "res/deferred.png" },
-                { type: syRender.DeferredTexture.Color, value: null },
-                { type: syRender.DeferredTexture.Position, value: null },
-                { type: syRender.DeferredTexture.Normal, value: null },
-                { type: syRender.DeferredTexture.UV, value: null }]
-        }
-        this._rtt.setPosition(-6, 10, 0);
-        this._centerNode.addChild(this._rtt);
+        this._deferredShading = new DeferredShading();
+        this._deferredShading.spriteFrame = "res/dragon.png";
+        this._deferredShading.setPosition(-3,10,0);
+        this._centerNode.addChild(this._deferredShading);
+
+        // this._renderSprite = new RenderOffline3DSprite();
+        // this._renderSprite.setRenderTextureUUid(syRender.RenderTextureUUid.other1);
+        // this._renderSprite.spriteFrame = {
+        //     place:syRender.AttachPlace.Color,
+        // }
+        // this._renderSprite.setPosition(-3,10,0);
+        // this._centerNode.addChild(this._renderSprite);
+
+        // this._renderSprite1 = new RenderOffline3DSprite();
+        // this._renderSprite1.setRenderTextureUUid(syRender.RenderTextureUUid.other2);
+        // this._renderSprite1.spriteFrame = {
+        //     place:syRender.AttachPlace.Color,
+        // }
+        // this._renderSprite1.setPosition(3,10,0);
+        // this._centerNode.addChild(this._renderSprite1);
+
+
+        // this._rtt = new RTT();
+        // this._rtt.spriteFrame = {
+        //     place: syRender.AttachPlace.MoreColor,
+        //     param: [
+        //         { type: syRender.DeferredTexture.None, value: "res/deferred.png" },
+        //         { type: syRender.DeferredTexture.Color, value: null },
+        //         { type: syRender.DeferredTexture.Position, value: null },
+        //         { type: syRender.DeferredTexture.Normal, value: null },
+        //         { type: syRender.DeferredTexture.UV, value: null }]
+        // }
+        // this._rtt.setPosition(-6, 10, 0);
+        // this._centerNode.addChild(this._rtt);
 
         this._cubeNode = new Cube();
         this._cubeNode.spriteFrame = "res/wicker.jpg";
@@ -194,10 +196,10 @@ export default class Scene3D extends Scene {
             this._fogCubeArr.push(fog);
         }
 
-        this._shadowCube = new ShadowCube();
-        this._shadowCube.spriteFrame = "res/tree.png";
-        this._shadowCube.setPosition(6,10,0);
-        this._centerNode.addChild(this._shadowCube);
+        // this._shadowCube = new ShadowCube();
+        // this._shadowCube.spriteFrame = "res/tree.png";
+        // this._shadowCube.setPosition(6,10,0);
+        // this._centerNode.addChild(this._shadowCube);
 
 
 
