@@ -35,10 +35,10 @@ export default class Scene2D extends Scene {
         // this._uvSprite.spriteFrame = "res/tree.png";
         // this.addChild(this._uvSprite);
 
-        this._instantiateSprite = new InstantiateSprite();
-        this._instantiateSprite.setScale(0.5,0.5,0.5);
-        this._instantiateSprite.setPosition(420,120,-100);
-        this.addChild(this._instantiateSprite);
+        // this._instantiateSprite = new InstantiateSprite();
+        // this._instantiateSprite.setScale(0.5,0.5,0.5);
+        // this._instantiateSprite.setPosition(420,120,-100);
+        // this.addChild(this._instantiateSprite);
 
         this._renderSprite = new RenderOfflineSprite();
         this._renderSprite.setPosition(Device.Instance.width/2+200,Device.Instance.height/2+200, -100);
@@ -47,25 +47,25 @@ export default class Scene2D extends Scene {
         }
         this.addChild(this._renderSprite);
 
-        this._depthSprite = new DepthSprite();
-        this._depthSprite.setPosition(Device.Instance.width/2-200,Device.Instance.height/2+200, -100);
-        this._depthSprite.spriteFrame = {
-            place:syRender.AttachPlace.MoreColor,
-                 param: [
-                { type: syRender.DeferredTexture.None, value: "res/deferred.png" },
-                { type: syRender.DeferredTexture.Depth, value: null },
-                { type: syRender.DeferredTexture.UV, value: null },
-                { type: syRender.DeferredTexture.Color, value: null },
-                ]
-        }
-        this.addChild(this._depthSprite);
+        // this._depthSprite = new DepthSprite();
+        // this._depthSprite.setPosition(Device.Instance.width/2-200,Device.Instance.height/2+200, -100);
+        // this._depthSprite.spriteFrame = {
+        //     place:syRender.AttachPlace.MoreColor,
+        //          param: [
+        //         { type: syRender.DeferredTexture.None, value: "res/deferred.png" },
+        //         { type: syRender.DeferredTexture.Depth, value: null },
+        //         { type: syRender.DeferredTexture.UV, value: null },
+        //         { type: syRender.DeferredTexture.Color, value: null },
+        //         ]
+        // }
+        // this.addChild(this._depthSprite);
 
         
 
-        this._label = new Label();
-        this._label.setPosition(0.0,0.0,0);
-        this._label.spriteFrame = "res/8x8-font.png";
-        this._label.content = "czj520"
-        this.addChild(this._label);
+        // this._label = new Label();
+        // this._label.setPosition(0.0,0.0,0);
+        // this._label.spriteFrame = "res/8x8-font.png";
+        // this._label.content = "czj520"
+        // this.addChild(this._label);
     }
 }

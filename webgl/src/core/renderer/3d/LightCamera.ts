@@ -14,6 +14,7 @@ import { G_LightCenter } from "../light/LightCenter";
 import { syPrimitives } from "../shader/Primitives";
 import { Line } from "./Line";
 import { LineFrustum } from "./LineFrustum";
+import Sphere from "./Sphere";
 
 /**
  * 绘制的顶点数据
@@ -53,16 +54,11 @@ export class LightCamera extends Node {
     private _cameraMatrix: Float32Array;   //相机矩阵
     private _projectMatrix: Float32Array;  //投影矩阵
     private _lightReverseDir: Float32Array;
-    private _sunSprite: SY.sySprite;
+    private _sunSprite: Sphere;
     private _lightLine: Line;
     private _frustum: LineFrustum;
     private addSmallSun(): void {
-        this._sunSprite = new SY.sySprite();
-        let vertexData = syPrimitives.createSphereVertices(1, 24, 24);
-        this._sunSprite.createIndexsBuffer(vertexData.indices);
-        this._sunSprite.createNormalsBuffer(vertexData.normal, 3);
-        this._sunSprite.createUVsBuffer(vertexData.texcoord, 2);
-        this._sunSprite.createVertexsBuffer(vertexData.position, 3);
+        this._sunSprite = new Sphere();
         this._sunSprite.setScale(0.3, 0.3, 0.3);
         this._sunSprite.spriteFrame = "res/light.jpg";
         this.addChild(this._sunSprite);

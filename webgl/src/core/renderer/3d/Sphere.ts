@@ -1,9 +1,47 @@
 
 import { SY } from "../base/Sprite";
+import { syPrimitives } from "../shader/Primitives";
 
 export default class Sphere extends SY.SpriteBase {
-
-    private drawQiu02(r, m) {
+    
+    public drawQiu1(SPHERE_DIV:number){
+        let position:Array<number> = [];
+        let indices:Array<number> = [];
+        let uvs:Array<number> = [];
+        for (let j = 0; j <= SPHERE_DIV; j++){//SPHERE_DIV为经纬线数
+            let aj = j * Math.PI/SPHERE_DIV;
+            let sj = Math.sin(aj);
+            let cj = Math.cos(aj);
+            for(let i = 0; i <= SPHERE_DIV; i++){
+                let ai = i * 2 * Math.PI/SPHERE_DIV;
+                let si = Math.sin(ai);
+                let ci = Math.cos(ai);
+                position.push(si * sj);//point为顶点坐标
+                position.push(cj);
+                position.push(ci * sj);
+            }
+        }
+        for(let j = 0; j < SPHERE_DIV; j++){
+            for(let i = 0; i < SPHERE_DIV; i++){
+                let p1 = j * (SPHERE_DIV+1) + i;
+                let p2 = p1 + (SPHERE_DIV+1);
+                indices.push(p1);//indices为顶点的索引
+                indices.push(p2);
+                indices.push(p1 + 1);
+                indices.push(p1 + 1);
+                indices.push(p2);
+                indices.push(p2 + 1);
+            }
+        }
+        for(let j = 0; j < SPHERE_DIV; j++){
+            for(let i = 0; i < SPHERE_DIV; i++){
+               uvs.push(0);
+               uvs.push(1);
+            }
+        }
+        return {position:position,indices:indices,uvs:uvs}
+    }
+    private drawQiu2(r, m) {
         var arr = new Array();
 
         var bufR = -r;
@@ -71,10 +109,11 @@ export default class Sphere extends SY.SpriteBase {
         return arr;
     }
     protected onInit() {
-
-
-        var data = this.drawQiu02(1, 18);
-        this.createVertexsBuffer(data, 3);
+        let vertexData = syPrimitives.createSphereVertices(1, 24, 24);
+        this.createIndexsBuffer(vertexData.indices);
+        this.createNormalsBuffer(vertexData.normal, 3);
+        this.createUVsBuffer(vertexData.texcoord, 2);
+        this.createVertexsBuffer(vertexData.position, 3);
 
         this._glPrimitiveType = this.gl.LINE_STRIP;
     }
