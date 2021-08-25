@@ -91,6 +91,7 @@ mapTree_u.set(syGL.AttributeUniform.TEX_COORD6,ShaderUseVariantType.TEX_COORD6);
 mapTree_u.set(syGL.AttributeUniform.TEX_COORD7,ShaderUseVariantType.TEX_COORD7);
 mapTree_u.set(syGL.AttributeUniform.TEX_COORD8,ShaderUseVariantType.TEX_COORD8);
 mapTree_u.set(syGL.AttributeUniform.CUBE_COORD,ShaderUseVariantType.CUBE_COORD);
+mapTree_u.set(syGL.AttributeUniform.TEX_CUSTOM,ShaderUseVariantType.TEX_CUSTOM);
 // mapTree_u.set(syGL.AttributeUniform.SKYBOX,ShaderUseVariantType.SKYBOX);  --天空盒异常手动处理
 //uniform
 mapTree_u.set(syGL.AttributeUniform.TEX_GPosition,ShaderUseVariantType.GPosition);

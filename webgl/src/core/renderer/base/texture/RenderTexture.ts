@@ -54,37 +54,6 @@ import { syRender } from "../../data/RenderData";
  * 
  */
 
-/**
- * !#en The depth buffer and stencil buffer format for RenderTexture.
- * !#zh RenderTexture 的深度缓冲以及模板缓冲格式。
- * @enum RenderTexture.DepthStencilFormat
- */
-let DepthStencilFormat = {
-    /**
-     * !#en 24 bit depth buffer and 8 bit stencil buffer
-     * !#zh 24 位深度缓冲和 8 位模板缓冲
-     * @property RB_FMT_D24S8
-     * @readonly
-     * @type {number}
-     */
-    RB_FMT_D24S8: syGL.RenderBufferFormat.D24S8,
-    /**
-     * !#en Only 8 bit stencil buffer
-     * !#zh 只申请 8 位模板缓冲
-     * @property RB_FMT_S8
-     * @readonly
-     * @type {number}
-     */
-    RB_FMT_S8: syGL.RenderBufferFormat.S8,
-    /**
-     * !#en Only 16 bit depth buffer
-     * !#zh 只申请 16 位深度缓冲
-     * @property RB_FMT_D16
-     * @readonly
-     * @type {number}
-     */
-    RB_FMT_D16: syGL.RenderBufferFormat.D16
-}
 
 /**
  * Render textures are textures that can be rendered to.
@@ -188,7 +157,8 @@ export class RenderTexture extends Texture2D {
             //设置上面创建纹理作为颜色附件
             gl.framebufferTexture2D(gl.FRAMEBUFFER, gl["COLOR_ATTACHMENT"+startCount], gl.TEXTURE_2D, textureID, 0);
             COLOR_ATTACHMENT.push(gl["COLOR_ATTACHMENT"+startCount]);
-            this._deferredTexMap.set(texType,textureID)
+            this._deferredTexMap.set(texType,textureID);
+            
             startCount++;
         }
         this.addRenderBufferToDepth(dtWidth, dtHeight);

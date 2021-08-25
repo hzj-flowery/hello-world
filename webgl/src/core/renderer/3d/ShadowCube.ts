@@ -2,6 +2,7 @@ import { glMatrix } from "../../math/Matrix";
 import { SY } from "../base/Sprite";
 import { CubeData } from "../data/CubeData";
 import { syRender } from "../data/RenderData";
+import { G_LightCenter } from "../light/LightCenter";
 
 export default class ShadowCube extends SY.SpriteBase {
   constructor() {
@@ -22,6 +23,7 @@ export default class ShadowCube extends SY.SpriteBase {
     this._customTempMatrix = glMatrix.mat4.identity(null);
     this._tempMatrix = glMatrix.mat4.identity(null);
 
+    this.color = [0.5, 1, 0.5, 1];
   }
 
   protected collectRenderData(time: number) {
@@ -35,7 +37,7 @@ export default class ShadowCube extends SY.SpriteBase {
    * @param proj 
    * @param view 
    */
-  public onBindGPUBufferDataBefore(rd:syRender.BaseData,proj: Float32Array, view: Float32Array): void {
+  public onBindGPUBufferDataBefore(rd: syRender.BaseData, proj: Float32Array, view: Float32Array): void {
     glMatrix.mat4.copy(this._customTempMatrix, rd.light.projectionMatrix);
     glMatrix.mat4.multiply(this._customTempMatrix, this._customTempMatrix, glMatrix.mat4.invert(null, rd.light.viewMatrix));
   }

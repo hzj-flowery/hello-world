@@ -114,10 +114,17 @@
         ]
     },
     {
-        "name": "Shadow/shader",
+        "name": "Shadow/shader2",
         "template":true,
         "custom":[
             {"key":"ShaderType","value":"Shadow"}
+        ]
+    },
+    {
+        "name": "ShadowDepth/shader",
+        "template":true,
+        "custom":[
+            {"key":"ShaderType","value":"ShadowDepth"}
         ]
     },
     {

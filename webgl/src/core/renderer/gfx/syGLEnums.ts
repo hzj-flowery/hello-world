@@ -168,6 +168,7 @@ export namespace syGL {
         TEX_COORD6 = 'u_texCoord6',
         TEX_COORD7 = 'u_texCoord7',
         TEX_COORD8 = 'u_texCoord8',
+        TEX_CUSTOM = 'u_customTexture',//自定义纹理 万能纹理
 
 
         //延迟渲染  第一次应该是从属性变量获取 第二次是uniform变量

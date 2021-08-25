@@ -51,57 +51,42 @@ export default class Scene3D extends Scene {
     private _centerNode: Node;
     private _shadowCube:ShadowCube;
     private _mirrorCube: MirrorCube;
-    private _FLightSpot: SpotLight;
-    private _FLightThreeD: ThreeDLight;
-    private _threeDF:ThreeDF
     private _sphere: Sphere;
     constructor() {
         super();
     }
     public init(): void {
 
-        // let lightNode = new Node();
-        // this.addChild(lightNode);
-        // this._FLightPoint = new PointLightFCube();
-        // this._FLightPoint.rotateX = 0;
-        // this._FLightPoint.setPosition(-50, -75, -15);
-        // lightNode.addChild(this._FLightPoint);
-        // this._FLightPoint.Url = "res/models/char/F.json";
-
-        // this._FLightSpot = new SpotLight();
-        // this._FLightSpot.setPosition(0,-20,-100);
-        // this.addChild(this._FLightSpot);
-        // this._FLightSpot.Url = "res/models/char/F.json";
-
-        // this._FLightThreeD = new ThreeDLight();
-        // this._FLightThreeD.setPosition(0,20,-100);
-        // this.addChild(this._FLightThreeD);
-        // this._FLightThreeD.Url = "res/models/char/F.json";
-
-
+        
         this._centerNode = new Node();
         this._centerNode.setPosition(0, 1.1, 0);
         this.addChild(this._centerNode);
 
 
+        this._plane = new Plane(100,100);
+        this._plane.setCellCounts(40,40);
+        this.addChild(this._plane);
+
+        
+        this._shadowCube = new ShadowCube();
+        this._shadowCube.spriteFrame = "res/tree.png";
+        this._shadowCube.setPosition(0,0,0);
+        this._centerNode.addChild(this._shadowCube);
 
 
-        // var spNode = new Node();
-        // this._sphere = new Sphere();
-        // this._sphere.spriteFrame="res/earth.png";
-        // spNode.setPosition(0, 0, 0);
-        // spNode.addChild(this._sphere);
-        // this._centerNode.addChild(spNode);
+        var spNode = new Node();
+        this._sphere = new Sphere();
+        this._sphere.spriteFrame="res/caustics.png";
+        spNode.setPosition(3,3, 0);
+        spNode.addChild(this._sphere);
+        this._centerNode.addChild(spNode);
 
         // this._floorNode = new Ground();
         // this._floorNode.spriteFrame = "res/ground.jpg";
         // this._floorNode.z = -20;
         // this.addChild(this._floorNode);
 
-        this._plane = new Plane(100,100);
-        this._plane.setCellCounts(40,40);
-        this.addChild(this._plane);
-
+       
         // this._spineNode = new Spine();
         // this._spineNode.x = -5;
         // this._spineNode.y = 10;
@@ -196,12 +181,10 @@ export default class Scene3D extends Scene {
         //     fogNode.addChild(fog);
         //     this._fogCubeArr.push(fog);
         // }
+        
 
-        this._shadowCube = new ShadowCube();
-        this._shadowCube.spriteFrame = "res/tree.png";
-        this._shadowCube.setPosition(0,0,0);
-        this._centerNode.addChild(this._shadowCube);
-
+        
+        
 
 
         // // 绘制 4 个腿
@@ -223,16 +206,16 @@ export default class Scene3D extends Scene {
 
         
 
-        this._skybox = new SkyBox();
-        this._skybox.setDefaultUrl();
-        this.addChild(this._skybox);
+        // this._skybox = new SkyBox();
+        // this._skybox.setDefaultUrl();
+        // this.addChild(this._skybox);
 
-        let tempNode = new Node();
-        tempNode.setPosition(-10,-3.0,0);
-        this.addChild(tempNode);
-        this._mirrorCube = new MirrorCube();
-        this._mirrorCube.setDefaultUrl();
-        tempNode.addChild(this._mirrorCube);
+        // let tempNode = new Node();
+        // tempNode.setPosition(-10,-3.0,0);
+        // this.addChild(tempNode);
+        // this._mirrorCube = new MirrorCube();
+        // this._mirrorCube.setDefaultUrl();
+        // tempNode.addChild(this._mirrorCube);
 
         this._centerNode.addChild(new LightCamera());
 

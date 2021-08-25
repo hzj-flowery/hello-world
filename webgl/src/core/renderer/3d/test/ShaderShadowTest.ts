@@ -85,11 +85,11 @@ class ShadowLight {
 
   private vertBase =
     `attribute vec4 a_position;
-    uniform mat4 u_projection;
-    uniform mat4 u_view;
-    uniform mat4 u_world;
+    uniform mat4 u_Pmat;
+    uniform mat4 u_Vmat;
+    uniform mat4 u_Mmat;
     void main() {
-    gl_Position = u_projection * u_view * u_world * a_position;
+    gl_Position = u_Pmat * u_Vmat * u_Mmat * a_position;
     }`
   private fragBase =
     `precision mediump float;
@@ -115,25 +115,27 @@ class ShadowLight {
 
     uniform vec3 u_lightWorldPosition; //光的位置
     uniform vec3 u_cameraWorldPosition;  //相机的位置
-    varying vec3 v_surfaceToLight;     //表面到光的方向
+    varying vec3 v_surfaceToLight;     //表面到光的方向 
     varying vec3 v_surfaceToView;      //表面到相机的方向
 
-    uniform mat4 u_projection;           
-    uniform mat4 u_view;
-    uniform mat4 u_world;
+    uniform mat4 u_Pmat;           
+    uniform mat4 u_Vmat;
+    uniform mat4 u_Mmat;
     uniform mat4 u_textureMatrix;                         //纹理矩阵 主要作用就是去算出投影的uv坐标 上一次光照的投影矩阵*视口矩阵
     varying vec2 v_texcoord;                              //当前顶点的uv坐标
     varying vec4 v_projectedTexcoord;
     varying vec3 v_normal;
     void main() {
-    vec4 worldPosition = u_world * a_position;            //将当前顶点的坐标转换到世界空间坐标系中
-    gl_Position = u_projection * u_view * worldPosition;  //将顶点转换到其次裁切空间下
+    vec4 worldPosition = u_Mmat * a_position;            //将当前顶点的坐标转换到世界空间坐标系中
+    gl_Position = u_Pmat * u_Vmat * worldPosition;  //将顶点转换到其次裁切空间下
     v_texcoord = a_texcoord;
     v_projectedTexcoord = u_textureMatrix * worldPosition; //算出投影纹理的uv
-    v_normal = mat3(u_world) * a_normal;
+    v_normal = mat3(u_Mmat) * a_normal;
     v_surfaceToLight = u_lightWorldPosition - worldPosition.rgb;  
     v_surfaceToView = u_cameraWorldPosition - worldPosition.rgb;
     }`
+
+  
   private fragmentshader3d =
     `precision mediump float;
 
@@ -144,11 +146,11 @@ class ShadowLight {
     varying vec2 v_texcoord;
     varying vec4 v_projectedTexcoord;
     varying vec3 v_normal;
-    uniform vec4 u_parallel;            //光的颜色
+    uniform vec4 u_color;            //节点的颜色
     uniform sampler2D u_texture;
-    uniform sampler2D u_shadowMap; //投影纹理，第一次站在光的位置进行绘制，将结果存在这里，这个纹理只用于存储深度
-    uniform float u_bias;
-    uniform vec3 u_reverseLightDirection;          //光的反方向
+    uniform sampler2D gDepth; //投影纹理，第一次站在光的位置进行绘制，将结果存在这里，这个纹理只用于存储深度
+    uniform vec4 u_shadowInfo;
+    uniform vec3 u_spotDirection;          //聚光的方向
 
    
 
@@ -160,8 +162,8 @@ class ShadowLight {
     float getShadowLight(vec4 coordP){
       vec3 projectedTexcoord = coordP.xyz / coordP.w;   //手动进行齐次除法
       projectedTexcoord = projectedTexcoord.xyz / 2.0 + 0.5;                     //转为屏幕坐标
-      float currentDepth = projectedTexcoord.z + u_bias;                          //Z2  当前顶点的深度值                  
-      float projectedDepth = texture2D(u_shadowMap, projectedTexcoord.xy).r; //取出深度z值 Z1
+      float currentDepth = projectedTexcoord.z + u_shadowInfo.x;                          //Z2  当前顶点的深度值                  
+      float projectedDepth = texture2D(gDepth, projectedTexcoord.xy).r; //取出深度z值 Z1
       float shadowLight = (inRange(projectedTexcoord) && projectedDepth <= currentDepth) ? 0.0 : 1.0;//小于说明光看不见，则处于阴影中，否则正常显示
       return shadowLight;
     }
@@ -179,12 +181,12 @@ class ShadowLight {
       float texelSize=1.0/1024.0;// 阴影像素尺寸,值越小阴影越逼真
       vec4 rgbaDepth;
       bool isInRange = inRange(projectedTexcoord);
-      float curDepth = projectedTexcoord.z-u_bias;
+      float curDepth = projectedTexcoord.z-u_shadowInfo.x;
       //消除阴影边缘的锯齿
       for(float y=-1.5; y <= 1.5; y += 1.0){
           for(float x=-1.5; x <=1.5; x += 1.0){
               //找出光照条件下的当前位置的最大深度
-              rgbaDepth = texture2D(u_shadowMap, projectedTexcoord.xy+vec2(x,y)*texelSize);
+              rgbaDepth = texture2D(gDepth, projectedTexcoord.xy+vec2(x,y)*texelSize);
               //如果当前深度大于光照的最大深度 则表明处于阴影中
               //否则可以看见
               shadows += (isInRange&&curDepth>(rgbaDepth).r) ? 1.0 : 0.0;
@@ -208,7 +210,7 @@ class ShadowLight {
     //宾式模型高光
     vec3 getSpecularBingShi(vec3 normal){
       // 计算法向量和光线的点积
-      float cosTheta = max(dot(normal,u_reverseLightDirection), 0.0);
+      float cosTheta = max(dot(normal,u_spotDirection), 0.0);
       vec3 surfaceToLightDirection = normalize(v_surfaceToLight);
       vec3 surfaceToViewDirection = normalize(v_surfaceToView);
       vec3 specularColor =vec3(1.0,1.0,1.0);
@@ -223,7 +225,7 @@ class ShadowLight {
       vec3 surfaceToViewDirection = normalize(v_surfaceToView);
       vec3 specularColor =vec3(1.0,1.0,1.0);  
       // 计算法向量和光线的点积
-      float cosTheta = max(dot(normal,u_reverseLightDirection), 0.0);
+      float cosTheta = max(dot(normal,u_spotDirection), 0.0);
       vec3 reflectionDirection = reflect(-surfaceToLightDirection, normal);
       float specularWeighting = pow(max(dot(reflectionDirection, surfaceToViewDirection), 0.0), u_specular_shininess);
       vec3 specular = specularColor.rgb * specularWeighting * step(cosTheta,0.0);
@@ -231,10 +233,10 @@ class ShadowLight {
     }
     void main() {
     vec3 normal = normalize(v_normal);             //归一化法线
-    float light = clamp(dot(normal, u_reverseLightDirection),0.0,1.0);    //算出光照强度
+    float light = clamp(dot(normal, u_spotDirection),0.0,1.0);    //算出光照强度
     float shadowLight = getShadowLightRYY(v_projectedTexcoord);
     //通过uv贴图找出当前片元的颜色 该颜色常被称为自发光颜色或是当前顶点的颜色
-    vec4 texColor = texture2D(u_texture, v_texcoord) * u_parallel;
+    vec4 texColor = texture2D(u_texture, v_texcoord) * u_color;
     //漫反射光  顶点颜色* 光照强度 * 阴影bool值
     vec3 diffuse = texColor.rgb * light * shadowLight; 
     //环境光 （它的值rgb最好都限定在0.2以下）
@@ -315,15 +317,15 @@ class ShadowLight {
     // note: any values with no corresponding uniform in the shader
     // are ignored.
     G_ShaderFactory.setUniforms(programInfo.uniSetters, {
-      u_view: viewMatrix,
-      u_projection: pMatrix,
-      u_bias: G_LightCenter.lightData.shadowBias,
+      u_Vmat: viewMatrix,
+      u_Pmat: pMatrix,
+      u_shadowInfo: G_LightCenter.lightData.shadowInfo,
       u_textureMatrix: texMatrix,
-      u_shadowMap: this.renderTexture.glID,
+      gDepth: this.renderTexture.glID,
       u_lightWorldPosition: lightPos,
       u_cameraWorldPosition: cameraPos,
       u_specular_shininess: 150,
-      u_reverseLightDirection: lightReverseDir,
+      u_spotDirection: lightReverseDir,
     });
 
     // ------ Draw the sphere --------
@@ -358,25 +360,25 @@ class ShadowLight {
     this.fieldOfViewRadians = MathUtils.degToRad(60);
     // Uniforms for each object.
     this.planeUniforms = {
-      u_parallel: [0.5, 0.5, 1, 1],  // lightblue
+      u_color: [0.5, 0.5, 1, 1],  // lightblue
       u_texture: this.checkerboardTexture.glID,
-      u_world: glMatrix.mat4.translation(null, 0, 0, 0),
+      u_Mmat: glMatrix.mat4.translation(null, 0, 0, 0),
     };
     this.sphereUniforms = {
-      u_parallel: [1, 0.5, 0.5, 1],  // pink
+      u_color: [1, 0.5, 0.5, 1],  // pink
       u_texture: this.checkerboardTexture.glID,
-      u_world: glMatrix.mat4.translation(null, 2, 6, 4),
+      u_Mmat: glMatrix.mat4.translation(null, 2, 6, 4),
     };
     this.cubeUniforms = {
-      u_parallel: [0.5, 1, 0.5, 1],  // lightgreen
+      u_color: [0.5, 1, 0.5, 1],  // lightgreen
       u_texture: this.checkerboardTexture.glID,
-      u_world: glMatrix.mat4.translation(null, 3, 1, 0),
+      u_Mmat: glMatrix.mat4.translation(null, 3, 1, 0),
     };
   }
 
   private getCameraData() {
     var gl = this.gl;
-    // Compute the projection matrix
+    // Compute the projection matrix 
     const aspect = gl.canvas.width / gl.canvas.height;
     const projectionMatrix = glMatrix.mat4.perspective(null, this.fieldOfViewRadians, aspect, 1, 200);
     // Compute the camera's matrix using look at.

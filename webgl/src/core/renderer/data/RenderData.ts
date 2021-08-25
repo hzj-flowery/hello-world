@@ -4,6 +4,7 @@ import { G_InputControl } from "../../InputControl";
 import { glMatrix } from "../../math/Matrix";
 import { MathUtils } from "../../utils/MathUtils";
 import { Node } from "../base/Node";
+import { GameMainCamera } from "../camera/GameMainCamera";
 import { glEnums } from "../gfx/GLapi";
 import State from "../gfx/State";
 import { syGL } from "../gfx/syGLEnums";
@@ -24,14 +25,15 @@ export namespace syRender {
         Label,
         Spine,
         Shadow,        //绘制阴影
+        ShadowDepth,
         Parallel,      //平行光
         Spot,         //聚光灯
         Point,        //点光
-        Depth,        //深度
         Rtt,          //多目标渲染
         SkyBox,       //天空盒
         Mirror,       //镜子
         Fog,          //雾
+        Depth,        //深度
         Test,         //只是测试使用
         NULL          //不用shader渲染
     }
@@ -44,14 +46,15 @@ export namespace syRender {
         "Label",
         "Spine",
         "Shadow",
+        "ShadowDepth",
         "Parallel",
         "Spot",         //7聚光灯
         "Point",        //点光
-        "Depth",        //8深度
         "Rtt",          //9多目标渲染
         "SkyBox",
         "Mirror",
         "Fog",
+        "Depth",        //8深度
         "Test",
         "NULL"          //不用shader渲染
     ]
@@ -75,6 +78,7 @@ export namespace syRender {
         screen = 1,  //将结果渲染到屏幕，此为正常渲染
         offline2D,   //将结果渲染到一张纹理上，这张纹理对应的是一个2d节点
         offline3D,   //将结果渲染到一张纹理上，这张纹理对应的是一个3d节点
+        shadowDepth,//深度
         Depth,       //将深度信息渲染到一张纹理上
         RTT,         //多目标渲染
         other1,
@@ -131,6 +135,7 @@ export namespace syRender {
         Color,  //颜色纹理
         UV,     //uv纹理
         Depth,  //深度纹理
+        Custom, //自定义
         None   //非延迟渲染输出的纹理 
     }
     /**
@@ -383,6 +388,7 @@ export namespace syRender {
             public get shadowMin(): number { return this._shadowMin };
             public set shadowMin(p: number) { this._shadowMin = p };
             public get shadowInfo() {
+                       //x马赫带            //y阴影像素尺寸,值越小阴影越逼真
                 return [this._shadowBias, this._shadowSize, this._shadowMin, this._shadowOpacity]
             }
 
@@ -606,6 +612,12 @@ export namespace syRender {
                         break;
                     case ShaderUseVariantType.GDepth:
                         _shader.setUseDeferredTexture(this._texture2DGLIDMap.get(DeferredTexture.Depth), useTextureAddres, syGL.AttributeUniform.TEX_GDepth);
+                        useTextureAddres++;
+                        break;
+                    case ShaderUseVariantType.TEX_CUSTOM:
+                        //延迟渲染中的万能矩阵
+                        // _shader.setUseDeferredTexture(this._texture2DGLIDMap.get(DeferredTexture.Custom), useTextureAddres,syGL.AttributeUniform.TEX_CUSTOM);
+                        _shader.setUseDeferredTexture(GameMainCamera.instance.getRenderTexture(syRender.RenderTextureUUid.shadowDepth).glID, useTextureAddres,syGL.AttributeUniform.TEX_CUSTOM);
                         useTextureAddres++;
                         break;
                     case ShaderUseVariantType.Projection:

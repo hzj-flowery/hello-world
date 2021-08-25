@@ -1,3 +1,4 @@
+
 attribute vec4 a_position;
 attribute vec2 a_uv;
 attribute vec3 a_normal;
@@ -25,3 +26,12 @@ void main(){
         v_surfaceToLight=u_lightWorldPosition-worldPosition.rgb;
         v_surfaceToView=u_cameraWorldPosition-worldPosition.rgb;
 }
+
+/*
+
+屏幕screen
+
+A = P * V * M * pos -->(x,y,z)
+在屏幕的指定位置上产生一个z值
+
+*/

@@ -1,20 +1,6 @@
 precision mediump float;
-uniform sampler2D gDepth;
-uniform sampler2D gDepth1;
-uniform sampler2D gUv;
-uniform sampler2D gColor;
-
-varying vec4 v_position;
-varying vec2 v_uv;
 void main(){
-    vec3 homogeneousDivisionPos = v_position.xyz/v_position.w; //齐次除法
-    vec2 screenPos = homogeneousDivisionPos.xy*0.5+vec2(0.5);
-    // gl_FragColor=vec4(texture2D(gUv,screenPos).r,0.0,0.0,1.0);
-    vec2 testPos = vec2(gl_FragCoord.x/(960.0),gl_FragCoord.y/(640.0));
-    vec2 uv = texture2D(gUv,screenPos).rg;
-    // gl_FragColor=vec4(texture2D(gDepth,v_uv).rgb,1.0);
-    // 
-    gl_FragColor=vec4(texture2D(gDepth,v_uv).r,0.0,0.0,1.0);
+    gl_FragColor=vec4(gl_FragCoord.z,0.0,0.0,1.0);
 }
 /*
 感受：

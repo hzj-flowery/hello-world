@@ -4,6 +4,7 @@ import { G_UISetting } from "../../ui/UiSetting";
 import { MathUtils } from "../../utils/MathUtils";
 import { Node } from "../base/Node";
 import { SY } from "../base/Sprite";
+import { G_Stage } from "../base/Stage";
 import Camera from "../camera/Camera";
 import { GameMainCamera } from "../camera/GameMainCamera";
 import OrthoCamera from "../camera/OrthoCamera";
@@ -39,7 +40,7 @@ export class LightCamera extends Node {
         this._cameraMatrix = glMatrix.mat4.identity(null);
         this._projectMatrix = glMatrix.mat4.identity(null);
         this._lightReverseDir = new Float32Array(3);
-        this._camera = GameMainCamera.instance.registerCamera(syRender.CameraType.Ortho,syRender.CameraUUid.light,this);
+        this._camera = GameMainCamera.instance.registerCamera(syRender.CameraType.Ortho,syRender.CameraUUid.light,G_Stage);
         this.addFrustum()
         this.addSmallSun();
         this.addLine();
@@ -102,9 +103,12 @@ export class LightCamera extends Node {
         glMatrix.vec3.normalize(this._lightReverseDir, this._cameraMatrix.slice(8, 11));
         this._camera.forceUpdateProjectMatrix()
         glMatrix.mat4.copy(this._projectMatrix,this._camera.getProjectionMatrix())
-
         
         var lightData = G_LightCenter.lightData;
+        lightData.viewMatrix = this._cameraMatrix;
+        lightData.projectionMatrix = this._projectMatrix;
+        
+    
         //取摄像机的中心方向作为聚光灯的方向
         lightData.spot.direction = [this._lightReverseDir[0], this._lightReverseDir[1], this._lightReverseDir[2]];
         this._lightLine.updateLinePos(VertData.position.concat([0, 0, 0, lightData.parallel.dirX, lightData.parallel.dirY, lightData.parallel.dirZ]));
@@ -114,7 +118,6 @@ export class LightCamera extends Node {
         this._sunSprite.setPosition(setting.eyeX, setting.eyeY, setting.eyeZ);
         this._lightLine.setPosition(setting.eyeX, setting.eyeY, setting.eyeZ);
 
-        lightData.viewMatrix = this._cameraMatrix;
-        lightData.projectionMatrix = this._projectMatrix;
+      
     }
 }

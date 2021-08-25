@@ -1,11 +1,12 @@
-
+#version 300 es
 precision mediump float;
 
-varying vec3 v_surfaceToLight;
-varying vec3 v_surfaceToView;
-varying vec2 v_uv;                  //uv坐标
-varying vec4 v_projectedTexcoord;
-varying vec3 v_normal;
+in vec3 v_surfaceToLight;
+in vec3 v_surfaceToView;
+in vec2 v_uv;                  //uv坐标
+in vec4 v_projectedTexcoord;
+in vec3 v_normal;
+layout (location = 0) out vec4 FragColor;   // 输出颜色
 
 uniform vec4 u_color;//节点的颜色
 uniform sampler2D u_texture;
@@ -49,11 +50,11 @@ float getShadowLightRYY(vec4 coordP){
     //消除阴影边缘的锯齿
     for(float y=-1.5;y<=1.5;y+=1.){
         for(float x=-1.5;x<=1.5;x+=1.){
-            //找出光照条件 下的当前位置的最大深度
-            rgbaDepth=texture2D(gDepth,projectedTexcoord.xy+vec2(x,y)*texelSize);
+            //找出光照条件下的当前位置的最大深度
+            rgbaDepth=texture(gDepth,projectedTexcoord.xy+vec2(x,y)*texelSize);
             //如果当前深度大于光照的最大深度 则表明处于阴影中
             //否则可以看见
-            shadows+=(isInRange&&curDepth<(rgbaDepth).r)?1.:0.;
+            shadows+=(isInRange&&curDepth>(rgbaDepth).r)?1.:0.;
         }
     }
     shadows/=16.;// 4*4的样本
@@ -100,7 +101,7 @@ void main(){
     float light=clamp(dot(normal,u_spotDirection),0.,1.);//算出光照强度
     float shadowLight=getShadowLightRYY(v_projectedTexcoord);
     //通过uv贴图找出当前片元的颜色 该颜色常被称为自发光颜色或是当前顶点的颜色
-    vec4 texColor=texture2D(u_texture,v_uv)*u_color;
+    vec4 texColor=texture(u_texture,v_uv)*u_color;
     //漫反射光  顶点颜色* 光照强度 * 阴影bool值
     vec3 diffuse=texColor.rgb*light*shadowLight;
     //环境光 （它的值rgb最好都限定在0.2以下）
@@ -108,5 +109,5 @@ void main(){
     vec4 ambientLight=vec4(.1,.1,.1,1.);
     vec4 ambient=vec4(texColor.rgb*ambientLight.rgb,1.);//环境光的颜色需要和漫反射颜色融合
     vec3 specular=shadowLight<1.?vec3(0.0,0.,0.):getSpecularFengShi(normal);//阴影处没有高光
-    gl_FragColor=vec4(diffuse+ambient.rgb+specular,texColor.a);
+    FragColor=vec4(diffuse+ambient.rgb+specular,texColor.a);
 }

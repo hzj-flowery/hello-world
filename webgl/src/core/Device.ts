@@ -110,18 +110,24 @@ function _commitDepthState(gl: WebGLRenderingContext, cur: State, next: State): 
     /**
      * 下面函数中，只对面消除，深度写入，深度比较函数这个三个进行操作
      */
-    if (cur.depthTest != next.depthTest) {
-        //是否开启深度测试
-        next.depthTest ? gl.enable(gl.DEPTH_TEST) : gl.disable(gl.DEPTH_TEST);
-    }
-    if (cur.depthWrite != next.depthWrite) {
-        //深度值是否写入深度附件中
-        next.depthWrite ? gl.depthMask(true) : gl.depthMask(false);
-    }
-    if (cur.depthFunc != next.depthFunc) {
-        //比较函数
-        gl.depthFunc(next.depthFunc);
-    }
+    // if (cur.depthTest != next.depthTest) {
+    //     //是否开启深度测试
+    //     next.depthTest ? gl.enable(gl.DEPTH_TEST) : gl.disable(gl.DEPTH_TEST);
+    // }
+    // if (cur.depthWrite != next.depthWrite) {
+    //     //深度值是否写入深度附件中
+    //     next.depthWrite ? gl.depthMask(true) : gl.depthMask(false);
+    // }
+    // if (cur.depthFunc != next.depthFunc) {
+    //     //比较函数
+    //     gl.depthFunc(next.depthFunc);
+    // }
+
+    gl.enable(gl.DEPTH_TEST)
+    gl.depthMask(true)
+    gl.depthFunc(glEnums.DS_FUNC_LESS)
+
+    gl.enable(gl.CULL_FACE);
 }
 /**
  * 
@@ -136,15 +142,16 @@ gl.FRONT：前面
 gl.FRONT_AND_BACK：前后两面
  */
 function _commitCullState(gl: WebGLRenderingContext, cur: State, next: State): void {
-    if (cur.cullMode === next.cullMode) {
-        return;
-    }
-    if (next.cullMode === glEnums.CULL_NONE) {
-        gl.disable(gl.CULL_FACE);
-        return;
-    }
-    gl.enable(gl.CULL_FACE);
-    gl.cullFace(next.cullMode);
+    // if (cur.cullMode === next.cullMode) {
+    //     gl.enable(gl.CULL_FACE);
+    //     return;
+    // }
+    // if (next.cullMode === glEnums.CULL_NONE) {
+    //     gl.disable(gl.CULL_FACE);
+    //     return;
+    // }
+    // gl.enable(gl.CULL_FACE);
+    // gl.cullFace(next.cullMode);
 }
 /**
  * 裁切状态
@@ -391,6 +398,13 @@ export default class Device {
         }
         return retData;
     }
+    private sortTreeData():void{
+        var data = this._mapRenderTreeData.get(syRender.DrawingOrder.Normal);
+        if(data&&data.length>0)
+        data.sort((a,b)=>{
+           return a.pass.shaderType - b.pass.shaderType
+        })
+    }
     /**
      * 获取常规渲染的data
      * @param drawOrder 
@@ -437,18 +451,21 @@ export default class Device {
     public startDraw(time: number, stage: Node): void {
         this.onBeforeRender();
         this.visitRenderTree(time, stage);
+        this.sortTreeData();
         var cameraData = GameMainCamera.instance.getRenderData();
         cameraData.sort(function(a,b){
             if (a.drawingOrder!=b.drawingOrder)
             return b.drawingOrder - a.drawingOrder;
+            else
+            return b.rtuuid-a.rtuuid;
         })
         for (let k = 0; k < cameraData.length; k++) {
             if(cameraData[k].drawingOrder==syRender.DrawingOrder.Normal)
             {
-                if(cameraData[k].rtuuid == syRender.RenderTextureUUid.Depth)
+                if(cameraData[k].rtuuid == syRender.RenderTextureUUid.shadowDepth)
                 {
                     //深度渲染pass
-                    this.triggerRender(this.getTreeData(syRender.DrawingOrder.Normal,syRender.ShaderType.Depth),cameraData[k]);
+                    this.triggerRender(this.getTreeData(syRender.DrawingOrder.Normal,syRender.ShaderType.ShadowDepth),cameraData[k]);
                 }
                 else
                 {
@@ -591,6 +608,7 @@ export default class Device {
         
         
         glMatrix.mat4.identity(this._temp1Matrix);
+        
 
         //补一下光的数据
         rData.light.parallel.color = G_LightCenter.lightData.parallel.color; //光的颜色
@@ -601,6 +619,7 @@ export default class Device {
         rData.light.specular.shininess = G_LightCenter.lightData.specular.shininess;
         rData.light.specular.color = G_LightCenter.lightData.specular.color;
         rData.light.position = G_LightCenter.lightData.position;
+
         rData.light.spot.direction = G_LightCenter.lightData.spot.direction;
         rData.light.spot.color = G_LightCenter.lightData.spot.color;
         rData.light.spot.innerLimitAngle = G_LightCenter.lightData.spot.innerLimitAngle;
@@ -621,8 +640,7 @@ export default class Device {
             case syRender.DataType.Base:
                 this._commitRenderState(rData.pass.state);
                 if (crData.isFirstVisualAngle()) {
-                    glMatrix.mat4.invert(this._temp1Matrix, cData.modelMat);
-                    this._drawBase(rData, cData.projectMat, this._temp1Matrix,crData);
+                    this._drawBase(rData, cData.projectMat, cData.viewMat,crData);
                 }
                 else {
                     let projMatix = G_CameraModel.getSceneProjectMatrix(crData.VA);

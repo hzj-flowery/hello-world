@@ -384,8 +384,10 @@ export default class Camera extends Node {
         this._lockLookAt = true;
         // //摄像机的位置
         this._glMatrix.mat4.lookAt2(this.modelMatrix, eye, center, up);
+        this._eye = eye;
     }
     
+    private _eye:Array<number> = [];
     /**
      * 当调用lookat这个函数的时候 创建的模型矩阵不一样 所以需要锁住
      */
@@ -398,7 +400,14 @@ export default class Camera extends Node {
     public getCameraData(): CameraData {
         this._cameraData.modelMat = this.modelMatrix;
         this._cameraData.projectMat = this._projectionMatrix;
-        this._cameraData.position = [this.x, this.y, this.z];
+        if(this._eye.length<=0)
+        {
+            this._cameraData.position =  this.convertToWorldSpace([this.x, this.y, this.z]);
+        }
+        else
+        {
+            this._cameraData.position = [this._eye[0],this._eye[1],this._eye[2]];
+        }
         return this._cameraData;
     }
 

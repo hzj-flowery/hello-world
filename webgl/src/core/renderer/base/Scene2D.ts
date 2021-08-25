@@ -8,6 +8,7 @@ import InstantiateSprite from "../2d/InstantiateSprite";
 import { UvSprite } from "../2d/UvSprite";
 import { syRender } from "../data/RenderData";
 import { DepthSprite } from "../2d/DepthSprite";
+import { ShadowDepth } from "../2d/ShadowDepth";
 
 export default class Scene2D extends Scene {
     
@@ -15,7 +16,7 @@ export default class Scene2D extends Scene {
     private _instantiateSprite:InstantiateSprite;
     private _label:Label;
     private _renderSprite:RenderOfflineSprite;
-    private _depthSprite:DepthSprite;//深度纹理
+    private _depthSprite:ShadowDepth;//深度纹理
     private _uvSprite:UvSprite;
     constructor(){
         super();
@@ -47,16 +48,22 @@ export default class Scene2D extends Scene {
         }
         this.addChild(this._renderSprite);
 
-        this._depthSprite = new DepthSprite();
-        this._depthSprite.setPosition(Device.Instance.width/2-200,Device.Instance.height/2+200, -100);
+        // this._depthSprite = new DepthSprite();
+        // this._depthSprite.setPosition(Device.Instance.width/2-200,Device.Instance.height/2+200, -100);
+        // this._depthSprite.spriteFrame = {
+        //     place:syRender.AttachPlace.MoreColor,
+        //          param: [
+        //         { type: syRender.DeferredTexture.Depth, value: null },
+        //         { type: syRender.DeferredTexture.UV, value: null },
+        //         { type: syRender.DeferredTexture.Color, value: null },
+        //         ]
+        // }
+        // this.addChild(this._depthSprite);
+
+        this._depthSprite = new ShadowDepth();
+        this._depthSprite.setPosition(Device.Instance.width/2,Device.Instance.height/2+200, -100);
         this._depthSprite.spriteFrame = {
-            place:syRender.AttachPlace.MoreColor,
-                 param: [
-                { type: syRender.DeferredTexture.None, value: "res/deferred.png" },
-                { type: syRender.DeferredTexture.Depth, value: null },
-                { type: syRender.DeferredTexture.UV, value: null },
-                { type: syRender.DeferredTexture.Color, value: null },
-                ]
+            place:syRender.AttachPlace.Color
         }
         this.addChild(this._depthSprite);
 

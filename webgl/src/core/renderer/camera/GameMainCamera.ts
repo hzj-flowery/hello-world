@@ -167,7 +167,7 @@ export class GameMainCamera {
     var temp = new CameraRenderData();
     temp.fb = null;
     temp.viewPort = { x: 0, y: 0, w: 1, h: 1 }
-    temp.rtuuid = syRender.RenderTextureUUid.Depth;
+    temp.rtuuid = syRender.RenderTextureUUid.shadowDepth;
     temp.uuid = syRender.CameraUUid.light;
     temp.isClear = true;
     temp.VA = 0;
@@ -232,6 +232,14 @@ export class GameMainCamera {
       base2D.setPosition(settings.cam2DPosX, settings.cam2DPosY, settings.cam2DPosZ);
       base2D.setRotation(settings.cam2DRotX, settings.cam2DRotY, settings.cam2DRotZ);
     }
+  }
+  
+  private _customTexture:WebGLTexture;
+  private setCustomTexture(tex:WebGLTexture):void{
+       this._customTexture = tex;
+  }
+  public getCustomTexture():WebGLTexture{
+       return this._customTexture;
   }
 
 }
