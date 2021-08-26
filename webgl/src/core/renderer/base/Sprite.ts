@@ -105,6 +105,9 @@ export namespace SY {
      * 数据生成 绑定  
      */
     export class SpriteBase extends Node {
+
+       
+
         //节点buffer
         private _vertexsBuffer: VertexsBuffer;
         //索引buffer

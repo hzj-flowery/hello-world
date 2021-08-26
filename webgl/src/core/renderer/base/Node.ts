@@ -38,7 +38,7 @@ export class Node extends Ref {
     protected name: string;
     protected tag: number;
     private __node__type: syRender.NodeType = syRender.NodeType.D3;//2代表2d节点 3代表3d节点
-
+    private _visible:boolean = true;//节点是否可见
     protected _glMatrix = glMatrix;//矩阵操作api
     /**
      * 此处务必注意
@@ -201,6 +201,13 @@ export class Node extends Ref {
     public get parent(): Node {
         return this._parent;
     }
+
+    public setVisible(p:boolean){
+        this._visible = p;
+    }
+    public isVisible():boolean{
+        return this._visible;
+    }
     /**
      * 
      * @param node 
@@ -253,6 +260,8 @@ export class Node extends Ref {
 
     //开启绘制
     public visit(time: number): void {
+
+        if(!this._visible) return ;
         //更新世界节点
         this.updateWorldMatrix();
         //开始绘制

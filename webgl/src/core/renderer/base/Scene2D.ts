@@ -15,7 +15,7 @@ export default class Scene2D extends Scene {
     private _instantiateSprite:InstantiateSprite;
     private _label:Label;
     private _renderSprite:RenderOfflineSprite;
-    private _depthSprite:ShadowMap;//深度纹理
+    private _shadowMap:ShadowMap;//深度纹理
     private _uvSprite:UvSprite;
     constructor(){
         super();
@@ -47,12 +47,13 @@ export default class Scene2D extends Scene {
         }
         this.addChild(this._renderSprite);
 
-        this._depthSprite = new ShadowMap();
-        this._depthSprite.setPosition(Device.Instance.width/2,Device.Instance.height/2+200, -100);
-        this._depthSprite.spriteFrame = {
+        this._shadowMap = new ShadowMap();
+        this._shadowMap.setPosition(Device.Instance.width/2,Device.Instance.height/2+200, -100);
+        this._shadowMap.spriteFrame = {
             place:syRender.AttachPlace.Color
         }
-        this.addChild(this._depthSprite);
+        this._shadowMap.setVisible(false);
+        this.addChild(this._shadowMap);
 
         
 
