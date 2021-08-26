@@ -349,6 +349,31 @@ export namespace syRender {
                 this.reset()
             }
         }
+        /**
+         * 阴影
+         */
+        export class Shadow{
+               //阴影贴图
+            private _bias: number = 0.005; //阴影贴图的马赫带
+            private _size: number = 1 / 1024;//阴影的像素尺寸 值越小 阴影越逼真
+            private _opacity: number = 0.1; //阴影的alpha值 值越小暗度越深
+            private _min: number = 0;       //阴影最小值
+            private _map:WebGLTexture;      //深度纹理
+            public get bias(): number { return this._bias };
+            public set bias(p: number) { this._bias = p };
+            public get size(): number { return this._size };
+            public set size(p: number) { this._size = p };
+            public get opacity(): number { return this._opacity };
+            public set opacity(p: number) { this._opacity = p };
+            public get min(): number { return this._min };
+            public set min(p: number) { this._min = p };
+            public get map(): WebGLTexture { return this._map };
+            public set map(p: WebGLTexture) { this._map = p };
+            public get info() {
+                       //x马赫带            //y阴影像素尺寸,值越小阴影越逼真
+                return [this._bias, this._size, this._min, this._opacity]
+            }
+        }
         //外界取数据接口
         export class Center {
             constructor() {
@@ -358,6 +383,7 @@ export namespace syRender {
                 this.specular = new Light.Specular();
                 this.point = new Light.Point();
                 this.ambient = new Light.Ambient();
+                this.shadow = new Light.Shadow();
                 this.position = []
             }
             public spot: Light.Spot;    //聚光灯
@@ -365,32 +391,12 @@ export namespace syRender {
             public parallel: Light.Parallel;//平行光
             public specular: Light.Specular;//高光
             public point: Light.Point;     //点光
+            public shadow:Light.Shadow;    //阴影
             public ambient: Light.Ambient;//环境光
             public position: Array<number>; //光的位置
 
             public viewMatrix: Float32Array;//光照摄像机的视口
             public projectionMatrix: Float32Array;//光照摄像机的投影
-
-            //阴影贴图
-            private _shadowBias: number = 0.005; //阴影贴图的马赫带
-            private _shadowSize: number = 1 / 1024;//阴影的像素尺寸 值越小 阴影越逼真
-            private _shadowOpacity: number = 0.1; //阴影的alpha值 值越小暗度越深
-            private _shadowMin: number = 0;       //阴影最小值
-            private _shadowMap:WebGLTexture;      //深度纹理
-            public get shadowBias(): number { return this._shadowBias };
-            public set shadowBias(p: number) { this._shadowBias = p };
-            public get shadowSize(): number { return this._shadowSize };
-            public set shadowSize(p: number) { this._shadowSize = p };
-            public get shadowOpacity(): number { return this._shadowOpacity };
-            public set shadowOpacity(p: number) { this._shadowOpacity = p };
-            public get shadowMin(): number { return this._shadowMin };
-            public set shadowMin(p: number) { this._shadowMin = p };
-            public get shadowMap(): WebGLTexture { return this._shadowMap };
-            public set shadowMap(p: WebGLTexture) { this._shadowMap = p };
-            public get shadowInfo() {
-                       //x马赫带            //y阴影像素尺寸,值越小阴影越逼真
-                return [this._shadowBias, this._shadowSize, this._shadowMin, this._shadowOpacity]
-            }
 
             public reset(): void {
                 this.spot.reset();
@@ -710,10 +716,10 @@ export namespace syRender {
                         _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.MOUSE, [p[0], p[1], 0, 0]);
                         break;
                     case ShaderUseVariantType.ShadowInfo:
-                        _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.SHADOW_INFO, this.light.shadowInfo);
+                        _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.SHADOW_INFO, this.light.shadow.info);
                         break;
                     case ShaderUseVariantType.ShadowMap:
-                        _shader.setUseDeferredTexture(this.light.shadowMap,useTextureAddres,syGL.AttributeUniform.SHADOW_MAP);
+                        _shader.setUseDeferredTexture(this.light.shadow.map,useTextureAddres,syGL.AttributeUniform.SHADOW_MAP);
                         useTextureAddres++;
                         break;
                     case ShaderUseVariantType.Define_UsePng:

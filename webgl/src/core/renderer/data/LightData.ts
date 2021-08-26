@@ -94,25 +94,7 @@ export class LightData {
         this.eyeZ = p[2] ? p[2] : this._eyeZ;
     }
 
-    private _shadowBias: number = 0.005; //阴影贴图的马赫带
-    private _shadowSize: number = 1/1024;//阴影的像素尺寸 值越小 阴影越逼真
-    private _shadowOpacity:number = 0.1; //阴影的alpha值 值越小暗度越深
-    private _shadowMin:number = 0;       //阴影最小值
-    private _shadowMap:WebGLTexture;      //深度纹理
-    public get shadowBias(): number { return this._shadowBias };
-    public set shadowBias(p: number) { this._shadowBias = p };
-    public get shadowSize(): number { return this._shadowSize };
-    public set shadowSize(p: number) { this._shadowSize = p };
-    public get shadowOpacity(): number { return this._shadowOpacity };
-    public set shadowOpacity(p: number) { this._shadowOpacity = p };
-    public get shadowMin(): number { return this._shadowMin };
-    public set shadowMin(p: number) { this._shadowMin = p };
-    public get shadowMap(): WebGLTexture { return this._shadowMap };
-            public set shadowMap(p: WebGLTexture) { this._shadowMap = p };
-    public get shadowInfo(){
-        return [this._shadowBias,this._shadowSize,this._shadowMin,this._shadowOpacity]
-    }
-
+    public shadow = new syRender.Light.Shadow();
     //雾
     public fog:syRender.Light.Fog = new syRender.Light.Fog();
     //聚光

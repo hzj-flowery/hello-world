@@ -319,7 +319,7 @@ class ShadowLight {
     G_ShaderFactory.setUniforms(programInfo.uniSetters, {
       u_Vmat: viewMatrix,
       u_Pmat: pMatrix,
-      u_shadowInfo: G_LightCenter.lightData.shadowInfo,
+      u_shadowInfo: G_LightCenter.lightData.shadow.info,
       u_textureMatrix: texMatrix,
       gDepth: this.renderTexture.glID,
       u_lightWorldPosition: lightPos,

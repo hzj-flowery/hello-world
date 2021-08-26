@@ -15,6 +15,6 @@ export class ShadowMap extends SY.Sprite2D{
     }
     protected onSetTextureUrl():void{
         GameMainCamera.instance.pushRenderTexture(syRender.RenderTextureUUid.shadowMap,this.texture as RenderTexture)
-        G_LightCenter.lightData.shadowMap = this.texture.glID;
+        G_LightCenter.lightData.shadow.map = this.texture.glID;
     }
 }

@@ -613,11 +613,11 @@ export default class Device {
         rData.light.viewMatrix = G_LightCenter.lightData.viewMatrix;
         rData.light.projectionMatrix = G_LightCenter.lightData.projectionMatrix;
         
-        rData.light.shadowBias = G_LightCenter.lightData.shadowBias;
-        rData.light.shadowSize = G_LightCenter.lightData.shadowSize;
-        rData.light.shadowMin = G_LightCenter.lightData.shadowMin;
-        rData.light.shadowOpacity = G_LightCenter.lightData.shadowOpacity;
-        rData.light.shadowMap = G_LightCenter.lightData.shadowMap;
+        rData.light.shadow.bias = G_LightCenter.lightData.shadow.bias;
+        rData.light.shadow.size = G_LightCenter.lightData.shadow.size;
+        rData.light.shadow.min = G_LightCenter.lightData.shadow.min;
+        rData.light.shadow.opacity = G_LightCenter.lightData.shadow.opacity;
+        rData.light.shadow.map = G_LightCenter.lightData.shadow.map;
 
         switch (rData.type) {
             case syRender.DataType.Base:
