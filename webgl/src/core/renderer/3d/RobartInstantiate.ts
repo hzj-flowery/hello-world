@@ -129,6 +129,7 @@ export default class RobartInstantiate extends SY.Sprite3DInstance {
         this.numInstances = this._skeletonNode.length;
 
         this.pushDivisor("a_matrix", true);
+        this.pushDivisor("a_color", false);
         // make a typed array with one view per matrix
         this.matrixData = new Float32Array(this.numInstances * 16);
         this.matrices = [];
@@ -141,8 +142,34 @@ export default class RobartInstantiate extends SY.Sprite3DInstance {
                 numFloatsForView));
         }
         this.createVertMatrixBuffer([], 4, this.matrixData.byteLength);
+
+        var colorData = [];
+        for (var j = 0; j < this.numInstances; j++) {
+            var res = this.getRandowColor();
+            colorData.push(res[0]);
+            colorData.push(res[1]);
+            colorData.push(res[2]);
+            colorData.push(res[3]);
+        }
+        this.createNodeVertColorBuffer(colorData, 4);
+
         super.onInitFinish()
     }
+
+    private getRandowColor() {
+        let ColorTest =
+            [1, 0, 0, 1,  // red
+                0, 1, 0, 1,  // green
+                0, 0, 1, 1,  // blue
+                1, 0, 1, 1,  // magenta
+                0, 1, 1, 1,  // cyan
+            ]
+        var p = Math.floor(Math.random() * 10 / 2);
+        if (p >= 5) p = 4;
+        var data = ColorTest.slice(p * 4, p * 4 + 4);
+        return data;
+    }
+
     private matrices;
     private matrixData;
     public onDrawBefore(time: number) {

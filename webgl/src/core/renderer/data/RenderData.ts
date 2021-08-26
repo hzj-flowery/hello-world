@@ -33,6 +33,7 @@ export namespace syRender {
         SkyBox,       //天空盒
         Mirror,       //镜子
         Fog,          //雾
+        Instantiate,  //实例化绘制
         Test,         //只是测试使用
         NULL          //不用shader渲染
     }
@@ -53,6 +54,7 @@ export namespace syRender {
         "SkyBox",
         "Mirror",
         "Fog",
+        "Instantiate",
         "Test",
         "NULL"          //不用shader渲染
     ]

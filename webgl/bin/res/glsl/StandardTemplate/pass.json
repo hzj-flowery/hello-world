@@ -121,6 +121,14 @@
         ]
     },
     {
+        "name": "Instantiate/shader",
+        "template":true,
+        "custom":[
+            {"key":"drawInstanced","value":true},
+            {"key":"ShaderType","value":"Instantiate"}
+        ]
+    },
+    {
         "name": "Test/shader",
         "template":true,
         "custom":[
