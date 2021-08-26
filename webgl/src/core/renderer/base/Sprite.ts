@@ -726,7 +726,72 @@ export namespace SY {
         }
 
     }
+    
 
+    export class Sprite3DInstance extends SY.SpriteBase {
+        constructor() {
+            super();
+            this._glPrimitiveType = syGL.PrimitiveType.TRIANGLE_STRIP;
+        }
+        /**
+         * 实例化的数目
+         */
+        private _numInstances: number;
+        /**
+         * 单个实例的顶点数目
+         */
+        private _InstanceVertNums: number;
+        protected onInit(): void {
+
+            this._divisorNameData = new Map();
+            this._divisorLocData = new Map();
+        }
+        private _divisorNameData: Map<string, boolean>;
+        private _divisorLocData: Map<number, boolean>;
+        public pushDivisor(name: string, isMatrix: boolean): void {
+            if (this._divisorNameData.has(name) == false)
+                this._divisorNameData.set(name, isMatrix);
+        }
+        protected set InstanceVertNums(nums: number) {
+            this._InstanceVertNums = nums;
+        }
+        protected get InstanceVertNums(): number {
+            return this._InstanceVertNums;
+        }
+        protected set numInstances(nums: number) {
+            this._numInstances = nums;
+        }
+        protected get numInstances(): number {
+            return this._numInstances;
+        }
+        protected onInitFinish() {
+            this._divisorNameData.forEach((value, key) => {
+                let loc = this.shader.getCustomAttributeLocation(key);
+                this._divisorLocData.set(loc, value)
+            })
+        }
+        protected onCollectRenderDataAfter(renderData: syRender.BaseData): void {
+            renderData.primitive.instancedNums = this._numInstances
+            renderData.primitive.instancedVertNums = this._InstanceVertNums
+        }
+        public onDrawBefore(time: number) {
+            this._divisorLocData.forEach((value, key) => {
+                if (value)
+                    G_DrawEngine.vertexAttribDivisor(key, 1, true);
+                else
+                    G_DrawEngine.vertexAttribDivisor(key);
+            })
+        }
+        public onDrawAfter(): void {
+            this._divisorLocData.forEach((value, key) => {
+                if (value)
+                    G_DrawEngine.disableVertexAttribArrayDivisor(key, true);
+                else
+                    G_DrawEngine.disableVertexAttribArrayDivisor(key);
+            })
+        }
+
+    }
 
 
 }

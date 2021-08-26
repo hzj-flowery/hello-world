@@ -28,7 +28,7 @@ var fragmentshader3d =
 
 "use strict";
 
-class TRS {
+class SKeletonTRS {
 
     public translation: Array<number>;
     public rotation: Array<number>;
@@ -53,8 +53,8 @@ class TRS {
     };
 }
 
-class Node {
-    public children: Array<Node>;
+class SKeletonNode {
+    public children: Array<SKeletonNode>;
     public localMatrix: Float32Array;
     public worldMatrix: Float32Array;
     public drawInfo:{uniforms:{
@@ -66,7 +66,7 @@ class Node {
     bufferInfo:BufferAttribsData};
 
     public source;
-    public parent: Node;
+    public parent: SKeletonNode;
     constructor(source) {
         this.children = [];
         this.localMatrix = glMatrix.mat4.identity(null);
@@ -139,7 +139,7 @@ function main() {
     var cameraHeight = 50;
 
     var objectsToDraw = [];
-    var objects:Array<Node> = [];
+    var objects:Array<SKeletonNode> = [];
     var nodeInfosByName = {};
 
     // Let's make all the nodes
@@ -147,8 +147,8 @@ function main() {
     
     
     function makeNode(nodeDescription) {
-        var trs = new TRS();
-        var node = new Node(trs);
+        var trs = new SKeletonTRS();
+        var node = new SKeletonNode(trs);
         nodeInfosByName[nodeDescription.name] = {
             trs: trs,
             node: node,

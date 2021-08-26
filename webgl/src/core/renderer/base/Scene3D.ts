@@ -28,6 +28,7 @@ import { LightCamera } from "../3d/LightCamera";
 import ShadowCube from "../3d/ShadowCube";
 import { Plane } from "../3d/Plane";
 import { ThreeDF } from "../3d/ThreeDF";
+import RobartInstantiate from "../3d/RobartInstantiate";
 
 export default class Scene3D extends Scene {
 
@@ -51,6 +52,7 @@ export default class Scene3D extends Scene {
     private _centerNode: Node;
     private _shadowCube:ShadowCube;
     private _mirrorCube: MirrorCube;
+    private _robart:RobartInstantiate;
     private _sphere: Sphere;
     constructor() {
         super();
@@ -81,16 +83,21 @@ export default class Scene3D extends Scene {
         spNode.addChild(this._sphere);
         this._centerNode.addChild(spNode);
 
+        // this._robart = new RobartInstantiate();
+        // this._robart.x = 5;
+        // this._robart.y = 10;
+        // this._robart.setScale(0.1,0.1,0.1)
+        // this.addChild(this._robart);
         // this._floorNode = new Ground();
         // this._floorNode.spriteFrame = "res/ground.jpg";
         // this._floorNode.z = -20;
         // this.addChild(this._floorNode);
 
        
-        // this._spineNode = new Spine();
-        // this._spineNode.x = -5;
-        // this._spineNode.y = 10;
-        // this.addChild(this._spineNode);
+        this._spineNode = new Spine();
+        this._spineNode.x = -5;
+        this._spineNode.y = 10;
+        this.addChild(this._spineNode);
 
         // this._customTexture = new CustomTextureCube();
         // this._customTexture.spriteFrame = CustomTextureData.getRandomData(3, 5, syGL.TextureFormat.RGB8);
@@ -222,6 +229,9 @@ export default class Scene3D extends Scene {
         this._centerNode.addChild(new LightCamera());
 
         G_UISetting.pushRenderCallBack((data)=>{
+            // this._robart.setPosition(-5,10,data.customValue?-data.customValue:0)
+            // var cg = (data.customValue?-data.customValue:0.1)/10000;
+            // this._robart.setScale(cg,cg,cg)
             // this._pointLightCube.setPosition(0,data.customValue?-data.customValue:0,0)
             // this._spotLightCube.setPosition(0,0,data.customValue?-data.customValue:-130)
         //     this._lightCube.setRotation(0,data.customValue?data.customValue:0,0)

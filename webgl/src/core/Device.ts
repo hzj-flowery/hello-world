@@ -384,7 +384,9 @@ export default class Device {
         var data = this._mapRenderTreeData.get(syRender.DrawingOrder.Normal);
         if(data&&data.length>0)
         data.sort((a,b)=>{
-           return a.pass.shaderType - b.pass.shaderType
+           if(a.pass!=null && b.pass!=null)
+           return a.pass.shaderType - b.pass.shaderType;
+           return -1;
         })
     }
     /**
