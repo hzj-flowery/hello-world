@@ -36,7 +36,7 @@ class SKeletonNode {
     public children: Array<SKeletonNode>;
     public localMatrix: Float32Array;
     public worldMatrix: Float32Array;
-    public source;
+    public source:SKeletonTRS;
     public parent: SKeletonNode;
     constructor(source) {
         this.children = [];
@@ -117,18 +117,13 @@ export default class RobartInstantiate extends SY.Sprite3DInstance {
         return nodeDescriptions ? nodeDescriptions.map(handler(this,this.makeNode)) : [];
     }
     protected onInitFinish():void{
-        // var cubeArrays = syPrimitives.createCubeVertices(1);
-        // this.createIndexsBuffer(cubeArrays.indices);
-        // this.createNormalsBuffer(cubeArrays.normal, 3);
-        // this.createUVsBuffer(cubeArrays.texcoord, 2);
-        // this.createVertexsBuffer(cubeArrays.position, 3);
-
-        var rd = CubeData.getData();
-        this.createVertexsBuffer(rd.vertex, rd.dF.vertex_item_size);
-        this.createUVsBuffer(rd.uvData, rd.dF.uv_item_size);
-        this.createNormalsBuffer(rd.normals,rd.dF.normal_item_size)
-        this.createIndexsBuffer(rd.indexs);
-        this.InstanceVertNums = rd.vertex.length/rd.dF.vertex_item_size;
+        var cubeArrays = syPrimitives.createCubeVertices(1);
+        this.createIndexsBuffer(cubeArrays.indices);
+        this.createNormalsBuffer(cubeArrays.normal, 3);
+        this.createUVsBuffer(cubeArrays.texcoord, 2);
+        this.createVertexsBuffer(cubeArrays.position, 3);
+        this.InstanceVertNums = cubeArrays.position.length/3;
+       
         var blockGuyNodeDescriptions = LoaderManager.instance.getRes("res/models/Robart/blockGuyNodeDescriptions.json");
         this._skeletonScene = this.makeNode(blockGuyNodeDescriptions);
         this.numInstances = this._skeletonNode.length;
@@ -158,7 +153,7 @@ export default class RobartInstantiate extends SY.Sprite3DInstance {
     }
 
     protected collectRenderData(time: number): void {
-        // time *= 0.001;  // convert to seconds
+        time *= 0.001;  // convert to seconds
         if(!this._skeletonScene)
         {
             super.collectRenderData(time);

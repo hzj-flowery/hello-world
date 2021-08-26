@@ -6,7 +6,7 @@ import { SY } from "../base/Sprite";
  * 实例化绘制的矩阵其实就是一个数组，里面包含了4个item,每个item都是一个vec4
  */
 
-export default class InstantiateSprite extends SY.SpriteInstance {
+export default class InstantiateSprite extends SY.Sprite2DInstance {
     constructor() {
         super();
     }

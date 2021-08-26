@@ -662,7 +662,7 @@ export namespace SY {
      *  启用这个drawArraysInstanced方法以后，GPU就拿着上面顶点数据，沿着实例化的个数，逐一从上面取数组中的item来进行绘制
      * 
      */
-    export class SpriteInstance extends SY.Sprite2D {
+    export class Sprite2DInstance extends SY.Sprite2D {
         constructor() {
             super();
             this._glPrimitiveType = syGL.PrimitiveType.TRIANGLE_STRIP;

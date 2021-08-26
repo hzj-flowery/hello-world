@@ -83,11 +83,10 @@ export default class Scene3D extends Scene {
         spNode.addChild(this._sphere);
         this._centerNode.addChild(spNode);
 
-        // this._robart = new RobartInstantiate();
-        // this._robart.x = 5;
-        // this._robart.y = 10;
-        // this._robart.setScale(0.1,0.1,0.1)
-        // this.addChild(this._robart);
+        this._robart = new RobartInstantiate();
+        this._robart.x = 5;
+        this._robart.y = 10;
+        this.addChild(this._robart);
         // this._floorNode = new Ground();
         // this._floorNode.spriteFrame = "res/ground.jpg";
         // this._floorNode.z = -20;
