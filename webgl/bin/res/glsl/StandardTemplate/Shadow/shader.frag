@@ -52,9 +52,8 @@ precision mediump float;
               //找出光照条件下的当前位置的最大深度
                 rgbaDepth = texture2D(u_shadowMap, projectedTexcoord.xy+vec2(x,y)*texelSize);
                 //如果当前深度大于光照的最大深度 则表明处于阴影中
-                float compareDepth = rgbaDepth.r;
                 //否则可以看见
-                shadows += (isInRange&&curDepth>compareDepth) ? 1.0 : 0.0;
+                shadows += (isInRange&&curDepth>unpack(rgbaDepth)) ? 1.0 : 0.0;
           }
       }
       shadows/=16.0;// 4*4的样本

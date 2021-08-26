@@ -5,7 +5,7 @@ import { syRender } from "../data/RenderData";
 import { G_LightCenter } from "../light/LightCenter";
 import { syPrimitives } from "../shader/Primitives";
 
-export default class Sphere extends SY.SpriteBase {
+export default class Sphere extends SY.ShadowSprite {
     
     public drawQiu1(SPHERE_DIV:number){
         let position:Array<number> = [];
@@ -112,9 +112,6 @@ export default class Sphere extends SY.SpriteBase {
         return arr;
     }
 
-    private _customTempMatrix: Float32Array;
-    private _tempMatrix: Float32Array;
-
     protected onInit() {
         let vertexData = syPrimitives.createSphereVertices(1, 24, 24);
         this.createIndexsBuffer(vertexData.indices);
@@ -124,26 +121,8 @@ export default class Sphere extends SY.SpriteBase {
 
         this._glPrimitiveType = this.gl.LINE_STRIP;
 
-        this._customTempMatrix = glMatrix.mat4.identity(null);
-        this._tempMatrix = glMatrix.mat4.identity(null);
 
         this.color = [1, 0.5, 0.5, 1];
     }
-
-    protected collectRenderData(time: number) {
-        glMatrix.mat4.copy(this._tempMatrix, this._customTempMatrix)
-        this.createCustomMatrix(this._tempMatrix);
-        super.collectRenderData(time)
-      }
-    
-      /**
-       * 更新pv矩阵
-       * @param proj 
-       * @param view 
-       */
-      public onBindGPUBufferDataBefore(rd:syRender.BaseData,proj: Float32Array, view: Float32Array): void {
-        glMatrix.mat4.copy(this._customTempMatrix, rd.light.projectionMatrix);
-        glMatrix.mat4.multiply(this._customTempMatrix, this._customTempMatrix, glMatrix.mat4.invert(null, rd.light.viewMatrix));
-      }
 
 }

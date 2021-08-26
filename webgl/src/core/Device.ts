@@ -155,11 +155,11 @@ function _commitCullState(gl: WebGLRenderingContext, cur: State, next: State): v
  */
 function _commitScissorState(gl: WebGLRenderingContext, cur: State, next: State): void {
 
-    gl.enable(gl.SCISSOR_TEST);
-    gl.scissor(0, 0, 200, 50);
-    gl.clearColor(1.0, 0.0, 0.0, 1.0);
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-    gl.disable(gl.SCISSOR_TEST);
+    // gl.enable(gl.SCISSOR_TEST);
+    // gl.scissor(0, 0, 200, 50);
+    // gl.clearColor(1.0, 0.0, 0.0, 1.0);
+    // gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    // gl.disable(gl.SCISSOR_TEST);
 }
 /**
  * 

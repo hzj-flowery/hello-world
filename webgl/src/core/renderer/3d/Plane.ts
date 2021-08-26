@@ -5,7 +5,7 @@ import { syRender } from "../data/RenderData";
 import { G_LightCenter } from "../light/LightCenter";
 import { syPrimitives } from "../shader/Primitives";
 
-export class Plane extends SY.SpriteBase{
+export class Plane extends SY.ShadowSprite{
     constructor(planeWidth:number,planeHeight:number){
         super();
         this._planeHeight = planeHeight;
@@ -18,9 +18,6 @@ export class Plane extends SY.SpriteBase{
     private _subdivisionDown:number = 1;//竖排细分
     private _widthCount:number = 20;
     private _heightCount:number = 20;
-
-    private _customTempMatrix: Float32Array;
-    private _tempMatrix: Float32Array;
 
     onLocalInit(){
         let vertexData = syPrimitives.createPlaneVertices( 
@@ -35,29 +32,11 @@ export class Plane extends SY.SpriteBase{
         this.createVertexsBuffer(vertexData.position, 3);
         
         this.color = [0.5, 0.5, 1, 1];
-        this._customTempMatrix = glMatrix.mat4.identity(null);
-        this._tempMatrix = glMatrix.mat4.identity(null);
     }
 
     protected onInitFinish():void{
         console.log(this.shader);
     }
-
-    protected collectRenderData(time: number) {
-        glMatrix.mat4.copy(this._tempMatrix, this._customTempMatrix)
-        this.createCustomMatrix(this._tempMatrix);
-        super.collectRenderData(time)
-      }
-    
-      /**
-       * 更新pv矩阵
-       * @param proj 
-       * @param view 
-       */
-      public onBindGPUBufferDataBefore(rd:syRender.BaseData,proj: Float32Array, view: Float32Array): void {
-        glMatrix.mat4.copy(this._customTempMatrix, rd.light.projectionMatrix);
-        glMatrix.mat4.multiply(this._customTempMatrix, this._customTempMatrix, glMatrix.mat4.invert(null, rd.light.viewMatrix));
-      }
 
     public setCellCounts(widthCount:number,heightCount:number):void{
         this._widthCount = widthCount;

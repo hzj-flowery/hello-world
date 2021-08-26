@@ -2,6 +2,7 @@ import { sy } from "../../Director";
 import { glMatrix } from "../../math/Matrix";
 import { G_UISetting } from "../../ui/UiSetting";
 import { MathUtils } from "../../utils/MathUtils";
+import { ShadowMap } from "../2d/ShadowMap";
 import { Node } from "../base/Node";
 import { SY } from "../base/Sprite";
 import { G_Stage } from "../base/Stage";
@@ -41,6 +42,7 @@ export class LightCamera extends Node {
         this._projectMatrix = glMatrix.mat4.identity(null);
         this._lightReverseDir = new Float32Array(3);
         this._camera = GameMainCamera.instance.registerCamera(syRender.CameraType.Ortho,syRender.CameraUUid.light,G_Stage);
+
         this.addFrustum()
         this.addSmallSun();
         this.addLine();

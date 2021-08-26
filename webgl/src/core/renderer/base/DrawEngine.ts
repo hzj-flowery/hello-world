@@ -244,6 +244,10 @@ class DrawEngine {
     * @param itemSize 一个单元的数据数目
     */
     public activeVertexAttribArray(glID: WebGLBuffer, loc: number, itemSize: number): void {
+        if(!(glID instanceof WebGLBuffer))
+        {
+            return;
+        }
         let gl = this.gl;
         gl.bindBuffer(gl.ARRAY_BUFFER, glID);
         this.enableVertexAttribArray(loc, itemSize, gl.FLOAT, false, 0, 0);

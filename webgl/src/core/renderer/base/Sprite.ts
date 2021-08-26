@@ -62,6 +62,7 @@ import { G_TextureManager } from "./texture/TextureManager";
 import { G_PassFactory } from "../shader/PassFactory";
 import { Pass } from "../shader/Pass";
 import { RenderTexture } from "./texture/RenderTexture";
+import { glMatrix } from "../../math/Matrix";
 
 /**
  * 显示节点
@@ -106,7 +107,7 @@ export namespace SY {
      */
     export class SpriteBase extends Node {
 
-       
+
 
         //节点buffer
         private _vertexsBuffer: VertexsBuffer;
@@ -130,7 +131,7 @@ export namespace SY {
         //参考glprimitive_type
         protected _glPrimitiveType: syGL.PrimitiveType;//绘制的类型
         protected _sizeMode: SpriteSizeMode;//节点的尺寸模式
-        private _isSupportPng:number=0; //是否支持png 
+        private _isSupportPng: number = 0; //是否支持png 
         constructor() {
             super();
             materialId++;
@@ -146,14 +147,14 @@ export namespace SY {
             this.onInit();
             this.handleShader();
         }
-        
+
         /**
          * 是否支持png
          * 支持png 模式 则p的值处于(0,1]
          * @param p 
          */
-        public setSupportPng(p:number):void{
-             this._isSupportPng = p;
+        public setSupportPng(p: number): void {
+            this._isSupportPng = p;
         }
         /**
          * 设置精灵图片的尺寸模式
@@ -181,7 +182,7 @@ export namespace SY {
             this._pass = []
             let name = this.name;
             LoaderManager.instance.loadGlsl(name, (res) => {
-                this._pass.push(G_PassFactory.createPass(res[0], res[1],res[2]));
+                this._pass.push(G_PassFactory.createPass(res[0], res[1], res[2]));
             }, () => {
                 this.onInitFinish();
             });
@@ -286,19 +287,17 @@ export namespace SY {
         /**
          * 直接设置纹理
          */
-        public set texture(tex:Texture){
-             if(this._texture==tex)
-             {
-                 //纹理相同 无需重新设置
-                 return;
-             }
-             if(this._texture)
-             {
-                 //之前存在纹理 需要将其销毁
-                 this._texture.destroy();
-             }
-             this._texture = tex;
-             this.onSetTextureUrl();
+        public set texture(tex: Texture) {
+            if (this._texture == tex) {
+                //纹理相同 无需重新设置
+                return;
+            }
+            if (this._texture) {
+                //之前存在纹理 需要将其销毁
+                this._texture.destroy();
+            }
+            this._texture = tex;
+            this.onSetTextureUrl();
         }
         /**
          * 设置完纹理之后调用
@@ -333,11 +332,11 @@ export namespace SY {
             return buffer ? buffer.itemSize : -1
         }
         //采集数据以后的行为
-        protected onCollectRenderDataAfter(data:syRender.BaseData){
+        protected onCollectRenderDataAfter(data: syRender.BaseData) {
 
         }
         //采集数据之前的行为
-        protected onCollectRenderDataBefore(){
+        protected onCollectRenderDataBefore() {
 
         }
         /**
@@ -370,7 +369,7 @@ export namespace SY {
                 Device.Instance.collectData(this._renderData[i]);
             }
         }
-        private updateRenderData(rData:syRender.BaseData):void{
+        private updateRenderData(rData: syRender.BaseData): void {
             //顶点组----------------------------------------------------------------------
             rData.primitive.vert.glID = this.getGLID(SY.GLID_TYPE.VERTEX);
             rData.primitive.vert.itemSize = this.getBufferItemSize(SY.GLID_TYPE.VERTEX);
@@ -414,11 +413,10 @@ export namespace SY {
                 rData.primitive.vertMatrix.itemNums = this.getBuffer(SY.GLID_TYPE.VERT_MATRIX).itemNums;
             }
             rData.primitive.modelMatrix = this.modelMatrix;
-            if(this._texture instanceof RenderTexture && (this._texture as RenderTexture).isDeferred())
-            {
-                syRender.DeferredAllTypeTexture.forEach((value,index)=>{
+            if (this._texture instanceof RenderTexture && (this._texture as RenderTexture).isDeferred()) {
+                syRender.DeferredAllTypeTexture.forEach((value, index) => {
                     var texS = (this._texture as RenderTexture).getDeferredTex(value);
-                    texS?rData.push2DTexture(texS,value):null;
+                    texS ? rData.push2DTexture(texS, value) : null;
                 })
             }
             else if (this._texture && this._texture.glID) {
@@ -436,9 +434,30 @@ export namespace SY {
             this._texture.destroy();
         }
     }
-    export class sySprite extends SpriteBase {
+    /**
+     * 阴影
+     */
+    export class ShadowSprite extends SpriteBase {
         constructor() {
             super();
+            this._customTempMatrix = glMatrix.mat4.identity(null);
+            this._tempMatrix = glMatrix.mat4.identity(null);
+        }
+        private _customTempMatrix: Float32Array;
+        private _tempMatrix: Float32Array;
+        protected collectRenderData(time: number) {
+            glMatrix.mat4.copy(this._tempMatrix, this._customTempMatrix)
+            this.createCustomMatrix(this._tempMatrix);
+            super.collectRenderData(time)
+        }
+        /**
+         * 更新pv矩阵
+         * @param proj 
+         * @param view 
+         */
+        public onBindGPUBufferDataBefore(rd: syRender.BaseData, proj: Float32Array, view: Float32Array): void {
+            glMatrix.mat4.copy(this._customTempMatrix, rd.light.projectionMatrix);
+            glMatrix.mat4.multiply(this._customTempMatrix, this._customTempMatrix, glMatrix.mat4.invert(null, rd.light.viewMatrix));
         }
     }
     export class Sprite extends Node {
@@ -548,7 +567,7 @@ export namespace SY {
         private _rb: Array<number> = [];//右下
         constructor() {
             super();
-            this._node__type=syRender.NodeType.D2;
+            this._node__type = syRender.NodeType.D2;
             this._glPrimitiveType = this.gl.TRIANGLE_STRIP;
         }
         private updateUV(): void {
@@ -657,7 +676,7 @@ export namespace SY {
          */
         private _InstanceVertNums: number;
         protected onInit(): void {
-            
+
             this._divisorNameData = new Map();
             this._divisorLocData = new Map();
         }
@@ -685,7 +704,7 @@ export namespace SY {
                 this._divisorLocData.set(loc, value)
             })
         }
-        protected onCollectRenderDataAfter(renderData:syRender.BaseData):void{
+        protected onCollectRenderDataAfter(renderData: syRender.BaseData): void {
             renderData.primitive.instancedNums = this._numInstances
             renderData.primitive.instancedVertNums = this._InstanceVertNums
         }

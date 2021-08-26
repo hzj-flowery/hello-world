@@ -70,7 +70,7 @@ export default class Scene3D extends Scene {
         
         this._shadowCube = new ShadowCube();
         this._shadowCube.spriteFrame = "res/tree.png";
-        this._shadowCube.setPosition(0,0,0);
+        this._shadowCube.setPosition(-10,0,0);
         this._centerNode.addChild(this._shadowCube);
 
 
@@ -97,11 +97,7 @@ export default class Scene3D extends Scene {
         // this._customTexture.setPosition(0, 3.1, 0);
         // this._centerNode.addChild(this._customTexture);
 
-        // this._tableNode = new Cube();
-        // this._tableNode.spriteFrame = "res/wood.jpg";
-        // this._tableNode.setPosition(0, 1, 0);
-        // this._tableNode.setScale(2.0, 0.1, 2.0);
-        // this._centerNode.addChild(this._tableNode);
+        
 
         // this._alphaNode = new AlphaCube();
         // this._alphaNode.spriteFrame = "res/good.jpg";
@@ -153,22 +149,18 @@ export default class Scene3D extends Scene {
         this._rtt.setPosition(-6, 10, 0);
         this._centerNode.addChild(this._rtt);
 
-        // this._cubeNode = new Cube();
-        // this._cubeNode.spriteFrame = "res/wicker.jpg";
-        // this._cubeNode.setPosition(0, 1.7, 0);
-        // this._cubeNode.setScale(0.5, 0.5, 0.5);
-        // this._centerNode.addChild(this._cubeNode);
+      
 
         // this._pointLightCube = new PointLightCube();
         // this._pointLightCube.setScale(100,0.1,100.0);
         // this._pointLightCube.setPosition(0, -10, 0);
         // this._pointLightCube.spriteFrame = "res/dragon.jpg";
         // this._centerNode.addChild(this._pointLightCube);
-        // this._spotLightCube = new SpotLightCube();
-        // this._spotLightCube.setScale(100,50.0,10.0);
-        // this._spotLightCube.setPosition(0, 0, -130);
-        // this._spotLightCube.spriteFrame = "res/dragon.jpg";
-        // this._centerNode.addChild(this._spotLightCube);
+        this._spotLightCube = new SpotLightCube();
+        this._spotLightCube.setScale(100,50.0,10.0);
+        this._spotLightCube.setPosition(0, 0, -130);
+        this._spotLightCube.spriteFrame = "res/dragon.jpg";
+        this._centerNode.addChild(this._spotLightCube);
 
         // this._fogCubeArr = [];
         // let fogCubeNums = 40;
@@ -186,18 +178,27 @@ export default class Scene3D extends Scene {
 
         
         
-
-
+           
+        this._cubeNode = new Cube();
+        this._cubeNode.spriteFrame = "res/wicker.jpg";
+        this._cubeNode.setPosition(0, 1.7, 0);
+        this._cubeNode.setScale(0.5, 0.5, 0.5);
+        this._centerNode.addChild(this._cubeNode);
+        this._tableNode = new Cube();
+        this._tableNode.spriteFrame = "res/wood.jpg";
+        this._tableNode.setPosition(0, 1, 0);
+        this._tableNode.setScale(2.0, 0.1, 2.0);
+        this._centerNode.addChild(this._tableNode);
         // // 绘制 4 个腿
-        // for (var i = -1; i <= 1; i += 2) {
-        //     for (var j = -1; j <= 1; j += 2) {
-        //         var node = new Cube();
-        //         node.setPosition(i * 1.9, -0.1, j * 1.9);
-        //         node.setScale(0.1, 1.0, 0.1);
-        //         node.spriteFrame = "res/wood.jpg";
-        //         this._centerNode.addChild(node);
-        //     }
-        // }
+        for (var i = -1; i <= 1; i += 2) {
+            for (var j = -1; j <= 1; j += 2) {
+                var node = new Cube();
+                node.setPosition(i * 1.9, -0.1, j * 1.9);
+                node.setScale(0.1, 1.0, 0.1);
+                node.spriteFrame = "res/wood.jpg";
+                this._centerNode.addChild(node);
+            }
+        }
         
         // this._lightCube = new LightCube();
         // this._lightCube.spriteFrame = "res/wicker.jpg";
