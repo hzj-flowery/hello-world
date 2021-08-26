@@ -296,9 +296,16 @@ export class Shader {
      * @param itemSize 
      */
     public setUseVertMatrix(uniforName:syGL.AttributeUniform,glID, itemSize: number): void {
-        var loc = getLocName(uniforName,true);
+        var loc = getLocName(uniforName,false);
         if (this.checklocValid(this[loc])) {
             G_DrawEngine.activeMatrixVertexAttribArray(glID, this[loc], itemSize)
+        }
+    }
+    //设置顶点值
+    public setUseVertexAttribPointer(attributeName: syGL.AttributeUniform,glID, itemSize: number): void {
+        var loc = getLocName(attributeName,false)
+        if (this.checklocValid(this[loc])) {
+            G_DrawEngine.activeVertexAttribArray(glID, this[loc], itemSize);
         }
     }
     //设置使用的纹理
@@ -347,13 +354,7 @@ export class Shader {
             G_DrawEngine.setUniformMatrix(this[loc], mat);
         }
     }
-    //设置顶点值
-    public setUseVertexAttribPointer(attributeName: syGL.AttributeUniform,glID, itemSize: number): void {
-        var loc = getLocName(attributeName,false)
-        if (this.checklocValid(this[loc])) {
-            G_DrawEngine.activeVertexAttribArray(glID, this[loc], itemSize);
-        }
-    }
+
     public disableVertexAttribArray(): void {
         mapTree_a.forEach((value, key) => {
             var loc = getLocName(key,false);
