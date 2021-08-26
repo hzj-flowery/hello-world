@@ -33,7 +33,6 @@ export namespace syRender {
         SkyBox,       //天空盒
         Mirror,       //镜子
         Fog,          //雾
-        Depth,        //深度
         Test,         //只是测试使用
         NULL          //不用shader渲染
     }
@@ -54,7 +53,6 @@ export namespace syRender {
         "SkyBox",
         "Mirror",
         "Fog",
-        "Depth",        //8深度
         "Test",
         "NULL"          //不用shader渲染
     ]
@@ -79,7 +77,6 @@ export namespace syRender {
         offline2D,   //将结果渲染到一张纹理上，这张纹理对应的是一个2d节点
         offline3D,   //将结果渲染到一张纹理上，这张纹理对应的是一个3d节点
         shadowMap,//深度
-        Depth,       //将深度信息渲染到一张纹理上
         RTT,         //多目标渲染
         other1,
         other2,

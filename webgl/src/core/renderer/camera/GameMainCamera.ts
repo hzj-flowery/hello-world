@@ -174,18 +174,7 @@ export class GameMainCamera {
     this._renderData.push(temp);
     
     
-    //绘制深度
-    // var temp = new CameraRenderData();
-    // temp.fb = null;
-    // temp.viewPort = { x: 0, y: 0, w: 1, h: 1 }
-    // temp.rtuuid = syRender.RenderTextureUUid.Depth;
-    // temp.isClear = true;
-    // temp.VA = 0;
-    // this._renderData.push(temp);
-    
-    
-
-    
+ 
     //绘制左边
     var temp = new CameraRenderData();
     temp.fb = null;

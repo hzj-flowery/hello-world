@@ -258,15 +258,8 @@ export default class Device {
         this.initExt();
 
 
-        this.handleEvent(canvas);
-        this.openStats();
-    }
-
-    private handleEvent(canvas: HTMLCanvasElement): void {
-        //添加事件监听
-        canvas.addEventListener("webglcontextlost", this.contextLost.bind(this));
-        canvas.addEventListener("webglcontextrestored", this.resume.bind(this));
         G_InputControl.handleEvent(canvas);
+        this.openStats();
     }
 
     //
@@ -300,12 +293,6 @@ export default class Device {
             console.log("没有canvas 2d画笔--------------");
         }
         return result;
-    }
-    private contextLost(): void {
-        console.log("丢失上下文----");
-    }
-    private resume(): void {
-        console.log("回来-----");
     }
     public getWebglContext(): WebGLRenderingContext {
         return (this.canvas as any).getContext("webgl")

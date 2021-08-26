@@ -38,9 +38,11 @@ precision mediump float;
     float getShadowLightRYY(vec4 coordP){
       vec3 projectedTexcoord = coordP.xyz / coordP.w;   //手动进行齐次除法
       projectedTexcoord = projectedTexcoord.xyz / 2.0 + 0.5;       //转为屏幕坐标
-      float shadows =0.0;
-      float opacity=0.1;// 阴影alpha值, 值越小暗度越深
-      float texelSize=1.0/1024.0;// 阴影像素尺寸,值越小阴影越逼真
+
+      float shadows=u_shadowInfo.z;  //0
+      float opacity=u_shadowInfo.w;// 阴影alpha值, 值越小暗度越深
+      float texelSize=u_shadowInfo.y;// 阴影像素尺寸,值越小阴影越逼真
+
       vec4 rgbaDepth;
       bool isInRange = inRange(projectedTexcoord);
       float curDepth = projectedTexcoord.z-u_shadowInfo.x;

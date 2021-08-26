@@ -30,13 +30,6 @@
         ]
     },
     {
-        "name": "Depth/shader",
-        "template":true,
-        "custom":[
-            {"key":"ShaderType","value":"Depth"}
-        ]
-    },
-    {
         "name": "Spot/shader",
         "template":true,
         "custom":[

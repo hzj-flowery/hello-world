@@ -7,7 +7,6 @@ import Scene from "./Scene";
 import InstantiateSprite from "../2d/InstantiateSprite";
 import { UvSprite } from "../2d/UvSprite";
 import { syRender } from "../data/RenderData";
-import { DepthSprite } from "../2d/DepthSprite";
 import { ShadowMap } from "../2d/ShadowMap";
 
 export default class Scene2D extends Scene {
@@ -47,18 +46,6 @@ export default class Scene2D extends Scene {
             place:syRender.AttachPlace.Color
         }
         this.addChild(this._renderSprite);
-
-        // this._depthSprite = new DepthSprite();
-        // this._depthSprite.setPosition(Device.Instance.width/2-200,Device.Instance.height/2+200, -100);
-        // this._depthSprite.spriteFrame = {
-        //     place:syRender.AttachPlace.MoreColor,
-        //          param: [
-        //         { type: syRender.DeferredTexture.Depth, value: null },
-        //         { type: syRender.DeferredTexture.UV, value: null },
-        //         { type: syRender.DeferredTexture.Color, value: null },
-        //         ]
-        // }
-        // this.addChild(this._depthSprite);
 
         this._depthSprite = new ShadowMap();
         this._depthSprite.setPosition(Device.Instance.width/2,Device.Instance.height/2+200, -100);

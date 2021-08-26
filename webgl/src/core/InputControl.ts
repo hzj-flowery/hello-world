@@ -21,6 +21,9 @@ class InputControl {
         canvas.onwheel = this.onWheel.bind(this);
         canvas.onmouseout = this.onMouseOut.bind(this);
         canvas.onkeydown = this.onKeyDown.bind(this);
+
+        canvas.addEventListener("webglcontextlost", this.contextLost.bind(this));
+        canvas.addEventListener("webglcontextrestored", this.resume.bind(this));
     }
 
    
@@ -72,6 +75,13 @@ class InputControl {
     }
     private onKeyDown(key): void {
         console.log("key---------", key);
+    }
+
+    private contextLost(): void {
+        console.log("丢失上下文----");
+    }
+    private resume(): void {
+        console.log("回来-----");
     }
 
     

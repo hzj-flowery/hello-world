@@ -63,7 +63,7 @@ export default class Scene3D extends Scene {
         this.addChild(this._centerNode);
 
 
-        this._plane = new Plane(100,100);
+        this._plane = new Plane(200,200);
         this._plane.setCellCounts(40,40);
         this.addChild(this._plane);
 
