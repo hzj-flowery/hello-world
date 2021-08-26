@@ -53,7 +53,7 @@ export enum ShaderUseVariantType {
     VertColor,          //顶点颜色
     VertMatrix,         //顶点矩阵
     ShadowInfo,             //阴影信息
-
+    ShadowMap,              //阴影的深度纹理
     Mouse,             //鼠标按下的位置信息
     Resolution,       //设计分辨率
 

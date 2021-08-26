@@ -206,9 +206,9 @@ export default class Scene3D extends Scene {
 
         
 
-        // this._skybox = new SkyBox();
-        // this._skybox.setDefaultUrl();
-        // this.addChild(this._skybox);
+        this._skybox = new SkyBox();
+        this._skybox.setDefaultUrl();
+        this.addChild(this._skybox);
 
         // let tempNode = new Node();
         // tempNode.setPosition(-10,-3.0,0);

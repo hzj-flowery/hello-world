@@ -149,6 +149,7 @@ export namespace syGL {
          * u_shadowInfo[3]:shadowOpacity  阴影的alpha值,值越小暗度越深
          */
         SHADOW_INFO = 'u_shadowInfo',//阴影信息
+        SHADOW_MAP = 'u_shadowMap',//阴影贴图
         UV = 'a_uv',
         UV0 = 'a_uv0',
         UV1 = 'a_uv1',

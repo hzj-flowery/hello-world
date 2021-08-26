@@ -98,6 +98,7 @@ export class LightData {
     private _shadowSize: number = 1/1024;//阴影的像素尺寸 值越小 阴影越逼真
     private _shadowOpacity:number = 0.1; //阴影的alpha值 值越小暗度越深
     private _shadowMin:number = 0;       //阴影最小值
+    private _shadowMap:WebGLTexture;      //深度纹理
     public get shadowBias(): number { return this._shadowBias };
     public set shadowBias(p: number) { this._shadowBias = p };
     public get shadowSize(): number { return this._shadowSize };
@@ -106,6 +107,8 @@ export class LightData {
     public set shadowOpacity(p: number) { this._shadowOpacity = p };
     public get shadowMin(): number { return this._shadowMin };
     public set shadowMin(p: number) { this._shadowMin = p };
+    public get shadowMap(): WebGLTexture { return this._shadowMap };
+            public set shadowMap(p: WebGLTexture) { this._shadowMap = p };
     public get shadowInfo(){
         return [this._shadowBias,this._shadowSize,this._shadowMin,this._shadowOpacity]
     }

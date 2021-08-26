@@ -81,7 +81,7 @@ export class LightCamera extends Node {
         this._camera.OrthoHeight = setting.lightProjHeight/2;
         this._camera.OrthoWidth = setting.lightProjWidth/2;
         this._camera.Near = 0.1;
-        this._camera.Far = 50;
+        this._camera.Far = 500;
         this._camera.Fovy = 60;
         /**
          * lightWorldMatrix是光照摄像机的视野坐标系

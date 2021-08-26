@@ -3,9 +3,10 @@ import Device from "../../Device";
 import {GameMainCamera} from "../camera/GameMainCamera";
 import { RenderTexture } from "../base/texture/RenderTexture";
 import { syRender } from "../data/RenderData";
+import { G_LightCenter } from "../light/LightCenter";
 
 
-export class ShadowDepth extends SY.Sprite2D{
+export class ShadowMap extends SY.Sprite2D{
     constructor(){
         super();
     }
@@ -13,6 +14,7 @@ export class ShadowDepth extends SY.Sprite2D{
         this.setContentSize(Device.Instance.width/4,Device.Instance.height/4);
     }
     protected onSetTextureUrl():void{
-        GameMainCamera.instance.pushRenderTexture(syRender.RenderTextureUUid.shadowDepth,this.texture as RenderTexture)
+        GameMainCamera.instance.pushRenderTexture(syRender.RenderTextureUUid.shadowMap,this.texture as RenderTexture)
+        G_LightCenter.lightData.shadowMap = this.texture.glID;
     }
 }

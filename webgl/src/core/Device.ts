@@ -110,24 +110,19 @@ function _commitDepthState(gl: WebGLRenderingContext, cur: State, next: State): 
     /**
      * 下面函数中，只对面消除，深度写入，深度比较函数这个三个进行操作
      */
-    // if (cur.depthTest != next.depthTest) {
-    //     //是否开启深度测试
-    //     next.depthTest ? gl.enable(gl.DEPTH_TEST) : gl.disable(gl.DEPTH_TEST);
-    // }
-    // if (cur.depthWrite != next.depthWrite) {
-    //     //深度值是否写入深度附件中
-    //     next.depthWrite ? gl.depthMask(true) : gl.depthMask(false);
-    // }
-    // if (cur.depthFunc != next.depthFunc) {
-    //     //比较函数
-    //     gl.depthFunc(next.depthFunc);
-    // }
+    if (cur.depthTest != next.depthTest) {
+        //是否开启深度测试
+        next.depthTest ? gl.enable(gl.DEPTH_TEST) : gl.disable(gl.DEPTH_TEST);
+    }
+    if (cur.depthWrite != next.depthWrite) {
+        //深度值是否写入深度附件中
+        next.depthWrite ? gl.depthMask(true) : gl.depthMask(false);
+    }
+    if (cur.depthFunc != next.depthFunc) {
+        //比较函数
+        gl.depthFunc(next.depthFunc);
+    }
 
-    gl.enable(gl.DEPTH_TEST)
-    gl.depthMask(true)
-    gl.depthFunc(glEnums.DS_FUNC_LESS)
-
-    gl.enable(gl.CULL_FACE);
 }
 /**
  * 
@@ -142,16 +137,16 @@ gl.FRONT：前面
 gl.FRONT_AND_BACK：前后两面
  */
 function _commitCullState(gl: WebGLRenderingContext, cur: State, next: State): void {
-    // if (cur.cullMode === next.cullMode) {
-    //     gl.enable(gl.CULL_FACE);
-    //     return;
-    // }
-    // if (next.cullMode === glEnums.CULL_NONE) {
-    //     gl.disable(gl.CULL_FACE);
-    //     return;
-    // }
-    // gl.enable(gl.CULL_FACE);
-    // gl.cullFace(next.cullMode);
+    if (cur.cullMode === next.cullMode) {
+        gl.enable(gl.CULL_FACE);
+        return;
+    }
+    if (next.cullMode === glEnums.CULL_NONE) {
+        gl.disable(gl.CULL_FACE);
+        return;
+    }
+    gl.enable(gl.CULL_FACE);
+    gl.cullFace(next.cullMode);
 }
 /**
  * 裁切状态
@@ -160,11 +155,11 @@ function _commitCullState(gl: WebGLRenderingContext, cur: State, next: State): v
  */
 function _commitScissorState(gl: WebGLRenderingContext, cur: State, next: State): void {
 
-    // gl.enable(gl.SCISSOR_TEST);
-    // gl.scissor(0, 0, 200, 50);
-    // gl.clearColor(1.0, 0.0, 0.0, 1.0);
-    // gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-    // gl.disable(gl.SCISSOR_TEST);
+    gl.enable(gl.SCISSOR_TEST);
+    gl.scissor(0, 0, 200, 50);
+    gl.clearColor(1.0, 0.0, 0.0, 1.0);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    gl.disable(gl.SCISSOR_TEST);
 }
 /**
  * 
@@ -462,10 +457,10 @@ export default class Device {
         for (let k = 0; k < cameraData.length; k++) {
             if(cameraData[k].drawingOrder==syRender.DrawingOrder.Normal)
             {
-                if(cameraData[k].rtuuid == syRender.RenderTextureUUid.shadowDepth)
+                if(cameraData[k].rtuuid == syRender.RenderTextureUUid.shadowMap)
                 {
                     //深度渲染pass
-                    this.triggerRender(this.getTreeData(syRender.DrawingOrder.Normal,syRender.ShaderType.ShadowDepth),cameraData[k]);
+                    this.triggerRender(this.getTreeData(syRender.DrawingOrder.Normal,syRender.ShaderType.ShadowMap),cameraData[k]);
                 }
                 else
                 {
@@ -635,6 +630,7 @@ export default class Device {
         rData.light.shadowSize = G_LightCenter.lightData.shadowSize;
         rData.light.shadowMin = G_LightCenter.lightData.shadowMin;
         rData.light.shadowOpacity = G_LightCenter.lightData.shadowOpacity;
+        rData.light.shadowMap = G_LightCenter.lightData.shadowMap;
 
         switch (rData.type) {
             case syRender.DataType.Base:

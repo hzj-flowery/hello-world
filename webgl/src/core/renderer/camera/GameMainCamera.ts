@@ -167,7 +167,7 @@ export class GameMainCamera {
     var temp = new CameraRenderData();
     temp.fb = null;
     temp.viewPort = { x: 0, y: 0, w: 1, h: 1 }
-    temp.rtuuid = syRender.RenderTextureUUid.shadowDepth;
+    temp.rtuuid = syRender.RenderTextureUUid.shadowMap;
     temp.uuid = syRender.CameraUUid.light;
     temp.isClear = true;
     temp.VA = 0;

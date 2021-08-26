@@ -1,7 +1,7 @@
 [
     {
         "name":"TemplatePass",
-        "tag":"ShadowDepth"
+        "tag":"ShadowMap"
     },
     {
         "name":"TemplatePass",

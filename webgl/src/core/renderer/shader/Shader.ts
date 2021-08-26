@@ -101,6 +101,7 @@ mapTree_u.set(syGL.AttributeUniform.TEX_GUv,ShaderUseVariantType.GUv);
 mapTree_u.set(syGL.AttributeUniform.TEX_GDepth,ShaderUseVariantType.GDepth);
 
 mapTree_u.set(syGL.AttributeUniform.SHADOW_INFO,ShaderUseVariantType.ShadowInfo);
+mapTree_u.set(syGL.AttributeUniform.SHADOW_MAP,ShaderUseVariantType.ShadowMap);
 mapTree_u.set(syGL.AttributeUniform.PVM_MATRIX,ShaderUseVariantType.ProjectionViewModel);
 mapTree_u.set(syGL.AttributeUniform.PVM_MATRIX_INVERSE,ShaderUseVariantType.ProjectionViewModelInverse);
 mapTree_u.set(syGL.AttributeUniform.MMatrix,ShaderUseVariantType.Model);

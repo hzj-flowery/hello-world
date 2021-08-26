@@ -25,7 +25,7 @@ export namespace syRender {
         Label,
         Spine,
         Shadow,        //绘制阴影
-        ShadowDepth,
+        ShadowMap,
         Parallel,      //平行光
         Spot,         //聚光灯
         Point,        //点光
@@ -46,7 +46,7 @@ export namespace syRender {
         "Label",
         "Spine",
         "Shadow",
-        "ShadowDepth",
+        "ShadowMap",
         "Parallel",
         "Spot",         //7聚光灯
         "Point",        //点光
@@ -78,7 +78,7 @@ export namespace syRender {
         screen = 1,  //将结果渲染到屏幕，此为正常渲染
         offline2D,   //将结果渲染到一张纹理上，这张纹理对应的是一个2d节点
         offline3D,   //将结果渲染到一张纹理上，这张纹理对应的是一个3d节点
-        shadowDepth,//深度
+        shadowMap,//深度
         Depth,       //将深度信息渲染到一张纹理上
         RTT,         //多目标渲染
         other1,
@@ -379,6 +379,7 @@ export namespace syRender {
             private _shadowSize: number = 1 / 1024;//阴影的像素尺寸 值越小 阴影越逼真
             private _shadowOpacity: number = 0.1; //阴影的alpha值 值越小暗度越深
             private _shadowMin: number = 0;       //阴影最小值
+            private _shadowMap:WebGLTexture;      //深度纹理
             public get shadowBias(): number { return this._shadowBias };
             public set shadowBias(p: number) { this._shadowBias = p };
             public get shadowSize(): number { return this._shadowSize };
@@ -387,6 +388,8 @@ export namespace syRender {
             public set shadowOpacity(p: number) { this._shadowOpacity = p };
             public get shadowMin(): number { return this._shadowMin };
             public set shadowMin(p: number) { this._shadowMin = p };
+            public get shadowMap(): WebGLTexture { return this._shadowMap };
+            public set shadowMap(p: WebGLTexture) { this._shadowMap = p };
             public get shadowInfo() {
                        //x马赫带            //y阴影像素尺寸,值越小阴影越逼真
                 return [this._shadowBias, this._shadowSize, this._shadowMin, this._shadowOpacity]
@@ -616,8 +619,7 @@ export namespace syRender {
                         break;
                     case ShaderUseVariantType.TEX_CUSTOM:
                         //延迟渲染中的万能矩阵
-                        // _shader.setUseDeferredTexture(this._texture2DGLIDMap.get(DeferredTexture.Custom), useTextureAddres,syGL.AttributeUniform.TEX_CUSTOM);
-                        _shader.setUseDeferredTexture(GameMainCamera.instance.getRenderTexture(syRender.RenderTextureUUid.shadowDepth).glID, useTextureAddres,syGL.AttributeUniform.TEX_CUSTOM);
+                        _shader.setUseDeferredTexture(this._texture2DGLIDMap.get(DeferredTexture.Custom), useTextureAddres,syGL.AttributeUniform.TEX_CUSTOM);
                         useTextureAddres++;
                         break;
                     case ShaderUseVariantType.Projection:
@@ -712,6 +714,10 @@ export namespace syRender {
                         break;
                     case ShaderUseVariantType.ShadowInfo:
                         _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.SHADOW_INFO, this.light.shadowInfo);
+                        break;
+                    case ShaderUseVariantType.ShadowMap:
+                        _shader.setUseDeferredTexture(this.light.shadowMap,useTextureAddres,syGL.AttributeUniform.SHADOW_MAP);
+                        useTextureAddres++;
                         break;
                     case ShaderUseVariantType.Define_UsePng:
                         _shader.setCustomUniformFloat(syGL.AttributeUniform.DefineUsePng,this._defineUse.PNG)
