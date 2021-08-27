@@ -85,11 +85,11 @@ class ShadowLight {
 
   private vertBase =
     `attribute vec4 a_position;
-    uniform mat4 u_Pmat;
-    uniform mat4 u_Vmat;
-    uniform mat4 u_Mmat;
+    uniform mat4 u_projection;
+    uniform mat4 u_view;
+    uniform mat4 u_world;
     void main() {
-    gl_Position = u_Pmat * u_Vmat * u_Mmat * a_position;
+    gl_Position = u_projection * u_view * u_world * a_position;
     }`
   private fragBase =
     `precision mediump float;
@@ -118,19 +118,19 @@ class ShadowLight {
     varying vec3 v_surfaceToLight;     //表面到光的方向 
     varying vec3 v_surfaceToView;      //表面到相机的方向
 
-    uniform mat4 u_Pmat;           
-    uniform mat4 u_Vmat;
-    uniform mat4 u_Mmat;
+    uniform mat4 u_projection;           
+    uniform mat4 u_view;
+    uniform mat4 u_world;
     uniform mat4 u_textureMatrix;                         //纹理矩阵 主要作用就是去算出投影的uv坐标 上一次光照的投影矩阵*视口矩阵
     varying vec2 v_texcoord;                              //当前顶点的uv坐标
     varying vec4 v_projectedTexcoord;
     varying vec3 v_normal;
     void main() {
-    vec4 worldPosition = u_Mmat * a_position;            //将当前顶点的坐标转换到世界空间坐标系中
-    gl_Position = u_Pmat * u_Vmat * worldPosition;  //将顶点转换到其次裁切空间下
+    vec4 worldPosition = u_world * a_position;            //将当前顶点的坐标转换到世界空间坐标系中
+    gl_Position = u_projection * u_view * worldPosition;  //将顶点转换到其次裁切空间下
     v_texcoord = a_texcoord;
     v_projectedTexcoord = u_textureMatrix * worldPosition; //算出投影纹理的uv
-    v_normal = mat3(u_Mmat) * a_normal;
+    v_normal = mat3(u_world) * a_normal;
     v_surfaceToLight = u_lightWorldPosition - worldPosition.rgb;  
     v_surfaceToView = u_cameraWorldPosition - worldPosition.rgb;
     }`
@@ -317,8 +317,8 @@ class ShadowLight {
     // note: any values with no corresponding uniform in the shader
     // are ignored.
     G_ShaderFactory.setUniforms(programInfo.uniSetters, {
-      u_Vmat: viewMatrix,
-      u_Pmat: pMatrix,
+      u_view: viewMatrix,
+      u_projection: pMatrix,
       u_shadowInfo: G_LightCenter.lightData.shadow.info,
       u_textureMatrix: texMatrix,
       gDepth: this.renderTexture.glID,
@@ -362,17 +362,17 @@ class ShadowLight {
     this.planeUniforms = {
       u_color: [0.5, 0.5, 1, 1],  // lightblue
       u_texture: this.checkerboardTexture.glID,
-      u_Mmat: glMatrix.mat4.translation(null, 0, 0, 0),
+      u_world: glMatrix.mat4.translation(null, 0, 0, 0),
     };
     this.sphereUniforms = {
       u_color: [1, 0.5, 0.5, 1],  // pink
       u_texture: this.checkerboardTexture.glID,
-      u_Mmat: glMatrix.mat4.translation(null, 2, 6, 4),
+      u_world: glMatrix.mat4.translation(null, 2, 6, 4),
     };
     this.cubeUniforms = {
       u_color: [0.5, 1, 0.5, 1],  // lightgreen
       u_texture: this.checkerboardTexture.glID,
-      u_Mmat: glMatrix.mat4.translation(null, 3, 1, 0),
+      u_world: glMatrix.mat4.translation(null, 3, 1, 0),
     };
   }
 

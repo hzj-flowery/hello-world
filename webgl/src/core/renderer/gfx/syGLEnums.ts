@@ -118,7 +118,7 @@ export namespace syGL {
         JOINTS = 'a_joints',
         WEIGHTS_0 = 'a_weights_0',  //权重
         JOINTS_0 = 'a_joints_0',    //骨骼节点
-        VERT_COLOR = 'a_color',//显示节点每一个顶点的颜色颜色
+        VERT_COLOR = 'a_color',//显示节点每一个顶点的颜色
         VERT_Matrix = 'a_matrix',//顶点矩阵
 
         TIME = 'u_time',//时间
@@ -182,16 +182,16 @@ export namespace syGL {
         SKYBOX = "u_skybox",
         Matrix = 'u_mat',      //万能矩阵
         VMMatrix = 'u_VMmat',  //视口矩阵*模型世界矩阵
-        MMatrix = 'u_Mmat',    //模型世界矩阵
-        MTMatrix = 'u_Mmat_T',    //模型世界矩阵的转置矩阵
-        MIMatrix = 'u_Mmat_I',    //模型世界矩阵的逆矩阵
-        MITMatrix = 'u_Mmat_I_T',    //模型世界矩阵的逆矩阵的转置矩阵
-        VMatrix = 'u_Vmat',    //视口矩阵
-        PMatrix = 'u_Pmat',    //投影矩阵
-        PVMatrix = 'u_PVmat',    //投影*视口矩阵
-        PVMatrix_INVERSE = 'u_PVmat_I',    //投影*视口矩阵的逆矩阵
-        PVM_MATRIX = "u_PVMmat",//投影矩阵*视口矩阵*模型世界矩阵
-        PVM_MATRIX_INVERSE = "u_PVMmat_I", //(投影矩阵*视口矩阵*模型世界矩阵)的逆矩阵
+        WorldMat = 'u_world',    //模型世界矩阵
+        WorldMat_T = 'u_world_T',    //模型世界矩阵的转置矩阵
+        WorldMat_I = 'u_world_I',    //模型世界矩阵的逆矩阵
+        WorldMat_I_T = 'u_world_I_T',    //模型世界矩阵的逆矩阵的转置矩阵
+        VMatrix = 'u_view',    //视口矩阵
+        PMatrix = 'u_projection',    //投影矩阵
+        PVMatrix = 'u_projection_view',    //投影*视口矩阵
+        PVMatrix_INVERSE = 'u_projection_view_I',    //投影*视口矩阵的逆矩阵
+        PVM_MATRIX = "u_projection_view_world",//投影矩阵*视口矩阵*模型世界矩阵
+        PVM_MATRIX_INVERSE = "u_projection_view_world_I", //(投影矩阵*视口矩阵*模型世界矩阵)的逆矩阵
         LightWorldPosition = "u_lightWorldPosition", //光的位置
         CameraWorldPosition = "u_cameraWorldPosition" ,//相机的位置
 

@@ -16,7 +16,7 @@ import { G_LightCenter } from "./core/renderer/light/LightCenter";
 import { G_LightModel } from "./core/renderer/light/LightModel";
 import { G_UISetting } from "./core/ui/UiSetting";
 import ShaderShadowTest from "./core/renderer/3d/test/ShaderShadowTest";
-import RobartTest from "./core/renderer/3d/test/RobartTest";
+import ObjTest from "./core/renderer/3d/test/ObjTest";
 
 
 

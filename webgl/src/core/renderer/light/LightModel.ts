@@ -17,11 +17,11 @@ import { G_LightCenter } from "./LightCenter";
 
 let vertBase =
     `attribute vec4 a_position;
-    uniform mat4 u_Pmat;
-    uniform mat4 u_Vmat;
-    uniform mat4 u_Mmat;
+    uniform mat4 u_projection;
+    uniform mat4 u_view;
+    uniform mat4 u_world;
 void main() {
-gl_Position = u_Pmat * u_Vmat * u_Mmat * a_position;
+gl_Position = u_projection * u_view * u_world * a_position;
 }`
 let fragBase =
     `precision mediump float;
@@ -116,9 +116,9 @@ class LightModel {
         // infinity
         // Set the uniforms we just computed
         G_ShaderFactory.setUniforms(this._colorProgramInfo.uniSetters, {
-            u_Vmat: this._lightViewMatrix,
-            u_Pmat: projectionMatrix,
-            u_Mmat: this._lightWorldMatrix,
+            u_view: this._lightViewMatrix,
+            u_projection: projectionMatrix,
+            u_world: this._lightWorldMatrix,
         });
         // calls gl.drawArrays or gl.drawElements
         G_ShaderFactory.drawBufferInfo(this._cubeLinesBufferInfo, gl.LINES);

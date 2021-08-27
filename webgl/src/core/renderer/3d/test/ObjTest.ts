@@ -109,7 +109,7 @@ async function main() {
   let str1 = "http:localhost:3000/res/models/chair/chair.obj"
   let str2 = "https://webglfundamentals.org/webgl/resources/models/book-vertex-chameleon-study/book.obj"
   let str3 = "http:localhost:3000/res/models/book/book.obj"
-  var objData = await OBJParseHelper.load(gl, str3);
+  var objData = await OBJParseHelper.load(gl, str);
   
   function getExtents(positions) {
     const min = positions.slice(0, 3);

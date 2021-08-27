@@ -631,7 +631,7 @@ export namespace syRender {
                         _shader.bindMatrixToShader(syGL.AttributeUniform.PMatrix, proj);
                         break;
                     case ShaderUseVariantType.Model:
-                        _shader.bindMatrixToShader(syGL.AttributeUniform.MMatrix, this.primitive.modelMatrix);
+                        _shader.bindMatrixToShader(syGL.AttributeUniform.WorldMat, this.primitive.modelMatrix);
                         break;
                     case ShaderUseVariantType.View:
                         _shader.bindMatrixToShader(syGL.AttributeUniform.VMatrix, view);
@@ -646,7 +646,7 @@ export namespace syRender {
                     case ShaderUseVariantType.ModelInverseTransform:
                         glMatrix.mat4.invert(this._temp_model_inverse_matrix, this.primitive.modelMatrix);
                         glMatrix.mat4.transpose(this._temp_model_inverse_transform_matrix, this._temp_model_inverse_matrix);
-                        _shader.bindMatrixToShader(syGL.AttributeUniform.MITMatrix, this._temp_model_inverse_transform_matrix);
+                        _shader.bindMatrixToShader(syGL.AttributeUniform.WorldMat_I_T, this._temp_model_inverse_transform_matrix);
                         break;
                     case ShaderUseVariantType.ProjectionViewModelInverse:
                         glMatrix.mat4.multiply(this._temp001_matrix, view, this.primitive.modelMatrix);

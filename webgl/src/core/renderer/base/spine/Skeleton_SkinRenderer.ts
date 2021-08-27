@@ -13,9 +13,9 @@ attribute vec3 a_normal;    //法线
 attribute vec4 a_weights_0; //权重
 attribute vec4 a_joints_0;  //受到哪些骨骼节点的影响
 attribute vec2 a_uv;
-uniform mat4 u_Pmat;  //投影
-uniform mat4 u_Vmat;        //观察空间
-uniform mat4 u_Mmat;       //世界空间
+uniform mat4 u_projection;  //投影
+uniform mat4 u_view;        //观察空间
+uniform mat4 u_world;       //世界空间
 uniform sampler2D u_jointTexture;   //骨骼矩阵纹理
 
 uniform float u_numJoints;  //[6,7,8,9,10,11]
@@ -45,8 +45,8 @@ void main() {
 mat4 skinMatrix =   getBoneMatrix(a_joints_0[0]) * a_weights_0[0] + getBoneMatrix(a_joints_0[1]) * a_weights_0[1] +
 getBoneMatrix(a_joints_0[2]) * a_weights_0[2] +
 getBoneMatrix(a_joints_0[3]) * a_weights_0[3];
-mat4 world = u_Mmat * skinMatrix;
-gl_Position = u_Pmat * u_Vmat * world * a_position;
+mat4 world = u_world * skinMatrix;
+gl_Position = u_projection * u_view * world * a_position;
 v_normal = mat3(world) * a_normal;
 v_uv = a_uv;
 }`
@@ -104,15 +104,15 @@ export class Skeleton_SkinRenderer {
             var renderData = this._renderDataArray[j];
             renderData._shaderData = this.skinProgramInfo;
             renderData._uniformData.push({
-                u_Mmat: worldMatrix,
+                u_world: worldMatrix,
                 u_texture: this.skin._texture.glID,
                 u_texCoord1:this.skin._riverTexture.glID,
                 u_jointTexture: this.skin.jointTexture.glID,
                 u_numJoints: this.skin.jointNodes.length,
                 u_time:Device.Instance.triggerRenderTime,
             });
-            renderData._projKey = "u_Pmat";
-            renderData._viewKey = "u_Vmat";
+            renderData._projKey = "u_projection";
+            renderData._viewKey = "u_view";
             renderData._uniformData.push(primitive.material.uniforms);
             renderData._uniformData.push(sharedUniforms);
             renderData._attrbufferData = primitive.bufferInfo;

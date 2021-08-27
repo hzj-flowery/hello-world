@@ -8,15 +8,15 @@ var vertextBaseCode =
     'attribute vec3 a_normal;' +
     'attribute vec2 a_uv;' +
 
-    'uniform mat4 u_Pmat;' +
-    'uniform mat4 u_Mmat;' +
-    'uniform mat4 u_Vmat;' +
+    'uniform mat4 u_projection;' +
+    'uniform mat4 u_world;' +
+    'uniform mat4 u_view;' +
 
     'varying vec3 v_normal;' +
     'varying vec2 v_uv;' +
 
     'void main() {' +
-    'gl_Position = u_Pmat * u_Vmat*u_Mmat * vec4(a_position, 1.0);' +
+    'gl_Position = u_projection * u_view*u_world * vec4(a_position, 1.0);' +
     'v_uv = a_uv;' +
     '}'
 //基础的shader的片段着色器
@@ -26,7 +26,7 @@ var fragBaseCode =
     'varying vec2 v_uv;' +
     'uniform samplerCube u_skybox;' +
     'uniform sampler2D u_texture;' +
-    'uniform mat4 u_PVMmat_I;' +
+    'uniform mat4 u_projection_view_world_I;' +
     'uniform vec4 u_color;' +
     'uniform vec4 u_color_dir;' +
 

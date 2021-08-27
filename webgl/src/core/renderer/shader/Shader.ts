@@ -104,11 +104,11 @@ mapTree_u.set(syGL.AttributeUniform.SHADOW_INFO,ShaderUseVariantType.ShadowInfo)
 mapTree_u.set(syGL.AttributeUniform.SHADOW_MAP,ShaderUseVariantType.ShadowMap);
 mapTree_u.set(syGL.AttributeUniform.PVM_MATRIX,ShaderUseVariantType.ProjectionViewModel);
 mapTree_u.set(syGL.AttributeUniform.PVM_MATRIX_INVERSE,ShaderUseVariantType.ProjectionViewModelInverse);
-mapTree_u.set(syGL.AttributeUniform.MMatrix,ShaderUseVariantType.Model);
+mapTree_u.set(syGL.AttributeUniform.WorldMat,ShaderUseVariantType.Model);
 mapTree_u.set(syGL.AttributeUniform.VMatrix,ShaderUseVariantType.View);
-mapTree_u.set(syGL.AttributeUniform.MIMatrix,ShaderUseVariantType.ModelInverse);
-mapTree_u.set(syGL.AttributeUniform.MTMatrix,ShaderUseVariantType.ModelTransform);
-mapTree_u.set(syGL.AttributeUniform.MITMatrix,ShaderUseVariantType.ModelInverseTransform);
+mapTree_u.set(syGL.AttributeUniform.WorldMat_I,ShaderUseVariantType.ModelInverse);
+mapTree_u.set(syGL.AttributeUniform.WorldMat_T,ShaderUseVariantType.ModelTransform);
+mapTree_u.set(syGL.AttributeUniform.WorldMat_I_T,ShaderUseVariantType.ModelInverseTransform);
 mapTree_u.set(syGL.AttributeUniform.PVMatrix,ShaderUseVariantType.ProjectionView);
 mapTree_u.set(syGL.AttributeUniform.PVMatrix_INVERSE,ShaderUseVariantType.ProjectionViewInverse);
 mapTree_u.set(syGL.AttributeUniform.CameraWorldPosition,ShaderUseVariantType.CameraWorldPosition);
