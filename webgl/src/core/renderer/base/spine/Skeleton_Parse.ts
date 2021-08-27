@@ -138,8 +138,8 @@ export class Skeleton_Parse {
             "a_POSITION": syGL.AttributeUniform.POSITION, //位置
             "a_NORMAL": syGL.AttributeUniform.NORMAL,    //法线
             "a_TANGENT": syGL.AttributeUniform.TANGENT,  //切线
-            "a_WEIGHTS_0": syGL.AttributeUniform.WEIGHTS_0, //权重
-            "a_JOINTS_0": syGL.AttributeUniform.JOINTS_0,  //受到哪些骨骼节点的影响
+            "a_WEIGHTS_0": syGL.AttributeUniform.WEIGHTS, //权重
+            "a_JOINTS_0": syGL.AttributeUniform.JOINTS,  //受到哪些骨骼节点的影响
             "a_TEXCOORD_0": syGL.AttributeUniform.TEXTURE_COORD0
         }
         // setup meshes

@@ -49,6 +49,7 @@ export enum ShaderUseVariantType {
     Fog,                //雾
     Time,               //时间
     Color,                    //节点颜色
+    Diffuse,             //漫反射
     Alpha,                  //节点的透明度
     VertColor,          //顶点颜色
     VertMatrix,         //顶点矩阵
@@ -56,7 +57,7 @@ export enum ShaderUseVariantType {
     ShadowMap,              //阴影的深度纹理
     Mouse,             //鼠标按下的位置信息
     Resolution,       //设计分辨率
-
+    Custom_Float_Value, //自定义一个float 变量
     Define_UsePng,   //宏 bool值 判断是否使用png图片
     UndefinedMax,//无效
 }

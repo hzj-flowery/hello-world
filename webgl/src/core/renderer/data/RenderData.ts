@@ -181,6 +181,8 @@ export namespace syRender {
         public normal: WebGLBufferData;//法线buffer
 
         public color: Array<number>;//节点自定义颜色
+        public diffuse:Array<number>; //漫反射颜色
+        public customFloatValue:number; //一个自定义的值
         public alpha: number;        //节点自定义透明度
         public customMatrix: Float32Array;//自定义矩阵
         public modelMatrix: Float32Array;//模型矩阵
@@ -698,6 +700,9 @@ export namespace syRender {
                     case ShaderUseVariantType.Color:
                         _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.COLOR, this.primitive.color);
                         break;
+                    case ShaderUseVariantType.Diffuse:
+                        _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.DIFFUSE, this.primitive.diffuse);
+                        break;
                     case ShaderUseVariantType.Alpha:
                         _shader.setCustomUniformFloat(syGL.AttributeUniform.ALPHA, this.primitive.alpha);
                         break;
@@ -709,6 +714,9 @@ export namespace syRender {
                         break;
                     case ShaderUseVariantType.Time:
                         _shader.setCustomUniformFloat(syGL.AttributeUniform.TIME, Device.Instance.triggerRenderTime);
+                        break;
+                    case ShaderUseVariantType.Custom_Float_Value:
+                        _shader.setCustomUniformFloat(syGL.AttributeUniform.CUSTOM_FLOAT_VALUE,this.primitive.customFloatValue);
                         break;
                     case ShaderUseVariantType.Resolution:
                         _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.RESOLUTION, [Device.Instance.width, Device.Instance.height, 0, 0]);

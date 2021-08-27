@@ -123,6 +123,7 @@ export namespace syGL {
 
         TIME = 'u_time',//时间
         COLOR = 'u_color', //节点颜色
+        DIFFUSE = 'u_diffuse',//漫反射
         ALPHA = 'u_alpha',//节点透明度
         //现阶段场景中只支持三束平行光VERT_
         //平行光只有方向和颜色没有位置
@@ -182,7 +183,7 @@ export namespace syGL {
 
         SKYBOX = "u_skybox",
         Matrix = 'u_mat',      //万能矩阵
-        VMMatrix = 'u_VMmat',  //视口矩阵*模型世界矩阵
+        VMMatrix = 'u_view_world',  //视口矩阵*模型世界矩阵
         WorldMat = 'u_world',    //模型世界矩阵
         WorldMat_T = 'u_world_T',    //模型世界矩阵的转置矩阵
         WorldMat_I = 'u_world_I',    //模型世界矩阵的逆矩阵
@@ -197,6 +198,7 @@ export namespace syGL {
         CameraWorldPosition = "u_cameraWorldPosition" ,//相机的位置
 
         MOUSE = "u_mouse",//鼠标位置数据
+        CUSTOM_FLOAT_VALUE = "u_float_custom",//一个自定义的值
         RESOLUTION= "u_resolution",//屏幕的设计分辨率
 
         DefineUsePng="u_use_png",//宏 bool值 判断是否使用png

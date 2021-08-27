@@ -120,6 +120,7 @@ export namespace SY {
         private _materialId: string;//这里存放一个材质id
 
         private _color: Array<number>;//节点自定义颜色
+        private _diffuse:Array<number>;//漫反射颜色
         private _alpha: number = 1;//节点自定义透明度
         private _customMatrix: Float32Array;//节点自定义矩阵
         //纹理buffer
@@ -140,6 +141,7 @@ export namespace SY {
             this._glPrimitiveType = syGL.PrimitiveType.TRIANGLES;
             this._renderData = []
             this._color = [1.0, 1.0, 1.0, 1.0];//默认颜色为白色
+            this._diffuse = [1.0, 1.0, 1.0, 1.0];//默认颜色为白色
             this._sizeMode = SpriteSizeMode.CUSTOM;//默认加载图片的尺寸大小为自定义
             this.init();
         }
@@ -269,6 +271,15 @@ export namespace SY {
             this._color[3] = color[3] != null ? color[3] : this._color[3];
         }
         /**
+         * 设置慢反射颜色
+         */
+         public set diffuse(diffuse: Array<number>) {
+            this._diffuse[0] = diffuse[0] != null ? diffuse[0] : this._diffuse[0];
+            this._diffuse[1] = diffuse[1] != null ? diffuse[1] : this._diffuse[1];
+            this._diffuse[2] = diffuse[2] != null ? diffuse[2] : this._diffuse[2];
+            this._diffuse[3] = diffuse[3] != null ? diffuse[3] : this._diffuse[3];
+        }
+        /**
          * 设置节点的透明度
          */
         public set alpha(value: number) {
@@ -396,6 +407,8 @@ export namespace SY {
 
             //节点的颜色
             rData.primitive.color = this._color;
+            //漫反射颜色
+            rData.primitive.diffuse = this._diffuse;
             //节点的透明度
             rData.primitive.alpha = this._alpha;
             //自定义的矩阵

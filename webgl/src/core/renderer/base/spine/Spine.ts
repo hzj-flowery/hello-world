@@ -10,16 +10,25 @@ export default class Spine extends SY.SpriteBase {
 
     constructor() {
         super();
-        this.gltf = Skeleton_Parse.parseGLTF(this.gl);
-        this._tempMatrix = glMatrix.mat4.identity(null);
-        this._lightDirection = glMatrix.vec3.create() as Float32Array;
-        this._glMatrix.vec3.normalize(this._lightDirection, [-1, 3, 5]);
+       
     }
     private gltf;
     private sharedUniforms;
     private origMatrices: Map<Skeleton_Node, Float32Array> = new Map();
     private _tempMatrix:Float32Array;
     private _lightDirection:Float32Array;
+    protected onInit():void{
+        this.gltf = Skeleton_Parse.parseGLTF(this.gl);
+        this._tempMatrix = glMatrix.mat4.identity(null);
+        this._lightDirection = glMatrix.vec3.create() as Float32Array;
+        this._glMatrix.vec3.normalize(this._lightDirection, [-1, 3, 5]);
+    }
+    protected onInitFinish():void{
+        // for (const drawable of node.skin_Drawables) {
+        //     //渲染皮肤
+        //     drawable.render(node,this.modelMatrix,this.sharedUniforms);
+        // }
+    }
     private animSkin(skin: Skeleton_Skin, a: number) {
         for (let i = 0; i < skin.jointNodes.length; ++i) {
             const jointNode = skin.jointNodes[i];
@@ -52,7 +61,7 @@ export default class Spine extends SY.SpriteBase {
         time *= 0.001;  // convert to seconds
         this.animSkin(this.gltf.skins[0], Math.sin(time) * .5);
         this.sharedUniforms = {
-            u_lightDirection: this._lightDirection,
+            u_spotDirection: this._lightDirection,
         };
         /**
          * 下面会遍历所有的骨骼节点
@@ -63,5 +72,10 @@ export default class Spine extends SY.SpriteBase {
             // walk the scene and render all renderables
             scene.root.traverse(this.renderDrawables.bind(this));
         }
+    }
+
+    //采集数据以后的行为
+    protected onCollectRenderDataAfter(data: syRender.BaseData) {
+        // data.primitive.customFloatValue = 
     }
 }
