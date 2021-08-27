@@ -545,46 +545,46 @@ export namespace syRender {
                     case ShaderUseVariantType.Normal:
                         _shader.setUseVertexAttribPointer(syGL.AttributeUniform.NORMAL, this.primitive.normal.glID, this.primitive.normal.itemSize);
                         break;
-                    case ShaderUseVariantType.UVs:
-                        _shader.setUseVertexAttribPointer(syGL.AttributeUniform.UV, this.primitive.uv.glID, this.primitive.uv.itemSize);
+                    case ShaderUseVariantType.TEXTURE_COORD0:
+                        _shader.setUseVertexAttribPointer(syGL.AttributeUniform.TEXTURE_COORD0, this.primitive.uv.glID, this.primitive.uv.itemSize);
                         break;
-                    case ShaderUseVariantType.TEX_COORD:
+                    case ShaderUseVariantType.TEXTURE0:
                         _shader.setUseTexture(this._texture2DGLIDArray[0], useTextureAddres);
                         useTextureAddres++;
                         break;
-                    case ShaderUseVariantType.TEX_COORD1:
+                    case ShaderUseVariantType.TEXTURE1:
                         _shader.setUseTexture(this._texture2DGLIDArray[1], useTextureAddres);
                         useTextureAddres++;
                         break;
-                    case ShaderUseVariantType.TEX_COORD2:
+                    case ShaderUseVariantType.TEXTURE2:
                         _shader.setUseTexture(this._texture2DGLIDArray[2], useTextureAddres);
                         useTextureAddres++;
                         break;
-                    case ShaderUseVariantType.TEX_COORD3:
+                    case ShaderUseVariantType.TEXTURE3:
                         _shader.setUseTexture(this._texture2DGLIDArray[3], useTextureAddres);
                         useTextureAddres++;
                         break;
-                    case ShaderUseVariantType.TEX_COORD4:
+                    case ShaderUseVariantType.TEXTURE4:
                         _shader.setUseTexture(this._texture2DGLIDArray[4], useTextureAddres);
                         useTextureAddres++;
                         break;
-                    case ShaderUseVariantType.TEX_COORD5:
+                    case ShaderUseVariantType.TEXTURE5:
                         _shader.setUseTexture(this._texture2DGLIDArray[5], useTextureAddres);
                         useTextureAddres++;
                         break;
-                    case ShaderUseVariantType.TEX_COORD6:
+                    case ShaderUseVariantType.TEXTURE6:
                         _shader.setUseTexture(this._texture2DGLIDArray[6], useTextureAddres);
                         useTextureAddres++;
                         break;
-                    case ShaderUseVariantType.TEX_COORD7:
+                    case ShaderUseVariantType.TEXTURE7:
                         _shader.setUseTexture(this._texture2DGLIDArray[7], useTextureAddres);
                         useTextureAddres++;
                         break;
-                    case ShaderUseVariantType.TEX_COORD8:
+                    case ShaderUseVariantType.TEXTURE8:
                         _shader.setUseTexture(this._texture2DGLIDArray[8], useTextureAddres);
                         useTextureAddres++;
                         break;
-                    case ShaderUseVariantType.CUBE_COORD:
+                    case ShaderUseVariantType.CUBE_TEXTURE:
                         //立方体纹理数据
                         //-****-------------
                         _shader.setUseTexture(this._textureCubeGLIDArray[0], useTextureAddres, false);

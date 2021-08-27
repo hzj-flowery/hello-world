@@ -23,11 +23,11 @@ var fs =
    uniform vec4 u_diffuse;         //漫反射
    uniform sampler2D u_texture;   //骨骼矩阵纹理
    uniform vec3 u_lightDirection;  //光的方向
-   varying vec2 a_uv;
+   varying vec2 a_texcoord;
    void main () {
    vec3 normal = normalize(v_normal);
    float light = dot(u_lightDirection,normal) * .5 + .5;
-   vec4 color = texture2D(u_texture,normalize(a_uv)); 
+   vec4 color = texture2D(u_texture,normalize(a_texcoord)); 
    gl_FragColor = color+vec4(u_diffuse.rgb * light, u_diffuse.a);
    }`
 

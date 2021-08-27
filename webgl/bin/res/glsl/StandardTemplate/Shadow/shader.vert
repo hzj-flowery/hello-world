@@ -1,5 +1,5 @@
 attribute vec4 a_position;
-    attribute vec2 a_uv;
+    attribute vec2 a_texcoord;
     attribute vec3 a_normal;
 
     uniform vec3 u_lightWorldPosition; //光的位置
@@ -17,7 +17,7 @@ attribute vec4 a_position;
     void main() {
     vec4 worldPosition = u_world * a_position;            //将当前顶点的坐标转换到世界空间坐标系中
     gl_Position = u_projection * u_view * worldPosition;  //将顶点转换到其次裁切空间下
-    v_uv = a_uv;
+    v_uv = a_texcoord;
     v_projectedTexcoord = u_mat * worldPosition; //算出投影纹理的uv
     v_normal = mat3(u_world) * a_normal;
     v_surfaceToLight = u_lightWorldPosition - worldPosition.rgb;  

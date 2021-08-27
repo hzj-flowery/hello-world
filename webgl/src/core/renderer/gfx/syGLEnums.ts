@@ -150,25 +150,26 @@ export namespace syGL {
          */
         SHADOW_INFO = 'u_shadowInfo',//阴影信息
         SHADOW_MAP = 'u_shadowMap',//阴影贴图
-        UV = 'a_uv',
-        UV0 = 'a_uv0',
-        UV1 = 'a_uv1',
-        UV2 = 'a_uv2',
-        UV3 = 'a_uv3',
-        UV4 = 'a_uv4',
-        UV5 = 'a_uv5',
-        UV6 = 'a_uv6',
-        UV7 = 'a_uv7',
-        CUBE_COORD = 'u_cubeTexture',//立方体纹理单元
-        TEX_COORD0 = 'u_texture',    //使用的纹理单元
-        TEX_COORD1 = 'u_texCoord1',
-        TEX_COORD2 = 'u_texCoord2',
-        TEX_COORD3 = 'u_texCoord3',
-        TEX_COORD4 = 'u_texCoord4',
-        TEX_COORD5 = 'u_texCoord5',
-        TEX_COORD6 = 'u_texCoord6',
-        TEX_COORD7 = 'u_texCoord7',
-        TEX_COORD8 = 'u_texCoord8',
+                                   
+        TEXTURE_COORD0 = 'a_texcoord', //纹理坐标
+        TEXTURE_COORD1 = 'a_texcoord1',
+        TEXTURE_COORD2 = 'a_texcoord2',
+        TEXTURE_COORD3 = 'a_texcoord3',
+        TEXTURE_COORD4 = 'a_texcoord4',
+        TEXTURE_COORD5 = 'a_texcoord5',
+        TEXTURE_COORD6 = 'a_texcoord6',
+        TEXTURE_COORD7 = 'a_texcoord7',
+        TEXTURE_COORD8 = 'a_texcoord8',
+        CUBE_TEXTURE = 'u_cubeTexture',//立方体纹理单元
+        TEXTURE0 = 'u_texture',    //使用的纹理单元
+        TEXTURE1 = 'u_texture1',
+        TEXTURE2 = 'u_texture2',
+        TEXTURE3 = 'u_texture3',
+        TEXTURE4 = 'u_texture4',
+        TEXTURE5 = 'u_texture5',
+        TEXTURE6 = 'u_texture6',
+        TEXTURE7 = 'u_texture7',
+        TEXTURE8 = 'u_texture8',
         TEX_CUSTOM = 'u_customTexture',//自定义纹理 万能纹理
 
 

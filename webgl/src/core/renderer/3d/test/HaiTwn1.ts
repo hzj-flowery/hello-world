@@ -26,7 +26,7 @@ var skinVS =
     
     'uniform float u_numJoints;' +  //[6,7,8,9,10,11]
     'varying vec3 v_normal;' +
-    'varying vec2 a_uv;' +
+    'varying vec2 a_texcoord;' +
     //获取骨骼矩阵
     //一共有6个骨骼矩阵
     //0 1 2 3 4 5
@@ -55,7 +55,7 @@ var skinVS =
     'mat4 world = u_world * skinMatrix;' +
     'gl_Position = u_projection * u_view * world * a_POSITION;' +
     'v_normal = mat3(world) * a_NORMAL;' +
-    'a_uv = a_TEXCOORD_0;' +
+    'a_texcoord = a_TEXCOORD_0;' +
     '}'
 
 var meshVS =
@@ -76,11 +76,11 @@ var fs =
     'uniform vec4 u_diffuse;' +         //漫反射
     'uniform sampler2D u_texture;' +   //骨骼矩阵纹理
     'uniform vec3 u_lightDirection;' +  //光的方向
-    'varying vec2 a_uv;' +
+    'varying vec2 a_texcoord;' +
     'void main () {' +
     'vec3 normal = normalize(v_normal);' +
     'float light = dot(u_lightDirection,normal) * .5 + .5;' +
-    'vec4 color = texture2D(u_texture,normalize(a_uv)); '+
+    'vec4 color = texture2D(u_texture,normalize(a_texcoord)); '+
     'gl_FragColor = color+vec4(u_diffuse.rgb * light, u_diffuse.a);' +
     '}'
 

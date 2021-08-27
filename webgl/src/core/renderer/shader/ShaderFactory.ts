@@ -6,7 +6,7 @@ import { BufferAttribsData, ShaderData } from "./Shader";
 var vertextBaseCode =
     'attribute vec3 a_position;' +
     'attribute vec3 a_normal;' +
-    'attribute vec2 a_uv;' +
+    'attribute vec2 a_texcoord;' +
 
     'uniform mat4 u_projection;' +
     'uniform mat4 u_world;' +
@@ -17,7 +17,7 @@ var vertextBaseCode =
 
     'void main() {' +
     'gl_Position = u_projection * u_view*u_world * vec4(a_position, 1.0);' +
-    'v_uv = a_uv;' +
+    'v_uv = a_texcoord;' +
     '}'
 //基础的shader的片段着色器
 var fragBaseCode =

@@ -4,19 +4,19 @@ export enum ShaderUseVariantType {
     Position,  //顶点缓冲
     Normal, //法线缓冲
     Tangent, //切线
-    UVs,    //uv坐标缓冲
+    TEXTURE_COORD0,    //uv坐标缓冲
 
     //目前支持同时使用9块纹理单元
-    TEX_COORD, //纹理0号单元
-    TEX_COORD1, //纹理1号单元
-    TEX_COORD2, //纹理2号单元
-    TEX_COORD3, //纹理3号单元
-    TEX_COORD4, //纹理4号单元
-    TEX_COORD5, //纹理5号单元
-    TEX_COORD6, //纹理6号单元
-    TEX_COORD7, //纹理7号单元
-    TEX_COORD8, //纹理8号单元
-    CUBE_COORD, //立方体纹理单元
+    TEXTURE0, //纹理0号单元
+    TEXTURE1, //纹理1号单元
+    TEXTURE2, //纹理2号单元
+    TEXTURE3, //纹理3号单元
+    TEXTURE4, //纹理4号单元
+    TEXTURE5, //纹理5号单元
+    TEXTURE6, //纹理6号单元
+    TEXTURE7, //纹理7号单元
+    TEXTURE8, //纹理8号单元
+    CUBE_TEXTURE, //立方体纹理单元
     SKYBOX,//cube纹理单元
     TEX_CUSTOM, //自定义纹理 万能纹理
     

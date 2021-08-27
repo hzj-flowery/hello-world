@@ -1,6 +1,6 @@
 
  attribute vec3 a_position;
- attribute vec2 a_uv;
+ attribute vec2 a_texcoord;
 
  uniform mat4 u_world;
  uniform mat4 u_view;
@@ -9,5 +9,5 @@
 
  void main() {
  gl_Position = u_projection * u_world *u_view* vec4(a_position, 1.0);
- v_uv = a_uv;
+ v_uv = a_texcoord;
  }

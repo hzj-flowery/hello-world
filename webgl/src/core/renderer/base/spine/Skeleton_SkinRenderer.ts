@@ -12,7 +12,7 @@ var skinVS =
 attribute vec3 a_normal;    //法线
 attribute vec4 a_weights_0; //权重
 attribute vec4 a_joints_0;  //受到哪些骨骼节点的影响
-attribute vec2 a_uv;
+attribute vec2 a_texcoord;
 uniform mat4 u_projection;  //投影
 uniform mat4 u_view;        //观察空间
 uniform mat4 u_world;       //世界空间
@@ -48,14 +48,14 @@ getBoneMatrix(a_joints_0[3]) * a_weights_0[3];
 mat4 world = u_world * skinMatrix;
 gl_Position = u_projection * u_view * world * a_position;
 v_normal = mat3(world) * a_normal;
-v_uv = a_uv;
+v_uv = a_texcoord;
 }`
 var fs =
 `precision mediump float;        //精度
 varying vec3 v_normal;          //法线
 uniform vec4 u_diffuse;         //漫反射
 uniform sampler2D u_texture;   //骨骼矩阵纹理
-uniform sampler2D u_texCoord1;   
+uniform sampler2D u_texture1;   
 uniform vec3 u_lightDirection;  //光的方向
 uniform float u_time;
 varying vec2 v_uv;
@@ -63,7 +63,7 @@ void main () {
 vec3 normal = normalize(v_normal);
 float light = dot(u_lightDirection,normal) * .5 + .5;
 float time = mod(u_time/1000.0,90.0);
-vec4 river = texture2D(u_texCoord1,normalize(v_uv)+sin(time));
+vec4 river = texture2D(u_texture1,normalize(v_uv)+sin(time));
 vec4 color = texture2D(u_texture,normalize(v_uv)); 
 gl_FragColor = color+vec4(u_diffuse.rgb * light, u_diffuse.a)+river;
 }`
@@ -106,7 +106,7 @@ export class Skeleton_SkinRenderer {
             renderData._uniformData.push({
                 u_world: worldMatrix,
                 u_texture: this.skin._texture.glID,
-                u_texCoord1:this.skin._riverTexture.glID,
+                u_texture1:this.skin._riverTexture.glID,
                 u_jointTexture: this.skin.jointTexture.glID,
                 u_numJoints: this.skin.jointNodes.length,
                 u_time:Device.Instance.triggerRenderTime,

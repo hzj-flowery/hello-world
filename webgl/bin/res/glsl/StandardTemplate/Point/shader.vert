@@ -1,6 +1,6 @@
 attribute vec4 a_position;
   attribute vec3 a_normal;
-  attribute vec2 a_uv;
+  attribute vec2 a_texcoord;
   uniform vec3 u_lightWorldPosition;
   uniform vec3 u_cameraWorldPosition;
   uniform mat4 u_world;
@@ -17,6 +17,6 @@ attribute vec4 a_position;
   vec3 surfaceWorldPosition = (u_world * a_position).xyz;
   v_surfaceToLight = u_lightWorldPosition - surfaceWorldPosition;
   v_surfaceToView = u_cameraWorldPosition - surfaceWorldPosition;
-  v_uv = a_uv;
+  v_uv = a_texcoord;
   gl_Position = u_projection *u_view*u_world* a_position;
   }
