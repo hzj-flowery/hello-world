@@ -39,23 +39,21 @@ var VertData = {
     ],
 }
 
-export class LineFrustum extends SY.SpriteBase {
-    constructor() {
-        super();
-        this._glPrimitiveType = syGL.PrimitiveType.LINES;
-    }
+export class LineFrustum extends SY.SpriteBasePolygon {
     private _lightWorldMatrix: Float32Array;
     private _lightProjectInverseMatrix: Float32Array;
     private _tempMatrix:Float32Array;
     onInit(): void {
-        this.createVertexsBuffer(VertData.position, 3);
+        this._glPrimitiveType = syGL.PrimitiveType.LINES;
         this.createIndexsBuffer(VertData.indices);
         this._lightWorldMatrix = glMatrix.mat4.identity(null);
         this._lightProjectInverseMatrix = glMatrix.mat4.identity(null);
         this._tempMatrix = glMatrix.mat4.identity(null);
         this.color = [1.0,0.0,0.0,1.0];
         this._defineUse.SY_USE_MAT = 0.1;
-        this.pushPassContent(syRender.ShaderType.Line);
+        super.onInit();
+        this.updatePositionData(VertData.position)
+        
     }
 
     protected collectRenderData(time:number){

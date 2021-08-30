@@ -549,7 +549,7 @@ export namespace SY {
         }
         private _polygon: Float32Array;//点坐标{x,y,z}
         protected onInit(): void {
-            this.createVertexsBuffer([], 3, 10);
+            
             if (this._glPrimitiveType == glEnums.PT_POINTS)
                 this.pushPassContent(syRender.ShaderType.Point);
             else if (this._glPrimitiveType == glEnums.PT_LINE_STRIP ||
@@ -559,6 +559,7 @@ export namespace SY {
         }
         public updatePositionData(posArr: Array<number>,isClear: boolean = true) {
             if (!posArr || posArr.length < 3) return;
+            this.check();
             if(this.is2DNode())
             {
                this.updateScreenPosition(posArr,isClear)
@@ -581,8 +582,15 @@ export namespace SY {
                 clipPos.push(temp[1]);
                 clipPos.push(z);
             }
+           
             this._polygon = new Float32Array(clipPos);
             this.getBuffer(SY.GLID_TYPE.VERTEX).updateSubData(this._polygon);
+        }
+        private check():void{
+            if(!this._polygon)
+            {
+                this.createVertexsBuffer([], 3, 10);
+            }
         }
         protected collectRenderData(time): void {
             if (!this._polygon || this._polygon.length < 3) return;
