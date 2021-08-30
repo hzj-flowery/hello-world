@@ -118,12 +118,12 @@ export namespace SY {
         private _vertMatrixBuffer: VertMatrixBuffer;//顶点矩阵buffer
         private _materialId: string;//这里存放一个材质id
 
-        private _passContent:Array<any> = [];//pass的内容
+        private _passContent: Array<any> = [];//pass的内容
 
         private _color: Array<number>;//节点自定义颜色
-        private _diffuse:Array<number>;//漫反射颜色
+        private _diffuse: Array<number>;//漫反射颜色
         private _alpha: number = 1;//节点自定义透明度
-        private _customMatrix: Float32Array;//节点自定义矩阵
+        private _customMatrix: Float32Array = glMatrix.mat4.identity(null);//节点自定义矩阵
         //纹理buffer
         private _uvsBuffer: UVsBuffer;
         protected _texture: Texture;
@@ -133,7 +133,7 @@ export namespace SY {
         //参考glprimitive_type
         protected _glPrimitiveType: syGL.PrimitiveType;//绘制的类型
         protected _sizeMode: SpriteSizeMode;//节点的尺寸模式
-        private _isSupportPng: number = 0; //是否支持png 
+        protected _defineUse: syRender.DefineUse = new syRender.DefineUse(); //是否支持png 
         constructor() {
             super();
             materialId++;
@@ -151,19 +151,10 @@ export namespace SY {
             this.handleShader();
         }
 
-        protected pushPassContent(shaderTy:syRender.ShaderType):void{
+        protected pushPassContent(shaderTy: syRender.ShaderType): void {
             var tag = syRender.ShaderTypeString[shaderTy]
-            if(tag)
-            this._passContent.push({"name":"TemplatePass","tag":tag});
-        }
-
-        /**
-         * 是否支持png
-         * 支持png 模式 则p的值处于(0,1]
-         * @param p 
-         */
-        public setSupportPng(p: number): void {
-            this._isSupportPng = p;
+            if (tag)
+                this._passContent.push({ "name": "TemplatePass", "tag": tag });
         }
         /**
          * 设置精灵图片的尺寸模式
@@ -194,7 +185,7 @@ export namespace SY {
                 this._pass.push(G_PassFactory.createPass(res[0], res[1], res[2]));
             }, () => {
                 this.onLoadShaderFinish();
-            },this._passContent);
+            }, this._passContent);
 
         }
         //创建顶点缓冲
@@ -280,7 +271,7 @@ export namespace SY {
         /**
          * 设置慢反射颜色
          */
-         public set diffuse(diffuse: Array<number>) {
+        public set diffuse(diffuse: Array<number>) {
             this._diffuse[0] = diffuse[0] != null ? diffuse[0] : this._diffuse[0];
             this._diffuse[1] = diffuse[1] != null ? diffuse[1] : this._diffuse[1];
             this._diffuse[2] = diffuse[2] != null ? diffuse[2] : this._diffuse[2];
@@ -423,8 +414,8 @@ export namespace SY {
 
             //宏-------------------------------------------------------------------------------------
             //是否支持png的使用
-            rData.setDefinePngUse(this._isSupportPng)
-
+            rData.setDefinePngUse(this._defineUse.PNG)
+            rData.setDefineMatUse(this._defineUse.SY_USE_MAT)
 
             //节点自定义矩阵组------------------------------------------------------------------------
             rData.primitive.vertMatrix.glID = this.getGLID(SY.GLID_TYPE.VERT_MATRIX);
@@ -466,7 +457,7 @@ export namespace SY {
         private _customTempMatrix: Float32Array;
         private _tempMatrix: Float32Array;
 
-        protected onInit():void{
+        protected onInit(): void {
             this.pushPassContent(syRender.ShaderType.ShadowMap);
             this.pushPassContent(syRender.ShaderType.Shadow);
         }
@@ -547,29 +538,58 @@ export namespace SY {
             G_ShaderFactory.drawBufferInfo(this._attrData, syGL.PrimitiveType.TRIANGLES);
         }
     }
-    //动态
-    export class SpriteBaseLine extends SY.SpriteBase {
+    /**
+     * 多边形
+     * 可以画线
+     * 可以画点
+     */
+    export class SpriteBasePolygon extends SY.SpriteBase {
         constructor() {
             super();
-            this._glPrimitiveType = syGL.PrimitiveType.LINES;
         }
-        private _linePositions: Array<number>;
-        public updateLinePos(posArr: Array<number>) {
+        private _polygon: Float32Array;//点坐标{x,y,z}
+        protected onInit(): void {
+            this.createVertexsBuffer([], 3, 10);
+            if (this._glPrimitiveType == glEnums.PT_POINTS)
+                this.pushPassContent(syRender.ShaderType.Point);
+            else if (this._glPrimitiveType == glEnums.PT_LINE_STRIP ||
+                this._glPrimitiveType == glEnums.PT_LINES ||
+                this._glPrimitiveType == glEnums.PT_LINE_LOOP)
+                this.pushPassContent(syRender.ShaderType.Line);
+        }
+        public updatePositionData(posArr: Array<number>,isClear: boolean = true) {
             if (!posArr || posArr.length < 3) return;
-            if (!this._linePositions) {
-                this._linePositions = posArr;
-                this.createVertexsBuffer(this._linePositions, 3, 0);
+            if(this.is2DNode())
+            {
+               this.updateScreenPosition(posArr,isClear)
             }
-            else {
-                this._linePositions = posArr;
-                this.getBuffer(SY.GLID_TYPE.VERTEX).updateSubData(new Float32Array(this._linePositions));
+            else if(this.is3DNode())
+            {
+                this._polygon = new Float32Array(posArr);
+                this.getBuffer(SY.GLID_TYPE.VERTEX).updateSubData(this._polygon);
             }
+        }
+        private updateScreenPosition(data: Array<any>, isClear: boolean = true): void {
+            if ((!data || data.length == 0) && isClear == false) {
+                return;
+            }
+            var clipPos: Array<number> = [];
+            var z = -1;
+            for (var k = 0; k < data.length; k++) {
+                var temp = this.convertScreenSpaceToClipSpace(data[k].x, data[k].y);
+                clipPos.push(temp[0]);
+                clipPos.push(temp[1]);
+                clipPos.push(z);
+            }
+            this._polygon = new Float32Array(clipPos);
+            this.getBuffer(SY.GLID_TYPE.VERTEX).updateSubData(this._polygon);
         }
         protected collectRenderData(time): void {
-            if (!this._linePositions || this._linePositions.length == 0) return;
+            if (!this._polygon || this._polygon.length < 3) return;
             super.collectRenderData(time);
         }
     }
+
 
     //2d显示节点
     /**lt(3)    rt(2)
@@ -628,7 +648,7 @@ export namespace SY {
             ];
             this.createUVsBuffer(floorVertexTextureCoordinates, 2);
             // 索引数据
-            var floorVertexIndices = [0, 1, 2,3,0];
+            var floorVertexIndices = [0, 1, 2, 3, 0];
             this.createIndexsBuffer(floorVertexIndices);
 
         }
@@ -656,7 +676,7 @@ export namespace SY {
         */
         public setContentSize(width: number, height: number): void {
             this.width = width;
-            this.height = height; 
+            this.height = height;
 
             var clipW = this.width / Device.Instance.width;
             var clipH = this.height / Device.Instance.height;
@@ -694,37 +714,7 @@ export namespace SY {
         }
     }
 
-    /**
-     * 多边形
-     * 可以画线
-     * 也可以画点
-     */
-    export class Polygon2D extends SpriteBase{
-        private _polygon:Float32Array;//点坐标{x,y,z}
-        protected onInit():void{
-            this._node__type = syRender.NodeType.D2;
-            this._polygon = new Float32Array(3);
-            this.createVertexsBuffer([], 3,10);
-            if(this._glPrimitiveType==glEnums.PT_POINTS)
-            this.pushPassContent(syRender.ShaderType.Point);
-            else if(this._glPrimitiveType==glEnums.PT_LINE_STRIP)
-            this.pushPassContent(syRender.ShaderType.Line);
-        }
 
-        protected updatePosition(data:Array<any>):void{
-             var clipPos:Array<number> = [];
-             var z = -1;
-             for(var k = 0;k<data.length;k++)
-             {
-                 var temp = this.convertScreenSpaceToClipSpace(data[k].x,data[k].y);
-                 clipPos.push(temp[0]);
-                 clipPos.push(temp[1]);
-                 clipPos.push(z);
-             }
-             this._polygon = new Float32Array(clipPos);
-             this.getBuffer(SY.GLID_TYPE.VERTEX).updateSubData(this._polygon);
-        }
-    }
 
     /**
      * 实例化绘制
@@ -806,7 +796,7 @@ export namespace SY {
         }
 
     }
-    
+
 
     export class Sprite3DInstance extends SY.SpriteBase {
         constructor() {

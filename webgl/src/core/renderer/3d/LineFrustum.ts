@@ -1,6 +1,7 @@
 
 import { glMatrix } from "../../math/Matrix";
 import { SY } from "../base/Sprite";
+import { syRender } from "../data/RenderData";
 import { syGL } from "../gfx/syGLEnums";
 
 /**
@@ -52,7 +53,9 @@ export class LineFrustum extends SY.SpriteBase {
         this._lightWorldMatrix = glMatrix.mat4.identity(null);
         this._lightProjectInverseMatrix = glMatrix.mat4.identity(null);
         this._tempMatrix = glMatrix.mat4.identity(null);
-        this.color = [1.0,0.0,0.0,1.0]
+        this.color = [1.0,0.0,0.0,1.0];
+        this._defineUse.SY_USE_MAT = 0.1;
+        this.pushPassContent(syRender.ShaderType.Line);
     }
 
     protected collectRenderData(time:number){

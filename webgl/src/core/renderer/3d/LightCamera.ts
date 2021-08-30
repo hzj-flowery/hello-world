@@ -68,7 +68,7 @@ export class LightCamera extends Node {
     }
     private addLine(): void {
         this._lightLine = new Line();
-        this._lightLine.updateLinePos(VertData.position.concat([0, 0, 0, 1, 1, 1]));
+        this._lightLine.updatePositionData(VertData.position.concat([0, 0, 0, 1, 1, 1]));
         this.addChild(this._lightLine);
     }
     /**
@@ -113,7 +113,7 @@ export class LightCamera extends Node {
     
         //取摄像机的中心方向作为聚光灯的方向
         lightData.spot.direction = [this._lightReverseDir[0], this._lightReverseDir[1], this._lightReverseDir[2]];
-        this._lightLine.updateLinePos(VertData.position.concat([0, 0, 0, lightData.parallel.dirX, lightData.parallel.dirY, lightData.parallel.dirZ]));
+        this._lightLine.updatePositionData(VertData.position.concat([0, 0, 0, lightData.parallel.dirX, lightData.parallel.dirY, lightData.parallel.dirZ]));
         this._lightLine.color = [lightData.parallel.colR, lightData.parallel.colG, lightData.parallel.colB, lightData.parallel.colA];
 
         this._frustum.updateProjView(this._projectMatrix, this._cameraMatrix);

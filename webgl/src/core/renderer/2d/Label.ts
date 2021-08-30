@@ -192,7 +192,7 @@ export class Label extends SY.Sprite2D {
 
         this._glPrimitiveType = syGL.PrimitiveType.TRIANGLES;
         
-        this.setSupportPng(0.1);
+        this._defineUse.PNG = (0.1);
     }
 }
 

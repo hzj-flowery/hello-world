@@ -8,7 +8,7 @@ import InstantiateSprite from "../2d/InstantiateSprite";
 import { UvSprite } from "../2d/UvSprite";
 import { syRender } from "../data/RenderData";
 import { ShadowMap } from "../2d/ShadowMap";
-import { PolygonLine } from "../2d/PolygonLine";
+import { Pen } from "../2d/Pen";
 import { G_InputControl } from "../../InputControl";
 import { handler } from "../../../utils/handler";
 
@@ -18,7 +18,7 @@ export default class Scene2D extends Scene {
     private _instantiateSprite:InstantiateSprite;
     private _label:Label;
     private _renderSprite:RenderOfflineSprite;
-    private _polygon:PolygonLine;
+    private _pen:Pen;
     private _shadowMap:ShadowMap;//深度纹理
     private _uvSprite:UvSprite;
     constructor(){
@@ -36,9 +36,9 @@ export default class Scene2D extends Scene {
         this._rectangle.spriteFrame = "res/map1.png";
         this.addChild(this._rectangle);
          
-        this._polygon = new PolygonLine();
-        this._polygon.spriteFrame = "res/bg_npc_06.png";
-        this.addChild(this._polygon);
+        this._pen = new Pen();
+        this._pen.spriteFrame = "res/bg_npc_06.png";
+        this.addChild(this._pen);
         
 
 
@@ -84,18 +84,18 @@ export default class Scene2D extends Scene {
     private _isPress:boolean = false;
     private onMouseDown(ev:MouseEvent):void{
        this._isPress = true;
-       this._polygon.pushScreenPos(ev.x,ev.y)
+       this._pen.pushScreenPos(ev.x,ev.y)
     }
     private onMouseMove(ev:MouseEvent):void{
         if(this._isPress)
-        this._polygon.pushScreenPos(ev.x,ev.y)
+        this._pen.pushScreenPos(ev.x,ev.y)
     }
     private onMouseUp(ev:MouseEvent):void{
         this._isPress = false;
-        this._polygon.clearScreenPos();
+        this._pen.clearScreenPos();
     }
     private onMouseOut():void{
         this._isPress = false;
-        this._polygon.clearScreenPos();
+        this._pen.clearScreenPos();
     }
 }

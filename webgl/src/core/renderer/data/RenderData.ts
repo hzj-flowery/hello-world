@@ -165,6 +165,7 @@ export namespace syRender {
     //shader 中使用的宏
     export class DefineUse{
          public PNG:number=0;
+         public SY_USE_MAT:number=0;//使用万能矩阵
     }
 
     //绘制信息
@@ -506,6 +507,9 @@ export namespace syRender {
         public setDefinePngUse(p:number):void{
              this._defineUse.PNG = p;
         }
+        public setDefineMatUse(p:number):void{
+             this._defineUse.SY_USE_MAT = p;
+        }
         public set pass(pass: Pass) {
             this._pass = pass
         }
@@ -748,6 +752,9 @@ export namespace syRender {
                         break;
                     case ShaderUseVariantType.Define_UsePng:
                         _shader.setCustomUniformFloat(syGL.AttributeUniform.DefineUsePng,this._defineUse.PNG)
+                        break;
+                    case ShaderUseVariantType.Define_UseMat:
+                        _shader.setCustomUniformFloat(syGL.AttributeUniform.DefineUseMat,this._defineUse.SY_USE_MAT)
                         break;
                     default:
                     // console.log("目前还没有处理这个矩阵类型");

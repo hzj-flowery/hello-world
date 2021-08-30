@@ -60,5 +60,6 @@ export enum ShaderUseVariantType {
     Resolution,       //设计分辨率
     Custom_Float_Value, //自定义一个float 变量
     Define_UsePng,   //宏 bool值 判断是否使用png图片
+    Define_UseMat,   //宏 判断是否使用万能矩阵
     UndefinedMax,//无效
 }
