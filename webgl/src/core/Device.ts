@@ -476,11 +476,12 @@ export default class Device {
     private getNormalTreeData():syRender.BaseData[]{
         var drawOrder = syRender.DrawingOrder.Normal;
         var tagArr:Array<syRender.ShaderType> = [syRender.ShaderType.Custom,
-            syRender.ShaderType.Spot,
-            syRender.ShaderType.Point,
+            syRender.ShaderType.Light_Spot,
+            syRender.ShaderType.Light_Point,
+            syRender.ShaderType.Light_Parallel,
             syRender.ShaderType.Line,
             syRender.ShaderType.LineFrustum,
-            syRender.ShaderType.Parallel,
+            syRender.ShaderType.Point,
             syRender.ShaderType.Sprite,
             syRender.ShaderType.Fog,
             syRender.ShaderType.SkyBox,

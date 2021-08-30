@@ -95,8 +95,8 @@ export default class RobartInstantiate extends SY.Sprite3DInstance {
         super();
     }
     private _skeletonScene:SKeletonNode;
-    private _skeletonNode:Array<SKeletonNode> = [];
-    private nodeInfosByName:any = {};
+    private _skeletonNode:Array<SKeletonNode>;
+    private nodeInfosByName:any;
     private makeNode(nodeDescription) {
         var trs = new SKeletonTRS();
         var node = new SKeletonNode(trs);
@@ -116,18 +116,22 @@ export default class RobartInstantiate extends SY.Sprite3DInstance {
     private makeNodes(nodeDescriptions) {
         return nodeDescriptions ? nodeDescriptions.map(handler(this,this.makeNode)) : [];
     }
-    protected onInitFinish():void{
+
+    protected onInit():void{
         var cubeArrays = syPrimitives.createCubeVertices(1);
         this.createIndexsBuffer(cubeArrays.indices);
         this.createNormalsBuffer(cubeArrays.normal, 3);
         this.createUVsBuffer(cubeArrays.texcoord, 2);
         this.createVertexsBuffer(cubeArrays.position, 3);
         this.InstanceVertNums = cubeArrays.position.length/3;
-       
+        this._skeletonNode = [];
+        this.nodeInfosByName = {};
+        super.onInit();
+    }
+    protected onLoadShaderFinish():void{
         var blockGuyNodeDescriptions = LoaderManager.instance.getRes("res/models/Robart/blockGuyNodeDescriptions.json");
         this._skeletonScene = this.makeNode(blockGuyNodeDescriptions);
         this.numInstances = this._skeletonNode.length;
-
         this.pushDivisor("a_matrix", true);
         this.pushDivisor("a_color", false);
         // make a typed array with one view per matrix
@@ -142,7 +146,6 @@ export default class RobartInstantiate extends SY.Sprite3DInstance {
                 numFloatsForView));
         }
         this.createVertMatrixBuffer([], 4, this.matrixData.byteLength);
-
         var colorData = [];
         for (var j = 0; j < this.numInstances; j++) {
             var res = this.getRandowColor();
@@ -152,8 +155,7 @@ export default class RobartInstantiate extends SY.Sprite3DInstance {
             colorData.push(res[3]);
         }
         this.createNodeVertColorBuffer(colorData, 4);
-
-        super.onInitFinish()
+        super.onLoadShaderFinish()
     }
 
     private getRandowColor() {

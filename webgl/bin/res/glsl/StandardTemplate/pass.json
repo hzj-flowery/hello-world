@@ -67,17 +67,17 @@
         ]
     },
     {
-        "name": "Spot/shader",
+        "name": "Light_Spot/shader",
         "template":true,
         "custom":[
-            {"key":"ShaderType","value":"Spot"}
+            {"key":"ShaderType","value":"Light_Spot"}
         ]
     },
     {
-        "name": "Point/shader",
+        "name": "Light_Point/shader",
         "template":true,
         "custom":[
-            {"key":"ShaderType","value":"Point"}
+            {"key":"ShaderType","value":"Light_Point"}
         ]
     },
     {
@@ -86,6 +86,13 @@
         "custom":[
             {"key":"DrawingOrder","value":1},
             {"key":"ShaderType","value":"Rtt"}
+        ]
+    },
+    {
+        "name": "Point/shader",
+        "template":true,
+        "custom":[
+            {"key":"ShaderType","value":"Point"}
         ]
     },
     {
@@ -103,10 +110,10 @@
         ]
     },
     {
-        "name": "Parallel/shader",
+        "name": "Light_Parallel/shader",
         "template":true,
         "custom":[
-            {"key":"ShaderType","value":"Parallel"}
+            {"key":"ShaderType","value":"Light_Parallel"}
         ]
     },
     {

@@ -34,7 +34,7 @@ export class Plane extends SY.ShadowSprite{
         this.color = [0.5, 0.5, 1, 1];
     }
 
-    protected onInitFinish():void{
+    protected onLoadShaderFinish():void{
         console.log(this.shader);
     }
 

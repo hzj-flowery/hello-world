@@ -11,7 +11,7 @@ export default class InstantiateSprite extends SY.Sprite2DInstance {
         super();
     }
     private _posArray: Array<Array<number>>;
-    protected onInitFinish():void{
+    protected onLoadShaderFinish():void{
         this.setContentSize(100, 200);
         this.numInstances = 3;
         this.InstanceVertNums = 4;
@@ -41,7 +41,7 @@ export default class InstantiateSprite extends SY.Sprite2DInstance {
             colorData.push(res[3]);
         }
         this.createNodeVertColorBuffer(colorData, 4);
-        super.onInitFinish()
+        super.onLoadShaderFinish()
     }
     private produceRandomPosArray(): void {
         this._posArray = [];

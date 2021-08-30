@@ -21,14 +21,15 @@ export namespace syRender {
         Custom = 0,
         Line,
         LineFrustum,
+        Point,
         Sprite,
         Label,
         Spine,
         Shadow,        //绘制阴影
         ShadowMap,
-        Parallel,      //平行光
-        Spot,         //聚光灯
-        Point,        //点光
+        Light_Parallel,      //平行光
+        Light_Spot,         //聚光灯
+        Light_Point,        //点光
         Rtt,          //多目标渲染
         SkyBox,       //天空盒
         Mirror,       //镜子
@@ -44,14 +45,15 @@ export namespace syRender {
         "Custom",
         "Line",
         "LineFrustum",
+        "Point",
         "Sprite",
         "Label",
         "Spine",
         "Shadow",
         "ShadowMap",
-        "Parallel",
-        "Spot",         //7聚光灯
-        "Point",        //点光
+        "Light_Parallel",
+        "Light_Spot",         //7聚光灯
+        "Light_Point",        //点光
         "Rtt",          //9多目标渲染
         "SkyBox",
         "Mirror",

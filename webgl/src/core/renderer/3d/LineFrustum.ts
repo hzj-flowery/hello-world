@@ -52,6 +52,7 @@ export class LineFrustum extends SY.SpriteBase {
         this._lightWorldMatrix = glMatrix.mat4.identity(null);
         this._lightProjectInverseMatrix = glMatrix.mat4.identity(null);
         this._tempMatrix = glMatrix.mat4.identity(null);
+        this.color = [1.0,0.0,0.0,1.0]
     }
 
     protected collectRenderData(time:number){

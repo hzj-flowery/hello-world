@@ -398,9 +398,11 @@ export default class LoaderManager {
     /**
      * 加载着色器代码
      * @param spriteName 
-     * @param progressBack
+     * @param progressBack 
+     * @param finishBack 
+     * @param passContent 
      */
-    public loadGlsl(spriteName: string, progressBack?: Function, finishBack?: Function): void {
+    public loadGlsl(spriteName: string, progressBack?: Function, finishBack?: Function,passContent?:Array<any>): void {
 
         let fatherPath = "res/glsl/" + spriteName + "/";
         let standardTemplate = "res/glsl/StandardTemplate/";//模板库目录
@@ -450,8 +452,7 @@ export default class LoaderManager {
 
         }.bind(this)
 
-        //先加载pass
-        this.load(passName, () => { }, (res: any[]) => {
+        var loadPassFinish = function(res:any[]){
             if (res && res.length > 0) {
                 //追加额外的pass
                 var passLen = res.length;
@@ -478,7 +479,17 @@ export default class LoaderManager {
             else {
                 console.log("配置pass出错啦------", res);
             }
-        })
+        }.bind(this)
+
+        //先加载pass
+        if(passContent&&passContent.length>0)
+        {
+            loadPassFinish(passContent);
+        }
+        else
+        {
+            this.load(passName, () => { },loadPassFinish)
+        }
     }
 
     public getStandardTemplatePass(tag: syRender.ShaderType): any {

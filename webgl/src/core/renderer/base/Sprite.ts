@@ -63,6 +63,8 @@ import { G_PassFactory } from "../shader/PassFactory";
 import { Pass } from "../shader/Pass";
 import { RenderTexture } from "./texture/RenderTexture";
 import { glMatrix } from "../../math/Matrix";
+import { glEnums } from "../gfx/GLapi";
+import { sy } from "../../Director";
 
 /**
  * 显示节点
@@ -106,9 +108,6 @@ export namespace SY {
      * 数据生成 绑定  
      */
     export class SpriteBase extends Node {
-
-
-
         //节点buffer
         private _vertexsBuffer: VertexsBuffer;
         //索引buffer
@@ -118,6 +117,8 @@ export namespace SY {
         private _VertColorBuffer: VertColorBuffer;//节点自定义顶点颜色buffer
         private _vertMatrixBuffer: VertMatrixBuffer;//顶点矩阵buffer
         private _materialId: string;//这里存放一个材质id
+
+        private _passContent:Array<any> = [];//pass的内容
 
         private _color: Array<number>;//节点自定义颜色
         private _diffuse:Array<number>;//漫反射颜色
@@ -150,6 +151,12 @@ export namespace SY {
             this.handleShader();
         }
 
+        protected pushPassContent(shaderTy:syRender.ShaderType):void{
+            var tag = syRender.ShaderTypeString[shaderTy]
+            if(tag)
+            this._passContent.push({"name":"TemplatePass","tag":tag});
+        }
+
         /**
          * 是否支持png
          * 支持png 模式 则p的值处于(0,1]
@@ -168,7 +175,7 @@ export namespace SY {
 
         }
 
-        protected onInitFinish(): void {
+        protected onLoadShaderFinish(): void {
         }
 
         /**
@@ -186,8 +193,8 @@ export namespace SY {
             LoaderManager.instance.loadGlsl(name, (res) => {
                 this._pass.push(G_PassFactory.createPass(res[0], res[1], res[2]));
             }, () => {
-                this.onInitFinish();
-            });
+                this.onLoadShaderFinish();
+            },this._passContent);
 
         }
         //创建顶点缓冲
@@ -458,6 +465,11 @@ export namespace SY {
         }
         private _customTempMatrix: Float32Array;
         private _tempMatrix: Float32Array;
+
+        protected onInit():void{
+            this.pushPassContent(syRender.ShaderType.ShadowMap);
+            this.pushPassContent(syRender.ShaderType.Shadow);
+        }
         protected collectRenderData(time: number) {
             glMatrix.mat4.copy(this._tempMatrix, this._customTempMatrix)
             this.createCustomMatrix(this._tempMatrix);
@@ -683,16 +695,20 @@ export namespace SY {
     }
 
     /**
-     * 画线
+     * 多边形
+     * 可以画线
+     * 也可以画点
      */
-    export class PolygonLine2D extends SpriteBase{
+    export class Polygon2D extends SpriteBase{
         private _polygon:Float32Array;//点坐标{x,y,z}
-        constructor() {
-            super();
+        protected onInit():void{
             this._node__type = syRender.NodeType.D2;
-            this._glPrimitiveType = this.gl.LINE_STRIP;
             this._polygon = new Float32Array(3);
             this.createVertexsBuffer([], 3,10);
+            if(this._glPrimitiveType==glEnums.PT_POINTS)
+            this.pushPassContent(syRender.ShaderType.Point);
+            else if(this._glPrimitiveType==glEnums.PT_LINE_STRIP)
+            this.pushPassContent(syRender.ShaderType.Line);
         }
 
         protected updatePosition(data:Array<any>):void{
@@ -740,7 +756,7 @@ export namespace SY {
          */
         private _InstanceVertNums: number;
         protected onInit(): void {
-
+            this.pushPassContent(syRender.ShaderType.Instantiate)
             this._divisorNameData = new Map();
             this._divisorLocData = new Map();
         }
@@ -762,7 +778,7 @@ export namespace SY {
         protected get numInstances(): number {
             return this._numInstances;
         }
-        protected onInitFinish() {
+        protected onLoadShaderFinish() {
             this._divisorNameData.forEach((value, key) => {
                 let loc = this.shader.getCustomAttributeLocation(key);
                 this._divisorLocData.set(loc, value)
@@ -809,6 +825,7 @@ export namespace SY {
 
             this._divisorNameData = new Map();
             this._divisorLocData = new Map();
+            this.pushPassContent(syRender.ShaderType.Instantiate)
         }
         private _divisorNameData: Map<string, boolean>;
         private _divisorLocData: Map<number, boolean>;
@@ -828,7 +845,7 @@ export namespace SY {
         protected get numInstances(): number {
             return this._numInstances;
         }
-        protected onInitFinish() {
+        protected onLoadShaderFinish() {
             this._divisorNameData.forEach((value, key) => {
                 let loc = this.shader.getCustomAttributeLocation(key);
                 this._divisorLocData.set(loc, value)

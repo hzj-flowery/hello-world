@@ -1,6 +1,7 @@
 
 import { SY } from "../base/Sprite";
 import { CubeData } from "../data/CubeData";
+import { syRender } from "../data/RenderData";
 
 export default class Cube extends SY.ShadowSprite {
     constructor() {
@@ -13,5 +14,6 @@ export default class Cube extends SY.ShadowSprite {
         this.createNormalsBuffer(rd.normals,rd.dF.normal_item_size)
         this.createIndexsBuffer(rd.indexs);
         this._glPrimitiveType = this.gl.TRIANGLE_STRIP;
+        super.onInit();
     }
 }
