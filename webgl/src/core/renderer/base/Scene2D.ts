@@ -8,6 +8,9 @@ import InstantiateSprite from "../2d/InstantiateSprite";
 import { UvSprite } from "../2d/UvSprite";
 import { syRender } from "../data/RenderData";
 import { ShadowMap } from "../2d/ShadowMap";
+import { PolygonLine } from "../2d/PolygonLine";
+import { G_InputControl } from "../../InputControl";
+import { handler } from "../../../utils/handler";
 
 export default class Scene2D extends Scene {
     
@@ -15,19 +18,28 @@ export default class Scene2D extends Scene {
     private _instantiateSprite:InstantiateSprite;
     private _label:Label;
     private _renderSprite:RenderOfflineSprite;
+    private _polygon:PolygonLine;
     private _shadowMap:ShadowMap;//深度纹理
     private _uvSprite:UvSprite;
     constructor(){
         super();
     }
+    
 
+    //-------左上角 （0，0）
+    //-------右下角 （960,640）
     public init(): void {
 
     
-        // this._rectangle = new Rectangle();
-        // this._rectangle.setPosition(Device.Instance.width/2,Device.Instance.height/2, -100);
-        // this._rectangle.spriteFrame = "res/map1.png";
-        // this.addChild(this._rectangle);
+        this._rectangle = new Rectangle();
+        this._rectangle.setPosition(Device.Instance.width/2,Device.Instance.height/2, -100);
+        this._rectangle.spriteFrame = "res/map1.png";
+        this.addChild(this._rectangle);
+         
+        this._polygon = new PolygonLine();
+        this._polygon.spriteFrame = "res/bg_npc_06.png";
+        this.addChild(this._polygon);
+        
 
 
         // this._uvSprite = new UvSprite();
@@ -35,10 +47,10 @@ export default class Scene2D extends Scene {
         // this._uvSprite.spriteFrame = "res/tree.png";
         // this.addChild(this._uvSprite);
 
-        this._instantiateSprite = new InstantiateSprite();
-        this._instantiateSprite.setScale(0.5,0.5,0.5);
-        this._instantiateSprite.setPosition(420,120,-100);
-        this.addChild(this._instantiateSprite);
+        // this._instantiateSprite = new InstantiateSprite();
+        // this._instantiateSprite.setScale(0.5,0.5,0.5);
+        // this._instantiateSprite.setPosition(420,120,-100);
+        // this.addChild(this._instantiateSprite);
 
         this._renderSprite = new RenderOfflineSprite();
         this._renderSprite.setPosition(Device.Instance.width/2+200,Device.Instance.height/2+200, -100);
@@ -62,5 +74,28 @@ export default class Scene2D extends Scene {
         this._label.spriteFrame = "res/8x8-font.png";
         this._label.content = "go"
         this.addChild(this._label);
+
+        G_InputControl.registerMouseDownEvent(handler(this,this.onMouseDown));
+        G_InputControl.registerMouseMoveEvent(handler(this,this.onMouseMove));
+        G_InputControl.registerMouseUpEvent(handler(this,this.onMouseUp));
+        G_InputControl.registerMouseOutEvent(handler(this,this.onMouseUp));
+    }
+    
+    private _isPress:boolean = false;
+    private onMouseDown(ev:MouseEvent):void{
+       this._isPress = true;
+       this._polygon.pushScreenPos(ev.x,ev.y)
+    }
+    private onMouseMove(ev:MouseEvent):void{
+        if(this._isPress)
+        this._polygon.pushScreenPos(ev.x,ev.y)
+    }
+    private onMouseUp(ev:MouseEvent):void{
+        this._isPress = false;
+        this._polygon.clearScreenPos();
+    }
+    private onMouseOut():void{
+        this._isPress = false;
+        this._polygon.clearScreenPos();
     }
 }

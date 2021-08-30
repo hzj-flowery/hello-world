@@ -179,20 +179,20 @@ export class GameMainCamera {
     var temp = new CameraRenderData();
     temp.fb = null;
     temp.rtuuid = syRender.RenderTextureUUid.screen;
-    temp.viewPort = { x: 0, y: 0, w: 0.5, h: 1 }
+    temp.viewPort = { x: 0, y: 0, w: 1, h: 1 }
     temp.isClear = true;
     temp.VA = 0;
     this._renderData.push(temp);
     
     //绘制右边
-    var temp = new CameraRenderData();
-    temp.fb = null;
-    temp.rtuuid = syRender.RenderTextureUUid.screen;
-    temp.viewPort = { x: 0.5, y: 0, w: 0.5, h: 1 }
-    temp.isClear = false;
-    temp.VAPos = [-70, 10, 10]
-    temp.VA = 1;
-    this._renderData.push(temp);
+    // var temp = new CameraRenderData();
+    // temp.fb = null;
+    // temp.rtuuid = syRender.RenderTextureUUid.screen;
+    // temp.viewPort = { x: 0.5, y: 0, w: 0.5, h: 1 }
+    // temp.isClear = false;
+    // temp.VAPos = [-70, 10, 10]
+    // temp.VA = 1;
+    // this._renderData.push(temp);
 
 
     G_UISetting.pushRenderCallBack(this.renderCallBack.bind(this));

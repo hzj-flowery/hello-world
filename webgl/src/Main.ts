@@ -17,6 +17,7 @@ import { G_LightModel } from "./core/renderer/light/LightModel";
 import { G_UISetting } from "./core/ui/UiSetting";
 import ShaderShadowTest from "./core/renderer/3d/test/ShaderShadowTest";
 import ObjTest from "./core/renderer/3d/test/ObjTest";
+import { syRender } from "./core/renderer/data/RenderData";
 
 
 
@@ -105,6 +106,8 @@ LoaderManager.instance.load(arr,null,function(){
          //启动游戏
          new RenderFlow().startup();
     })
+
+    
 
    
     // RampTextureTest.run();

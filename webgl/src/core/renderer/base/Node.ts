@@ -146,10 +146,10 @@ export class Node extends Ref {
             return value;
         }
         if (pos == 0) {
-            return this.convertScreenSpaceToClipSpaceX(value);
+            return this.convertShiYouSpaceToClipSpaceX(value);
         }
         else if (pos == 1) {
-            return this.convertScreenSpaceToClipSpaceY(value);
+            return this.convertShiYouSpaceToClipSpaceY(value);
         }
         return value;
     }
@@ -408,12 +408,39 @@ export class Node extends Ref {
     }
 
     /**
+        * 诗游坐标转为齐次裁切坐标 x
+        */
+     public convertShiYouSpaceToClipSpaceX(x: number): number {
+        var width = Device.Instance.width;
+        var centerX = width / 2;//0
+        return ((x - centerX) / centerX)
+    }
+    /**
+     * 诗游坐标转为齐次裁切坐标 y
+     */
+    public convertShiYouSpaceToClipSpaceY(y: number): number {
+        var height = Device.Instance.height;
+        var centerY = height / 2;//0
+        return (y-centerY) / centerY
+    }
+    /**
+     * 诗游坐标转为齐次裁切坐标
+     * 诗游坐标：左下角【0,0】=>右上角【screenWidth,screenHeight】
+     * 齐次裁切坐标：左下角【-1,-1】=>中间【0,0】=>右上角[1,1]
+     */
+    public convertShiYouSpaceToClipSpace(x: number, y: number): Array<number> {
+        return [this.convertShiYouSpaceToClipSpaceX(x), this.convertShiYouSpaceToClipSpaceY(y)]
+    }
+
+
+
+    /**
         * 屏幕坐标转为齐次裁切坐标 x
         */
     public convertScreenSpaceToClipSpaceX(x: number): number {
         var width = Device.Instance.width;
         var centerX = width / 2;//0
-        return (x - centerX) / centerX
+        return ((x - centerX) / centerX)
     }
     /**
      * 屏幕坐标转为齐次裁切坐标 y
@@ -421,11 +448,11 @@ export class Node extends Ref {
     public convertScreenSpaceToClipSpaceY(y: number): number {
         var height = Device.Instance.height;
         var centerY = height / 2;//0
-        return (y - centerY) / centerY
+        return (centerY-y) / centerY
     }
     /**
      * 屏幕坐标转为齐次裁切坐标
-     * 笛卡尔坐标：左下角【0,0】=>【screenWidth,screenHeight】
+     * 屏幕坐标：左上角【0,0】=>右下角【screenWidth,screenHeight】
      * 齐次裁切坐标：左下角【-1,-1】=>中间【0,0】=>右上角[1,1]
      */
     public convertScreenSpaceToClipSpace(x: number, y: number): Array<number> {

@@ -78,7 +78,7 @@ export default class Scene3D extends Scene {
 
         var spNode = new Node();
         this._sphere = new Sphere();
-        this._sphere.spriteFrame="res/caustics.png";
+        this._sphere.spriteFrame="res/ball.jpg";
         spNode.setPosition(3,3, 0);
         spNode.addChild(this._sphere);
         this._centerNode.addChild(spNode);
@@ -218,13 +218,10 @@ export default class Scene3D extends Scene {
         this._skybox.setDefaultUrl();
         this.addChild(this._skybox);
 
-        // let tempNode = new Node();
-        // tempNode.setPosition(-10,-3.0,0);
-        // this.addChild(tempNode);
-        // this._mirrorCube = new MirrorCube();
-        // this._mirrorCube.setDefaultUrl();
-        // tempNode.addChild(this._mirrorCube);
-
+        this._mirrorCube = new MirrorCube();
+        this._mirrorCube.setDefaultUrl();
+        this._mirrorCube.setPosition(-13,3.0,0);
+        this.addChild(this._mirrorCube);
         this._centerNode.addChild(new LightCamera());
 
         G_UISetting.pushRenderCallBack((data)=>{

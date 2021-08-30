@@ -20,6 +20,8 @@ import { SYMacro } from "./platform/SYMacro";
 import { G_LightModel } from "./renderer/light/LightModel";
 import { G_ShaderCenter } from "./renderer/shader/ShaderCenter";
 import { G_InputControl } from "./InputControl";
+import utils from "./platform/utils";
+import { Util } from "../utils/Util";
 
 /**
  渲染流程：
@@ -125,33 +127,43 @@ function _commitDepthState(gl: WebGLRenderingContext, cur: State, next: State): 
 
 }
 /**
- * 
+ * 默认情况下 剔除功能是关闭的
 gl.enable(gl.CULL_FACE);开启面剔除
 gl.disable(gl.CULL_FACE);关闭面剔除
 gl.frontFace()这个函数是设置那个面是正面
-gl.CW：表示逆时针绘制的代表正面gl.FRONT，否则是背面gl.BACK，这个是默认设置
-gl.CCW：表示顺时针绘制的代表正面gl.FRONT，否则是背面gl.BACK
+gl.CW：表示顺时针绘制的代表正面gl.FRONT，否则是背面gl.BACK，这个是默认设置
+gl.CCW：表示逆时针绘制的代表正面gl.FRONT，否则是背面gl.BACK
 gl.cullFace()设置那一面被剔除有三个函数，如下
 gl.BACK：背面
 gl.FRONT：前面
 gl.FRONT_AND_BACK：前后两面
+
+CULL_NONE: 0,      
+CULL_FRONT: 1028,
+CULL_BACK: 1029,
+CULL_FRONT_AND_BACK: 1032,
+
  */
 function _commitCullState(gl: WebGLRenderingContext, cur: State, next: State): void {
-    if (cur.cullMode === next.cullMode) {
-        gl.enable(gl.CULL_FACE);
-        return;
+    if (cur.cullMode != next.cullMode) {
+        if(next.cullMode==glEnums.CULL_NONE)
+        {   
+            //关闭剔除
+            gl.disable(gl.CULL_FACE);
+        }
+        else
+        { 
+            gl.frontFace(gl.CCW)
+            gl.enable(gl.CULL_FACE);
+            gl.cullFace(next.cullMode);
+        }
     }
-    if (next.cullMode === glEnums.CULL_NONE) {
-        gl.disable(gl.CULL_FACE);
-        return;
-    }
-    gl.enable(gl.CULL_FACE);
-    gl.cullFace(next.cullMode);
-}
+} 
 /**
  * 裁切状态
  * 剪裁测试用于限制绘制区域。区域内的像素，将被绘制修改。区域外的像素，将不会被修改。
  * 例子 比如我要在画布的某个区域做一些其他的事情，让其为纯色等
+ * 这个功能用的比较少
  */
 function _commitScissorState(gl: WebGLRenderingContext, cur: State, next: State): void {
 
@@ -162,16 +174,32 @@ function _commitScissorState(gl: WebGLRenderingContext, cur: State, next: State)
     gl.disable(gl.SCISSOR_TEST);
 }
 /**
- * 
- * public blend;
-    public blendSep;
-    public blendColor;
-    public blendEq;
-    public blendAlphaEq;
-    public blendSrc;
-    public blendDst;
-    public blendSrcAlpha;
-    public blendDstAlpha;
+ * Blending就是控制透明的。处于光栅化的最后阶段
+ * 最终颜色 = （Shader计算出的点颜色值 * 源系数）op（点累积颜色 * 目标系数）
+ * Shader计算出的点颜色值：这个是当前材质上点的颜色
+ * 源系数:这个是我们可以控制的（SrcFactor）
+ * 点累积颜色：这个是当前位置的点累计计算的颜色，在屏幕上每一个像素点，都有可能产生很多个颜色，而最终的颜色是通过帧缓冲中同一个位置一层层颜色累计计算得出
+ * 目标系数：这个是我们可以控制的（DstFactor）
+
+ *  blend: false, //是否开启混合  -->enable(gl.BLEND) or gl.disable(gl.CULL_FACE);
+    blendSep: false, //是否拆开混合
+    blendColor: 0xffffffff,
+    blendEq: syGL.BlendFunc.ADD, 
+    blendAlphaEq: syGL.BlendFunc.ADD,
+    blendSrc: syGL.Blend.ONE,
+    blendDst: syGL.Blend.ZERO,
+    blendSrcAlpha: syGL.Blend.ONE,
+    blendDstAlpha: syGL.Blend.ZERO,
+blendSep：关于这个需要特别说明
+关于混合函数目前只有两种，，如下：
+第一种：blendFunc，这种混合函数只有两个参数，无法指定混合后的alpha
+blendEq：也只有三种运算 要么相加 要么相减 要么反过来减
+比如：ttColor = sColor*blendSrc blendEq  tColor*blendDst
+那么：ttAlpha = (sAlpha blendEq tAlpha)/2,这个值将被写入到alpha的目标缓冲中
+
+如果此时我们不希望混合后的alpha改变，那么该如何操作呢，就要用到下面第二种混合函数了
+第二种：blendFuncSeparate
+
 
  * 混合状态
  * 最常实现的功能就是半透明叠加
@@ -218,9 +246,59 @@ gl.FUNC_REVERSE_SUBSTRACT：反向相减处理，即 dest 减去 source
 gl.blendEquationSeparate(GLenum modeRGB, GLenum modeAlpha)
  */
 function _commitBlendState(gl: WebGLRenderingContext, cur: State, next: State): void {
-    // gl.enable(gl.BLEND)
-    // gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
-    // gl.blendFunc(gl.ZERO, gl.ONE_MINUS_SRC_ALPHA)
+     
+    
+    if (cur.blend != next.blend) {
+        //控制开启或者关闭混合
+        next.blend ? gl.enable(gl.BLEND) : gl.disable(gl.BLEND);
+    }
+ 
+    if(cur.blendColor!=next.blendColor)
+    {
+        var setColor = Util.hexToRgb(next.blendColor)
+        gl.blendColor(setColor.r,setColor.g,setColor.b,setColor.a)
+    }
+    if (next.blend) {
+        //混合必须开启 下面的设置才有意义
+        if (next.blendSep) {
+            //使用高级拆分混合函数blendFuncSeparate
+            if (cur.blendSrc != next.blendSrc ||
+                cur.blendDst != next.blendDst ||
+                cur.blendSrcAlpha != next.blendSrcAlpha ||
+                cur.blendDstAlpha != next.blendDstAlpha) {
+                /**
+                 * 
+                 */
+                gl.blendFuncSeparate(next.blendSrc, next.blendDst, next.blendSrcAlpha, next.blendDstAlpha);
+            }
+            if (cur.blendAlphaEq != next.blendAlphaEq || cur.blendEq != next.blendEq) {
+                //设置混合结果的操作函数
+                //混合结果只有两种
+                //1是源颜色和目标颜色各自计算后如何操作来写入到目标颜色缓冲中
+                //2是源alpha和目标alpha两者如何混合来写入到目标alpha缓冲中
+                gl.blendEquationSeparate(next.blendEq, next.blendAlphaEq);
+            }
+        }
+        else {
+            // 使用普通的混合函数blendFunc
+            if (cur.blendSrc != next.blendSrc ||
+                cur.blendDst != next.blendDst) {
+                gl.blendFunc(next.blendSrc, next.blendDst)
+            }
+
+            if(cur.blendEq!=next.blendEq)
+            {
+                //源颜色rgb计算结果该如何与目标颜色rgb计算结果进行计算
+                /**
+                    *   gl.FUNC_ADD：相加处理
+                        gl.FUNC_SUBTRACT：相减处理
+                        gl.FUNC_REVERSE_SUBSTRACT：反向相减处理，即 dest 减去 source
+                    */
+                gl.blendEquation(next.blendEq)
+            }
+
+        }
+    }
 }
 
 export default class Device {
@@ -409,6 +487,8 @@ export default class Device {
             syRender.ShaderType.Mirror,
             syRender.ShaderType.Shadow,
             syRender.ShaderType.Instantiate,
+            syRender.ShaderType.Purity,
+            syRender.ShaderType.OutLine,
             syRender.ShaderType.Test]
         //深度渲染pass
         var treeData = this._mapRenderTreeData.get(drawOrder);
@@ -498,9 +578,18 @@ export default class Device {
         this._nextFrameS.depthFunc = state.depthFunc;//距离视野近的则留下
         this._nextFrameS.depthWrite = state.depthWrite;//可以写入
 
-        this._nextFrameS.cullMode = glEnums.CULL_BACK;
-
+        this._nextFrameS.cullMode = state.cullMode;
         this._nextFrameS.ScissorTest = true;//裁切测试
+
+        this._nextFrameS.blend = state.blend;
+        this._nextFrameS.blendAlphaEq = state.blendAlphaEq;
+        this._nextFrameS.blendColor = state.blendColor;
+        this._nextFrameS.blendDst = state.blendDst;
+        this._nextFrameS.blendDstAlpha = state.blendDstAlpha;
+        this._nextFrameS.blendEq = state.blendEq;
+        this._nextFrameS.blendSep = state.blendSep;
+        this._nextFrameS.blendSrc = state.blendSrc;
+        this._nextFrameS.blendSrcAlpha = state.blendSrcAlpha;
 
         _commitDepthState(gl, this._curFrameS, this._nextFrameS);
         _commitCullState(gl, this._curFrameS, this._nextFrameS);
@@ -734,7 +823,7 @@ export default class Device {
      * h:【0,1】
      * }
      */
-    private _curViewPort: any;
+    private _curViewPort:any;
     private setViewPort(object: any): void {
         let x = object.x * this.width;
         let y = object.y * this.height;

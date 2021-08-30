@@ -8,12 +8,12 @@ const _default = {
     blend: false,
     blendSep: false,
     blendColor: 0xffffffff,
-    blendEq: syGL.BlendFunc.ADD,
-    blendAlphaEq: syGL.BlendFunc.ADD,
-    blendSrc: syGL.Blend.ONE,
-    blendDst: syGL.Blend.ZERO,
-    blendSrcAlpha: syGL.Blend.ONE,
-    blendDstAlpha: syGL.Blend.ZERO,
+    blendEq: glEnums.BLEND_FUNC_ADD,
+    blendAlphaEq: glEnums.BLEND_FUNC_ADD,
+    blendSrc: glEnums.BLEND_ONE,
+    blendDst: glEnums.BLEND_ZERO,
+    blendSrcAlpha: glEnums.BLEND_ONE,
+    blendDstAlpha: glEnums.BLEND_ZERO,
 
     // depth
     depthTest: false,
@@ -44,7 +44,7 @@ const _default = {
     ScissorTest:false,
 
     // cull-mode
-    cullMode: glEnums.CULL_BACK,
+    cullMode: glEnums.CULL_NONE,  //剔除默认不开启
 
     // primitive-type
     primitiveType: glEnums.PT_TRIANGLES,
@@ -71,15 +71,15 @@ export default class State {
     public vertexBufferOffsets;
     public textureUnits;
 
-    public blend;
-    public blendSep;
-    public blendColor;
+    public blend:boolean;//是否开启混合
+    public blendSep:boolean;//是否是拆分混合函数blendFuncSeparate 不然就使用低级的blendFunc
+    public blendColor:string;
     public blendEq;
     public blendAlphaEq;
-    public blendSrc;
-    public blendDst;
-    public blendSrcAlpha;
-    public blendDstAlpha;
+    public blendSrc:number;
+    public blendDst:number;
+    public blendSrcAlpha:number;
+    public blendDstAlpha:number;
 
     // depth
     public depthTest;

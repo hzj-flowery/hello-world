@@ -5,7 +5,7 @@
         "state": [
             {
                 "key": "depthFunc",
-                "value": "glEnums.DS_FUNC_LESS"
+                "value": "DS_FUNC_LESS"
             },
             {
                 "key": "depthTest",
@@ -15,17 +15,54 @@
                 "key": "depthWrite",
                 "value": true
             },
+            
             {
                 "key":"blend",
+                "des":"是否开启混合",
                 "value":true
             },
             {
+                "key":"blendSep",
+                "des":"是否开启拆分混合，这个比较高级，这个可以指定颜色和alpha分开混合",
+                "value":false
+            },
+            {
+                "key":"blendColor",
+                "value":"0xffffffff"
+            },
+            {
+                "key":"blendEq",
+                "des":"源颜色和目标颜色各自计算以后,如何整理",
+                "value":"BLEND_FUNC_ADD"
+            },
+            {
+                "key":"blendAlphaEq",
+                "des":"源alpha和目标alpha各自计算以后,如何整理",
+                "value":"BLEND_FUNC_ADD"
+            },
+            {
+                "key":"blendSrc",
+                "des":"源颜色如何计算",
+                "value":"BLEND_ONE"
+            },
+            {
+                "key":"blendDst",
+                "des":"目标颜色如何计算",
+                "value":"BLEND_ZERO"
+            },
+            {
                 "key": "blendSrcAlpha",
-                "value": "glEnums.BLEND_SRC_ALPHA"
+                "des":"源alpha如何计算",
+                "value": "BLEND_SRC_ALPHA"
             },
             {
                 "key": "blendDstAlpha",
-                "value": "glEnums.BLEND_ONE_MINUS_SRC_ALPHA"
+                "des":"目标alpha如何计算",
+                "value": "BLEND_ONE_MINUS_SRC_ALPHA"
+            },
+            {
+                "key": "cullMode",
+                "value": "CULL_BACK"
             }
         ]
     },
@@ -92,7 +129,7 @@
         "state": [
             {
                 "key": "depthFunc",
-                "value": "glEnums.DS_FUNC_LEQUAL"
+                "value": "DS_FUNC_LEQUAL"
             }
         ],
         "custom":[
@@ -118,6 +155,30 @@
         "template":true,
         "custom":[
             {"key":"ShaderType","value":"ShadowMap"}
+        ]
+    },
+    {
+        "name": "Purity/shader",
+        "template":true,
+        "state": [
+            {
+                "key": "cullMode",
+                "value": "CULL_FRONT"
+            },
+            {
+                "key": "depthWrite",
+                "value": false
+            }
+        ],
+        "custom":[
+            {"key":"ShaderType","value":"Purity"}
+        ]
+    },
+    {
+        "name": "OutLine/shader",
+        "template":true,
+        "custom":[
+            {"key":"ShaderType","value":"OutLine"}
         ]
     },
     {

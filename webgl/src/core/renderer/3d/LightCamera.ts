@@ -53,7 +53,7 @@ export class LightCamera extends Node {
 
         super.collectRenderData(time);
     }
-    private _camera:OrthoCamera;
+    private _camera:Camera;
     private _cameraMatrix: Float32Array;   //相机矩阵
     private _projectMatrix: Float32Array;  //投影矩阵
     private _lightReverseDir: Float32Array;

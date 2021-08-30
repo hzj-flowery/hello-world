@@ -560,14 +560,37 @@ export namespace SY {
     }
 
     //2d显示节点
-    /**lt         rt
+    /**lt(3)    rt(2)
      * ************
      * *          *
      * *          *
      * *          *
      * *          *
      * ************
-     * lb         rb        
+     * lb(0)    rb(1) 
+     * 
+     * gl.TRIANGLES:表示以正常的三角形顺序进行绘制
+     * 1：我们可以发送六个点给GPU,GPU就会按照给定点的顺序，每三个一组进行绘制
+     * 注意每三个一组点的顺序非常重要，到底是顺时针还是逆时针，在执行剔除的时候，会决定是否剔除
+     * (0,1,2)==>代表逆时针，（0,3,2）==>代表顺时针，而GPU那边默认剔除面的规则是顺时针是背面，逆时针是正面
+     * 如果我们开启剔除，然后选择剔除的面是背面，那这个2d图片就只可以看到右下半部分这个三角形，左上半部分这个三角形被剔除了
+     * 
+     * 注意到上面是发六个顶点，每个顶点又有三个坐标（x,y,z）组成，如果每个坐标都是float,那每个坐标又是占4个字节，这里占的内存也是需要考虑的
+     * 介于此,可以使用下面的方法
+     * 2：如果我们要画一个四边形，我们只需要给GPU发送四个顶点就可以了，其本质上就是两个三角形拼接而成，然后再发送绘制索引，就好了，GPU会像发送顶点一样来找，三个三个取
+     * 一个模型的顶点数是有限的，一般一个字节就足以了，当有很多三角形需要绘制的时候，这样可以省去不少内存
+     * 
+     * 总结：使用三角形绘制，不管是发送全部三角形的顶点数组，还是发送所有顶点的数组+所有三角形的索引数组，其绘制的规律一律是，三个三个取，最后面几个点如果不是3的倍数，则直接丢弃
+     * 
+     * gl.TRIANGLE_STRIP:三角形带绘制，
+     * 发往GPU的数组：（0，1，2，3，4，5，6，7，8，9，....）
+     * 这个数组的信息可以是纯粹的顶点，也可以是顶点+索引
+     * 目前发现的规律是，从顶点数组或者索引数组中，先取三个顶点组成第一个三角形（0,1,2）,再从数组中取两个组成第三个三角形（2，3，4），
+     * 再从数组中取两个组成第三个三角形（4，5，6），依次往下找
+     * 
+     * gl.LINES:表示画线，每次从数组中取出两个顶点，依次往下取
+     * gl.LINES_STRIP:表示画线管带，第一次从数组中取出两个顶点组成一条线，后面依次取出一个点与上一次取出的最后一个点组成一条线
+     *       
      * 凡继承此类的显示节点，则默认会干以下几件事
      * 1：根据尺寸，创建四个顶点坐标 组成一个顶点数组传送到GPU中
      * 2：根据四个顶点坐标的索引来画两个三角形刚好可以组成一个四边形，这些索引就组成了一个索引数组发往GPU中
@@ -593,7 +616,7 @@ export namespace SY {
             ];
             this.createUVsBuffer(floorVertexTextureCoordinates, 2);
             // 索引数据
-            var floorVertexIndices = [0, 1, 2, 3, 2, 0];
+            var floorVertexIndices = [0, 1, 2,3,0];
             this.createIndexsBuffer(floorVertexIndices);
 
         }
@@ -621,7 +644,7 @@ export namespace SY {
         */
         public setContentSize(width: number, height: number): void {
             this.width = width;
-            this.height = height;
+            this.height = height; 
 
             var clipW = this.width / Device.Instance.width;
             var clipH = this.height / Device.Instance.height;
@@ -656,6 +679,34 @@ export namespace SY {
             var pos = [].concat(this._lb, this._rb, this._rt, this._lt);
             this.createVertexsBuffer(pos, 3);
             this.updateUV();
+        }
+    }
+
+    /**
+     * 画线
+     */
+    export class PolygonLine2D extends SpriteBase{
+        private _polygon:Float32Array;//点坐标{x,y,z}
+        constructor() {
+            super();
+            this._node__type = syRender.NodeType.D2;
+            this._glPrimitiveType = this.gl.LINE_STRIP;
+            this._polygon = new Float32Array(3);
+            this.createVertexsBuffer([], 3,10);
+        }
+
+        protected updatePosition(data:Array<any>):void{
+             var clipPos:Array<number> = [];
+             var z = -1;
+             for(var k = 0;k<data.length;k++)
+             {
+                 var temp = this.convertScreenSpaceToClipSpace(data[k].x,data[k].y);
+                 clipPos.push(temp[0]);
+                 clipPos.push(temp[1]);
+                 clipPos.push(z);
+             }
+             this._polygon = new Float32Array(clipPos);
+             this.getBuffer(SY.GLID_TYPE.VERTEX).updateSubData(this._polygon);
         }
     }
 

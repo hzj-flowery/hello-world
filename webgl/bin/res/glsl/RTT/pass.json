@@ -8,7 +8,7 @@
         "state": [
             {
                 "key": "depthFunc",
-                "value": "glEnums.DS_FUNC_LESS"
+                "value": "DS_FUNC_LESS"
             },
             {
                 "key": "depthTest",
@@ -24,12 +24,17 @@
             },
             {
                 "key": "blendSrcAlpha",
-                "value": "glEnums.BLEND_SRC_ALPHA"
+                "value": "BLEND_SRC_ALPHA"
             },
             {
                 "key": "blendDstAlpha",
-                "value": "glEnums.BLEND_ONE_MINUS_SRC_ALPHA"
+                "value": "BLEND_ONE_MINUS_SRC_ALPHA"
+            },
+            {
+                "key": "cullMode",
+                "value": "CULL_BACK"
             }
+            
         ],
         "custom":[
             {"key":"DrawingOrder","value":0}

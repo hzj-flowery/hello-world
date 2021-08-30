@@ -183,17 +183,18 @@ export namespace syGL {
 
         SKYBOX = "u_skybox",
         Matrix = 'u_mat',      //万能矩阵
-        VMMatrix = 'u_view_world',  //视口矩阵*模型世界矩阵
-        WorldMat = 'u_world',    //模型世界矩阵
-        WorldMat_T = 'u_world_T',    //模型世界矩阵的转置矩阵
-        WorldMat_I = 'u_world_I',    //模型世界矩阵的逆矩阵
-        WorldMat_I_T = 'u_world_I_T',    //模型世界矩阵的逆矩阵的转置矩阵
-        VMatrix = 'u_view',    //视口矩阵
-        PMatrix = 'u_projection',    //投影矩阵
-        PVMatrix = 'u_projection_view',    //投影*视口矩阵
-        PVMatrix_INVERSE = 'u_projection_view_I',    //投影*视口矩阵的逆矩阵
-        PVM_MATRIX = "u_projection_view_world",//投影矩阵*视口矩阵*模型世界矩阵
-        PVM_MATRIX_INVERSE = "u_projection_view_world_I", //(投影矩阵*视口矩阵*模型世界矩阵)的逆矩阵
+        VW_Mat = 'u_view_world',  //视口矩阵*模型世界矩阵
+        VW_Mat_I_T = 'u_view_world_I_T',  //视口矩阵*模型世界矩阵的逆矩阵的转置矩阵
+        W_Mat = 'u_world',    //模型世界矩阵
+        W_Mat_T = 'u_world_T',    //模型世界矩阵的转置矩阵
+        W_Mat_I = 'u_world_I',    //模型世界矩阵的逆矩阵
+        W_Mat_I_T = 'u_world_I_T',    //模型世界矩阵的逆矩阵的转置矩阵
+        V_Mat = 'u_view',    //视口矩阵
+        P_Mat = 'u_projection',    //投影矩阵
+        PV_Mat = 'u_projection_view',    //投影*视口矩阵
+        PV_Mat_I = 'u_projection_view_I',    //投影*视口矩阵的逆矩阵
+        PVW_Mat = "u_projection_view_world",//投影矩阵*视口矩阵*模型世界矩阵
+        PVW_Mat_I = "u_projection_view_world_I", //(投影矩阵*视口矩阵*模型世界矩阵)的逆矩阵
         LightWorldPosition = "u_lightWorldPosition", //光的位置
         CameraWorldPosition = "u_cameraWorldPosition" ,//相机的位置
 

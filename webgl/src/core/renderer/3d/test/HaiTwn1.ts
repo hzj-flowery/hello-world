@@ -579,7 +579,7 @@ class Spine extends SY.SpriteBase {
         var v = GameMainCamera.instance.getCameraByUUid(syRender.CameraUUid.base3D).getInversModelMatrix();
         var m = this.modelMatrix;
         this._glMatrix.mat4.mul(newMV,v,m)
-        this.shader.bindMatrixToShader(syGL.AttributeUniform.VMMatrix,newMV);
+        this.shader.bindMatrixToShader(syGL.AttributeUniform.VW_Mat,newMV);
         var pMatix = GameMainCamera.instance.getCameraByUUid(syRender.CameraUUid.base3D).getProjectionMatrix();
         
         var projection = pMatix;

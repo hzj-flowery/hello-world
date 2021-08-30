@@ -2,6 +2,7 @@
 import { glMatrix } from "../../math/Matrix";
 import { SY } from "../base/Sprite";
 import { syRender } from "../data/RenderData";
+import { syGL } from "../gfx/syGLEnums";
 import { G_LightCenter } from "../light/LightCenter";
 import { syPrimitives } from "../shader/Primitives";
 
@@ -119,7 +120,7 @@ export default class Sphere extends SY.ShadowSprite {
         this.createUVsBuffer(vertexData.texcoord, 2);
         this.createVertexsBuffer(vertexData.position, 3);
 
-        this._glPrimitiveType = this.gl.LINE_STRIP;
+        this._glPrimitiveType = syGL.PrimitiveType.TRIANGLE_STRIP;
 
 
         this.color = [1, 0.5, 0.5, 1];

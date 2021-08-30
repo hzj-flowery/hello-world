@@ -61,26 +61,21 @@ class PassFactory{
                 }
                 else if(typeof(tempValue)=="string")
                 {
-                    var str1 = new String(tempValue); 
-                    var index = str1.indexOf("glEnums");
-                    if(index>=0)
+                    //符合预期
+                    if(glEnums[tempValue])
                     {
-                        //符合预期
-                        let value = str1.split(".")[1];
-                        if(glEnums[value])
-                        {
-                            pass.state[tempKey] = glEnums[value];
-                        }
-                        else
-                        {
-                            console.log("你的配置有问题--",tempValue);
-                        }
+                        pass.state[tempKey] = glEnums[tempValue];
                     }
                     else
                     {
                         console.log("你的配置有问题--",tempValue);
                     }
-                }  
+                }
+                else
+                {
+                    console.log("你的配置有问题--",tempValue);
+                }
+                  
                 
             }
         }

@@ -17,7 +17,7 @@ let renderDataId: number = 0;
 export namespace syRender {
 
     //着色器的类型
-    export enum ShaderType {
+    export const enum ShaderType {
         Custom = 0,
         Line,
         LineFrustum,
@@ -33,6 +33,8 @@ export namespace syRender {
         SkyBox,       //天空盒
         Mirror,       //镜子
         Fog,          //雾
+        OutLine,      //描边
+        Purity,       //纯色绘制
         Instantiate,  //实例化绘制
         Test,         //只是测试使用
         NULL          //不用shader渲染
@@ -54,6 +56,8 @@ export namespace syRender {
         "SkyBox",
         "Mirror",
         "Fog",
+        "OutLine",
+        "Purity",
         "Instantiate",
         "Test",
         "NULL"          //不用shader渲染
@@ -424,6 +428,7 @@ export namespace syRender {
             this._id = renderDataId++;
             this._type = syRender.DataType.Base;
             this._temp_model_view_matrix = glMatrix.mat4.identity(null);
+            this._temp_model_view_matrix_inverse_transform = glMatrix.mat4.identity(null);
             this._temp_model_inverse_matrix = glMatrix.mat4.identity(null);
             this._temp_model_inverse_transform_matrix = glMatrix.mat4.identity(null);
             this._temp_model_transform_matrix = glMatrix.mat4.identity(null);
@@ -471,6 +476,7 @@ export namespace syRender {
         private _textureCubeGLIDArray: Array<WebGLTexture>;//立方体纹理
         private _texture2DGLIDMap: Map<DeferredTexture, WebGLTexture> = new Map()
         private _temp_model_view_matrix;//视口模型矩阵
+        private _temp_model_view_matrix_inverse_transform;//视口模型矩阵逆矩阵的转置矩阵
         private _temp_model_inverse_matrix;//模型世界矩阵的逆矩阵
         private _temp_model_transform_matrix;//模型世界矩阵的转置矩阵
         private _temp_model_inverse_transform_matrix;//模型世界矩阵的逆矩阵的转置矩阵
@@ -601,7 +607,7 @@ export namespace syRender {
                         this._temp001_matrix[14] = 0;
                         glMatrix.mat4.multiply(this._temp002_matrix, proj, this._temp001_matrix);
                         glMatrix.mat4.invert(this._temp001_matrix, this._temp002_matrix);
-                        _shader.bindMatrixToShader(syGL.AttributeUniform.PVMatrix_INVERSE, this._temp001_matrix);
+                        _shader.bindMatrixToShader(syGL.AttributeUniform.PV_Mat_I, this._temp001_matrix);
                         useTextureAddres++;
                         break;
                     case ShaderUseVariantType.GPosition:
@@ -630,40 +636,46 @@ export namespace syRender {
                         useTextureAddres++;
                         break;
                     case ShaderUseVariantType.Projection:
-                        _shader.bindMatrixToShader(syGL.AttributeUniform.PMatrix, proj);
+                        _shader.bindMatrixToShader(syGL.AttributeUniform.P_Mat, proj);
                         break;
                     case ShaderUseVariantType.Model:
-                        _shader.bindMatrixToShader(syGL.AttributeUniform.WorldMat, this.primitive.modelMatrix);
+                        _shader.bindMatrixToShader(syGL.AttributeUniform.W_Mat, this.primitive.modelMatrix);
                         break;
                     case ShaderUseVariantType.View:
-                        _shader.bindMatrixToShader(syGL.AttributeUniform.VMatrix, view);
+                        _shader.bindMatrixToShader(syGL.AttributeUniform.V_Mat, view);
+                        break;
+                    case ShaderUseVariantType.ViewModelInverseTransform:
+                        glMatrix.mat4.multiply(this._temp_model_view_matrix_inverse_transform, view, this.primitive.modelMatrix);
+                        glMatrix.mat4.invert(this._temp_model_view_matrix_inverse_transform, this._temp_model_view_matrix_inverse_transform);
+                        glMatrix.mat4.transpose(this._temp_model_view_matrix_inverse_transform, this._temp_model_view_matrix_inverse_transform);
+                        _shader.bindMatrixToShader(syGL.AttributeUniform.VW_Mat_I_T,this._temp_model_view_matrix_inverse_transform);
                         break;
                     case ShaderUseVariantType.CustomMatrix:
                         _shader.bindMatrixToShader(syGL.AttributeUniform.Matrix, this.primitive.customMatrix);
                         break;
                     case ShaderUseVariantType.ViewModel:
                         glMatrix.mat4.mul(this._temp_model_view_matrix, view, this.primitive.modelMatrix);
-                        _shader.bindMatrixToShader(syGL.AttributeUniform.VMMatrix, this._temp_model_view_matrix);
+                        _shader.bindMatrixToShader(syGL.AttributeUniform.VW_Mat, this._temp_model_view_matrix);
                         break;
                     case ShaderUseVariantType.ModelInverseTransform:
                         glMatrix.mat4.invert(this._temp_model_inverse_matrix, this.primitive.modelMatrix);
                         glMatrix.mat4.transpose(this._temp_model_inverse_transform_matrix, this._temp_model_inverse_matrix);
-                        _shader.bindMatrixToShader(syGL.AttributeUniform.WorldMat_I_T, this._temp_model_inverse_transform_matrix);
+                        _shader.bindMatrixToShader(syGL.AttributeUniform.W_Mat_I_T, this._temp_model_inverse_transform_matrix);
                         break;
                     case ShaderUseVariantType.ProjectionViewModelInverse:
                         glMatrix.mat4.multiply(this._temp001_matrix, view, this.primitive.modelMatrix);
                         glMatrix.mat4.multiply(this._temp002_matrix, proj, this._temp001_matrix);
                         glMatrix.mat4.invert(this._temp003_matrix, this._temp002_matrix);
-                        _shader.bindMatrixToShader(syGL.AttributeUniform.PVM_MATRIX_INVERSE, this._temp003_matrix);
+                        _shader.bindMatrixToShader(syGL.AttributeUniform.PVW_Mat_I, this._temp003_matrix);
                         break;
                     case ShaderUseVariantType.ProjectionView:
                         glMatrix.mat4.multiply(this._temp001_matrix, proj, view);
-                        _shader.bindMatrixToShader(syGL.AttributeUniform.PVMatrix, this._temp001_matrix);
+                        _shader.bindMatrixToShader(syGL.AttributeUniform.PV_Mat, this._temp001_matrix);
                         break;
                     case ShaderUseVariantType.ProjectionViewInverse:
                         glMatrix.mat4.multiply(this._temp001_matrix, proj, view);
                         glMatrix.mat4.invert(this._temp002_matrix, this._temp001_matrix);
-                        _shader.bindMatrixToShader(syGL.AttributeUniform.PVMatrix_INVERSE, this._temp002_matrix);
+                        _shader.bindMatrixToShader(syGL.AttributeUniform.PV_Mat_I, this._temp002_matrix);
                         break;
                     case ShaderUseVariantType.CameraWorldPosition:
                         _shader.setCustomUniformFloatVec3(syGL.AttributeUniform.CameraWorldPosition, this._cameraPosition);
@@ -763,7 +775,8 @@ export namespace syRender {
             this._state.depthFunc = glEnums.DS_FUNC_LESS;
             this._state.depthTest = true;
             this._state.depthWrite = true;
-
+            
+            this._state.cullMode = glEnums.CULL_BACK;
         }
         public reset() {
             super.reset();

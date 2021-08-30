@@ -358,8 +358,6 @@ export default class LoaderManager {
             let v = passData[k]
             if(v.name=="baseAttribute")
             continue;
-
-            
             if(v.template==null)
             {
                 v.template=baseData.template
@@ -380,6 +378,8 @@ export default class LoaderManager {
                             isExist= true;
                          }
                     })
+                    //对于不存在的值 要以模板值为主
+                    //对于存在的值，则以外围pass为主
                     if(!isExist)
                     {
                         v.state.push(value);

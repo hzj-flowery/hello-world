@@ -67,7 +67,8 @@ import { syRender } from "../data/RenderData";
  * 坐标系：
  * 笛卡尔坐标系：X轴为水平方向，Y轴为垂直方向
  * 视口坐标:左下角为(0,0),右上角为（1,1)
- * 屏幕坐标:屏幕的左下角为(0,0),但右上角为(screen.width,screen.height)，screen.width表示屏幕宽度，screen.height表示屏幕高度
+ * 屏幕坐标:屏幕的左上角为(0,0),右下角为(screen.width,screen.height)，screen.width表示屏幕宽度，screen.height表示屏幕高度
+ * SY坐标：左下角（0,0）,右上脚（screen.width,screen.height）
  * UI坐标系:这个坐标系与屏幕坐标系相似，左下角为（0，0）点，右上角为（Screen.width，Screen.height）
  * uv坐标系：左下角为【0，0】，右上角为【1,1】
  * 齐次裁切坐标:屏幕正中心为原点（0,0），坐标范围是【-1,1】

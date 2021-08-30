@@ -1,10 +1,14 @@
 [
     {
-        "name":"TemplatePass",
-        "tag":"ShadowMap"
+        "name": "TemplatePass",
+        "tag": "Purity"
     },
     {
-        "name":"TemplatePass",
-        "tag":"Shadow"
+        "name": "TemplatePass",
+        "tag": "ShadowMap"
+    },
+    {
+        "name": "TemplatePass",
+        "tag": "Shadow"
     }
 ]
