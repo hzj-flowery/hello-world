@@ -440,7 +440,7 @@ export namespace syRender {
 
             this.light = new Light.Center();
             this.primitive = new Primitive()
-            this._defineUse = new DefineUse();
+            this.defineUse = new DefineUse();
             this.reset();
         }
 
@@ -485,7 +485,7 @@ export namespace syRender {
         private _temp002_matrix;//
         private _temp003_matrix;//
         private _temp004_matrix;//
-        private _defineUse:DefineUse;
+        public defineUse:DefineUse;
         public reset(): void {
             this._pass = null;
             this._cameraPosition = [];
@@ -496,17 +496,6 @@ export namespace syRender {
             this._textureCubeGLIDArray = [];
             this.time = 0;
             this.useFlag = false;
-        }
-        
-        /**
-         * 设置是否使用宏
-         * @param p 
-         */
-        public setDefinePngUse(p:number):void{
-             this._defineUse.SY_USE_PNG = p;
-        }
-        public setDefineMatUse(p:number):void{
-             this._defineUse.SY_USE_MAT = p;
         }
         public set pass(pass: Pass) {
             this._pass = pass
@@ -749,10 +738,10 @@ export namespace syRender {
                         useTextureAddres++;
                         break;
                     case ShaderUseVariantType.Define_UsePng:
-                        _shader.setCustomUniformFloat(syGL.AttributeUniform.DefineUsePng,this._defineUse.SY_USE_PNG)
+                        _shader.setCustomUniformFloat(syGL.AttributeUniform.DefineUsePng,this.defineUse.SY_USE_PNG)
                         break;
                     case ShaderUseVariantType.Define_UseMat:
-                        _shader.setCustomUniformFloat(syGL.AttributeUniform.DefineUseMat,this._defineUse.SY_USE_MAT)
+                        _shader.setCustomUniformFloat(syGL.AttributeUniform.DefineUseMat,this.defineUse.SY_USE_MAT)
                         break;
                     default:
                     // console.log("目前还没有处理这个矩阵类型");

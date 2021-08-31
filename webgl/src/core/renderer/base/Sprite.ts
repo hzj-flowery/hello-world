@@ -134,7 +134,7 @@ export namespace SY {
         //参考glprimitive_type
         protected _glPrimitiveType: syGL.PrimitiveType;//绘制的类型
         protected _sizeMode: SpriteSizeMode;//节点的尺寸模式
-        public _defineUse: syRender.DefineUse = new syRender.DefineUse(); //是否支持png 
+        public defineUse: syRender.DefineUse = new syRender.DefineUse(); //是否支持png 
         constructor() {
             super();
             materialId++;
@@ -426,8 +426,8 @@ export namespace SY {
 
             //宏-------------------------------------------------------------------------------------
             //是否支持png的使用
-            rData.setDefinePngUse(this._defineUse.SY_USE_PNG)
-            rData.setDefineMatUse(this._defineUse.SY_USE_MAT)
+            rData.defineUse.SY_USE_PNG = (this.defineUse.SY_USE_PNG)
+            rData.defineUse.SY_USE_MAT = (this.defineUse.SY_USE_MAT)
 
             //节点自定义矩阵组------------------------------------------------------------------------
             rData.primitive.vertMatrix.glID = this.getGLID(SY.GLID_TYPE.VERT_MATRIX);

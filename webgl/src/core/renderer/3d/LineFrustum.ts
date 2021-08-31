@@ -50,7 +50,7 @@ export class LineFrustum extends SY.SpriteBasePolygon {
         this._lightProjectInverseMatrix = glMatrix.mat4.identity(null);
         this._tempMatrix = glMatrix.mat4.identity(null);
         this.color = [1.0,0.0,0.0,1.0];
-        this._defineUse.SY_USE_MAT = 0.1;
+        this.defineUse.SY_USE_MAT = 0.1;
         super.onInit();
         this.updatePositionData(VertData.position)
         

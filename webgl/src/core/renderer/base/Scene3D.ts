@@ -20,7 +20,6 @@ import { glMatrix } from "../../math/Matrix";
 import { syGL } from "../gfx/syGLEnums";
 import { DeferredShading } from "../3d/DeferredShading";
 import { RTT } from "../3d/RTT";
-import AlphaCube from "../3d/AlphaCube";
 import Device from "../../Device";
 import { RenderOffline3DSprite } from "../3d/RenderOffline3DSprite";
 import { syRender } from "../data/RenderData";
@@ -44,7 +43,7 @@ export default class Scene3D extends Scene {
     private _renderSprite2: RenderOffline3DSprite;
     private _rtt: RTT;
     private _tableNode: Cube;
-    private _alphaNode: AlphaCube;
+    private _alphaNode: Cube;
     private _spineNode: Spine;
     private _pointLightCube: PointLightCube;
     private _spotLightCube: SpotLightCube;
@@ -106,11 +105,12 @@ export default class Scene3D extends Scene {
 
         
 
-        // this._alphaNode = new AlphaCube();
-        // this._alphaNode.spriteFrame = "res/good.jpg";
-        // this._alphaNode.setPosition(0, 3, 0);
-        // this._alphaNode.setScale(2.0, 2.0, 2.0);
-        // this._centerNode.addChild(this._alphaNode);
+        this._alphaNode = new Cube();
+        // this._alphaNode.alpha = 0.3
+        this._alphaNode.spriteFrame = "res/good.jpg";
+        this._alphaNode.setPosition(0, 3, 0);
+        this._alphaNode.setScale(2.0, 2.0, 2.0);
+        this._centerNode.addChild(this._alphaNode);
 
 
 
