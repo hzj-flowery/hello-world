@@ -31,48 +31,20 @@ export default class Scene2D extends Scene {
     //-------右下角 （960,640）
     public init(): void {
 
-        // var rectangle1 = new Rectangle();
-        // rectangle1.alpha = 1.0;
-        // rectangle1.defineUse.SY_USE_PNG = 0.1;
-        // rectangle1.pushPassContent(syRender.ShaderType.Sprite,[
-        //     {
-        //         "key":"blendSep",
-        //         "des":"是否开启拆分混合，这个比较高级，这个可以指定颜色和alpha分开混合",
-        //         "value":false
-        //     },
-        //     {
-        //         "key": "depthTest",
-        //         "value": true
-        //     },
-        //     {
-        //         "key": "depthWrite",
-        //         "value": true
-        //     },
-        //     {
-        //         "key":"blendSrc",
-        //         "des":"源颜色如何计算",
-        //         "value":"BLEND_SRC_ALPHA"
-        //     },
-        //     {
-        //         "key":"blendDst",
-        //         "des":"目标颜色如何计算",
-        //         "value":"BLEND_ONE_MINUS_SRC_ALPHA"
-        //     },
-        //     {
-        //         "key": "blendSrcAlpha",
-        //         "des":"源alpha如何计算",
-        //         "value": "BLEND_SRC_ALPHA"
-        //     },
-        //     {
-        //         "key": "blendDstAlpha",
-        //         "des":"目标alpha如何计算",
-        //         "value": "BLEND_ONE_MINUS_SRC_ALPHA"
-        //     },                                                    
-        // ])
-        // rectangle1.setPosition(Device.Instance.width/2,Device.Instance.height/2-100, -100);
-        // rectangle1.setScale(3,3,1);
-        // rectangle1.spriteFrame = "res/ground.png";
-        // this.addChild(rectangle1);
+        var rectangle1 = new Rectangle();
+        rectangle1.alpha = 1.0;
+        rectangle1.defineUse.SY_USE_PNG = 0.1;
+        rectangle1.pushPassContent(syRender.ShaderType.Sprite,[
+            {
+                "key":"blendSep",
+                "des":"是否开启拆分混合，这个比较高级，这个可以指定颜色和alpha分开混合",
+                "value":false
+            }  
+        ])
+        rectangle1.setPosition(Device.Instance.width/2,Device.Instance.height/2-100, -100);
+        rectangle1.setScale(3,3,1);
+        rectangle1.spriteFrame = "res/ground.png";
+        this.addChild(rectangle1);
 
 
 
@@ -141,7 +113,7 @@ export default class Scene2D extends Scene {
                 "value": "BLEND_ONE"
             },                                                    
         ])
-        this._rectangle.setPosition(Device.Instance.width/2,Device.Instance.height/2, -101);
+        this._rectangle.setPosition(Device.Instance.width/2,Device.Instance.height/2, -100);
         this._rectangle.spriteFrame = "res/deferred.png";
         this.addChild(this._rectangle);
 
