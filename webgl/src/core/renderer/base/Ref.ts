@@ -17,10 +17,10 @@ export default class Ref{
         onEnable():void{
 
         }
-        onEnter():void{
+        protected onEnter():void{
 
         }
-        onEixt():void{
+        protected onEixt():void{
 
         }
 }

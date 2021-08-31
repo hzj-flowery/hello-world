@@ -462,7 +462,32 @@ export default class LoaderManager {
                         var templatePass = this.getStandardTemplatePass(res[k].tag);
                         if (templatePass) {
                             //更新为真实的模板pass
-                            res[k] = templatePass;
+                            if(res[k].state)
+                            {
+                                templatePass.state.forEach((value,index)=>{
+                                    let isExist:boolean = false;
+                                    res[k].state.forEach((svalue,sindex)=>{
+                                         if(svalue.key==value.key)
+                                         {
+                                            isExist= true;
+                                         }
+                                    })
+                                    //对于不存在的值 要以模板值为主
+                                    //对于存在的值，则以外围pass为主
+                                    if(!isExist)
+                                    {
+                                        res[k].state.push(value);
+                                    }
+                                })
+
+                            }
+                            else
+                            {
+                                res[k].state = MathUtils.clone(templatePass.state)
+                            }
+                            res[k].name = templatePass.name
+                            res[k].template = true;
+                            res[k].custom = MathUtils.clone(templatePass.custom)
                         }
                     }
                     else if(res[k].name == "baseAttribute")

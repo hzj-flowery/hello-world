@@ -20,7 +20,7 @@ export class CameraRenderData {
   constructor() {
     this.drawingOrder = syRender.DrawingOrder.Normal;
     this.uuid = syRender.CameraUUid.adapt;
-    this.clearColor = [0.5, 0.5, 0.5, 1.0];
+    this.clearColor = [0.0,0.6,0.0, 1.0];
     this.viewPort = { x: 0, y: 0, w: 1, h: 1 };
     this.cColor = true;
     this.cDepth = true;

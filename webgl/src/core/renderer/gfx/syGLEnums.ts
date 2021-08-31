@@ -201,8 +201,11 @@ export namespace syGL {
         MOUSE = "u_mouse",//鼠标位置数据
         CUSTOM_FLOAT_VALUE = "u_float_custom",//一个自定义的值
         RESOLUTION= "u_resolution",//屏幕的设计分辨率
+        
+        POINT_SIZE = "u_point_size", //点的尺寸
 
-        DefineUsePng="u_use_png",//宏 bool值 判断是否使用png
+        
+        DefineUsePng="u_use_png",//宏 判断是否使用png
 
         DefineUseMat="SY_USE_MAT",//宏 判断是否使用万能矩阵
     }

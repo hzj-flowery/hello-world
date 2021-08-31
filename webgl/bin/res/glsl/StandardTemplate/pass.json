@@ -15,7 +15,6 @@
                 "key": "depthWrite",
                 "value": true
             },
-            
             {
                 "key":"blend",
                 "des":"是否开启混合",
@@ -100,13 +99,6 @@
         "template":true,
         "custom":[
             {"key":"ShaderType","value":"Line"}
-        ]
-    },
-    {
-        "name": "LineFrustum/shader",
-        "template":true,
-        "custom":[
-            {"key":"ShaderType","value":"LineFrustum"}
         ]
     },
     {

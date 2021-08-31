@@ -19,11 +19,14 @@ export default class RenderFlow {
         GameMainCamera.instance.initRenderData();
         
        
-
-        this._3dScene = new Scene3D();
-        this._3dScene.init();
+        
         this._2dScene = new Scene2D();
         this._2dScene.init();
+
+        
+        this._3dScene = new Scene3D();
+        this._3dScene.init();
+        
         
         G_Stage.addChild(this._3dScene);
         G_Stage.addChild(this._2dScene);

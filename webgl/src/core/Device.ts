@@ -405,7 +405,7 @@ export default class Device {
             failIfMajorPerformanceCaveat?: boolean;
             powerPreference?: WebGLPowerPreference;
             premultipliedAlpha?: boolean;
-            preserveDrawingBuffer?: boolean; //这让 WebGL 在将画布和页面其它内容合成后不清除画布
+            preserveDrawingBuffer?: boolean; //这让 WebGL 在将画布和页面其它内容合成后不清除画布 
             stencil?: boolean;
          */
         let options = {
@@ -463,7 +463,21 @@ export default class Device {
         if(data&&data.length>0)
         data.sort((a,b)=>{
            if(a.pass!=null && b.pass!=null)
-           return a.pass.shaderType - b.pass.shaderType;
+           {
+               if(a.primitive.alpha==b.primitive.alpha)
+               {
+                   return a.pass.shaderType - b.pass.shaderType;
+               }
+               else
+               {
+                   /**
+                    * 需要优先绘制不透明的物体
+                    * 
+                    * 绘制所有半透明的物体（α小于0）,注意它们应当按照深度排序，然后从后向前绘制
+                    */
+                   return b.primitive.alpha - a.primitive.alpha;
+               }
+           }
            return -1;
         })
     }
@@ -480,7 +494,6 @@ export default class Device {
             syRender.ShaderType.Light_Point,
             syRender.ShaderType.Light_Parallel,
             syRender.ShaderType.Line,
-            syRender.ShaderType.LineFrustum,
             syRender.ShaderType.Point,
             syRender.ShaderType.Sprite,
             syRender.ShaderType.Fog,

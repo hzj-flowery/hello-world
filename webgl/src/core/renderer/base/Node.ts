@@ -221,7 +221,7 @@ export class Node extends Ref {
         this._children.push(node);
         node._parent = this;
         //节点被添加到父节点上了
-        this.onEnter();
+        node.onEnter();
     }
     /**
      * 移除孩子节点
@@ -231,7 +231,7 @@ export class Node extends Ref {
         var index = this._children.indexOf(node);
         if (index >= 0) {
             //节点被移除了
-            this.onEixt();
+            node.onEixt();
             this._children.splice(index, 1);
             node._parent = null;
         }

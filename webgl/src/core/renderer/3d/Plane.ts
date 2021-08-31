@@ -34,10 +34,6 @@ export class Plane extends SY.ShadowSprite{
         this.color = [0.5, 0.5, 1, 1];
     }
 
-    protected onLoadShaderFinish():void{
-        console.log(this.shader);
-    }
-
     public setCellCounts(widthCount:number,heightCount:number):void{
         this._widthCount = widthCount;
         this._heightCount = heightCount;

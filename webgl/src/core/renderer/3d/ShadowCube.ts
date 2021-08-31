@@ -17,6 +17,7 @@ export default class ShadowCube extends SY.ShadowSprite {
     this.createUVsBuffer(rd.uvData, rd.dF.uv_item_size);
     this._glPrimitiveType = this.gl.TRIANGLE_STRIP;
     this.color = [1, 1.0, 1.0, 1.0];
+    super.onInit();
   }
 
 }

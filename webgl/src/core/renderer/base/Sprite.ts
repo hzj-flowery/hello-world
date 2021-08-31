@@ -65,6 +65,7 @@ import { RenderTexture } from "./texture/RenderTexture";
 import { glMatrix } from "../../math/Matrix";
 import { glEnums } from "../gfx/GLapi";
 import { sy } from "../../Director";
+import State from "../gfx/State";
 
 /**
  * 显示节点
@@ -133,7 +134,7 @@ export namespace SY {
         //参考glprimitive_type
         protected _glPrimitiveType: syGL.PrimitiveType;//绘制的类型
         protected _sizeMode: SpriteSizeMode;//节点的尺寸模式
-        protected _defineUse: syRender.DefineUse = new syRender.DefineUse(); //是否支持png 
+        public _defineUse: syRender.DefineUse = new syRender.DefineUse(); //是否支持png 
         constructor() {
             super();
             materialId++;
@@ -148,13 +149,13 @@ export namespace SY {
         }
         private init(): void {
             this.onInit();
-            this.handleShader();
+            // this.handleShader();
         }
 
-        protected pushPassContent(shaderTy: syRender.ShaderType): void {
+        public pushPassContent(shaderTy: syRender.ShaderType,state?:any): void {
             var tag = syRender.ShaderTypeString[shaderTy]
             if (tag)
-                this._passContent.push({ "name": "TemplatePass", "tag": tag });
+                this._passContent.push({ "name": "TemplatePass", "tag": tag,state:state});
         }
         /**
          * 设置精灵图片的尺寸模式
@@ -165,7 +166,18 @@ export namespace SY {
         protected onInit(): void {
 
         }
+        /**
+         * 节点被添加到父节点上
+         */
+        protected onEnter():void{
+            this.handleShader();
+        }
+        /**
+         * 节点从父节点上移除
+         */
+        protected onEixt():void{
 
+        }
         protected onLoadShaderFinish(): void {
         }
 
@@ -414,7 +426,7 @@ export namespace SY {
 
             //宏-------------------------------------------------------------------------------------
             //是否支持png的使用
-            rData.setDefinePngUse(this._defineUse.PNG)
+            rData.setDefinePngUse(this._defineUse.SY_USE_PNG)
             rData.setDefineMatUse(this._defineUse.SY_USE_MAT)
 
             //节点自定义矩阵组------------------------------------------------------------------------
@@ -549,7 +561,6 @@ export namespace SY {
         }
         private _polygon: Float32Array;//点坐标{x,y,z}
         protected onInit(): void {
-            
             if (this._glPrimitiveType == glEnums.PT_POINTS)
                 this.pushPassContent(syRender.ShaderType.Point);
             else if (this._glPrimitiveType == glEnums.PT_LINE_STRIP ||

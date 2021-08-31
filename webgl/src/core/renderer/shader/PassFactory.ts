@@ -61,8 +61,13 @@ class PassFactory{
                 }
                 else if(typeof(tempValue)=="string")
                 {
+                    if(tempValue.indexOf("0x")>=0)
+                    {
+                        //这是一个16进制 特殊处理
+                        pass.state[tempKey] = tempValue;
+                    }
                     //符合预期
-                    if(glEnums[tempValue])
+                    else if(glEnums[tempValue]!=null)
                     {
                         pass.state[tempKey] = glEnums[tempValue];
                     }

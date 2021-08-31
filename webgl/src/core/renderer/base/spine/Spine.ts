@@ -23,12 +23,6 @@ export default class Spine extends SY.SpriteBase {
         this._lightDirection = glMatrix.vec3.create() as Float32Array;
         this._glMatrix.vec3.normalize(this._lightDirection, [-1, 3, 5]);
     }
-    protected onLoadShaderFinish():void{
-        // for (const drawable of node.skin_Drawables) {
-        //     //渲染皮肤
-        //     drawable.render(node,this.modelMatrix,this.sharedUniforms);
-        // }
-    }
     private animSkin(skin: Skeleton_Skin, a: number) {
         for (let i = 0; i < skin.jointNodes.length; ++i) {
             const jointNode = skin.jointNodes[i];

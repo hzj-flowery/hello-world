@@ -20,7 +20,6 @@ export namespace syRender {
     export const enum ShaderType {
         Custom = 0,
         Line,
-        LineFrustum,
         Point,
         Sprite,
         Label,
@@ -44,7 +43,6 @@ export namespace syRender {
     export var ShaderTypeString:Array<string> = [
         "Custom",
         "Line",
-        "LineFrustum",
         "Point",
         "Sprite",
         "Label",
@@ -164,7 +162,7 @@ export namespace syRender {
     
     //shader 中使用的宏
     export class DefineUse{
-         public PNG:number=0;
+         public SY_USE_PNG:number=0;
          public SY_USE_MAT:number=0;//使用万能矩阵
     }
 
@@ -505,7 +503,7 @@ export namespace syRender {
          * @param p 
          */
         public setDefinePngUse(p:number):void{
-             this._defineUse.PNG = p;
+             this._defineUse.SY_USE_PNG = p;
         }
         public setDefineMatUse(p:number):void{
              this._defineUse.SY_USE_MAT = p;
@@ -751,7 +749,7 @@ export namespace syRender {
                         useTextureAddres++;
                         break;
                     case ShaderUseVariantType.Define_UsePng:
-                        _shader.setCustomUniformFloat(syGL.AttributeUniform.DefineUsePng,this._defineUse.PNG)
+                        _shader.setCustomUniformFloat(syGL.AttributeUniform.DefineUsePng,this._defineUse.SY_USE_PNG)
                         break;
                     case ShaderUseVariantType.Define_UseMat:
                         _shader.setCustomUniformFloat(syGL.AttributeUniform.DefineUseMat,this._defineUse.SY_USE_MAT)
