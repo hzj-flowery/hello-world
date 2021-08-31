@@ -162,7 +162,7 @@ export namespace syRender {
     
     //shader 中使用的宏
     export class DefineUse{
-         public SY_USE_PNG:number=0;
+         public SY_USE_ALPHA_TEST:number=0; //alpha测试
          public SY_USE_MAT:number=0;//使用万能矩阵
     }
 
@@ -737,8 +737,8 @@ export namespace syRender {
                         _shader.setUseDeferredTexture(this.light.shadow.map,useTextureAddres,syGL.AttributeUniform.SHADOW_MAP);
                         useTextureAddres++;
                         break;
-                    case ShaderUseVariantType.Define_UsePng:
-                        _shader.setCustomUniformFloat(syGL.AttributeUniform.DefineUsePng,this.defineUse.SY_USE_PNG)
+                    case ShaderUseVariantType.Define_UseAlphaTest:
+                        _shader.setCustomUniformFloat(syGL.AttributeUniform.DefineUseAlphaTest,this.defineUse.SY_USE_ALPHA_TEST)
                         break;
                     case ShaderUseVariantType.Define_UseMat:
                         _shader.setCustomUniformFloat(syGL.AttributeUniform.DefineUseMat,this.defineUse.SY_USE_MAT)

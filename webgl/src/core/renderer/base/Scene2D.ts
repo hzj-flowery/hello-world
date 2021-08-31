@@ -33,7 +33,7 @@ export default class Scene2D extends Scene {
 
         var rectangle1 = new Rectangle();
         rectangle1.alpha = 1.0;
-        rectangle1.defineUse.SY_USE_PNG = 0.1;
+        rectangle1.defineUse.SY_USE_ALPHA_TEST = 0.1;
         rectangle1.pushPassContent(syRender.ShaderType.Sprite,[
             {
                 "key":"blendSep",
@@ -73,7 +73,7 @@ export default class Scene2D extends Scene {
          */
         this._rectangle = new Rectangle();
         this._rectangle.alpha = 0.2;
-        this._rectangle.defineUse.SY_USE_PNG = 0.0;
+        this._rectangle.defineUse.SY_USE_ALPHA_TEST = 0.0;
         this._rectangle.pushPassContent(syRender.ShaderType.Sprite,[
             {
                 "key":"blendSep",
@@ -95,12 +95,12 @@ export default class Scene2D extends Scene {
             {
                 "key":"blendSrc",
                 "des":"源颜色如何计算",
-                "value":"BLEND_SRC_ALPHA"
+                "value":"BLEND_ONE"
             },
             {
                 "key":"blendDst",
                 "des":"目标颜色如何计算",
-                "value":"BLEND_ONE_MINUS_SRC_ALPHA"
+                "value":"BLEND_ZERO" 
             },
             {
                 "key": "blendSrcAlpha",

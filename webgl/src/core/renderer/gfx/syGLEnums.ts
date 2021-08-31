@@ -204,8 +204,8 @@ export namespace syGL {
         
         POINT_SIZE = "u_point_size", //点的尺寸
 
-        
-        DefineUsePng="u_use_png",//宏 判断是否使用png
+
+        DefineUseAlphaTest="u_use_apha_test",//宏 判断是否使用png
 
         DefineUseMat="SY_USE_MAT",//宏 判断是否使用万能矩阵
     }

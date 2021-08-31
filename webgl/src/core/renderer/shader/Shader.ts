@@ -119,7 +119,7 @@ mapTree_u.set(syGL.AttributeUniform.LightWorldPosition,ShaderUseVariantType.Ligh
 
 mapTree_u.set(syGL.AttributeUniform.MOUSE,ShaderUseVariantType.Mouse);
 mapTree_u.set(syGL.AttributeUniform.RESOLUTION,ShaderUseVariantType.Resolution)
-mapTree_u.set(syGL.AttributeUniform.DefineUsePng,ShaderUseVariantType.Define_UsePng)
+mapTree_u.set(syGL.AttributeUniform.DefineUseAlphaTest,ShaderUseVariantType.Define_UseAlphaTest)
 mapTree_u.set(syGL.AttributeUniform.DefineUseMat,ShaderUseVariantType.Define_UseMat);
 /**
  * 获取当前对象记载显存地址的key
