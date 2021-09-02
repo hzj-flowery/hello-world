@@ -22,6 +22,7 @@ import { G_ShaderCenter } from "./renderer/shader/ShaderCenter";
 import { G_InputControl } from "./InputControl";
 import utils from "./platform/utils";
 import { Util } from "../utils/Util";
+import { MathUtils } from "./utils/MathUtils";
 
 /**
  渲染流程：
@@ -32,7 +33,8 @@ import { Util } from "../utils/Util";
  阶段3--》图元装配：点，线，三角形目前支持这三种
  阶段4--》光栅化，生成片元，这里面也有裁切操作进行
  阶段5--》片元着色器
- 阶段6--》逐片元操作
+ 阶段6--》逐片元操作（深度测试）
+ 阶段7--》著片元操作（混合）
 
  */
 
@@ -118,6 +120,12 @@ function _commitDepthState(gl: WebGLRenderingContext, cur: State, next: State): 
     }
     if (cur.depthWrite != next.depthWrite) {
         //深度值是否写入深度附件中
+        //举一个例子
+        //在混合的时候，往往是先渲染不透明的物体，再渲染透明的物体，透明的物体也是从远往近绘制
+        //在绘制不透明节点的时候，是开启深度测试，然后关闭深度写入，注意这里只是关闭深度写入，混合后的颜色值还是正常写入的
+        //对于透明的物体而言，它是可以看到后边物体的，如果我们把深度写入，那后边的物体就不会通过深度测试了，这是关闭深度写入的原因
+        //对于那些挡在透明度物体前面的物体，那当前透明物体这块区域是看不见的，所以要开启深度测试
+        //当有多个透明物体时，多个透明物体彼此是可以相互透明的，就需要从远处向近处绘制，不然无法通过深度测试
         next.depthWrite ? gl.depthMask(true) : gl.depthMask(false);
     }
     if (cur.depthFunc != next.depthFunc) {
@@ -130,13 +138,14 @@ function _commitDepthState(gl: WebGLRenderingContext, cur: State, next: State): 
  * 默认情况下 剔除功能是关闭的
 gl.enable(gl.CULL_FACE);开启面剔除
 gl.disable(gl.CULL_FACE);关闭面剔除
+
 gl.frontFace()这个函数是设置那个面是正面
-gl.CW：表示顺时针绘制的代表正面gl.FRONT，否则是背面gl.BACK，这个是默认设置
-gl.CCW：表示逆时针绘制的代表正面gl.FRONT，否则是背面gl.BACK
+----------》gl.CW：表示顺时针绘制的代表正面gl.FRONT，否则是背面gl.BACK，这个是默认设置
+----------》gl.CCW：表示逆时针绘制的代表正面gl.FRONT，否则是背面gl.BACK
 gl.cullFace()设置那一面被剔除有三个函数，如下
-gl.BACK：背面
-gl.FRONT：前面
-gl.FRONT_AND_BACK：前后两面
+----------》gl.BACK：背面
+----------》gl.FRONT：前面
+----------》gl.FRONT_AND_BACK：前后两面
 
 CULL_NONE: 0,      
 CULL_FRONT: 1028,
@@ -174,76 +183,82 @@ function _commitScissorState(gl: WebGLRenderingContext, cur: State, next: State)
     gl.disable(gl.SCISSOR_TEST);
 }
 /**
- * Blending就是控制透明的。处于光栅化的最后阶段
- * 最终颜色 = （Shader计算出的点颜色值 * 源系数）op（点累积颜色 * 目标系数）
- * Shader计算出的点颜色值：这个是当前材质上点的颜色
- * 源系数:这个是我们可以控制的（SrcFactor）
- * 点累积颜色：这个是当前位置的点累计计算的颜色，在屏幕上每一个像素点，都有可能产生很多个颜色，而最终的颜色是通过帧缓冲中同一个位置一层层颜色累计计算得出
- * 目标系数：这个是我们可以控制的（DstFactor）
+ * 导读-----------------------------------------------------------------------------
+ * 混合(Blending)就是控制透明的。处于片元着色器以后通过深度测试，就会进入到混合
+ * alpha值可以直接来自于纹理中，也可以外界传入，然后在片元着色器中赋给片元
+ * 特别注意：在混合中也不一定会用到从片元着色器出来的alpha值，这取决于我们如何选取混合函数的参数
+ * 例如我们选gl.blendFunc(gl.ONE,gl.ZERO) == 》 finalColor = srcColor*1 op targetColor*0，
+ * 但如果我们选gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA) ==》 finalColor = srcColor*sAlpha op targetColor*(1-sAlpha),这样alpha就会
+ * 
+ * 最常实现的功能就是半透明叠加
+ * 有一个问题 必须是透明的颜色才具备混合，也就是alpha的值必须小于1，否则就是覆盖了
+ * 所以我们说的混合都是针对alpha小于1的顶点颜色
+ * 
+ * 最常见的混合方式gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);但这样的混合方式会改变alpha
+   如果不希望改变混合后的alpha,可以使用下面这个函数
+   gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ZERO, gl.ONE);
+ * 
+ * ----------------------------------------------------------------------------------
+ * 
+ * 公式------------------------------------------------------------------------------
+ * 
+ * gl.enable(gl.BLEND);开启混合
+ * gl.enable(gl.BLEND);//关闭混合
+ * 
+ * 
+ * 在不使用拆分混合的时候
+ * gl.blendFunc(源系数,目标系数)
+ * 最终颜色 = （Shader计算出的点颜色值 * 源系数）op（深度缓冲区颜色 * 目标系数）
+ * 最终alpha = （Shader计算出的点alpha * 源系数）op（深度缓冲区alpha * 目标系数）
+ * 在使用拆分混合的时候
+ * gl.blendFuncSeparate(rgb源系数,rgb目标系数,alpha源系数,alpha目标系数)
+ * 最终颜色 = （Shader计算出的点颜色值 * rgb源系数）op（深度缓冲区颜色 * rgb目标系数）
+ * 最终alpha = （Shader计算出的点alpha * alpha源系数）op（深度缓冲区alpha * alpha目标系数）
+ * -----------------------------------------------------------------------------------
 
+ * 参数解析---------------------------------------------------------------------------
+ * 源系数&&目标系数（SrcFactor&&DstFactor）
+ * ==》可以是从片元着色器中输出的alpha值，也可以是从片元着色器中输出的rgb值
+ * --》混合参数就需要下面这几种
+ *  -gl.ONE;
+    -gl.ZERO;
+    -gl.SRC_COLOR;
+    -gl.DST_COLOR
+    -gl.SRC_ALPHA;
+    -gl.DST_ALPHA;
+    -gl.ONE_MINUS_SRC_ALPHA;
+    -gl.ONE_MINUS_SRC_COLOR;
+    -gl.ONE_MINUS_DST_ALPHA;
+    -gl.ONE_MINUS_DST_COLOR;
+ * ==》也可以通过gl.blendColor(r,g,b,a)这个函数来指定alpha值和rgb值
+ * --》混合参数就需要调用这四个参数
+    -gl.CONSTANT_ALPHA
+    -gl.CONSTANT_COLOR
+    -gl.ONE_MINUS_CONSTANT_ALPHA
+    -gl.ONE_MINUS_CONSTANT_COLO
+ * 深度缓冲区颜色：这个是当前位置的点累计计算的颜色，也就是深度缓冲区的颜色
+ * 深度缓冲区alpha:这个就是深度缓冲区的alpha值，也有可能是alpha缓冲中，如果深度缓冲中只存有rgb的话
+ * Shader计算出的点颜色值：这个是当前材质上点的颜色，也就是片元着色器中gl_FragColor.rgb
+ * Shader计算出的点alpha：从片元着色器中传出的值，也就是gl_FragColor.a
+ * op:指的是操作函数 ，无非就三种，加，减，逆向减
+ *  ==》gl.blendEquation(mode):该函数可以设置op的操作函数如下：
+    -gl.FUNC_ADD：相加处理
+    -gl.FUNC_SUBTRACT：相减处理
+    -gl.FUNC_REVERSE_SUBSTRACT：反向相减处理，即 dest 减去 source
+ * ----------------------------------------------------------------------------------------
+ * 
+
+ * 外界传参---------------------------------------------------------------------------------
  *  blend: false, //是否开启混合  -->enable(gl.BLEND) or gl.disable(gl.CULL_FACE);
     blendSep: false, //是否拆开混合
     blendColor: 0xffffffff,
     blendEq: syGL.BlendFunc.ADD, 
     blendAlphaEq: syGL.BlendFunc.ADD,
-    blendSrc: syGL.Blend.ONE,
+    blendSrc: syGL.Blend.ONE,  
     blendDst: syGL.Blend.ZERO,
     blendSrcAlpha: syGL.Blend.ONE,
     blendDstAlpha: syGL.Blend.ZERO,
-blendSep：关于这个需要特别说明
-关于混合函数目前只有两种，，如下：
-第一种：blendFunc，这种混合函数只有两个参数，无法指定混合后的alpha
-blendEq：也只有三种运算 要么相加 要么相减 要么反过来减
-比如：ttColor = sColor*blendSrc blendEq  tColor*blendDst
-那么：ttAlpha = (sAlpha blendEq tAlpha)/2,这个值将被写入到alpha的目标缓冲中
-
-如果此时我们不希望混合后的alpha改变，那么该如何操作呢，就要用到下面第二种混合函数了
-第二种：blendFuncSeparate
-
-
- * 混合状态
- * 最常实现的功能就是半透明叠加
- * 有一个问题 必须是透明的颜色才具备混合，也就是alpha的值必须小于1，否则就是覆盖了
- * 所以我们说的混合都是针对alpha小于1的顶点颜色
- * 
- * gl.enable(gl.BLEND);开启混合
- * gl.enable(gl.BLEND);//关闭混合
-公式：COLORfinal = COLORsource*FACTORsource op COLORdest * FACTORdest
-COLORfinal：混合之后的颜色。
-COLORsource：即将写入缓冲区的颜色。
-FACTORsource：写入颜色的比例因子，会与颜色值进行乘法计算。
-op：数学计算方法，将操作符左右两边的结果进行某种数学运算。最常见的是加法。
-COLORdest：缓冲区已经存在的颜色
-FACTORdest：已存在颜色的比例因子
-
-gl.blendFunc(sFactor,dFactor);设置混合方式，可以用的参数如下：
-gl.ONE;
-gl.ZERO;
-gl.SRC_COLOR;
-gl.DST_COLOR
-gl.SRC_ALPHA;
-gl.DST_ALPHA;
-gl.CONSTANT_ALPHA;
-gl.CONSTANT_COLOR;
-gl.ONE_MINUS_SRC_ALPHA;
-gl.ONE_MINUS_SRC_COLOR;
-gl.ONE_MINUS_DST_ALPHA;
-gl.ONE_MINUS_DST_COLOR;
-gl.ONE_MINUS_CONSTANT_ALPHA;
-gl.ONE_MINUS_CONSTANT_COLOR;
-最常见的混合方式gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);但这样的混合方式会改变alpha
-如果不希望改变混合后的alpha,可以使用下面这个函数
-gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ZERO, gl.ONE);
-
-如果我们使用了上面提到的constant的混合因子，可以使用下面这个函数来指定混合颜色
-gl.blendColor(GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha)
-
-gl.blendEquation(mode):该函数可以设置op的操作函数如下：
-gl.FUNC_ADD：相加处理
-gl.FUNC_SUBTRACT：相减处理
-gl.FUNC_REVERSE_SUBSTRACT：反向相减处理，即 dest 减去 source
-下面这个函数可以对rgb和alpha
-gl.blendEquationSeparate(GLenum modeRGB, GLenum modeAlpha)
+   -----------------------------------------------------------------------------------------
  */
 function _commitBlendState(gl: WebGLRenderingContext, cur: State, next: State): void {
      
@@ -255,7 +270,8 @@ function _commitBlendState(gl: WebGLRenderingContext, cur: State, next: State): 
  
     if(cur.blendColor!=next.blendColor)
     {
-        var setColor = Util.hexToRgb(next.blendColor)
+        var copyColor = next.blendColor
+        var setColor = Util.hexToRgb(copyColor)
         gl.blendColor(setColor.r,setColor.g,setColor.b,setColor.a)
     }
     if (next.blend) {

@@ -32,22 +32,52 @@ export default class Scene2D extends Scene {
     public init(): void {
 
         var rectangle1 = new Rectangle();
-        rectangle1.alpha = 1.0;
+        rectangle1.alpha = 0.5;
         rectangle1.defineUse.SY_USE_ALPHA_TEST = 0.1;
         rectangle1.pushPassContent(syRender.ShaderType.Sprite,[
             {
                 "key":"blendSep",
                 "des":"是否开启拆分混合，这个比较高级，这个可以指定颜色和alpha分开混合",
-                "value":false
-            }  
+                "value":true
+            },
+            {
+                "key": "depthTest",
+                "value": true
+            },
+            {
+                "key": "depthWrite",
+                "value": false
+
+            },
+            {
+                "key": "depthFunc",
+                "value": glEnums.DS_FUNC_LEQUAL
+            },
+            {
+                "key":"blendSrc",
+                "des":"源颜色如何计算",
+                "value":glEnums.BLEND_SRC_ALPHA
+            },
+            {
+                "key":"blendDst",
+                "des":"目标颜色如何计算",
+                "value":glEnums.BLEND_ONE_MINUS_SRC_ALPHA 
+            },
+            {
+                "key": "blendSrcAlpha",
+                "des":"源alpha如何计算",
+                "value": glEnums.BLEND_ZERO
+            },
+            {
+                "key": "blendDstAlpha",
+                "des":"目标alpha如何计算",
+                "value": glEnums.BLEND_ONE
+            },                                                    
         ])
         rectangle1.setPosition(Device.Instance.width/2,Device.Instance.height/2-100, -100);
         rectangle1.setScale(3,3,1);
         rectangle1.spriteFrame = "res/ground.png";
         this.addChild(rectangle1);
-
-
-
         /**
          * // blend-equation
             BLEND_FUNC_ADD: 32774,              // gl.FUNC_ADD
@@ -65,10 +95,12 @@ export default class Scene2D extends Scene {
             BLEND_ONE_MINUS_SRC_ALPHA: 771,         // gl.ONE_MINUS_SRC_ALPHA
             BLEND_DST_ALPHA: 772,                   // gl.DST_ALPHA
             BLEND_ONE_MINUS_DST_ALPHA: 773,         // gl.ONE_MINUS_DST_ALPHA
+
             BLEND_CONSTANT_COLOR: 32769,            // gl.CONSTANT_COLOR
             BLEND_ONE_MINUS_CONSTANT_COLOR: 32770,  // gl.ONE_MINUS_CONSTANT_COLOR
             BLEND_CONSTANT_ALPHA: 32771,            // gl.CONSTANT_ALPHA
             BLEND_ONE_MINUS_CONSTANT_ALPHA: 32772,  // gl.ONE_MINUS_CONSTANT_ALPHA
+
             BLEND_SRC_ALPHA_SATURATE: 776,          // gl.SRC_ALPHA_SATURATE
          */
         this._rectangle = new Rectangle();
@@ -87,30 +119,31 @@ export default class Scene2D extends Scene {
             {
                 "key": "depthWrite",
                 "value": false
+
             },
             {
                 "key": "depthFunc",
-                "value": "DS_FUNC_LEQUAL"
+                "value": glEnums.DS_FUNC_LEQUAL
             },
             {
                 "key":"blendSrc",
                 "des":"源颜色如何计算",
-                "value":"BLEND_ONE"
+                "value":glEnums.BLEND_SRC_ALPHA
             },
             {
                 "key":"blendDst",
                 "des":"目标颜色如何计算",
-                "value":"BLEND_ZERO" 
+                "value":glEnums.BLEND_ONE_MINUS_SRC_ALPHA 
             },
             {
                 "key": "blendSrcAlpha",
                 "des":"源alpha如何计算",
-                "value": "BLEND_ZERO"
+                "value": glEnums.BLEND_ZERO
             },
             {
                 "key": "blendDstAlpha",
                 "des":"目标alpha如何计算",
-                "value": "BLEND_ONE"
+                "value": glEnums.BLEND_ONE
             },                                                    
         ])
         this._rectangle.setPosition(Device.Instance.width/2,Device.Instance.height/2, -100);

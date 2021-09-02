@@ -7,7 +7,7 @@ const _default = {
     // blend
     blend: false,
     blendSep: false,
-    blendColor: 0xffffffff,
+    blendColor: "0xffffffff",
     blendEq: glEnums.BLEND_FUNC_ADD,
     blendAlphaEq: glEnums.BLEND_FUNC_ADD,
     blendSrc: glEnums.BLEND_ONE,
