@@ -62,10 +62,60 @@ const _default = {
 
 };
 
+export const StateString = {
+    vertexBuffers:"vertexBuffers",
+    vertexBufferOffsets:"vertexBufferOffsets",
+    textureUnits:"textureUnits",
+
+    blend:"blend",//是否开启混合
+    blendSep:"blendSep",//是否是拆分混合函数blendFuncSeparate 不然就使用低级的blendFunc
+    blendColor:"blendColor",
+    blendEq:"blendEq",
+    blendAlphaEq:"blendAlphaEq",
+    blendSrc:"blendSrc",
+    blendDst:"blendDst",
+    blendSrcAlpha:"blendSrcAlpha",
+    blendDstAlpha:"blendDstAlpha",
+
+    // depth
+    depthTest:"depthTest",
+    depthWrite:"depthWrite",
+    depthFunc:"depthFunc",
+
+    // stencil
+    stencilTest:"stencilTest",
+    stencilSep:"stencilSep",
+    stencilFuncFront:"stencilFuncFront",
+    stencilRefFront:"stencilRefFront",
+    stencilMaskFront:"stencilMaskFront",
+    stencilFailOpFront:"stencilFailOpFront",
+    stencilZFailOpFront:"stencilZFailOpFront",
+    stencilZPassOpFront:"stencilZPassOpFront",
+    stencilWriteMaskFront:"stencilWriteMaskFront",
+    stencilFuncBack:"stencilFuncBack",
+    stencilRefBack:"stencilRefBack",
+    stencilMaskBack:"stencilMaskBack",
+    stencilFailOpBack:"stencilFailOpBack",
+    stencilZFailOpBack:"stencilZFailOpBack",
+    stencilZPassOpBack:"stencilZPassOpBack",
+    stencilWriteMaskBack:"stencilWriteMaskBack",
+    ScissorTest:"ScissorTest",
+
+    // cull-mode
+    cullMode:"cullMode",
+    // primitive-type
+    primitiveType:"primitiveType",
+    // buffer bindings
+    maxStream:"maxStream",
+    indexBuffer:"indexBuffer",
+    maxTextureSlot:"maxTextureSlot",
+    program:"program",
+}
+
 /***
  * 渲染状态
  */
-export default class State {
+export  class State {
 
     public vertexBuffers;
     public vertexBufferOffsets;

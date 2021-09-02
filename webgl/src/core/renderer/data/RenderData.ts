@@ -6,7 +6,7 @@ import { MathUtils } from "../../utils/MathUtils";
 import { Node } from "../base/Node";
 import { GameMainCamera } from "../camera/GameMainCamera";
 import { glEnums } from "../gfx/GLapi";
-import State from "../gfx/State";
+import {State} from "../gfx/State";
 import { syGL } from "../gfx/syGLEnums";
 import { Pass } from "../shader/Pass";
 import { BufferAttribsData, Shader, ShaderData } from "../shader/Shader";

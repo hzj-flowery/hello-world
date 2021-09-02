@@ -1,5 +1,5 @@
 import { syRender } from "../data/RenderData";
-import State from "../gfx/State";
+import {State} from "../gfx/State";
 import { Shader } from "./Shader";
 
 

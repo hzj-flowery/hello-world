@@ -64,8 +64,6 @@ import { Pass } from "../shader/Pass";
 import { RenderTexture } from "./texture/RenderTexture";
 import { glMatrix } from "../../math/Matrix";
 import { glEnums } from "../gfx/GLapi";
-import { sy } from "../../Director";
-import State from "../gfx/State";
 
 /**
  * 显示节点

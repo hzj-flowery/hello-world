@@ -1,6 +1,6 @@
 import { syRender } from "../data/RenderData";
 import { glEnums } from "../gfx/GLapi"
-import State from "../gfx/State"
+import { State } from "../gfx/State";
 import { Pass, PassType } from "./Pass"
 import { G_ShaderCenter } from "./ShaderCenter"
 

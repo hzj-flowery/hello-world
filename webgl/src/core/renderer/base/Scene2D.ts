@@ -12,6 +12,7 @@ import { Pen } from "../2d/Pen";
 import { G_InputControl } from "../../InputControl";
 import { handler } from "../../../utils/handler";
 import { glEnums } from "../gfx/GLapi";
+import { StateString } from "../gfx/State";
 
 export default class Scene2D extends Scene {
     
@@ -36,40 +37,40 @@ export default class Scene2D extends Scene {
         rectangle1.defineUse.SY_USE_ALPHA_TEST = 0.1;
         rectangle1.pushPassContent(syRender.ShaderType.Sprite,[
             {
-                "key":"blendSep",
+                "key":StateString.blendSep,
                 "des":"是否开启拆分混合，这个比较高级，这个可以指定颜色和alpha分开混合",
                 "value":true
             },
             {
-                "key": "depthTest",
+                "key": StateString.depthTest,
                 "value": true
             },
             {
-                "key": "depthWrite",
+                "key": StateString.depthWrite,
                 "value": false
 
             },
             {
-                "key": "depthFunc",
+                "key": StateString.depthFunc,
                 "value": glEnums.DS_FUNC_LEQUAL
             },
             {
-                "key":"blendSrc",
+                "key":StateString.blendSrc,
                 "des":"源颜色如何计算",
                 "value":glEnums.BLEND_SRC_ALPHA
             },
             {
-                "key":"blendDst",
+                "key":StateString.blendDst,
                 "des":"目标颜色如何计算",
                 "value":glEnums.BLEND_ONE_MINUS_SRC_ALPHA 
             },
             {
-                "key": "blendSrcAlpha",
+                "key": StateString.blendSrcAlpha,
                 "des":"源alpha如何计算",
                 "value": glEnums.BLEND_ZERO
             },
             {
-                "key": "blendDstAlpha",
+                "key": StateString.blendDstAlpha,
                 "des":"目标alpha如何计算",
                 "value": glEnums.BLEND_ONE
             },                                                    
@@ -78,70 +79,45 @@ export default class Scene2D extends Scene {
         rectangle1.setScale(3,3,1);
         rectangle1.spriteFrame = "res/ground.png";
         this.addChild(rectangle1);
-        /**
-         * // blend-equation
-            BLEND_FUNC_ADD: 32774,              // gl.FUNC_ADD
-            BLEND_FUNC_SUBTRACT: 32778,         // gl.FUNC_SUBTRACT
-            BLEND_FUNC_REVERSE_SUBTRACT: 32779, // gl.FUNC_REVERSE_SUBTRACT
-        
-            // blend
-            BLEND_ZERO: 0,                          // gl.ZERO
-            BLEND_ONE: 1,                           // gl.ONE
-            BLEND_SRC_COLOR: 768,                   // gl.SRC_COLOR
-            BLEND_ONE_MINUS_SRC_COLOR: 769,         // gl.ONE_MINUS_SRC_COLOR
-            BLEND_DST_COLOR: 774,                   // gl.DST_COLOR
-            BLEND_ONE_MINUS_DST_COLOR: 775,         // gl.ONE_MINUS_DST_COLOR
-            BLEND_SRC_ALPHA: 770,                   // gl.SRC_ALPHA
-            BLEND_ONE_MINUS_SRC_ALPHA: 771,         // gl.ONE_MINUS_SRC_ALPHA
-            BLEND_DST_ALPHA: 772,                   // gl.DST_ALPHA
-            BLEND_ONE_MINUS_DST_ALPHA: 773,         // gl.ONE_MINUS_DST_ALPHA
 
-            BLEND_CONSTANT_COLOR: 32769,            // gl.CONSTANT_COLOR
-            BLEND_ONE_MINUS_CONSTANT_COLOR: 32770,  // gl.ONE_MINUS_CONSTANT_COLOR
-            BLEND_CONSTANT_ALPHA: 32771,            // gl.CONSTANT_ALPHA
-            BLEND_ONE_MINUS_CONSTANT_ALPHA: 32772,  // gl.ONE_MINUS_CONSTANT_ALPHA
-
-            BLEND_SRC_ALPHA_SATURATE: 776,          // gl.SRC_ALPHA_SATURATE
-         */
         this._rectangle = new Rectangle();
         this._rectangle.alpha = 0.2;
         this._rectangle.defineUse.SY_USE_ALPHA_TEST = 0.0;
         this._rectangle.pushPassContent(syRender.ShaderType.Sprite,[
             {
-                "key":"blendSep",
+                "key":StateString.blendSep,
                 "des":"是否开启拆分混合，这个比较高级，这个可以指定颜色和alpha分开混合",
                 "value":true
             },
             {
-                "key": "depthTest",
+                "key": StateString.depthTest,
                 "value": true
             },
             {
-                "key": "depthWrite",
+                "key": StateString.depthWrite,
                 "value": false
-
             },
             {
-                "key": "depthFunc",
+                "key": StateString.depthFunc,
                 "value": glEnums.DS_FUNC_LEQUAL
             },
             {
-                "key":"blendSrc",
+                "key":StateString.blendSrc,
                 "des":"源颜色如何计算",
                 "value":glEnums.BLEND_SRC_ALPHA
             },
             {
-                "key":"blendDst",
+                "key":StateString.blendDst,
                 "des":"目标颜色如何计算",
                 "value":glEnums.BLEND_ONE_MINUS_SRC_ALPHA 
             },
             {
-                "key": "blendSrcAlpha",
+                "key": StateString.blendSrcAlpha,
                 "des":"源alpha如何计算",
                 "value": glEnums.BLEND_ZERO
             },
             {
-                "key": "blendDstAlpha",
+                "key": StateString.blendDstAlpha,
                 "des":"目标alpha如何计算",
                 "value": glEnums.BLEND_ONE
             },                                                    

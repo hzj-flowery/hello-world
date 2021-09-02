@@ -7,7 +7,7 @@ import { CameraRenderData, GameMainCamera } from "./renderer/camera/GameMainCame
 import FrameBuffer from "./renderer/gfx/FrameBuffer";
 import { CameraData } from "./renderer/data/CameraData";
 import { syRender } from "./renderer/data/RenderData";
-import State from "./renderer/gfx/State";
+import {State} from "./renderer/gfx/State";
 import { G_ShaderFactory } from "./renderer/shader/ShaderFactory"; 
 import { glEnums } from "./renderer/gfx/GLapi";
 import { Node } from "./renderer/base/Node";
