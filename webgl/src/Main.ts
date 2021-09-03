@@ -18,6 +18,7 @@ import { G_UISetting } from "./core/ui/UiSetting";
 import ShaderShadowTest from "./core/renderer/3d/test/ShaderShadowTest";
 import ObjTest from "./core/renderer/3d/test/ObjTest";
 import { syRender } from "./core/renderer/data/RenderData";
+import { StencilTest } from "./core/renderer/3d/test/StencilTest";
 
 
 

@@ -125,13 +125,13 @@ export default class Scene3D extends Scene {
         // this._deferredShading.setPosition(-3,10,0);
         // this._centerNode.addChild(this._deferredShading);
 
-        // this._renderSprite = new RenderOffline3DSprite();
-        // this._renderSprite.setRenderTextureUUid(syRender.RenderTextureUUid.other1);
-        // this._renderSprite.spriteFrame = {
-        //     place:syRender.AttachPlace.Color,
-        // }
-        // this._renderSprite.setPosition(-3,10,0);
-        // this._centerNode.addChild(this._renderSprite);
+        this._renderSprite = new RenderOffline3DSprite();
+        this._renderSprite.setRenderTextureUUid(syRender.RenderTextureUUid.other1);
+        this._renderSprite.spriteFrame = {
+            place:syRender.AttachPlace.Color,
+        }
+        this._renderSprite.setPosition(-3,10,0);
+        this._centerNode.addChild(this._renderSprite);
 
         // this._renderSprite1 = new RenderOffline3DSprite();
         // this._renderSprite1.setRenderTextureUUid(syRender.RenderTextureUUid.other2);

@@ -1,6 +1,7 @@
 
 import { SY } from "../base/Sprite";
 import { CubeData } from "../data/CubeData";
+import { syRender } from "../data/RenderData";
 
 /**
  * 如果将三维物体的朝向和光的方向点乘， 结果为 1 则物体朝向和光照方向相同，为 -1 则物体朝向和光照方向相反
@@ -21,5 +22,6 @@ export default class ParallelLightCube extends SY.SpriteBase {
         this.createIndexsBuffer(rd.indexs);
         this.createNormalsBuffer(rd.normals,rd.dF.normal_item_size);
         this._glPrimitiveType = this.gl.TRIANGLE_STRIP;
+        this.pushPassContent(syRender.ShaderType.Light_Parallel)
     }
 }

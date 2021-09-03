@@ -18,6 +18,7 @@ export class RenderOffline3DSprite extends SY.SpriteBase{
         this.createUVsBuffer(rd.uvData, rd.dF.uv_item_size);
         this.createIndexsBuffer(rd.indexs);
         this._glPrimitiveType = this.gl.TRIANGLE_STRIP;
+        this.pushPassContent(syRender.ShaderType.Sprite)
     }
     protected onSetTextureUrl():void{
         GameMainCamera.instance.pushRenderTexture(this._rtuuid,this.texture as RenderTexture)

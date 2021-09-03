@@ -1,101 +1,20 @@
 
 import { SY } from "../base/Sprite";
-import { syGL } from "../gfx/syGLEnums";
+import { CubeData } from "../data/CubeData";
+import { syRender } from "../data/RenderData";
 
-var positions = [
-    -0.5, -0.5, -0.5,
-    -0.5, 0.5, -0.5,
-    0.5, -0.5, -0.5,
-    -0.5, 0.5, -0.5,
-    0.5, 0.5, -0.5,
-    0.5, -0.5, -0.5,
-
-    -0.5, -0.5, 0.5,
-    0.5, -0.5, 0.5,
-    -0.5, 0.5, 0.5,
-    -0.5, 0.5, 0.5,
-    0.5, -0.5, 0.5,
-    0.5, 0.5, 0.5,
-
-    -0.5, 0.5, -0.5,
-    -0.5, 0.5, 0.5,
-    0.5, 0.5, -0.5,
-    -0.5, 0.5, 0.5,
-    0.5, 0.5, 0.5,
-    0.5, 0.5, -0.5,
-
-    -0.5, -0.5, -0.5,
-    0.5, -0.5, -0.5,
-    -0.5, -0.5, 0.5,
-    -0.5, -0.5, 0.5,
-    0.5, -0.5, -0.5,
-    0.5, -0.5, 0.5,
-
-    -0.5, -0.5, -0.5,
-    -0.5, -0.5, 0.5,
-    -0.5, 0.5, -0.5,
-    -0.5, -0.5, 0.5,
-    -0.5, 0.5, 0.5,
-    -0.5, 0.5, -0.5,
-
-    0.5, -0.5, -0.5,
-    0.5, 0.5, -0.5,
-    0.5, -0.5, 0.5,
-    0.5, -0.5, 0.5,
-    0.5, 0.5, -0.5,
-    0.5, 0.5, 0.5,
-]
-var texcoord = [
-    0, 0,
-    0, 1,
-    1, 0,
-    0, 1,
-    1, 1,
-    1, 0,
-
-    0, 0,
-    1, 0,
-    0, 1,
-    0, 1,
-    1, 0,
-    1, 1,
-
-    0, 0,
-    0, 1,
-    1, 0,
-    0, 1,
-    1, 1,
-    1, 0,
-
-    0, 0,
-    1, 0,
-    0, 1,
-    0, 1,
-    1, 0,
-    1, 1,
-
-    0, 0,
-    0, 1,
-    1, 0,
-    0, 1,
-    1, 1,
-    1, 0,
-
-    0, 0,
-    1, 0,
-    0, 1,
-    0, 1,
-    1, 0,
-    1, 1,
-]
-
-export class FogCube extends SY.SpriteBase {
+export  class FogCube extends SY.SpriteBase {
     constructor() {
         super();
-        this._glPrimitiveType = syGL.PrimitiveType.TRIANGLES;
     }
-    onInit(): void {
-        this.createVertexsBuffer(positions, 3);
-        this.createUVsBuffer(texcoord, 2);
+    protected onInit() {
+        var rd = CubeData.getData();
+        this.createVertexsBuffer(rd.vertex, rd.dF.vertex_item_size);
+        this.createUVsBuffer(rd.uvData, rd.dF.uv_item_size);
+        this.createNormalsBuffer(rd.normals,rd.dF.normal_item_size)
+        this.createIndexsBuffer(rd.indexs);
+        this._glPrimitiveType = this.gl.TRIANGLE_STRIP;
+        this.pushPassContent(syRender.ShaderType.Fog);
+        super.onInit();
     }
 }

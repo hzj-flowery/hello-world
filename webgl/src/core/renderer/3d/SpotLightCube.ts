@@ -1,6 +1,7 @@
 
 import { SY } from "../base/Sprite";
 import { CubeData } from "../data/CubeData";
+import { syRender } from "../data/RenderData";
 
 
 
@@ -47,5 +48,7 @@ export default class SpotLightCube extends SY.SpriteBase {
     
     this._glPrimitiveType = this.gl.TRIANGLE_STRIP;
     this.color = [1, 1.0, 1.0, 1.0];
+
+    this.pushPassContent(syRender.ShaderType.Light_Spot);
   }
 }

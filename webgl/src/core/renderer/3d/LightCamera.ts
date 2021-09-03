@@ -2,7 +2,6 @@ import { sy } from "../../Director";
 import { glMatrix } from "../../math/Matrix";
 import { G_UISetting } from "../../ui/UiSetting";
 import { MathUtils } from "../../utils/MathUtils";
-import { ShadowMap } from "../2d/ShadowMap";
 import { Node } from "../base/Node";
 import { SY } from "../base/Sprite";
 import { G_Stage } from "../base/Stage";

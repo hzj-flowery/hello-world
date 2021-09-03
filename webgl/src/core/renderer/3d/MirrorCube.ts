@@ -2,6 +2,7 @@
 
 import { SY } from "../base/Sprite";
 import { CubeData } from "../data/CubeData";
+import { syRender } from "../data/RenderData";
 
 export default class MirrorCube extends SY.SpriteBase {
     constructor() {
@@ -13,6 +14,7 @@ export default class MirrorCube extends SY.SpriteBase {
         this.createIndexsBuffer(rd.indexs);
         this.createNormalsBuffer(rd.normals,rd.dF.normal_item_size);
         this._glPrimitiveType = this.gl.TRIANGLE_STRIP;
+        this.pushPassContent(syRender.ShaderType.Mirror)
     }
     private defaultPath = [
         'res/skybox/2/right+x.png',

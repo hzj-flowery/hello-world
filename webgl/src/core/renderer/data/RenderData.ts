@@ -16,6 +16,15 @@ import { ShaderUseVariantType } from "../shader/ShaderUseVariantType";
 let renderDataId: number = 0;
 export namespace syRender {
 
+    export enum ColorMask {
+        NONE = 0x0, //00000000 
+        R    = 0x1, //00000001
+        G    = 0x2, //00000010
+        B    = 0x4, //00000100
+        A    = 0x8, //00001000
+        ALL  = R | G | B | A,//表示全部开启
+    }
+
     //着色器的类型
     export const enum ShaderType {
         Custom = 0,

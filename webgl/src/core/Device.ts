@@ -7,8 +7,8 @@ import { CameraRenderData, GameMainCamera } from "./renderer/camera/GameMainCame
 import FrameBuffer from "./renderer/gfx/FrameBuffer";
 import { CameraData } from "./renderer/data/CameraData";
 import { syRender } from "./renderer/data/RenderData";
-import {State} from "./renderer/gfx/State";
-import { G_ShaderFactory } from "./renderer/shader/ShaderFactory"; 
+import { State } from "./renderer/gfx/State";
+import { G_ShaderFactory } from "./renderer/shader/ShaderFactory";
 import { glEnums } from "./renderer/gfx/GLapi";
 import { Node } from "./renderer/base/Node";
 import { SY } from "./renderer/base/Sprite";
@@ -33,8 +33,11 @@ import { MathUtils } from "./utils/MathUtils";
  阶段3--》图元装配：点，线，三角形目前支持这三种
  阶段4--》光栅化，生成片元，这里面也有裁切操作进行
  阶段5--》片元着色器
- 阶段6--》逐片元操作（深度测试）
- 阶段7--》著片元操作（混合）
+ 阶段6--》逐片元操作（像素所有权测试）
+ 阶段7--》逐片元操作（裁切）
+ 阶段8--》逐片元操作（模板测试）
+ 阶段9--》逐片元操作（深度测试）
+ 阶段10--》逐片元操作（混合）
 
  */
 
@@ -132,8 +135,138 @@ function _commitDepthState(gl: WebGLRenderingContext, cur: State, next: State): 
         //比较函数
         gl.depthFunc(next.depthFunc);
     }
-
 }
+/**
+ * 提交模板状态
+ * @param gl 
+ * @param cur 
+ * @param next 
+ * 
+    //模板测试伪代码
+    // stencil test比较的时候需要mask
+    status = stencilfunc.func((stencilbuf[x,y] & stencilfunc.mask), (stencilfunc.ref & stencilfunc.mask));
+    status |= depth_test_result;
+    if (status == stencil_test_fail) stencilop = sfailop;
+    else if (status == stencil_test_pass & depth_test_fail) stencilop = dpfailop;
+    else if (status == stencil_test_pass & depth_test_pass) stencilop = dppassop;
+    // stencil test结束后的操作不需要mask
+    stencil_new_value = stencilop(stencilbuf[x,y]);
+    // 写入stencil buffer的时候需要另一个mask
+    stencilbuf[x,y] = (stencil_new_value & stencilmask.mask) | (stencilbuf[x,y] & (~stencilmask.mask));
+
+
+    函数功能：指定模板测试的比较方法
+    gl.stencilFunc(func: number, ref: number, mask: number)
+    func:设置一个比较方法
+    ref:指定模板测试的引用值。模板缓冲的内容会与这个值对比
+    mask:指定一个遮罩，在模板测试对比引用值和储存的模板值前，对它们进行按位与（and）操作，初始设置为1，
+         指定掩码，只在掩码为1的位上进行比较，控制参考值的哪些位和缓冲区进行比较
+    func的值下边随便用
+        DS_FUNC_NEVER: 512,    // gl.NEVER    总是不通过测试
+        DS_FUNC_LESS: 513,     // gl.LESS     (ref & mask) < (bufferValue & mask)
+        DS_FUNC_EQUAL: 514,    // gl.EQUAL    (ref & mask) = (bufferValue & mask)
+        DS_FUNC_LEQUAL: 515,   // gl.LEQUAL   (ref & mask) <= (bufferValue & mask)
+        DS_FUNC_GREATER: 516,  // gl.GREATER  (ref & mask) > (bufferValue & mask)
+        DS_FUNC_NOTEQUAL: 517, // gl.NOTEQUAL (ref & mask) != (bufferValue & mask)
+        DS_FUNC_GEQUAL: 518,   // gl.GEQUAL   (ref & mask) >= (bufferValue & mask)
+        DS_FUNC_ALWAYS: 519,   // gl.ALWAYS   总是通过测试
+    gl.stencilFuncSeparate(face:number,func: number, ref: number, mask: number)
+    此函数与gl.stencilFunc功能一样，只是它可以指定一个面进行模板测试
+    face可以传入的值如下：
+        CULL_FRONT: 1028,          //gl.FRONT           前面
+        CULL_BACK: 1029,           //gl.BACK            背面
+        CULL_FRONT_AND_BACK: 1032, //gl.FRONT_AND_BACK  前后两面
+
+    
+    函数功能：指定了当一个片段通过或未通过模板测试是，模板缓冲区中的数据如何进行修改
+    gl.stencilOp(fail: GLenum, zfail: GLenum, zpass: GLenum)
+    fail: 如果模板测试失败将采取的动作。
+    zfail： 如果模板测试通过，但是深度测试失败时采取的动作。
+    zpass： 如果深度测试和模板测试都通过，将采取的动作
+    下边的参数随便用
+        STENCIL_OP_KEEP: 7680,          // gl.KEEP  	保持现有的模板值
+        STENCIL_OP_ZERO: 0,             // gl.ZERO      将模板值置为0
+        STENCIL_OP_REPLACE: 7681,       // gl.REPLACE   将模板值设置为用glStencilFunc函数设置的ref值
+        STENCIL_OP_INCR: 7682,          // gl.INCR      如果模板值不是最大值就将模板值+1
+        STENCIL_OP_INCR_WRAP: 34055,    // gl.INCR_WRAP 与gl.GL_INCR一样将模板值+1，如果模板值已经是最大值则设为0
+        STENCIL_OP_DECR: 7683,          // gl.DECR      如果模板值不是最小值就将模板值-1
+        STENCIL_OP_DECR_WRAP: 34056,    // gl.DECR_WRAP 与GL_DECR一样将模板值-1，如果模板值已经是最小值则设为最大值
+        STENCIL_OP_INVERT: 5386,        // gl.INVERT    Bitwise inverts the current stencil buffer value
+    gl.stencilOpSeparate(face:number,fail: GLenum, zfail: GLenum, zpass: GLenum)
+    此函数与gl.stencilOp功能一样，只是它可以指定一个面进行模板数据操作
+    face可以传入的值如下：
+        CULL_FRONT: 1028,          //gl.FRONT           前面
+        CULL_BACK: 1029,           //gl.BACK            背面
+        CULL_FRONT_AND_BACK: 1032, //gl.FRONT_AND_BACK  前后两面
+    
+    函数功能：当通过层层测试的时候最终要写入到模板缓冲的时候，需要用到这个值
+    gl.stencilMask(mask:number)
+    gl.stencilMaskSeparate(face:number,mask:number)
+ */
+function _commitStencilState(gl: WebGLRenderingContext, cur: State, next: State): void {
+
+    //关闭或者开启模板测试
+    if ((cur.stencilTestFront !== next.stencilTestFront)
+        || (cur.stencilTestBack !== next.stencilTestBack)) {
+        if (next.stencilTestFront || next.stencilTestBack) {
+            gl.enable(gl.STENCIL_TEST);
+        } else {
+            gl.disable(gl.STENCIL_TEST);
+        }
+    }
+
+    // front
+    if ((cur.stencilFuncFront !== next.stencilFuncFront)
+        || (cur.stencilRefFront !== next.stencilRefFront)
+        || (cur.stencilMaskFront !== next.stencilMaskFront)) {
+        gl.stencilFuncSeparate(
+            gl.FRONT,
+            next.stencilFuncFront,
+            next.stencilRefFront,
+            next.stencilMaskFront,
+        );
+    }
+    if ((cur.stencilFailOpFront !== next.stencilFailOpFront)
+        || (cur.stencilZFailOpFront !== next.stencilZFailOpFront)
+        || (cur.stencilZPassOpFront !== next.stencilZPassOpFront)) {
+        gl.stencilOpSeparate(
+            gl.FRONT,
+            next.stencilFailOpFront,
+            next.stencilZFailOpFront,
+            next.stencilZPassOpFront,
+        );
+    }
+    if (cur.stencilWriteMaskFront !== next.stencilWriteMaskFront) {
+        gl.stencilMaskSeparate(gl.FRONT, next.stencilWriteMaskFront);
+        cur.stencilWriteMaskFront = next.stencilWriteMaskFront;
+    }
+    //back
+    if ((cur.stencilFuncBack !== next.stencilFuncBack)
+        || (cur.stencilRefBack !== next.stencilRefBack)
+        || (cur.stencilMaskBack !== next.stencilMaskBack)) {
+        gl.stencilFuncSeparate(
+            gl.BACK,
+            next.stencilFuncBack,
+            next.stencilRefBack,
+            next.stencilMaskBack,
+        );
+    }
+    if ((cur.stencilFailOpBack !== next.stencilFailOpBack)
+        || (cur.stencilZFailOpBack !== next.stencilZFailOpBack)
+        || (cur.stencilZPassOpBack !== next.stencilZPassOpBack)) {
+        gl.stencilOpSeparate(
+            gl.BACK,
+            next.stencilFailOpBack,
+            next.stencilZFailOpBack,
+            next.stencilZPassOpBack,
+        );
+    }
+    if (cur.stencilWriteMaskBack !== next.stencilWriteMaskBack) {
+        gl.stencilMaskSeparate(gl.BACK, next.stencilWriteMaskBack);
+    }
+}
+
+
 /**
  * 默认情况下 剔除功能是关闭的
 gl.enable(gl.CULL_FACE);开启面剔除
@@ -155,19 +288,17 @@ CULL_FRONT_AND_BACK: 1032,
  */
 function _commitCullState(gl: WebGLRenderingContext, cur: State, next: State): void {
     if (cur.cullMode != next.cullMode) {
-        if(next.cullMode==glEnums.CULL_NONE)
-        {   
+        if (next.cullMode == glEnums.CULL_NONE) {
             //关闭剔除
             gl.disable(gl.CULL_FACE);
         }
-        else
-        { 
+        else {
             gl.frontFace(gl.CCW)
             gl.enable(gl.CULL_FACE);
             gl.cullFace(next.cullMode);
         }
     }
-} 
+}
 /**
  * 裁切状态
  * 剪裁测试用于限制绘制区域。区域内的像素，将被绘制修改。区域外的像素，将不会被修改。
@@ -261,18 +392,26 @@ function _commitScissorState(gl: WebGLRenderingContext, cur: State, next: State)
    -----------------------------------------------------------------------------------------
  */
 function _commitBlendState(gl: WebGLRenderingContext, cur: State, next: State): void {
-     
-    
+
+
     if (cur.blend != next.blend) {
         //控制开启或者关闭混合
         next.blend ? gl.enable(gl.BLEND) : gl.disable(gl.BLEND);
     }
- 
-    if(cur.blendColor!=next.blendColor)
-    {
+
+    if (cur.blendColorMask !== next.blendColorMask) {
+        var colorMask = next.blendColorMask
+        const r = (colorMask & syRender.ColorMask.R) !== syRender.ColorMask.NONE;
+        const g = (colorMask & syRender.ColorMask.G) !== syRender.ColorMask.NONE;
+        const b = (colorMask & syRender.ColorMask.B) !== syRender.ColorMask.NONE;
+        const a = (colorMask & syRender.ColorMask.A) !== syRender.ColorMask.NONE;
+        gl.colorMask(r, g, b, a);
+    }
+
+    if (cur.blendColor != next.blendColor) {
         var copyColor = next.blendColor
         var setColor = Util.hexToRgb(copyColor)
-        gl.blendColor(setColor.r,setColor.g,setColor.b,setColor.a)
+        gl.blendColor(setColor.r, setColor.g, setColor.b, setColor.a)
     }
     if (next.blend) {
         //混合必须开启 下面的设置才有意义
@@ -302,8 +441,7 @@ function _commitBlendState(gl: WebGLRenderingContext, cur: State, next: State): 
                 gl.blendFunc(next.blendSrc, next.blendDst)
             }
 
-            if(cur.blendEq!=next.blendEq)
-            {
+            if (cur.blendEq != next.blendEq) {
                 //源颜色rgb计算结果该如何与目标颜色rgb计算结果进行计算
                 /**
                     *   gl.FUNC_ADD：相加处理
@@ -454,48 +592,42 @@ export default class Device {
         return context;
     }
 
-   
-    
 
-    private getTreeData(drawOrder:syRender.DrawingOrder,tag:syRender.ShaderType):syRender.BaseData[]{
+
+
+    private getTreeData(drawOrder: syRender.DrawingOrder, tag: syRender.ShaderType): syRender.BaseData[] {
         //深度渲染pass
         var treeData = this._mapRenderTreeData.get(drawOrder);
         var retData = []
-        for(let j in treeData)
-        {
-           if(treeData[j].pass&&treeData[j].pass.shaderType==tag)
-           {
-              retData.push(treeData[j]);
-           }
-           else if(!treeData[j].pass&&tag==syRender.ShaderType.Custom)
-           {
-              retData.push(treeData[j]);
-           }
+        for (let j in treeData) {
+            if (treeData[j].pass && treeData[j].pass.shaderType == tag) {
+                retData.push(treeData[j]);
+            }
+            else if (!treeData[j].pass && tag == syRender.ShaderType.Custom) {
+                retData.push(treeData[j]);
+            }
         }
         return retData;
     }
-    private sortTreeData():void{
+    private sortTreeData(): void {
         var data = this._mapRenderTreeData.get(syRender.DrawingOrder.Normal);
-        if(data&&data.length>0)
-        data.sort((a,b)=>{
-           if(a.pass!=null && b.pass!=null)
-           {
-               if(a.primitive.alpha==b.primitive.alpha)
-               {
-                   return a.pass.shaderType - b.pass.shaderType;
-               }
-               else
-               {
-                   /**
-                    * 需要优先绘制不透明的物体
-                    * 
-                    * 绘制所有半透明的物体（α小于0）,注意它们应当按照深度排序，然后从后向前绘制
-                    */
-                   return b.primitive.alpha - a.primitive.alpha;
-               }
-           }
-           return -1;
-        })
+        if (data && data.length > 0)
+            data.sort((a, b) => {
+                if (a.pass != null && b.pass != null) {
+                    if (a.primitive.alpha == b.primitive.alpha) {
+                        return a.pass.shaderType - b.pass.shaderType;
+                    }
+                    else {
+                        /**
+                         * 需要优先绘制不透明的物体
+                         * 
+                         * 绘制所有半透明的物体（α小于0）,注意它们应当按照深度排序，然后从后向前绘制
+                         */
+                        return b.primitive.alpha - a.primitive.alpha;
+                    }
+                }
+                return -1;
+            })
     }
     /**
      * 获取常规渲染的data
@@ -503,36 +635,33 @@ export default class Device {
      * @param tagArr 
      * @returns 
      */
-    private getNormalTreeData():syRender.BaseData[]{
+    private getNormalTreeData(): syRender.BaseData[] {
         var drawOrder = syRender.DrawingOrder.Normal;
-        var tagArr:Array<syRender.ShaderType> = [syRender.ShaderType.Custom,
-            syRender.ShaderType.Light_Spot,
-            syRender.ShaderType.Light_Point,
-            syRender.ShaderType.Light_Parallel,
-            syRender.ShaderType.Line,
-            syRender.ShaderType.Point,
-            syRender.ShaderType.Sprite,
-            syRender.ShaderType.Fog,
-            syRender.ShaderType.SkyBox,
-            syRender.ShaderType.Mirror,
-            syRender.ShaderType.Shadow,
-            syRender.ShaderType.Instantiate,
-            syRender.ShaderType.Purity,
-            syRender.ShaderType.OutLine,
-            syRender.ShaderType.Test]
+        var tagArr: Array<syRender.ShaderType> = [syRender.ShaderType.Custom,
+        syRender.ShaderType.Light_Spot,
+        syRender.ShaderType.Light_Point,
+        syRender.ShaderType.Light_Parallel,
+        syRender.ShaderType.Line,
+        syRender.ShaderType.Point,
+        syRender.ShaderType.Sprite,
+        syRender.ShaderType.Fog,
+        syRender.ShaderType.SkyBox,
+        syRender.ShaderType.Mirror,
+        syRender.ShaderType.Shadow,
+        syRender.ShaderType.Instantiate,
+        syRender.ShaderType.Purity,
+        syRender.ShaderType.OutLine,
+        syRender.ShaderType.Test]
         //深度渲染pass
         var treeData = this._mapRenderTreeData.get(drawOrder);
         var retData = []
-        for(let j in treeData)
-        {
-           if(treeData[j].pass&&tagArr.indexOf(treeData[j].pass.shaderType)>=0)
-           {
-              retData.push(treeData[j]);
-           }
-           else if(!treeData[j].pass&&tagArr.indexOf(syRender.ShaderType.Custom)>=0)
-           {
-              retData.push(treeData[j]);
-           }
+        for (let j in treeData) {
+            if (treeData[j].pass && tagArr.indexOf(treeData[j].pass.shaderType) >= 0) {
+                retData.push(treeData[j]);
+            }
+            else if (!treeData[j].pass && tagArr.indexOf(syRender.ShaderType.Custom) >= 0) {
+                retData.push(treeData[j]);
+            }
         }
         return retData;
     }
@@ -548,34 +677,30 @@ export default class Device {
         this.visitRenderTree(time, stage);
         this.sortTreeData();
         var cameraData = GameMainCamera.instance.getRenderData();
-        cameraData.sort(function(a,b){
-            if (a.drawingOrder!=b.drawingOrder)
-            return b.drawingOrder - a.drawingOrder;
+        cameraData.sort(function (a, b) {
+            if (a.drawingOrder != b.drawingOrder)
+                return b.drawingOrder - a.drawingOrder;
             else
-            return b.rtuuid-a.rtuuid;
+                return b.rtuuid - a.rtuuid;
         })
         for (let k = 0; k < cameraData.length; k++) {
-            if(cameraData[k].drawingOrder==syRender.DrawingOrder.Normal)
-            {
-                if(cameraData[k].rtuuid == syRender.RenderTextureUUid.shadowMap)
-                {
+            if (cameraData[k].drawingOrder == syRender.DrawingOrder.Normal) {
+                if (cameraData[k].rtuuid == syRender.RenderTextureUUid.shadowMap) {
                     //深度渲染pass
-                    this.triggerRender(this.getTreeData(syRender.DrawingOrder.Normal,syRender.ShaderType.ShadowMap),cameraData[k]);
+                    this.triggerRender(this.getTreeData(syRender.DrawingOrder.Normal, syRender.ShaderType.ShadowMap), cameraData[k]);
                 }
-                else
-                {
-                    this.triggerRender(this.getNormalTreeData(),cameraData[k]);
+                else {
+                    this.triggerRender(this.getNormalTreeData(), cameraData[k]);
                 }
             }
-            else if(cameraData[k].drawingOrder==syRender.DrawingOrder.Middle)
-            {
+            else if (cameraData[k].drawingOrder == syRender.DrawingOrder.Middle) {
                 //优先绘制
-                var tree1 = this.getTreeData(syRender.DrawingOrder.Middle,syRender.ShaderType.Custom)
-                var tree2 = this.getTreeData(syRender.DrawingOrder.Middle,syRender.ShaderType.Rtt)
-                this.triggerRender(tree1.concat(tree2),cameraData[k]);
+                var tree1 = this.getTreeData(syRender.DrawingOrder.Middle, syRender.ShaderType.Custom)
+                var tree2 = this.getTreeData(syRender.DrawingOrder.Middle, syRender.ShaderType.Rtt)
+                this.triggerRender(tree1.concat(tree2), cameraData[k]);
             }
         }
-        if (G_InputControl.openCapture&&G_InputControl.isCapture) {
+        if (G_InputControl.openCapture && G_InputControl.isCapture) {
             G_InputControl.isCapture = false;
             this.capture();
             // this.showCurFramerBufferOnCanvas();
@@ -620,8 +745,10 @@ export default class Device {
         this._nextFrameS.blendSep = state.blendSep;
         this._nextFrameS.blendSrc = state.blendSrc;
         this._nextFrameS.blendSrcAlpha = state.blendSrcAlpha;
+        this._nextFrameS.blendColorMask = state.blendColorMask;
 
         _commitDepthState(gl, this._curFrameS, this._nextFrameS);
+        _commitStencilState(gl, this._curFrameS, this._nextFrameS);
         _commitCullState(gl, this._curFrameS, this._nextFrameS);
         _commitScissorState(gl, this._curFrameS, this._nextFrameS);
         _commitBlendState(gl, this._curFrameS, this._nextFrameS);
@@ -631,7 +758,7 @@ export default class Device {
     //渲染后
     private onAfterRender() {
         this.stats.end();
-        this._mapRenderTreeData.forEach(function(value,key){
+        this._mapRenderTreeData.forEach(function (value, key) {
             syRender.DataPool.return(value);
         })
     }
@@ -648,9 +775,8 @@ export default class Device {
      * @param treeData 
      * @param crData 
      */
-    private triggerRender(treeData:Array<syRender.BaseData>,crData: CameraRenderData) {
-        if(!treeData||treeData.length<=0)
-        {
+    private triggerRender(treeData: Array<syRender.BaseData>, crData: CameraRenderData) {
+        if (!treeData || treeData.length <= 0) {
             return;
         }
         //设置帧缓冲区
@@ -658,9 +784,9 @@ export default class Device {
         //记录一下当前渲染的时间
         this._triggerRenderTime++;
         var cameraData = GameMainCamera.instance.getCameraByUUid(syRender.CameraUUid.base3D).getCameraData();
-        G_CameraModel.createCamera(crData.VA, cameraData.projectMat, cameraData.modelMat,crData.VAPos);
+        G_CameraModel.createCamera(crData.VA, cameraData.projectMat, cameraData.modelMat, crData.VAPos);
         //提交数据给GPU 立即绘制
-        for (var j = 0; j < treeData.length; j++) {   
+        for (var j = 0; j < treeData.length; j++) {
             if (treeData[j].isOffline && crData.fb) {
                 //对于离屏渲染的数据 如果当前是离屏渲染的话 则不可以渲染它 否则会报错
                 //你想啊你把一堆显示数据渲染到一张纹理中，这张纹理本身就在这一堆渲染数据中 自然是会冲突的
@@ -670,25 +796,21 @@ export default class Device {
             let rData = treeData[j];
             //相机 一般只有两种 要么是3d透视相机 要么是2d正交相机
             var cammerauuid = crData.uuid;
-            if(cammerauuid==syRender.CameraUUid.adapt)
-            {
+            if (cammerauuid == syRender.CameraUUid.adapt) {
                 //自适应的相机 就是2d的节点使用2d相机 3d节点使用3d相机
-                if(rData.node.is3DNode())
-                {
+                if (rData.node.is3DNode()) {
                     cammerauuid = syRender.CameraUUid.base3D;
                 }
-                else
-                {
+                else {
                     cammerauuid = syRender.CameraUUid.base2D;
                 }
             }
-            else
-            {
+            else {
                 cammerauuid = syRender.CameraUUid.light;
             }
             var cameraData = GameMainCamera.instance.getCameraByUUid(cammerauuid).getCameraData();
 
-            this.draw(rData, crData,cameraData);
+            this.draw(rData, crData, cameraData);
         }
     }
     /**
@@ -697,7 +819,7 @@ export default class Device {
      * @param projMatix 投影矩阵
      * @param viewMatrix 视口矩阵
      */
-    private _drawBase(rData: syRender.BaseData, projMatix: Float32Array, viewMatrix: Float32Array,crData: CameraRenderData): void {
+    private _drawBase(rData: syRender.BaseData, projMatix: Float32Array, viewMatrix: Float32Array, crData: CameraRenderData): void {
         G_DrawEngine.run(rData, viewMatrix, projMatix, rData.shader);
     }
     private _temp1Matrix: Float32Array = glMatrix.mat4.identity(null);
@@ -708,11 +830,11 @@ export default class Device {
      * @param cData
      * @param isUseScene 
      */
-    private draw(rData: syRender.BaseData, crData: CameraRenderData,cData:CameraData): void {
-        
-        
+    private draw(rData: syRender.BaseData, crData: CameraRenderData, cData: CameraData): void {
+
+
         glMatrix.mat4.identity(this._temp1Matrix);
-        
+
 
         //补一下光的数据
         rData.light.parallel.color = G_LightCenter.lightData.parallel.color; //光的颜色
@@ -734,7 +856,7 @@ export default class Device {
 
         rData.light.viewMatrix = G_LightCenter.lightData.viewMatrix;
         rData.light.projectionMatrix = G_LightCenter.lightData.projectionMatrix;
-        
+
         rData.light.shadow.bias = G_LightCenter.lightData.shadow.bias;
         rData.light.shadow.size = G_LightCenter.lightData.shadow.size;
         rData.light.shadow.min = G_LightCenter.lightData.shadow.min;
@@ -745,12 +867,12 @@ export default class Device {
             case syRender.DataType.Base:
                 this._commitRenderState(rData.pass.state);
                 if (crData.isFirstVisualAngle()) {
-                    this._drawBase(rData, cData.projectMat, cData.viewMat,crData);
+                    this._drawBase(rData, cData.projectMat, cData.viewMat, crData);
                 }
                 else {
                     let projMatix = G_CameraModel.getSceneProjectMatrix(crData.VA);
                     glMatrix.mat4.invert(this._temp1Matrix, G_CameraModel.getSceneCameraMatrix(crData.VA));
-                    this._drawBase(rData, projMatix, this._temp1Matrix,crData);
+                    this._drawBase(rData, projMatix, this._temp1Matrix, crData);
                 }
                 break;
             case syRender.DataType.Normal:
@@ -807,11 +929,10 @@ export default class Device {
         }
         G_ShaderFactory.drawBufferInfo(sData._attrbufferData, sData.primitive.type);
     }
-    private _mapRenderTreeData:Map<syRender.DrawingOrder,Array<syRender.BaseData>> = new Map();//渲染树上的绘制数据
+    private _mapRenderTreeData: Map<syRender.DrawingOrder, Array<syRender.BaseData>> = new Map();//渲染树上的绘制数据
     public collectData(rData: syRender.BaseData): void {
-        if(!this._mapRenderTreeData.has(rData.drawingOrder))
-        {
-            this._mapRenderTreeData.set(rData.drawingOrder,[])
+        if (!this._mapRenderTreeData.has(rData.drawingOrder)) {
+            this._mapRenderTreeData.set(rData.drawingOrder, [])
         }
         this._mapRenderTreeData.get(rData.drawingOrder).push(rData);
     }
@@ -823,13 +944,13 @@ export default class Device {
      * @param viewPort 视口大小
      * @param isClear 是否清理缓冲区
      */
-    private readyForOneFrame(cdData:CameraRenderData): void {
-        
+    private readyForOneFrame(cdData: CameraRenderData): void {
+
         this.setFrameBuffer(cdData.fb);
         this.setViewPort(cdData.viewPort);
         if (cdData.isClear)
-            this.clear(cdData.clearColor,cdData.cColor,cdData.cDepth,cdData.cStencil);
-        
+            this.clear(cdData.clearColor, cdData.cColor, cdData.cDepth, cdData.cStencil);
+
     }
     private _framebuffer: WebGLFramebuffer;//帧缓冲
     /**
@@ -853,7 +974,7 @@ export default class Device {
      * h:【0,1】
      * }
      */
-    private _curViewPort:any;
+    private _curViewPort: any;
     private setViewPort(object: any): void {
         let x = object.x * this.width;
         let y = object.y * this.height;
@@ -873,12 +994,12 @@ export default class Device {
      * 深度
      * 模板
      */
-    public clear(cColor:Array<number>=[0.5,0.5,0.5,1.0],cBuffer:boolean=true,dBuffer:boolean=true,sBuffer:boolean=true): void {
+    public clear(cColor: Array<number> = [0.5, 0.5, 0.5, 1.0], cBuffer: boolean = true, dBuffer: boolean = true, sBuffer: boolean = true): void {
         let gl = this.gl;
-        gl.clearColor(cColor[0],cColor[1],cColor[2],cColor[3]);
-        var value=cBuffer?gl.COLOR_BUFFER_BIT:null;
-        value = dBuffer?(value?value|gl.DEPTH_BUFFER_BIT:gl.DEPTH_BUFFER_BIT):null;
-        value = sBuffer?(value?value|gl.STENCIL_BUFFER_BIT:gl.STENCIL_BUFFER_BIT):null;
+        gl.clearColor(cColor[0], cColor[1], cColor[2], cColor[3]);
+        var value = cBuffer ? gl.COLOR_BUFFER_BIT : null;
+        value = dBuffer ? (value ? value | gl.DEPTH_BUFFER_BIT : gl.DEPTH_BUFFER_BIT) : null;
+        value = sBuffer ? (value ? value | gl.STENCIL_BUFFER_BIT : gl.STENCIL_BUFFER_BIT) : null;
         gl.clear(value);
     }
     //---------------------------------------------------------------------------------------------end---------------------------------
@@ -1096,17 +1217,17 @@ export default class Device {
         localStorage.setItem("zm", "nihaoa");
     }
 
-    public autoCapture():void{
+    public autoCapture(): void {
         var x = G_InputControl.getLastPressPos()[0];
         var y = G_InputControl.getLastPressPos()[1];
         var gl = this.gl;
         var width = 512;
         var height = 512;
         var pixels = new Uint8Array(width * height * 4);
-        gl.readPixels(x,y, width, height, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+        gl.readPixels(x, y, width, height, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
         let imageData = new ImageData(new Uint8ClampedArray(pixels), width, height);
         let ctx = Device.Instance.getCanvas2D();
-        ctx.putImageData(imageData, 0,0);
+        ctx.putImageData(imageData, 0, 0);
         //截图保存下来
         this.capture(window["canvas2d"]);
     }
@@ -1117,8 +1238,7 @@ export default class Device {
      * @param height 
      */
     public showCurFramerBufferOnCanvas(width?: number, height?: number): void {
-        if(!G_InputControl.openCapture)
-        {
+        if (!G_InputControl.openCapture) {
             return;
         }
         let gl = this.gl;

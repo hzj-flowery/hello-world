@@ -147,13 +147,22 @@ export namespace SY {
         }
         private init(): void {
             this.onInit();
-            // this.handleShader();
         }
 
-        public pushPassContent(shaderTy: syRender.ShaderType,state?:any): void {
+        public pushPassContent(shaderTy: syRender.ShaderType, stateArr?: Array<Array<any>>): void {
+
             var tag = syRender.ShaderTypeString[shaderTy]
-            if (tag)
-                this._passContent.push({ "name": "TemplatePass", "tag": tag,state:state});
+            if (tag) {
+                var state = null;
+                if (stateArr && stateArr.length) {
+                    state = []
+                    for (let k = 0; k < stateArr.length; k++) {
+                        state.push({ "key": stateArr[k][0], "value": stateArr[k][1] });
+                    }
+                }
+
+                this._passContent.push({ "name": "TemplatePass", "tag": tag, state: state });
+            }
         }
         /**
          * 设置精灵图片的尺寸模式
@@ -167,13 +176,13 @@ export namespace SY {
         /**
          * 节点被添加到父节点上
          */
-        protected onEnter():void{
+        protected onEnter(): void {
             this.handleShader();
         }
         /**
          * 节点从父节点上移除
          */
-        protected onEixt():void{
+        protected onEixt(): void {
 
         }
         protected onLoadShaderFinish(): void {
@@ -566,15 +575,19 @@ export namespace SY {
                 this._glPrimitiveType == glEnums.PT_LINE_LOOP)
                 this.pushPassContent(syRender.ShaderType.Line);
         }
-        public updatePositionData(posArr: Array<number>,isClear: boolean = true) {
-            if (!posArr || posArr.length < 3) return;
-            this.check();
-            if(this.is2DNode())
-            {
-               this.updateScreenPosition(posArr,isClear)
+        public updatePositionData(posArr: Array<number>, isClear: boolean = true) {
+            if (!posArr || posArr.length < 3) {
+                if (this.is2DNode()) {
+                    this.check();
+                    this.updateScreenPosition(posArr, isClear)
+                }
+                return;
             }
-            else if(this.is3DNode())
-            {
+            this.check();
+            if (this.is2DNode()) {
+                this.updateScreenPosition(posArr, isClear)
+            }
+            else if (this.is3DNode()) {
                 this._polygon = new Float32Array(posArr);
                 this.getBuffer(SY.GLID_TYPE.VERTEX).updateSubData(this._polygon);
             }
@@ -591,13 +604,12 @@ export namespace SY {
                 clipPos.push(temp[1]);
                 clipPos.push(z);
             }
-           
+
             this._polygon = new Float32Array(clipPos);
             this.getBuffer(SY.GLID_TYPE.VERTEX).updateSubData(this._polygon);
         }
-        private check():void{
-            if(!this._polygon)
-            {
+        private check(): void {
+            if (!this._polygon) {
                 this.createVertexsBuffer([], 3, 10);
             }
         }
@@ -728,6 +740,15 @@ export namespace SY {
             var pos = [].concat(this._lb, this._rb, this._rt, this._lt);
             this.createVertexsBuffer(pos, 3);
             this.updateUV();
+        }
+    }
+
+    /**
+     * mask
+     */
+    export class MaskSprite extends SpriteBase {
+        constructor() {
+            super();
         }
     }
 

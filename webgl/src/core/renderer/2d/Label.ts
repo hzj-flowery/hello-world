@@ -1,5 +1,6 @@
 "use strict";
 import { SY } from "../base/Sprite";
+import { syRender } from "../data/RenderData";
 import { syGL } from "../gfx/syGLEnums";
 
 var fontInfo = {
@@ -127,6 +128,7 @@ var makeVerticesForString = function (fontInfo, s) {
 export class Label extends SY.Sprite2D {
     constructor() {
         super();
+        this.pushPassContent(syRender.ShaderType.Sprite);
     }
     
     private _realCharWidth:number = 0;

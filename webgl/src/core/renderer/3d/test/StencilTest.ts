@@ -342,7 +342,7 @@ function draw() {
     pwgl.useProgramNum = 2;
 
     // ----- 模板方法 begin -----
-   Device.Instance.compareStencil(1,1);
+   Device.Instance.compareStencil(1,0x00);
     // ----- 模板方法 end -----
     // 绘制小盒子 2
     pushModelViewMatrix();
