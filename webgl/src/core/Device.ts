@@ -1115,35 +1115,43 @@ export default class Device {
      */
     private _initStates() {
         const gl = this.gl;
+        
+        gl.activeTexture(gl.TEXTURE0);
+        gl.pixelStorei(gl.PACK_ALIGNMENT, 1);
+        gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
 
-        // gl.frontFace(gl.CCW);这一句代码是多余的，webgl默认的就是逆时针为正面
-        gl.disable(gl.BLEND);
-        gl.blendFunc(gl.ONE, gl.ZERO);
-        gl.blendEquation(gl.FUNC_ADD);
-        gl.blendColor(1, 1, 1, 1);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
-        gl.colorMask(true, true, true, true);//允许往颜色缓冲写数据
-
+        // rasterizer state
+        gl.enable(gl.SCISSOR_TEST);
         gl.enable(gl.CULL_FACE);
         gl.cullFace(gl.BACK);
-
-        gl.disable(gl.DEPTH_TEST);
-        gl.depthFunc(gl.LESS);
-        gl.depthMask(true);//允许往深度缓存写数据
+        gl.frontFace(gl.CCW);
         gl.disable(gl.POLYGON_OFFSET_FILL);
-        gl.depthRange(0, 1);
+        gl.polygonOffset(0.0, 0.0);
 
+        // depth stencil state
+        gl.enable(gl.DEPTH_TEST);
+        gl.depthMask(true);
+        gl.depthFunc(gl.LESS);
+        gl.depthRange(0.0, 1.0);
+
+        gl.stencilFuncSeparate(gl.FRONT, gl.ALWAYS, 1, 0xffff);
+        gl.stencilOpSeparate(gl.FRONT, gl.KEEP, gl.KEEP, gl.KEEP);
+        gl.stencilMaskSeparate(gl.FRONT, 0xffff);
+        gl.stencilFuncSeparate(gl.BACK, gl.ALWAYS, 1, 0xffff);
+        gl.stencilOpSeparate(gl.BACK, gl.KEEP, gl.KEEP, gl.KEEP); 
+        gl.stencilMaskSeparate(gl.BACK, 0xffff);
         gl.disable(gl.STENCIL_TEST);
-        gl.stencilFunc(gl.ALWAYS, 0, 0xFF);
-        gl.stencilMask(0xFF);
-        gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
 
-
-        gl.clearDepth(1);
-        gl.clearColor(0, 0, 0, 0);
-        gl.clearStencil(0);
-
-        gl.disable(gl.SCISSOR_TEST);
+        // blend state
+        gl.disable(gl.SAMPLE_ALPHA_TO_COVERAGE);
+        gl.disable(gl.BLEND);
+        gl.blendEquationSeparate(gl.FUNC_ADD, gl.FUNC_ADD);
+        gl.blendFuncSeparate(gl.ONE, gl.ZERO, gl.ONE, gl.ZERO);
+        gl.colorMask(true, true, true, true);
+        gl.blendColor(0.0, 0.0, 0.0, 0.0);
     }
 
     private _initExtensions(extensions) {
