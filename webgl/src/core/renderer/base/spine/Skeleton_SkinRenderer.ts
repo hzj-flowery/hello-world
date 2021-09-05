@@ -16,7 +16,7 @@ attribute vec2 a_texcoord;
 uniform mat4 u_projection;  //投影
 uniform mat4 u_view;        //观察空间
 uniform mat4 u_world;       //世界空间
-uniform sampler2D u_texture2;   //骨骼矩阵纹理
+uniform sampler2D u_jointTexture;   //骨骼矩阵纹理
 
 uniform float u_float_custom;  //[6,7,8,9,10,11]
 varying vec3 v_normal;
@@ -36,10 +36,10 @@ varying vec2 v_uv;
 mat4 getBoneMatrix(float jointNdx) {
 float v = (jointNdx + 0.5) / u_float_custom;       //算出行
 return mat4(                                                 //s      
-texture2D(u_texture2, vec2(((0.5 + 0.0) / 4.), v)),  //0.125 
-texture2D(u_texture2, vec2(((0.5 + 1.0) / 4.), v)),  //0.375 
-texture2D(u_texture2, vec2(((0.5 + 2.0) / 4.), v)),  //0.625 
-texture2D(u_texture2, vec2(((0.5 + 3.0) / 4.), v))); //0.875 
+texture2D(u_jointTexture, vec2(((0.5 + 0.0) / 4.), v)),  //0.125 
+texture2D(u_jointTexture, vec2(((0.5 + 1.0) / 4.), v)),  //0.375 
+texture2D(u_jointTexture, vec2(((0.5 + 2.0) / 4.), v)),  //0.625 
+texture2D(u_jointTexture, vec2(((0.5 + 3.0) / 4.), v))); //0.875 
 }
 void main() {
 mat4 skinMatrix =   getBoneMatrix(a_joints[0]) * a_weights[0] + getBoneMatrix(a_joints[1]) * a_weights[1] +
@@ -55,7 +55,7 @@ var fs =
 varying vec3 v_normal;          //法线
 uniform vec4 u_diffuse;         //漫反射
 uniform sampler2D u_texture;   //骨骼矩阵纹理
-uniform sampler2D u_texture1;   
+uniform sampler2D u_riverTexture;   //水波纹纹理
 uniform vec3 u_spotDirection;  //光的方向
 uniform float u_time;
 varying vec2 v_uv;
@@ -63,7 +63,7 @@ void main () {
 vec3 normal = normalize(v_normal);
 float light = dot(u_spotDirection,normal) * .5 + .5;
 float time = mod(u_time/1000.0,90.0);
-vec4 river = texture2D(u_texture1,normalize(v_uv)+sin(time));
+vec4 river = texture2D(u_riverTexture,normalize(v_uv)+sin(time));
 vec4 color = texture2D(u_texture,normalize(v_uv)); 
 gl_FragColor = color+vec4(u_diffuse.rgb * light, u_diffuse.a)+river;
 }`
@@ -113,8 +113,8 @@ export class Skeleton_SkinRenderer {
             renderData._uniformData.push({
                 u_world: worldMatrix,
                 u_texture: this.skin._texture.glID,
-                u_texture1:this.skin._riverTexture.glID,
-                u_texture2: this.skin.jointTexture.glID,
+                u_riverTexture:this.skin._riverTexture.glID,
+                u_jointTexture: this.skin.jointTexture.glID,
                 u_float_custom: this.skin.jointNodes.length,
                 u_time:Device.Instance.triggerRenderTime,
             });

@@ -349,7 +349,10 @@ export namespace SY {
                 case GLID_TYPE.INDEX: return this._indexsBuffer;
                 case GLID_TYPE.UV: return this._uvsBuffer;
                 case GLID_TYPE.NORMAL: return this._normalsBuffer;
-                case GLID_TYPE.VERTEX: return this._vertexsBuffer;
+                case GLID_TYPE.VERTEX: 
+                if(!this._vertexsBuffer)
+                console.log("aaaaaaaaa");
+                return this._vertexsBuffer;
                 case GLID_TYPE.VERT_COLOR: return this._VertColorBuffer;
                 case GLID_TYPE.VERT_MATRIX: return this._vertMatrixBuffer;
                 default: return null;//未知
@@ -665,17 +668,27 @@ export namespace SY {
         constructor() {
             super();
             this._node__type = syRender.NodeType.D2;
+            this._sizeMode = SpriteSizeMode.RAW;
             this._glPrimitiveType = this.gl.TRIANGLE_STRIP;
         }
+        protected isUnpackY:boolean = false;
         private updateUV(): void {
             //uv 数据
-            var floorVertexTextureCoordinates = [
-                0.0, 0.0, //v0
-                1.0, 0.0, //v1
-                1.0, 1.0, //v2
-                0.0, 1.0, //v3
+            var texCoordinates_uv = [
+                0.0,1.0, //v0
+                1.0,1.0, //v1
+                1.0,0.0, //v2    //标准的uv坐标 左上角为原点 
+                0.0,0.0  //v3
             ];
-            this.createUVsBuffer(floorVertexTextureCoordinates, 2);
+
+            var texCoordinates_webgl = [
+                0.0, 0.0, //v1
+                1.0, 0.0, //v2       //webgl坐标 左下脚为原点
+                1.0, 1.0, //v3
+                0.0, 1.0, //v0
+            ];
+
+            this.createUVsBuffer(this.isUnpackY?texCoordinates_webgl:texCoordinates_uv, 2);
             // 索引数据
             var floorVertexIndices = [0, 1, 2, 3, 0];
             this.createIndexsBuffer(floorVertexIndices);

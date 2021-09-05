@@ -23,4 +23,8 @@ export default class Ref{
         protected onEixt():void{
 
         }
+
+        protected onUpdate():void{
+            
+        }
 }

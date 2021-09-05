@@ -98,22 +98,22 @@ export default class Scene3D extends Scene {
         this._spineNode.y = 10;
         this.addChild(this._spineNode);
 
-        this._customTexture = new CustomTextureCube();
-        this._customTexture.spriteFrame = CustomTextureData.getRandomData(3, 5, syGL.TextureFormat.RGB8);
-        this._customTexture.setPosition(0, 3.1, 0);
-        this._centerNode.addChild(this._customTexture);
+        // this._customTexture = new CustomTextureCube();
+        // this._customTexture.spriteFrame = CustomTextureData.getRandomData(3, 5, syGL.TextureFormat.RGB8);
+        // this._customTexture.setPosition(0, 3.1, 0);
+        // this._centerNode.addChild(this._customTexture);
 
         
 
-        this._alphaNode = new Cube();
-        // this._alphaNode.alpha = 0.3
-        this._alphaNode.spriteFrame = "res/good.jpg";
-        this._alphaNode.setPosition(0, 3, 0);
-        this._alphaNode.setScale(2.0, 2.0, 2.0);
-        this._centerNode.addChild(this._alphaNode);
+        // this._alphaNode = new Cube();
+        // // this._alphaNode.alpha = 0.3
+        // this._alphaNode.spriteFrame = "res/good.jpg";
+        // this._alphaNode.setPosition(0, 3, 0);
+        // this._alphaNode.setScale(2.0, 2.0, 2.0);
+        // this._centerNode.addChild(this._alphaNode);
 
 
-
+ 
         //  this._threeDF = new ThreeDF();
         //  this._threeDF.spriteFrame="res/dragon.png";
         //  this._threeDF.setPosition(0,0,-200);
@@ -125,13 +125,13 @@ export default class Scene3D extends Scene {
         // this._deferredShading.setPosition(-3,10,0);
         // this._centerNode.addChild(this._deferredShading);
 
-        this._renderSprite = new RenderOffline3DSprite();
-        this._renderSprite.setRenderTextureUUid(syRender.RenderTextureUUid.other1);
-        this._renderSprite.spriteFrame = {
-            place:syRender.AttachPlace.Color,
-        }
-        this._renderSprite.setPosition(-3,10,0);
-        this._centerNode.addChild(this._renderSprite);
+        // this._renderSprite = new RenderOffline3DSprite();
+        // this._renderSprite.setRenderTextureUUid(syRender.RenderTextureUUid.other1);
+        // this._renderSprite.spriteFrame = {
+        //     place:syRender.AttachPlace.Color,
+        // }
+        // this._renderSprite.setPosition(-3,10,0);
+        // this._centerNode.addChild(this._renderSprite);
 
         // this._renderSprite1 = new RenderOffline3DSprite();
         // this._renderSprite1.setRenderTextureUUid(syRender.RenderTextureUUid.other2);
@@ -186,22 +186,22 @@ export default class Scene3D extends Scene {
         
         
            
-        this._cubeNode = new Cube();
-        this._cubeNode.spriteFrame = "res/wicker.jpg";
-        this._cubeNode.setPosition(0, 1.7, 0);
-        this._cubeNode.setScale(0.5, 0.5, 0.5);
-        this._centerNode.addChild(this._cubeNode);
-        this._tableNode = new Cube();
-        this._tableNode.spriteFrame = "res/wood.jpg";
-        this._tableNode.setPosition(0, 1, 0);
-        this._tableNode.setScale(2.0, 0.1, 2.0);
-        this._centerNode.addChild(this._tableNode);
+        // this._cubeNode = new Cube();
+        // this._cubeNode.spriteFrame = "res/wicker.jpg";
+        // this._cubeNode.setPosition(0, 1.7, 0);
+        // this._cubeNode.setScale(0.5, 0.5, 0.5);
+        // this._centerNode.addChild(this._cubeNode);
+        // this._tableNode = new Cube();
+        // this._tableNode.spriteFrame = "res/wood.jpg";
+        // this._tableNode.setPosition(0, 1, 0);
+        // this._tableNode.setScale(2.0, 0.1, 2.0);
+        // this._centerNode.addChild(this._tableNode);
 
-        this._testAlphaCube = new Cube();
-        this._testAlphaCube.spriteFrame = "res/ground.png";
-        this._testAlphaCube.setPosition(0, 0, -20);
-        this._testAlphaCube.setScale(10, 5, 1);
-        this._centerNode.addChild(this._testAlphaCube);
+        // this._testAlphaCube = new Cube();
+        // this._testAlphaCube.spriteFrame = "res/ground.png";
+        // this._testAlphaCube.setPosition(0, 0, -20);
+        // this._testAlphaCube.setScale(10, 5, 1);
+        // this._centerNode.addChild(this._testAlphaCube);
 
         // // 绘制 4 个腿
         for (var i = -1; i <= 1; i += 2) {
@@ -226,10 +226,11 @@ export default class Scene3D extends Scene {
         this._skybox.setDefaultUrl();
         this.addChild(this._skybox);
 
-        this._mirrorCube = new MirrorCube();
-        this._mirrorCube.setDefaultUrl();
-        this._mirrorCube.setPosition(-13,3.0,0);
-        this.addChild(this._mirrorCube);
+        // this._mirrorCube = new MirrorCube();
+        // this._mirrorCube.setDefaultUrl();
+        // this._mirrorCube.setPosition(-13,3.0,0);
+        // this.addChild(this._mirrorCube);
+
         this._centerNode.addChild(new LightCamera());
 
         G_UISetting.pushRenderCallBack((data)=>{

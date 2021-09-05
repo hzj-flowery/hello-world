@@ -266,6 +266,8 @@ export class Node extends Ref {
         this.updateWorldMatrix();
         //开始绘制
         this.collectRenderData(time);
+        //更新
+        this.onUpdate();
         for (var j = 0; j < this._children.length; j++) {
             this._children[j].visit(time);
         }

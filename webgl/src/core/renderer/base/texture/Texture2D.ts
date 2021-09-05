@@ -79,7 +79,7 @@ export class Texture2D extends Texture{
         options.data = image;
         options.width = image.width;
         options.height = image.height;
-        options.unpackFlipY = true;
+        options.unpackFlipY = false;
         options.magFilter = syGL.TexFilter.LINEAR;
         options.minFilter = syGL.TexFilter.LINEAR_MIPMAP_LINEAR;
         options.checkValid();
@@ -88,7 +88,6 @@ export class Texture2D extends Texture{
         
         if(this._loadCallBack)
         this._loadCallBack(image);
-
         this.loaded = true;
     }
     public set textureOnLoad(cb:any){

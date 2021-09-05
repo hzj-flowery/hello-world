@@ -6,7 +6,7 @@ import { MathUtils } from "../../utils/MathUtils";
 import { Node } from "../base/Node";
 import { GameMainCamera } from "../camera/GameMainCamera";
 import { glEnums } from "../gfx/GLapi";
-import {State} from "../gfx/State";
+import {State, StateString, StateValueMap} from "../gfx/State";
 import { syGL } from "../gfx/syGLEnums";
 import { Pass } from "../shader/Pass";
 import { BufferAttribsData, Shader, ShaderData } from "../shader/Shader";
@@ -15,6 +15,11 @@ import { ShaderUseVariantType } from "../shader/ShaderUseVariantType";
 
 let renderDataId: number = 0;
 export namespace syRender {
+
+    export var StateData={
+        name:StateString,
+        value:StateValueMap
+    }
 
     export enum ColorMask {
         NONE = 0x0, //00000000 
@@ -31,6 +36,7 @@ export namespace syRender {
         Line,
         Point,
         Sprite,
+        UvSprite,
         Label,
         Spine,
         Shadow,        //绘制阴影
@@ -54,6 +60,7 @@ export namespace syRender {
         "Line",
         "Point",
         "Sprite",
+        "UvSprite",
         "Label",
         "Spine",
         "Shadow",

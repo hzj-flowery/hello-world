@@ -38,6 +38,7 @@ import { MathUtils } from "./utils/MathUtils";
  阶段8--》逐片元操作（模板测试）
  阶段9--》逐片元操作（深度测试）
  阶段10--》逐片元操作（混合）
+ 阶段11--》抖动
 
  */
 
@@ -153,6 +154,7 @@ function _commitDepthState(gl: WebGLRenderingContext, cur: State, next: State): 
     stencil_new_value = stencilop(stencilbuf[x,y]);
     // 写入stencil buffer的时候需要另一个mask
     stencilbuf[x,y] = (stencil_new_value & stencilmask.mask) | (stencilbuf[x,y] & (~stencilmask.mask));
+
 
 
     函数功能：指定模板测试的比较方法
@@ -644,6 +646,7 @@ export default class Device {
         syRender.ShaderType.Line,
         syRender.ShaderType.Point,
         syRender.ShaderType.Sprite,
+        syRender.ShaderType.UvSprite,
         syRender.ShaderType.Fog,
         syRender.ShaderType.SkyBox,
         syRender.ShaderType.Mirror,
@@ -728,25 +731,7 @@ export default class Device {
      */
     private _commitRenderState(state: State): void {
         let gl = this.gl;
-
-        this._nextFrameS.depthTest = state.depthTest; //开启深度测试
-        this._nextFrameS.depthFunc = state.depthFunc;//距离视野近的则留下
-        this._nextFrameS.depthWrite = state.depthWrite;//可以写入
-
-        this._nextFrameS.cullMode = state.cullMode;
-        this._nextFrameS.ScissorTest = true;//裁切测试
-
-        this._nextFrameS.blend = state.blend;
-        this._nextFrameS.blendAlphaEq = state.blendAlphaEq;
-        this._nextFrameS.blendColor = state.blendColor;
-        this._nextFrameS.blendDst = state.blendDst;
-        this._nextFrameS.blendDstAlpha = state.blendDstAlpha;
-        this._nextFrameS.blendEq = state.blendEq;
-        this._nextFrameS.blendSep = state.blendSep;
-        this._nextFrameS.blendSrc = state.blendSrc;
-        this._nextFrameS.blendSrcAlpha = state.blendSrcAlpha;
-        this._nextFrameS.blendColorMask = state.blendColorMask;
-
+        this._nextFrameS.set(state);
         _commitDepthState(gl, this._curFrameS, this._nextFrameS);
         _commitStencilState(gl, this._curFrameS, this._nextFrameS);
         _commitCullState(gl, this._curFrameS, this._nextFrameS);
@@ -912,13 +897,14 @@ export default class Device {
         for (let j = 0; j < sData._uniformData.length; j++) {
             G_ShaderFactory.setUniforms(sData._shaderData.uniSetters, sData._uniformData[j]);
         }
-        let projData = {};
+        let projData = {}; 
         projData[sData._projKey] = projMatix;
         G_ShaderFactory.setUniforms(sData._shaderData.uniSetters, projData);
         let viewData = {};
         viewData[sData._viewKey] = viewMatrix;
         G_ShaderFactory.setUniforms(sData._shaderData.uniSetters, viewData);
         G_ShaderFactory.drawBufferInfo(sData._attrbufferData, sData.primitive.type);
+
     }
     private _drawNormal(sData: syRender.NormalData, cameraData: CameraData): void {
         this.gl.useProgram(sData._shaderData.spGlID);

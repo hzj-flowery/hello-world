@@ -3,6 +3,7 @@ import { glEnums } from "./GLapi";
 import { syRender } from "../data/RenderData";
 import { couldStartTrivia } from "typescript";
 
+
 const sy_temp_blend_func = {
     BLEND_ZERO: 0,                          // gl.ZERO
     BLEND_ONE: 1,                           // gl.ONE
@@ -65,6 +66,15 @@ const sy_temp_pt = {
     PT_TRIANGLE_STRIP: 5, // gl.TRIANGLE_STRIP
     PT_TRIANGLE_FAN: 6,   // gl.TRIANGLE_FAN
 }
+
+// const sy_temp_color_mask = {
+//     NONE:syRender.ColorMask.NONE,
+//     R:syRender.ColorMask.R,
+//     G:syRender.ColorMask.G,
+//     B:syRender.ColorMask.B,
+//     A:syRender.ColorMask.A,
+//     All:syRender.ColorMask.ALL,
+// }
 
 const sy_temp_on_off = {
     on:true,
@@ -176,7 +186,7 @@ export const StateValueMap = {
     /**
      * 控制是否可以向颜色缓冲写数据
      */
-    // blendColorMask:"blendColorMask",
+    // blendColorMask:sy_temp_color_mask,
 
     // depth
     /**
