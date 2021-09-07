@@ -56,12 +56,12 @@ export default class Scene2D extends Scene {
         // this._instantiateSprite.setPosition(420,120,-100);
         // this.addChild(this._instantiateSprite);
 
-        // this._renderSprite = new RenderOfflineSprite();
-        // this._renderSprite.setPosition(Device.Instance.width / 2 + 200, Device.Instance.height / 2 + 200, -100);
-        // this._renderSprite.spriteFrame = {
-        //     place: syRender.AttachPlace.Color
-        // }
-        // this.addChild(this._renderSprite);
+        this._renderSprite = new RenderOfflineSprite();
+        this._renderSprite.setPosition(Device.Instance.width / 2 + 200, Device.Instance.height / 2 + 200, -100);
+        this._renderSprite.spriteFrame = {
+            place: syRender.AttachPlace.Color
+        }
+        this.addChild(this._renderSprite);
 
         this._shadowMap = new ShadowMap();
         this._shadowMap.setPosition(Device.Instance.width / 2, Device.Instance.height / 2 + 200, -100);
@@ -94,9 +94,7 @@ export default class Scene2D extends Scene {
         if (this._isPress)
             {
                 // this._pen.pushScreenPos(ev.x, ev.y)
-                 
-
-                this._rectangle.setPosition(ev.x,Device.Instance.height - ev.y, -100);
+                this._rectangle.setPosition(ev.x,Device.Instance.height - ev.y, -99);
             }
     }
     private onMouseUp(ev: MouseEvent): void {
@@ -114,57 +112,104 @@ export default class Scene2D extends Scene {
         //mask
         this._rectangle = new SY.Sprite2D();
         this._rectangle.alpha = 1.0;
-        this._rectangle.defineUse.SY_USE_ALPHA_TEST = 0.0;
+        this._rectangle.defineUse.SY_USE_ALPHA_TEST = 0.1;
         this._rectangle.pushPassContent(syRender.ShaderType.Sprite, [
             
             //深度
-            [StateString.depthTest,StateValueMap.depthTest.on],
+            [StateString.depthTest,StateValueMap.depthTest.ON],
             [StateString.depthFunc,StateValueMap.depthFunc.DS_FUNC_LEQUAL],
-            [StateString.depthWrite,StateValueMap.depthWrite.on],
+            [StateString.depthWrite,StateValueMap.depthWrite.ON],
             
+            // [StateString.blendSep,StateValueMap.blendSep.ON],
+            // [StateString.blendSrc,StateValueMap.blendSrc.BLEND_ZERO],
+            // [StateString.blendDst,StateValueMap.blendDst.BLEND_ONE],
+            // [StateString.blendSrcAlpha,StateValueMap.blendSrcAlpha.BLEND_ZERO],
+            // [StateString.blendDstAlpha,StateValueMap.blendDstAlpha.BLEND_ONE],
+
             [StateString.blendColorMask,syRender.ColorMask.NONE],
 
-            [StateString.stencilTestFront,StateValueMap.stencilTestFront.on],
-            // [StateString.stencilSep,StateValueMap.stencilSep.on],
-            // [StateString.stencilFuncFront,StateValueMap.stencilFuncFront.DS_FUNC_ALWAYS],
-            // [StateString.stencilRefFront,2],
-            // [StateString.stencilMaskFront,0xffff],
-            // [StateString.stencilFailOpFront,StateValueMap.stencilFailOpFront.STENCIL_OP_KEEP],
-            // [StateString.stencilZFailOpFront,StateValueMap.stencilZFailOpFront.STENCIL_OP_KEEP],
-            // [StateString.stencilZPassOpFront,StateValueMap.stencilZPassOpFront.STENCIL_OP_REPLACE]
+            [StateString.stencilTestFront,StateValueMap.stencilTestFront.ON],
+            [StateString.stencilFuncFront,StateValueMap.stencilFuncFront.DS_FUNC_ALWAYS],
+            [StateString.stencilRefFront,1],
+            [StateString.stencilMaskFront,0xffff],
+            [StateString.stencilFailOpFront,StateValueMap.stencilFailOpFront.STENCIL_OP_KEEP],
+            [StateString.stencilZFailOpFront,StateValueMap.stencilZFailOpFront.STENCIL_OP_KEEP],
+            [StateString.stencilZPassOpFront,StateValueMap.stencilZPassOpFront.STENCIL_OP_REPLACE],
         ])
-        this._rectangle.setPosition(Device.Instance.width / 2, Device.Instance.height / 2, -100);
-        this._rectangle.spriteFrame = "res/map1.png";
+        this._rectangle.setPosition(Device.Instance.width / 2, Device.Instance.height / 2, -99);
+        this._rectangle.spriteFrame = "res/btn_plus_1.png";
         this.addChild(this._rectangle);
 
 
 
         var rectangle1 = new SY.Sprite2D();
         rectangle1.alpha = 1.0;
-        // rectangle1.defineUse.SY_USE_ALPHA_TEST = 0.1;
         rectangle1.pushPassContent(syRender.ShaderType.Sprite, [
 
-            [StateString.depthTest,StateValueMap.depthTest.off],
+            [StateString.depthTest,StateValueMap.depthTest.OFF],
             [StateString.depthFunc,StateValueMap.depthFunc.DS_FUNC_LEQUAL],
-            [StateString.depthWrite,StateValueMap.depthWrite.on],
+            [StateString.depthWrite,StateValueMap.depthWrite.ON],
 
             [StateString.blendColorMask,syRender.ColorMask.ALL],
 
-            // [StateString.stencilTestFront,StateValueMap.stencilTestFront.off],
-            // [StateString.stencilSep,StateValueMap.stencilSep.on],
-            // [StateString.stencilFuncFront,StateValueMap.stencilFuncFront.DS_FUNC_EQUAL],
-            // [StateString.stencilRefFront,2],
-            // [StateString.stencilMaskFront,0xffff],
-            // [StateString.stencilFailOpFront,StateValueMap.stencilFailOpFront.STENCIL_OP_KEEP],
-            // [StateString.stencilZFailOpFront,StateValueMap.stencilZFailOpFront.STENCIL_OP_KEEP],
-            // [StateString.stencilZPassOpFront,StateValueMap.stencilZPassOpFront.STENCIL_OP_KEEP],
+            [StateString.stencilTestFront,StateValueMap.stencilTestFront.ON],
+            [StateString.stencilSep,StateValueMap.stencilSep.ON],
+            [StateString.stencilFuncFront,StateValueMap.stencilFuncFront.DS_FUNC_EQUAL],
+            [StateString.stencilRefFront,1],
+            [StateString.stencilMaskFront,0xffff],
+            [StateString.stencilFailOpFront,StateValueMap.stencilFailOpFront.STENCIL_OP_KEEP],
+            [StateString.stencilZFailOpFront,StateValueMap.stencilZFailOpFront.STENCIL_OP_KEEP],
+            [StateString.stencilZPassOpFront,StateValueMap.stencilZPassOpFront.STENCIL_OP_KEEP],
         ])
-        rectangle1.setPosition(Device.Instance.width / 2, Device.Instance.height / 2 - 100,-101);
+        rectangle1.setPosition(Device.Instance.width / 2, Device.Instance.height / 2 - 100,-100);
         rectangle1.spriteFrame = "res/1.png";
         this.addChild(rectangle1);
 
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//----------------------------------------------------------------------------------------------------------------------------------------------------------
     // private blendTest(): void {
     //     var rectangle1 = new SY.Sprite2D();
     //     rectangle1.alpha = 0.5;

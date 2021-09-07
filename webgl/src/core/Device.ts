@@ -42,6 +42,49 @@ import { MathUtils } from "./utils/MathUtils";
 
  */
 
+ /**
+     * 初始化渲染状态
+     */
+function _initStates(gl:WebGL2RenderingContext) {
+    
+    gl.activeTexture(gl.TEXTURE0);
+    gl.pixelStorei(gl.PACK_ALIGNMENT, 1);
+    gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
+    // rasterizer state
+    gl.enable(gl.SCISSOR_TEST);
+    gl.enable(gl.CULL_FACE);
+    gl.cullFace(gl.BACK);
+    gl.frontFace(gl.CCW);
+    gl.disable(gl.POLYGON_OFFSET_FILL);
+    gl.polygonOffset(0.0, 0.0);
+
+    // depth stencil state
+    gl.enable(gl.DEPTH_TEST);
+    gl.depthMask(true);
+    gl.depthFunc(gl.LESS);
+    gl.depthRange(0.0, 1.0);
+
+    gl.stencilFuncSeparate(gl.FRONT, gl.ALWAYS, 1, 0xffff);
+    gl.stencilOpSeparate(gl.FRONT, gl.KEEP, gl.KEEP, gl.KEEP);
+    gl.stencilMaskSeparate(gl.FRONT, 0xffff);
+    gl.stencilFuncSeparate(gl.BACK, gl.ALWAYS, 1, 0xffff);
+    gl.stencilOpSeparate(gl.BACK, gl.KEEP, gl.KEEP, gl.KEEP); 
+    gl.stencilMaskSeparate(gl.BACK, 0xffff);
+    gl.disable(gl.STENCIL_TEST);
+
+    // blend state
+    gl.disable(gl.SAMPLE_ALPHA_TO_COVERAGE);
+    gl.disable(gl.BLEND);
+    gl.blendEquationSeparate(gl.FUNC_ADD, gl.FUNC_ADD);
+    gl.blendFuncSeparate(gl.ONE, gl.ZERO, gl.ONE, gl.ZERO);
+    gl.colorMask(true, true, true, true);
+    gl.blendColor(0.0, 0.0, 0.0, 0.0);
+}
+
 /**
 * _attach
 */
@@ -210,12 +253,22 @@ function _commitStencilState(gl: WebGLRenderingContext, cur: State, next: State)
     //关闭或者开启模板测试
     if ((cur.stencilTestFront !== next.stencilTestFront)
         || (cur.stencilTestBack !== next.stencilTestBack)) {
+
         if (next.stencilTestFront || next.stencilTestBack) {
             gl.enable(gl.STENCIL_TEST);
         } else {
             gl.disable(gl.STENCIL_TEST);
         }
     }
+
+    // if(cur.stencilClear!=next.stencilClear)
+    // {
+    //     if(next.stencilClear)
+    //     {
+    //         gl.clearStencil(1)
+    //         gl.clear(gl.STENCIL_BUFFER_BIT);
+    //     }
+    // }
 
     // front
     if ((cur.stencilFuncFront !== next.stencilFuncFront)
@@ -240,7 +293,6 @@ function _commitStencilState(gl: WebGLRenderingContext, cur: State, next: State)
     }
     if (cur.stencilWriteMaskFront !== next.stencilWriteMaskFront) {
         gl.stencilMaskSeparate(gl.FRONT, next.stencilWriteMaskFront);
-        cur.stencilWriteMaskFront = next.stencilWriteMaskFront;
     }
     //back
     if ((cur.stencilFuncBack !== next.stencilFuncBack)
@@ -1065,7 +1117,7 @@ export default class Device {
             'WEBGL_draw_buffers',
         ]);
         this._initCaps();
-        this._initStates();
+        _initStates(this.gl);
 
         this.handlePrecision();
 
@@ -1108,50 +1160,6 @@ export default class Device {
         var data5 = gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.MEDIUM_INT);
         var data6 = gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.HIGH_INT);
         console.log("fragment 精度值---", data1, data2, data3, data4, data5, data6);
-    }
-
-    /**
-     * 初始化渲染状态
-     */
-    private _initStates() {
-        const gl = this.gl;
-        
-        gl.activeTexture(gl.TEXTURE0);
-        gl.pixelStorei(gl.PACK_ALIGNMENT, 1);
-        gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
-        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
-
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-
-        // rasterizer state
-        gl.enable(gl.SCISSOR_TEST);
-        gl.enable(gl.CULL_FACE);
-        gl.cullFace(gl.BACK);
-        gl.frontFace(gl.CCW);
-        gl.disable(gl.POLYGON_OFFSET_FILL);
-        gl.polygonOffset(0.0, 0.0);
-
-        // depth stencil state
-        gl.enable(gl.DEPTH_TEST);
-        gl.depthMask(true);
-        gl.depthFunc(gl.LESS);
-        gl.depthRange(0.0, 1.0);
-
-        gl.stencilFuncSeparate(gl.FRONT, gl.ALWAYS, 1, 0xffff);
-        gl.stencilOpSeparate(gl.FRONT, gl.KEEP, gl.KEEP, gl.KEEP);
-        gl.stencilMaskSeparate(gl.FRONT, 0xffff);
-        gl.stencilFuncSeparate(gl.BACK, gl.ALWAYS, 1, 0xffff);
-        gl.stencilOpSeparate(gl.BACK, gl.KEEP, gl.KEEP, gl.KEEP); 
-        gl.stencilMaskSeparate(gl.BACK, 0xffff);
-        gl.disable(gl.STENCIL_TEST);
-
-        // blend state
-        gl.disable(gl.SAMPLE_ALPHA_TO_COVERAGE);
-        gl.disable(gl.BLEND);
-        gl.blendEquationSeparate(gl.FUNC_ADD, gl.FUNC_ADD);
-        gl.blendFuncSeparate(gl.ONE, gl.ZERO, gl.ONE, gl.ZERO);
-        gl.colorMask(true, true, true, true);
-        gl.blendColor(0.0, 0.0, 0.0, 0.0);
     }
 
     private _initExtensions(extensions) {

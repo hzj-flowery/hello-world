@@ -77,8 +77,8 @@ const sy_temp_pt = {
 // }
 
 const sy_temp_on_off = {
-    on:true,
-    off:false,
+    ON:true,
+    OFF:false,
 }
 
 const _default = {
@@ -119,6 +119,7 @@ const _default = {
     stencilZFailOpBack: glEnums.STENCIL_OP_KEEP,
     stencilZPassOpBack: glEnums.STENCIL_OP_KEEP,
     stencilWriteMaskBack: 0xffff,
+    stencilClear:false,
 
     //Scissor
     ScissorTest:false,
@@ -271,6 +272,10 @@ export const StateValueMap = {
      * 设置背面参与最后写入模板缓冲计算的mask值
      */
     // stencilWriteMaskBack:"stencilWriteMaskBack",
+    /**
+     * 是否清空模板缓存
+     */
+    stencilClear:sy_temp_on_off,
 
     /**
      * 是否开启裁切
@@ -413,6 +418,8 @@ export const StateString = {
      */
     stencilWriteMaskBack:"stencilWriteMaskBack",
 
+    stencilClear:"stencilClear",
+
     /**
      * 是否开启裁切
      */
@@ -472,6 +479,7 @@ export  class State {
     public stencilZFailOpBack;
     public stencilZPassOpBack;
     public stencilWriteMaskBack;
+    public stencilClear:boolean;
 
     //裁切测试
     public ScissorTest;
@@ -545,6 +553,7 @@ export  class State {
         this.stencilZFailOpBack = cpy.stencilZFailOpBack;
         this.stencilZPassOpBack = cpy.stencilZPassOpBack;
         this.stencilWriteMaskBack = cpy.stencilWriteMaskBack;
+        this.stencilClear = cpy.stencilClear;
 
         this.ScissorTest = cpy.ScissorTest;
 

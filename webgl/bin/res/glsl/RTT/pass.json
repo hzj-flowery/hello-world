@@ -100,7 +100,7 @@
             {
                 "key": "stencilMaskFront",
                 "des": "传入mask值,这个值会参与运算",
-                "value": 255
+                "value": 65535
             },
             {
                 "key": "stencilFailOpFront",
@@ -120,7 +120,7 @@
             {
                 "key": "stencilWriteMaskFront",
                 "des": "传入mask值,这个值会参与写入模板运算",
-                "value": 255
+                "value": 65535
             },
             {
                 "key": "stencilFuncBack",
@@ -135,7 +135,7 @@
             {
                 "key": "stencilMaskBack",
                 "des": "传入mask值,这个值会参与运算",
-                "value": 255
+                "value": 65535
             },
             {
                 "key": "stencilFailOpBack",
@@ -155,7 +155,7 @@
             {
                 "key": "stencilWriteMaskBack",
                 "des": "传入mask值,这个值会参与写入模板运算",
-                "value": 255
+                "value": 65535
             }
         ],
         "custom":[

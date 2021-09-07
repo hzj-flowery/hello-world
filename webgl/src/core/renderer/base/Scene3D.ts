@@ -163,11 +163,11 @@ export default class Scene3D extends Scene {
         // this._pointLightCube.setPosition(0, -10, 0);
         // this._pointLightCube.spriteFrame = "res/dragon.jpg";
         // this._centerNode.addChild(this._pointLightCube);
-        // this._spotLightCube = new SpotLightCube();
-        // this._spotLightCube.setScale(100,50.0,10.0);
-        // this._spotLightCube.setPosition(0, 0, -130);
-        // this._spotLightCube.spriteFrame = "res/dragon.jpg";
-        // this._centerNode.addChild(this._spotLightCube);
+        this._spotLightCube = new SpotLightCube();
+        this._spotLightCube.setScale(100,50.0,10.0);
+        this._spotLightCube.setPosition(0, 0, -130);
+        this._spotLightCube.spriteFrame = "res/dragon.jpg";
+        this._centerNode.addChild(this._spotLightCube);
 
         // this._fogCubeArr = [];
         // let fogCubeNums = 40;
@@ -204,15 +204,15 @@ export default class Scene3D extends Scene {
         // this._centerNode.addChild(this._testAlphaCube);
 
         // // 绘制 4 个腿
-        for (var i = -1; i <= 1; i += 2) {
-            for (var j = -1; j <= 1; j += 2) {
-                var node = new Cube();
-                node.setPosition(i * 1.9, -0.1, j * 1.9);
-                node.setScale(0.1, 1.0, 0.1);
-                node.spriteFrame = "res/wood.jpg";
-                this._centerNode.addChild(node);
-            }
-        }
+        // for (var i = -1; i <= 1; i += 2) {
+        //     for (var j = -1; j <= 1; j += 2) {
+        //         var node = new Cube();
+        //         node.setPosition(i * 1.9, -0.1, j * 1.9);
+        //         node.setScale(0.1, 1.0, 0.1);
+        //         node.spriteFrame = "res/wood.jpg";
+        //         this._centerNode.addChild(node);
+        //     }
+        // }
         
         // this._lightCube = new LightCube();
         // this._lightCube.spriteFrame = "res/wicker.jpg";
