@@ -10,7 +10,8 @@ void main(){
     vec4 texcolor = texture2D(u_texture, v_uv);
     texcolor = vec4(texcolor.rgb,u_alpha*texcolor.a);
     if(u_use_apha_test>0.0)
-    if((texcolor.r+texcolor.g+texcolor.b)<u_use_apha_test) discard;
+    // if((texcolor.r+texcolor.g+texcolor.b)<u_use_apha_test) discard;
+    if(texcolor.a<u_use_apha_test) discard;
     
     gl_FragColor = texcolor;
 }

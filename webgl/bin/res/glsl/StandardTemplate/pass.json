@@ -90,11 +90,6 @@
                 "value": "DS_FUNC_ALWAYS"
             },
             {
-                "key": "stencilRefFront",
-                "des": "传入ref值,这个值会参与运算",
-                "value": 1
-            },
-            {
                 "key": "stencilMaskFront",
                 "des": "传入mask值,这个值会参与运算",
                 "value": 65535
@@ -123,11 +118,6 @@
                 "key": "stencilFuncBack",
                 "des":"控制背面模板测试的比较函数，总是通过，总是不通过，>,<,!=,>=,<=",
                 "value": "DS_FUNC_ALWAYS"
-            },
-            {
-                "key": "stencilRefBack",
-                "des": "传入ref值,这个值会参与运算",
-                "value": 1
             },
             {
                 "key": "stencilMaskBack",

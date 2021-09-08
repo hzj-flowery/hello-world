@@ -108,6 +108,12 @@ export default class Scene2D extends Scene {
 
     private stencilTest(): void {
         
+        // this._rectangle = new SY.Sprite2D();
+        // this._rectangle.alpha = 0.9;
+        // this._rectangle.pushPassContent(syRender.ShaderType.Sprite)
+        // this._rectangle.setPosition(Device.Instance.width / 2, Device.Instance.height / 2,-101);
+        // this._rectangle.spriteFrame = "res/png/player_watch/104.png";
+        // this.addChild(this._rectangle);
     
         //mask
         this._rectangle = new SY.Sprite2D();
@@ -117,49 +123,49 @@ export default class Scene2D extends Scene {
             
             //深度
             [StateString.depthTest,StateValueMap.depthTest.ON],
-            [StateString.depthFunc,StateValueMap.depthFunc.DS_FUNC_LEQUAL],
+            [StateString.depthFunc,StateValueMap.depthFunc.LEQUAL],
             [StateString.depthWrite,StateValueMap.depthWrite.ON],
             
             // [StateString.blendSep,StateValueMap.blendSep.ON],
-            // [StateString.blendSrc,StateValueMap.blendSrc.BLEND_ZERO],
-            // [StateString.blendDst,StateValueMap.blendDst.BLEND_ONE],
-            // [StateString.blendSrcAlpha,StateValueMap.blendSrcAlpha.BLEND_ZERO],
-            // [StateString.blendDstAlpha,StateValueMap.blendDstAlpha.BLEND_ONE],
+            // [StateString.blendSrc,StateValueMap.blendSrc.SRC_ALPHA],
+            // [StateString.blendDst,StateValueMap.blendDst.ONE_MINUS_SRC_ALPHA],
+            // [StateString.blendSrcAlpha,StateValueMap.blendSrcAlpha.ZERO],
+            // [StateString.blendDstAlpha,StateValueMap.blendDstAlpha.ONE],
 
             [StateString.blendColorMask,syRender.ColorMask.NONE],
 
             [StateString.stencilTestFront,StateValueMap.stencilTestFront.ON],
-            [StateString.stencilFuncFront,StateValueMap.stencilFuncFront.DS_FUNC_ALWAYS],
+            [StateString.stencilFuncFront,StateValueMap.stencilFuncFront.ALWAYS],
             [StateString.stencilRefFront,1],
             [StateString.stencilMaskFront,0xffff],
-            [StateString.stencilFailOpFront,StateValueMap.stencilFailOpFront.STENCIL_OP_KEEP],
-            [StateString.stencilZFailOpFront,StateValueMap.stencilZFailOpFront.STENCIL_OP_KEEP],
-            [StateString.stencilZPassOpFront,StateValueMap.stencilZPassOpFront.STENCIL_OP_REPLACE],
+            [StateString.stencilFailOpFront,StateValueMap.stencilFailOpFront.KEEP],
+            [StateString.stencilZFailOpFront,StateValueMap.stencilZFailOpFront.KEEP],
+            [StateString.stencilZPassOpFront,StateValueMap.stencilZPassOpFront.REPLACE],
         ])
         this._rectangle.setPosition(Device.Instance.width / 2, Device.Instance.height / 2, -99);
-        this._rectangle.spriteFrame = "res/btn_plus_1.png";
+        this._rectangle.spriteFrame = "res/png/player_watch/1143.png";
         this.addChild(this._rectangle);
 
 
 
         var rectangle1 = new SY.Sprite2D();
-        rectangle1.alpha = 1.0;
+        rectangle1.alpha = 1.0; 
         rectangle1.pushPassContent(syRender.ShaderType.Sprite, [
 
             [StateString.depthTest,StateValueMap.depthTest.OFF],
-            [StateString.depthFunc,StateValueMap.depthFunc.DS_FUNC_LEQUAL],
+            [StateString.depthFunc,StateValueMap.depthFunc.LEQUAL],
             [StateString.depthWrite,StateValueMap.depthWrite.ON],
 
-            [StateString.blendColorMask,syRender.ColorMask.ALL],
+            // [StateString.blendColorMask,syRender.ColorMask.ALL],
 
             [StateString.stencilTestFront,StateValueMap.stencilTestFront.ON],
             [StateString.stencilSep,StateValueMap.stencilSep.ON],
-            [StateString.stencilFuncFront,StateValueMap.stencilFuncFront.DS_FUNC_EQUAL],
+            [StateString.stencilFuncFront,StateValueMap.stencilFuncFront.EQUAL],
             [StateString.stencilRefFront,1],
             [StateString.stencilMaskFront,0xffff],
-            [StateString.stencilFailOpFront,StateValueMap.stencilFailOpFront.STENCIL_OP_KEEP],
-            [StateString.stencilZFailOpFront,StateValueMap.stencilZFailOpFront.STENCIL_OP_KEEP],
-            [StateString.stencilZPassOpFront,StateValueMap.stencilZPassOpFront.STENCIL_OP_KEEP],
+            [StateString.stencilFailOpFront,StateValueMap.stencilFailOpFront.KEEP],
+            [StateString.stencilZFailOpFront,StateValueMap.stencilZFailOpFront.KEEP],
+            [StateString.stencilZPassOpFront,StateValueMap.stencilZPassOpFront.KEEP],
         ])
         rectangle1.setPosition(Device.Instance.width / 2, Device.Instance.height / 2 - 100,-100);
         rectangle1.spriteFrame = "res/1.png";
@@ -210,40 +216,40 @@ export default class Scene2D extends Scene {
 
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
-    // private blendTest(): void {
-    //     var rectangle1 = new SY.Sprite2D();
-    //     rectangle1.alpha = 0.5;
-    //     rectangle1.defineUse.SY_USE_ALPHA_TEST = 0.1;
-    //     rectangle1.pushPassContent(syRender.ShaderType.Sprite, [
-    //         [StateString.blendSep,StateValueMap.blendSep.on],
-    //         [StateString.depthTest,StateValueMap.depthTest.on],
-    //         [StateString.depthWrite,StateValueMap.depthWrite.off],
-    //         [StateString.depthFunc,StateValueMap.depthFunc.DS_FUNC_LEQUAL],
-    //         [StateString.blendSrc,StateValueMap.blendSrc.BLEND_SRC_ALPHA],
-    //         [StateString.blendDst,StateValueMap.blendDst.BLEND_ONE_MINUS_SRC_ALPHA],
-    //         [StateString.blendSrcAlpha,StateValueMap.blendSrcAlpha.BLEND_ZERO],
-    //         [StateString.blendDstAlpha,StateValueMap.blendDstAlpha.BLEND_ONE],
-    //     ])
-    //     rectangle1.setPosition(Device.Instance.width / 2, Device.Instance.height / 2 - 100, -100);
-    //     rectangle1.spriteFrame = "res/ground.png";
-    //     this.addChild(rectangle1);
+    private blendTest(): void {
+        var rectangle1 = new SY.Sprite2D();
+        rectangle1.alpha = 1.0;
+        rectangle1.defineUse.SY_USE_ALPHA_TEST = 0.1;
+        rectangle1.pushPassContent(syRender.ShaderType.Sprite, [
+            [StateString.blendSep,StateValueMap.blendSep.ON],
+            [StateString.depthTest,StateValueMap.depthTest.ON],
+            [StateString.depthWrite,StateValueMap.depthWrite.ON],
+            [StateString.depthFunc,StateValueMap.depthFunc.LEQUAL],
+            [StateString.blendSrc,StateValueMap.blendSrc.SRC_ALPHA],
+            [StateString.blendDst,StateValueMap.blendDst.ONE_MINUS_SRC_ALPHA],
+            [StateString.blendSrcAlpha,StateValueMap.blendSrcAlpha.ZERO],
+            [StateString.blendDstAlpha,StateValueMap.blendDstAlpha.ONE],
+        ])
+        rectangle1.setPosition(Device.Instance.width / 2, Device.Instance.height / 2 - 100, -100);
+        rectangle1.spriteFrame = "res/ground.png";
+        this.addChild(rectangle1);
 
-    //     this._rectangle = new SY.Sprite2D();
-    //     this._rectangle.alpha = 0.2;
-    //     this._rectangle.setScale(0.3,0.3,1.0)
-    //     this._rectangle.defineUse.SY_USE_ALPHA_TEST = 0.0;
-    //     this._rectangle.pushPassContent(syRender.ShaderType.Sprite, [
-    //         [StateString.blendSep,StateValueMap.blendSep.on],
-    //         [StateString.depthTest,StateValueMap.depthTest.on],
-    //         [StateString.depthWrite,StateValueMap.depthWrite.off],
-    //         [StateString.depthFunc,StateValueMap.depthFunc.DS_FUNC_LEQUAL],
-    //         [StateString.blendSrc,StateValueMap.blendSrc.BLEND_SRC_ALPHA],
-    //         [StateString.blendDst,StateValueMap.blendDst.BLEND_ONE_MINUS_SRC_ALPHA],
-    //         [StateString.blendSrcAlpha,StateValueMap.blendSrcAlpha.BLEND_ZERO],
-    //         [StateString.blendDstAlpha,StateValueMap.blendDstAlpha.BLEND_ONE],
-    //     ])
-    //     this._rectangle.setPosition(Device.Instance.width / 2, Device.Instance.height / 2, -100);
-    //     this._rectangle.spriteFrame = "res/deferred.png";
-    //     this.addChild(this._rectangle);
-    // }
+        this._rectangle = new SY.Sprite2D();
+        this._rectangle.alpha = 1.0;
+        this._rectangle.setScale(1.0,1.0,1.0)
+        this._rectangle.defineUse.SY_USE_ALPHA_TEST = 0.0;
+        this._rectangle.pushPassContent(syRender.ShaderType.Sprite, [
+            [StateString.blendSep,StateValueMap.blendSep.ON],
+            [StateString.depthTest,StateValueMap.depthTest.ON],
+            [StateString.depthWrite,StateValueMap.depthWrite.ON],
+            [StateString.depthFunc,StateValueMap.depthFunc.LEQUAL],
+            [StateString.blendSrc,StateValueMap.blendSrc.SRC_ALPHA],
+            [StateString.blendDst,StateValueMap.blendDst.ONE_MINUS_SRC_ALPHA],
+            [StateString.blendSrcAlpha,StateValueMap.blendSrcAlpha.ZERO],
+            [StateString.blendDstAlpha,StateValueMap.blendDstAlpha.ONE],
+        ])
+        this._rectangle.setPosition(Device.Instance.width / 2, Device.Instance.height / 2, 0);
+        this._rectangle.spriteFrame = "res/png/player_watch/104.png";
+        this.addChild(this._rectangle);
+    }
 }

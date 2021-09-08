@@ -112,7 +112,7 @@ export namespace syRender {
      * 节点的类型
      */
     export enum NodeType {
-        D2 = 1, //2d节点
+        D2 = 2, //2d节点
         D3,//3d节点
     }
     export enum Type {

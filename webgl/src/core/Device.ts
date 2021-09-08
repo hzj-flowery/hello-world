@@ -156,6 +156,15 @@ gl.drawArrays(gl.TRIANGLES, 0, n / 2);   // 绿色三角形
 gl.polygonOffset(1.0, 1.0);          // 设置偏移量
 gl.drawArrays(gl.TRIANGLES, n / 2, n / 2); // 黄色三角形
 
+gDepthBuffer[x][y] = [z,z,z,z,z,z,....]
+x:屏幕的坐标
+y:屏幕的坐标
+....................
+....................
+....................
+....................
+....................
+
  */
 function _commitDepthState(gl: WebGLRenderingContext, cur: State, next: State): void {
     /**
@@ -261,15 +270,6 @@ function _commitStencilState(gl: WebGLRenderingContext, cur: State, next: State)
         }
     }
 
-    // if(cur.stencilClear!=next.stencilClear)
-    // {
-    //     if(next.stencilClear)
-    //     {
-    //         gl.clearStencil(1)
-    //         gl.clear(gl.STENCIL_BUFFER_BIT);
-    //     }
-    // }
-
     // front
     if ((cur.stencilFuncFront !== next.stencilFuncFront)
         || (cur.stencilRefFront !== next.stencilRefFront)
@@ -364,7 +364,7 @@ function _commitScissorState(gl: WebGLRenderingContext, cur: State, next: State)
     gl.enable(gl.SCISSOR_TEST);
     gl.scissor(0, 0, 200, 50);
     gl.clearColor(1.0, 0.0, 0.0, 1.0);
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT|gl.STENCIL_BUFFER_BIT);
     gl.disable(gl.SCISSOR_TEST);
 }
 /**
@@ -663,21 +663,43 @@ export default class Device {
         }
         return retData;
     }
+    /**
+     * 渲染顺序规则如下：值越大，表示渲染越靠后
+     * 2d节点：1
+     *       透明：1.1
+     *       深度：1.2
+     * 3d节点：2
+     *       透明：2.1
+     *       深度：2.2
+     */
     private sortTreeData(): void {
         var data = this._mapRenderTreeData.get(syRender.DrawingOrder.Normal);
         if (data && data.length > 0)
             data.sort((a, b) => {
                 if (a.pass != null && b.pass != null) {
                     if (a.primitive.alpha == b.primitive.alpha) {
-                        return a.pass.shaderType - b.pass.shaderType;
+                        //2d节点应该在3d节点之前渲染
+                        if (a.node.getNodeType() == b.node.getNodeType()) {
+                            return a.pass.shaderType - b.pass.shaderType;
+                        }
+                        else {
+                            //3d节点应该先于2d节点渲染
+                            return b.node.getNodeType() - a.node.getNodeType()
+                        }
                     }
                     else {
-                        /**
+                        if (a.node.getNodeType() == b.node.getNodeType()) {
+                            /**
                          * 需要优先绘制不透明的物体
                          * 
                          * 绘制所有半透明的物体（α小于0）,注意它们应当按照深度排序，然后从后向前绘制
                          */
-                        return b.primitive.alpha - a.primitive.alpha;
+                            return b.primitive.alpha - a.primitive.alpha;
+                        }
+                        else {
+                            //3d节点应该先于2d节点渲染
+                            return b.node.getNodeType() - a.node.getNodeType()
+                        }
                     }
                 }
                 return -1;
@@ -823,6 +845,8 @@ export default class Device {
         var cameraData = GameMainCamera.instance.getCameraByUUid(syRender.CameraUUid.base3D).getCameraData();
         G_CameraModel.createCamera(crData.VA, cameraData.projectMat, cameraData.modelMat, crData.VAPos);
         //提交数据给GPU 立即绘制
+        
+        //最后渲染2d
         for (var j = 0; j < treeData.length; j++) {
             if (treeData[j].isOffline && crData.fb) {
                 //对于离屏渲染的数据 如果当前是离屏渲染的话 则不可以渲染它 否则会报错

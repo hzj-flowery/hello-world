@@ -13,12 +13,18 @@ export class Node extends Ref {
         this.initBaseNode();
     }
     /**
-     * 基于父节点中心进行变换
+     * 是否基于父节点中心进行变换
+     * 只有两个选择 要么基于父节点 要么基于自己
+     * 比如一个立方体，基于父节点就是绕着父节点转，基于自己，就是自己旋转
+     * 从常理上，一般都是基于自己中心进行变换
      */
     private _baseFatherOriginTransform: boolean = false;
-    private _x: number = 0;
-    private _y: number = 0;
-    private _z: number = 0;
+    private _x: number = 0;//本地坐标 即相对于父节点坐标
+    private _y: number = 0;//本地坐标 即相对于父节点坐标
+    private _z: number = 0;//本地坐标 即相对于父节点坐标
+    private _worldX:number = 0;//世界坐标
+    private _worldY:number = 0;//世界坐标
+    private _worldZ:number = 0;//世界坐标
     private _scaleX: number = 1;
     private _scaleY: number = 1;
     private _scaleZ: number = 1;
@@ -95,8 +101,19 @@ export class Node extends Ref {
     public is3DNode(): boolean {
         return this.__node__type == syRender.NodeType.D3;
     }
+    /**
+     * 判断是否为2d节点
+     * @returns 
+     */
     public is2DNode(): boolean {
         return this.__node__type == syRender.NodeType.D2;
+    }
+    /**
+     * 获取节点的类型
+     * @returns 
+     */
+    public getNodeType(): syRender.NodeType{
+        return this.__node__type;
     }
     public get x(): number {
         return this._x;
@@ -369,6 +386,7 @@ export class Node extends Ref {
     }
     private _tempSpacePoint:Float32Array = new Float32Array(3);
     public convertToWorldSpace(nodePoint: Array<number>):Array<number> {
+        nodePoint = nodePoint ||[this.x,this.y,this.z];
         this.updateWorldMatrix();
         glMatrix.mat4.transformPoint(this._tempSpacePoint,this.modelMatrix,nodePoint);
         return [this._tempSpacePoint[0],this._tempSpacePoint[1],this._tempSpacePoint[2]]
@@ -385,7 +403,7 @@ export class Node extends Ref {
     public setPosition(x: number, y: number, z: number): void {
         this.x = x;
         this.y = y;
-        this.z = z;
+        this.z = z; //此值非常重要 将关系到渲染顺序
     }
     public setScale(x: number, y: number, z: number): void {
         this.scaleX = x;

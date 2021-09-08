@@ -1,60 +1,60 @@
-import { syGL} from "./syGLEnums";
+import { syGL } from "./syGLEnums";
 import { glEnums } from "./GLapi";
 import { syRender } from "../data/RenderData";
 import { couldStartTrivia } from "typescript";
 
 
 const sy_temp_blend_func = {
-    BLEND_ZERO: 0,                          // gl.ZERO
-    BLEND_ONE: 1,                           // gl.ONE
-    BLEND_SRC_COLOR: 768,                   // gl.SRC_COLOR
-    BLEND_ONE_MINUS_SRC_COLOR: 769,         // gl.ONE_MINUS_SRC_COLOR
-    BLEND_DST_COLOR: 774,                   // gl.DST_COLOR
-    BLEND_ONE_MINUS_DST_COLOR: 775,         // gl.ONE_MINUS_DST_COLOR
-    BLEND_SRC_ALPHA: 770,                   // gl.SRC_ALPHA
-    BLEND_ONE_MINUS_SRC_ALPHA: 771,         // gl.ONE_MINUS_SRC_ALPHA
-    BLEND_DST_ALPHA: 772,                   // gl.DST_ALPHA
-    BLEND_ONE_MINUS_DST_ALPHA: 773,         // gl.ONE_MINUS_DST_ALPHA
-    BLEND_CONSTANT_COLOR: 32769,            // gl.CONSTANT_COLOR
-    BLEND_ONE_MINUS_CONSTANT_COLOR: 32770,  // gl.ONE_MINUS_CONSTANT_COLOR
-    BLEND_CONSTANT_ALPHA: 32771,            // gl.CONSTANT_ALPHA
-    BLEND_ONE_MINUS_CONSTANT_ALPHA: 32772,  // gl.ONE_MINUS_CONSTANT_ALPHA
-    BLEND_SRC_ALPHA_SATURATE: 776,          // gl.SRC_ALPHA_SATURATE
+    ZERO: 0,                          // gl.ZERO
+    ONE: 1,                           // gl.ONE
+    SRC_COLOR: 768,                   // gl.SRC_COLOR
+    ONE_MINUS_SRC_COLOR: 769,         // gl.ONE_MINUS_SRC_COLOR
+    DST_COLOR: 774,                   // gl.DST_COLOR
+    ONE_MINUS_DST_COLOR: 775,         // gl.ONE_MINUS_DST_COLOR
+    SRC_ALPHA: 770,                   // gl.SRC_ALPHA
+    ONE_MINUS_SRC_ALPHA: 771,         // gl.ONE_MINUS_SRC_ALPHA
+    DST_ALPHA: 772,                   // gl.DST_ALPHA
+    ONE_MINUS_DST_ALPHA: 773,         // gl.ONE_MINUS_DST_ALPHA
+    CONSTANT_COLOR: 32769,            // gl.CONSTANT_COLOR
+    ONE_MINUS_CONSTANT_COLOR: 32770,  // gl.ONE_MINUS_CONSTANT_COLOR
+    CONSTANT_ALPHA: 32771,            // gl.CONSTANT_ALPHA
+    ONE_MINUS_CONSTANT_ALPHA: 32772,  // gl.ONE_MINUS_CONSTANT_ALPHA
+    SRC_ALPHA_SATURATE: 776,          // gl.SRC_ALPHA_SATURATE
 }
 
 const sy_temp_blend_eq_func = {
-    BLEND_FUNC_ADD: 32774,              // gl.FUNC_ADD
-    BLEND_FUNC_SUBTRACT: 32778,         // gl.FUNC_SUBTRACT
-    BLEND_FUNC_REVERSE_SUBTRACT: 32779, // gl.FUNC_REVERSE_SUBTRACT
+    ADD: 32774,              // gl.FUNC_ADD
+    SUBTRACT: 32778,         // gl.FUNC_SUBTRACT
+    REVERSE_SUBTRACT: 32779, // gl.FUNC_REVERSE_SUBTRACT
 }
 
 const sy_temp_stencil_op_func = {
-    STENCIL_OP_KEEP: 7680,          // gl.KEEP
-    STENCIL_OP_ZERO: 0,             // gl.ZERO
-    STENCIL_OP_REPLACE: 7681,       // gl.REPLACE
-    STENCIL_OP_INCR: 7682,          // gl.INCR
-    STENCIL_OP_INCR_WRAP: 34055,    // gl.INCR_WRAP
-    STENCIL_OP_DECR: 7683,          // gl.DECR
-    STENCIL_OP_DECR_WRAP: 34056,    // gl.DECR_WRAP
-    STENCIL_OP_INVERT: 5386,        // gl.INVERT
+    KEEP: 7680,          // gl.KEEP
+    ZERO: 0,             // gl.ZERO
+    REPLACE: 7681,       // gl.REPLACE
+    INCR: 7682,          // gl.INCR
+    INCR_WRAP: 34055,    // gl.INCR_WRAP
+    DECR: 7683,          // gl.DECR
+    DECR_WRAP: 34056,    // gl.DECR_WRAP
+    INVERT: 5386,        // gl.INVERT
 }
 
 const sy_temp_cull = {
-    CULL_NONE: 0,
-    CULL_FRONT: 1028,
-    CULL_BACK: 1029,
-    CULL_FRONT_AND_BACK: 1032,
+    NONE: 0,
+    FRONT: 1028,
+    BACK: 1029,
+    FRONT_AND_BACK: 1032,
 }
 
 const sy_temp_ds_func = {
-    DS_FUNC_NEVER: 512,    // gl.NEVER
-    DS_FUNC_LESS: 513,     // gl.LESS
-    DS_FUNC_EQUAL: 514,    // gl.EQUAL
-    DS_FUNC_LEQUAL: 515,   // gl.LEQUAL
-    DS_FUNC_GREATER: 516,  // gl.GREATER
-    DS_FUNC_NOTEQUAL: 517, // gl.NOTEQUAL
-    DS_FUNC_GEQUAL: 518,   // gl.GEQUAL
-    DS_FUNC_ALWAYS: 519,   // gl.ALWAYS
+    NEVER: 512,    // gl.NEVER
+    LESS: 513,     // gl.LESS
+    EQUAL: 514,    // gl.EQUAL
+    LEQUAL: 515,   // gl.LEQUAL
+    GREATER: 516,  // gl.GREATER
+    NOTEQUAL: 517, // gl.NOTEQUAL
+    GEQUAL: 518,   // gl.GEQUAL
+    ALWAYS: 519,   // gl.ALWAYS
 }
 
 const sy_temp_pt = {
@@ -77,8 +77,8 @@ const sy_temp_pt = {
 // }
 
 const sy_temp_on_off = {
-    ON:true,
-    OFF:false,
+    ON: true,
+    OFF: false,
 }
 
 const _default = {
@@ -92,7 +92,7 @@ const _default = {
     blendDst: glEnums.BLEND_ZERO,
     blendSrcAlpha: glEnums.BLEND_ONE,
     blendDstAlpha: glEnums.BLEND_ZERO,
-    blendColorMask:15,
+    blendColorMask: 15,
 
     // depth
     depthTest: false,
@@ -102,8 +102,8 @@ const _default = {
 
 
     // stencil
-    stencilTestFront:false,
-    stencilTestBack:false,
+    stencilTestFront: false,
+    stencilTestBack: false,
     stencilSep: false,
     stencilFuncFront: glEnums.DS_FUNC_ALWAYS,
     stencilRefFront: 1,
@@ -119,10 +119,10 @@ const _default = {
     stencilZFailOpBack: glEnums.STENCIL_OP_KEEP,
     stencilZPassOpBack: glEnums.STENCIL_OP_KEEP,
     stencilWriteMaskBack: 0xffff,
-    stencilClear:false,
+    stencilClear: false,
 
     //Scissor
-    ScissorTest:false,
+    ScissorTest: false,
 
     // cull-mode
     cullMode: glEnums.CULL_NONE,  //剔除默认不开启
@@ -139,20 +139,20 @@ const _default = {
     textureUnits: [],
     program: null,
 
-    viewPort:null
+    viewPort: null
 
 };
 
 export const StateValueMap = {
-   
+
     /**
      * 是否开启alpha混合
      */
-    blend:sy_temp_on_off,
+    blend: sy_temp_on_off,
     /**
      * 是否是拆分混合函数blendFuncSeparate 不然就使用低级的blendFunc
      */
-    blendSep:sy_temp_on_off,
+    blendSep: sy_temp_on_off,
     /**
      * 设置常量的混合颜色 r g b a
      * 一般情况，源颜色指的是片元着色器传出的颜色，目标颜色指的是颜色缓冲中的颜色
@@ -163,27 +163,27 @@ export const StateValueMap = {
      * 设置混合颜色计算公式(加 减 逆向减)
      * 默认情况不拆开混合的话，也会设置alpha计算公式
      */
-    blendEq:sy_temp_blend_eq_func,
+    blendEq: sy_temp_blend_eq_func,
     /**
      * 设置透明度混合的计算公式
      */
-    blendAlphaEq:sy_temp_blend_eq_func,
+    blendAlphaEq: sy_temp_blend_eq_func,
     /**
      * 设置源因子
      */
-    blendSrc:sy_temp_blend_func,
+    blendSrc: sy_temp_blend_func,
     /**
      * 设置目标因子
      */
-    blendDst:sy_temp_blend_func,
+    blendDst: sy_temp_blend_func,
     /**
      * 设置alpha的源因子
      */
-    blendSrcAlpha:sy_temp_blend_func,
+    blendSrcAlpha: sy_temp_blend_func,
     /**
      * 设置alpha的目标因子
      */
-    blendDstAlpha:sy_temp_blend_func,
+    blendDstAlpha: sy_temp_blend_func,
     /**
      * 控制是否可以向颜色缓冲写数据
      */
@@ -193,33 +193,33 @@ export const StateValueMap = {
     /**
      * 是否开启深度测试
      */
-    depthTest:sy_temp_on_off,
+    depthTest: sy_temp_on_off,
     /**
      * 是否允许深度写入
      */
-    depthWrite:sy_temp_on_off,
+    depthWrite: sy_temp_on_off,
     /**
      * 设置深度比较函数
      */
-    depthFunc:sy_temp_ds_func,
+    depthFunc: sy_temp_ds_func,
 
     // stencil
     /**
      * 是否开启正面模板测试
      */
-    stencilTestFront:sy_temp_on_off,
+    stencilTestFront: sy_temp_on_off,
     /**
      * 是否开启背面模板测试
      */
-    stencilTestBack:sy_temp_on_off,
+    stencilTestBack: sy_temp_on_off,
     /**
      * 是否拆分开启模板测试
      */
-    stencilSep:sy_temp_on_off,
+    stencilSep: sy_temp_on_off,
     /**
      * 设置正面模板函数
      */
-    stencilFuncFront:sy_temp_ds_func,
+    stencilFuncFront: sy_temp_ds_func,
     /**
      * 设置正面的模板函数的ref参数
      */
@@ -231,23 +231,23 @@ export const StateValueMap = {
     /**
      * 正面模板测试失败后该如何操作
      */
-    stencilFailOpFront:sy_temp_stencil_op_func,
+    stencilFailOpFront: sy_temp_stencil_op_func,
     /**
      * 正面模板测试通过，深度测试成功，该如何操作
      */
-    stencilZFailOpFront:sy_temp_stencil_op_func,
+    stencilZFailOpFront: sy_temp_stencil_op_func,
     /**
      * 正面模板测试和深度测试都通过，该如何操作
      */
-    stencilZPassOpFront:sy_temp_stencil_op_func,
+    stencilZPassOpFront: sy_temp_stencil_op_func,
     /**
      * 设置正面参与最后写入模板缓冲计算的mask值
      */
     // stencilWriteMaskFront:"stencilWriteMaskFront",
-     /**
-     * 设置背面模板函数
-     */
-    stencilFuncBack:sy_temp_ds_func,
+    /**
+    * 设置背面模板函数
+    */
+    stencilFuncBack: sy_temp_ds_func,
     /**
      * 设置背面的模板函数的ref参数
      */
@@ -259,15 +259,15 @@ export const StateValueMap = {
     /**
      * 背面模板测试失败后该如何操作
      */
-    stencilFailOpBack:sy_temp_stencil_op_func,
+    stencilFailOpBack: sy_temp_stencil_op_func,
     /**
      * 背面模板测试通过，深度测试成功，该如何操作
      */
-    stencilZFailOpBack:sy_temp_stencil_op_func,
+    stencilZFailOpBack: sy_temp_stencil_op_func,
     /**
      * 背面模板测试和深度测试都通过，该如何操作
      */
-    stencilZPassOpBack:sy_temp_stencil_op_func,
+    stencilZPassOpBack: sy_temp_stencil_op_func,
     /**
      * 设置背面参与最后写入模板缓冲计算的mask值
      */
@@ -275,186 +275,186 @@ export const StateValueMap = {
     /**
      * 是否清空模板缓存
      */
-    stencilClear:sy_temp_on_off,
+    stencilClear: sy_temp_on_off,
 
     /**
      * 是否开启裁切
      */
-    ScissorTest:sy_temp_on_off,
+    ScissorTest: sy_temp_on_off,
 
     // cull-mode
-    cullMode:sy_temp_cull,
+    cullMode: sy_temp_cull,
     // primitive-type
-    primitiveType:sy_temp_pt,
+    primitiveType: sy_temp_pt,
 }
 
 export const StateString = {
-    vertexBuffers:"vertexBuffers",
-    vertexBufferOffsets:"vertexBufferOffsets",
-    textureUnits:"textureUnits",
-    
+    vertexBuffers: "vertexBuffers",
+    vertexBufferOffsets: "vertexBufferOffsets",
+    textureUnits: "textureUnits",
+
     /**
      * 是否开启alpha混合
      */
-    blend:"blend",
+    blend: "blend",
     /**
      * 是否是拆分混合函数blendFuncSeparate 不然就使用低级的blendFunc
      */
-    blendSep:"blendSep",
+    blendSep: "blendSep",
     /**
      * 设置常量的混合颜色 r g b a
      * 一般情况，源颜色指的是片元着色器传出的颜色，目标颜色指的是颜色缓冲中的颜色
      * 我们也可以追加指定一个常量，不使用上面提到的两种颜色，或者alpha
      */
-    blendColor:"blendColor",
+    blendColor: "blendColor",
     /**
      * 设置混合颜色计算公式(加 减 逆向减)
      * 默认情况不拆开混合的话，也会设置alpha计算公式
      */
-    blendEq:"blendEq",
+    blendEq: "blendEq",
     /**
      * 设置透明度混合的计算公式
      */
-    blendAlphaEq:"blendAlphaEq",
+    blendAlphaEq: "blendAlphaEq",
     /**
      * 设置源因子
      */
-    blendSrc:"blendSrc",
+    blendSrc: "blendSrc",
     /**
      * 设置目标因子
      */
-    blendDst:"blendDst",
+    blendDst: "blendDst",
     /**
      * 设置alpha的源因子
      */
-    blendSrcAlpha:"blendSrcAlpha",
+    blendSrcAlpha: "blendSrcAlpha",
     /**
      * 设置alpha的目标因子
      */
-    blendDstAlpha:"blendDstAlpha",
+    blendDstAlpha: "blendDstAlpha",
     /**
      * 控制是否可以向颜色缓冲写数据
      */
-    blendColorMask:"blendColorMask",
+    blendColorMask: "blendColorMask",
 
     // depth
     /**
      * 是否开启深度测试
      */
-    depthTest:"depthTest",
+    depthTest: "depthTest",
     /**
      * 是否允许深度写入
      */
-    depthWrite:"depthWrite",
+    depthWrite: "depthWrite",
     /**
      * 设置深度比较函数
      */
-    depthFunc:"depthFunc",
+    depthFunc: "depthFunc",
 
     // stencil
     /**
      * 是否开启正面模板测试
      */
-    stencilTestFront:"stencilTestFront",
+    stencilTestFront: "stencilTestFront",
     /**
      * 是否开启背面模板测试
      */
-    stencilTestBack:"stencilTestBack",
-    stencilSep:"stencilSep",
+    stencilTestBack: "stencilTestBack",
+    stencilSep: "stencilSep",
     /**
      * 设置正面模板函数
      */
-    stencilFuncFront:"stencilFuncFront",
+    stencilFuncFront: "stencilFuncFront",
     /**
      * 设置正面的模板函数的ref参数
      */
-    stencilRefFront:"stencilRefFront",
+    stencilRefFront: "stencilRefFront",
     /**
      * 设置正面的模板函数的mask参数
      */
-    stencilMaskFront:"stencilMaskFront",
+    stencilMaskFront: "stencilMaskFront",
     /**
      * 正面模板测试失败后该如何操作
      */
-    stencilFailOpFront:"stencilFailOpFront",
+    stencilFailOpFront: "stencilFailOpFront",
     /**
      * 正面模板测试通过，深度测试成功，该如何操作
      */
-    stencilZFailOpFront:"stencilZFailOpFront",
+    stencilZFailOpFront: "stencilZFailOpFront",
     /**
      * 正面模板测试和深度测试都通过，该如何操作
      */
-    stencilZPassOpFront:"stencilZPassOpFront",
+    stencilZPassOpFront: "stencilZPassOpFront",
     /**
      * 设置正面参与最后写入模板缓冲计算的mask值
      */
-    stencilWriteMaskFront:"stencilWriteMaskFront",
-     /**
-     * 设置背面模板函数
-     */
-    stencilFuncBack:"stencilFuncBack",
+    stencilWriteMaskFront: "stencilWriteMaskFront",
+    /**
+    * 设置背面模板函数
+    */
+    stencilFuncBack: "stencilFuncBack",
     /**
      * 设置背面的模板函数的ref参数
      */
-    stencilRefBack:"stencilRefBack",
+    stencilRefBack: "stencilRefBack",
     /**
      * 设置背面的模板函数的mask参数
      */
-    stencilMaskBack:"stencilMaskBack",
+    stencilMaskBack: "stencilMaskBack",
     /**
      * 背面模板测试失败后该如何操作
      */
-    stencilFailOpBack:"stencilFailOpBack",
+    stencilFailOpBack: "stencilFailOpBack",
     /**
      * 背面模板测试通过，深度测试成功，该如何操作
      */
-    stencilZFailOpBack:"stencilZFailOpBack",
+    stencilZFailOpBack: "stencilZFailOpBack",
     /**
      * 背面模板测试和深度测试都通过，该如何操作
      */
-    stencilZPassOpBack:"stencilZPassOpBack",
+    stencilZPassOpBack: "stencilZPassOpBack",
     /**
      * 设置背面参与最后写入模板缓冲计算的mask值
      */
-    stencilWriteMaskBack:"stencilWriteMaskBack",
+    stencilWriteMaskBack: "stencilWriteMaskBack",
 
-    stencilClear:"stencilClear",
+    stencilClear: "stencilClear",
 
     /**
      * 是否开启裁切
      */
-    ScissorTest:"ScissorTest",
+    ScissorTest: "ScissorTest",
 
     // cull-mode
-    cullMode:"cullMode",
+    cullMode: "cullMode",
     // primitive-type
-    primitiveType:"primitiveType",
+    primitiveType: "primitiveType",
     // buffer bindings
-    maxStream:"maxStream",
-    indexBuffer:"indexBuffer",
-    maxTextureSlot:"maxTextureSlot",
-    program:"program",
+    maxStream: "maxStream",
+    indexBuffer: "indexBuffer",
+    maxTextureSlot: "maxTextureSlot",
+    program: "program",
 }
 
 /***
  * 渲染状态
  */
-export  class State {
+export class State {
 
     public vertexBuffers;
     public vertexBufferOffsets;
     public textureUnits;
 
-    public blend:boolean;//是否开启混合
-    public blendSep:boolean;//是否是拆分混合函数blendFuncSeparate 不然就使用低级的blendFunc
-    public blendColor:string;
+    public blend: boolean;//是否开启混合
+    public blendSep: boolean;//是否是拆分混合函数blendFuncSeparate 不然就使用低级的blendFunc
+    public blendColor: string;
     public blendEq;
     public blendAlphaEq;
-    public blendSrc:number;
-    public blendDst:number;
-    public blendSrcAlpha:number;
-    public blendDstAlpha:number;
-    public blendColorMask:number;
+    public blendSrc: number;
+    public blendDst: number;
+    public blendSrcAlpha: number;
+    public blendDstAlpha: number;
+    public blendColorMask: number;
 
     // depth
     public depthTest;
@@ -479,7 +479,7 @@ export  class State {
     public stencilZFailOpBack;
     public stencilZPassOpBack;
     public stencilWriteMaskBack;
-    public stencilClear:boolean;
+    public stencilClear: boolean;
 
     //裁切测试
     public ScissorTest;
@@ -503,7 +503,7 @@ export  class State {
 
 
     constructor() {
-        
+
         this.set(_default);
     }
 
