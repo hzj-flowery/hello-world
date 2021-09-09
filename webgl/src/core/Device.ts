@@ -68,10 +68,10 @@ function _initStates(gl:WebGL2RenderingContext) {
     gl.depthFunc(gl.LESS);
     gl.depthRange(0.0, 1.0);
 
-    gl.stencilFuncSeparate(gl.FRONT, gl.ALWAYS, 1, 0xffff);
+    gl.stencilFuncSeparate(gl.FRONT, gl.ALWAYS, 3, 0xffff);
     gl.stencilOpSeparate(gl.FRONT, gl.KEEP, gl.KEEP, gl.KEEP);
     gl.stencilMaskSeparate(gl.FRONT, 0xffff);
-    gl.stencilFuncSeparate(gl.BACK, gl.ALWAYS, 1, 0xffff);
+    gl.stencilFuncSeparate(gl.BACK, gl.ALWAYS, 3, 0xffff);
     gl.stencilOpSeparate(gl.BACK, gl.KEEP, gl.KEEP, gl.KEEP); 
     gl.stencilMaskSeparate(gl.BACK, 0xffff);
     gl.disable(gl.STENCIL_TEST);
@@ -267,6 +267,7 @@ function _commitStencilState(gl: WebGLRenderingContext, cur: State, next: State)
             gl.enable(gl.STENCIL_TEST);
         } else {
             gl.disable(gl.STENCIL_TEST);
+            gl.clearStencil(0);
         }
     }
 
@@ -678,27 +679,39 @@ export default class Device {
             data.sort((a, b) => {
                 if (a.pass != null && b.pass != null) {
                     if (a.primitive.alpha == b.primitive.alpha) {
-                        //2d节点应该在3d节点之前渲染
-                        if (a.node.getNodeType() == b.node.getNodeType()) {
-                            return a.pass.shaderType - b.pass.shaderType;
+
+                        if (a.node.gZOrder == b.node.gZOrder) { 
+                            if (a.node.getNodeType() == b.node.getNodeType()) {
+                                return a.pass.shaderType - b.pass.shaderType;
+                            }
+                            else {
+                                //3d节点应该先于2d节点渲染
+                                return b.node.getNodeType() - a.node.getNodeType()
+                            }
                         }
                         else {
-                            //3d节点应该先于2d节点渲染
-                            return b.node.getNodeType() - a.node.getNodeType()
+                            //gZOrder 值越小越要提前渲染
+                            return a.node.gZOrder - b.node.gZOrder
                         }
+
                     }
                     else {
-                        if (a.node.getNodeType() == b.node.getNodeType()) {
-                            /**
-                         * 需要优先绘制不透明的物体
-                         * 
-                         * 绘制所有半透明的物体（α小于0）,注意它们应当按照深度排序，然后从后向前绘制
-                         */
-                            return b.primitive.alpha - a.primitive.alpha;
+                        if (a.node.gZOrder == b.node.gZOrder) {
+                            if (a.node.getNodeType() == b.node.getNodeType()) {
+                                /**
+                             * 需要优先绘制不透明的物体
+                             * 
+                             * 绘制所有半透明的物体（α小于0）,注意它们应当按照深度排序，然后从后向前绘制
+                             */
+                                return b.primitive.alpha - a.primitive.alpha;
+                            }
+                            else {
+                                //3d节点应该先于2d节点渲染
+                                return b.node.getNodeType() - a.node.getNodeType()
+                            }
                         }
                         else {
-                            //3d节点应该先于2d节点渲染
-                            return b.node.getNodeType() - a.node.getNodeType()
+                            return a.node.gZOrder - b.node.gZOrder
                         }
                     }
                 }
@@ -845,8 +858,6 @@ export default class Device {
         var cameraData = GameMainCamera.instance.getCameraByUUid(syRender.CameraUUid.base3D).getCameraData();
         G_CameraModel.createCamera(crData.VA, cameraData.projectMat, cameraData.modelMat, crData.VAPos);
         //提交数据给GPU 立即绘制
-        
-        //最后渲染2d
         for (var j = 0; j < treeData.length; j++) {
             if (treeData[j].isOffline && crData.fb) {
                 //对于离屏渲染的数据 如果当前是离屏渲染的话 则不可以渲染它 否则会报错

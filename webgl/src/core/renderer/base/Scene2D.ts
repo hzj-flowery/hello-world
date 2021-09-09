@@ -16,7 +16,7 @@ import { SY } from "./Sprite";
 
 export default class Scene2D extends Scene {
 
-    private _rectangle: SY.Sprite2D;
+    private _mask: SY.Sprite2D;
     private _instantiateSprite: InstantiateSprite;
     private _label: Label;
     private _renderSprite: RenderOfflineSprite;
@@ -94,7 +94,7 @@ export default class Scene2D extends Scene {
         if (this._isPress)
             {
                 // this._pen.pushScreenPos(ev.x, ev.y)
-                this._rectangle.setPosition(ev.x,Device.Instance.height - ev.y, -99);
+                this._mask.setPosition(ev.x,Device.Instance.height - ev.y, -99);
             }
     }
     private onMouseUp(ev: MouseEvent): void {
@@ -108,48 +108,41 @@ export default class Scene2D extends Scene {
 
     private stencilTest(): void {
         
-        // this._rectangle = new SY.Sprite2D();
-        // this._rectangle.alpha = 0.9;
-        // this._rectangle.pushPassContent(syRender.ShaderType.Sprite)
-        // this._rectangle.setPosition(Device.Instance.width / 2, Device.Instance.height / 2,-101);
-        // this._rectangle.spriteFrame = "res/png/player_watch/104.png";
-        // this.addChild(this._rectangle);
+        // this._mask = new SY.Sprite2D();
+        // this._mask.alpha = 0.9;
+        // this._mask.pushPassContent(syRender.ShaderType.Sprite)
+        // this._mask.setPosition(Device.Instance.width / 2, Device.Instance.height / 2,-101);
+        // this._mask.spriteFrame = "res/png/player_watch/104.png";
+        // this.addChild(this._mask);
     
         //mask
-        this._rectangle = new SY.Sprite2D();
-        this._rectangle.alpha = 1.0;
-        this._rectangle.defineUse.SY_USE_ALPHA_TEST = 0.1;
-        this._rectangle.pushPassContent(syRender.ShaderType.Sprite, [
-            
-            //深度
+        this._mask = new SY.Mask2D();
+        this._mask.setPosition(Device.Instance.width / 2, Device.Instance.height / 2, -99);
+        this._mask.spriteFrame = "res/png/player_watch/1143.png";
+        this._mask.gZOrder = 1000;
+        this._mask.pushPassContent(syRender.ShaderType.Sprite, [
+            //深度 
             [StateString.depthTest,StateValueMap.depthTest.ON],
             [StateString.depthFunc,StateValueMap.depthFunc.LEQUAL],
             [StateString.depthWrite,StateValueMap.depthWrite.ON],
             
-            // [StateString.blendSep,StateValueMap.blendSep.ON],
-            // [StateString.blendSrc,StateValueMap.blendSrc.SRC_ALPHA],
-            // [StateString.blendDst,StateValueMap.blendDst.ONE_MINUS_SRC_ALPHA],
-            // [StateString.blendSrcAlpha,StateValueMap.blendSrcAlpha.ZERO],
-            // [StateString.blendDstAlpha,StateValueMap.blendDstAlpha.ONE],
-
             [StateString.blendColorMask,syRender.ColorMask.NONE],
 
             [StateString.stencilTestFront,StateValueMap.stencilTestFront.ON],
             [StateString.stencilFuncFront,StateValueMap.stencilFuncFront.ALWAYS],
-            [StateString.stencilRefFront,1],
+            [StateString.stencilRefFront,3],
             [StateString.stencilMaskFront,0xffff],
             [StateString.stencilFailOpFront,StateValueMap.stencilFailOpFront.KEEP],
             [StateString.stencilZFailOpFront,StateValueMap.stencilZFailOpFront.KEEP],
             [StateString.stencilZPassOpFront,StateValueMap.stencilZPassOpFront.REPLACE],
         ])
-        this._rectangle.setPosition(Device.Instance.width / 2, Device.Instance.height / 2, -99);
-        this._rectangle.spriteFrame = "res/png/player_watch/1143.png";
-        this.addChild(this._rectangle);
+        this.addChild(this._mask);
 
 
 
         var rectangle1 = new SY.Sprite2D();
         rectangle1.alpha = 1.0; 
+        rectangle1.gZOrder = 1001;
         rectangle1.pushPassContent(syRender.ShaderType.Sprite, [
 
             [StateString.depthTest,StateValueMap.depthTest.OFF],
@@ -161,7 +154,7 @@ export default class Scene2D extends Scene {
             [StateString.stencilTestFront,StateValueMap.stencilTestFront.ON],
             [StateString.stencilSep,StateValueMap.stencilSep.ON],
             [StateString.stencilFuncFront,StateValueMap.stencilFuncFront.EQUAL],
-            [StateString.stencilRefFront,1],
+            [StateString.stencilRefFront,3],
             [StateString.stencilMaskFront,0xffff],
             [StateString.stencilFailOpFront,StateValueMap.stencilFailOpFront.KEEP],
             [StateString.stencilZFailOpFront,StateValueMap.stencilZFailOpFront.KEEP],
@@ -234,11 +227,11 @@ export default class Scene2D extends Scene {
         rectangle1.spriteFrame = "res/ground.png";
         this.addChild(rectangle1);
 
-        this._rectangle = new SY.Sprite2D();
-        this._rectangle.alpha = 1.0;
-        this._rectangle.setScale(1.0,1.0,1.0)
-        this._rectangle.defineUse.SY_USE_ALPHA_TEST = 0.0;
-        this._rectangle.pushPassContent(syRender.ShaderType.Sprite, [
+        this._mask = new SY.Sprite2D();
+        this._mask.alpha = 1.0;
+        this._mask.setScale(1.0,1.0,1.0)
+        this._mask.defineUse.SY_USE_ALPHA_TEST = 0.0;
+        this._mask.pushPassContent(syRender.ShaderType.Sprite, [
             [StateString.blendSep,StateValueMap.blendSep.ON],
             [StateString.depthTest,StateValueMap.depthTest.ON],
             [StateString.depthWrite,StateValueMap.depthWrite.ON],
@@ -248,8 +241,8 @@ export default class Scene2D extends Scene {
             [StateString.blendSrcAlpha,StateValueMap.blendSrcAlpha.ZERO],
             [StateString.blendDstAlpha,StateValueMap.blendDstAlpha.ONE],
         ])
-        this._rectangle.setPosition(Device.Instance.width / 2, Device.Instance.height / 2, 0);
-        this._rectangle.spriteFrame = "res/png/player_watch/104.png";
-        this.addChild(this._rectangle);
+        this._mask.setPosition(Device.Instance.width / 2, Device.Instance.height / 2, 0);
+        this._mask.spriteFrame = "res/png/player_watch/104.png";
+        this.addChild(this._mask);
     }
 }

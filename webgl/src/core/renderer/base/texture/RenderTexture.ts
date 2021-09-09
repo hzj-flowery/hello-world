@@ -73,9 +73,10 @@ export class RenderTexture extends Texture2D {
         this._frameBuffer = gl.createFramebuffer();
     }
     private _frameBuffer: WebGLFramebuffer;//帧缓冲的glID
-    private _renderBuffer: WebGLRenderbuffer;//渲染缓冲的glID
-    private _deferredTexMap:Map<syRender.DeferredTexture,WebGLTexture>;
-    public get frameBuffer(){
+    private _renderBuffer_Depth: WebGLRenderbuffer;//深度渲染缓冲的glID
+    private _renderBuffer_Depth_Stencil: WebGLRenderbuffer;//深度和模板渲染缓存的glID
+    private _deferredTexMap: Map<syRender.DeferredTexture, WebGLTexture>;
+    public get frameBuffer() {
         return this._frameBuffer;
     }
     /**
@@ -85,65 +86,78 @@ export class RenderTexture extends Texture2D {
      * @param height 
      * @param nums 
      */
-    public attach(attachPlace:syRender.AttachPlace,width:number,height:number,param?:any) {
-        if(attachPlace == syRender.AttachPlace.Color)
-        {
-            this.renderTextureToColor(width,height);
+    public attach(attachPlace: syRender.AttachPlace, width: number, height: number, param?: any) {
+        if (attachPlace == syRender.AttachPlace.Color) {
+            this.renderTextureToColor(width, height);
         }
-        else if(attachPlace == syRender.AttachPlace.Depth)
-        {
-            let isWebgl2 = this._gl instanceof WebGL2RenderingContext?true:false;
-            isWebgl2?this.renderTextureToDepthWebgl2(width,height):this.renderTextureToDepthWebgl1(width,height);
+        else if (attachPlace == syRender.AttachPlace.Depth) {
+            let isWebgl2 = this._gl instanceof WebGL2RenderingContext ? true : false;
+            isWebgl2 ? this.renderTextureToDepthWebgl2(width, height) : this.renderTextureToDepthWebgl1(width, height);
         }
-        else if(attachPlace == syRender.AttachPlace.MoreColor)
-        {
-            this.renderMoreTextureToColor(width,height,param);
+        else if (attachPlace == syRender.AttachPlace.MoreColor) {
+            this.renderMoreTextureToColor(width, height, param);
         }
         this.checkAndUnbind();
         this.loaded = true;
     }
-    private checkAndUnbind():void{
+    private checkAndUnbind(): void {
         var gl = this._gl;
-         // 检测帧缓冲区对象的配置状态是否成功
-         var e = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
-         if (gl.FRAMEBUFFER_COMPLETE !== e) {
-             console.log('Frame buffer object is incomplete: ' + e.toString());
-             return;
-         }
-         else {
-             console.log("创建帧缓存成功----------");
-         }
-         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-         gl.bindTexture(gl.TEXTURE_2D, null);
-         gl.bindRenderbuffer(gl.RENDERBUFFER, null);
+        // 检测帧缓冲区对象的配置状态是否成功
+        var e = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
+
+        if (e !== gl.FRAMEBUFFER_COMPLETE) {
+            switch (e) {
+                case gl.FRAMEBUFFER_INCOMPLETE_ATTACHMENT: {
+                    console.error('glCheckFramebufferStatus() - FRAMEBUFFER_INCOMPLETE_ATTACHMENT');
+                    break;
+                }
+                case gl.FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT: {
+                    console.error('glCheckFramebufferStatus() - FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT');
+                    break;
+                }
+                case gl.FRAMEBUFFER_INCOMPLETE_DIMENSIONS: {
+                    console.error('glCheckFramebufferStatus() - FRAMEBUFFER_INCOMPLETE_DIMENSIONS');
+                    break;
+                }
+                case gl.FRAMEBUFFER_UNSUPPORTED: {
+                    console.error('glCheckFramebufferStatus() - FRAMEBUFFER_UNSUPPORTED');
+                    break;
+                }
+                default:
+            }
+        }
+        else {
+            console.log("创建帧缓存成功----------");
+        }
+
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        gl.bindTexture(gl.TEXTURE_2D, null);
+        gl.bindRenderbuffer(gl.RENDERBUFFER, null);
     }
     /**
      * 渲染多纹理到颜色附件
      * @param dtWidth 
      * @param dtHeight 
      */
-     private renderMoreTextureToColor(dtWidth: number, dtHeight: number,texData:Array<any>):void{
+    private renderMoreTextureToColor(dtWidth: number, dtHeight: number, texData: Array<any>): void {
 
-        if(!texData||texData.length<=0)
-        {
+        if (!texData || texData.length <= 0) {
             return
         }
-        
+
         this._deferredTexMap = new Map();
         let gl = this._gl;
         gl.bindFramebuffer(gl.FRAMEBUFFER, this._frameBuffer);
-        
+
         let COLOR_ATTACHMENT = [];
         let startCount = 0;
-        for(let i = 0;i<texData.length;i++)
-        {
+        for (let i = 0; i < texData.length; i++) {
             var texType = texData[i].type;
-            if(texType==syRender.DeferredTexture.None)
-            {
+            if (texType == syRender.DeferredTexture.None) {
                 this._gl.deleteTexture(this.glID);
                 var tempTex = G_TextureManager.createTexture(texData[i].value);
                 this.glID = tempTex.glID;
-                this._deferredTexMap.set(syRender.DeferredTexture.None,this.glID)
+                this._deferredTexMap.set(syRender.DeferredTexture.None, this.glID)
                 continue;
             }
             let textureID = gl.createTexture();
@@ -151,52 +165,50 @@ export class RenderTexture extends Texture2D {
             gl.bindTexture(gl.TEXTURE_2D, textureID);
             // Y 轴取反
             this._gl.pixelStorei(this._gl.UNPACK_FLIP_Y_WEBGL, false);
-            this.texParameteri(gl.LINEAR,gl.LINEAR,gl.REPEAT,gl.REPEAT);
+            this.texParameteri(gl.LINEAR, gl.LINEAR, gl.REPEAT, gl.REPEAT);
             //设置纹理格式，作为帧缓冲的颜色附件
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, dtWidth, dtHeight, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
             //设置上面创建纹理作为颜色附件
-            gl.framebufferTexture2D(gl.FRAMEBUFFER, gl["COLOR_ATTACHMENT"+startCount], gl.TEXTURE_2D, textureID, 0);
-            COLOR_ATTACHMENT.push(gl["COLOR_ATTACHMENT"+startCount]);
-            this._deferredTexMap.set(texType,textureID);
-            
+            gl.framebufferTexture2D(gl.FRAMEBUFFER, gl["COLOR_ATTACHMENT" + startCount], gl.TEXTURE_2D, textureID, 0);
+            COLOR_ATTACHMENT.push(gl["COLOR_ATTACHMENT" + startCount]);
+            this._deferredTexMap.set(texType, textureID);
+
             startCount++;
         }
-        this.addRenderBufferToDepth(dtWidth, dtHeight);
-            //采样到几个颜色附件(对应的几何纹理)
+        this.addRenderBuffer(dtWidth, dtHeight,true);
+        //采样到几个颜色附件(对应的几何纹理)
         gl.drawBuffers(COLOR_ATTACHMENT);
 
     }
-    
+
     /**
      * 获取延迟渲染的纹理
      * @param ty 
      * @returns 
      */
-    public getDeferredTex(ty:syRender.DeferredTexture):WebGLTexture{
+    public getDeferredTex(ty: syRender.DeferredTexture): WebGLTexture {
         return this._deferredTexMap.get(ty)
     }
-    
+
     /**
      * 获取延迟渲染纹理的数量
      * @returns 
      */
-    public getDeferredTexSize():number{
-        if(!this._deferredTexMap)
-        {
-           return 0;
+    public getDeferredTexSize(): number {
+        if (!this._deferredTexMap) {
+            return 0;
         }
-        if(this._deferredTexMap.get(syRender.DeferredTexture.None))
-        {
+        if (this._deferredTexMap.get(syRender.DeferredTexture.None)) {
             //普通的纹理不能包含在里面
-            return this._deferredTexMap.size-1;
+            return this._deferredTexMap.size - 1;
         }
-         return this._deferredTexMap.size
+        return this._deferredTexMap.size
     }
     /**
      * 判断是否事离线渲染
      */
-    public isDeferred():boolean{
-       return this._deferredTexMap && this._deferredTexMap.size >=1;
+    public isDeferred(): boolean {
+        return this._deferredTexMap && this._deferredTexMap.size >= 1;
     }
 
     /**
@@ -204,7 +216,7 @@ export class RenderTexture extends Texture2D {
      * @param dtWidth 
      * @param dtHeight 
      */
-    private renderTextureToColor(dtWidth: number, dtHeight: number):void{
+    private renderTextureToColor(dtWidth: number, dtHeight: number): void {
         let gl = this._gl;
         gl.bindFramebuffer(gl.FRAMEBUFFER, this._frameBuffer);
         var options = new TextureOpts();
@@ -224,7 +236,7 @@ export class RenderTexture extends Texture2D {
         //如果是gl.DEPTH_ATTACHMENT表示纹理缓冲区作为帧缓冲区的深度缓冲区，接收片元深度值Z
         gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.glID, 0);
 
-        this.addRenderBufferToDepth(dtWidth, dtHeight)
+        this.addRenderBuffer(dtWidth, dtHeight,true);
     }
     private renderTextureToDepthWebgl1(dtWidth: number, dtHeight: number): void {
         var gl = this._gl as WebGLRenderingContext;
@@ -265,7 +277,7 @@ export class RenderTexture extends Texture2D {
             gl.UNSIGNED_BYTE,
             null,
         );
-        this.texParameteri(gl.NEAREST,gl.NEAREST,gl.CLAMP_TO_EDGE,gl.CLAMP_TO_EDGE)
+        this.texParameteri(gl.NEAREST, gl.NEAREST, gl.CLAMP_TO_EDGE, gl.CLAMP_TO_EDGE)
         // attach it to the framebuffer
         //将颜色纹理附件附加到帧缓存
         gl.framebufferTexture2D(
@@ -299,35 +311,59 @@ export class RenderTexture extends Texture2D {
             this.glID,         // texture
             0);                    // mip level
 
-        this.addRenderBufferToDepth(dtWidth, dtHeight)
+        this.addRenderBuffer(dtWidth, dtHeight,true);
     }
     
     /**
-     * 添加渲染缓冲充当深度附件
+     * 
      * @param dtWidth 
      * @param dtHeight 
+     * @param isAddStencil 是否加入模板缓冲
      */
-    private addRenderBufferToDepth(dtWidth:number, dtHeight:number):void{
+    private addRenderBuffer(dtWidth: number, dtHeight: number,isAddStencil?):void{
         var gl = this._gl
-
-        //创建渲染缓冲区
-        if(!this._renderBuffer)
-        this._renderBuffer = gl.createRenderbuffer();
-
-        //设置渲染缓冲对象作为深度附件
-        gl.bindRenderbuffer(gl.RENDERBUFFER, this._renderBuffer);
-        /**
-         * 指定为颜色缓冲区就可以接收帧缓冲区的片元的像素数据（rgb），指定为深度缓冲区就可以接收片元的深度值Z数据
-         *  gl.DEPTH_COMPONENT16	深度缓冲区
-         *  gl.DEPTH_COMPONENT24    深度缓冲区
-            gl.DEPTH_COMPONENT32F   深度缓冲区
-            gl.STENCIL_INDEX8	    模板缓冲区
-            gl.RGBA4	            颜色缓冲区，4个分量都是4比特
-            gl.RGB5_A1          	颜色缓冲区，RGB分量5比特，A分量1比特
-            gl.RGB565	            颜色缓冲区，RGB分量分别5、6、5比特
-         */
-        gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, dtWidth, dtHeight);
-        gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, this._renderBuffer);
+        if(isAddStencil)
+        {
+            //添加渲染缓冲充当深度和模板附件
+            //创建渲染缓冲区
+            if (!this._renderBuffer_Depth_Stencil)
+                this._renderBuffer_Depth_Stencil = gl.createRenderbuffer();
+            //设置渲染缓冲对象作为深度附件
+            gl.bindRenderbuffer(gl.RENDERBUFFER, this._renderBuffer_Depth_Stencil);
+            /**
+             * 指定为颜色缓冲区就可以接收帧缓冲区的片元的像素数据（rgb），指定为深度缓冲区就可以接收片元的深度值Z数据
+             *  gl.DEPTH_COMPONENT16	深度缓冲区
+             *  gl.DEPTH_COMPONENT24    深度缓冲区
+                gl.DEPTH_COMPONENT32F   深度缓冲区
+                gl.STENCIL_INDEX8	    模板缓冲区
+                gl.RGBA4	            颜色缓冲区，4个分量都是4比特
+                gl.RGB5_A1          	颜色缓冲区，RGB分量5比特，A分量1比特
+                gl.RGB565	            颜色缓冲区，RGB分量分别5、6、5比特
+             */
+            gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_STENCIL, dtWidth, dtHeight);
+            gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_STENCIL_ATTACHMENT, gl.RENDERBUFFER, this._renderBuffer_Depth_Stencil);
+        }
+        else
+        {
+            //添加渲染缓冲充当深度附件
+            //创建渲染缓冲区
+            if (!this._renderBuffer_Depth)
+                this._renderBuffer_Depth = gl.createRenderbuffer();
+            //设置渲染缓冲对象作为深度附件
+            gl.bindRenderbuffer(gl.RENDERBUFFER, this._renderBuffer_Depth);
+            /**
+             * 指定为颜色缓冲区就可以接收帧缓冲区的片元的像素数据（rgb），指定为深度缓冲区就可以接收片元的深度值Z数据
+             *  gl.DEPTH_COMPONENT16	深度缓冲区
+             *  gl.DEPTH_COMPONENT24    深度缓冲区
+                gl.DEPTH_COMPONENT32F   深度缓冲区
+                gl.STENCIL_INDEX8	    模板缓冲区
+                gl.RGBA4	            颜色缓冲区，4个分量都是4比特
+                gl.RGB5_A1          	颜色缓冲区，RGB分量5比特，A分量1比特
+                gl.RGB565	            颜色缓冲区，RGB分量分别5、6、5比特
+             */
+            gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, dtWidth, dtHeight);
+            gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, this._renderBuffer_Depth);
+        }
     }
 
     destroy() {
@@ -336,9 +372,13 @@ export class RenderTexture extends Texture2D {
             this._gl.deleteFramebuffer(this._frameBuffer);
             this._frameBuffer = null;
         }
-        if(this._renderBuffer){
-            this._gl.deleteRenderbuffer(this._renderBuffer);
-            this._renderBuffer = null;
+        if (this._renderBuffer_Depth) {
+            this._gl.deleteRenderbuffer(this._renderBuffer_Depth);
+            this._renderBuffer_Depth = null;
+        }
+        if (this._renderBuffer_Depth_Stencil) {
+            this._gl.deleteRenderbuffer(this._renderBuffer_Depth_Stencil);
+            this._renderBuffer_Depth_Stencil = null;
         }
     }
 

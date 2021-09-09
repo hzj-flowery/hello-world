@@ -64,6 +64,7 @@ import { Pass } from "../shader/Pass";
 import { RenderTexture } from "./texture/RenderTexture";
 import { glMatrix } from "../../math/Matrix";
 import { glEnums } from "../gfx/GLapi";
+import { StateString, StateValueMap } from "../gfx/State";
 
 /**
  * 显示节点
@@ -349,10 +350,7 @@ export namespace SY {
                 case GLID_TYPE.INDEX: return this._indexsBuffer;
                 case GLID_TYPE.UV: return this._uvsBuffer;
                 case GLID_TYPE.NORMAL: return this._normalsBuffer;
-                case GLID_TYPE.VERTEX: 
-                if(!this._vertexsBuffer)
-                console.log("aaaaaaaaa");
-                return this._vertexsBuffer;
+                case GLID_TYPE.VERTEX:return this._vertexsBuffer;
                 case GLID_TYPE.VERT_COLOR: return this._VertColorBuffer;
                 case GLID_TYPE.VERT_MATRIX: return this._vertMatrixBuffer;
                 default: return null;//未知
@@ -665,6 +663,7 @@ export namespace SY {
         private _lb: Array<number> = [];//左下
         private _rt: Array<number> = [];//右上
         private _rb: Array<number> = [];//右下
+        private _mask:Mask2D;//遮罩
         constructor() {
             super();
             this._node__type = syRender.NodeType.D2;
@@ -754,14 +753,23 @@ export namespace SY {
             this.createVertexsBuffer(pos, 3);
             this.updateUV();
         }
+
+        public set mask(mk)
+        {
+            this._mask = mk;
+        }
     }
 
     /**
      * mask
      */
-    export class MaskSprite extends SpriteBase {
+    export class Mask2D extends Sprite2D {
         constructor() {
             super();
+        }
+        protected onInit(){
+            super.onInit()
+            this.defineUse.SY_USE_ALPHA_TEST = 0.1;
         }
     }
 

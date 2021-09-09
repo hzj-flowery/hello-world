@@ -19,7 +19,7 @@ export namespace syRender {
     export var StateData={
         name:StateString,
         value:StateValueMap
-    }
+    } 
 
     export enum ColorMask {
         NONE = 0x0, //00000000 
@@ -441,7 +441,6 @@ export namespace syRender {
      */
     export class BaseData {
         constructor() {
-
             this._id = renderDataId++;
             this._type = syRender.DataType.Base;
             this._temp_model_view_matrix = glMatrix.mat4.identity(null);
@@ -459,18 +458,17 @@ export namespace syRender {
             this.defineUse = new DefineUse();
             this.reset();
         }
-
         /**
          * 唯一id
          */
         public get id() {
             return this._id
         }
-
+        public father:number;//父亲的渲染数据
+        public son:number;//儿子的渲染数据
         public get type() {
             return this._type
         }
-
         public get drawingOrder() {
             if (this._pass) return this._pass.drawingOrder;
             return syRender.DrawingOrder.Normal;
