@@ -128,13 +128,23 @@ export default class Scene2D extends Scene {
             
             [StateString.blendColorMask,syRender.ColorMask.NONE],
 
-            [StateString.stencilTestFront,StateValueMap.stencilTestFront.ON],
-            [StateString.stencilFuncFront,StateValueMap.stencilFuncFront.ALWAYS],
-            [StateString.stencilRefFront,3],
-            [StateString.stencilMaskFront,0xffff],
-            [StateString.stencilFailOpFront,StateValueMap.stencilFailOpFront.KEEP],
-            [StateString.stencilZFailOpFront,StateValueMap.stencilZFailOpFront.KEEP],
-            [StateString.stencilZPassOpFront,StateValueMap.stencilZPassOpFront.REPLACE],
+            [StateString.stencilTest,StateValueMap.stencilTest.ON],
+            [StateString.stencilSep,StateValueMap.stencilSep.OFF],
+            [StateString.stencilFunc,StateValueMap.stencilFunc.ALWAYS],
+            [StateString.stencilRef,10],
+            [StateString.stencilMask,0xffff],
+            [StateString.stencilFailOp,StateValueMap.stencilFailOp.KEEP],
+            [StateString.stencilZFailOp,StateValueMap.stencilZFailOp.KEEP],
+            [StateString.stencilZPassOp,StateValueMap.stencilZPassOp.REPLACE],
+
+
+            // [StateString.stencilTestFront,StateValueMap.stencilTestFront.ON],
+            // [StateString.stencilFuncFront,StateValueMap.stencilFuncFront.ALWAYS],
+            // [StateString.stencilRefFront,3],
+            // [StateString.stencilMaskFront,0xffff],
+            // [StateString.stencilFailOpFront,StateValueMap.stencilFailOpFront.KEEP],
+            // [StateString.stencilZFailOpFront,StateValueMap.stencilZFailOpFront.KEEP],
+            // [StateString.stencilZPassOpFront,StateValueMap.stencilZPassOpFront.REPLACE],
         ])
         this.addChild(this._mask);
 
@@ -151,14 +161,23 @@ export default class Scene2D extends Scene {
 
             // [StateString.blendColorMask,syRender.ColorMask.ALL],
 
-            [StateString.stencilTestFront,StateValueMap.stencilTestFront.ON],
-            [StateString.stencilSep,StateValueMap.stencilSep.ON],
-            [StateString.stencilFuncFront,StateValueMap.stencilFuncFront.EQUAL],
-            [StateString.stencilRefFront,3],
-            [StateString.stencilMaskFront,0xffff],
-            [StateString.stencilFailOpFront,StateValueMap.stencilFailOpFront.KEEP],
-            [StateString.stencilZFailOpFront,StateValueMap.stencilZFailOpFront.KEEP],
-            [StateString.stencilZPassOpFront,StateValueMap.stencilZPassOpFront.KEEP],
+            [StateString.stencilTest,StateValueMap.stencilTest.ON],
+            [StateString.stencilSep,StateValueMap.stencilSep.OFF],
+            [StateString.stencilFunc,StateValueMap.stencilFunc.EQUAL],
+            [StateString.stencilRef,10],
+            [StateString.stencilMask,0xffff],
+            [StateString.stencilFailOp,StateValueMap.stencilFailOp.KEEP],
+            [StateString.stencilZFailOp,StateValueMap.stencilZFailOp.KEEP],
+            [StateString.stencilZPassOp,StateValueMap.stencilZPassOp.KEEP],
+
+            // [StateString.stencilTestFront,StateValueMap.stencilTestFront.ON],
+            // [StateString.stencilSep,StateValueMap.stencilSep.ON],
+            // [StateString.stencilFuncFront,StateValueMap.stencilFuncFront.EQUAL],
+            // [StateString.stencilRefFront,3],
+            // [StateString.stencilMaskFront,0xffff],
+            // [StateString.stencilFailOpFront,StateValueMap.stencilFailOpFront.KEEP],
+            // [StateString.stencilZFailOpFront,StateValueMap.stencilZFailOpFront.KEEP],
+            // [StateString.stencilZPassOpFront,StateValueMap.stencilZPassOpFront.KEEP],
         ])
         rectangle1.setPosition(Device.Instance.width / 2, Device.Instance.height / 2 - 100,-100);
         rectangle1.spriteFrame = "res/1.png";

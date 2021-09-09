@@ -42,11 +42,11 @@ import { MathUtils } from "./utils/MathUtils";
 
  */
 
- /**
-     * 初始化渲染状态
-     */
-function _initStates(gl:WebGL2RenderingContext) {
-    
+/**
+    * 初始化渲染状态
+    */
+function _initStates(gl: WebGL2RenderingContext) {
+
     gl.activeTexture(gl.TEXTURE0);
     gl.pixelStorei(gl.PACK_ALIGNMENT, 1);
     gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
@@ -68,11 +68,15 @@ function _initStates(gl:WebGL2RenderingContext) {
     gl.depthFunc(gl.LESS);
     gl.depthRange(0.0, 1.0);
 
-    gl.stencilFuncSeparate(gl.FRONT, gl.ALWAYS, 3, 0xffff);
+    gl.stencilFunc(gl.ALWAYS, 0, 0xffff)
+    gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP)
+    gl.stencilMask(0xffff)
+
+    gl.stencilFuncSeparate(gl.FRONT, gl.ALWAYS, 0, 0xffff);
     gl.stencilOpSeparate(gl.FRONT, gl.KEEP, gl.KEEP, gl.KEEP);
     gl.stencilMaskSeparate(gl.FRONT, 0xffff);
-    gl.stencilFuncSeparate(gl.BACK, gl.ALWAYS, 3, 0xffff);
-    gl.stencilOpSeparate(gl.BACK, gl.KEEP, gl.KEEP, gl.KEEP); 
+    gl.stencilFuncSeparate(gl.BACK, gl.ALWAYS, 0, 0xffff);
+    gl.stencilOpSeparate(gl.BACK, gl.KEEP, gl.KEEP, gl.KEEP);
     gl.stencilMaskSeparate(gl.BACK, 0xffff);
     gl.disable(gl.STENCIL_TEST);
 
@@ -118,6 +122,8 @@ function _attach(gl, location, attachment, face = 0) {
 
 //----------------------------------------------------------下面是状态管理-----------------------------
 //深度缓冲区 也称Z缓冲区
+//坊间基础知识
+//何为隐藏面消除 隐藏面一般都在背面 深度值要大一些，开启深度测试 可以消除
 /**
 深度缓冲区其实就是一个二维数组，下标就是屏幕坐标，里面存放着的值就是z坐标，我们可以通过下面描述的方法来对这个数组进行操作
 它的主要功能就是判断前后遮挡关系，选择片元是否渲染
@@ -259,65 +265,90 @@ function _commitDepthState(gl: WebGLRenderingContext, cur: State, next: State): 
  */
 function _commitStencilState(gl: WebGLRenderingContext, cur: State, next: State): void {
 
-    //关闭或者开启模板测试
-    if ((cur.stencilTestFront !== next.stencilTestFront)
-        || (cur.stencilTestBack !== next.stencilTestBack)) {
+    if (next.stencilSep) {
+        /**
+         * 这种模式下的模板功能很奇怪
+         * 只有默认值和用到的时候设置的ref,mask一样，才可以正常使用模板
+         */
+        //关闭或者开启模板测试
+        if ((cur.stencilTestFront !== next.stencilTestFront)
+            || (cur.stencilTestBack !== next.stencilTestBack)) {
 
-        if (next.stencilTestFront || next.stencilTestBack) {
-            gl.enable(gl.STENCIL_TEST);
-        } else {
-            gl.disable(gl.STENCIL_TEST);
-            gl.clearStencil(0);
+            if (next.stencilTestFront || next.stencilTestBack) {
+                gl.enable(gl.STENCIL_TEST);
+            } else {
+                gl.disable(gl.STENCIL_TEST);
+                return
+            }
+        }
+        // front
+        if ((cur.stencilFuncFront !== next.stencilFuncFront)
+            || (cur.stencilRefFront !== next.stencilRefFront)
+            || (cur.stencilMaskFront !== next.stencilMaskFront)) {
+            gl.stencilFuncSeparate(
+                gl.FRONT,
+                next.stencilFuncFront,
+                next.stencilRefFront,
+                next.stencilMaskFront,
+            );
+        }
+        if ((cur.stencilFailOpFront !== next.stencilFailOpFront)
+            || (cur.stencilZFailOpFront !== next.stencilZFailOpFront)
+            || (cur.stencilZPassOpFront !== next.stencilZPassOpFront)) {
+            gl.stencilOpSeparate(
+                gl.FRONT,
+                next.stencilFailOpFront,
+                next.stencilZFailOpFront,
+                next.stencilZPassOpFront,
+            );
+        }
+        if (cur.stencilWriteMaskFront !== next.stencilWriteMaskFront) {
+            gl.stencilMaskSeparate(gl.FRONT, next.stencilWriteMaskFront);
+        }
+        //back
+        if ((cur.stencilFuncBack !== next.stencilFuncBack)
+            || (cur.stencilRefBack !== next.stencilRefBack)
+            || (cur.stencilMaskBack !== next.stencilMaskBack)) {
+            gl.stencilFuncSeparate(
+                gl.BACK,
+                next.stencilFuncBack,
+                next.stencilRefBack,
+                next.stencilMaskBack,
+            );
+        }
+        if ((cur.stencilFailOpBack !== next.stencilFailOpBack)
+            || (cur.stencilZFailOpBack !== next.stencilZFailOpBack)
+            || (cur.stencilZPassOpBack !== next.stencilZPassOpBack)) {
+            gl.stencilOpSeparate(
+                gl.BACK,
+                next.stencilFailOpBack,
+                next.stencilZFailOpBack,
+                next.stencilZPassOpBack,
+            );
+        }
+        if (cur.stencilWriteMaskBack !== next.stencilWriteMaskBack) {
+            gl.stencilMaskSeparate(gl.BACK, next.stencilWriteMaskBack);
         }
     }
-
-    // front
-    if ((cur.stencilFuncFront !== next.stencilFuncFront)
-        || (cur.stencilRefFront !== next.stencilRefFront)
-        || (cur.stencilMaskFront !== next.stencilMaskFront)) {
-        gl.stencilFuncSeparate(
-            gl.FRONT,
-            next.stencilFuncFront,
-            next.stencilRefFront,
-            next.stencilMaskFront,
-        );
-    }
-    if ((cur.stencilFailOpFront !== next.stencilFailOpFront)
-        || (cur.stencilZFailOpFront !== next.stencilZFailOpFront)
-        || (cur.stencilZPassOpFront !== next.stencilZPassOpFront)) {
-        gl.stencilOpSeparate(
-            gl.FRONT,
-            next.stencilFailOpFront,
-            next.stencilZFailOpFront,
-            next.stencilZPassOpFront,
-        );
-    }
-    if (cur.stencilWriteMaskFront !== next.stencilWriteMaskFront) {
-        gl.stencilMaskSeparate(gl.FRONT, next.stencilWriteMaskFront);
-    }
-    //back
-    if ((cur.stencilFuncBack !== next.stencilFuncBack)
-        || (cur.stencilRefBack !== next.stencilRefBack)
-        || (cur.stencilMaskBack !== next.stencilMaskBack)) {
-        gl.stencilFuncSeparate(
-            gl.BACK,
-            next.stencilFuncBack,
-            next.stencilRefBack,
-            next.stencilMaskBack,
-        );
-    }
-    if ((cur.stencilFailOpBack !== next.stencilFailOpBack)
-        || (cur.stencilZFailOpBack !== next.stencilZFailOpBack)
-        || (cur.stencilZPassOpBack !== next.stencilZPassOpBack)) {
-        gl.stencilOpSeparate(
-            gl.BACK,
-            next.stencilFailOpBack,
-            next.stencilZFailOpBack,
-            next.stencilZPassOpBack,
-        );
-    }
-    if (cur.stencilWriteMaskBack !== next.stencilWriteMaskBack) {
-        gl.stencilMaskSeparate(gl.BACK, next.stencilWriteMaskBack);
+    else {
+        /**
+         * 使用下面这种可以正常使用模板功能
+         * 也就是说 可以随意指定模板值
+         */
+        if (cur.stencilTest != next.stencilTest) {
+            next.stencilTest ? gl.enable(gl.STENCIL_TEST) : gl.disable(gl.STENCIL_TEST)
+        }
+        if (cur.stencilFunc != next.stencilFunc ||
+            cur.stencilRef != next.stencilRef ||
+            cur.stencilMask != next.stencilMask) {
+            gl.stencilFunc(next.stencilFunc, next.stencilRef, next.stencilMask)
+        }
+        if ((cur.stencilFailOp !== next.stencilFailOp)
+            || (cur.stencilZFailOp !== next.stencilZFailOp)
+            || (cur.stencilZPassOp !== next.stencilZPassOp)) {
+            gl.stencilOp(next.stencilFailOp, next.stencilZFailOp, next.stencilZPassOp,
+            );
+        }
     }
 }
 
@@ -365,7 +396,7 @@ function _commitScissorState(gl: WebGLRenderingContext, cur: State, next: State)
     gl.enable(gl.SCISSOR_TEST);
     gl.scissor(0, 0, 200, 50);
     gl.clearColor(1.0, 0.0, 0.0, 1.0);
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT|gl.STENCIL_BUFFER_BIT);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
     gl.disable(gl.SCISSOR_TEST);
 }
 /**
@@ -680,7 +711,7 @@ export default class Device {
                 if (a.pass != null && b.pass != null) {
                     if (a.primitive.alpha == b.primitive.alpha) {
 
-                        if (a.node.gZOrder == b.node.gZOrder) { 
+                        if (a.node.gZOrder == b.node.gZOrder) {
                             if (a.node.getNodeType() == b.node.getNodeType()) {
                                 return a.pass.shaderType - b.pass.shaderType;
                             }
@@ -984,7 +1015,7 @@ export default class Device {
         for (let j = 0; j < sData._uniformData.length; j++) {
             G_ShaderFactory.setUniforms(sData._shaderData.uniSetters, sData._uniformData[j]);
         }
-        let projData = {}; 
+        let projData = {};
         projData[sData._projKey] = projMatix;
         G_ShaderFactory.setUniforms(sData._shaderData.uniSetters, projData);
         let viewData = {};

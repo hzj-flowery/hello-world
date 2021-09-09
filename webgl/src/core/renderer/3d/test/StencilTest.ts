@@ -324,7 +324,7 @@ function draw() {
     drawFloor();
 
     // ----- 模板方法 begin -----
-     Device.Instance.writeStencil(1,1,false);
+     Device.Instance.writeStencil(10,0xffff,false);
     // ----- 模板方法 end -----
 
     // 绘制小盒子 1
@@ -342,7 +342,7 @@ function draw() {
     pwgl.useProgramNum = 2;
 
     // ----- 模板方法 begin -----
-   Device.Instance.compareStencil(1,0x00);
+   Device.Instance.compareStencil(10,0xffff);
     // ----- 模板方法 end -----
     // 绘制小盒子 2
     pushModelViewMatrix();

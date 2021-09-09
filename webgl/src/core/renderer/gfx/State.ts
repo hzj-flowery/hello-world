@@ -102,18 +102,26 @@ const _default = {
 
 
     // stencil
+    stencilTest:false,
+    stencilFunc:glEnums.DS_FUNC_ALWAYS,
+    stencilRef:0,
+    stencilMask:0xffff,
+    stencilFailOp:glEnums.STENCIL_OP_KEEP,
+    stencilZFailOp:glEnums.STENCIL_OP_KEEP,
+    stencilZPassOp:glEnums.STENCIL_OP_KEEP,
+    stencilWriteMask:0xffff,
+    stencilSep: false,
     stencilTestFront: false,
     stencilTestBack: false,
-    stencilSep: false,
     stencilFuncFront: glEnums.DS_FUNC_ALWAYS,
-    stencilRefFront: 3,
+    stencilRefFront: 4,
     stencilMaskFront: 0xffff,
     stencilFailOpFront: glEnums.STENCIL_OP_KEEP,
     stencilZFailOpFront: glEnums.STENCIL_OP_KEEP,
     stencilZPassOpFront: glEnums.STENCIL_OP_KEEP,
     stencilWriteMaskFront: 0xffff,
     stencilFuncBack: glEnums.DS_FUNC_ALWAYS,
-    stencilRefBack: 3,
+    stencilRefBack: 4,
     stencilMaskBack: 0xffff,
     stencilFailOpBack: glEnums.STENCIL_OP_KEEP,
     stencilZFailOpBack: glEnums.STENCIL_OP_KEEP,
@@ -202,6 +210,15 @@ export const StateValueMap = {
      * 设置深度比较函数
      */
     depthFunc: sy_temp_ds_func,
+
+    stencilTest:sy_temp_on_off,
+    stencilFunc:sy_temp_ds_func,
+    // stencilRef;
+    // stencilMask;
+    stencilFailOp:sy_temp_stencil_op_func,
+    stencilZFailOp:sy_temp_stencil_op_func,
+    stencilZPassOp:sy_temp_stencil_op_func, 
+    // stencilWriteMask;
 
     // stencil
     /**
@@ -352,6 +369,20 @@ export const StateString = {
     depthFunc: "depthFunc",
 
     // stencil
+
+    stencilTest:"stencilTest",
+    stencilFunc:"stencilFunc",
+    stencilRef:"stencilRef",
+    stencilMask:"stencilMask",
+    stencilFailOp:"stencilFailOp",
+    stencilZFailOp:"stencilZFailOp",
+    stencilZPassOp:"stencilZPassOp",
+    stencilWriteMask:"stencilWriteMask",
+    
+    /**
+     * 是否开启拆分模板测试
+     */
+    stencilSep: "stencilSep",
     /**
      * 是否开启正面模板测试
      */
@@ -360,7 +391,7 @@ export const StateString = {
      * 是否开启背面模板测试
      */
     stencilTestBack: "stencilTestBack",
-    stencilSep: "stencilSep",
+    
     /**
      * 设置正面模板函数
      */
@@ -462,9 +493,19 @@ export class State {
     public depthFunc;
 
     // stencil
+    
+    public stencilTest:boolean;
+    public stencilFunc;
+    public stencilRef;
+    public stencilMask;
+    public stencilFailOp;
+    public stencilZFailOp;
+    public stencilZPassOp;
+    public stencilWriteMask;
+
+    public stencilSep;
     public stencilTestFront;
     public stencilTestBack;
-    public stencilSep;
     public stencilFuncFront;
     public stencilRefFront;
     public stencilMaskFront;
@@ -536,9 +577,18 @@ export class State {
         this.depthFunc = cpy.depthFunc;
 
         // stencil
+        this.stencilTest=cpy.stencilTest;
+        this.stencilFunc=cpy.stencilFunc;
+        this.stencilRef=cpy.stencilRef;
+        this.stencilMask=cpy.stencilMask;
+        this.stencilFailOp=cpy.stencilFailOp;
+        this.stencilZFailOp=cpy.stencilZFailOp;
+        this.stencilZPassOp=cpy.stencilZPassOp;
+        this.stencilWriteMask=cpy.stencilWriteMask;
+
+        this.stencilSep = cpy.stencilSep;
         this.stencilTestFront = cpy.stencilTestFront;
         this.stencilTestBack = cpy.stencilTestBack;
-        this.stencilSep = cpy.stencilSep;
         this.stencilFuncFront = cpy.stencilFuncFront;
         this.stencilRefFront = cpy.stencilRefFront;
         this.stencilMaskFront = cpy.stencilMaskFront;

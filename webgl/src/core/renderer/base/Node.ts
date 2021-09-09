@@ -42,7 +42,11 @@ export class Node extends Ref {
     public anchorY: number = 0.5;//y轴锚点
 
     protected name: string;
-    public gZOrder: number=0;//设置全局的渲染顺序
+    /**
+     * 设置全局的渲染顺序
+     * 此值越大 渲染越靠后
+     */
+    public gZOrder: number=0;
     private __node__type: syRender.NodeType = syRender.NodeType.D3;//2代表2d节点 3代表3d节点
     private _visible:boolean = true;//节点是否可见
     protected _glMatrix = glMatrix;//矩阵操作api
