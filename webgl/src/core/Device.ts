@@ -24,6 +24,7 @@ import utils from "./platform/utils";
 import { Util } from "../utils/Util";
 import { MathUtils } from "./utils/MathUtils";
 import { Rect } from "./value-types/rect";
+import Vec4 from "./value-types/vec4";
 
 /**
  渲染流程：
@@ -1051,7 +1052,8 @@ export default class Device {
 
         this.setFrameBuffer(crData.fb);
         this.setViewPort(crData.viewPort);
-        crData.clear?this.clear(crData.clearColor, crData.clear):null;
+        crData.clear?G_DrawEngine.clearBuffer(crData.clearColor, crData.clear):null;
+        
 
     }
     private _framebuffer: WebGLFramebuffer;//帧缓冲
@@ -1076,27 +1078,21 @@ export default class Device {
      * h:【0,1】
      * }
      */
-    private _curViewPort: any;
+    private _curViewPort:Rect = new Rect();
     private setViewPort(object: Rect): void {
         let x = object.x * this.width;
         let y = object.y * this.height;
         let width = object.width * this.width;
         let height = object.height * this.height;
-        if (this._curViewPort == null ||!(this._curViewPort.x == x && this._curViewPort.y == y && this._curViewPort.width == width && this._curViewPort.height == height)) {
-            this.gl.viewport(x, y, width, height);
-            this._curViewPort = { x: x, y: y, width: width, height: height };
+        if (this._curViewPort == null ||
+            this._curViewPort.x != x ||
+            this._curViewPort.y != y || 
+            this._curViewPort.width != width ||
+             this._curViewPort.height != height) {
+            G_DrawEngine.viewport(x, y, width, height);
+            this._curViewPort.set(object);
         }
 
-    }
-    /**
-     * 清理附件
-     * 颜色
-     * 深度
-     * 模板
-     */
-    public clear(cColor: Array<number> = [0.5, 0.5, 0.5, 1.0], mask:number): void {
-        G_DrawEngine.clearColor(cColor[0], cColor[1], cColor[2], cColor[3]);
-        G_DrawEngine.clear(mask);
     }
     //---------------------------------------------------------------------------------------------end---------------------------------
 

@@ -1,3 +1,5 @@
+import { Rect } from "../../value-types/rect";
+import Vec4 from "../../value-types/vec4";
 import { syRender } from "../data/RenderData";
 import { syGL } from "../gfx/syGLEnums";
 import { Shader } from "../shader/Shader";
@@ -35,7 +37,6 @@ class DrawEngine {
         let gl = this.gl;
         gl.clearColor(red,green,blue,alpha);
     }
-    
     /**
      * 清空缓冲
      * mask值包括：
@@ -51,6 +52,34 @@ class DrawEngine {
         let gl = this.gl;
         gl.clear(mask);
     }
+    
+    /**
+     * 清空缓冲
+     * @param color  选择指定的颜色来替换颜色缓冲中的颜色
+     * @param mask 
+     */
+    public clearBuffer(color:Vec4,mask:number):void{
+        this.clearColor(color.x,color.y,color.z,color.w);
+        this.clear(mask);
+    }
+    /**
+     * 设置视口
+     * 将屏幕想象成一个矩形
+     * 坐标系的原点在屏幕的左下角
+     * 尺寸为(screenWidth,screenHeight)
+     * 下面这个函数就是要把绘制结果显示在这个矩形的指定区域
+     * 如果设置的矩形原点和屏幕原点重合，宽高都和屏幕的宽高相等，则1：1显示
+     * 否则会相应的缩放显示
+     * @param x 绘制原点x坐标
+     * @param y 绘制原点y坐标
+     * @param width 绘制的宽度
+     * @param height 绘制的高度
+     */
+    public viewport(x:number,y:number,width:number,height:number):void{
+        this.gl.viewport(x,y, width,height);
+    }
+
+    
 
     
     /**

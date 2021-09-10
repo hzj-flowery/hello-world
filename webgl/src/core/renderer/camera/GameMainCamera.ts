@@ -4,6 +4,7 @@ import Device from "../../Device";
 import { sy } from "../../Director";
 import { G_UISetting } from "../../ui/UiSetting";
 import { Rect } from "../../value-types/rect";
+import Vec4 from "../../value-types/vec4";
 import { Node } from "../base/Node";
 import { RenderTexture } from "../base/texture/RenderTexture";
 import { syRender } from "../data/RenderData";
@@ -21,14 +22,14 @@ export class CameraRenderData {
   constructor() {
     this.drawingOrder = syRender.DrawingOrder.Normal;
     this.uuid = syRender.CameraUUid.adapt;
-    this.clearColor = [0.5,0.5,0.5, 1.0];
+    this.clearColor = new Vec4(0.5,0.5,0.5, 1.0);
     this.viewPort = new Rect(0,0,1,1)
   }
   public fb: WebGLFramebuffer;   //帧缓冲 null表示渲染到屏幕 否则渲染到其它缓冲
   public rtuuid:syRender.RenderTextureUUid;//渲染纹理的uuid
   public uuid:syRender.CameraUUid;//相机的uuid        
   public viewPort: Rect;
-  public clearColor: Array<number>;
+  public clearColor:Vec4;
   public clear:number;
   public VA: number = 0;//视角 0代表玩家自己 1代表别人视角 2代表别人视角 3代表别人视角 依次类推
   public VAPos: Array<number> = []; //视角的位置
@@ -96,7 +97,10 @@ export class GameMainCamera {
     temp.fb = null;
     temp.rtuuid = uuid;
     temp.clear = this.gl.COLOR_BUFFER_BIT|this.gl.DEPTH_BUFFER_BIT|this.gl.STENCIL_BUFFER_BIT;
-    temp.clearColor = [0.3, 0.3, 0.3, 1.0]
+    temp.clearColor.x = 0.3;
+    temp.clearColor.y = 0.3;
+    temp.clearColor.z = 0.3;
+    temp.clearColor.w = 1.0;
     temp.VA = 0;
     temp.drawingOrder = drawingOrder;
     this._renderData.push(temp);
@@ -174,7 +178,7 @@ export class GameMainCamera {
     temp.viewPort.x = 0;
     temp.viewPort.y = 0;
     temp.viewPort.width = 0.5;
-    temp.viewPort.height = 1;
+    temp.viewPort.height = 1.0;
     temp.clear = this.gl.COLOR_BUFFER_BIT|this.gl.DEPTH_BUFFER_BIT|this.gl.STENCIL_BUFFER_BIT;
     temp.VA = 0;
     this._renderData.push(temp);
@@ -186,7 +190,7 @@ export class GameMainCamera {
     temp.viewPort.x = 0.5;
     temp.viewPort.y = 0;
     temp.viewPort.width = 0.5;
-    temp.viewPort.height = 1;
+    temp.viewPort.height = 1.0;
     temp.VAPos = [-70, 10, 10]
     temp.VA = 1;
     this._renderData.push(temp);
