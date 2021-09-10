@@ -23,6 +23,7 @@ import { G_InputControl } from "./InputControl";
 import utils from "./platform/utils";
 import { Util } from "../utils/Util";
 import { MathUtils } from "./utils/MathUtils";
+import { Rect } from "./value-types/rect";
 
 /**
  渲染流程：
@@ -764,6 +765,7 @@ export default class Device {
         syRender.ShaderType.Line,
         syRender.ShaderType.Point,
         syRender.ShaderType.Sprite,
+        syRender.ShaderType.SolidColor,
         syRender.ShaderType.UvSprite,
         syRender.ShaderType.Fog,
         syRender.ShaderType.SkyBox,
@@ -1044,16 +1046,12 @@ export default class Device {
     //----------------------------------------------------------------------------------------------------------------start---------
     /**
      * 渲染一帧前 对缓冲区做一些准备工作
-     * @param fb  帧缓冲
-     * @param viewPort 视口大小
-     * @param isClear 是否清理缓冲区
      */
-    private readyForOneFrame(cdData: CameraRenderData): void {
+    private readyForOneFrame(crData: CameraRenderData): void {
 
-        this.setFrameBuffer(cdData.fb);
-        this.setViewPort(cdData.viewPort);
-        if (cdData.isClear)
-            this.clear(cdData.clearColor, cdData.cColor, cdData.cDepth, cdData.cStencil);
+        this.setFrameBuffer(crData.fb);
+        this.setViewPort(crData.viewPort);
+        crData.clear?this.clear(crData.clearColor, crData.clear):null;
 
     }
     private _framebuffer: WebGLFramebuffer;//帧缓冲
@@ -1079,15 +1077,13 @@ export default class Device {
      * }
      */
     private _curViewPort: any;
-    private setViewPort(object: any): void {
+    private setViewPort(object: Rect): void {
         let x = object.x * this.width;
         let y = object.y * this.height;
-        let width = object.w * this.width;
-        let height = object.h * this.height;
-        if (this._curViewPort == null ||
-            !(this._curViewPort.x == x && this._curViewPort.y == y && this._curViewPort.width == width && this._curViewPort.height == height)) {
+        let width = object.width * this.width;
+        let height = object.height * this.height;
+        if (this._curViewPort == null ||!(this._curViewPort.x == x && this._curViewPort.y == y && this._curViewPort.width == width && this._curViewPort.height == height)) {
             this.gl.viewport(x, y, width, height);
-            // this.gl.scissor(x, y, width, height);
             this._curViewPort = { x: x, y: y, width: width, height: height };
         }
 
@@ -1098,13 +1094,9 @@ export default class Device {
      * 深度
      * 模板
      */
-    public clear(cColor: Array<number> = [0.5, 0.5, 0.5, 1.0], cBuffer: boolean = true, dBuffer: boolean = true, sBuffer: boolean = true): void {
-        let gl = this.gl;
-        gl.clearColor(cColor[0], cColor[1], cColor[2], cColor[3]);
-        var value = cBuffer ? gl.COLOR_BUFFER_BIT : null;
-        value = dBuffer ? (value ? value | gl.DEPTH_BUFFER_BIT : gl.DEPTH_BUFFER_BIT) : null;
-        value = sBuffer ? (value ? value | gl.STENCIL_BUFFER_BIT : gl.STENCIL_BUFFER_BIT) : null;
-        gl.clear(value);
+    public clear(cColor: Array<number> = [0.5, 0.5, 0.5, 1.0], mask:number): void {
+        G_DrawEngine.clearColor(cColor[0], cColor[1], cColor[2], cColor[3]);
+        G_DrawEngine.clear(mask);
     }
     //---------------------------------------------------------------------------------------------end---------------------------------
 

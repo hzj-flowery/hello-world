@@ -37,7 +37,7 @@ export default class Scene2D extends Scene {
 
         // this.blendTest();
 
-        this.stencilTest();
+        // this.stencilTest();
 
         this._pen = new Pen();
         this._pen.spriteFrame = "res/bg_npc_06.png";
@@ -91,7 +91,7 @@ export default class Scene2D extends Scene {
         // this._pen.pushScreenPos(ev.x, ev.y)
     }
     private onMouseMove(ev: MouseEvent): void {
-        if (this._isPress)
+        if (this._isPress&&this._mask)
             {
                 // this._pen.pushScreenPos(ev.x, ev.y)
                 this._mask.setPosition(ev.x,Device.Instance.height - ev.y, -99);
@@ -107,48 +107,6 @@ export default class Scene2D extends Scene {
     }
 
     private stencilTest(): void {
-        
-        // this._mask = new SY.Sprite2D();
-        // this._mask.alpha = 0.9;
-        // this._mask.pushPassContent(syRender.ShaderType.Sprite)
-        // this._mask.setPosition(Device.Instance.width / 2, Device.Instance.height / 2,-101);
-        // this._mask.spriteFrame = "res/png/player_watch/104.png";
-        // this.addChild(this._mask);
-    
-        //mask
-        this._mask = new SY.Mask2D();
-        this._mask.setPosition(Device.Instance.width / 2, Device.Instance.height / 2, -99);
-        this._mask.spriteFrame = "res/png/player_watch/1143.png";
-        this._mask.gZOrder = 1000;
-        this._mask.pushPassContent(syRender.ShaderType.Sprite, [
-            //深度 
-            [StateString.depthTest,StateValueMap.depthTest.ON],
-            [StateString.depthFunc,StateValueMap.depthFunc.LEQUAL],
-            [StateString.depthWrite,StateValueMap.depthWrite.ON],
-            
-            [StateString.blendColorMask,syRender.ColorMask.NONE],
-
-            [StateString.stencilTest,StateValueMap.stencilTest.ON],
-            [StateString.stencilSep,StateValueMap.stencilSep.OFF],
-            [StateString.stencilFunc,StateValueMap.stencilFunc.ALWAYS],
-            [StateString.stencilRef,10],
-            [StateString.stencilMask,0xffff],
-            [StateString.stencilFailOp,StateValueMap.stencilFailOp.KEEP],
-            [StateString.stencilZFailOp,StateValueMap.stencilZFailOp.KEEP],
-            [StateString.stencilZPassOp,StateValueMap.stencilZPassOp.REPLACE],
-
-
-            // [StateString.stencilTestFront,StateValueMap.stencilTestFront.ON],
-            // [StateString.stencilFuncFront,StateValueMap.stencilFuncFront.ALWAYS],
-            // [StateString.stencilRefFront,3],
-            // [StateString.stencilMaskFront,0xffff],
-            // [StateString.stencilFailOpFront,StateValueMap.stencilFailOpFront.KEEP],
-            // [StateString.stencilZFailOpFront,StateValueMap.stencilZFailOpFront.KEEP],
-            // [StateString.stencilZPassOpFront,StateValueMap.stencilZPassOpFront.REPLACE],
-        ])
-        this.addChild(this._mask);
-
-
 
         var rectangle1 = new SY.Sprite2D();
         rectangle1.alpha = 1.0; 
@@ -182,6 +140,14 @@ export default class Scene2D extends Scene {
         rectangle1.setPosition(Device.Instance.width / 2, Device.Instance.height / 2 - 100,-100);
         rectangle1.spriteFrame = "res/1.png";
         this.addChild(rectangle1);
+
+        //mask
+        this._mask = new SY.Mask2D();
+        this._mask.spriteFrame = "res/png/player_watch/1143.png";
+        this._mask.gZOrder = 1000;
+        this._mask.setScale(1.1,1.1,1.0)
+        
+        rectangle1.addChild(this._mask);
 
     }
 

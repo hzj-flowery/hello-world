@@ -3,6 +3,7 @@ import { isNoSubstitutionTemplateLiteral } from "typescript";
 import Device from "../../Device";
 import { sy } from "../../Director";
 import { G_UISetting } from "../../ui/UiSetting";
+import { Rect } from "../../value-types/rect";
 import { Node } from "../base/Node";
 import { RenderTexture } from "../base/texture/RenderTexture";
 import { syRender } from "../data/RenderData";
@@ -21,20 +22,14 @@ export class CameraRenderData {
     this.drawingOrder = syRender.DrawingOrder.Normal;
     this.uuid = syRender.CameraUUid.adapt;
     this.clearColor = [0.5,0.5,0.5, 1.0];
-    this.viewPort = { x: 0, y: 0, w: 1, h: 1 };
-    this.cColor = true;
-    this.cDepth = true;
-    this.cStencil = true;
+    this.viewPort = new Rect(0,0,1,1)
   }
   public fb: WebGLFramebuffer;   //帧缓冲 null表示渲染到屏幕 否则渲染到其它缓冲
   public rtuuid:syRender.RenderTextureUUid;//渲染纹理的uuid
   public uuid:syRender.CameraUUid;//相机的uuid        
-  public viewPort: any;
-  public isClear: boolean;     //清除缓冲区的数据
+  public viewPort: Rect;
   public clearColor: Array<number>;
-  public cColor: boolean;//清除颜色缓存
-  public cDepth: boolean;//清除深度缓存
-  public cStencil: boolean;//清除模板缓存
+  public clear:number;
   public VA: number = 0;//视角 0代表玩家自己 1代表别人视角 2代表别人视角 3代表别人视角 依次类推
   public VAPos: Array<number> = []; //视角的位置
   public drawingOrder: syRender.DrawingOrder;//绘制类型
@@ -100,8 +95,7 @@ export class GameMainCamera {
     var temp = new CameraRenderData();
     temp.fb = null;
     temp.rtuuid = uuid;
-    temp.viewPort = { x: 0, y: 0, w: 1, h: 1 };
-    temp.isClear = true;
+    temp.clear = this.gl.COLOR_BUFFER_BIT|this.gl.DEPTH_BUFFER_BIT|this.gl.STENCIL_BUFFER_BIT;
     temp.clearColor = [0.3, 0.3, 0.3, 1.0]
     temp.VA = 0;
     temp.drawingOrder = drawingOrder;
@@ -157,19 +151,17 @@ export class GameMainCamera {
     //离线渲染
     var temp = new CameraRenderData();
     temp.fb = null;
-    temp.viewPort = { x: 0, y: 0, w: 1, h: 1 }
     temp.rtuuid = syRender.RenderTextureUUid.offline2D;
-    temp.isClear = true;
+    temp.clear = this.gl.COLOR_BUFFER_BIT|this.gl.DEPTH_BUFFER_BIT|this.gl.STENCIL_BUFFER_BIT;
     temp.VA = 0;
     this._renderData.push(temp);
 
     //光照相机
     var temp = new CameraRenderData();
     temp.fb = null;
-    temp.viewPort = { x: 0, y: 0, w: 1, h: 1 }
     temp.rtuuid = syRender.RenderTextureUUid.shadowMap;
     temp.uuid = syRender.CameraUUid.light;
-    temp.isClear = true;
+    temp.clear = this.gl.COLOR_BUFFER_BIT|this.gl.DEPTH_BUFFER_BIT|this.gl.STENCIL_BUFFER_BIT;
     temp.VA = 0;
     this._renderData.push(temp);
     
@@ -179,20 +171,25 @@ export class GameMainCamera {
     var temp = new CameraRenderData();
     temp.fb = null;
     temp.rtuuid = syRender.RenderTextureUUid.screen;
-    temp.viewPort = { x: 0, y: 0, w: 1, h: 1 }
-    temp.isClear = true;
+    temp.viewPort.x = 0;
+    temp.viewPort.y = 0;
+    temp.viewPort.width = 0.5;
+    temp.viewPort.height = 1;
+    temp.clear = this.gl.COLOR_BUFFER_BIT|this.gl.DEPTH_BUFFER_BIT|this.gl.STENCIL_BUFFER_BIT;
     temp.VA = 0;
     this._renderData.push(temp);
     
     //绘制右边
-    // var temp = new CameraRenderData();
-    // temp.fb = null;
-    // temp.rtuuid = syRender.RenderTextureUUid.screen;
-    // temp.viewPort = { x: 0.5, y: 0, w: 0.5, h: 1 }
-    // temp.isClear = false;
-    // temp.VAPos = [-70, 10, 10]
-    // temp.VA = 1;
-    // this._renderData.push(temp);
+    var temp = new CameraRenderData();
+    temp.fb = null;
+    temp.rtuuid = syRender.RenderTextureUUid.screen;
+    temp.viewPort.x = 0.5;
+    temp.viewPort.y = 0;
+    temp.viewPort.width = 0.5;
+    temp.viewPort.height = 1;
+    temp.VAPos = [-70, 10, 10]
+    temp.VA = 1;
+    this._renderData.push(temp);
 
 
     G_UISetting.pushRenderCallBack(this.renderCallBack.bind(this));

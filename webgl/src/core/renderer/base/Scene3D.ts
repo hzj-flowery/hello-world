@@ -186,33 +186,33 @@ export default class Scene3D extends Scene {
         
         
            
-        // this._cubeNode = new Cube();
-        // this._cubeNode.spriteFrame = "res/wicker.jpg";
-        // this._cubeNode.setPosition(0, 1.7, 0);
-        // this._cubeNode.setScale(0.5, 0.5, 0.5);
-        // this._centerNode.addChild(this._cubeNode);
-        // this._tableNode = new Cube();
-        // this._tableNode.spriteFrame = "res/wood.jpg";
-        // this._tableNode.setPosition(0, 1, 0);
-        // this._tableNode.setScale(2.0, 0.1, 2.0);
-        // this._centerNode.addChild(this._tableNode);
+        this._cubeNode = new Cube();
+        this._cubeNode.spriteFrame = "res/wicker.jpg";
+        this._cubeNode.setPosition(0, 1.7, 0);
+        this._cubeNode.setScale(0.5, 0.5, 0.5);
+        this._centerNode.addChild(this._cubeNode);
+        this._tableNode = new Cube();
+        this._tableNode.spriteFrame = "res/wood.jpg";
+        this._tableNode.setPosition(0, 1, 0);
+        this._tableNode.setScale(2.0, 0.1, 2.0);
+        this._centerNode.addChild(this._tableNode);
 
-        // this._testAlphaCube = new Cube();
-        // this._testAlphaCube.spriteFrame = "res/ground.png";
-        // this._testAlphaCube.setPosition(0, 0, -20);
-        // this._testAlphaCube.setScale(10, 5, 1);
-        // this._centerNode.addChild(this._testAlphaCube);
+        this._testAlphaCube = new Cube();
+        this._testAlphaCube.spriteFrame = "res/ground.png";
+        this._testAlphaCube.setPosition(0, 0, -20);
+        this._testAlphaCube.setScale(10, 5, 1);
+        this._centerNode.addChild(this._testAlphaCube);
 
-        // // 绘制 4 个腿
-        // for (var i = -1; i <= 1; i += 2) {
-        //     for (var j = -1; j <= 1; j += 2) {
-        //         var node = new Cube();
-        //         node.setPosition(i * 1.9, -0.1, j * 1.9);
-        //         node.setScale(0.1, 1.0, 0.1);
-        //         node.spriteFrame = "res/wood.jpg";
-        //         this._centerNode.addChild(node);
-        //     }
-        // }
+        // 绘制 4 个腿
+        for (var i = -1; i <= 1; i += 2) {
+            for (var j = -1; j <= 1; j += 2) {
+                var node = new Cube();
+                node.setPosition(i * 1.9, -0.1, j * 1.9);
+                node.setScale(0.1, 1.0, 0.1);
+                node.spriteFrame = "res/wood.jpg";
+                this._centerNode.addChild(node);
+            }
+        }
         
         // this._lightCube = new LightCube();
         // this._lightCube.spriteFrame = "res/wicker.jpg";
@@ -226,10 +226,10 @@ export default class Scene3D extends Scene {
         this._skybox.setDefaultUrl();
         this.addChild(this._skybox);
 
-        // this._mirrorCube = new MirrorCube();
-        // this._mirrorCube.setDefaultUrl();
-        // this._mirrorCube.setPosition(-13,3.0,0);
-        // this.addChild(this._mirrorCube);
+        this._mirrorCube = new MirrorCube();
+        this._mirrorCube.setDefaultUrl();
+        this._mirrorCube.setPosition(-13,3.0,0);
+        this.addChild(this._mirrorCube);
 
         this._centerNode.addChild(new LightCamera());
 

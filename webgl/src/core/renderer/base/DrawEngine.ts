@@ -18,10 +18,41 @@ class DrawEngine {
     constructor() {
 
     }
-    private gl: WebGLRenderingContext;
-    init(gl: WebGLRenderingContext): void {
+    private gl: WebGL2RenderingContext;
+    init(gl: WebGL2RenderingContext): void {
         this.gl = gl;
     }
+    
+    /**
+     * 当清空颜色缓冲区的时候
+     * 设置用什么颜色来替换颜色缓冲中的颜色
+     * @param red 
+     * @param green 
+     * @param blue 
+     * @param alpha 
+     */
+    public clearColor(red:number,green:number,blue:number,alpha:number):void{
+        let gl = this.gl;
+        gl.clearColor(red,green,blue,alpha);
+    }
+    
+    /**
+     * 清空缓冲
+     * mask值包括：
+     * 颜色缓冲(gl.COLOR_BUFFER_BIT)，
+     * 深度缓冲(gl.DEPTH_BUFFER_BIT)，
+     * 模板缓冲(gl.STENCIL_BUFFER_BIT)，
+     * 以及这三种任意组合
+     * 类似gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT：表示清除颜色和深度两个附件缓冲区
+     * 
+     * @param mask 
+     */
+    public clear(mask:number):void{
+        let gl = this.gl;
+        gl.clear(mask);
+    }
+
+    
     /**
      * @param mode  绘制类型
      * @param count 索引的数目

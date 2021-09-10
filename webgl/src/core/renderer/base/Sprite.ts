@@ -770,6 +770,33 @@ export namespace SY {
         protected onInit(){
             super.onInit()
             this.defineUse.SY_USE_ALPHA_TEST = 0.1;
+
+            this.pushPassContent(syRender.ShaderType.Sprite, [
+                //深度 
+                [StateString.depthTest,StateValueMap.depthTest.ON],
+                [StateString.depthFunc,StateValueMap.depthFunc.LEQUAL],
+                [StateString.depthWrite,StateValueMap.depthWrite.ON],
+                
+                [StateString.blendColorMask,syRender.ColorMask.NONE],
+    
+                [StateString.stencilTest,StateValueMap.stencilTest.ON],
+                [StateString.stencilSep,StateValueMap.stencilSep.OFF],
+                [StateString.stencilFunc,StateValueMap.stencilFunc.ALWAYS],
+                [StateString.stencilRef,10],
+                [StateString.stencilMask,0xffff],
+                [StateString.stencilFailOp,StateValueMap.stencilFailOp.KEEP],
+                [StateString.stencilZFailOp,StateValueMap.stencilZFailOp.KEEP],
+                [StateString.stencilZPassOp,StateValueMap.stencilZPassOp.REPLACE],
+    
+    
+                // [StateString.stencilTestFront,StateValueMap.stencilTestFront.ON],
+                // [StateString.stencilFuncFront,StateValueMap.stencilFuncFront.ALWAYS],
+                // [StateString.stencilRefFront,3],
+                // [StateString.stencilMaskFront,0xffff],
+                // [StateString.stencilFailOpFront,StateValueMap.stencilFailOpFront.KEEP],
+                // [StateString.stencilZFailOpFront,StateValueMap.stencilZFailOpFront.KEEP],
+                // [StateString.stencilZPassOpFront,StateValueMap.stencilZPassOpFront.REPLACE],
+            ])
         }
     }
 

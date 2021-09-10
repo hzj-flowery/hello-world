@@ -95,14 +95,14 @@ export namespace misc {
 
     export var BUILTIN_CLASSID_RE = /^(?:cc|dragonBones|sp|ccsg)\..+/;
 
+     // decoded value indexed by base64 char code
+     export var BASE64_VALUES = new Array(123); // max char code in base64Keys;
 
     var BASE64_KEYS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
     for (let i = 0; i < 123; ++i) BASE64_VALUES[i] = 64; // fill with placeholder('=') index
     for (let i = 0; i < 64; ++i) BASE64_VALUES[BASE64_KEYS.charCodeAt(i)] = i;
 
-    // decoded value indexed by base64 char code
-    export var BASE64_VALUES = new Array(123); // max char code in base64Keys;
-
+   
     // set value to map, if key exists, push to array
     export var pushToMap = function (map, key, value, pushFront) {
         var exists = map[key];

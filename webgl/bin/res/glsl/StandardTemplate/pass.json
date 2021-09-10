@@ -197,6 +197,13 @@
         ]
     },
     {
+        "name": "SolidColor/shader",
+        "template":true,
+        "custom":[
+            {"key":"ShaderType","value":"SolidColor"}
+        ]
+    },
+    {
         "name": "UvSprite/shader",
         "template":true,
         "custom":[
@@ -234,6 +241,7 @@
     {
         "name": "Shadow/shader",
         "template":true,
+        "des":"这是一个定向光产生的阴影",
         "custom":[
             {"key":"ShaderType","value":"Shadow"}
         ]
