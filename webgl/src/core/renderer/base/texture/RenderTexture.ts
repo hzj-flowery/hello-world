@@ -35,7 +35,7 @@ import { syRender } from "../../data/RenderData";
  * 第五步：启动片元着色器
  * 
  * 将结果写入到帧缓冲的相关附件中，其实这个附件就是一个二维数组，下标的范围是[0,1],这一点非常重要
- * Color[x][y] = rgb :x和y的值范围就是[0,1]
+ * Color[x][y] = rgba :x和y的值范围就是[0,1]
  * Depth[x][y] = z:   x和y的值范围就是[0,1]
  * Stencil[x][y] = s :x和y的值范围就是[0,1]
  * 
