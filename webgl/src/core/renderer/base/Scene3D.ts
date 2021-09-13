@@ -8,8 +8,6 @@ import CustomTextureCube from "../3d/CustomTextureCube";
 import CustomTextureData from "../data/CustomTextureData";
 import Sphere from "../3d/Sphere";
 import Spine from "./spine/Spine";
-import { SpotLight } from "../light/SpotLight";
-import { ThreeDLight } from "../light/ThreeDLight";
 import MirrorCube from "../3d/MirrorCube";
 import { Line } from "../3d/Line";
 import { G_UISetting } from "../../ui/UiSetting";

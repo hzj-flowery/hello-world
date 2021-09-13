@@ -403,9 +403,9 @@ class ShaderFactory {
                 if (setter) {
                     setter(uniforms[name]);
                 }
-                else {
-                    // console.log("error  绑定uniform变量失败------",name);
-                }
+                // else {
+                //     console.log("error  绑定uniform变量失败------",name);
+                // }
             });
         }
     }

@@ -164,13 +164,13 @@ export namespace SY {
 
                 this._passContent.push({ "name": "TemplatePass", "tag": tag, state: state });
             }
-        }
+        };
         /**
          * 设置精灵图片的尺寸模式
          */
         public set sizeMode(mode: SpriteSizeMode) {
             this._sizeMode = mode;
-        }
+        };
         protected onInit(): void {
 
         }
@@ -494,68 +494,6 @@ export namespace SY {
         public onBindGPUBufferDataBefore(rd: syRender.BaseData, proj: Float32Array, view: Float32Array): void {
             glMatrix.mat4.copy(this._customTempMatrix, rd.light.projectionMatrix);
             glMatrix.mat4.multiply(this._customTempMatrix, this._customTempMatrix, glMatrix.mat4.invert(null, rd.light.viewMatrix));
-        }
-    }
-    export class Sprite extends Node {
-        constructor() {
-            super();
-            this.init();
-        }
-        public _attrData: BufferAttribsData;
-        public _uniformData: any;
-        public _shaderData: ShaderData;
-        private _renderData: syRender.NormalData;
-        protected _cameraIndex: number = 0;//相机的类型(0表示透视1表示正交)
-        //参考glprimitive_type
-        protected _glPrimitiveType: syGL.PrimitiveType;//绘制的类型
-        private init(): void {
-            this._glPrimitiveType = syGL.PrimitiveType.TRIANGLES;
-            this._renderData = syRender.DataPool.get(syRender.DataType.Normal) as syRender.NormalData;
-            this.onInit();
-        }
-        protected onInit(): void {
-
-        }
-
-        public set Url(url) {
-            let datas = LoaderManager.instance.getRes(url);
-            this.onLoadFinish(datas);
-        }
-        protected onLoadFinish(data: any): void {
-
-        }
-        protected collectRenderData(time: number): void {
-            this.updateRenderData();
-            Device.Instance.collectData(this._renderData);
-        }
-        //更新渲染数据
-        protected updateRenderData(): void {
-            this._renderData._shaderData = this._shaderData;
-            this._renderData._uniformData = [];
-            this._renderData._uniformData.push(this._uniformData);
-
-            this._renderData._projKey = "u_projection";//投影矩阵的key
-            this._renderData._viewKey = "u_view";//视口矩阵的key
-            this._renderData._worldKey = "u_world";//世界坐标系的key
-            this._renderData._attrbufferData = this._attrData;//顶点着色器的顶点相关属性
-            this._renderData.node = this;//渲染的节点
-            this._renderData.primitive.type = syGL.PrimitiveType.TRIANGLES;//三角形
-        }
-        //设置shader
-        protected setShader(vert: string, frag: string): void {
-            this._shaderData = G_ShaderFactory.createProgramInfo(vert, frag);
-        }
-        //更新unifoms变量
-        public updateUniformsData(cameraData: CameraData, lightData: LightData): any {
-
-        }
-        /**
-         * 此接口用于测试使用 日后删除
-         */
-        public testDraw(): void {
-            G_ShaderFactory.setBuffersAndAttributes(this._shaderData.attrSetters, this._attrData);
-            G_ShaderFactory.setUniforms(this._shaderData.uniSetters, this._uniformData);
-            G_ShaderFactory.drawBufferInfo(this._attrData, syGL.PrimitiveType.TRIANGLES);
         }
     }
     /**

@@ -5,13 +5,9 @@ import { Skeleton_Node } from "./Skeleton_Node";
 import { Skeleton_Skin } from "./Skeleton_Skin";
 import { glMatrix } from "../../../math/Matrix";
 import { syRender } from "../../data/RenderData";
+import Device from "../../../Device";
 //骨骼节点
 export default class Spine extends SY.SpriteBase {
-
-    constructor() {
-        super();
-       
-    }
     private gltf;
     private sharedUniforms;
     private origMatrices: Map<Skeleton_Node, Float32Array> = new Map();
@@ -35,6 +31,9 @@ export default class Spine extends SY.SpriteBase {
             this._glMatrix.mat4.rotateX(this._tempMatrix, origMatrix, a);
             // this._glMatrix.mat4.rotateY(this._tempMatrix, origMatrix, a);
             // this._glMatrix.mat4.rotateZ(this._tempMatrix, origMatrix, a);
+            // this._glMatrix.mat4.rotate(this._tempMatrix, origMatrix, a,[1,0,0])
+            // this._glMatrix.mat4.rotate(this._tempMatrix, this._tempMatrix, a,[0,1,0])
+            // this._glMatrix.mat4.rotate(this._tempMatrix, this._tempMatrix, a,[0,0,1])
             // decompose it back into position, rotation, scale
             // into the joint
             this._glMatrix.mat4.decompose(this._tempMatrix, jointNode.transform.position, jointNode.transform.rotation, jointNode.transform.scale);
@@ -47,7 +46,7 @@ export default class Spine extends SY.SpriteBase {
         }
         for (const drawable of node.skin_Drawables) {
             //渲染皮肤
-            drawable.render(node,this.modelMatrix,this.sharedUniforms);
+            drawable.render(node,this.modelMatrix,this.sharedUniforms)
         }
     }
 
@@ -66,10 +65,5 @@ export default class Spine extends SY.SpriteBase {
             // walk the scene and render all renderables
             scene.root.traverse(this.renderDrawables.bind(this));
         }
-    }
-
-    //采集数据以后的行为
-    protected onCollectRenderDataAfter(data: syRender.BaseData) {
-        // data.primitive.customFloatValue = 
     }
 }

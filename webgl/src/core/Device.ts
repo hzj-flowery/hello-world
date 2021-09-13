@@ -1005,44 +1005,20 @@ export default class Device {
                     this._drawNormal(rData as syRender.NormalData, cData);
                 }
                 break;
-            case syRender.DataType.Spine:
-                this._commitRenderState((rData as syRender.SpineData)._state);
-                if (crData.isFirstVisualAngle()) {
-                    glMatrix.mat4.invert(this._temp1Matrix, cData.modelMat);
-                    this._drawSpine(rData as syRender.SpineData, cData.projectMat, this._temp1Matrix);
-                } else {
-                    let projMatix = G_CameraModel.getSceneProjectMatrix(crData.VA);
-                    glMatrix.mat4.invert(this._temp1Matrix, G_CameraModel.getSceneCameraMatrix(crData.VA));
-                    this._drawSpine(rData as syRender.SpineData, projMatix, this._temp1Matrix);
-                }
-                break;
         }
 
     }
-    private _curGLID = -1;
-    private _drawSpine(sData: syRender.SpineData, projMatix: Float32Array, viewMatrix: Float32Array): void {
-        if (this._curGLID != sData._shaderData.spGlID) {
-            this.gl.useProgram(sData._shaderData.spGlID);
-            this._curGLID == sData._shaderData.spGlID;
-        }
-        G_ShaderFactory.setBuffersAndAttributes(sData._shaderData.attrSetters, sData._attrbufferData);
-        for (let j = 0; j < sData._uniformData.length; j++) {
-            G_ShaderFactory.setUniforms(sData._shaderData.uniSetters, sData._uniformData[j]);
-        }
-        let projData = {};
-        projData[sData._projKey] = projMatix;
-        G_ShaderFactory.setUniforms(sData._shaderData.uniSetters, projData);
-        let viewData = {};
-        viewData[sData._viewKey] = viewMatrix;
-        G_ShaderFactory.setUniforms(sData._shaderData.uniSetters, viewData);
-        G_ShaderFactory.drawBufferInfo(sData._attrbufferData, sData.primitive.type);
-
-    }
+    private _curShaderGLID = -1;
     private _drawNormal(sData: syRender.NormalData, cameraData: CameraData): void {
-        this.gl.useProgram(sData._shaderData.spGlID);
-        (sData.node as SY.Sprite).updateUniformsData(cameraData, G_LightCenter.lightData);
+        if (this._curShaderGLID != sData._shaderData.spGlID) {
+            this.gl.useProgram(sData._shaderData.spGlID);
+            this._curShaderGLID == sData._shaderData.spGlID;
+        }
         G_ShaderFactory.setBuffersAndAttributes(sData._shaderData.attrSetters, sData._attrbufferData);
-        for (let j in sData._uniformData) {
+
+        sData.pushProjectMat(cameraData.projectMat);
+        sData.pushViewMat(cameraData.viewMat);
+        for (let j = 0; j < sData._uniformData.length; j++) {
             G_ShaderFactory.setUniforms(sData._shaderData.uniSetters, sData._uniformData[j]);
         }
         G_ShaderFactory.drawBufferInfo(sData._attrbufferData, sData.primitive.type);

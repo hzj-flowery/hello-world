@@ -141,7 +141,6 @@ class DrawEngine {
         //绑定状态机数据
         rd.bindGPUBufferData(view, proj, shader);
 
-
         //绘制前
         rd.node ? rd.node.onDrawBefore(rd.time,rd) : null;
         if (!rd.isDrawInstanced) {

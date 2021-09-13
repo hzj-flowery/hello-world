@@ -39,7 +39,8 @@ export namespace syRender {
         SolidColor,
         UvSprite,
         Label,
-        Spine,
+        Spine_Skin,
+        Spine_Mesh,
         Shadow,        //绘制阴影
         ShadowMap,
         Light_Parallel,      //平行光
@@ -64,7 +65,8 @@ export namespace syRender {
         "SolidColor",
         "UvSprite",
         "Label",
-        "Spine",
+        "Spine_Skin",
+        "Spine_Mesh",
         "Shadow",
         "ShadowMap",
         "Light_Parallel",
@@ -124,8 +126,7 @@ export namespace syRender {
     //渲染数据的类型
     export enum DataType {
         Base = 1,
-        Normal,
-        Spine
+        Normal
     }
 
     //绘制的顺序
@@ -795,8 +796,6 @@ export namespace syRender {
             this._uniformData = [];
             this._shaderData = null;
             this._attrbufferData = null;
-            this._projKey = "";
-            this._viewKey = "";
             this.primitive.type = syGL.PrimitiveType.TRIANGLES;
             glMatrix.mat4.identity(this._tempMatrix1);
         }
@@ -811,17 +810,34 @@ export namespace syRender {
         //uniform变量的数据
         public _uniformData: Array<any>;
         public _tempMatrix1: Float32Array;
-        public _projKey: string;//投影矩阵的key
-        public _viewKey: string;//视口矩阵key
-        public _worldKey: string;//世界矩阵key
-
-    }
-
-    export class SpineData extends syRender.NormalData {
-        constructor() {
-            super();
-            this._type = syRender.DataType.Spine;
+        
+        public pushProjectMat(proj:Float32Array):void{
+            this.pushMat("u_projection",proj)
         }
+        public pushViewMat(view:Float32Array):void{
+            this.pushMat("u_view",view)
+        }
+        public pushWorldMat(world:Float32Array):void{
+             this.pushMat("u_world",world);
+        }
+        private pushMat(name:string,value:Float32Array):void{
+            for(let k=0;k<this._uniformData.length;k++)
+            {
+                var searchData = this._uniformData[k]
+                for(let s in searchData)
+                {
+                     if(s==name)
+                     {
+                        this._uniformData[k][name]=value;
+                        return;
+                     }
+                }
+            }
+            var st = {}
+            st[name] = value
+            this._uniformData.push(st)
+        }
+
     }
 
     /**
@@ -843,7 +859,6 @@ export namespace syRender {
             switch (type) {
                 case syRender.DataType.Base: retItem = new syRender.BaseData(); pool.push(retItem); break;
                 case syRender.DataType.Normal: retItem = new syRender.NormalData(); pool.push(retItem); break;
-                case syRender.DataType.Spine: retItem = new syRender.SpineData(); pool.push(retItem); break;
             }
             retItem.useFlag = true;
             return retItem;

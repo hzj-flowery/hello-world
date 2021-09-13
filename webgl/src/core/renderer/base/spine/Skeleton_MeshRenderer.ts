@@ -6,15 +6,15 @@ import { G_ShaderFactory } from "../../shader/ShaderFactory";
 import { Skeleton_Node } from "./Skeleton_Node";
 
 var meshVS =
-   `attribute vec4 a_POSITION;
-   attribute vec3 a_NORMAL;
+   `attribute vec4 a_position;
+   attribute vec3 a_normal;
    uniform mat4 u_projection;
    uniform mat4 u_view;
    uniform mat4 u_world;
    varying vec3 v_normal;
    void main() {
-   gl_Position = u_projection * u_view * u_world * a_POSITION;
-   v_normal = mat3(u_world) * a_NORMAL;
+   gl_Position = u_projection * u_view * u_world * a_position;
+   v_normal = mat3(u_world) * a_normal;
    }`
 
 var fs =
@@ -47,9 +47,7 @@ export class Skeleton_MeshRenderer {
     public render(node: Skeleton_Node,worldMatrix:Float32Array,sharedUniforms) {
         glMatrix.mat4.mul(this._temWolrdMatrix,worldMatrix,node.worldMatrix);
         for (const primitive of this.mesh.primitives) {
-            var renderData = syRender.DataPool.get(syRender.DataType.Spine) as syRender.SpineData;
-            renderData._projKey = "u_projection";
-            renderData._viewKey = "u_view";
+            var renderData = syRender.DataPool.get(syRender.DataType.Normal) as syRender.NormalData;
             renderData._shaderData = this.meshProgramInfo;
             renderData._attrbufferData = primitive.bufferInfo;
             renderData._uniformData.push({u_world: this._temWolrdMatrix});

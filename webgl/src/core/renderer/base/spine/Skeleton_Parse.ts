@@ -129,6 +129,7 @@ export class Skeleton_Parse {
         const defaultMaterial = {
             uniforms: {
                 u_diffuse: [0.5, 0, 0, 1],
+                u_color: [0.5, 0, 0, 1],
             },
         };
         
@@ -244,7 +245,7 @@ export class Skeleton_Parse {
          * 日后就会通过这个蒙皮节点来调用这个蒙皮渲染器，进而来渲染网格mesh
          */
         for (const { node, mesh, skinNdx } of skinNodes) {
-            node.skin_Drawables.push(new Skeleton_SkinRenderer(mesh, gltf.skins[skinNdx], gl));
+            node.skin_Drawables.push(new Skeleton_SkinRenderer(mesh, gltf.skins[skinNdx]));
         }
 
         /**

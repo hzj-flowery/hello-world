@@ -286,6 +286,20 @@
         ]
     },
     {
+        "name": "Spine/mesh/shader",
+        "template":true,
+        "custom":[
+            {"key":"ShaderType","value":"Spine_Mesh"}
+        ]
+    },
+    {
+        "name": "Spine/skin/shader",
+        "template":true,
+        "custom":[
+            {"key":"ShaderType","value":"Spine_Skin"}
+        ]
+    },
+    {
         "name": "Test/shader",
         "template":true,
         "custom":[

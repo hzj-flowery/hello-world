@@ -5,7 +5,6 @@
 
 import Device from "./core/Device";
 import LoaderManager from "./core/LoaderManager";
-import PointLightTest from "./core/renderer/light/PointLightTest";
 import RenderFlow from "./core/RenderFlow";
 import ThreeDLightTest from "./core/renderer/light/ThreeDLightTest";
 import SpotLightTest from "./core/renderer/light/SpotLightTest";
