@@ -42,6 +42,8 @@ import Vec4 from "./value-types/vec4";
  阶段10--》逐片元操作（混合）
  阶段11--》抖动
 
+ 从顶点着色器传到片元着色器的相关的变量，有的是需要归一化的，比如法线，其它方向等，因为这个中间有一个插值的存在
+
  */
 
 /**
@@ -392,14 +394,22 @@ function _commitCullState(gl: WebGLRenderingContext, cur: State, next: State): v
  * 剪裁测试用于限制绘制区域。区域内的像素，将被绘制修改。区域外的像素，将不会被修改。
  * 例子 比如我要在画布的某个区域做一些其他的事情，让其为纯色等
  * 这个功能用的比较少
+ * 裁切区域左下角为：（0,0）
+ * 裁切区域右上角为：（screenWidth,screenHeight）
  */
 function _commitScissorState(gl: WebGLRenderingContext, cur: State, next: State): void {
+    if(cur.ScissorTest!=next.ScissorTest)
+    {
+        next.ScissorTest?gl.enable(gl.SCISSOR_TEST):gl.disable(gl.SCISSOR_TEST);
+    }
 
-    gl.enable(gl.SCISSOR_TEST);
-    gl.scissor(0, 0, 200, 50);
-    gl.clearColor(1.0, 0.0, 0.0, 1.0);
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
-    gl.disable(gl.SCISSOR_TEST);
+    if(cur.ScissorLeftBottom_X!=next.ScissorLeftBottom_X||
+        cur.ScissorLeftBottom_Y!=next.ScissorLeftBottom_Y||
+        cur.ScissorRightTop_X!=next.ScissorRightTop_X||
+        cur.ScissorRightTop_Y!=next.ScissorRightTop_Y)
+    {
+        gl.scissor(next.ScissorLeftBottom_X,next.ScissorLeftBottom_Y,next.ScissorRightTop_X, next.ScissorRightTop_Y);
+    }
 }
 /**
  * 导读-----------------------------------------------------------------------------
@@ -840,6 +850,7 @@ export default class Device {
      */
     private visitRenderTree(time: number, stage: Node): void {
         stage.visit(time);
+       
     }
     //渲染前
     private onBeforeRender() {
@@ -853,10 +864,10 @@ export default class Device {
     private _commitRenderState(state: State): void {
         let gl = this.gl;
         this._nextFrameS.set(state);
+        _commitScissorState(gl, this._curFrameS, this._nextFrameS);
         _commitDepthState(gl, this._curFrameS, this._nextFrameS);
         _commitStencilState(gl, this._curFrameS, this._nextFrameS);
         _commitCullState(gl, this._curFrameS, this._nextFrameS);
-        _commitScissorState(gl, this._curFrameS, this._nextFrameS);
         _commitBlendState(gl, this._curFrameS, this._nextFrameS);
         //更新状态
         this._curFrameS.set(this._nextFrameS);

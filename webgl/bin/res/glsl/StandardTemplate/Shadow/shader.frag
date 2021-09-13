@@ -5,17 +5,23 @@ precision mediump float;
  
 
     varying vec2 v_uv;
-    varying vec4 v_projectedTexcoord;
+    
     varying vec3 v_normal;
     uniform vec4 u_color;            //节点的颜色
     uniform sampler2D u_texture;
     uniform sampler2D gDepth; //投影纹理，第一次站在光的位置进行绘制，将结果存在这里，这个纹理只用于存储深度
     uniform sampler2D gUv;
     uniform sampler2D gColor;
+
     uniform sampler2D u_shadowMap;
     uniform vec4 u_shadowInfo;
-    uniform vec3 u_spotDirection;          //聚光的方向
+    varying vec4 v_projectedTexcoord;
+
+    
     uniform vec4 u_spot;//聚光的颜色
+    uniform vec3 u_spotDirection;  //聚光的方向
+    uniform float u_spotInnerLimit;//聚光的内部限制
+    uniform float u_spotOuterLimit;//聚光的外部限制
     
     uniform float u_specular_shininess;//光照因子
     uniform vec4 u_specular;//高光的颜色
@@ -126,9 +132,37 @@ precision mediump float;
       vec3 specular = specularColor.rgb * specularWeighting * step(cosTheta,0.0);
       return specular;
     }
+    
+    /*
+    获取聚光灯的光照强度
+    @param normal 法线
+    @param spotDirection 聚光灯的方向
+    @param surfaceToLightDirection 表面指向聚光灯位置的方向
+    @param spotInnerLimit  聚光灯的最小范围
+    @param spotOuterLimit  聚光灯的最大范围
+    */
+    float getSpotLightDot(vec3 normal,vec3 spotDirection,vec3 surfaceToLightDirection,float spotInnerLimit,float spotOuterLimit){
+      float dotFromDirection = dot(surfaceToLightDirection,spotDirection);
+      float inLight = smoothstep(spotOuterLimit, spotInnerLimit, dotFromDirection);
+      float light =inLight* max(dot(normal, surfaceToLightDirection),0.0); //算出点光的入射强度
+      return light;
+    }
+    /*
+    获取平行光的光照强度
+    */
+    float getParallelLightDot(vec3 normal,vec3 lightDirection){
+      float lightDot = clamp(dot(normal,lightDirection),0.0,1.0);    //算出光照强度
+      return lightDot;
+    }
     void main() {
         vec3 normal = normalize(v_normal);             //归一化法线
-        float lightDot = clamp(dot(normal, u_spotDirection),0.0,1.0);    //算出光照强度
+        vec3 surfaceToLightDirection = normalize(v_surfaceToLight); //表面指向光位置的方向
+        vec3 surfaceToViewDirection = normalize(v_surfaceToView);   //表面指向摄像机位置的方向
+        vec3 spotDirection = normalize(u_spotDirection);
+
+        float lightDot = getParallelLightDot(normal,spotDirection);    //算出平行光强度
+        // float lightDot = getSpotLightDot(normal,spotDirection,surfaceToLightDirection,u_spotInnerLimit,u_spotOuterLimit);    //算出聚光强度
+
         float shadowLight = getShadowLightRYY(v_projectedTexcoord,u_shadowMap,u_shadowInfo);
         //通过uv贴图找出当前片元的颜色 该颜色常被称为自发光颜色或是当前顶点的颜色
         vec4 texColor = texture2D(u_texture, v_uv) * u_color;

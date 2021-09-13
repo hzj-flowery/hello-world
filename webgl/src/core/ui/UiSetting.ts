@@ -72,8 +72,8 @@ export class UIStatusData {
     public static lightTargetX: number = 3.5; //光照摄像机看向的目标的x轴坐标
     public static lightTargetY: number = 0;   //光照摄像机看向的目标的y轴坐标
     public static lightTargetZ: number = 3.5; //光照摄像机看向的目标的z轴坐标
-    public static lightProjWidth: number = 2; //光照摄像机渲染的屏幕宽度
-    public static lightProjHeight: number = 2; //光照摄像机渲染的屏幕高度
+    public static lightProjWidth: number = 100; //光照摄像机渲染的屏幕宽度
+    public static lightProjHeight: number = 100; //光照摄像机渲染的屏幕高度
     public static lightFieldOfView: number = 120;   //视角fov
     public static lightBias: number = 0.005;
     

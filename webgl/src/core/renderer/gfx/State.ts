@@ -131,7 +131,10 @@ const _default = {
 
     //Scissor
     ScissorTest: false,
-
+    ScissorLeftBottom_X:0,
+    ScissorLeftBottom_Y:0,
+    ScissorRightTop_X:0,
+    ScissorRightTop_Y:0,
     // cull-mode
     cullMode: glEnums.CULL_NONE,  //剔除默认不开启
 
@@ -524,6 +527,10 @@ export class State {
 
     //裁切测试
     public ScissorTest;
+    public ScissorLeftBottom_X:number;
+    public ScissorLeftBottom_Y:number;
+    public ScissorRightTop_X:number;
+    public ScissorRightTop_Y:number;
 
     // cull-mode
     public cullMode;
@@ -606,7 +613,11 @@ export class State {
         this.stencilClear = cpy.stencilClear;
 
         this.ScissorTest = cpy.ScissorTest;
-
+        this.ScissorLeftBottom_X = cpy.ScissorLeftBottom_X;
+        this.ScissorLeftBottom_Y = cpy.ScissorLeftBottom_Y;
+        this.ScissorRightTop_X = cpy.ScissorRightTop_X;
+        this.ScissorRightTop_Y = cpy.ScissorRightTop_Y;
+        
         // cull-mode
         this.cullMode = cpy.cullMode;
 
