@@ -151,7 +151,7 @@ export namespace syGL {
          */
         SHADOW_INFO = 'u_shadowInfo',//阴影信息
         SHADOW_MAP = 'u_shadowMap',//阴影贴图
-                                   
+
         TEXTURE_COORD0 = 'a_texcoord', //纹理坐标
         TEXTURE_COORD1 = 'a_texcoord1',
         TEXTURE_COORD2 = 'a_texcoord2',
@@ -179,7 +179,7 @@ export namespace syGL {
         TEX_GNormal = "gNormal",//法线信息
         TEX_GColor = "gColor",  //颜色信息
         TEX_GUv = "gUv",  //uv信息
-        TEX_GDepth="gDepth",//深度纹理
+        TEX_GDepth = "gDepth",//深度纹理
 
         SKYBOX = "u_skybox",
         Matrix = 'u_mat',      //万能矩阵
@@ -196,18 +196,18 @@ export namespace syGL {
         PVW_Mat = "u_projection_view_world",//投影矩阵*视口矩阵*模型世界矩阵
         PVW_Mat_I = "u_projection_view_world_I", //(投影矩阵*视口矩阵*模型世界矩阵)的逆矩阵
         LightWorldPosition = "u_lightWorldPosition", //光的位置
-        CameraWorldPosition = "u_cameraWorldPosition" ,//相机的位置
+        CameraWorldPosition = "u_cameraWorldPosition",//相机的位置
 
         MOUSE = "u_mouse",//鼠标位置数据
         CUSTOM_FLOAT_VALUE = "u_float_custom",//一个自定义的值
-        RESOLUTION= "u_resolution",//屏幕的设计分辨率
-        
+        RESOLUTION = "u_resolution",//屏幕的设计分辨率
+
         POINT_SIZE = "u_point_size", //点的尺寸
 
 
-        DefineUseAlphaTest="u_use_apha_test",//宏 判断是否使用png
+        DefineUseAlphaTest = "u_use_apha_test",//宏 判断是否使用png
 
-        DefineUseMat="SY_USE_MAT",//宏 判断是否使用万能矩阵
+        DefineUseMat = "SY_USE_MAT",//宏 判断是否使用万能矩阵
     }
     // cull
     export const Cull = {
@@ -326,10 +326,10 @@ export namespace syGL {
  * @return {format,internalFormat,pixelType} result
  */
     export function getTexFmtConfig(fmt: syGL.TextureFormat) {
-        let result = _textureFmtGL[fmt];
+        let result = _textureFmtGL.get(fmt);
         if (result === undefined) {
             console.warn(`Unknown TEXTURE_FMT: ${fmt}`);
-            return _textureFmtGL[syGL.TextureFormat.RGBA8];
+            return _textureFmtGL.get(syGL.TextureFormat.RGBA8);
         }
         return result;
     }
@@ -363,70 +363,40 @@ const _filterGL = [
     [syGL.TexFilter.LINEAR, syGL.TexFilter.LINEAR_MIPMAP_NEAREST, syGL.TexFilter.LINEAR_MIPMAP_LINEAR],
 ];
 
-const _textureFmtGL = [
-    // RGB_DXT1: 0
-    { format: gltex_fmt.RGB, internalFormat: gltex_fmt.RGB_S3TC_DXT1_EXT, pixelType: null },
-    // RGBA_DXT1: 1
-    { format: gltex_fmt.RGBA, internalFormat: gltex_fmt.RGBA_S3TC_DXT1_EXT, pixelType: null },
-    // RGBA_DXT3: 2
-    { format: gltex_fmt.RGBA, internalFormat: gltex_fmt.RGBA_S3TC_DXT3_EXT, pixelType: null },
-    // RGBA_DXT5: 3
-    { format: gltex_fmt.RGBA, internalFormat: gltex_fmt.RGBA_S3TC_DXT5_EXT, pixelType: null },
-    // RGB_ETC1: 4
-    { format: gltex_fmt.RGB, internalFormat: gltex_fmt.RGB_ETC1_WEBGL, pixelType: null },
-    // RGB_PVRTC_2BPPV1: 5
-    { format: gltex_fmt.RGB, internalFormat: gltex_fmt.RGB_PVRTC_2BPPV1_IMG, pixelType: null },
-    // RGBA_PVRTC_2BPPV1: 6
-    { format: gltex_fmt.RGBA, internalFormat: gltex_fmt.RGBA_PVRTC_2BPPV1_IMG, pixelType: null },
-    // RGB_PVRTC_4BPPV1: 7
-    { format: gltex_fmt.RGB, internalFormat: gltex_fmt.RGB_PVRTC_4BPPV1_IMG, pixelType: null },
-    // RGBA_PVRTC_4BPPV1: 8
-    { format: gltex_fmt.RGBA, internalFormat: gltex_fmt.RGBA_PVRTC_4BPPV1_IMG, pixelType: null },
-    // A8: 9
-    { format: gltex_fmt.ALPHA, internalFormat: gltex_fmt.ALPHA, pixelType: syGL.PixelType.UNSIGNED_BYTE },
-    // L8: 10
-    { format: gltex_fmt.LUMINANCE, internalFormat: gltex_fmt.LUMINANCE, pixelType: syGL.PixelType.UNSIGNED_BYTE },
-    // L8_A8: 11
-    { format: gltex_fmt.LUMINANCE_ALPHA, internalFormat: gltex_fmt.LUMINANCE_ALPHA, pixelType: syGL.PixelType.UNSIGNED_BYTE },
-    // R5_G6_B5: 12
-    { format: gltex_fmt.RGB, internalFormat: gltex_fmt.RGB, pixelType: syGL.PixelType.UNSIGNED_SHORT_5_6_5 },
-    // R5_G5_B5_A1: 13
-    { format: gltex_fmt.RGBA, internalFormat: gltex_fmt.RGBA, pixelType: syGL.PixelType.UNSIGNED_SHORT_5_5_5_1 },
-    // R4_G4_B4_A4: 14
-    { format: gltex_fmt.RGBA, internalFormat: gltex_fmt.RGBA, pixelType: syGL.PixelType.UNSIGNED_SHORT_4_4_4_4 },
-    // RGB8: 15
-    { format: gltex_fmt.RGB, internalFormat: gltex_fmt.RGB, pixelType: syGL.PixelType.UNSIGNED_BYTE },
-    // RGBA8: 16
-    { format: gltex_fmt.RGBA, internalFormat: gltex_fmt.RGBA, pixelType: syGL.PixelType.UNSIGNED_BYTE },
-    // RGB16F: 17
-    { format: gltex_fmt.RGB, internalFormat: gltex_fmt.RGB, pixelType: syGL.PixelType.HALF_FLOAT_OES },
-    // RGBA16F: 18
-    { format: gltex_fmt.RGBA, internalFormat: gltex_fmt.RGBA, pixelType: syGL.PixelType.HALF_FLOAT_OES },
-    // RGB32F: 19
-    { format: gltex_fmt.RGB, internalFormat: gltex_fmt.RGB, pixelType: syGL.PixelType.FLOAT },
-    // RGBA32F: 20
-    { format: gltex_fmt.RGBA, internalFormat: gltex_fmt.RGBA, pixelType: syGL.PixelType.FLOAT },
-    // R32F: 21
-    { format: null, internalFormat: null, pixelType: null },
-    // _111110F: 22
-    { format: null, internalFormat: null, pixelType: null },
-    // SRGB: 23
-    { format: null, internalFormat: null, pixelType: null },
-    // SRGBA: 24
-    { format: null, internalFormat: null, pixelType: null },
-    // D16: 25
-    { format: gltex_fmt.DEPTH_COMPONENT, internalFormat: gltex_fmt.DEPTH_COMPONENT, pixelType: syGL.PixelType.UNSIGNED_SHORT },
-    // D32: 26
-    { format: gltex_fmt.DEPTH_COMPONENT, internalFormat: gltex_fmt.DEPTH_COMPONENT, pixelType: syGL.PixelType.UNSIGNED_INT },
-    // D24S8: 27
-    { format: gltex_fmt.DEPTH_COMPONENT, internalFormat: gltex_fmt.DEPTH_COMPONENT, pixelType: syGL.PixelType.UNSIGNED_INT },
-    // RGB_ETC2: 28
-    { format: gltex_fmt.RGB, internalFormat: gltex_fmt.RGB8_ETC2, pixelType: null },
-    // RGBA_ETC2: 29
-    { format: gltex_fmt.RGBA, internalFormat: gltex_fmt.RGBA8_ETC2_EAC, pixelType: null },
-    // RGBA32F_2: 30  下面这个组合是针对webgl2的
-    { format: gltex_fmt.RGBA, internalFormat: gltex_fmt.RGBA32F, pixelType: syGL.PixelType.FLOAT },
-];
+const _textureFmtGL: Map<syGL.TextureFormat, any> = new Map();
+_textureFmtGL.set(syGL.TextureFormat.RGB_DXT1, { format: gltex_fmt.RGB, internalFormat: gltex_fmt.RGB_S3TC_DXT1_EXT, pixelType: null });
+_textureFmtGL.set(syGL.TextureFormat.RGBA_DXT1, { format: gltex_fmt.RGBA, internalFormat: gltex_fmt.RGBA_S3TC_DXT1_EXT, pixelType: null });
+_textureFmtGL.set(syGL.TextureFormat.RGBA_DXT3, { format: gltex_fmt.RGBA, internalFormat: gltex_fmt.RGBA_S3TC_DXT3_EXT, pixelType: null });
+_textureFmtGL.set(syGL.TextureFormat.RGBA_DXT5, { format: gltex_fmt.RGBA, internalFormat: gltex_fmt.RGBA_S3TC_DXT5_EXT, pixelType: null });
+_textureFmtGL.set(syGL.TextureFormat.RGB_ETC1, { format: gltex_fmt.RGB, internalFormat: gltex_fmt.RGB_ETC1_WEBGL, pixelType: null });
+_textureFmtGL.set(syGL.TextureFormat.RGB_PVRTC_2BPPV1, { format: gltex_fmt.RGB, internalFormat: gltex_fmt.RGB_PVRTC_2BPPV1_IMG, pixelType: null });
+_textureFmtGL.set(syGL.TextureFormat.RGBA_PVRTC_2BPPV1, { format: gltex_fmt.RGBA, internalFormat: gltex_fmt.RGBA_PVRTC_2BPPV1_IMG, pixelType: null });
+_textureFmtGL.set(syGL.TextureFormat.RGB_PVRTC_4BPPV1, { format: gltex_fmt.RGB, internalFormat: gltex_fmt.RGB_PVRTC_4BPPV1_IMG, pixelType: null });
+_textureFmtGL.set(syGL.TextureFormat.RGBA_PVRTC_4BPPV1, { format: gltex_fmt.RGBA, internalFormat: gltex_fmt.RGBA_PVRTC_4BPPV1_IMG, pixelType: null });
+
+_textureFmtGL.set(syGL.TextureFormat.A8, { format: gltex_fmt.ALPHA, internalFormat: gltex_fmt.ALPHA, pixelType: syGL.PixelType.UNSIGNED_BYTE });
+_textureFmtGL.set(syGL.TextureFormat.L8, { format: gltex_fmt.LUMINANCE, internalFormat: gltex_fmt.LUMINANCE, pixelType: syGL.PixelType.UNSIGNED_BYTE });
+_textureFmtGL.set(syGL.TextureFormat.L8_A8, { format: gltex_fmt.LUMINANCE_ALPHA, internalFormat: gltex_fmt.LUMINANCE_ALPHA, pixelType: syGL.PixelType.UNSIGNED_BYTE });
+_textureFmtGL.set(syGL.TextureFormat.R5_G6_B5, { format: gltex_fmt.RGB, internalFormat: gltex_fmt.RGB, pixelType: syGL.PixelType.UNSIGNED_SHORT_5_6_5 });
+_textureFmtGL.set(syGL.TextureFormat.R5_G5_B5_A1, { format: gltex_fmt.RGBA, internalFormat: gltex_fmt.RGBA, pixelType: syGL.PixelType.UNSIGNED_SHORT_5_5_5_1 });
+_textureFmtGL.set(syGL.TextureFormat.R4_G4_B4_A4, { format: gltex_fmt.RGBA, internalFormat: gltex_fmt.RGBA, pixelType: syGL.PixelType.UNSIGNED_SHORT_4_4_4_4 });
+_textureFmtGL.set(syGL.TextureFormat.RGB8, { format: gltex_fmt.RGB, internalFormat: gltex_fmt.RGB, pixelType: syGL.PixelType.UNSIGNED_BYTE });
+_textureFmtGL.set(syGL.TextureFormat.RGBA8, { format: gltex_fmt.RGBA, internalFormat: gltex_fmt.RGBA, pixelType: syGL.PixelType.UNSIGNED_BYTE });
+_textureFmtGL.set(syGL.TextureFormat.RGB16F, { format: gltex_fmt.RGB, internalFormat: gltex_fmt.RGB, pixelType: syGL.PixelType.HALF_FLOAT_OES });
+_textureFmtGL.set(syGL.TextureFormat.RGBA16F, { format: gltex_fmt.RGBA, internalFormat: gltex_fmt.RGBA, pixelType: syGL.PixelType.HALF_FLOAT_OES });
+_textureFmtGL.set(syGL.TextureFormat.RGB32F, { format: gltex_fmt.RGB, internalFormat: gltex_fmt.RGB, pixelType: syGL.PixelType.FLOAT });
+_textureFmtGL.set(syGL.TextureFormat.RGBA32F, { format: gltex_fmt.RGBA, internalFormat: gltex_fmt.RGBA, pixelType: syGL.PixelType.FLOAT });
+_textureFmtGL.set(syGL.TextureFormat.R32F, { format: null, internalFormat: null, pixelType: null });
+_textureFmtGL.set(syGL.TextureFormat._111110F, { format: null, internalFormat: null, pixelType: null });
+_textureFmtGL.set(syGL.TextureFormat.SRGB, { format: null, internalFormat: null, pixelType: null });
+_textureFmtGL.set(syGL.TextureFormat.SRGBA, { format: null, internalFormat: null, pixelType: null });
+_textureFmtGL.set(syGL.TextureFormat.D16, { format: gltex_fmt.DEPTH_COMPONENT, internalFormat: gltex_fmt.DEPTH_COMPONENT, pixelType: syGL.PixelType.UNSIGNED_SHORT });
+_textureFmtGL.set(syGL.TextureFormat.D32, { format: gltex_fmt.DEPTH_COMPONENT, internalFormat: gltex_fmt.DEPTH_COMPONENT, pixelType: syGL.PixelType.UNSIGNED_INT });
+_textureFmtGL.set(syGL.TextureFormat.D24S8, { format: gltex_fmt.DEPTH_COMPONENT, internalFormat: gltex_fmt.DEPTH_COMPONENT, pixelType: syGL.PixelType.UNSIGNED_INT });
+_textureFmtGL.set(syGL.TextureFormat.RGB_ETC2, { format: gltex_fmt.RGB, internalFormat: gltex_fmt.RGB8_ETC2, pixelType: null });
+_textureFmtGL.set(syGL.TextureFormat.RGBA_ETC2, { format: gltex_fmt.RGBA, internalFormat: gltex_fmt.RGBA8_ETC2_EAC, pixelType: null });
+_textureFmtGL.set(syGL.TextureFormat.RGBA32F_2, { format: gltex_fmt.RGBA, internalFormat: gltex_fmt.RGBA32F, pixelType: syGL.PixelType.FLOAT });
+
 /*
 format                type            通道数 通道总字节数
 RGBA         	 UNSIGNED_BYTE	        4	    4

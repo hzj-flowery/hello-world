@@ -43,7 +43,13 @@ export default class Scene2D extends Scene {
         this._pen.spriteFrame = "res/bg_npc_06.png";
         this.addChild(this._pen);
 
-
+        var rectangle1 = new SY.Sprite2D();
+        rectangle1.alpha = 1.0;
+        rectangle1.defineUse.SY_USE_ALPHA_TEST = 0.1;
+        rectangle1.pushPassContent(syRender.ShaderType.Sprite,[])
+        rectangle1.setPosition(Device.Instance.width / 2, Device.Instance.height / 2 - 100, -100);
+        rectangle1.spriteFrame = "res/ground.png";
+        this.addChild(rectangle1);
 
         // this._uvSprite = new SY.Sprite2D();
         // this._uvSprite.pushPassContent(syRender.ShaderType.UvSprite)
