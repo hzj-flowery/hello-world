@@ -43,7 +43,7 @@ enum ShaderType {
  * shader工厂
  */
 class ShaderFactory {
-    public _gl: WebGLRenderingContext;
+    public _gl: WebGL2RenderingContext;
     protected _shaderData: Array<ShaderData>;
     init(gl) {
         this._gl = gl;

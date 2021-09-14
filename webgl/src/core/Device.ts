@@ -1009,19 +1009,21 @@ export default class Device {
 
     }
     private _curShaderGLID = -1;
-    private _drawNormal(sData: syRender.NormalData, cameraData: CameraData): void {
-        if (this._curShaderGLID != sData._shaderData.spGlID) {
-            this.gl.useProgram(sData._shaderData.spGlID);
-            this._curShaderGLID == sData._shaderData.spGlID;
+    private _drawNormal(nData: syRender.NormalData, cameraData: CameraData): void {
+        if (this._curShaderGLID != nData._shaderData.spGlID) {
+            this.gl.useProgram(nData._shaderData.spGlID);
+            this._curShaderGLID == nData._shaderData.spGlID;
         }
-        G_ShaderFactory.setBuffersAndAttributes(sData._shaderData.attrSetters, sData._attrbufferData);
+        G_ShaderFactory.setBuffersAndAttributes(nData._shaderData.attrSetters, nData._attrbufferData);
 
-        sData.pushProjectMat(cameraData.projectMat);
-        sData.pushViewMat(cameraData.viewMat);
-        for (let j = 0; j < sData._uniformData.length; j++) {
-            G_ShaderFactory.setUniforms(sData._shaderData.uniSetters, sData._uniformData[j]);
+        nData.pushProjectMat(cameraData.projectMat);
+        nData.pushViewMat(cameraData.viewMat);
+        nData.pushCameraPosition(nData._cameraPosition);
+        nData.pushLightDirection(nData.light.spot.direction);
+        for (let j = 0; j < nData._uniformData.length; j++) {
+            G_ShaderFactory.setUniforms(nData._shaderData.uniSetters, nData._uniformData[j]);
         }
-        G_ShaderFactory.drawBufferInfo(sData._attrbufferData, sData.primitive.type);
+        G_ShaderFactory.drawBufferInfo(nData._attrbufferData, nData.primitive.type);
     }
     private _mapRenderTreeData: Map<syRender.DrawingOrder, Array<syRender.BaseData>> = new Map();//渲染树上的绘制数据
     public collectData(rData: syRender.BaseData): void {

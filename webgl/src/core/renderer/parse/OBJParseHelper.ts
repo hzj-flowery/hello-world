@@ -291,16 +291,16 @@ export namespace OBJParseHelper {
           materials[unparsedArgs] = material;
         },
         /* eslint brace-style:0 */
-        Ns(parts) { material.shininess = parseFloat(parts[0]); },
-        Ka(parts) { material.ambient = parts.map(parseFloat); },
-        Kd(parts) { material.diffuse = parts.map(parseFloat); },
-        Ks(parts) { material.specular = parts.map(parseFloat); },
+        Ns(parts) { material.shininess = parseFloat(parts[0]); }, //反射高光度 指定材质的反射指数
+        Ka(parts) { material.ambient = parts.map(parseFloat); }, //环境色
+        Kd(parts) { material.diffuse = parts.map(parseFloat); }, //漫反射色
+        Ks(parts) { material.specular = parts.map(parseFloat); }, //高光色
         Ke(parts) { material.emissive = parts.map(parseFloat); },
         map_Kd(parts, unparsedArgs) { material.diffuseMap = parseMapArgs(unparsedArgs); },
         map_Ns(parts, unparsedArgs) { material.specularMap = parseMapArgs(unparsedArgs); },
         map_Bump(parts, unparsedArgs) { material.normalMap = parseMapArgs(unparsedArgs); },
-        Ni(parts) { material.opticalDensity = parseFloat(parts[0]); },
-        d(parts) { material.opacity = parseFloat(parts[0]); },
+        Ni(parts) { material.opticalDensity = parseFloat(parts[0]); }, //折射值 指定材质表面的光密度
+        d(parts) { material.opacity = parseFloat(parts[0]); },         //透明度
         illum(parts) { material.illum = parseInt(parts[0]); },
       };
   

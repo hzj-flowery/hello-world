@@ -26,6 +26,7 @@ import ShadowCube from "../3d/ShadowCube";
 import { Plane } from "../3d/Plane";
 import { ThreeDF } from "../3d/ThreeDF";
 import RobartInstantiate from "../3d/RobartInstantiate";
+import ObjNode from "../3d/ObjNode";
 
 export default class Scene3D extends Scene {
 
@@ -44,6 +45,7 @@ export default class Scene3D extends Scene {
     private _alphaNode: Cube;
     private _spineNode: Spine;
     private _pointLightCube: PointLightCube;
+    private _objNode:ObjNode;
     private _spotLightCube: SpotLightCube;
     private _fogCubeArr: Array<FogCube>;
     private _customTexture: CustomTextureCube;
@@ -96,10 +98,16 @@ export default class Scene3D extends Scene {
         this._spineNode.y = 10;
         this.addChild(this._spineNode);
 
-        // this._customTexture = new CustomTextureCube();
-        // this._customTexture.spriteFrame = CustomTextureData.getRandomData(3, 5, syGL.TextureFormat.RGB8);
-        // this._customTexture.setPosition(0, 3.1, 0);
-        // this._centerNode.addChild(this._customTexture);
+        this._objNode = new ObjNode();
+        this._objNode.x = 5;
+        this._objNode.y = 10;
+        this._objNode.z = -10;
+        this.addChild(this._objNode);
+
+        this._customTexture = new CustomTextureCube();
+        this._customTexture.spriteFrame = CustomTextureData.getRandomData(3, 5, syGL.TextureFormat.RGB8);
+        this._customTexture.setPosition(0, 3.1, 0);
+        this._centerNode.addChild(this._customTexture);
 
         
 

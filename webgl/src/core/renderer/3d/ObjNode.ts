@@ -1,6 +1,8 @@
+import Device from "../../Device";
 import { SY } from "../base/Sprite";
+import { syRender } from "../data/RenderData";
 import { OBJParseHelper } from "../parse/OBJParseHelper";
-import {ShaderData } from "../shader/Shader";
+import { ShaderData } from "../shader/Shader";
 import { G_ShaderFactory } from "../shader/ShaderFactory";
 
 const vs = `
@@ -84,26 +86,54 @@ const fs = `
         effectiveOpacity);
   }
 `
-export default class ObjNode extends SY.SpriteBase{
-     constructor(){
-         super();
-     }
-     private _meshProgramInfo:ShaderData;
-     private _objData:any;
-     protected onInit(){
-        this._meshProgramInfo = G_ShaderFactory.createProgramInfo(vs, fs);
-        this.load();
-     }
 
-     private async load(){
-        let str = "http:localhost:3000/res/models/windmill/windmill.obj";
-        // let str1 = "https://webglfundamentals.org/webgl/resources/models/chair/chair.obj"
-        let str1 = "http:localhost:3000/res/models/chair/chair.obj"
-        let str2 = "https://webglfundamentals.org/webgl/resources/models/book-vertex-chameleon-study/book.obj"
-        let str3 = "http:localhost:3000/res/models/book/book.obj"
-        this._objData = await OBJParseHelper.load(this.gl, str3);
-     }
+var OBJRes = [
+  "http:localhost:3000/res/models/windmill/windmill.obj",
+  "http:localhost:3000/res/models/chair/chair.obj",
+  "http:localhost:3000/res/models/book/book.obj",
+  "http:localhost:3000/res/models/Artorias_Sword/Artorias_Sword.obj",
+  "http:localhost:3000/res/models/earth/earth.obj",
+  "http:localhost:3000/res/models/T-90_uv/T-90_uv.obj",
+]
+export default class ObjNode extends SY.SpriteBase {
+  constructor() {
+    super();
+  }
+  private _meshProgramInfo: ShaderData;
+  private _objData: any;
+  private _renderDataArray: Array<syRender.NormalData> = [];
+  protected onInit() {
+    this._meshProgramInfo = G_ShaderFactory.createProgramInfo(vs, fs);
+    this.load();
+  }
 
-     protected collectRenderData(time: number): void {
-     }
+  private async load() {
+    this._objData = await OBJParseHelper.load(this.gl, OBJRes[4]);
+  }
+
+  protected collectRenderData(time: number): void {
+
+    if (!this._objData)
+      return;
+    this.rotateZ = 180;
+    let j = 0;
+    // this.setScale(0.05,0.05,0.05);
+    this.rotateX = 90;
+    for (const { bufferInfo, material } of this._objData.parts) {
+      var renderData = this._renderDataArray[j];
+      if (!renderData) {
+        renderData = syRender.DataPool.get(syRender.DataType.Normal) as syRender.NormalData;
+        this._renderDataArray.push(renderData);
+      }
+      renderData._shaderData = this._meshProgramInfo;
+      renderData._uniformData.push({
+        u_world: this.modelMatrix
+      });
+      renderData._uniformData.push(material);
+      renderData._attrbufferData = bufferInfo;
+      renderData.node = this;
+      Device.Instance.collectData(renderData);
+      j++;
+    }
+  }
 }

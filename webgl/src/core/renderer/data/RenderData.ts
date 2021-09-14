@@ -6,7 +6,7 @@ import { MathUtils } from "../../utils/MathUtils";
 import { Node } from "../base/Node";
 import { GameMainCamera } from "../camera/GameMainCamera";
 import { glEnums } from "../gfx/GLapi";
-import {State, StateString, StateValueMap} from "../gfx/State";
+import { State, StateString, StateValueMap } from "../gfx/State";
 import { syGL } from "../gfx/syGLEnums";
 import { Pass } from "../shader/Pass";
 import { BufferAttribsData, Shader, ShaderData } from "../shader/Shader";
@@ -16,18 +16,18 @@ import { ShaderUseVariantType } from "../shader/ShaderUseVariantType";
 let renderDataId: number = 0;
 export namespace syRender {
 
-    export var StateData={
-        name:StateString,
-        value:StateValueMap
-    } 
+    export var StateData = {
+        name: StateString,
+        value: StateValueMap
+    }
 
     export enum ColorMask {
         NONE = 0x0, //00000000 
-        R    = 0x1, //00000001
-        G    = 0x2, //00000010
-        B    = 0x4, //00000100
-        A    = 0x8, //00001000
-        ALL  = R | G | B | A,//表示全部开启
+        R = 0x1, //00000001
+        G = 0x2, //00000010
+        B = 0x4, //00000100
+        A = 0x8, //00001000
+        ALL = R | G | B | A,//表示全部开启
     }
 
     //着色器的类型
@@ -57,7 +57,7 @@ export namespace syRender {
         NULL          //不用shader渲染
     }
 
-    export var ShaderTypeString:Array<string> = [
+    export var ShaderTypeString: Array<string> = [
         "Custom",
         "Line",
         "Point",
@@ -178,11 +178,11 @@ export namespace syRender {
         public itemSize: number;//单个buffer单元的数据数目
         public itemNums: number;//所有buffer单元数目
     }
-    
+
     //shader 中使用的宏
-    export class DefineUse{
-         public SY_USE_ALPHA_TEST:number=0; //alpha测试
-         public SY_USE_MAT:number=0;//使用万能矩阵
+    export class DefineUse {
+        public SY_USE_ALPHA_TEST: number = 0; //alpha测试
+        public SY_USE_MAT: number = 0;//使用万能矩阵
     }
 
     //绘制信息
@@ -205,8 +205,8 @@ export namespace syRender {
         public normal: WebGLBufferData;//法线buffer
 
         public color: Array<number>;//节点自定义颜色
-        public diffuse:Array<number>; //漫反射颜色
-        public customFloatValue:number; //一个自定义的值
+        public diffuse: Array<number>; //漫反射颜色
+        public customFloatValue: number; //一个自定义的值
         public alpha: number;        //节点自定义透明度
         public customMatrix: Float32Array;//自定义矩阵
         public modelMatrix: Float32Array;//模型矩阵
@@ -380,13 +380,13 @@ export namespace syRender {
         /**
          * 阴影
          */
-        export class Shadow{
-               //阴影贴图
+        export class Shadow {
+            //阴影贴图
             private _bias: number = 0.005; //阴影贴图的马赫带
             private _size: number = 1 / 1024;//阴影的像素尺寸 值越小 阴影越逼真
             private _opacity: number = 0.1; //阴影的alpha值 值越小暗度越深
             private _min: number = 0;       //阴影最小值
-            private _map:WebGLTexture;      //深度纹理
+            private _map: WebGLTexture;      //深度纹理
             public get bias(): number { return this._bias };
             public set bias(p: number) { this._bias = p };
             public get size(): number { return this._size };
@@ -398,7 +398,7 @@ export namespace syRender {
             public get map(): WebGLTexture { return this._map };
             public set map(p: WebGLTexture) { this._map = p };
             public get info() {
-                       //x马赫带            //y阴影像素尺寸,值越小阴影越逼真
+                //x马赫带            //y阴影像素尺寸,值越小阴影越逼真
                 return [this._bias, this._size, this._min, this._opacity]
             }
         }
@@ -419,7 +419,7 @@ export namespace syRender {
             public parallel: Light.Parallel;//平行光
             public specular: Light.Specular;//高光
             public point: Light.Point;     //点光
-            public shadow:Light.Shadow;    //阴影
+            public shadow: Light.Shadow;    //阴影
             public ambient: Light.Ambient;//环境光
             public position: Array<number>; //光的位置
 
@@ -467,8 +467,8 @@ export namespace syRender {
         public get id() {
             return this._id
         }
-        public father:number;//父亲的渲染数据
-        public son:number;//儿子的渲染数据
+        public father: number;//父亲的渲染数据
+        public son: number;//儿子的渲染数据
         public get type() {
             return this._type
         }
@@ -502,7 +502,7 @@ export namespace syRender {
         private _temp002_matrix;//
         private _temp003_matrix;//
         private _temp004_matrix;//
-        public defineUse:DefineUse;
+        public defineUse: DefineUse;
         public reset(): void {
             this._pass = null;
             this._cameraPosition = [];
@@ -642,7 +642,7 @@ export namespace syRender {
                         break;
                     case ShaderUseVariantType.TEX_CUSTOM:
                         //延迟渲染中的万能矩阵
-                        _shader.setUseDeferredTexture(this._texture2DGLIDMap.get(DeferredTexture.Custom), useTextureAddres,syGL.AttributeUniform.TEX_CUSTOM);
+                        _shader.setUseDeferredTexture(this._texture2DGLIDMap.get(DeferredTexture.Custom), useTextureAddres, syGL.AttributeUniform.TEX_CUSTOM);
                         useTextureAddres++;
                         break;
                     case ShaderUseVariantType.Projection:
@@ -658,7 +658,7 @@ export namespace syRender {
                         glMatrix.mat4.multiply(this._temp_model_view_matrix_inverse_transform, view, this.primitive.modelMatrix);
                         glMatrix.mat4.invert(this._temp_model_view_matrix_inverse_transform, this._temp_model_view_matrix_inverse_transform);
                         glMatrix.mat4.transpose(this._temp_model_view_matrix_inverse_transform, this._temp_model_view_matrix_inverse_transform);
-                        _shader.bindMatrixToShader(syGL.AttributeUniform.VW_Mat_I_T,this._temp_model_view_matrix_inverse_transform);
+                        _shader.bindMatrixToShader(syGL.AttributeUniform.VW_Mat_I_T, this._temp_model_view_matrix_inverse_transform);
                         break;
                     case ShaderUseVariantType.CustomMatrix:
                         _shader.bindMatrixToShader(syGL.AttributeUniform.Matrix, this.primitive.customMatrix);
@@ -738,7 +738,7 @@ export namespace syRender {
                         _shader.setCustomUniformFloat(syGL.AttributeUniform.TIME, Device.Instance.triggerRenderTime);
                         break;
                     case ShaderUseVariantType.Custom_Float_Value:
-                        _shader.setCustomUniformFloat(syGL.AttributeUniform.CUSTOM_FLOAT_VALUE,this.primitive.customFloatValue);
+                        _shader.setCustomUniformFloat(syGL.AttributeUniform.CUSTOM_FLOAT_VALUE, this.primitive.customFloatValue);
                         break;
                     case ShaderUseVariantType.Resolution:
                         _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.RESOLUTION, [Device.Instance.width, Device.Instance.height, 0, 0]);
@@ -751,14 +751,14 @@ export namespace syRender {
                         _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.SHADOW_INFO, this.light.shadow.info);
                         break;
                     case ShaderUseVariantType.ShadowMap:
-                        _shader.setUseDeferredTexture(this.light.shadow.map,useTextureAddres,syGL.AttributeUniform.SHADOW_MAP);
+                        _shader.setUseDeferredTexture(this.light.shadow.map, useTextureAddres, syGL.AttributeUniform.SHADOW_MAP);
                         useTextureAddres++;
                         break;
                     case ShaderUseVariantType.Define_UseAlphaTest:
-                        _shader.setCustomUniformFloat(syGL.AttributeUniform.DefineUseAlphaTest,this.defineUse.SY_USE_ALPHA_TEST)
+                        _shader.setCustomUniformFloat(syGL.AttributeUniform.DefineUseAlphaTest, this.defineUse.SY_USE_ALPHA_TEST)
                         break;
                     case ShaderUseVariantType.Define_UseMat:
-                        _shader.setCustomUniformFloat(syGL.AttributeUniform.DefineUseMat,this.defineUse.SY_USE_MAT)
+                        _shader.setCustomUniformFloat(syGL.AttributeUniform.DefineUseMat, this.defineUse.SY_USE_MAT)
                         break;
                     default:
                     // console.log("目前还没有处理这个矩阵类型");
@@ -788,7 +788,7 @@ export namespace syRender {
             this._state.depthFunc = glEnums.DS_FUNC_LESS;
             this._state.depthTest = true;
             this._state.depthWrite = true;
-            
+
             this._state.cullMode = glEnums.CULL_BACK;
         }
         public reset() {
@@ -810,27 +810,40 @@ export namespace syRender {
         //uniform变量的数据
         public _uniformData: Array<any>;
         public _tempMatrix1: Float32Array;
-        
-        public pushProjectMat(proj:Float32Array):void{
-            this.pushMat("u_projection",proj)
+
+        /**
+         * 压入相机的位置
+         * @param pos 
+         */
+        public pushCameraPosition(pos: Array<number>) {
+            this.pushUniform("u_viewWorldPosition", pos)
         }
-        public pushViewMat(view:Float32Array):void{
-            this.pushMat("u_view",view)
+        /**
+         * 压入光的方向
+         * @param dir 
+         */
+        public pushLightDirection(dir: Array<number>) {
+            this.pushUniform("u_lightDirection", dir)
         }
-        public pushWorldMat(world:Float32Array):void{
-             this.pushMat("u_world",world);
+        //--------------------------压入矩阵--------------------------
+        public pushProjectMat(proj: Float32Array): void {
+            this.pushUniform("u_projection", proj)
         }
-        private pushMat(name:string,value:Float32Array):void{
-            for(let k=0;k<this._uniformData.length;k++)
-            {
+        public pushViewMat(view: Float32Array): void {
+            this.pushUniform("u_view", view)
+        }
+        public pushWorldMat(world: Float32Array): void {
+            this.pushUniform("u_world", world);
+        }
+        //------------------------向统一变量中压入一组key value
+        private pushUniform(name: string, value: any): void {
+            for (let k = 0; k < this._uniformData.length; k++) {
                 var searchData = this._uniformData[k]
-                for(let s in searchData)
-                {
-                     if(s==name)
-                     {
-                        this._uniformData[k][name]=value;
+                for (let s in searchData) {
+                    if (s == name) {
+                        this._uniformData[k][name] = value;
                         return;
-                     }
+                    }
                 }
             }
             var st = {}
