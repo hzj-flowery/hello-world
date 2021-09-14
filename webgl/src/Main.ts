@@ -14,10 +14,6 @@ import { G_DrawEngine } from "./core/renderer/base/DrawEngine";
 import { G_LightCenter } from "./core/renderer/light/LightCenter";
 import { G_LightModel } from "./core/renderer/light/LightModel";
 import { G_UISetting } from "./core/ui/UiSetting";
-import ShaderShadowTest from "./core/renderer/3d/test/ShaderShadowTest";
-import { syRender } from "./core/renderer/data/RenderData";
-import { StencilTest } from "./core/renderer/3d/test/StencilTest";
-import EarthSunTest from "./core/renderer/3d/test/EarthSunTest";
 
 
 

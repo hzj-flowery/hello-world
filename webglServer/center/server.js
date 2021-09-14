@@ -12,6 +12,23 @@ var handleChat = require('./action_chat').handleChat
 var handleListenDownloadFile = require('./action_download').handleListenDownloadFile
 
 var analysisURL = require('./action').analysisURL;
+
+function runCopyRes(){
+//   var child = require('child_process');
+//   child.exec('ls', function(err, sto) {
+//     console.log(sto);//sto才是真正的输出，要不要打印到控制台，由你自己啊
+//   })
+//   const execFile = child.execFile;
+  
+//   execFile(path.join(process.cwd() + "/", "center/copyRes.sh"),[],null,function (err, stdout, stderr) {
+//     // callback(err, stdout, stderr);
+//     console.log(err)
+// })
+}
+
+//拷贝资源
+// runCopyRes();
+
 // req : 从浏览器带来的请求信息
 // res : 从服务器返回给浏览器的信息
 var server = http.createServer(function (req, res) {

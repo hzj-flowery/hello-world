@@ -177,6 +177,7 @@ export namespace OBJParseHelper {
       }
   
       const keywords = {
+        //顶点
         v(parts) {
           // if there are more than 3 values here they are vertex colors
           if (parts.length > 3) {
@@ -186,9 +187,11 @@ export namespace OBJParseHelper {
             objPositions.push(parts.map(parseFloat));
           }
         },
+        //顶点法线
         vn(parts) {
           objNormals.push(parts.map(parseFloat));
         },
+        //纹理坐标
         vt(parts) {
           // should check for missing v and extra w?
           objTexcoords.push(parts.map(parseFloat));
@@ -203,11 +206,13 @@ export namespace OBJParseHelper {
           }
         },
         s: noop,    // smoothing group
+        //obj对应的材质文件
         mtllib(parts, unparsedArgs) {
           // the spec says there can be multiple filenames here
           // but many exist with spaces in a single filename
           materialLibs.push(unparsedArgs);
         },
+        //当前图元所用材质
         usemtl(parts, unparsedArgs) {
           material = unparsedArgs;
           newGeometry();
@@ -216,6 +221,7 @@ export namespace OBJParseHelper {
           groups = parts;
           newGeometry();
         },
+        //对象名称
         o(parts, unparsedArgs) {
           object = unparsedArgs;
           newGeometry();

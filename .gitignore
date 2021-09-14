@@ -2,3 +2,4 @@ vscodeTypeScript
 webgl/node_modules
 testjs
 webgl/.vscode/chrome
+webglServer/res
