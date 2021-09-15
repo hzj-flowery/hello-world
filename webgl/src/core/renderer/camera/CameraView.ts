@@ -129,16 +129,16 @@ export default class CameraView extends SY.SpriteBase {
          */
     protected collectRenderData(time: number): void {
         //激活shader 并且给shader中的变量赋值
-        this.shader.active();
+        this.baseProgram.active();
         var newMV = this._glMatrix.mat4.create();
         var v = GameMainCamera.instance.getCameraByUUid(syRender.CameraUUid.base3D).modelMatrix;
         var m = this.modelMatrix;
         this._glMatrix.mat4.mul(newMV,v,m)
-        this.shader.bindMatrixToShader(syGL.AttributeUniform.VW_Mat,newMV);
-        this.shader.bindMatrixToShader(syGL.AttributeUniform.P_Mat,GameMainCamera.instance.getCameraByUUid(syRender.CameraUUid.base3D).getProjectionMatrix());
-        this.shader.setCustomUniformFloatVec4(syGL.AttributeUniform.LIGHT_PARALLEL,[1, 0, 0, 1])
-        this.shader.setCustomUniformFloatVec3(syGL.AttributeUniform.LIGHT_PARALLEL_DIR,[])
-        this.shader.setUseVertexAttribPointer(syGL.AttributeUniform.POSITION,this.getGLID(SY.GLID_TYPE.VERTEX), this.getBufferItemSize(SY.GLID_TYPE.VERTEX));
+        this.baseProgram.bindMatrixToShader(syGL.AttributeUniform.VW_Mat,newMV);
+        this.baseProgram.bindMatrixToShader(syGL.AttributeUniform.P_Mat,GameMainCamera.instance.getCameraByUUid(syRender.CameraUUid.base3D).getProjectionMatrix());
+        this.baseProgram.setCustomUniformFloatVec4(syGL.AttributeUniform.LIGHT_PARALLEL,[1, 0, 0, 1])
+        this.baseProgram.setCustomUniformFloatVec3(syGL.AttributeUniform.LIGHT_PARALLEL_DIR,[])
+        this.baseProgram.setUseVertexAttribPointer(syGL.AttributeUniform.POSITION,this.getGLID(SY.GLID_TYPE.VERTEX), this.getBufferItemSize(SY.GLID_TYPE.VERTEX));
         
         //绑定操作的索引缓冲
         this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.getGLID(SY.GLID_TYPE.INDEX));
@@ -148,20 +148,20 @@ export default class CameraView extends SY.SpriteBase {
         var head = 24;
         var ray = 2*3;
         var clip = 24;
-        this.shader.setCustomUniformFloatVec4(syGL.AttributeUniform.LIGHT_PARALLEL,[0, 0, 0, 1])
-        this.shader.setCustomUniformFloatVec3(syGL.AttributeUniform.LIGHT_PARALLEL_DIR,[])
+        this.baseProgram.setCustomUniformFloatVec4(syGL.AttributeUniform.LIGHT_PARALLEL,[0, 0, 0, 1])
+        this.baseProgram.setCustomUniformFloatVec3(syGL.AttributeUniform.LIGHT_PARALLEL_DIR,[])
         this.gl.drawElements(this._glPrimitiveType,body, this.gl.UNSIGNED_SHORT, 0);
 
-        this.shader.setCustomUniformFloatVec4(syGL.AttributeUniform.LIGHT_PARALLEL,[0, 1, 0, 1])
-        this.shader.setCustomUniformFloatVec3(syGL.AttributeUniform.LIGHT_PARALLEL_DIR,[])
+        this.baseProgram.setCustomUniformFloatVec4(syGL.AttributeUniform.LIGHT_PARALLEL,[0, 1, 0, 1])
+        this.baseProgram.setCustomUniformFloatVec3(syGL.AttributeUniform.LIGHT_PARALLEL_DIR,[])
         this.gl.drawElements(this._glPrimitiveType,head, this.gl.UNSIGNED_SHORT,body*2);
 
-        this.shader.setCustomUniformFloatVec4(syGL.AttributeUniform.LIGHT_PARALLEL,[1, 0, 0, 1])
-        this.shader.setCustomUniformFloatVec3(syGL.AttributeUniform.LIGHT_PARALLEL_DIR,[])
+        this.baseProgram.setCustomUniformFloatVec4(syGL.AttributeUniform.LIGHT_PARALLEL,[1, 0, 0, 1])
+        this.baseProgram.setCustomUniformFloatVec3(syGL.AttributeUniform.LIGHT_PARALLEL_DIR,[])
         this.gl.drawElements(this._glPrimitiveType,ray, this.gl.UNSIGNED_SHORT,(body+head)*2);
 
-        this.shader.setCustomUniformFloatVec4(syGL.AttributeUniform.LIGHT_PARALLEL,[1, 1, 0, 1])
-        this.shader.setCustomUniformFloatVec3(syGL.AttributeUniform.LIGHT_PARALLEL_DIR,[])
+        this.baseProgram.setCustomUniformFloatVec4(syGL.AttributeUniform.LIGHT_PARALLEL,[1, 1, 0, 1])
+        this.baseProgram.setCustomUniformFloatVec3(syGL.AttributeUniform.LIGHT_PARALLEL_DIR,[])
         this.gl.drawElements(this._glPrimitiveType,clip, this.gl.UNSIGNED_SHORT,(body+head+ray)*2);
 
         //解除缓冲区绑定

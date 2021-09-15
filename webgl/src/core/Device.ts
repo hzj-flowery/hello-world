@@ -785,6 +785,9 @@ export default class Device {
         syRender.ShaderType.Instantiate,
         syRender.ShaderType.Purity,
         syRender.ShaderType.OutLine,
+        syRender.ShaderType.Spine_Mesh,
+        syRender.ShaderType.Spine_Skin,
+        syRender.ShaderType.Obj,
         syRender.ShaderType.Test]
         //深度渲染pass
         var treeData = this._mapRenderTreeData.get(drawOrder);
@@ -993,7 +996,7 @@ export default class Device {
                 }
                 break;
             case syRender.QueueItemType.Normal:
-                this._commitRenderState((rData as syRender.QueueItemData)._state);
+                this._commitRenderState(rData.pass.state);
                 if (crData.isFirstVisualAngle()) {
                     this._drawNormal(rData as syRender.QueueItemData, cData);
                 }

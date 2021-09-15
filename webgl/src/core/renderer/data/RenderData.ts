@@ -523,7 +523,7 @@ export namespace syRender {
             return this._pass
         }
         public get shader() {
-            return this._pass.code
+            return this._pass.baseProgram
         }
         public get isOffline() {
             if (this._pass) return this._pass.offlineRender
@@ -784,14 +784,6 @@ export namespace syRender {
             super();
             this._tempMatrix1 = glMatrix.mat4.identity(null);
             this._type = syRender.QueueItemType.Normal;
-            this._state = new State();
-
-            //渲染状态
-            this._state.depthFunc = glEnums.DS_FUNC_LESS;
-            this._state.depthTest = true;
-            this._state.depthWrite = true;
-
-            this._state.cullMode = glEnums.CULL_BACK;
         }
         public reset() {
             super.reset();
@@ -801,11 +793,6 @@ export namespace syRender {
             this.primitive.type = syGL.PrimitiveType.TRIANGLES;
             glMatrix.mat4.identity(this._tempMatrix1);
         }
-        /**
-        * 渲染状态
-        */
-        public _state: State;
-
         public _shaderData: ShaderProgram;
         //顶点着色器属性数据
         public _attrbufferData: BufferAttribsData;

@@ -15,8 +15,8 @@ export default class MoreSprite extends SY.Sprite2D {
 
     protected onInit(): void {
         this.setContentSize(100,200);
-        this._colorLoc = this.shader.getCustomAttributeLocation("a_color");
-        this._matrixLoc = this.shader.getCustomAttributeLocation('a_matrix');
+        this._colorLoc = this.baseProgram.getCustomAttributeLocation("a_color");
+        this._matrixLoc = this.baseProgram.getCustomAttributeLocation('a_matrix');
         var gl = this.gl;
         // setup matrixes, one per instance
         this.numInstances = 3;
@@ -83,16 +83,16 @@ export default class MoreSprite extends SY.Sprite2D {
         const numVertices = 4;
         time *= 0.001; // seconds
 
-        this.shader.active();
-        this.shader.setUseVertexAttribPointer(syGL.AttributeUniform.POSITION,this.getGLID(SY.GLID_TYPE.VERTEX), this.getBufferItemSize(SY.GLID_TYPE.VERTEX));
+        this.baseProgram.active();
+        this.baseProgram.setUseVertexAttribPointer(syGL.AttributeUniform.POSITION,this.getGLID(SY.GLID_TYPE.VERTEX), this.getBufferItemSize(SY.GLID_TYPE.VERTEX));
 
         var newMV = this._glMatrix.mat4.create();
         var v = GameMainCamera.instance.getCameraByUUid(syRender.CameraUUid.base2D).getInversModelMatrix();
         var m = this.modelMatrix;
         this._glMatrix.mat4.mul(newMV, v, m)
-        this.shader.bindMatrixToShader(syGL.AttributeUniform.VW_Mat,newMV);
+        this.baseProgram.bindMatrixToShader(syGL.AttributeUniform.VW_Mat,newMV);
         var pMatix = GameMainCamera.instance.getCameraByUUid(syRender.CameraUUid.base2D).getProjectionMatrix();
-        this.shader.bindMatrixToShader(syGL.AttributeUniform.P_Mat,pMatix);
+        this.baseProgram.bindMatrixToShader(syGL.AttributeUniform.P_Mat,pMatix);
 
         // update all the matrices
         this.matrices.forEach((mat, ndx) => {
@@ -177,15 +177,15 @@ export default class MoreSprite extends SY.Sprite2D {
 
         time *= 0.001; // seconds
 
-        const colorLoc = this.shader.getCustomAttributeLocation("a_color");
-        const matrixLoc = this.shader.getCustomAttributeLocation('a_matrix');
+        const colorLoc = this.baseProgram.getCustomAttributeLocation("a_color");
+        const matrixLoc = this.baseProgram.getCustomAttributeLocation('a_matrix');
 
 
-        this.shader.active();
-        this.shader.setUseVertexAttribPointer(syGL.AttributeUniform.POSITION,this.getGLID(SY.GLID_TYPE.VERTEX), this.getBufferItemSize(SY.GLID_TYPE.VERTEX));
-        this.shader.bindMatrixToShader(syGL.AttributeUniform.VW_Mat,this.modelMatrix);
+        this.baseProgram.active();
+        this.baseProgram.setUseVertexAttribPointer(syGL.AttributeUniform.POSITION,this.getGLID(SY.GLID_TYPE.VERTEX), this.getBufferItemSize(SY.GLID_TYPE.VERTEX));
+        this.baseProgram.bindMatrixToShader(syGL.AttributeUniform.VW_Mat,this.modelMatrix);
         var pMatrix = GameMainCamera.instance.getCameraByUUid(syRender.CameraUUid.base2D).getProjectionMatrix();
-        this.shader.bindMatrixToShader(syGL.AttributeUniform.P_Mat,pMatrix);
+        this.baseProgram.bindMatrixToShader(syGL.AttributeUniform.P_Mat,pMatrix);
 
         // update all the matrices
         this.matrices.forEach((mat, ndx) => {

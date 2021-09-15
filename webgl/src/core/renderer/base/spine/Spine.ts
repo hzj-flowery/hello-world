@@ -6,18 +6,21 @@ import { Skeleton_Skin } from "./Skeleton_Skin";
 import { glMatrix } from "../../../math/Matrix";
 import { syRender } from "../../data/RenderData";
 import Device from "../../../Device";
+import { ShaderProgram } from "../../shader/Shader";
 //骨骼节点
 export default class Spine extends SY.SpriteBase {
     private gltf;
     private sharedUniforms;
     private origMatrices: Map<Skeleton_Node, Float32Array> = new Map();
-    private _tempMatrix:Float32Array;
-    private _lightDirection:Float32Array;
-    protected onInit():void{
+    private _tempMatrix: Float32Array;
+    private _lightDirection: Float32Array;
+    protected onInit(): void {
         this.gltf = Skeleton_Parse.parseGLTF(this.gl);
         this._tempMatrix = glMatrix.mat4.identity(null);
         this._lightDirection = glMatrix.vec3.create() as Float32Array;
         this._glMatrix.vec3.normalize(this._lightDirection, [-1, 3, 5]);
+        this.pushPassContent(syRender.ShaderType.Spine_Skin);
+        // this.pushPassContent(syRender.ShaderType.Spine_Mesh);
     }
     private animSkin(skin: Skeleton_Skin, a: number) {
         for (let i = 0; i < skin.jointNodes.length; ++i) {
@@ -42,15 +45,18 @@ export default class Spine extends SY.SpriteBase {
     private renderDrawables(node: Skeleton_Node) {
         for (const drawable of node.mesh_Drawables) {
             //渲染网格
-            drawable.render(node,this.modelMatrix,this.sharedUniforms);
+            drawable.render(node, this.modelMatrix, this.sharedUniforms, this.pass[1]);
         }
         for (const drawable of node.skin_Drawables) {
             //渲染皮肤
-            drawable.render(node,this.modelMatrix,this.sharedUniforms)
+            drawable.render(node, this.modelMatrix, this.sharedUniforms, this.pass[0])
         }
     }
 
     protected collectRenderData(time: number): void {
+        if (this.pass.length<0) {
+            return;
+        }
         time *= 0.001;  // convert to seconds
         this.animSkin(this.gltf.skins[0], Math.sin(time) * .5);
         this.sharedUniforms = {

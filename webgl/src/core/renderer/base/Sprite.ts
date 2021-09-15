@@ -191,8 +191,30 @@ export namespace SY {
         /**
          * 获取当前正在使用的shader
          */
-        protected get shader() {
-            return this._pass[0].code
+        protected get baseProgram() {
+            if(this._pass&&this._pass.length>0)
+            {
+                return this._pass[0].baseProgram;
+            }
+            else
+            {
+                console.error("当前还没创建pass")
+            }
+        }
+
+        protected get program(){
+            if(this._pass&&this._pass.length>0)
+            {
+                return this._pass[0].program;
+            }
+            else
+            {
+                console.error("当前还没创建pass")
+            }
+        }
+
+        protected get pass(){
+            return this._pass;
         }
         /**
          * 处理着色器
@@ -793,7 +815,7 @@ export namespace SY {
         }
         protected onLoadShaderFinish() {
             this._divisorNameData.forEach((value, key) => {
-                let loc = this.shader.getCustomAttributeLocation(key);
+                let loc = this.baseProgram.getCustomAttributeLocation(key);
                 this._divisorLocData.set(loc, value)
             })
         }
@@ -860,7 +882,7 @@ export namespace SY {
         }
         protected onLoadShaderFinish() {
             this._divisorNameData.forEach((value, key) => {
-                let loc = this.shader.getCustomAttributeLocation(key);
+                let loc = this.baseProgram.getCustomAttributeLocation(key);
                 this._divisorLocData.set(loc, value)
             })
         }

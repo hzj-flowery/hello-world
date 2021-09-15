@@ -3,6 +3,7 @@ import { glEnums } from "../gfx/GLapi"
 import { State } from "../gfx/State";
 import { Pass, PassType } from "./Pass"
 import { G_ShaderCenter } from "./ShaderCenter"
+import { G_ShaderFactory } from "./ShaderFactory";
 
 export enum PassCustomString{
     offlineRender = "offlineRender", //离线渲染
@@ -129,10 +130,23 @@ class PassFactory{
 
             }
         }
-       
-        //创建shader
-        var code = G_ShaderCenter.createShader(pass.shaderType, vert, frag)
-        pass.code = code
+        var normalShaderType=[
+            syRender.ShaderType.Spine_Mesh,
+            syRender.ShaderType.Spine_Skin,
+            syRender.ShaderType.Obj,
+        ]
+        if(normalShaderType.indexOf(pass.shaderType)>=0)
+        {
+             var program = G_ShaderFactory.createProgramInfo(vert, frag);
+             pass.program = program
+        }
+        else
+        {
+            //创建shader
+            var baseProgram = G_ShaderCenter.createShader(pass.shaderType, vert, frag)
+            pass.baseProgram = baseProgram 
+        }
+
         this._pass.push(pass);
 
         return pass
