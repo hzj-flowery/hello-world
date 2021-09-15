@@ -1,7 +1,7 @@
 import Device from "../../../Device";
 import { glMatrix } from "../../../math/Matrix";
 import { syRender } from "../../data/RenderData";
-import { ShaderData } from "../../shader/Shader";
+import { ShaderProgram } from "../../shader/Shader";
 import { G_ShaderFactory } from "../../shader/ShaderFactory";
 import { Skeleton_Node } from "./Skeleton_Node";
 import { Skeleton_Skin } from "./Skeleton_Skin";
@@ -81,8 +81,8 @@ export class Skeleton_SkinRenderer {
      */
     public mesh: any;
     public skin: Skeleton_Skin;
-    public skinProgramInfo: ShaderData;
-    private _renderDataArray: Array<syRender.NormalData> = [];
+    public skinProgramInfo: ShaderProgram;
+    private _renderDataArray: Array<syRender.QueueItemData> = [];
     constructor(mesh, skin: Skeleton_Skin) {
         this.mesh = mesh;
         this.skin = skin;
@@ -94,7 +94,7 @@ export class Skeleton_SkinRenderer {
         for (const primitive of this.mesh.primitives) {
             var renderData = this._renderDataArray[j];
             if (!renderData) {
-                renderData = syRender.DataPool.get(syRender.DataType.Normal) as syRender.NormalData;
+                renderData = syRender.DataPool.get(syRender.QueueItemType.Normal) as syRender.QueueItemData;
                 this._renderDataArray.push(renderData);
             }
             renderData._shaderData = this.skinProgramInfo;

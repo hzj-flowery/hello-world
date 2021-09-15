@@ -4,7 +4,7 @@ import { glMatrix } from "../../math/Matrix";
 import { G_UISetting } from "../../ui/UiSetting";
 import { MathUtils } from "../../utils/MathUtils";
 import { syPrimitives } from "../shader/Primitives";
-import { BufferAttribsData, ShaderData } from "../shader/Shader";
+import { BufferAttribsData, ShaderProgram } from "../shader/Shader";
 import { G_ShaderFactory } from "../shader/ShaderFactory";
 
 
@@ -41,8 +41,8 @@ export class CameraModel {
         this._isInit = false;
     }
     private gl: WebGLRenderingContext;
-    private _frustumCube: ShaderData;
-    private _programInfor: ShaderData;
+    private _frustumCube: ShaderProgram;
+    private _programInfor: ShaderProgram;
     private _modelBuffer: BufferAttribsData;
     private _clipSpaceBuffer: BufferAttribsData;
     private _cubeBufferInfo: BufferAttribsData;

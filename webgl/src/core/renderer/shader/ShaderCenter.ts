@@ -1,12 +1,12 @@
 import Device from "../../Device";
 import { syRender } from "../data/RenderData";
-import { Shader } from "./Shader";
+import { ShaderProgramBase } from "./Shader";
 import { ShaderCode } from "./ShaderCode";
 import { G_ShaderFactory } from "./ShaderFactory";
 
 
 class ShaderCenter {
-    private _shaderMap: Map<string, Shader> = new Map();
+    private _shaderMap: Map<string, ShaderProgramBase> = new Map();
     private _shaderCustomUUid: number;
     constructor() {
         this._shaderCustomUUid = 0;
@@ -37,7 +37,7 @@ class ShaderCenter {
      * @param vert 
      * @param frag 
      */
-    public createShader(type: syRender.ShaderType, vert?: string, frag?: string): Shader {
+    public createShader(type: syRender.ShaderType, vert?: string, frag?: string): ShaderProgramBase {
         var oldShader = this.getShader(type);
         if(oldShader)
         {
@@ -50,14 +50,14 @@ class ShaderCenter {
         }
         var glID = G_ShaderFactory.createShader(vert, frag);
         let name = this.createShaderName(type);
-        let shader = new Shader(Device.Instance.gl, glID, name)
+        let shader = new ShaderProgramBase(Device.Instance.gl, glID, name)
         this._shaderMap.set(name, shader);
         return shader;
     }
-    public getCustomShader(name: string): Shader {
+    public getCustomShader(name: string): ShaderProgramBase {
         return this._shaderMap.get(name);
     }
-    public getShader(type: syRender.ShaderType): Shader {
+    public getShader(type: syRender.ShaderType): ShaderProgramBase {
         var name = syRender.ShaderTypeString[type];
         if(!name||name=="NULL")
         {

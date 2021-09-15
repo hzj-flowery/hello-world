@@ -1,6 +1,6 @@
 
 import { syGL } from "../gfx/syGLEnums";
-import { BufferAttribsData, ShaderData } from "./Shader";
+import { BufferAttribsData, ShaderProgram } from "./Shader";
 
 
 var vertextBaseCode =
@@ -44,7 +44,7 @@ enum ShaderType {
  */
 class ShaderFactory {
     public _gl: WebGL2RenderingContext;
-    protected _shaderData: Array<ShaderData>;
+    protected _shaderData: Array<ShaderProgram>;
     init(gl) {
         this._gl = gl;
         this._shaderData = [];
@@ -54,8 +54,8 @@ class ShaderFactory {
      * 获取一个shaderData
      * @param index 
      */
-    protected getShareDataByIndex(index): ShaderData {
-        var ret: ShaderData;
+    protected getShareDataByIndex(index): ShaderProgram {
+        var ret: ShaderProgram;
         this._shaderData.forEach(function (value, index) {
             if (value.Index == index) {
                 ret = value;
@@ -67,8 +67,8 @@ class ShaderFactory {
      * 获取一个shaderData
      * @param glID 
      */
-    protected getShareDataByGlID(glID): ShaderData {
-        var ret: ShaderData;
+    protected getShareDataByGlID(glID): ShaderProgram {
+        var ret: ShaderProgram;
         this._shaderData.forEach(function (value, index) {
             if (value.spGlID == glID) {
                 ret = value;
@@ -83,11 +83,11 @@ class ShaderFactory {
      * @param USet 
      * @param ASet 
      */
-    protected createShaderData(GLID): ShaderData {
+    protected createShaderData(GLID): ShaderProgram {
         var ret = this.getShareDataByGlID(GLID);
         if (ret == null) {
             var index = this._shaderData.length;
-            var res: ShaderData = new ShaderData(GLID, index);
+            var res: ShaderProgram = new ShaderProgram(GLID, index);
             this._shaderData.push(res);
             return res;
         }
@@ -176,7 +176,7 @@ class ShaderFactory {
             }
         };
     }
-    private createAttributeSetters(shaderData: ShaderData): { [index: string]: Function } {
+    private createAttributeSetters(shaderData: ShaderProgram): { [index: string]: Function } {
         var gl = this._gl;
         var program = shaderData.spGlID;
         const attribSetters: { [index: string]: Function } = {
@@ -207,7 +207,7 @@ class ShaderFactory {
        * @param {WebGLUniformInfo} uniformInfo
        * @returns {function} the created setter.
        */
-    private createUniformSetter(uniformInfo, shaderData: ShaderData) {
+    private createUniformSetter(uniformInfo, shaderData: ShaderProgram) {
         var gl = this._gl;
         var program = shaderData.spGlID;
         const location = gl.getUniformLocation(program, uniformInfo.name);
@@ -329,7 +329,7 @@ class ShaderFactory {
     /**
      * uniform变量设置器
      */
-    private createUniformSetters(shaderData: ShaderData): { [index: string]: Function } {
+    private createUniformSetters(shaderData: ShaderProgram): { [index: string]: Function } {
         var program = shaderData.spGlID;
         let gl = this._gl;
 
@@ -360,7 +360,7 @@ class ShaderFactory {
      * @param vs 
      * @param fs 
      */
-    public createProgramInfo(vs: string, fs: string): ShaderData {
+    public createProgramInfo(vs: string, fs: string): ShaderProgram {
         var glID = this.createShader(vs, fs);
         var shaderData = this.createShaderData(glID);
         const uniformSetters = this.createUniformSetters(shaderData);

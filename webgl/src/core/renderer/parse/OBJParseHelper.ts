@@ -261,7 +261,6 @@ export namespace OBJParseHelper {
           // geometry.data = Object.fromEntries(
           // Object.entries(geometry.data).filter(([, array]) => array.length > 0));
           let arrData = Object.entries(geometry.data).filter(([, array]) => array["length"] > 0);
-          console.log("arrData------",arrData);
           let targetData = {};
           for (let j in arrData) {
             let curData = arrData[j][1][1];
@@ -271,8 +270,6 @@ export namespace OBJParseHelper {
           }
           //重新赋值
           geometry.data = targetData;
-  
-          console.log("targetData------",targetData);
         }
       }
   

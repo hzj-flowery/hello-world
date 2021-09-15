@@ -10,7 +10,7 @@ import { RenderTexture } from "../base/texture/RenderTexture";
 import { syRender } from "../data/RenderData";
 import FrameBuffer from "../gfx/FrameBuffer";
 import { glEnums } from "../gfx/GLapi";
-import { Shader } from "../shader/Shader";
+import { ShaderProgramBase } from "../shader/Shader";
 import Camera from "./Camera";
 import enums from "./enums";
 import OrthoCamera from "./OrthoCamera";

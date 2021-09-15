@@ -9,7 +9,7 @@ import enums from "../camera/enums";
 import { GameMainCamera} from "../camera/GameMainCamera";
 import { syRender } from "../data/RenderData";
 import { syPrimitives } from "../shader/Primitives";
-import { BufferAttribsData, ShaderData } from "../shader/Shader";
+import { BufferAttribsData, ShaderProgram } from "../shader/Shader";
 import { G_ShaderFactory } from "../shader/ShaderFactory";
 import { ShaderUseVariantType } from "../shader/ShaderUseVariantType";
 import { G_LightCenter } from "./LightCenter";
@@ -35,7 +35,7 @@ class LightModel {
     constructor() {
 
     }
-    private _colorProgramInfo: ShaderData;
+    private _colorProgramInfo: ShaderProgram;
     private _cubeLinesBufferInfo: BufferAttribsData;
     private _lightViewMatrix: Float32Array;
     private _lightWorldMatrix: Float32Array;

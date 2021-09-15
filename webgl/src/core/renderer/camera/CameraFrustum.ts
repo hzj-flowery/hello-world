@@ -3,7 +3,7 @@ import { glMatrix } from "../../math/Matrix";
 import { MathUtils } from "../../utils/MathUtils";
 import { SY } from "../base/Sprite";
 import { syPrimitives } from "../shader/Primitives";
-import { BufferAttribsData, ShaderData } from "../shader/Shader";
+import { BufferAttribsData, ShaderProgram } from "../shader/Shader";
 import { G_ShaderFactory } from "../shader/ShaderFactory";
 
 
@@ -216,8 +216,8 @@ export class CameraFrustum extends SY.SpriteBase {
     u_worldViewProjection: new Float32Array(16),
   };
 
-  private vertexColorProgramInfo: ShaderData;
-  private colorProgramInfo: ShaderData;
+  private vertexColorProgramInfo: ShaderProgram;
+  private colorProgramInfo: ShaderProgram;
   private cubeRaysBufferInfo: BufferAttribsData;
   private wireCubeBufferInfo: BufferAttribsData;
   private cubeBufferInfo: BufferAttribsData;
@@ -445,7 +445,7 @@ export class CameraFrustum extends SY.SpriteBase {
   }
   // Draw view cone.
   //绘制齐次裁切空间的四条射线
-  private drawViewCone(vp: Float32Array, sd: ShaderData, buffAttr: BufferAttribsData) {
+  private drawViewCone(vp: Float32Array, sd: ShaderProgram, buffAttr: BufferAttribsData) {
     const halfHeight = this.gl.canvas.height / 2;
     const width = this.gl.canvas.width;
     glMatrix.mat4.translation(this._worldTemp,this._originPos[0],this._originPos[1],this._originPos[2]);
@@ -465,7 +465,7 @@ export class CameraFrustum extends SY.SpriteBase {
   }
   // Draw Frustum Wire
   //绘制齐次裁切空间远近平面的边缘线
-  private drawFrustumWire(vp: Float32Array, sdData: ShaderData, buffAttrData: BufferAttribsData) {
+  private drawFrustumWire(vp: Float32Array, sdData: ShaderProgram, buffAttrData: BufferAttribsData) {
     this.gl.useProgram(sdData.spGlID);
     glMatrix.mat4.translation(this._worldTemp, this._originPos[0],this._originPos[1],this._originPos[2]);
     glMatrix.mat4.multiply(this._worldTemp, this._worldTemp, this._loacalInvertProj);
@@ -476,7 +476,7 @@ export class CameraFrustum extends SY.SpriteBase {
     G_ShaderFactory.drawBufferInfo(buffAttrData, this.gl.LINES);
   }
   // Draw Frustum Cube behind
-  private drawFrustumCube(vp: Float32Array, shaderD: ShaderData, buffAttData: BufferAttribsData) {
+  private drawFrustumCube(vp: Float32Array, shaderD: ShaderProgram, buffAttData: BufferAttribsData) {
     var gl = this.gl;
     Device.Instance.cullFace(false);
     gl.useProgram(shaderD.spGlID);

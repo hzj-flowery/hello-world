@@ -693,7 +693,7 @@ export default class Device {
 
 
 
-    private getTreeData(drawOrder: syRender.DrawingOrder, tag: syRender.ShaderType): syRender.BaseData[] {
+    private getTreeData(drawOrder: syRender.DrawingOrder, tag: syRender.ShaderType): syRender.QueueItemBaseData[] {
         //深度渲染pass
         var treeData = this._mapRenderTreeData.get(drawOrder);
         var retData = []
@@ -767,7 +767,7 @@ export default class Device {
      * @param tagArr 
      * @returns 
      */
-    private getNormalTreeData(): syRender.BaseData[] {
+    private getNormalTreeData(): syRender.QueueItemBaseData[] {
         var drawOrder = syRender.DrawingOrder.Normal;
         var tagArr: Array<syRender.ShaderType> = [syRender.ShaderType.Custom,
         syRender.ShaderType.Light_Spot,
@@ -836,8 +836,8 @@ export default class Device {
         }
         if (G_InputControl.openCapture && G_InputControl.isCapture) {
             G_InputControl.isCapture = false;
-            this.capture();
-            // this.showCurFramerBufferOnCanvas();
+            // this.capture();
+            this.showCurFramerBufferOnCanvas();
             // this.autoCapture()
         }
         this.onAfterRender();
@@ -892,7 +892,7 @@ export default class Device {
      * @param treeData 
      * @param crData 
      */
-    private triggerRender(treeData: Array<syRender.BaseData>, crData: CameraRenderData) {
+    private triggerRender(treeData: Array<syRender.QueueItemBaseData>, crData: CameraRenderData) {
         if (!treeData || treeData.length <= 0) {
             return;
         }
@@ -936,7 +936,7 @@ export default class Device {
      * @param projMatix 投影矩阵
      * @param viewMatrix 视口矩阵
      */
-    private _drawBase(rData: syRender.BaseData, projMatix: Float32Array, viewMatrix: Float32Array, crData: CameraRenderData): void {
+    private _drawBase(rData: syRender.QueueItemBaseData, projMatix: Float32Array, viewMatrix: Float32Array, crData: CameraRenderData): void {
         G_DrawEngine.run(rData, viewMatrix, projMatix, rData.shader);
     }
     private _temp1Matrix: Float32Array = glMatrix.mat4.identity(null);
@@ -947,7 +947,7 @@ export default class Device {
      * @param cData
      * @param isUseScene 
      */
-    private draw(rData: syRender.BaseData, crData: CameraRenderData, cData: CameraData): void {
+    private draw(rData: syRender.QueueItemBaseData, crData: CameraRenderData, cData: CameraData): void {
 
 
         glMatrix.mat4.identity(this._temp1Matrix);
@@ -981,7 +981,7 @@ export default class Device {
         rData.light.shadow.map = G_LightCenter.lightData.shadow.map;
 
         switch (rData.type) {
-            case syRender.DataType.Base:
+            case syRender.QueueItemType.Base:
                 this._commitRenderState(rData.pass.state);
                 if (crData.isFirstVisualAngle()) {
                     this._drawBase(rData, cData.projectMat, cData.viewMat, crData);
@@ -992,24 +992,24 @@ export default class Device {
                     this._drawBase(rData, projMatix, this._temp1Matrix, crData);
                 }
                 break;
-            case syRender.DataType.Normal:
-                this._commitRenderState((rData as syRender.NormalData)._state);
+            case syRender.QueueItemType.Normal:
+                this._commitRenderState((rData as syRender.QueueItemData)._state);
                 if (crData.isFirstVisualAngle()) {
-                    this._drawNormal(rData as syRender.NormalData, cData);
+                    this._drawNormal(rData as syRender.QueueItemData, cData);
                 }
                 else {
                     let projMatix = G_CameraModel.getSceneProjectMatrix(crData.VA);
                     glMatrix.mat4.invert(this._temp1Matrix, G_CameraModel.getSceneCameraMatrix(crData.VA));
                     cData.projectMat = projMatix;
                     cData.modelMat = this._temp1Matrix;
-                    this._drawNormal(rData as syRender.NormalData, cData);
+                    this._drawNormal(rData as syRender.QueueItemData, cData);
                 }
                 break;
         }
 
     }
     private _curShaderGLID = -1;
-    private _drawNormal(nData: syRender.NormalData, cameraData: CameraData): void {
+    private _drawNormal(nData: syRender.QueueItemData, cameraData: CameraData): void {
         if (this._curShaderGLID != nData._shaderData.spGlID) {
             this.gl.useProgram(nData._shaderData.spGlID);
             this._curShaderGLID == nData._shaderData.spGlID;
@@ -1025,8 +1025,8 @@ export default class Device {
         }
         G_ShaderFactory.drawBufferInfo(nData._attrbufferData, nData.primitive.type);
     }
-    private _mapRenderTreeData: Map<syRender.DrawingOrder, Array<syRender.BaseData>> = new Map();//渲染树上的绘制数据
-    public collectData(rData: syRender.BaseData): void {
+    private _mapRenderTreeData: Map<syRender.DrawingOrder, Array<syRender.QueueItemBaseData>> = new Map();//渲染树上的绘制数据
+    public collectData(rData: syRender.QueueItemBaseData): void {
         if (!this._mapRenderTreeData.has(rData.drawingOrder)) {
             this._mapRenderTreeData.set(rData.drawingOrder, [])
         }
@@ -1354,62 +1354,5 @@ export default class Device {
         gl.cullFace(gl.FRONT);
         gl.disable(gl.CULL_FACE);
     }
-    //写入模板值
-    public writeStencil(ref: number = 1, mask: number = 1, isCloseColorWrite: boolean = true): void {
-        /**
-         * 可以把模板缓存想象成一个二维数组stencil[width][height]
-         * 清空缓存，就是将这个数组的每一个元素设为0
-         * 开启模板测试，就是当下面进行绘制的时候，每一个片元进行逐片元的操作时，会有模板测试
-         * 对于一个片元而言，它本身会携带位置信息，通过位置我们就能在模板缓冲中对应的模板值
-         * 设置模板测试参数ref，这个其实就是一个全局变量，GPU会拿这个值和模板值进行比较
-         * gl.ALWAYS：这个是比较函数，它的意思是不管最后比较结果如何，都通过模板测试
-         * 设置模板操作，其实就是说如果模板测试通过了，将采取什么操作
-         * gl.REPLACE：表示拿全局测试参数ref，替换掉模板缓冲的值
-         * 综上：其实这个函数的作用就是将接下来绘制的所有片元，以他们的位置为索引，替换掉模板缓冲的值
-         */
-        let gl = this.gl;
-        // 清除模板缓存
-        gl.clear(gl.STENCIL_BUFFER_BIT);
-        // 开启模板测试
-        gl.enable(gl.STENCIL_TEST);
-        // 设置模板测试参数
-        gl.stencilFunc(gl.ALWAYS, ref, mask);
-        // 设置模板值操作
-        gl.stencilOp(gl.KEEP, gl.KEEP, gl.REPLACE);
-
-        if (isCloseColorWrite) {
-            //关闭向颜色附件中写入颜色值
-            gl.colorMask(false, false, false, false);
-        }
-    }
-    //比较模板值
-    public compareStencil(ref: number = 1, mask: number = 1): void {
-        /**
-         * 在我们调用了 writeStencil 这个函数以后，然后进行了绘制，那么模板缓冲中已经有了我们设置的值
-         * 接着我们调用了这个函数
-         * 设置模板测试参数ref
-         * gl.EQUAL:意思是在进行模板测试的时候，只有模板值和我们的模板测试参数一样，才可以通过，否则不通过测试，即丢弃
-         * 设置模板操作，注意到这里写的都是gl.keep,它的意思就是无论测试结果如何，都保持模板缓冲现有的值
-         * 
-         * 综上：这个函数的功能就是说，在接下来的绘制中，必须模板缓冲的值必须和我们现在设置的模板参数ref一样，才可以进行绘制
-         */
-        let gl = this.gl;
-        //设置模板测试参数
-        gl.stencilFunc(gl.EQUAL, ref, mask);
-        //设置模板测试后的操作
-        gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
-        // ----- 模板方法 end -----
-        // 关闭深度检测
-        gl.disable(gl.DEPTH_TEST);
-
-        gl.colorMask(true, true, true, true);
-    }
-    //关闭模板测试
-    public closeStencil(): void {
-        let gl = this.gl;
-        // 开启深度检测
-        gl.enable(gl.DEPTH_TEST);
-        // 关闭模板测试
-        gl.disable(gl.STENCIL_TEST);
-    }
+    
 }

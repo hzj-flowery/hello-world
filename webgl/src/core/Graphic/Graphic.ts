@@ -1,5 +1,5 @@
 import { glMatrix } from "../math/Matrix";
-import { BufferAttribsData, ShaderData } from "../renderer/shader/Shader";
+import { BufferAttribsData, ShaderProgram } from "../renderer/shader/Shader";
 import { G_ShaderFactory } from "../renderer/shader/ShaderFactory";
 
 /**
@@ -98,7 +98,7 @@ export class Graphic {
         this._tempMatrix = glMatrix.mat4.identity(null);
         this._temp1Matrix = glMatrix.mat4.identity(null);
     }
-    private _programInfor: ShaderData;
+    private _programInfor: ShaderProgram;
     private _coordinateBufferInfo: BufferAttribsData;
     private _pointBufferInfor: BufferAttribsData;
     /**

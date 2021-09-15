@@ -43,7 +43,6 @@ import Device from "../../Device";
 import LoaderManager from "../../LoaderManager";
 import { CameraData } from "../data/CameraData";
 import { syRender } from "../data/RenderData";
-import { BufferAttribsData, Shader, ShaderData } from "../shader/Shader";
 import { G_ShaderFactory } from "../shader/ShaderFactory";
 import { Node } from "./Node";
 import { Texture, TextureOpts } from "./texture/Texture";
@@ -129,7 +128,7 @@ export namespace SY {
         protected _texture: Texture;
         protected gl: WebGL2RenderingContext;
         private _pass: Array<Pass>;
-        private _renderData: Array<syRender.BaseData>;
+        private _renderData: Array<syRender.QueueItemBaseData>;
         //参考glprimitive_type
         protected _glPrimitiveType: syGL.PrimitiveType;//绘制的类型
         protected _sizeMode: SpriteSizeMode;//节点的尺寸模式
@@ -361,7 +360,7 @@ export namespace SY {
             return buffer ? buffer.itemSize : -1
         }
         //采集数据以后的行为
-        protected onCollectRenderDataAfter(data: syRender.BaseData) {
+        protected onCollectRenderDataAfter(data: syRender.QueueItemBaseData) {
 
         }
         //采集数据之前的行为
@@ -388,7 +387,7 @@ export namespace SY {
                     continue;
                 }
                 if (!this._renderData[i]) {
-                    this._renderData.push(syRender.DataPool.get(syRender.DataType.Base));
+                    this._renderData.push(syRender.DataPool.get(syRender.QueueItemType.Base));
                 }
                 this._renderData[i].node = this as Node;
                 this._renderData[i].pass = pass;
@@ -398,7 +397,7 @@ export namespace SY {
                 Device.Instance.collectData(this._renderData[i]);
             }
         }
-        private updateRenderData(rData: syRender.BaseData): void {
+        private updateRenderData(rData: syRender.QueueItemBaseData): void {
             //顶点组----------------------------------------------------------------------
             rData.primitive.vert.glID = this.getGLID(SY.GLID_TYPE.VERTEX);
             rData.primitive.vert.itemSize = this.getBufferItemSize(SY.GLID_TYPE.VERTEX);
@@ -491,7 +490,7 @@ export namespace SY {
          * @param proj 
          * @param view 
          */
-        public onBindGPUBufferDataBefore(rd: syRender.BaseData, proj: Float32Array, view: Float32Array): void {
+        public onBindGPUBufferDataBefore(rd: syRender.QueueItemBaseData, proj: Float32Array, view: Float32Array): void {
             glMatrix.mat4.copy(this._customTempMatrix, rd.light.projectionMatrix);
             glMatrix.mat4.multiply(this._customTempMatrix, this._customTempMatrix, glMatrix.mat4.invert(null, rd.light.viewMatrix));
         }
@@ -798,7 +797,7 @@ export namespace SY {
                 this._divisorLocData.set(loc, value)
             })
         }
-        protected onCollectRenderDataAfter(renderData: syRender.BaseData): void {
+        protected onCollectRenderDataAfter(renderData: syRender.QueueItemBaseData): void {
             renderData.primitive.instancedNums = this._numInstances
             renderData.primitive.instancedVertNums = this._InstanceVertNums
         }
@@ -865,7 +864,7 @@ export namespace SY {
                 this._divisorLocData.set(loc, value)
             })
         }
-        protected onCollectRenderDataAfter(renderData: syRender.BaseData): void {
+        protected onCollectRenderDataAfter(renderData: syRender.QueueItemBaseData): void {
             renderData.primitive.instancedNums = this._numInstances
             renderData.primitive.instancedVertNums = this._InstanceVertNums
         }

@@ -5,7 +5,7 @@ import { syGL } from "../gfx/syGLEnums";
 import { ShaderUseVariantType } from "./ShaderUseVariantType";
 
 
-export class ShaderData {
+export class ShaderProgram {
     constructor(spGLID, index) {
         this._spGLID = spGLID;
         this._textureUnit = 0;
@@ -141,7 +141,7 @@ texture2DConstBridge.push(syGL.AttributeUniform.TEXTURE6);
 texture2DConstBridge.push(syGL.AttributeUniform.TEXTURE7);
 texture2DConstBridge.push(syGL.AttributeUniform.TEXTURE8);
 
-export class Shader {
+export class ShaderProgramBase {
     private u_skybox_loc;//天空盒属性位置
     protected _gl: WebGLRenderingContext;
     protected _spGLID: WebGLProgram;

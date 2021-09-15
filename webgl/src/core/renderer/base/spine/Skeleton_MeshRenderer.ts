@@ -1,7 +1,7 @@
 import Device from "../../../Device";
 import { glMatrix } from "../../../math/Matrix";
 import {syRender} from "../../data/RenderData";
-import { ShaderData } from "../../shader/Shader";
+import { ShaderProgram } from "../../shader/Shader";
 import { G_ShaderFactory } from "../../shader/ShaderFactory";
 import { Skeleton_Node } from "./Skeleton_Node";
 
@@ -36,7 +36,7 @@ var fs =
 export class Skeleton_MeshRenderer {
     private mesh;
     private gl: WebGLRenderingContext;
-    private meshProgramInfo: ShaderData;
+    private meshProgramInfo: ShaderProgram;
     private _temWolrdMatrix:Float32Array;//世界矩阵
     constructor(mesh, gl: WebGLRenderingContext) {
         this.mesh = mesh;
@@ -47,7 +47,7 @@ export class Skeleton_MeshRenderer {
     public render(node: Skeleton_Node,worldMatrix:Float32Array,sharedUniforms) {
         glMatrix.mat4.mul(this._temWolrdMatrix,worldMatrix,node.worldMatrix);
         for (const primitive of this.mesh.primitives) {
-            var renderData = syRender.DataPool.get(syRender.DataType.Normal) as syRender.NormalData;
+            var renderData = syRender.DataPool.get(syRender.QueueItemType.Normal) as syRender.QueueItemData;
             renderData._shaderData = this.meshProgramInfo;
             renderData._attrbufferData = primitive.bufferInfo;
             renderData._uniformData.push({u_world: this._temWolrdMatrix});

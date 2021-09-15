@@ -2,7 +2,7 @@ import { Rect } from "../../value-types/rect";
 import Vec4 from "../../value-types/vec4";
 import { syRender } from "../data/RenderData";
 import { syGL } from "../gfx/syGLEnums";
-import { Shader } from "../shader/Shader";
+import { ShaderProgramBase } from "../shader/Shader";
 
 /**
  * 顶点信息：
@@ -129,7 +129,7 @@ class DrawEngine {
         let gl = this.gl as WebGL2RenderingContext;
         gl.drawElementsInstanced(mode, count, type, offset, instanceCount)
     }
-    public run(rd: syRender.BaseData, view, proj, shader: Shader): void {
+    public run(rd: syRender.QueueItemBaseData, view, proj, shader: ShaderProgramBase): void {
         if (!shader) 
         {
             return;

@@ -9,7 +9,7 @@ import { glEnums } from "../gfx/GLapi";
 import { State, StateString, StateValueMap } from "../gfx/State";
 import { syGL } from "../gfx/syGLEnums";
 import { Pass } from "../shader/Pass";
-import { BufferAttribsData, Shader, ShaderData } from "../shader/Shader";
+import { BufferAttribsData, ShaderProgramBase, ShaderProgram } from "../shader/Shader";
 import { ShaderUseVariantType } from "../shader/ShaderUseVariantType";
 
 
@@ -39,8 +39,9 @@ export namespace syRender {
         SolidColor,
         UvSprite,
         Label,
-        Spine_Skin,
-        Spine_Mesh,
+        Spine_Skin,    //
+        Spine_Mesh,    //
+        Obj,           //
         Shadow,        //绘制阴影
         ShadowMap,
         Light_Parallel,      //平行光
@@ -67,6 +68,7 @@ export namespace syRender {
         "Label",
         "Spine_Skin",
         "Spine_Mesh",
+        "Obj",
         "Shadow",
         "ShadowMap",
         "Light_Parallel",
@@ -124,7 +126,7 @@ export namespace syRender {
         Deferred,   //延迟渲染
     }
     //渲染数据的类型
-    export enum DataType {
+    export enum QueueItemType {
         Base = 1,
         Normal
     }
@@ -442,10 +444,10 @@ export namespace syRender {
     /**
      * 定义渲染数据
      */
-    export class BaseData {
+    export class QueueItemBaseData {
         constructor() {
             this._id = renderDataId++;
-            this._type = syRender.DataType.Base;
+            this._type = syRender.QueueItemType.Base;
             this._temp_model_view_matrix = glMatrix.mat4.identity(null);
             this._temp_model_view_matrix_inverse_transform = glMatrix.mat4.identity(null);
             this._temp_model_inverse_matrix = glMatrix.mat4.identity(null);
@@ -487,7 +489,7 @@ export namespace syRender {
         public time: number;
         public useFlag: boolean = false;//使用状态
 
-        protected _type: syRender.DataType;
+        protected _type: syRender.QueueItemType;
 
         private _id: number;//每一个渲染数据都一个唯一的id
         private _texture2DGLIDArray: Array<WebGLTexture>;//2d纹理
@@ -552,7 +554,7 @@ export namespace syRender {
          * @param view 
          * @param proj 
          */
-        private updateShaderVariant(view, proj, _shader: Shader): void {
+        private updateShaderVariant(view, proj, _shader: ShaderProgramBase): void {
             let useTextureAddres: number = 0;
             let useVariantType = _shader.useVariantType;
             useVariantType.forEach((value: ShaderUseVariantType) => {
@@ -770,18 +772,18 @@ export namespace syRender {
          * @param view 视口矩阵
          * @param proj 投影矩阵
          */
-        public bindGPUBufferData(view, proj, shader: Shader): void {
+        public bindGPUBufferData(view, proj, shader: ShaderProgramBase): void {
             //激活shader
             shader.active();
             this.updateShaderVariant(view, proj, shader);
         }
     }
 
-    export class NormalData extends syRender.BaseData {
+    export class QueueItemData extends syRender.QueueItemBaseData {
         constructor() {
             super();
             this._tempMatrix1 = glMatrix.mat4.identity(null);
-            this._type = syRender.DataType.Normal;
+            this._type = syRender.QueueItemType.Normal;
             this._state = new State();
 
             //渲染状态
@@ -804,7 +806,7 @@ export namespace syRender {
         */
         public _state: State;
 
-        public _shaderData: ShaderData;
+        public _shaderData: ShaderProgram;
         //顶点着色器属性数据
         public _attrbufferData: BufferAttribsData;
         //uniform变量的数据
@@ -857,10 +859,10 @@ export namespace syRender {
      * 渲染数据缓存池
      */
     export class DataPool {
-        private static _pool: Array<syRender.BaseData> = [];
-        static get(type: syRender.DataType): syRender.BaseData {
+        private static _pool: Array<syRender.QueueItemBaseData> = [];
+        static get(type: syRender.QueueItemType): syRender.QueueItemBaseData {
             let pool = syRender.DataPool._pool;
-            let retItem: syRender.BaseData;
+            let retItem: syRender.QueueItemBaseData;
             for (var j = 0; j < pool.length; j++) {
                 let item = pool[j];
                 if (item.type == type && item.useFlag == false) {
@@ -870,21 +872,21 @@ export namespace syRender {
             }
 
             switch (type) {
-                case syRender.DataType.Base: retItem = new syRender.BaseData(); pool.push(retItem); break;
-                case syRender.DataType.Normal: retItem = new syRender.NormalData(); pool.push(retItem); break;
+                case syRender.QueueItemType.Base: retItem = new syRender.QueueItemBaseData(); pool.push(retItem); break;
+                case syRender.QueueItemType.Normal: retItem = new syRender.QueueItemData(); pool.push(retItem); break;
             }
             retItem.useFlag = true;
             return retItem;
         }
-        static return(retData: syRender.BaseData | Array<syRender.BaseData>): void {
+        static return(retData: syRender.QueueItemBaseData | Array<syRender.QueueItemBaseData>): void {
             if (retData instanceof Array) {
-                let arr = retData as Array<syRender.BaseData>;
+                let arr = retData as Array<syRender.QueueItemBaseData>;
                 for (let j = 0; j < arr.length; j++) {
                     arr[j].reset();
                 }
             }
             else {
-                (retData as syRender.BaseData).reset();
+                (retData as syRender.QueueItemBaseData).reset();
             }
         }
     }

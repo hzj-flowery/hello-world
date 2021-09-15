@@ -1,6 +1,6 @@
 import { syRender } from "../data/RenderData";
 import {State} from "../gfx/State";
-import { Shader } from "./Shader";
+import { ShaderProgramBase, ShaderProgram } from "./Shader";
 
 
 /**
@@ -24,7 +24,8 @@ export class Pass {
         this.drawingOrder = syRender.DrawingOrder.Normal;
         this._shadeType = syRender.ShaderType.Custom;
     }
-    public code:Shader; //shader 代码
+    public code:ShaderProgramBase; //shader 代码
+    public normalCode:ShaderProgram;
     public state:State; //渲染状态
     private _type:PassType;
     private _shadeType:syRender.ShaderType;
