@@ -37,28 +37,31 @@ export default class ObjNode extends SY.SpriteBase {
 
   protected collectRenderData(time: number): void {
 
-    if (!this.pass || this.pass.length < 0||!this._objData) {
+    if (!this.pass || this.pass.length < 0 || !this._objData) {
       return;
     }
-    let j = 0;
     this.setScale(0.2, 0.2, 0.2);
     this.rotateX = 0;
-    for (const { bufferInfo, material } of this._objData.parts) {
-      var renderData = this._renderDataArray[j];
-      if (!renderData) {
-        renderData = syRender.DataPool.get(syRender.QueueItemType.Normal) as syRender.QueueItemData;
-        this._renderDataArray.push(renderData);
+    for (let k = 0; k < this.pass.length; k++) {
+      let j = 0;
+
+      for (const { bufferInfo, material } of this._objData.parts) {
+        var renderData = this._renderDataArray[j];
+        if (!renderData) {
+          renderData = syRender.DataPool.get(syRender.QueueItemType.Normal) as syRender.QueueItemData;
+          this._renderDataArray.push(renderData);
+        }
+        renderData._shaderData = this.pass[k].program;
+        renderData.pass = this.pass[k];
+        renderData._uniformData.push({
+          u_world: this.modelMatrix
+        });
+        renderData._uniformData.push(material);
+        renderData._attrbufferData = bufferInfo;
+        renderData.node = this;
+        Device.Instance.collectData(renderData);
+        j++;
       }
-      renderData._shaderData = this.pass[0].program;
-      renderData.pass = this.pass[0];
-      renderData._uniformData.push({
-        u_world: this.modelMatrix
-      });
-      renderData._uniformData.push(material);
-      renderData._attrbufferData = bufferInfo;
-      renderData.node = this;
-      Device.Instance.collectData(renderData);
-      j++;
     }
   }
 }
