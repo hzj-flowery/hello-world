@@ -175,18 +175,18 @@ export default class Scene3D extends Scene {
         this._spotLightCube.spriteFrame = "res/dragon.jpg";
         this._centerNode.addChild(this._spotLightCube);
 
-        // this._fogCubeArr = [];
-        // let fogCubeNums = 40;
-        // let fogNode = new Node();
-        // this._centerNode.addChild(fogNode);
-        // for(let j = 0;j<fogCubeNums;j++)
-        // {
-        //     let fog = new FogCube();
-        //     fog.spriteFrame = "resources/f-texture.png";
-        //     fog.setPosition(-2+j*1.1,0, j*2);
-        //     fogNode.addChild(fog);
-        //     this._fogCubeArr.push(fog);
-        // }
+        this._fogCubeArr = [];
+        let fogCubeNums = 40;
+        let fogNode = new Node();
+        this._centerNode.addChild(fogNode);
+        for(let j = 0;j<fogCubeNums;j++)
+        {
+            let fog = new FogCube();
+            fog.spriteFrame = "resources/f-texture.png";
+            fog.setPosition(-2+j*1.1,0, j*2);
+            fogNode.addChild(fog);
+            this._fogCubeArr.push(fog);
+        }
         
 
         
@@ -255,9 +255,9 @@ export default class Scene3D extends Scene {
     }
 
     protected collectRenderData(time): void {
-        // this._fogCubeArr.forEach((fog,index)=>{
-        //     fog.rotate(0,1,0)
-        // })
+        this._fogCubeArr.forEach((fog,index)=>{
+            fog.rotate(0,1,0)
+        })
         super.collectRenderData(time);
     }
 

@@ -2,7 +2,6 @@ import Device from "../../Device";
 import { SY } from "../base/Sprite";
 import { syRender } from "../data/RenderData";
 import { OBJParseHelper } from "../parse/OBJParseHelper";
-import { ShaderProgram } from "../shader/Shader";
 var OBJRes = [
   "http:localhost:3000/res/models/windmill/windmill.obj",
   "http:localhost:3000/res/models/chair/chair.obj",

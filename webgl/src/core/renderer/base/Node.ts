@@ -84,6 +84,7 @@ export class Node extends Ref {
         this._scaleMatrix = glMatrix.mat4.identity(null);
         this._rotateMatrix = glMatrix.mat4.identity(null);
         this._translateMatrix = glMatrix.mat4.identity(null);
+
         this._updateModelMatrixFlag = true;
     }
     /**
@@ -302,7 +303,7 @@ export class Node extends Ref {
      * @param mvMatrix 设置父节点矩阵
      */
     private setFatherMatrix(mvMatrix): void {
-        this._worldMatrix = glMatrix.mat4.clone(mvMatrix);
+        glMatrix.mat4.copy(this._worldMatrix,mvMatrix)
     }
     /**
     * 更新2D矩阵 
@@ -325,19 +326,15 @@ export class Node extends Ref {
             this.rotateModelMatrix();
             //最后平移
             this.translateModelMatrix();
-            this._updateModelMatrixFlag = false;
         }
-        if (this._baseFatherOriginTransform) {
-            //将本地矩阵拷贝过来
-            glMatrix.mat4.copy(this._modelMatrix, this._localMatrix);
-            glMatrix.mat4.multiply(this._modelMatrix, this._worldMatrix, this._modelMatrix);
+        if (!this._baseFatherOriginTransform&&this._updateModelMatrixFlag) { 
+            glMatrix.mat4.multiply(this._localMatrix, this._rotateMatrix, this._scaleMatrix)
+            glMatrix.mat4.multiply(this._localMatrix, this._translateMatrix, this._localMatrix)
         }
-        else {
-            // m = t*r*s
-            glMatrix.mat4.multiply(this._modelMatrix, this._rotateMatrix, this._scaleMatrix)
-            glMatrix.mat4.multiply(this._modelMatrix, this._translateMatrix, this._modelMatrix)
-            glMatrix.mat4.multiply(this._modelMatrix, this._worldMatrix, this._modelMatrix);
-        }
+        //将本地矩阵拷贝过来
+        glMatrix.mat4.copy(this._modelMatrix, this._localMatrix);
+        glMatrix.mat4.multiply(this._modelMatrix, this._worldMatrix, this._modelMatrix);
+        this._updateModelMatrixFlag = false;
     }
     //缩放模型矩阵
     private scaleModelMatrix(): void {
