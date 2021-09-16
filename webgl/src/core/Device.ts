@@ -983,10 +983,11 @@ export default class Device {
         rData.light.shadow.min = G_LightCenter.lightData.shadow.min;
         rData.light.shadow.opacity = G_LightCenter.lightData.shadow.opacity;
         rData.light.shadow.map = G_LightCenter.lightData.shadow.map;
-
+        
+        this._commitRenderState(rData.pass.state);
         switch (rData.type) {
             case syRender.QueueItemType.Base:
-                this._commitRenderState(rData.pass.state);
+                
                 if (crData.isFirstVisualAngle()) {
                     this._drawBase(rData, cData.projectMat, cData.viewMat, crData);
                 }
@@ -997,15 +998,13 @@ export default class Device {
                 }
                 break;
             case syRender.QueueItemType.Normal:
-                this._commitRenderState(rData.pass.state);
                 if (crData.isFirstVisualAngle()) {
                     this._drawNormal(rData as syRender.QueueItemData, cData);
                 }
                 else {
                     let projMatix = G_CameraModel.getSceneProjectMatrix(crData.VA);
-                    glMatrix.mat4.invert(this._temp1Matrix, G_CameraModel.getSceneCameraMatrix(crData.VA));
                     cData.projectMat = projMatix;
-                    cData.modelMat = this._temp1Matrix;
+                    cData.modelMat = G_CameraModel.getSceneCameraMatrix(crData.VA);
                     this._drawNormal(rData as syRender.QueueItemData, cData);
                 }
                 break;
