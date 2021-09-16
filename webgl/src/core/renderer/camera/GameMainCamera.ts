@@ -4,6 +4,7 @@ import Device from "../../Device";
 import { sy } from "../../Director";
 import { G_UISetting } from "../../ui/UiSetting";
 import { Rect } from "../../value-types/rect";
+import Vec3 from "../../value-types/vec3";
 import Vec4 from "../../value-types/vec4";
 import { Node } from "../base/Node";
 import { RenderTexture } from "../base/texture/RenderTexture";
@@ -31,14 +32,14 @@ export class CameraRenderData {
   public viewPort: Rect;
   public clearColor:Vec4;
   public clear:number;
-  public VA: number = 0;//视角 0代表玩家自己 1代表别人视角 2代表别人视角 3代表别人视角 依次类推
-  public VAPos: Array<number> = []; //视角的位置
+  public visualAngle: number = 0;//视角 0代表玩家自己 1代表别人视角 2代表别人视角 3代表别人视角 依次类推
+  public visualAnglePosition:Vec3 = new Vec3(); //视角的位置
   public drawingOrder: syRender.DrawingOrder;//绘制类型
   public isSecondVisualAngle(): boolean {
-    return this.VA == 1;
+    return this.visualAngle == 1;
   }
   public isFirstVisualAngle(): boolean {
-    return this.VA == 0;
+    return this.visualAngle == 0;
   }
 }
 /**
@@ -101,7 +102,7 @@ export class GameMainCamera {
     temp.clearColor.y = 0.3;
     temp.clearColor.z = 0.3;
     temp.clearColor.w = 1.0;
-    temp.VA = 0;
+    temp.visualAngle = 0;
     temp.drawingOrder = drawingOrder;
     this._renderData.push(temp);
   }
@@ -157,7 +158,7 @@ export class GameMainCamera {
     temp.fb = null;
     temp.rtuuid = syRender.RenderTextureUUid.offline2D;
     temp.clear = this.gl.COLOR_BUFFER_BIT|this.gl.DEPTH_BUFFER_BIT|this.gl.STENCIL_BUFFER_BIT;
-    temp.VA = 0;
+    temp.visualAngle = 0;
     this._renderData.push(temp);
 
     //光照相机
@@ -166,7 +167,7 @@ export class GameMainCamera {
     temp.rtuuid = syRender.RenderTextureUUid.shadowMap;
     temp.uuid = syRender.CameraUUid.light;
     temp.clear = this.gl.COLOR_BUFFER_BIT|this.gl.DEPTH_BUFFER_BIT|this.gl.STENCIL_BUFFER_BIT;
-    temp.VA = 0;
+    temp.visualAngle = 0;
     this._renderData.push(temp);
     
     
@@ -180,7 +181,7 @@ export class GameMainCamera {
     temp.viewPort.width = 0.5;
     temp.viewPort.height = 1.0;
     temp.clear = this.gl.COLOR_BUFFER_BIT|this.gl.DEPTH_BUFFER_BIT|this.gl.STENCIL_BUFFER_BIT;
-    temp.VA = 0;
+    temp.visualAngle = 0;
     this._renderData.push(temp);
     
     //绘制右边
@@ -191,8 +192,10 @@ export class GameMainCamera {
     temp.viewPort.y = 0;
     temp.viewPort.width = 0.5;
     temp.viewPort.height = 1.0;
-    temp.VAPos = [-70, 10, 10]
-    temp.VA = 1;
+    temp.visualAnglePosition.x = -70;
+    temp.visualAnglePosition.y = 10;
+    temp.visualAnglePosition.z = 10;
+    temp.visualAngle = 1;
     this._renderData.push(temp);
 
 

@@ -3,6 +3,8 @@ import { Graphic } from "../../Graphic/Graphic";
 import { glMatrix } from "../../math/Matrix";
 import { G_UISetting } from "../../ui/UiSetting";
 import { MathUtils } from "../../utils/MathUtils";
+import { Vec2 } from "../../value-types/vec2";
+import Vec3 from "../../value-types/vec3";
 import { syPrimitives } from "../shader/Primitives";
 import { BufferAttribsData, ShaderProgram } from "../shader/Shader";
 import { G_ShaderFactory } from "../shader/ShaderFactory";
@@ -291,9 +293,9 @@ export class CameraModel {
     //设置场景相机-------------------------------------------------------------------------------------------------------
     private _sceneCameraMatrix: Float32Array;
     private _sceneCameraProjectMatrix: Float32Array;
-    private _sceneCameraPosition: Array<number> = [-70, 10, 10];
-    public setSceneCameraPosition(pos: Array<number>): void {
-        this._sceneCameraPosition = pos;
+    private _sceneCameraPosition: Vec3 = new Vec3(-70, 10, 10);
+    public setSceneCameraPosition(pos: Vec3): void {
+        this._sceneCameraPosition.set(pos);
         this.setSceneCamera();
     }
     private setSceneCamera(): void {
@@ -304,7 +306,7 @@ export class CameraModel {
         const far = 2000;
         glMatrix.mat4.perspective(this._sceneCameraProjectMatrix, MathUtils.degToRad(60), aspect, near, far);
         // Compute the cameras matrix using look at.
-        const cameraPosition2 = this._sceneCameraPosition;
+        const cameraPosition2 = [this._sceneCameraPosition.x,this._sceneCameraPosition.y,this._sceneCameraPosition.z];
         const target2 = [0, 0, 0];
         const up2 = [0, 1, 0];
         glMatrix.mat4.lookAt2(this._sceneCameraMatrix, cameraPosition2, target2, up2);
@@ -322,7 +324,7 @@ export class CameraModel {
 
 export class G_CameraModel{
        static modelMap:Map<number,CameraModel> = new Map()
-       static createCamera(VA,targetProjMatrix, targetCameraMatrix,pos=[-70, 10, 10]):CameraModel{
+       static createCamera(VA,targetProjMatrix, targetCameraMatrix,pos:Vec3= new Vec3(-70, 10, 10)):CameraModel{
             if(VA < 1)
             {
                 return;

@@ -904,7 +904,7 @@ export default class Device {
         //记录一下当前渲染的时间
         this._triggerRenderTime++;
         var cameraData = GameMainCamera.instance.getCameraByUUid(syRender.CameraUUid.base3D).getCameraData();
-        G_CameraModel.createCamera(crData.VA, cameraData.projectMat, cameraData.modelMat, crData.VAPos);
+        G_CameraModel.createCamera(crData.visualAngle, cameraData.projectMat, cameraData.modelMat, crData.visualAnglePosition);
         //提交数据给GPU 立即绘制
         for (var j = 0; j < treeData.length; j++) {
             if (treeData[j].isOffline && crData.fb) {
@@ -992,8 +992,8 @@ export default class Device {
                     this._drawBase(rData, cData.projectMat, cData.viewMat, crData);
                 }
                 else {
-                    let projMatix = G_CameraModel.getSceneProjectMatrix(crData.VA);
-                    glMatrix.mat4.invert(this._temp1Matrix, G_CameraModel.getSceneCameraMatrix(crData.VA));
+                    let projMatix = G_CameraModel.getSceneProjectMatrix(crData.visualAngle);
+                    glMatrix.mat4.invert(this._temp1Matrix, G_CameraModel.getSceneCameraMatrix(crData.visualAngle));
                     this._drawBase(rData, projMatix, this._temp1Matrix, crData);
                 }
                 break;
@@ -1002,9 +1002,9 @@ export default class Device {
                     this._drawNormal(rData as syRender.QueueItemData, cData);
                 }
                 else {
-                    let projMatix = G_CameraModel.getSceneProjectMatrix(crData.VA);
+                    let projMatix = G_CameraModel.getSceneProjectMatrix(crData.visualAngle);
                     cData.projectMat = projMatix;
-                    cData.modelMat = G_CameraModel.getSceneCameraMatrix(crData.VA);
+                    cData.modelMat = G_CameraModel.getSceneCameraMatrix(crData.visualAngle);
                     this._drawNormal(rData as syRender.QueueItemData, cData);
                 }
                 break;
