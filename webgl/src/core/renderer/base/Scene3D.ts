@@ -148,19 +148,19 @@ export default class Scene3D extends Scene {
         // this._centerNode.addChild(this._renderSprite1);
 
 
-        this._rtt = new RTT();
-        this._rtt.spriteFrame = {
-            place: syRender.AttachPlace.MoreColor,
-            param: [
-                { type: syRender.DeferredTexture.None, value: "res/deferred.png" },
-                { type: syRender.DeferredTexture.Color, value: null },
-                { type: syRender.DeferredTexture.Position, value: null },
-                { type: syRender.DeferredTexture.Normal, value: null },
-                { type: syRender.DeferredTexture.UV, value: null },
-                { type: syRender.DeferredTexture.Depth, value: null }]
-        }
-        this._rtt.setPosition(-6, 10, 0);
-        this._centerNode.addChild(this._rtt);
+        // this._rtt = new RTT();
+        // this._rtt.spriteFrame = {
+        //     place: syRender.AttachPlace.MoreColor,
+        //     param: [
+        //         { type: syRender.DeferredTexture.None, value: "res/deferred.png" },
+        //         { type: syRender.DeferredTexture.Color, value: null },
+        //         { type: syRender.DeferredTexture.Position, value: null },
+        //         { type: syRender.DeferredTexture.Normal, value: null },
+        //         { type: syRender.DeferredTexture.UV, value: null },
+        //         { type: syRender.DeferredTexture.Depth, value: null }]
+        // }
+        // this._rtt.setPosition(-6, 10, 0);
+        // this._centerNode.addChild(this._rtt);
 
       
 

@@ -62,12 +62,7 @@ export default class Scene2D extends Scene {
         // this._instantiateSprite.setPosition(420,120,-100);
         // this.addChild(this._instantiateSprite);
 
-        this._renderSprite = new RenderOfflineSprite();
-        this._renderSprite.setPosition(Device.Instance.width / 2 + 200, Device.Instance.height / 2 + 200, -100);
-        this._renderSprite.spriteFrame = {
-            place: syRender.AttachPlace.Color
-        }
-        this.addChild(this._renderSprite);
+       
 
         this._shadowMap = new ShadowMap();
         this._shadowMap.setPosition(Device.Instance.width / 2, Device.Instance.height / 2 + 200, -100);
@@ -76,6 +71,13 @@ export default class Scene2D extends Scene {
         }
         this._shadowMap.setVisible(false);
         this.addChild(this._shadowMap);
+
+        this._renderSprite = new RenderOfflineSprite();
+        this._renderSprite.setPosition(Device.Instance.width / 2 + 200, Device.Instance.height / 2 + 200, -100);
+        this._renderSprite.spriteFrame = {
+            place: syRender.AttachPlace.Color
+        }
+        this.addChild(this._renderSprite);
 
 
 

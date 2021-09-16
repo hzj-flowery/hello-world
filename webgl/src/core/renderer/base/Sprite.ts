@@ -149,7 +149,7 @@ export namespace SY {
             this.onInit();
         }
 
-        public pushPassContent(shaderTy: syRender.ShaderType, stateArr?: Array<Array<any>>): void {
+        public pushPassContent(shaderTy: syRender.ShaderType, stateArr?: Array<Array<any>>,customArr?:Array<Array<any>>): void {
 
             var tag = syRender.ShaderTypeString[shaderTy]
             if (tag) {
@@ -160,8 +160,14 @@ export namespace SY {
                         state.push({ "key": stateArr[k][0], "value": stateArr[k][1] });
                     }
                 }
-
-                this._passContent.push({ "name": "TemplatePass", "tag": tag, state: state });
+                var custom = null;
+                if (customArr && customArr.length) {
+                    custom = []
+                    for (let k = 0; k < customArr.length; k++) {
+                        custom.push({ "key": customArr[k][0], "value": customArr[k][1] });
+                    }
+                }
+                this._passContent.push({ "name": "TemplatePass", "tag": tag, state: state,custom:custom});
             }
         };
         /**

@@ -339,60 +339,77 @@ export default class LoaderManager {
     public getRes(url: string): any {
         return this._cache.get(url);
     }
-    
+
     /**
      * 调整模板pass
      */
-    public adjustTemplatePass():void{
+    public adjustTemplatePass(): void {
         let passName = "res/glsl/StandardTemplate/pass.json";
         let passData = this.getRes(passName);
-        let baseData:any = {};
-        for(let k=0;k<passData.length;k++)
-        {
-            if(passData[k].name=="baseAttribute")
-            baseData=passData[k];
+        let baseData: any = {};
+        for (let k = 0; k < passData.length; k++) {
+            if (passData[k].name == "baseAttribute")
+                baseData = passData[k];
         }
         //追加
-        for(let k in passData)
-        {
+        for (let k in passData) {
             let v = passData[k]
-            if(v.name=="baseAttribute")
-            continue;
-            if(v.template==null)
-            {
-                v.template=baseData.template
+            if (v.name == "baseAttribute")
+                continue;
+            if (v.template == null) {
+                v.template = baseData.template
             }
-            //copy state
-            var baseState:Array<any> = baseData.state;
-            if(v.state==null)
-            {
-                v.state=MathUtils.clone(baseState)
+
+            //copy state-------------------------------------
+            var baseState: Array<any> = baseData.state;
+            if (v.state == null) {
+                v.state = MathUtils.clone(baseState)
             }
-            else
-            {
-                baseState.forEach((value,index)=>{
-                    let isExist:boolean = false;
-                    v.state.forEach((svalue,sindex)=>{
-                         if(svalue.key==value.key)
-                         {
-                            isExist= true;
-                         }
+            else {
+                baseState.forEach((value, index) => {
+                    let isExist: boolean = false;
+                    v.state.forEach((svalue, sindex) => {
+                        if (svalue.key == value.key) {
+                            isExist = true;
+                        }
                     })
                     //对于不存在的值 要以模板值为主
                     //对于存在的值，则以外围pass为主
-                    if(!isExist)
-                    {
+                    if (!isExist) {
                         v.state.push(value);
                     }
                 })
             }
+
+            //copy custom--------------------------------------------
+            var baseCustom: Array<any> = baseData.custom;
+            if (baseCustom && baseCustom.length > 0) {
+                if (v.custom == null) {
+                    v.custom = MathUtils.clone(baseCustom)
+                }
+                else {
+                    baseCustom.forEach((value, index) => {
+                        let isExist: boolean = false;
+                        v.custom.forEach((svalue, sindex) => {
+                            if (svalue.key == value.key) {
+                                isExist = true;
+                            }
+                        })
+                        //对于不存在的值 要以模板值为主
+                        //对于存在的值，则以外围pass为主
+                        if (!isExist) {
+                            v.custom.push(value);
+                        }
+                    })
+                }
+            }
         }
     }
 
-    public loadTemplate(cb):void{
-        LoaderManager.instance.loadGlsl("StandardTemplate",null,function(){
+    public loadTemplate(cb): void {
+        LoaderManager.instance.loadGlsl("StandardTemplate", null, function () {
             LoaderManager.instance.adjustTemplatePass();
-            if(cb)cb();
+            if (cb) cb();
         })
     }
     /**
@@ -402,7 +419,7 @@ export default class LoaderManager {
      * @param finishBack 
      * @param passContent 
      */
-    public loadGlsl(spriteName: string, progressBack?: Function, finishBack?: Function,passContent?:Array<any>): void {
+    public loadGlsl(spriteName: string, progressBack?: Function, finishBack?: Function, passContent?: Array<any>): void {
 
         let fatherPath = "res/glsl/" + spriteName + "/";
         let standardTemplate = "res/glsl/StandardTemplate/";//模板库目录
@@ -420,7 +437,7 @@ export default class LoaderManager {
             }
             let vsData = this.getRes(vs);
             let fsData = this.getRes(fs);
-            
+
             if (vsData && fsData) {
                 loadCount--;
                 if (progressBack) progressBack([vsData, fsData, passJson]);
@@ -452,47 +469,65 @@ export default class LoaderManager {
 
         }.bind(this)
 
-        var loadPassFinish = function(res:any[]){
+        var loadPassFinish = function (res: any[]) {
             if (res && res.length > 0) {
                 //追加额外的pass
                 var passLen = res.length;
-                var reduceLen=0;
+                var reduceLen = 0;
                 for (let k = 0; k < passLen; k++) {
                     if (res[k].name == "TemplatePass") {
                         var templatePass = this.getStandardTemplatePass(res[k].tag);
                         if (templatePass) {
-                            //更新为真实的模板pass
-                            if(res[k].state)
-                            {
-                                templatePass.state.forEach((value,index)=>{
-                                    let isExist:boolean = false;
-                                    res[k].state.forEach((svalue,sindex)=>{
-                                         if(svalue.key==value.key)
-                                         {
-                                            isExist= true;
-                                         }
+                            //copy state-----------------------------------------------
+                            if (res[k].state) {
+                                templatePass.state.forEach((value, index) => {
+                                    let isExist: boolean = false;
+                                    res[k].state.forEach((svalue, sindex) => {
+                                        if (svalue.key == value.key) {
+                                            isExist = true;
+                                        }
                                     })
                                     //对于不存在的值 要以模板值为主
                                     //对于存在的值，则以外围pass为主
-                                    if(!isExist)
-                                    {
+                                    if (!isExist) {
                                         res[k].state.push(value);
                                     }
                                 })
 
                             }
-                            else
-                            {
+                            else {
                                 res[k].state = MathUtils.clone(templatePass.state)
                             }
                             res[k].name = templatePass.name
                             res[k].template = true;
-                            res[k].custom = MathUtils.clone(templatePass.custom)
+
+                            //copy custom-----------------------------------------------
+                            // res[k].custom = MathUtils.clone(templatePass.custom)
+                            if (templatePass.custom && templatePass.custom.length > 0) {
+                                if (res[k].custom) {
+                                    templatePass.custom.forEach((value, index) => {
+                                        let isExist: boolean = false;
+                                        res[k].custom.forEach((svalue, sindex) => {
+                                            if (svalue.key == value.key) {
+                                                isExist = true;
+                                            }
+                                        })
+                                        //对于不存在的值 要以模板值为主
+                                        //对于存在的值，则以外围pass为主
+                                        if (!isExist) {
+                                            res[k].custom.push(value);
+                                        }
+                                    })
+
+                                }
+                                else {
+                                    res[k].custom = MathUtils.clone(templatePass.custom)
+                                }
+                            }
                         }
                     }
-                    else if(res[k].name == "baseAttribute")
-                    {
-                        reduceLen=1;
+                    else if (res[k].name == "baseAttribute") {
+                        reduceLen = 1;
                     }
                 }
                 //加载pass成功啦
@@ -507,13 +542,11 @@ export default class LoaderManager {
         }.bind(this)
 
         //先加载pass
-        if(passContent&&passContent.length>0)
-        {
+        if (passContent && passContent.length > 0) {
             loadPassFinish(passContent);
         }
-        else
-        {
-            this.load(passName, () => { },loadPassFinish)
+        else {
+            this.load(passName, () => { }, loadPassFinish)
         }
     }
 

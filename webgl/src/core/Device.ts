@@ -911,6 +911,7 @@ export default class Device {
                 //对于离屏渲染的数据 如果当前是离屏渲染的话 则不可以渲染它 否则会报错
                 //你想啊你把一堆显示数据渲染到一张纹理中，这张纹理本身就在这一堆渲染数据中 自然是会冲突的
                 //[.Offscreen-For-WebGL-07E77500]GL ERROR :GL_INVALID_OPERATION : glDrawElements: Source and destination textures of the draw are the same
+                //GL_INVALID_OPERATION: Feedback loop formed between Framebuffer and active Texture
                 continue;
             }
             let rData = treeData[j];
