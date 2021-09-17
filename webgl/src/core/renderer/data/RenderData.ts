@@ -47,7 +47,8 @@ export namespace syRender {
         Light_Parallel,      //平行光
         Light_Spot,         //聚光灯
         Light_Point,        //点光
-        Rtt,          //多目标渲染
+        RTT_Create,          //多目标渲染
+        RTT_Use,
         SkyBox,       //天空盒
         Mirror,       //镜子
         Fog,          //雾
@@ -74,7 +75,8 @@ export namespace syRender {
         "Light_Parallel",
         "Light_Spot",         //7聚光灯
         "Light_Point",        //点光
-        "Rtt",          //9多目标渲染
+        "RTT_Create",          //多目标渲染
+        "RTT_Use",          //多目标渲染
         "SkyBox",
         "Mirror",
         "Fog",

@@ -161,11 +161,19 @@
         ]
     },
     {
-        "name": "Rtt/shader",
+        "name": "RTT_Create/shader",
         "template":true,
         "custom":[
             {"key":"DrawingOrder","value":1},
-            {"key":"ShaderType","value":"Rtt"}
+            {"key":"ShaderType","value":"RTT_Create"}
+        ]
+    },
+    {
+        "name": "RTT_Use/shader",
+        "template":true,
+        "custom":[
+            {"key":"DrawingOrder","value":0},
+            {"key":"ShaderType","value":"RTT_Use"}
         ]
     },
     {

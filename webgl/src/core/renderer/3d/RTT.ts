@@ -20,6 +20,8 @@ export class RTT extends SY.SpriteBase {
         this.createNormalsBuffer(rd.normals, rd.dF.normal_item_size)
         this._glPrimitiveType = this.gl.TRIANGLE_STRIP;
         GameMainCamera.instance.createBaseVituralCamera(syRender.RenderTextureUUid.RTT, syRender.DrawingOrder.Middle);
+        this.pushPassContent(syRender.ShaderType.RTT_Create)
+        this.pushPassContent(syRender.ShaderType.RTT_Use)
     }
     protected onSetTextureUrl(): void {
         GameMainCamera.instance.pushRenderTexture(syRender.RenderTextureUUid.RTT,this.texture as RenderTexture);

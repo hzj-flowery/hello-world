@@ -785,6 +785,7 @@ export default class Device {
         syRender.ShaderType.Instantiate,
         syRender.ShaderType.Purity,
         syRender.ShaderType.OutLine,
+        syRender.ShaderType.RTT_Use,
         syRender.ShaderType.Spine_Mesh,
         syRender.ShaderType.Spine_Skin,
         syRender.ShaderType.Obj,
@@ -833,7 +834,7 @@ export default class Device {
             else if (cameraData[k].drawingOrder == syRender.DrawingOrder.Middle) {
                 //优先绘制
                 var tree1 = this.getTreeData(syRender.DrawingOrder.Middle, syRender.ShaderType.Custom)
-                var tree2 = this.getTreeData(syRender.DrawingOrder.Middle, syRender.ShaderType.Rtt)
+                var tree2 = this.getTreeData(syRender.DrawingOrder.Middle, syRender.ShaderType.RTT_Create)
                 this.triggerRender(tree1.concat(tree2), cameraData[k]);
             }
         }
@@ -895,8 +896,8 @@ export default class Device {
      * @param treeData 
      * @param crData 
      */
-    private triggerRender(treeData: Array<syRender.QueueItemBaseData>, crData: CameraRenderData) {
-        if (!treeData || treeData.length <= 0) {
+    private triggerRender(queueItems: Array<syRender.QueueItemBaseData>, crData: CameraRenderData) {
+        if (!queueItems || queueItems.length <= 0) {
             return;
         }
         //设置帧缓冲区
@@ -906,15 +907,15 @@ export default class Device {
         var cameraData = GameMainCamera.instance.getCameraByUUid(syRender.CameraUUid.base3D).getCameraData();
         G_CameraModel.createCamera(crData.visualAngle, cameraData.projectMat, cameraData.modelMat, crData.visualAnglePosition);
         //提交数据给GPU 立即绘制
-        for (var j = 0; j < treeData.length; j++) {
-            if (treeData[j].isOffline && crData.fb) {
+        for (var j = 0; j < queueItems.length; j++) {
+            if (queueItems[j].isOffline && crData.fb) {
                 //对于离屏渲染的数据 如果当前是离屏渲染的话 则不可以渲染它 否则会报错
                 //你想啊你把一堆显示数据渲染到一张纹理中，这张纹理本身就在这一堆渲染数据中 自然是会冲突的
                 //[.Offscreen-For-WebGL-07E77500]GL ERROR :GL_INVALID_OPERATION : glDrawElements: Source and destination textures of the draw are the same
                 //GL_INVALID_OPERATION: Feedback loop formed between Framebuffer and active Texture
                 continue;
             }
-            let rData = treeData[j];
+            let rData = queueItems[j];
             //相机 一般只有两种 要么是3d透视相机 要么是2d正交相机
             var cammerauuid = crData.uuid;
             if (cammerauuid == syRender.CameraUUid.adapt) {
