@@ -250,9 +250,9 @@ export namespace syGL {
     }
     // buffer usage
     export const BufferUsage = {
-        USAGE_STATIC: 35044,  // gl.STATIC_DRAW
-        USAGE_DYNAMIC: 35048, // gl.DYNAMIC_DRAW
-        USAGE_STREAM: 35040,  // gl.STREAM_DRAW
+        STATIC: 35044,  // gl.STATIC_DRAW 意味着VBO中的数据不会被改变（一次修改，多次使用）
+        DYNAMIC: 35048, // gl.DYNAMIC_DRAW 意味着数据可以被频繁修改（多次修改，多次使用）
+        STREAM: 35040,  // gl.STREAM_DRAW 意味着数据每帧都不同（一次修改，一次使用）
     }
     // blend-func
     export const BlendFunc = {

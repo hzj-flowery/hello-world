@@ -76,6 +76,7 @@ export class RenderTexture extends Texture2D {
     private _renderBuffer_Depth: WebGLRenderbuffer;//深度渲染缓冲的glID
     private _renderBuffer_Depth_Stencil: WebGLRenderbuffer;//深度和模板渲染缓存的glID
     private _deferredTexMap: Map<syRender.DeferredTexture, WebGLTexture>;
+    private _deferredTexMapPos:Map<number,WebGLTexture>;
     public get frameBuffer() {
         return this._frameBuffer;
     }
@@ -146,6 +147,7 @@ export class RenderTexture extends Texture2D {
         }
 
         this._deferredTexMap = new Map();
+        this._deferredTexMapPos = new Map();
         let gl = this._gl;
         gl.bindFramebuffer(gl.FRAMEBUFFER, this._frameBuffer);
 
@@ -172,13 +174,29 @@ export class RenderTexture extends Texture2D {
             gl.framebufferTexture2D(gl.FRAMEBUFFER, gl["COLOR_ATTACHMENT" + startCount], gl.TEXTURE_2D, textureID, 0);
             COLOR_ATTACHMENT.push(gl["COLOR_ATTACHMENT" + startCount]);
             this._deferredTexMap.set(texType, textureID);
-
+            this._deferredTexMapPos.set(startCount,textureID);
             startCount++;
         }
         this.addRenderBuffer(dtWidth, dtHeight,true);
         //采样到几个颜色附件(对应的几何纹理)
         gl.drawBuffers(COLOR_ATTACHMENT);
 
+    }
+    
+    /**
+     * 绑定纹理
+     */
+    public bindFrameTexture2D():void{
+        let gl = this._gl;
+        gl.bindFramebuffer(gl.FRAMEBUFFER, this._frameBuffer);
+        let COLOR_ATTACHMENT = [];
+        this._deferredTexMapPos.forEach((value,key)=>{
+            //设置上面创建纹理作为颜色附件
+            gl.framebufferTexture2D(gl.FRAMEBUFFER, gl["COLOR_ATTACHMENT" + key], gl.TEXTURE_2D, value, 0);
+            COLOR_ATTACHMENT.push(gl["COLOR_ATTACHMENT" + key]);
+        })
+        //采样到几个颜色附件(对应的几何纹理)
+        gl.drawBuffers(COLOR_ATTACHMENT);
     }
 
     /**

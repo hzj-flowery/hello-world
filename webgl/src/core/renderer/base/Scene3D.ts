@@ -17,7 +17,7 @@ import { FogCube } from "../3d/FogCube";
 import { glMatrix } from "../../math/Matrix";
 import { syGL } from "../gfx/syGLEnums";
 import { DeferredShading } from "../3d/DeferredShading";
-import { RTT } from "../3d/RTT";
+import { RTT, RTTTest } from "../3d/RTT";
 import Device from "../../Device";
 import { RenderOffline3DSprite } from "../3d/RenderOffline3DSprite";
 import { syRender } from "../data/RenderData";
@@ -27,6 +27,7 @@ import { Plane } from "../3d/Plane";
 import { ThreeDF } from "../3d/ThreeDF";
 import RobartInstantiate from "../3d/RobartInstantiate";
 import ObjNode from "../3d/ObjNode";
+import { StateString, StateValueMap } from "../gfx/State";
 
 export default class Scene3D extends Scene {
 
@@ -41,6 +42,7 @@ export default class Scene3D extends Scene {
     private _renderSprite1: RenderOffline3DSprite;
     private _renderSprite2: RenderOffline3DSprite;
     private _rtt: RTT;
+    private _rttTest:RTTTest;
     private _tableNode: Cube;
     private _alphaNode: Cube;
     private _spineNode: Spine;
@@ -149,6 +151,7 @@ export default class Scene3D extends Scene {
 
 
         this._rtt = new RTT();
+        this._rtt.gZOrder = 500;
         this._rtt.spriteFrame = {
             place: syRender.AttachPlace.MoreColor,
             param: [
@@ -157,12 +160,31 @@ export default class Scene3D extends Scene {
                 { type: syRender.DeferredTexture.Position, value: null },
                 { type: syRender.DeferredTexture.Normal, value: null },
                 { type: syRender.DeferredTexture.UV, value: null },
-                { type: syRender.DeferredTexture.Depth, value: null }]
+                { type: syRender.DeferredTexture.Depth, value: null }
+            ]
         }
         this._rtt.setPosition(-6, 10, 0);
         this._centerNode.addChild(this._rtt);
 
+
+        setTimeout(()=>{
+            this._rtt.pushPassContent(syRender.ShaderType.RTT_Use,[
+                [StateString.blend,StateValueMap.blend.ON],
+                [StateString.blendSep,StateValueMap.blendSep.OFF],
+                [StateString.blendSrc,StateValueMap.blendSrc.SRC_ALPHA],
+                [StateString.blendDst,StateValueMap.blendDst.ONE_MINUS_SRC_ALPHA],
+
+                [StateString.depthWrite,StateValueMap.depthWrite.OFF], //关闭深度写入
+            ],[],true)
+        },1000)
+
       
+        this._rttTest = new RTTTest();
+        // this._rttTest.spriteFrame = "res/bg_npc_06.png";
+        this._rttTest.pushPassContent(syRender.ShaderType.RTT_Use)
+        this._rttTest.gZOrder = 501;
+        this._rttTest.setPosition(-5, 10, 0);
+        this._centerNode.addChild(this._rttTest);
 
         // this._pointLightCube = new PointLightCube();
         // this._pointLightCube.setScale(100,0.1,100.0);

@@ -64,6 +64,7 @@ import { RenderTexture } from "./texture/RenderTexture";
 import { glMatrix } from "../../math/Matrix";
 import { glEnums } from "../gfx/GLapi";
 import { StateString, StateValueMap } from "../gfx/State";
+import { GameMainCamera } from "../camera/GameMainCamera";
 
 /**
  * 显示节点
@@ -149,7 +150,7 @@ export namespace SY {
             this.onInit();
         }
 
-        public pushPassContent(shaderTy: syRender.ShaderType, stateArr?: Array<Array<any>>,customArr?:Array<Array<any>>): void {
+        public pushPassContent(shaderTy: syRender.ShaderType, stateArr?: Array<Array<any>>,customArr?:Array<Array<any>>,isForce?:boolean): void {
 
             var tag = syRender.ShaderTypeString[shaderTy]
             if (tag) {
@@ -168,6 +169,11 @@ export namespace SY {
                     }
                 }
                 this._passContent.push({ "name": "TemplatePass", "tag": tag, state: state,custom:custom});
+            }
+
+            if(isForce)
+            {
+                this.handleShader();
             }
         };
         /**
@@ -420,6 +426,7 @@ export namespace SY {
                 this._renderData[i].node = this as Node;
                 this._renderData[i].pass = pass;
                 this._renderData[i].time = time;
+               
                 this.updateRenderData(this._renderData[i]);
                 this.onCollectRenderDataAfter(this._renderData[i])
                 Device.Instance.collectData(this._renderData[i]);
@@ -474,6 +481,15 @@ export namespace SY {
             if (this._texture instanceof RenderTexture && (this._texture as RenderTexture).isDeferred()) {
                 syRender.DeferredAllTypeTexture.forEach((value, index) => {
                     var texS = (this._texture as RenderTexture).getDeferredTex(value);
+                    texS ? rData.push2DTexture(texS, value) : null;
+                })
+            }
+            else if(rData.pass.shaderType == syRender.ShaderType.RTT_Use)
+            {
+                //mrt
+                var mrtTex = GameMainCamera.instance.getRenderTexture(syRender.RenderTextureUUid.RTT)
+                syRender.DeferredAllTypeTexture.forEach((value, index) => {
+                    var texS = mrtTex.getDeferredTex(value);
                     texS ? rData.push2DTexture(texS, value) : null;
                 })
             }

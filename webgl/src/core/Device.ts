@@ -25,6 +25,7 @@ import { Util } from "../utils/Util";
 import { MathUtils } from "./utils/MathUtils";
 import { Rect } from "./value-types/rect";
 import Vec4 from "./value-types/vec4";
+import { couldStartTrivia } from "typescript";
 
 /**
  渲染流程：
@@ -1042,10 +1043,18 @@ export default class Device {
      * 渲染一帧前 对缓冲区做一些准备工作
      */
     private readyForOneFrame(crData: CameraRenderData): void {
-
+        
+         //多目标渲染
         this.setFrameBuffer(crData.fb);
         this.setViewPort(crData.viewPort);
         crData.clear?G_DrawEngine.clearBuffer(crData.clearColor, crData.clear):null;
+
+        if(crData.rtuuid == syRender.RenderTextureUUid.RTT)
+        {
+            //多目标渲染
+            var rendTex = GameMainCamera.instance.getRenderTexture(crData.rtuuid);
+            rendTex.bindFrameTexture2D();
+        }
         
 
     }

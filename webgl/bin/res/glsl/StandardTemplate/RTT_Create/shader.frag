@@ -15,9 +15,9 @@ in vec3 vNormal;
 in vec2 v_uv;
 
 void main() {
+  gColor = vec4(texture(u_texture, v_uv).rgb,1.0);
   gPosition = vPosition;
   gNormal =normalize(vNormal);
-  gColor = vec4(texture(u_texture, v_uv).rgb,1.0);
   gUv = v_uv;
   gDepth = vec4(gl_FragCoord.z,0.0,0.0,1.0);
 }

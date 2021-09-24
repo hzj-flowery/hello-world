@@ -1,13 +1,17 @@
+// #extension GL_EXT_draw_buffers : require
+
 precision mediump float;
 
 varying vec2 v_uv;
-uniform sampler2D u_texture;
-uniform float u_alpha;
+uniform sampler2D gColor;
 uniform float u_use_apha_test;
+uniform float u_alpha;
 void main(){
-    vec4 tex=texture2D(u_texture,v_uv);
-    if(u_use_apha_test>0.0)
-    gl_FragColor=vec4(tex.rgb*u_use_apha_test,1.0);
-    else
-    gl_FragColor=vec4(tex.rgb*0.0,u_alpha);
+    vec4 texcolor = texture2D(gColor, v_uv);
+    // texcolor = vec4(texcolor.rgb,u_alpha*texcolor.a);
+    // if(u_use_apha_test>0.0)
+    // // if((texcolor.r+texcolor.g+texcolor.b)<u_use_apha_test) discard;
+    // if(texcolor.a<u_use_apha_test) discard;
+    
+    gl_FragColor = texcolor;
 }

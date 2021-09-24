@@ -1,3 +1,4 @@
+import { syGL } from "../../gfx/syGLEnums";
 import { SY } from "../Sprite";
 /**
  * 该类主要用来生成顶点数据的buffer,顶点数据的种类如下：
@@ -60,7 +61,7 @@ export abstract class glBaseBuffer {
         this._arrayBufferType = arrbufferType;
         this._itemBytes = itemBytes;
         // //默认使用以下数据
-        this._usage = gl.STATIC_DRAW;
+        this._usage = syGL.BufferUsage.STATIC;
 
         this._curMapTotalBytes = 0;
         this._hasAllocateByteLen = 0;
@@ -84,6 +85,11 @@ export abstract class glBaseBuffer {
     private _itemSize: number = 0;     //在缓冲区中，一个单元有几个数据组成
     private _itemNums: number = 0;     //在缓冲区中，一共含有多少个单元
     private _glID: WebGLBuffer;//显存存储数据的地址
+    /**
+     * 只有两个值：
+     * 1： gl.ARRAY_BUFFER         除索引数据外其它一切顶点数据
+     * 2： gl.ELEMENT_ARRAY_BUFFER 专门针对索引数据
+     */
     private _arrayBufferType: number;//缓冲区的类型
     private _usage: number;
     private _preAllocateLen: number;//动态预分配的字节长度
@@ -91,7 +97,7 @@ export abstract class glBaseBuffer {
     protected gl: WebGLRenderingContext;
 
     protected useDynamicUsage() {
-        this._usage = this.gl.DYNAMIC_DRAW;
+        this._usage = syGL.BufferUsage.DYNAMIC;
     }
     //一个数据有几个字节组成
     public get itemBytes(): number {
