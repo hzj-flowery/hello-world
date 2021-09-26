@@ -20,14 +20,14 @@ export default class SkyBox extends SY.SpriteBase {
           this._glPrimitiveType = this.gl.TRIANGLE_STRIP;
           this.pushPassContent(syRender.ShaderType.SkyBox);
      }
-     private defaultPath = [
-          'res/skybox/2/right+x.png',
-          'res/skybox/2/left-x.png',
-          'res/skybox/2/up-y.png',
-          'res/skybox/2/down+y.png',
-          'res/skybox/2/back-z.png',
-          'res/skybox/2/front+z.png'
-     ]
+     // private defaultPath = [
+     //      'res/skybox/2/right+x.png',
+     //      'res/skybox/2/left-x.png',
+     //      'res/skybox/2/up-y.png',
+     //      'res/skybox/2/down+y.png',
+     //      'res/skybox/2/back-z.png',
+     //      'res/skybox/2/front+z.png'
+     // ]
      // private defaultPath = [
      //      'res/skybox/3/1.jpg',
      //      'res/skybox/3/2.jpg',
@@ -36,6 +36,14 @@ export default class SkyBox extends SY.SpriteBase {
      //      'res/skybox/3/5.jpg',
      //      'res/skybox/3/6.jpg'
      // ]
+     private defaultPath = [
+          'res/skybox/cube/Bridge2/posx.jpg',
+          'res/skybox/cube/Bridge2/negx.jpg',
+          'res/skybox/cube/Bridge2/posy.jpg',
+          'res/skybox/cube/Bridge2/negy.jpg',
+          'res/skybox/cube/Bridge2/posz.jpg',
+          'res/skybox/cube/Bridge2/negz.jpg'
+     ]
      public setDefaultUrl(): void {
           this.spriteFrame = this.defaultPath;
      }

@@ -122,7 +122,6 @@ export default class Sphere extends SY.ShadowSprite {
 
         this._glPrimitiveType = syGL.PrimitiveType.TRIANGLE_STRIP;
 
-
         this.color = [1, 0.5, 0.5, 1];
         this.pushPassContent(syRender.ShaderType.Purity);
         super.onInit();

@@ -94,6 +94,22 @@ export class GameMainCamera {
    * @param drawOrder 
    */
   public createBaseVituralCamera(uuid: syRender.RenderTextureUUid, drawingOrder: syRender.DrawingOrder = syRender.DrawingOrder.Normal): void {
+    if(this._renderData&&this._renderData.length>0)
+    {
+      var isExit = false
+      this._renderData.forEach((value,index)=>{
+           if(value.rtuuid==uuid)
+           {
+             isExit = true;
+             return
+           }
+      })
+      if(isExit)
+      {
+        console.log("已经存在 RenderTextureUUid--",uuid)
+        return;
+      }
+    }
     var temp = new CameraRenderData();
     temp.fb = null;
     temp.rtuuid = uuid;
@@ -178,25 +194,25 @@ export class GameMainCamera {
     temp.rtuuid = syRender.RenderTextureUUid.screen;
     temp.viewPort.x = 0;
     temp.viewPort.y = 0;
-    temp.viewPort.width = 0.5;
+    temp.viewPort.width = 1.0;
     temp.viewPort.height = 1.0;
     temp.clear = this.gl.COLOR_BUFFER_BIT|this.gl.DEPTH_BUFFER_BIT|this.gl.STENCIL_BUFFER_BIT;
     temp.visualAngle = 0;
     this._renderData.push(temp);
     
     //绘制右边
-    var temp = new CameraRenderData();
-    temp.fb = null;
-    temp.rtuuid = syRender.RenderTextureUUid.screen;
-    temp.viewPort.x = 0.5;
-    temp.viewPort.y = 0;
-    temp.viewPort.width = 0.5;
-    temp.viewPort.height = 1.0;
-    temp.visualAnglePosition.x = -70;
-    temp.visualAnglePosition.y = 10;
-    temp.visualAnglePosition.z = 10;
-    temp.visualAngle = 1;
-    this._renderData.push(temp);
+    // var temp = new CameraRenderData();
+    // temp.fb = null;
+    // temp.rtuuid = syRender.RenderTextureUUid.screen;
+    // temp.viewPort.x = 0.5;
+    // temp.viewPort.y = 0;
+    // temp.viewPort.width = 0.5;
+    // temp.viewPort.height = 1.0;
+    // temp.visualAnglePosition.x = -70;
+    // temp.visualAnglePosition.y = 10;
+    // temp.visualAnglePosition.z = 10;
+    // temp.visualAngle = 1;
+    // this._renderData.push(temp);
 
 
     G_UISetting.pushRenderCallBack(this.renderCallBack.bind(this));

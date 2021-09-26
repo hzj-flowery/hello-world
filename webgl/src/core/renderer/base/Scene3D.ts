@@ -28,6 +28,7 @@ import { ThreeDF } from "../3d/ThreeDF";
 import RobartInstantiate from "../3d/RobartInstantiate";
 import ObjNode from "../3d/ObjNode";
 import { StateString, StateValueMap } from "../gfx/State";
+import Mirror from "../3d/Mirror";
 
 export default class Scene3D extends Scene {
 
@@ -54,6 +55,7 @@ export default class Scene3D extends Scene {
     private _centerNode: Node;
     private _shadowCube:ShadowCube;
     private _mirrorCube: MirrorCube;
+    private _mirror:Mirror;
     private _robart:RobartInstantiate;
     private _sphere: Sphere;
     constructor() {
@@ -258,6 +260,11 @@ export default class Scene3D extends Scene {
         this._mirrorCube.setDefaultUrl();
         this._mirrorCube.setPosition(-13,3.0,0);
         this.addChild(this._mirrorCube);
+
+        this._mirror = new Mirror();
+        this._mirror.setDefaultUrl();
+        this._mirror.setPosition(-3,3.0,0);
+        this.addChild(this._mirror);
 
         this._centerNode.addChild(new LightCamera());
 
