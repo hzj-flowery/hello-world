@@ -108,24 +108,15 @@ export namespace SY {
      * 数据生成 绑定  
      */
     export class SpriteBase extends Node {
-        //节点buffer
-        private _vertexsBuffer: VertexsBuffer;
-        //索引buffer
-        private _indexsBuffer: IndexsBuffer;
-        //法线buffer
-        private _normalsBuffer: NormalBuffer;
-        private _VertColorBuffer: VertColorBuffer;//节点自定义顶点颜色buffer
-        private _vertMatrixBuffer: VertMatrixBuffer;//顶点矩阵buffer
+        
         private _materialId: string;//这里存放一个材质id
-
         private _passContent: Array<any> = [];//pass的内容
 
         private _color: Array<number>;//节点自定义颜色
         private _diffuse: Array<number>;//漫反射颜色
         private _alpha: number = 1;//节点自定义透明度
         private _customMatrix: Float32Array = glMatrix.mat4.identity(null);//节点自定义矩阵
-        //纹理buffer
-        private _uvsBuffer: UVsBuffer;
+      
         protected _texture: Texture;
         protected gl: WebGL2RenderingContext;
         private _pass: Array<Pass>;
@@ -247,9 +238,8 @@ export namespace SY {
          * @param preAllocateLen 
          */
         public createVertexsBuffer(vertexs: Array<number>, itemSize: number, preAllocateLen: number = 0): VertexsBuffer {
-            this._vertexsBuffer = G_BufferManager.createBuffer(GLID_TYPE.VERTEX,
+            return G_BufferManager.createBuffer(GLID_TYPE.VERTEX,
                 this._materialId, vertexs, itemSize, preAllocateLen) as VertexsBuffer;
-            return this._vertexsBuffer;
         }
         //创建法线缓冲
         /**
@@ -259,9 +249,8 @@ export namespace SY {
          * @param preAllocateLen 
          */
         public createNormalsBuffer(normals: Array<number>, itemSize: number, preAllocateLen: number = 0): NormalBuffer {
-            this._normalsBuffer = G_BufferManager.createBuffer(GLID_TYPE.NORMAL,
+            return G_BufferManager.createBuffer(GLID_TYPE.NORMAL,
                 this._materialId, normals, itemSize, preAllocateLen) as NormalBuffer;
-            return this._normalsBuffer;
         }
         //创建索引缓冲
         //索引缓冲的单位数据个数肯定为1
@@ -270,9 +259,8 @@ export namespace SY {
          * @param indexs 
          */
         public createIndexsBuffer(indexs: Array<number>, preAllocateLen: number = 0): IndexsBuffer {
-            this._indexsBuffer = G_BufferManager.createBuffer(GLID_TYPE.INDEX,
+            return G_BufferManager.createBuffer(GLID_TYPE.INDEX,
                 this._materialId, indexs, 1, preAllocateLen) as IndexsBuffer;
-            return this._indexsBuffer;
         }
         //创建uv缓冲
         /**
@@ -282,9 +270,8 @@ export namespace SY {
          * @param preAllocateLen 
          */
         public createUVsBuffer(uvs: Array<number>, itemSize: number, preAllocateLen: number = 0): UVsBuffer {
-            this._uvsBuffer = G_BufferManager.createBuffer(GLID_TYPE.UV,
+            return G_BufferManager.createBuffer(GLID_TYPE.UV,
                 this._materialId, uvs, itemSize, preAllocateLen) as UVsBuffer;
-            return this._uvsBuffer
         }
         //创建顶点自定义矩阵buffer
         /**
@@ -294,8 +281,7 @@ export namespace SY {
          * @param preAllocateLen 
          */
         public createVertMatrixBuffer(matrix: Array<number>, itemSize: number, preAllocateLen: number = 0): VertMatrixBuffer {
-            this._vertMatrixBuffer = G_BufferManager.createBuffer(GLID_TYPE.VERT_MATRIX, this._materialId, matrix, itemSize, preAllocateLen) as VertMatrixBuffer;
-            return this._vertMatrixBuffer;
+            return G_BufferManager.createBuffer(GLID_TYPE.VERT_MATRIX, this._materialId, matrix, itemSize, preAllocateLen) as VertMatrixBuffer;
         }
         /** 
          * @param color 
@@ -303,8 +289,7 @@ export namespace SY {
          * @param preAllocateLen 
          */
         public createNodeVertColorBuffer(color: Array<number>, itemSize: number, preAllocateLen: number = 0): VertColorBuffer {
-            this._VertColorBuffer = G_BufferManager.createBuffer(GLID_TYPE.VERT_COLOR, this._materialId, color, itemSize, preAllocateLen) as VertColorBuffer;
-            return this._VertColorBuffer;
+            return G_BufferManager.createBuffer(GLID_TYPE.VERT_COLOR, this._materialId, color, itemSize, preAllocateLen) as VertColorBuffer;
         }
         public createCustomMatrix(mat): void {
             this._customMatrix = mat;
@@ -377,15 +362,7 @@ export namespace SY {
          * @param type 
          */
         public getBuffer(type: GLID_TYPE): glBaseBuffer {
-            switch (type) {
-                case GLID_TYPE.INDEX: return this._indexsBuffer;
-                case GLID_TYPE.UV: return this._uvsBuffer;
-                case GLID_TYPE.NORMAL: return this._normalsBuffer;
-                case GLID_TYPE.VERTEX:return this._vertexsBuffer;
-                case GLID_TYPE.VERT_COLOR: return this._VertColorBuffer;
-                case GLID_TYPE.VERT_MATRIX: return this._vertMatrixBuffer;
-                default: return null;//未知
-            }
+            return G_BufferManager.getBuffer(type,this._materialId)
         }
         protected getBufferItemSize(type: GLID_TYPE): number {
             var buffer = this.getBuffer(type);
