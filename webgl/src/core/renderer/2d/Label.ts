@@ -1,6 +1,7 @@
 "use strict";
 import { SY } from "../base/Sprite";
 import { syRender } from "../data/RenderData";
+import { StateString, StateValueMap } from "../gfx/State";
 import { syGL } from "../gfx/syGLEnums";
 
 var fontInfo = {
@@ -128,7 +129,9 @@ var makeVerticesForString = function (fontInfo, s) {
 export class Label extends SY.Sprite2D {
     constructor() {
         super();
-        this.pushPassContent(syRender.ShaderType.Sprite);
+        this.pushPassContent(syRender.ShaderType.Sprite,[
+          [StateString.primitiveType,StateValueMap.primitiveType.PT_TRIANGLES]
+        ]);
     }
     
     private _realCharWidth:number = 0;
@@ -192,8 +195,6 @@ export class Label extends SY.Sprite2D {
         }
         this.createIndexsBuffer(floorVertexIndices);
 
-        this._glPrimitiveType = syGL.PrimitiveType.TRIANGLES;
-        
         this.defineUse.SY_USE_ALPHA_TEST = (0.1);
     }
 }

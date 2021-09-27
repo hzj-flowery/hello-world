@@ -131,7 +131,6 @@ export namespace SY {
         private _pass: Array<Pass>;
         private _renderData: Array<syRender.QueueItemBaseData>;
         //参考glprimitive_type
-        protected _glPrimitiveType: syGL.PrimitiveType;//绘制的类型
         protected _sizeMode: SpriteSizeMode;//节点的尺寸模式
         public defineUse: syRender.DefineUse = new syRender.DefineUse(); //是否支持png 
         constructor() {
@@ -139,7 +138,6 @@ export namespace SY {
             materialId++;
             this._materialId = "materialId_" + materialId;
             this.gl = Device.Instance.gl;
-            this._glPrimitiveType = syGL.PrimitiveType.TRIANGLES;
             this._renderData = []
             this._color = [1.0, 1.0, 1.0, 1.0];//默认颜色为白色
             this._diffuse = [1.0, 1.0, 1.0, 1.0];//默认颜色为白色
@@ -499,7 +497,7 @@ export namespace SY {
                 else if (this._texture.isTextureCube)
                     rData.pushCubeTexture(this.getGLID(SY.GLID_TYPE.TEXTURE_CUBE));
             }
-            rData.primitive.type = this._glPrimitiveType;
+            rData.primitive.type = rData.pass.state.primitiveType;
         }
         public get texture(): Texture {
             return this._texture;
@@ -549,14 +547,6 @@ export namespace SY {
             super();
         }
         private _polygon: Float32Array;//点坐标{x,y,z}
-        protected onInit(): void {
-            if (this._glPrimitiveType == glEnums.PT_POINTS)
-                this.pushPassContent(syRender.ShaderType.Point);
-            else if (this._glPrimitiveType == glEnums.PT_LINE_STRIP ||
-                this._glPrimitiveType == glEnums.PT_LINES ||
-                this._glPrimitiveType == glEnums.PT_LINE_LOOP)
-                this.pushPassContent(syRender.ShaderType.Line);
-        }
         public updatePositionData(posArr: Array<number>, isClear: boolean = true) {
             if (!posArr || posArr.length < 3) {
                 if (this.is2DNode()) {
@@ -649,7 +639,6 @@ export namespace SY {
             super();
             this._node__type = syRender.NodeType.D2;
             this._sizeMode = SpriteSizeMode.RAW;
-            this._glPrimitiveType = this.gl.TRIANGLE_STRIP;
         }
         protected isUnpackY:boolean = false;
         private updateUV(): void {
@@ -802,7 +791,6 @@ export namespace SY {
     export class Sprite2DInstance extends SY.Sprite2D {
         constructor() {
             super();
-            this._glPrimitiveType = syGL.PrimitiveType.TRIANGLE_STRIP;
         }
         /**
          * 实例化的数目
@@ -868,7 +856,6 @@ export namespace SY {
     export class Sprite3DInstance extends SY.SpriteBase {
         constructor() {
             super();
-            this._glPrimitiveType = syGL.PrimitiveType.TRIANGLE_STRIP;
         }
         /**
          * 实例化的数目

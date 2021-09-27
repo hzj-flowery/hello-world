@@ -1,5 +1,7 @@
 
 import { SY } from "../base/Sprite";
+import { syRender } from "../data/RenderData";
+import { StateString, StateValueMap } from "../gfx/State";
 import { syGL } from "../gfx/syGLEnums";
 
 
@@ -106,6 +108,8 @@ export default class CustomTextureCube extends SY.SpriteBase {
         this.createVertexsBuffer(positions, 3);
         this.createUVsBuffer(uvs, 2);
         
-        this._glPrimitiveType = syGL.PrimitiveType.TRIANGLES;
+        this.pushPassContent(syRender.ShaderType.Sprite,[
+            [StateString.primitiveType,StateValueMap.primitiveType.PT_TRIANGLES]
+        ])
     }
 }

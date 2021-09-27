@@ -143,7 +143,14 @@
                 "key": "stencilWriteMaskBack",
                 "des": "传入mask值,这个值会参与写入模板运算",
                 "value": 65535
+            },
+            {
+                "key": "primitiveType",
+                "des": "绘制类型,要么是绘制点，要么是绘制线，要么是绘制三角形",
+                "value": "PT_TRIANGLE_STRIP"
             }
+
+            
         ]
     },
     {

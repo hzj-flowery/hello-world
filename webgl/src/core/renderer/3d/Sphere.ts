@@ -120,8 +120,6 @@ export default class Sphere extends SY.ShadowSprite {
         this.createUVsBuffer(vertexData.texcoord, 2);
         this.createVertexsBuffer(vertexData.position, 3);
 
-        this._glPrimitiveType = syGL.PrimitiveType.TRIANGLE_STRIP;
-
         this.color = [1, 0.5, 0.5, 1];
         this.pushPassContent(syRender.ShaderType.Purity);
         super.onInit();

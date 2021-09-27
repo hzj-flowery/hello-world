@@ -1,5 +1,6 @@
 import { syRender } from "../data/RenderData";
 import {State} from "../gfx/State";
+import { syGL } from "../gfx/syGLEnums";
 import { ShaderProgramBase, ShaderProgram } from "./Shader";
 
 

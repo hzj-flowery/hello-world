@@ -2,6 +2,8 @@ import { SY } from "../base/Sprite";
 import { RenderTexture } from "../base/texture/RenderTexture";
 import {GameMainCamera} from "../camera/GameMainCamera";
 import { CubeData } from "../data/CubeData";
+import { syRender } from "../data/RenderData";
+import { StateString, StateValueMap } from "../gfx/State";
 
 /**
  * 延迟渲染
@@ -15,6 +17,6 @@ export class DeferredShading extends SY.SpriteBase{
         this.createVertexsBuffer(rd.vertex, rd.dF.vertex_item_size);
         this.createUVsBuffer(rd.uvData, rd.dF.uv_item_size);
         this.createIndexsBuffer(rd.indexs);
-        this._glPrimitiveType = this.gl.TRIANGLE_STRIP;
+        this.pushPassContent(syRender.ShaderType.Sprite)
     }
 }

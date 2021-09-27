@@ -480,5 +480,9 @@ export class Node extends Ref {
         return [this.convertScreenSpaceToClipSpaceX(x), this.convertScreenSpaceToClipSpaceY(y)]
     }
 
+
+    //----------------四元数 欧拉角 
+    
+
 }
 

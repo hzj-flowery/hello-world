@@ -13,7 +13,6 @@ export  class FogCube extends SY.SpriteBase {
         this.createUVsBuffer(rd.uvData, rd.dF.uv_item_size);
         this.createNormalsBuffer(rd.normals,rd.dF.normal_item_size)
         this.createIndexsBuffer(rd.indexs);
-        this._glPrimitiveType = this.gl.TRIANGLE_STRIP;
         this.pushPassContent(syRender.ShaderType.Fog);
         super.onInit();
     }

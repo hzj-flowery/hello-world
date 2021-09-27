@@ -17,7 +17,6 @@ import { syRender } from "../data/RenderData";
         this.createUVsBuffer(rd.uvData, rd.dF.uv_item_size);
         this.createIndexsBuffer(rd.indexs); 
         this.createNormalsBuffer(rd.normals, rd.dF.normal_item_size)
-        this._glPrimitiveType = this.gl.TRIANGLE_STRIP;
         GameMainCamera.instance.createBaseVituralCamera(syRender.RenderTextureUUid.RTT, syRender.DrawingOrder.Middle);
         this.pushPassContent(syRender.ShaderType.RTT_Create)
     }
@@ -36,6 +35,5 @@ export class RTTTest extends SY.SpriteBase {
         this.createUVsBuffer(rd.uvData, rd.dF.uv_item_size);
         this.createIndexsBuffer(rd.indexs); 
         this.createNormalsBuffer(rd.normals, rd.dF.normal_item_size)
-        this._glPrimitiveType = this.gl.TRIANGLE_STRIP;
     }
 }

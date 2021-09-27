@@ -1,5 +1,4 @@
 import Scene from "./Scene";
-import Ground from "../3d/Ground";
 import Cube from "../3d/Cube";
 import LightCube from "../3d/ParallelLightCube";
 import SkyBox from "../3d/SkyBox";
@@ -34,7 +33,6 @@ export default class Scene3D extends Scene {
 
     private _lightCube: LightCube;
     private _skybox: SkyBox;
-    private _floorNode: Ground;
     private _plane:Plane;
     private _cubeNode: Cube;
     private _testAlphaCube:Cube;
@@ -91,10 +89,7 @@ export default class Scene3D extends Scene {
         this._robart.x = 5;
         this._robart.y = 10;
         this.addChild(this._robart);
-        // this._floorNode = new Ground();
-        // this._floorNode.spriteFrame = "res/ground.jpg";
-        // this._floorNode.z = -20;
-        // this.addChild(this._floorNode);
+
 
        
         this._spineNode = new Spine();
@@ -102,11 +97,11 @@ export default class Scene3D extends Scene {
         this._spineNode.y = 10;
         this.addChild(this._spineNode);
 
-        this._objNode = new ObjNode();
-        this._objNode.x = 5;
-        this._objNode.y = 10;
-        this._objNode.z = -10;
-        this.addChild(this._objNode);
+        // this._objNode = new ObjNode();
+        // this._objNode.x = 5;
+        // this._objNode.y = 10;
+        // this._objNode.z = -10;
+        // this.addChild(this._objNode);
 
         this._customTexture = new CustomTextureCube();
         this._customTexture.spriteFrame = CustomTextureData.getRandomData(3, 5, syGL.TextureFormat.RGB8);
@@ -182,7 +177,6 @@ export default class Scene3D extends Scene {
 
       
         this._rttTest = new RTTTest();
-        // this._rttTest.spriteFrame = "res/bg_npc_06.png";
         this._rttTest.pushPassContent(syRender.ShaderType.RTT_Use)
         this._rttTest.gZOrder = 501;
         this._rttTest.setPosition(-5, 10, 0);
@@ -261,10 +255,10 @@ export default class Scene3D extends Scene {
         this._mirrorCube.setPosition(-13,3.0,0);
         this.addChild(this._mirrorCube);
 
-        this._mirror = new Mirror();
-        this._mirror.setDefaultUrl();
-        this._mirror.setPosition(-3,3.0,0);
-        this.addChild(this._mirror);
+        // this._mirror = new Mirror();
+        // this._mirror.setDefaultUrl();
+        // this._mirror.setPosition(-3,3.0,0);
+        // this.addChild(this._mirror);
 
         this._centerNode.addChild(new LightCamera());
 

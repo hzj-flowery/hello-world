@@ -64,7 +64,7 @@ export default class Scene2D extends Scene {
         // this._instantiateSprite.setPosition(420,120,-100);
         // this.addChild(this._instantiateSprite);
 
-       
+
 
         this._shadowMap = new ShadowMap();
         this._shadowMap.setPosition(Device.Instance.width / 2, Device.Instance.height / 2 + 200, -100);
@@ -98,14 +98,17 @@ export default class Scene2D extends Scene {
     private _isPress: boolean = false;
     private onMouseDown(ev: MouseEvent): void {
         this._isPress = true;
-        // this._pen.pushScreenPos(ev.x, ev.y)
+        this._pen.pushScreenPos(ev.x, ev.y)
     }
     private onMouseMove(ev: MouseEvent): void {
-        if (this._isPress&&this._mask)
-            {
-                // this._pen.pushScreenPos(ev.x, ev.y)
-                this._mask.setPosition(ev.x,Device.Instance.height - ev.y, -99);
-            }
+        if (this._isPress && this._pen) {
+            this._pen.pushScreenPos(ev.x, ev.y)
+        }
+
+        if (this._isPress && this._mask) {
+            this._mask.setPosition(ev.x, Device.Instance.height - ev.y, -99);
+        }
+
     }
     private onMouseUp(ev: MouseEvent): void {
         this._isPress = false;
@@ -119,24 +122,24 @@ export default class Scene2D extends Scene {
     private stencilTest(): void {
 
         var rectangle1 = new SY.Sprite2D();
-        rectangle1.alpha = 1.0; 
+        rectangle1.alpha = 1.0;
         rectangle1.gZOrder = 1001;
         rectangle1.pushPassContent(syRender.ShaderType.Sprite, [
 
-            [StateString.depthTest,StateValueMap.depthTest.OFF],
-            [StateString.depthFunc,StateValueMap.depthFunc.LEQUAL],
-            [StateString.depthWrite,StateValueMap.depthWrite.ON],
+            [StateString.depthTest, StateValueMap.depthTest.OFF],
+            [StateString.depthFunc, StateValueMap.depthFunc.LEQUAL],
+            [StateString.depthWrite, StateValueMap.depthWrite.ON],
 
             // [StateString.blendColorMask,syRender.ColorMask.ALL],
 
-            [StateString.stencilTest,StateValueMap.stencilTest.ON],
-            [StateString.stencilSep,StateValueMap.stencilSep.OFF],
-            [StateString.stencilFunc,StateValueMap.stencilFunc.EQUAL],
-            [StateString.stencilRef,10],
-            [StateString.stencilMask,0xffff],
-            [StateString.stencilFailOp,StateValueMap.stencilFailOp.KEEP],
-            [StateString.stencilZFailOp,StateValueMap.stencilZFailOp.KEEP],
-            [StateString.stencilZPassOp,StateValueMap.stencilZPassOp.KEEP],
+            [StateString.stencilTest, StateValueMap.stencilTest.ON],
+            [StateString.stencilSep, StateValueMap.stencilSep.OFF],
+            [StateString.stencilFunc, StateValueMap.stencilFunc.EQUAL],
+            [StateString.stencilRef, 10],
+            [StateString.stencilMask, 0xffff],
+            [StateString.stencilFailOp, StateValueMap.stencilFailOp.KEEP],
+            [StateString.stencilZFailOp, StateValueMap.stencilZFailOp.KEEP],
+            [StateString.stencilZPassOp, StateValueMap.stencilZPassOp.KEEP],
 
             // [StateString.stencilTestFront,StateValueMap.stencilTestFront.ON],
             // [StateString.stencilSep,StateValueMap.stencilSep.ON],
@@ -147,7 +150,7 @@ export default class Scene2D extends Scene {
             // [StateString.stencilZFailOpFront,StateValueMap.stencilZFailOpFront.KEEP],
             // [StateString.stencilZPassOpFront,StateValueMap.stencilZPassOpFront.KEEP],
         ])
-        rectangle1.setPosition(Device.Instance.width / 2, Device.Instance.height / 2 - 100,-100);
+        rectangle1.setPosition(Device.Instance.width / 2, Device.Instance.height / 2 - 100, -100);
         rectangle1.spriteFrame = "res/1.png";
         this.addChild(rectangle1);
 
@@ -155,8 +158,8 @@ export default class Scene2D extends Scene {
         this._mask = new SY.Mask2D();
         this._mask.spriteFrame = "res/png/player_watch/1143.png";
         this._mask.gZOrder = 1000;
-        this._mask.setScale(1.1,1.1,1.0)
-        
+        this._mask.setScale(1.1, 1.1, 1.0)
+
         rectangle1.addChild(this._mask);
 
     }
@@ -203,20 +206,20 @@ export default class Scene2D extends Scene {
 
 
 
-//----------------------------------------------------------------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------------------------------------------------------
     private blendTest(): void {
         var rectangle1 = new SY.Sprite2D();
         rectangle1.alpha = 1.0;
         rectangle1.defineUse.SY_USE_ALPHA_TEST = 0.1;
         rectangle1.pushPassContent(syRender.ShaderType.Sprite, [
-            [StateString.blendSep,StateValueMap.blendSep.ON],
-            [StateString.depthTest,StateValueMap.depthTest.ON],
-            [StateString.depthWrite,StateValueMap.depthWrite.ON],
-            [StateString.depthFunc,StateValueMap.depthFunc.LEQUAL],
-            [StateString.blendSrc,StateValueMap.blendSrc.SRC_ALPHA],
-            [StateString.blendDst,StateValueMap.blendDst.ONE_MINUS_SRC_ALPHA],
-            [StateString.blendSrcAlpha,StateValueMap.blendSrcAlpha.ZERO],
-            [StateString.blendDstAlpha,StateValueMap.blendDstAlpha.ONE],
+            [StateString.blendSep, StateValueMap.blendSep.ON],
+            [StateString.depthTest, StateValueMap.depthTest.ON],
+            [StateString.depthWrite, StateValueMap.depthWrite.ON],
+            [StateString.depthFunc, StateValueMap.depthFunc.LEQUAL],
+            [StateString.blendSrc, StateValueMap.blendSrc.SRC_ALPHA],
+            [StateString.blendDst, StateValueMap.blendDst.ONE_MINUS_SRC_ALPHA],
+            [StateString.blendSrcAlpha, StateValueMap.blendSrcAlpha.ZERO],
+            [StateString.blendDstAlpha, StateValueMap.blendDstAlpha.ONE],
         ])
         rectangle1.setPosition(Device.Instance.width / 2, Device.Instance.height / 2 - 100, -100);
         rectangle1.spriteFrame = "res/ground.png";
@@ -224,17 +227,17 @@ export default class Scene2D extends Scene {
 
         this._mask = new SY.Sprite2D();
         this._mask.alpha = 1.0;
-        this._mask.setScale(1.0,1.0,1.0)
+        this._mask.setScale(1.0, 1.0, 1.0)
         this._mask.defineUse.SY_USE_ALPHA_TEST = 0.0;
         this._mask.pushPassContent(syRender.ShaderType.Sprite, [
-            [StateString.blendSep,StateValueMap.blendSep.ON],
-            [StateString.depthTest,StateValueMap.depthTest.ON],
-            [StateString.depthWrite,StateValueMap.depthWrite.ON],
-            [StateString.depthFunc,StateValueMap.depthFunc.LEQUAL],
-            [StateString.blendSrc,StateValueMap.blendSrc.SRC_ALPHA],
-            [StateString.blendDst,StateValueMap.blendDst.ONE_MINUS_SRC_ALPHA],
-            [StateString.blendSrcAlpha,StateValueMap.blendSrcAlpha.ZERO],
-            [StateString.blendDstAlpha,StateValueMap.blendDstAlpha.ONE],
+            [StateString.blendSep, StateValueMap.blendSep.ON],
+            [StateString.depthTest, StateValueMap.depthTest.ON],
+            [StateString.depthWrite, StateValueMap.depthWrite.ON],
+            [StateString.depthFunc, StateValueMap.depthFunc.LEQUAL],
+            [StateString.blendSrc, StateValueMap.blendSrc.SRC_ALPHA],
+            [StateString.blendDst, StateValueMap.blendDst.ONE_MINUS_SRC_ALPHA],
+            [StateString.blendSrcAlpha, StateValueMap.blendSrcAlpha.ZERO],
+            [StateString.blendDstAlpha, StateValueMap.blendDstAlpha.ONE],
         ])
         this._mask.setPosition(Device.Instance.width / 2, Device.Instance.height / 2, 0);
         this._mask.spriteFrame = "res/png/player_watch/104.png";

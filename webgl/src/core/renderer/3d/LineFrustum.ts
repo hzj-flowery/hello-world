@@ -2,6 +2,7 @@
 import { glMatrix } from "../../math/Matrix";
 import { SY } from "../base/Sprite";
 import { syRender } from "../data/RenderData";
+import { StateString, StateValueMap } from "../gfx/State";
 import { syGL } from "../gfx/syGLEnums";
 
 /**
@@ -44,13 +45,17 @@ export class LineFrustum extends SY.SpriteBasePolygon {
     private _lightProjectInverseMatrix: Float32Array;
     private _tempMatrix:Float32Array;
     onInit(): void {
-        this._glPrimitiveType = syGL.PrimitiveType.LINES;
         this.createIndexsBuffer(VertData.indices);
         this._lightWorldMatrix = glMatrix.mat4.identity(null);
         this._lightProjectInverseMatrix = glMatrix.mat4.identity(null);
         this._tempMatrix = glMatrix.mat4.identity(null);
         this.color = [1.0,0.0,0.0,1.0];
         this.defineUse.SY_USE_MAT = 0.1;
+
+        this.pushPassContent(syRender.ShaderType.Line,[
+            [StateString.primitiveType,StateValueMap.primitiveType.PT_LINES]
+        ]);
+
         super.onInit();
         this.updatePositionData(VertData.position)
         

@@ -14,7 +14,6 @@ export default class Mirror extends SY.SpriteBase {
         this.createUVsBuffer(vertexData.texcoord, 2);
         this.createVertexsBuffer(vertexData.position, 3);
 
-        this._glPrimitiveType = syGL.PrimitiveType.TRIANGLE_STRIP;
         this.color = [1, 0.5, 0.5, 1];
         this.pushPassContent(syRender.ShaderType.Mirror);
         super.onInit();

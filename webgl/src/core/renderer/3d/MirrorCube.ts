@@ -13,7 +13,6 @@ export default class MirrorCube extends SY.SpriteBase {
         this.createVertexsBuffer(rd.vertex,rd.dF.vertex_item_size);
         this.createIndexsBuffer(rd.indexs);
         this.createNormalsBuffer(rd.normals,rd.dF.normal_item_size);
-        this._glPrimitiveType = this.gl.TRIANGLE_STRIP;
         this.pushPassContent(syRender.ShaderType.Mirror)
     }
 //     private defaultPath = [

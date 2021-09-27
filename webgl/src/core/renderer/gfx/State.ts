@@ -139,7 +139,7 @@ const _default = {
     cullMode: glEnums.CULL_NONE,  //剔除默认不开启
 
     // primitive-type
-    primitiveType: glEnums.PT_TRIANGLES,
+    primitiveType: glEnums.PT_TRIANGLE_STRIP, //绘制类型
 
     // bindings
     maxStream: -1,
@@ -536,7 +536,7 @@ export class State {
     public cullMode;
 
     // primitive-type
-    public primitiveType;
+    public primitiveType:syGL.PrimitiveType;
 
     // buffer bindings
     public maxStream;

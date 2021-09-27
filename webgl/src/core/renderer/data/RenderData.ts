@@ -198,7 +198,7 @@ export namespace syRender {
             this.index = new WebGLBufferData()
             this.uv = new WebGLBufferData()
             this.normal = new WebGLBufferData();
-            this.type = syGL.PrimitiveType.TRIANGLE_FAN;
+            this.type = syGL.PrimitiveType.TRIANGLE_STRIP;
             this.customMatrix = glMatrix.mat4.identity(null);
         }
         public nodeVertColor: WebGLBufferData;//节点自定义顶点颜色

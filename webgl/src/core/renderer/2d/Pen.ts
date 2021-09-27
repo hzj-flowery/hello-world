@@ -2,6 +2,7 @@
 import { SY } from "../base/Sprite";
 import { syRender } from "../data/RenderData";
 import { glEnums } from "../gfx/GLapi";
+import { StateString, StateValueMap } from "../gfx/State";
 
 export class Pen extends SY.SpriteBasePolygon {
     constructor() {
@@ -12,7 +13,9 @@ export class Pen extends SY.SpriteBasePolygon {
     protected onInit(): void {
         this._node__type = syRender.NodeType.D2;
         this.color = [1.0,0,0,1.0];
-        this._glPrimitiveType = glEnums.PT_POINTS;
+        this.pushPassContent(syRender.ShaderType.Point,[
+            [StateString.primitiveType,StateValueMap.primitiveType.PT_POINTS]
+        ]);
         super.onInit();
     }
     public pushScreenPos(x:number,y:number):void{
