@@ -68,58 +68,58 @@ class LightCenter {
 
         
         //平行光
-        this._lightData.parallel.colR = setting.parallelColR;
-        this._lightData.parallel.colG = setting.parallelColG;
-        this._lightData.parallel.colB = setting.parallelColB;
-        this._lightData.parallel.colA = setting.parallelColA;
-        this._lightData.parallel.dirX = setting.parallelDirX;
-        this._lightData.parallel.dirY = setting.parallelDirY;
-        this._lightData.parallel.dirZ = setting.parallelDirZ;
+        this._lightData.parallel.color.r = setting.parallelColR*255;
+        this._lightData.parallel.color.g = setting.parallelColG*255;
+        this._lightData.parallel.color.b = setting.parallelColB*255;
+        this._lightData.parallel.color.a = setting.parallelColA*255;
+        this._lightData.parallel.direction.x = setting.parallelDirX;
+        this._lightData.parallel.direction.y = setting.parallelDirY;
+        this._lightData.parallel.direction.z = setting.parallelDirZ;
         
         //聚光
         this._lightData.spot.innerLimitAngle = setting.spotInnerLimit;
         this._lightData.spot.outerLimitAngle = setting.spotOuterLimit;
-        this._lightData.spot.dirX = setting.spotDirX;
-        this._lightData.spot.dirY = setting.spotDirY;
-        this._lightData.spot.dirZ = setting.spotDirZ;
-        this._lightData.spot.colR = setting.spotColR;
-        this._lightData.spot.colG = setting.spotColG;
-        this._lightData.spot.colB = setting.spotColB;
-        this._lightData.spot.colA = setting.spotColA;
+        this._lightData.spot.direction.x = setting.spotDirX;
+        this._lightData.spot.direction.y = setting.spotDirY;
+        this._lightData.spot.direction.z = setting.spotDirZ;
+        this._lightData.spot.color.r = setting.spotColR*255;
+        this._lightData.spot.color.g = setting.spotColG*255;
+        this._lightData.spot.color.b = setting.spotColB*255;
+        this._lightData.spot.color.a = setting.spotColA*255;
 
         //高光
-        this._lightData.specular.colR = setting.specularColR;
-        this._lightData.specular.colG = setting.specularColG;
-        this._lightData.specular.colB = setting.specularColB;
-        this._lightData.specular.colA = setting.specularColA;
+        this._lightData.specular.color.r = setting.specularColR*255;
+        this._lightData.specular.color.g = setting.specularColG*255;
+        this._lightData.specular.color.b = setting.specularColB*255;
+        this._lightData.specular.color.a = setting.specularColA*255;
         this.lightData.specular.shininess = setting.specularShininess;
 
         //环境光
-        this._lightData.ambient.colR = setting.ambientColR;
-        this._lightData.ambient.colG = setting.ambientColG;
-        this._lightData.ambient.colB = setting.ambientColB;
-        this._lightData.ambient.colA = setting.ambientColA;
+        this._lightData.ambient.color.r = setting.ambientColR*255;
+        this._lightData.ambient.color.g = setting.ambientColG*255;
+        this._lightData.ambient.color.b = setting.ambientColB*255;
+        this._lightData.ambient.color.a = setting.ambientColA*255;
         
         //雾
-        this._lightData.fog.colR = setting.fogColR;
-        this._lightData.fog.colG = setting.fogColG;
-        this._lightData.fog.colB = setting.fogColB;
-        this._lightData.fog.colA = setting.fogColA;
+        this._lightData.fog.color.r = setting.fogColR*255;
+        this._lightData.fog.color.g = setting.fogColG*255;
+        this._lightData.fog.color.b = setting.fogColB*255;
+        this._lightData.fog.color.a = setting.fogColA*255;
         this._lightData.fog.density = setting.fogDensity;
 
         //点光
-        this._lightData.point.colR = setting.pointColR;
-        this._lightData.point.colG = setting.pointColG;
-        this._lightData.point.colB = setting.pointColB;
-        this._lightData.point.colA = setting.pointColA;
+        this._lightData.point.color.r = setting.pointColR*255;
+        this._lightData.point.color.g = setting.pointColG*255;
+        this._lightData.point.color.b = setting.pointColB*255;
+        this._lightData.point.color.a = setting.pointColA*255;
 
 
-        this._posX =  this._lightData.eyeX = setting.eyeX;
-        this._posY = this._lightData.eyeY = setting.eyeY;
-        this._posZ =  this._lightData.eyeZ = setting.eyeZ;
-        this._targetX = this._lightData.targetX = setting.lightTargetX;
-        this._targetY =  this._lightData.targetY = setting.lightTargetY;
-        this._targetZ =  this._lightData.targetZ = setting.lightTargetZ;
+        this._posX =  this._lightData.position.x = setting.eyeX;
+        this._posY = this._lightData.position.y = setting.eyeY;
+        this._posZ =  this._lightData.position.z = setting.eyeZ;
+        this._targetX = this._lightData.target.x = setting.lightTargetX;
+        this._targetY =  this._lightData.target.y = setting.lightTargetY;
+        this._targetZ =  this._lightData.target.z = setting.lightTargetZ;
 
         this._projHeight = this._lightData.projHeight = setting.lightProjHeight;
         this._projWidth =  this._lightData.projWidth = setting.lightProjWidth;

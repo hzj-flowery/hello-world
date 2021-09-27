@@ -1,4 +1,5 @@
 import { glMatrix } from "../../math/Matrix";
+import Vec3 from "../../value-types/vec3";
 
 
 
@@ -9,12 +10,13 @@ export class CameraData {
     constructor() {
         this._viewProjectionMat = glMatrix.mat4.identity(null);
         this._viewMat = glMatrix.mat4.identity(null);
+        this.position = new Vec3(0,0,0)
         this.reset();
     }
     /*
     相机的位置
     */
-    public position: Array<number>;
+    public position: Vec3;
     //相机的投影矩阵
     private _projectMat: Float32Array;
     //相机的节点矩阵
@@ -26,7 +28,9 @@ export class CameraData {
     private _isNeedUpdate: boolean;
 
     public reset(): void {
-        this.position = [];
+        this.position.x =0 ;
+        this.position.y = 0;
+        this.position.z = 0;
         this.projectMat = null;
         this.modelMat = null;
         this._isNeedUpdate = false;

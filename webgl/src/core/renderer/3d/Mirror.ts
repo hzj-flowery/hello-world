@@ -13,8 +13,7 @@ export default class Mirror extends SY.SpriteBase {
         this.createNormalsBuffer(vertexData.normal, 3);
         this.createUVsBuffer(vertexData.texcoord, 2);
         this.createVertexsBuffer(vertexData.position, 3);
-
-        this.color = [1, 0.5, 0.5, 1];
+        this.setColor(255,122.5,122.5,255);
         this.pushPassContent(syRender.ShaderType.Mirror);
         super.onInit();
     }

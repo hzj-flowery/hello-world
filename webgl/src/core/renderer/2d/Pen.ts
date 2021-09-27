@@ -12,7 +12,7 @@ export class Pen extends SY.SpriteBasePolygon {
     private _stop2Clear:boolean = true;//
     protected onInit(): void {
         this._node__type = syRender.NodeType.D2;
-        this.color = [1.0,0,0,1.0];
+        this.setColor(255,0,0,255);
         this.pushPassContent(syRender.ShaderType.Point,[
             [StateString.primitiveType,StateValueMap.primitiveType.PT_POINTS]
         ]);

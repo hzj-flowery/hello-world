@@ -3,6 +3,8 @@ import Device from "../../Device";
 import { G_InputControl } from "../../InputControl";
 import { glMatrix } from "../../math/Matrix";
 import { MathUtils } from "../../utils/MathUtils";
+import { Color } from "../../value-types/color";
+import Vec3 from "../../value-types/vec3";
 import { Node } from "../base/Node";
 import { GameMainCamera } from "../camera/GameMainCamera";
 import { glEnums } from "../gfx/GLapi";
@@ -200,6 +202,7 @@ export namespace syRender {
             this.normal = new WebGLBufferData();
             this.type = syGL.PrimitiveType.TRIANGLE_STRIP;
             this.customMatrix = glMatrix.mat4.identity(null);
+            this.color = new Color(255,255,255,255);
         }
         public nodeVertColor: WebGLBufferData;//节点自定义顶点颜色
         public vertMatrix: WebGLBufferData;//节点自定义矩阵
@@ -208,7 +211,7 @@ export namespace syRender {
         public uv: WebGLBufferData;//uv buffer
         public normal: WebGLBufferData;//法线buffer
 
-        public color: Array<number>;//节点自定义颜色
+        public color: Color;//节点自定义颜色
         public diffuse: Array<number>; //漫反射颜色
         public customFloatValue: number; //一个自定义的值
         public alpha: number;        //节点自定义透明度
@@ -235,64 +238,18 @@ export namespace syRender {
             constructor() {
 
             }
-            private _colR: number = 0;
-            private _colG: number = 0;
-            private _colB: number = 0;
-            private _colA: number = 1.0;//透明通道
-            public get colR(): number { return this._colR };
-            public set colR(p: number) { this._colR = p };
-            public get colG(): number { return this._colG };
-            public set colG(p: number) { this._colG = p };
-            public get colB(): number { return this._colB };
-            public set colB(p: number) { this._colB = p };
-            public get colA(): number { return this._colA };
-            public set colA(p: number) { this._colA = p };
-            public get color(): Array<number> {
-                return [this._colR, this._colG, this._colB, this._colA];
-            }
-            public set color(p: Array<number>) {
-                this.colR = p[0] != null ? p[0] : this._colR;
-                this.colG = p[1] != null ? p[1] : this._colG;
-                this.colB = p[2] != null ? p[2] : this._colB;
-                this.colA = p[3] != null ? p[3] : this._colA;
-            }
-            private _posX: number = 0;
-            private _posY: number = 0;
-            private _posZ: number = 0;
-            public get posX(): number { return this._posX };
-            public set posX(p: number) { this._posX = p };
-            public get posY(): number { return this._posY };
-            public set posY(p: number) { this._posY = p };
-            public get posZ(): number { return this._posZ };
-            public set posZ(p: number) { this._posZ = p };
-            public get position(): Array<number> {
-                return [this._posX, this._posY, this._posZ];
-            }
-            public set position(p: Array<number>) {
-                this.posX = p[0] != null ? p[0] : this._posX;
-                this.posY = p[1] != null ? p[1] : this._posY;
-                this.posZ = p[2] != null ? p[2] : this._posZ;
-            }
-            private _dirX: number = 0;
-            private _dirY: number = 0;
-            private _dirZ: number = 0;
-            public get dirX(): number { return this._dirX };
-            public set dirX(p: number) { this._dirX = p };
-            public get dirY(): number { return this._dirY };
-            public set dirY(p: number) { this._dirY = p };
-            public get dirZ(): number { return this._dirZ };
-            public set dirZ(p: number) { this._dirZ = p };
-            public get direction(): Array<number> {
-                return [this._dirX, this._dirY, this._dirZ];
-            }
-            public set direction(p: Array<number>) {
-                this.dirX = p[0] != null ? p[0] : this._dirX;
-                this.dirY = p[1] != null ? p[1] : this._dirY;
-                this.dirZ = p[2] != null ? p[2] : this._dirZ;
-            }
+            public color = new Color(0,0,0,255);
+            public position = new Vec3(0,0,0);
+            public direction = new Vec3(0,0,0);
             public reset(): void {
-                this.color = [1, 0, 0, 1]; //默认的颜色
-                this.direction = [1, 1, 1]; //默认的方向
+                
+                this.color.r = 255;
+                this.color.g = 0;
+                this.color.b = 0;
+                this.color.a = 255;//默认的颜色
+                this.direction.x = 1;
+                this.direction.y=1;
+                this.direction.z =1;
             }
         }
         export class Spot extends BaseData {
@@ -416,7 +373,7 @@ export namespace syRender {
                 this.point = new Light.Point();
                 this.ambient = new Light.Ambient();
                 this.shadow = new Light.Shadow();
-                this.position = []
+                this.position = new Vec3(0,0,0);
             }
             public spot: Light.Spot;    //聚光灯
             public fog: Light.Fog;     //雾
@@ -425,7 +382,7 @@ export namespace syRender {
             public point: Light.Point;     //点光
             public shadow: Light.Shadow;    //阴影
             public ambient: Light.Ambient;//环境光
-            public position: Array<number>; //光的位置
+            public position:Vec3; //光的位置
 
             public viewMatrix: Float32Array;//光照摄像机的视口
             public projectionMatrix: Float32Array;//光照摄像机的投影
@@ -437,7 +394,9 @@ export namespace syRender {
                 this.specular.reset();
                 this.point.reset();
                 this.ambient.reset();
-                this.position = [];
+                this.position.x = 0;
+                this.position.y = 0;
+                this.position.z = 0;
             }
         }
     }
@@ -463,6 +422,7 @@ export namespace syRender {
             this.light = new Light.Center();
             this.primitive = new Primitive()
             this.defineUse = new DefineUse();
+            this._cameraPosition = new Vec3(0,0,0)
             this.reset();
         }
         /**
@@ -482,7 +442,7 @@ export namespace syRender {
         }
 
         public node: Node;//渲染的节点
-        public _cameraPosition: Array<number>;//相机的位置
+        public _cameraPosition:Vec3;//相机的位置
         private _pass: Pass;
         public light: Light.Center;
         public primitive: Primitive;
@@ -509,7 +469,9 @@ export namespace syRender {
         public defineUse: DefineUse;
         public reset(): void {
             this._pass = null;
-            this._cameraPosition = [];
+            this._cameraPosition.x = 0;
+            this._cameraPosition.y = 0;
+            this._cameraPosition.z = 0;
             this.light.reset();
             this.primitive.reset();
             this._texture2DGLIDMap.clear();
@@ -692,39 +654,39 @@ export namespace syRender {
                         _shader.bindMatrixToShader(syGL.AttributeUniform.PV_Mat_I, this._temp002_matrix);
                         break;
                     case ShaderUseVariantType.CameraWorldPosition:
-                        _shader.setCustomUniformFloatVec3(syGL.AttributeUniform.CameraWorldPosition, this._cameraPosition);
+                        _shader.setCustomUniformFloatVec3(syGL.AttributeUniform.CameraWorldPosition, this._cameraPosition.toArray());
                         break;
                     case ShaderUseVariantType.LightWorldPosition:
-                        _shader.setCustomUniformFloatVec3(syGL.AttributeUniform.LightWorldPosition, this.light.position);
+                        _shader.setCustomUniformFloatVec3(syGL.AttributeUniform.LightWorldPosition, this.light.position.toArray());
                         break;
                     case ShaderUseVariantType.SpecularLight:
-                        _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.LIGHT_SPECULAR, this.light.specular.color)
+                        _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.LIGHT_SPECULAR, this.light.specular.color.toNormalizeArray())
                         _shader.setCustomUniformFloat(syGL.AttributeUniform.LIGHT_SPECULAR_SHININESS, this.light.specular.shininess)
                         break;
                     case ShaderUseVariantType.AmbientLight:
-                        _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.LIGHT_AMBIENT, this.light.ambient.color);
+                        _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.LIGHT_AMBIENT, this.light.ambient.color.toNormalizeArray());
                         break;
                     case ShaderUseVariantType.PointLight:
-                        _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.LIGHT_POINT, this.light.point.color);
+                        _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.LIGHT_POINT, this.light.point.color.toNormalizeArray());
                         break;
                     //平行光
                     case ShaderUseVariantType.ParallelLight:
-                        _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.LIGHT_PARALLEL, this.light.parallel.color)
-                        _shader.setCustomUniformFloatVec3(syGL.AttributeUniform.LIGHT_PARALLEL_DIR, this.light.parallel.direction)
+                        _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.LIGHT_PARALLEL, this.light.parallel.color.toNormalizeArray())
+                        _shader.setCustomUniformFloatVec3(syGL.AttributeUniform.LIGHT_PARALLEL_DIR, this.light.parallel.direction.toArray())
                         break;
                     //聚光灯
                     case ShaderUseVariantType.SpotLight:
-                        _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.LIGHT_SPOT, this.light.spot.color);
-                        _shader.setCustomUniformFloatVec3(syGL.AttributeUniform.LIGHT_SPOT_DIRECTION, this.light.spot.direction)
+                        _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.LIGHT_SPOT, this.light.spot.color.toNormalizeArray());
+                        _shader.setCustomUniformFloatVec3(syGL.AttributeUniform.LIGHT_SPOT_DIRECTION, this.light.spot.direction.toArray())
                         _shader.setCustomUniformFloat(syGL.AttributeUniform.LIGHT_SPOT_INNER_LIMIT, this.light.spot.innerLimit)
                         _shader.setCustomUniformFloat(syGL.AttributeUniform.LIGHT_SPOT_OUTER_LIMIT, this.light.spot.outerLimit);
                         break;
                     case ShaderUseVariantType.Fog:
-                        _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.FOG_COLOR, this.light.fog.color);
+                        _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.FOG_COLOR, this.light.fog.color.toNormalizeArray());
                         _shader.setCustomUniformFloat(syGL.AttributeUniform.FOG_DENSITY, this.light.fog.density);
                         break;
                     case ShaderUseVariantType.Color:
-                        _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.COLOR, this.primitive.color);
+                        _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.COLOR, this.primitive.color.toNormalizeArray());
                         break;
                     case ShaderUseVariantType.Diffuse:
                         _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.DIFFUSE, this.primitive.diffuse);

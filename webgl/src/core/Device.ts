@@ -960,21 +960,21 @@ export default class Device {
 
 
         //补一下光的数据
-        rData.light.parallel.color = G_LightCenter.lightData.parallel.color; //光的颜色
-        rData.light.parallel.direction = G_LightCenter.lightData.parallel.direction;//光的方向
-        rData._cameraPosition = cData.position;
-        rData.light.ambient.color = G_LightCenter.lightData.ambient.color;//环境光
-        rData.light.point.color = G_LightCenter.lightData.point.color;//点光
+        rData.light.parallel.color.set(G_LightCenter.lightData.parallel.color); //光的颜色
+        rData.light.parallel.direction.set(G_LightCenter.lightData.parallel.direction);//光的方向
+        rData._cameraPosition.set(cData.position);
+        rData.light.ambient.color.set(G_LightCenter.lightData.ambient.color);//环境光
+        rData.light.point.color.set(G_LightCenter.lightData.point.color);//点光
         rData.light.specular.shininess = G_LightCenter.lightData.specular.shininess;
-        rData.light.specular.color = G_LightCenter.lightData.specular.color;
-        rData.light.position = G_LightCenter.lightData.position;
+        rData.light.specular.color.set(G_LightCenter.lightData.specular.color);
+        rData.light.position.set(G_LightCenter.lightData.position);
 
-        rData.light.spot.direction = G_LightCenter.lightData.spot.direction;
-        rData.light.spot.color = G_LightCenter.lightData.spot.color;
+        rData.light.spot.direction.set(G_LightCenter.lightData.spot.direction);
+        rData.light.spot.color.set(G_LightCenter.lightData.spot.color);
         rData.light.spot.innerLimitAngle = G_LightCenter.lightData.spot.innerLimitAngle;
         rData.light.spot.outerLimitAngle = G_LightCenter.lightData.spot.outerLimitAngle;
 
-        rData.light.fog.color = G_LightCenter.lightData.fog.color;
+        rData.light.fog.color.set(G_LightCenter.lightData.fog.color);
         rData.light.fog.density = G_LightCenter.lightData.fog.density;
 
         rData.light.viewMatrix = G_LightCenter.lightData.viewMatrix;
@@ -1023,8 +1023,8 @@ export default class Device {
 
         nData.pushProjectMat(cameraData.projectMat);
         nData.pushViewMat(cameraData.viewMat);
-        nData.pushCameraPosition(nData._cameraPosition);
-        nData.pushLightDirection(nData.light.spot.direction);
+        nData.pushCameraPosition(nData._cameraPosition.toArray());
+        nData.pushLightDirection(nData.light.spot.direction.toArray());
         for (let j = 0; j < nData._uniformData.length; j++) {
             G_ShaderFactory.setUniforms(nData._shaderData.uniSetters, nData._uniformData[j]);
         }

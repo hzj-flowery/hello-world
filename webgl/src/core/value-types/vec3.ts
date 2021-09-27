@@ -1076,6 +1076,11 @@ export default class Vec3 extends ValueType {
         return new Vec3(this.x, this.y, this.z);
     }
 
+    toArray():Array<number>
+    {
+        return [this.x,this.y,this.z]
+    }
+
     /**
      * !#en Set the current vector value with the given vector.
      * !#zh 用另一个向量设置当前的向量对象值。

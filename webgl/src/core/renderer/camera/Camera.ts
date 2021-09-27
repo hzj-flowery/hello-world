@@ -403,11 +403,16 @@ export default class Camera extends Node {
         this._cameraData.projectMat = this._projectionMatrix;
         if(this._eye.length<=0)
         {
-            this._cameraData.position =  this.convertToWorldSpace([this.x, this.y, this.z]);
+            var temp =  this.convertToWorldSpace([this.x, this.y, this.z]);
+            this._cameraData.position.x = temp[0];
+            this._cameraData.position.y = temp[1];
+            this._cameraData.position.z = temp[2];
         }
         else
         {
-            this._cameraData.position = [this._eye[0],this._eye[1],this._eye[2]];
+            this._cameraData.position.x = this._eye[0];
+            this._cameraData.position.y = this._eye[1];
+            this._cameraData.position.z = this._eye[2];
         }
         return this._cameraData;
     }

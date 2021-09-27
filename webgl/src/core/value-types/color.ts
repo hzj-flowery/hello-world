@@ -851,6 +851,10 @@ export class Color extends ValueType {
         this._val = ((this._val & 0x00ffffff) | (alpha << 24)) >>> 0;
     }
 
+    toNormalizeArray():Array<number> {
+        return [this.r/255,this.g/255,this.b/255,this.a/255]
+    }
+
     /**
      * !#en Multiplies the current color by the specified color
      * !#zh 将当前颜色乘以与指定颜色

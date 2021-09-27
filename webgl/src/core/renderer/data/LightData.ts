@@ -1,5 +1,6 @@
 import { sy } from "../../Director";
 import { MathUtils } from "../../utils/MathUtils";
+import Vec3 from "../../value-types/vec3";
 import { syRender } from "./RenderData";
 
 /**
@@ -54,20 +55,46 @@ export class LightData {
     public projectionMatrix:Float32Array;//光照摄像机的投影
 
     public reset(): void {
-        this.position = [0, 0, 0];
-        this.parallel.direction = [8, 5, -10];      //平行光的方向
-        this.parallel.color = [0.1, 0.1, 0.1, 1.0]; //平行光的颜色
+        this.position.x = 0;
+        this.position.y = 0;
+        this.position.z = 0;  
+        this.parallel.direction.x=8;//平行光的方向 
+        this.parallel.direction.y=5;
+        this.parallel.direction.z = -10;
+        this.parallel.color.r = 25.5;////平行光的颜色
+        this.parallel.color.g = 25.5;
+        this.parallel.color.b = 25.5;
+        this.parallel.color.a = 255;
         this.specular.shininess = 140;
-        this.specular.color = [1.0, 0.0, 0.0, 1.0];
-        this.ambient.color = [0.1, 0.1, 0.1, 1.0];//环境光
-        this.point.color = [1.0, 1.0, 1.0, 1.0];//默认点光的颜色为红色
+        this.specular.color.r = 255;//高光的颜色
+        this.specular.color.g = 0;
+        this.specular.color.b = 0;
+        this.specular.color.a = 255;
 
+        this.ambient.color.r = 25.5;//环境光
+        this.ambient.color.g = 25.5;
+        this.ambient.color.b = 25.5;
+        this.ambient.color.a = 255;
+
+        this.point.color.r = 255; //点光
+        this.point.color.g = 255;
+        this.point.color.b = 255;
+        this.point.color.a = 255;
+
+        this.spot.color.r = 255; //点光
+        this.spot.color.g = 0;
+        this.spot.color.b = 0;
+        this.spot.color.a = 255;
         this.spot.innerLimitAngle = 20;
         this.spot.outerLimitAngle = 30;
-        this.spot.direction = [0, 0, 1];
-        this.spot.color = [1, 0, 0, 1];
+        this.spot.direction.x = 0;
+        this.spot.direction.y = 0;
+        this.spot.direction.z = 1;
 
-        this.fog.color = [0.8, 0.9, 1, 1];
+        this.fog.color.r = 255*0.8; //雾
+        this.fog.color.g = 255*0.9;
+        this.fog.color.b = 255;
+        this.fog.color.a = 255;
         this.fog.density = 0.092;
     }
 
@@ -89,41 +116,9 @@ export class LightData {
     /**
      * 光看向的位置
      */
-    private _targetX: number = 3.5;//看向哪里
-    private _targetY: number = 0;//看向哪里
-    private _targetZ: number = 3.5;//看向哪里
-    public get targetX(): number { return this._targetX };
-    public set targetX(p: number) { this._targetX = p };
-    public get targetY(): number { return this._targetY };
-    public set targetY(p: number) { this._targetY = p };
-    public get targetZ(): number { return this._targetZ };
-    public set targetZ(p: number) { this._targetZ = p };
-    public get targetPosition(): Array<number> {
-        return [this._targetX, this._targetY, this._targetZ]
-    }
-    public set targetPosition(p: Array<number>) {
-        this.targetX = p[0] ? p[0] : this._targetX;
-        this.targetY = p[1] ? p[1] : this._targetY;
-        this.targetZ = p[2] ? p[2] : this._targetZ;
-    }
+    public target:Vec3 = new Vec3(0,0,0)
     //眼睛的位置
-    private _eyeX: number = 0;
-    private _eyeY: number = 0;
-    private _eyeZ: number = 0;
-    public get eyeX(): number { return this._eyeX };
-    public set eyeX(p: number) { this._eyeX = p };
-    public get eyeY(): number { return this._eyeY };
-    public set eyeY(p: number) { this._eyeY = p };
-    public get eyeZ(): number { return this._eyeZ };
-    public set eyeZ(p: number) { this._eyeZ = p };
-    public get position(): Array<number> {
-        return [this._eyeX, this._eyeY, this._eyeZ];
-    }
-    public set position(p: Array<number>) {
-        this.eyeX = p[0] ? p[0] : this._eyeX;
-        this.eyeY = p[1] ? p[1] : this._eyeY;
-        this.eyeZ = p[2] ? p[2] : this._eyeZ;
-    }
+    public position:Vec3 = new Vec3(0,0,0)
 
     public shadow = new syRender.Light.Shadow();
     //雾

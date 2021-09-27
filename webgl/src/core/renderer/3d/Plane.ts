@@ -78,7 +78,7 @@ export class Plane extends SY.ShadowSprite{
         this.createUVsBuffer(vertexData.texcoord, 2);
         this.createVertexsBuffer(vertexData.position, 3);
         
-        this.color = [0.5, 0.5, 1, 1];
+        this.setColor(122.5,122.5,255,255);
     }
 
     public setCellCounts(widthCount:number,heightCount:number):void{

@@ -65,6 +65,7 @@ import { glMatrix } from "../../math/Matrix";
 import { glEnums } from "../gfx/GLapi";
 import { StateString, StateValueMap } from "../gfx/State";
 import { GameMainCamera } from "../camera/GameMainCamera";
+import { Color } from "../../value-types/color";
 
 /**
  * 显示节点
@@ -112,7 +113,7 @@ export namespace SY {
         private _materialId: string;//这里存放一个材质id
         private _passContent: Array<any> = [];//pass的内容
 
-        private _color: Array<number>;//节点自定义颜色
+        private _color: Color;//节点自定义颜色
         private _diffuse: Array<number>;//漫反射颜色
         private _alpha: number = 1;//节点自定义透明度
         private _customMatrix: Float32Array = glMatrix.mat4.identity(null);//节点自定义矩阵
@@ -130,7 +131,7 @@ export namespace SY {
             this._materialId = "materialId_" + materialId;
             this.gl = Device.Instance.gl;
             this._renderData = []
-            this._color = [1.0, 1.0, 1.0, 1.0];//默认颜色为白色
+            this._color = new Color(255,255,255,255);//默认颜色为白色
             this._diffuse = [1.0, 1.0, 1.0, 1.0];//默认颜色为白色
             this._sizeMode = SpriteSizeMode.CUSTOM;//默认加载图片的尺寸大小为自定义
             this.init();
@@ -298,11 +299,11 @@ export namespace SY {
         /**
          * 设置节点颜色
          */
-        public set color(color: Array<number>) {
-            this._color[0] = color[0] != null ? color[0] : this._color[0];
-            this._color[1] = color[1] != null ? color[1] : this._color[1];
-            this._color[2] = color[2] != null ? color[2] : this._color[2];
-            this._color[3] = color[3] != null ? color[3] : this._color[3];
+        public setColor(r: number = 0, g: number = 0, b: number = 0, a: number = 255) {
+            this._color.r = r;
+            this._color.g = g;
+            this._color.b = b;
+            this._color.a = a;
         }
         /**
          * 设置慢反射颜色
@@ -433,7 +434,7 @@ export namespace SY {
             }
 
             //节点的颜色
-            rData.primitive.color = this._color;
+            rData.primitive.color.set(this._color);
             //漫反射颜色
             rData.primitive.diffuse = this._diffuse;
             //节点的透明度

@@ -9,7 +9,7 @@ export class Line extends SY.SpriteBasePolygon {
         super();
     }
     protected onInit() {
-        this.color = [1.0,0,0,1.0];
+        this.setColor(255,0,0,255);
         this.pushPassContent(syRender.ShaderType.Line,[
             [StateString.primitiveType,StateValueMap.primitiveType.PT_LINES]
         ]);
