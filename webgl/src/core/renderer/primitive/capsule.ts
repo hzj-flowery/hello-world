@@ -1,203 +1,242 @@
-// 'use strict';
+/*
+ Copyright (c) 2020 Xiamen Yaji Software Co., Ltd.
 
-// import Vec3 from '../../value-types/vec3';
-// import VertexData from './vertex-data';
+ https://www.cocos.com/
 
-// let temp1 = cc.v3(0, 0, 0);
-// let temp2 = cc.v3(0, 0, 0);
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated engine source code (the "Software"), a limited,
+ worldwide, royalty-free, non-assignable, revocable and non-exclusive license
+ to use Cocos Creator solely to develop games on your target platforms. You shall
+ not use Cocos Creator software for developing other software or tools that's
+ used for developing games. You are not granted to publish, distribute,
+ sublicense, and/or sell copies of Cocos Creator.
 
-// /**
-//  * @param {Number} radiusTop
-//  * @param {Number} radiusBottom
-//  * @param {Number} height
-//  * @param {Object} opts
-//  * @param {Number} opts.sides
-//  * @param {Number} opts.heightSegments
-//  * @param {Boolean} opts.capped
-//  * @param {Number} opts.arc
-//  */
-// export default function (radiusTop = 0.5, radiusBottom = 0.5, height = 2, opts = {sides: 32, heightSegments: 32, arc: 2.0 * Math.PI}) {
-//   let torsoHeight = height - radiusTop - radiusBottom;
-//   let sides = opts.sides;
-//   let heightSegments = opts.heightSegments;
-//   let bottomProp = radiusBottom / height;
-//   let torProp = torsoHeight / height;
-//   let topProp = radiusTop / height;
-//   let bottomSegments = Math.floor(heightSegments * bottomProp);
-//   let topSegments = Math.floor(heightSegments * topProp);
-//   let torSegments = Math.floor(heightSegments * torProp);
-//   let topOffset = torsoHeight + radiusBottom - height / 2;
-//   let torOffset = radiusBottom - height / 2;
-//   let bottomOffset = radiusBottom - height / 2;
-//   let arc = opts.arc;
+ The software or tools in this License Agreement are licensed, not sold.
+ Xiamen Yaji Software Co., Ltd. reserves all rights not expressly granted to you.
 
-//   // calculate vertex count
-//   let positions: number[] = [];
-//   let normals: number[] = [];
-//   let uvs: number[] = [];
-//   let indices: number[] = [];
-//   let maxRadius = Math.max(radiusTop, radiusBottom);
-//   let minPos = cc.v3(-maxRadius, -height / 2, -maxRadius);
-//   let maxPos = cc.v3(maxRadius, height / 2, maxRadius);
-//   let boundingRadius = height / 2;
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE SOFTWARE.
+ */
 
-//   let index = 0;
-//   let indexArray: number[][] = [];
+import Vec3 from "../../value-types/vec3";
 
-//   generateBottom();
+/**
+ * @packageDocumentation
+ * @module 3d/primitive
+ */
 
-//   generateTorso();
+/**
+ * @en
+ * The definition of the parameter for building a capsule.
+ * @zh
+ * 胶囊体参数选项。
+ */
+export interface ICapsuteOptions {
+    sides: number;
+    heightSegments: number;
+    capped: boolean;
+    arc: number;
+}
 
-//   generateTop();
+const temp1 = new Vec3(0, 0, 0);
+const temp2 = new Vec3(0, 0, 0);
 
-//   return new VertexData(
-//     positions,
-//     normals,
-//     uvs,
-//     indices,
-//     minPos,
-//     maxPos,
-//     boundingRadius
-//   );
+/**
+ * Generate a capsule with radiusTop radiusBottom 0.5, height 2, centered at origin,
+ * but may be repositioned through the `center` option.
+ * @zh
+ * 生成一个胶囊体。
+ * @param radiusTop 顶部半径。
+ * @param radiusBottom 底部半径。
+ * @param opts 胶囊体参数选项。
+ */
+export default function capsule(radiusTop = 0.5, radiusBottom = 0.5, height = 2, opts: any = {}) {
+    const torsoHeight = height - radiusTop - radiusBottom;
+    const sides = opts.sides || 32;
+    const heightSegments = opts.heightSegments || 32;
+    const bottomProp = radiusBottom / height;
+    const torProp = torsoHeight / height;
+    const topProp = radiusTop / height;
+    const bottomSegments = Math.floor(heightSegments * bottomProp);
+    const topSegments = Math.floor(heightSegments * topProp);
+    const torSegments = Math.floor(heightSegments * torProp);
+    const topOffset = torsoHeight + radiusBottom - height / 2;
+    const torOffset = radiusBottom - height / 2;
+    const bottomOffset = radiusBottom - height / 2;
 
-//   // =======================
-//   // internal fucntions
-//   // =======================
+    const arc = opts.arc || 2.0 * Math.PI;
 
-//   function generateTorso() {
-//     // this will be used to calculate the normal
-//     let slope = (radiusTop - radiusBottom) / torsoHeight;
+    // calculate vertex count
+    const positions: number[] = [];
+    const normals: number[] = [];
+    const uvs: number[] = [];
+    const indices: number[] = [];
+    const maxRadius = Math.max(radiusTop, radiusBottom);
+    const minPos = new Vec3(-maxRadius, -height / 2, -maxRadius);
+    const maxPos = new Vec3(maxRadius, height / 2, maxRadius);
+    const boundingRadius = height / 2;
 
-//     // generate positions, normals and uvs
-//     for (let y = 0; y <= torSegments; y++) {
+    let index = 0;
+    const indexArray: number[][] = [];
 
-//       let indexRow: number[] = [];
-//       let lat = y / torSegments;
-//       let radius = lat * (radiusTop - radiusBottom) + radiusBottom;
+    generateBottom();
 
-//       for (let x = 0; x <= sides; ++x) {
-//         let u = x / sides;
-//         let v = lat * torProp + bottomProp;
-//         let theta = u * arc - (arc / 4);
+    generateTorso();
 
-//         let sinTheta = Math.sin(theta);
-//         let cosTheta = Math.cos(theta);
+    generateTop();
 
-//         // vertex
-//         positions.push(radius * sinTheta);
-//         positions.push(lat * torsoHeight + torOffset);
-//         positions.push(radius * cosTheta);
+    return {
+        positions,
+        normals,
+        uvs,
+        indices,
+        minPos,
+        maxPos,
+        boundingRadius,
+    };
 
-//         // normal
-//         Vec3.normalize(temp1, Vec3.set(temp2, sinTheta, -slope, cosTheta));
-//         normals.push(temp1.x);
-//         normals.push(temp1.y);
-//         normals.push(temp1.z);
+    // =======================
+    // internal fucntions
+    // =======================
 
-//         // uv
-//         uvs.push(u,v);
-//         // save index of vertex in respective row
-//         indexRow.push(index);
+    function generateTorso() {
+        // this will be used to calculate the normal
+        const slope = (radiusTop - radiusBottom) / torsoHeight;
 
-//         // increase index
-//         ++index;
-//       }
+        // generate positions, normals and uvs
+        for (let y = 0; y <= torSegments; y++) {
+            const indexRow: number[] = [];
+            const lat = y / torSegments;
+            const radius = lat * (radiusTop - radiusBottom) + radiusBottom;
 
-//       // now save positions of the row in our index array
-//       indexArray.push(indexRow);
-//     }
+            for (let x = 0; x <= sides; ++x) {
+                const u = x / sides;
+                const v = lat * torProp + bottomProp;
+                const theta = u * arc - (arc / 4);
 
-//     // generate indices
-//     for (let y = 0; y < torSegments; ++y) {
-//       for (let x = 0; x < sides; ++x) {
-//         // we use the index array to access the correct indices
-//         let i1 = indexArray[y][x];
-//         let i2 = indexArray[y + 1][x];
-//         let i3 = indexArray[y + 1][x + 1];
-//         let i4 = indexArray[y][x + 1];
+                const sinTheta = Math.sin(theta);
+                const cosTheta = Math.cos(theta);
 
-//         // face one
-//         indices.push(i1);
-//         indices.push(i4);
-//         indices.push(i2);
+                // vertex
+                positions.push(radius * sinTheta);
+                positions.push(lat * torsoHeight + torOffset);
+                positions.push(radius * cosTheta);
 
-//         // face two
-//         indices.push(i4);
-//         indices.push(i3);
-//         indices.push(i2);
-//       }
-//     }
-//   }
+                // normal
+                Vec3.normalize(temp1, Vec3.set(temp2, sinTheta, -slope, cosTheta));
+                normals.push(temp1.x);
+                normals.push(temp1.y);
+                normals.push(temp1.z);
 
-//   function generateBottom() {
-//     for (let lat = 0; lat <= bottomSegments; ++lat) {
-//       let theta = lat * Math.PI / bottomSegments / 2;
-//       let sinTheta = Math.sin(theta);
-//       let cosTheta = -Math.cos(theta);
+                // uv
+                uvs.push(u, v);
+                // save index of vertex in respective row
+                indexRow.push(index);
 
-//       for (let lon = 0; lon <= sides; ++lon) {
-//         let phi = lon * 2 * Math.PI / sides - Math.PI / 2.0;
-//         let sinPhi = Math.sin(phi);
-//         let cosPhi = Math.cos(phi);
+                // increase index
+                ++index;
+            }
 
-//         let x = sinPhi * sinTheta;
-//         let y = cosTheta;
-//         let z = cosPhi * sinTheta;
-//         let u = lon / sides;
-//         let v = lat / heightSegments;
+            // now save positions of the row in our index array
+            indexArray.push(indexRow);
+        }
 
-//         positions.push(x * radiusBottom, y * radiusBottom + bottomOffset, z * radiusBottom);
-//         normals.push(x, y, z);
-//         uvs.push(u, v);
+        // generate indices
+        for (let y = 0; y < torSegments; ++y) {
+            for (let x = 0; x < sides; ++x) {
+                // we use the index array to access the correct indices
+                const i1 = indexArray[y][x];
+                const i2 = indexArray[y + 1][x];
+                const i3 = indexArray[y + 1][x + 1];
+                const i4 = indexArray[y][x + 1];
 
-//         if ((lat < bottomSegments) && (lon < sides)) {
-//           let seg1 = sides + 1;
-//           let a = seg1 * lat + lon;
-//           let b = seg1 * (lat + 1) + lon;
-//           let c = seg1 * (lat + 1) + lon + 1;
-//           let d = seg1 * lat + lon + 1;
+                // face one
+                indices.push(i1);
+                indices.push(i4);
+                indices.push(i2);
 
-//           indices.push(a, d, b);
-//           indices.push(d, c, b);
-//         }
+                // face two
+                indices.push(i4);
+                indices.push(i3);
+                indices.push(i2);
+            }
+        }
+    }
 
-//         ++index;
-//       }
-//     }
-//   }
+    function generateBottom() {
+        for (let lat = 0; lat <= bottomSegments; ++lat) {
+            const theta = lat * Math.PI / bottomSegments / 2;
+            const sinTheta = Math.sin(theta);
+            const cosTheta = -Math.cos(theta);
 
-//   function generateTop() {
-//     for (let lat = 0; lat <= topSegments; ++lat) {
-//       let theta = lat * Math.PI / topSegments / 2 + Math.PI / 2;
-//       let sinTheta = Math.sin(theta);
-//       let cosTheta = -Math.cos(theta);
+            for (let lon = 0; lon <= sides; ++lon) {
+                const phi = lon * 2 * Math.PI / sides - Math.PI / 2.0;
+                const sinPhi = Math.sin(phi);
+                const cosPhi = Math.cos(phi);
 
-//       for (let lon = 0; lon <= sides; ++lon) {
-//         let phi = lon * 2 * Math.PI / sides - Math.PI / 2.0;
-//         let sinPhi = Math.sin(phi);
-//         let cosPhi = Math.cos(phi);
+                const x = sinPhi * sinTheta;
+                const y = cosTheta;
+                const z = cosPhi * sinTheta;
+                const u = lon / sides;
+                const v = lat / heightSegments;
 
-//         let x = sinPhi * sinTheta;
-//         let y = cosTheta;
-//         let z = cosPhi * sinTheta;
-//         let u = lon / sides;
-//         let v = lat / heightSegments + (1-topProp);
+                positions.push(x * radiusBottom, y * radiusBottom + bottomOffset, z * radiusBottom);
+                normals.push(x, y, z);
+                uvs.push(u, v);
 
-//         positions.push(x * radiusTop, y * radiusTop + topOffset, z * radiusTop);
-//         normals.push(x, y, z);
-//         uvs.push(u, v);
+                if ((lat < bottomSegments) && (lon < sides)) {
+                    const seg1 = sides + 1;
+                    const a = seg1 * lat + lon;
+                    const b = seg1 * (lat + 1) + lon;
+                    const c = seg1 * (lat + 1) + lon + 1;
+                    const d = seg1 * lat + lon + 1;
 
-//         if ((lat < topSegments) && (lon < sides)) {
-//           let seg1 = sides + 1;
-//           let a = seg1 * lat + lon + indexArray[torSegments][sides] + 1;
-//           let b = seg1 * (lat + 1) + lon + indexArray[torSegments][sides] + 1;
-//           let c = seg1 * (lat + 1) + lon + 1 + indexArray[torSegments][sides] + 1;
-//           let d = seg1 * lat + lon + 1 + indexArray[torSegments][sides] + 1;
+                    indices.push(a, d, b);
+                    indices.push(d, c, b);
+                }
 
-//           indices.push(a, d, b);
-//           indices.push(d, c, b);
-//         }
-//       }
-//     }
-//   }
-// }
+                ++index;
+            }
+        }
+    }
+
+    function generateTop() {
+        for (let lat = 0; lat <= topSegments; ++lat) {
+            const theta = lat * Math.PI / topSegments / 2 + Math.PI / 2;
+            const sinTheta = Math.sin(theta);
+            const cosTheta = -Math.cos(theta);
+
+            for (let lon = 0; lon <= sides; ++lon) {
+                const phi = lon * 2 * Math.PI / sides - Math.PI / 2.0;
+                const sinPhi = Math.sin(phi);
+                const cosPhi = Math.cos(phi);
+
+                const x = sinPhi * sinTheta;
+                const y = cosTheta;
+                const z = cosPhi * sinTheta;
+                const u = lon / sides;
+                const v = lat / heightSegments + (1 - topProp);
+
+                positions.push(x * radiusTop, y * radiusTop + topOffset, z * radiusTop);
+                normals.push(x, y, z);
+                uvs.push(u, v);
+
+                if ((lat < topSegments) && (lon < sides)) {
+                    const seg1 = sides + 1;
+                    const a = seg1 * lat + lon + indexArray[torSegments][sides] + 1;
+                    const b = seg1 * (lat + 1) + lon + indexArray[torSegments][sides] + 1;
+                    const c = seg1 * (lat + 1) + lon + 1 + indexArray[torSegments][sides] + 1;
+                    const d = seg1 * lat + lon + 1 + indexArray[torSegments][sides] + 1;
+
+                    indices.push(a, d, b);
+                    indices.push(d, c, b);
+                }
+            }
+        }
+    }
+}

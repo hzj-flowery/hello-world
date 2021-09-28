@@ -182,22 +182,6 @@ export class RenderTexture extends Texture2D {
         gl.drawBuffers(COLOR_ATTACHMENT);
 
     }
-    
-    /**
-     * 绑定纹理
-     */
-    public bindFrameTexture2D():void{
-        let gl = this._gl;
-        gl.bindFramebuffer(gl.FRAMEBUFFER, this._frameBuffer);
-        let COLOR_ATTACHMENT = [];
-        this._deferredTexMapPos.forEach((value,key)=>{
-            //设置上面创建纹理作为颜色附件
-            gl.framebufferTexture2D(gl.FRAMEBUFFER, gl["COLOR_ATTACHMENT" + key], gl.TEXTURE_2D, value, 0);
-            COLOR_ATTACHMENT.push(gl["COLOR_ATTACHMENT" + key]);
-        })
-        //采样到几个颜色附件(对应的几何纹理)
-        gl.drawBuffers(COLOR_ATTACHMENT);
-    }
 
     /**
      * 获取延迟渲染的纹理

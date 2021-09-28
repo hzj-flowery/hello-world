@@ -1048,15 +1048,6 @@ export default class Device {
         this.setFrameBuffer(crData.fb);
         this.setViewPort(crData.viewPort);
         crData.clear?G_DrawEngine.clearBuffer(crData.clearColor, crData.clear):null;
-
-        if(crData.rtuuid == syRender.RenderTextureUUid.RTT)
-        {
-            //多目标渲染
-            var rendTex = GameMainCamera.instance.getRenderTexture(crData.rtuuid);
-            rendTex.bindFrameTexture2D();
-        }
-        
-
     }
     private _framebuffer: WebGLFramebuffer;//帧缓冲
     /**

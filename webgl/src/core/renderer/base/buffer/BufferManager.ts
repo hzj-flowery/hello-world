@@ -84,6 +84,7 @@ export abstract class glBaseBuffer {
     private _curMapTotalBytes: number;//当前map中含有的总的字节数
     private _itemSize: number = 0;     //在缓冲区中，一个单元有几个数据组成
     private _itemNums: number = 0;     //在缓冲区中，一共含有多少个单元
+    private _itemOffset:number = 0;    //在缓冲区中，从哪一个位置开始存储这个数据
     private _glID: WebGLBuffer;//显存存储数据的地址
     /**
      * 只有两个值：
@@ -110,6 +111,10 @@ export abstract class glBaseBuffer {
     //一共有多少个单元
     public get itemNums(): number {
         return this._itemNums;
+    }
+    //数据存储在显存的buffer的偏移地址
+    public get itemOffset(): number {
+        return this._itemOffset;
     }
     public get glID(): WebGLBuffer {
         return this._glID;

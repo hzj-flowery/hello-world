@@ -238,7 +238,7 @@ export namespace SY {
          * @param itemSize 
          * @param preAllocateLen 
          */
-        public createVertexsBuffer(vertexs: Array<number>, itemSize: number, preAllocateLen: number = 0): VertexsBuffer {
+        public createVertexsBuffer(vertexs: Array<number>, itemSize: number=3, preAllocateLen: number = 0): VertexsBuffer {
             return G_BufferManager.createBuffer(GLID_TYPE.VERTEX,
                 this._materialId, vertexs, itemSize, preAllocateLen) as VertexsBuffer;
         }
@@ -249,7 +249,7 @@ export namespace SY {
          * @param itemSize 
          * @param preAllocateLen 
          */
-        public createNormalsBuffer(normals: Array<number>, itemSize: number, preAllocateLen: number = 0): NormalBuffer {
+        public createNormalsBuffer(normals: Array<number>, itemSize: number=3, preAllocateLen: number = 0): NormalBuffer {
             return G_BufferManager.createBuffer(GLID_TYPE.NORMAL,
                 this._materialId, normals, itemSize, preAllocateLen) as NormalBuffer;
         }
@@ -270,7 +270,7 @@ export namespace SY {
          * @param itemSize 
          * @param preAllocateLen 
          */
-        public createUVsBuffer(uvs: Array<number>, itemSize: number, preAllocateLen: number = 0): UVsBuffer {
+        public createUVsBuffer(uvs: Array<number>, itemSize: number=2, preAllocateLen: number = 0): UVsBuffer {
             return G_BufferManager.createBuffer(GLID_TYPE.UV,
                 this._materialId, uvs, itemSize, preAllocateLen) as UVsBuffer;
         }

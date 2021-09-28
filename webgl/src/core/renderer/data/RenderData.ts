@@ -10,6 +10,7 @@ import { GameMainCamera } from "../camera/GameMainCamera";
 import { glEnums } from "../gfx/GLapi";
 import { State, StateString, StateValueMap } from "../gfx/State";
 import { syGL } from "../gfx/syGLEnums";
+import { IGeometry } from "../primitive/define";
 import { Pass } from "../shader/Pass";
 import { BufferAttribsData, ShaderProgramBase, ShaderProgram } from "../shader/Shader";
 import { ShaderUseVariantType } from "../shader/ShaderUseVariantType";
@@ -30,6 +31,67 @@ export namespace syRender {
         B = 0x4, //00000100
         A = 0x8, //00001000
         ALL = R | G | B | A,//表示全部开启
+    }
+    
+    /**
+     * 网格数据
+     */
+    export class Mesh{
+        constructor(){
+            this.positions = [];
+            this.normals = [];
+            this.uvs = [];
+            this.indices = [];
+        }
+        positions:Array<number>;
+        normals:Array<number>;
+        uvs:Array<number>;
+        indices:Array<number>;
+        static create():Mesh{
+             return new Mesh();
+        }
+        
+        /**
+         * 网格合并
+         */
+        public combine(data:IGeometry,offsetX:number=0,offsetY:number=0,offsetZ:number=0):void{
+            
+           var curPosLen = this.positions.length/3;
+           var tempPositions = [].concat(data.positions);
+           if(offsetX!=0||offsetY!=0||offsetZ!=0)
+           {
+               //需要对位置进行整体调整
+               for(let k=0;k<tempPositions.length;k=k+3)
+               {
+                  tempPositions[k] = tempPositions[k] + offsetX;
+                  tempPositions[k+1] = tempPositions[k+1] + offsetY;
+                  tempPositions[k+2] = tempPositions[k+2] + offsetZ;
+               }
+           }
+           //新的位置数据
+           this.positions = [].concat(this.positions,tempPositions);
+           //新的法线数据
+           this.normals = [].concat(this.normals,data.normals);
+           //新的uv数据
+           this.uvs = [].concat(this.uvs,data.uvs);
+           
+           if(curPosLen>0)
+           {
+               //三角形管带绘制
+               //输入两个不存在的索引，让其无法绘制三角形 从而让网格断开
+               // (尾-2 尾-1 尾) ==> (尾-1 尾 -1) (尾 -1 -1) (-1 -1 头) (-1 头 头+1) ==>(头 头+1 头+2)
+               this.indices.push(-1)
+               this.indices.push(-1)
+           }
+           //新的索引数据
+           let newIndices = [];
+           for(let k=0;k<data.indices.length;k++)
+           {
+              newIndices.push(data.indices[k]+curPosLen);
+           }
+           this.indices = [].concat(this.indices,newIndices)
+
+        }
     }
 
     //着色器的类型
@@ -183,6 +245,7 @@ export namespace syRender {
         public glID: WebGLBuffer;//显存地址
         public itemSize: number;//单个buffer单元的数据数目
         public itemNums: number;//所有buffer单元数目
+        public itemOffset:number=0;//从显存的buffer数组的哪一个位置开始读取数据
     }
 
     //shader 中使用的宏
