@@ -32,6 +32,7 @@ import { Object3D } from "../3d/Object3D";
 import capsule from "../primitive/capsule";
 import cone from "../primitive/cone";
 import box from "../primitive/box";
+import { UCS } from "../3d/UCS";
 
 export default class Scene3D extends Scene {
 
@@ -42,7 +43,7 @@ export default class Scene3D extends Scene {
     private _testAlphaCube:Cube;
     private _deferredShading: DeferredShading;
     private _renderSprite: RenderOffline3DSprite;
-    private _obj3D: Object3D;
+    private _ucs: UCS;
     private _rtt: RTT;
     private _rttTest:RTTTest;
     private _tableNode: Cube;
@@ -80,16 +81,10 @@ export default class Scene3D extends Scene {
         this._shadowCube.setPosition(-10,0,0);
         this._centerNode.addChild(this._shadowCube);
         
-        var boxData = box({width:0.1,height:5,length:0.1});
-        var coneData = cone();
-        var mesh = syRender.Mesh.create();
-        mesh.combine(boxData)
-        mesh.combine(coneData,0,2.5,0)
-        this._obj3D = new Object3D(mesh);
-        this._obj3D.spriteFrame = "res/ball.jpg";
-        this._obj3D.setPosition(-10,12,0);
-        this._obj3D.pushPassContent(syRender.ShaderType.Sprite);
-        this._centerNode.addChild(this._obj3D)
+
+        this._ucs = new UCS();
+        this._ucs.setPosition(-10,12,0);
+        this._centerNode.addChild(this._ucs)
 
         var spNode = new Node();
         this._sphere = new Sphere();
