@@ -56,7 +56,7 @@ const temp2 = new Vec3(0, 0, 0);
  * @param radiusBottom 底部半径。
  * @param opts 圆柱参数选项。
  */
-export default function cylinder (radiusTop = 0.5, radiusBottom = 0.5, height = 2, opts:any = {}): IGeometry {
+export default function cylinder (radiusTop = 0.5, radiusBottom = 0.5, height = 2, opts:any = new ICylinderOptions()): IGeometry {
     const halfHeight = height * 0.5;
     const radialSegments = opts.radialSegments || 32;
     const heightSegments = opts.heightSegments || 1;

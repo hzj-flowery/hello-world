@@ -87,7 +87,7 @@ const c01 = new Vec3(0, 0, 0);
  * 生成一个平面，其位于XOZ平面，方向为Y轴正方向。
  * @param options 平面参数选项。
  */
-export default function plane (options?: IPlaneOptions): IGeometry {
+export default function plane (options?: any): IGeometry {
     const normalizedOptions = applyDefaultPlaneOptions(options);
 
     const {

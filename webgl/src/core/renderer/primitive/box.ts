@@ -37,7 +37,7 @@ import { IGeometry, IGeometryOptions } from './define';
  * @zh
  * 立方体参数选项。
  */
-interface IBoxOptions extends IGeometryOptions {
+export class IBoxOptions extends IGeometryOptions {
     /**
      * @en
      * Box extent on X-axis.
@@ -95,8 +95,7 @@ interface IBoxOptions extends IGeometryOptions {
  * 生成一个立方体，其大小是定义的范围且中心在原点。
  * @param options 参数选项。
  */
-export default function box (options?: any): IGeometry {
-    options = options || {};
+export default function box (options: any = new IBoxOptions()): IGeometry {
     const ws = options.widthSegments || 1;
     const hs = options.heightSegments || 1;
     const ls = options.lengthSegments || 1;

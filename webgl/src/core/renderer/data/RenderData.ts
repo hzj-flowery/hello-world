@@ -24,6 +24,14 @@ export namespace syRender {
         value: StateValueMap
     }
 
+    export enum PassCustomString{
+        offlineRender = "offlineRender", //离线渲染
+        drawInstanced = "drawInstanced", //实例化绘制
+        DrawingOrder = "DrawingOrder",//绘制顺序
+        ShaderType="ShaderType",//shader的类型
+        DefineUse="DefineUse",//宏的使用
+    }
+
     export enum ColorMask {
         NONE = 0x0, //00000000 
         R = 0x1, //00000001
@@ -151,6 +159,11 @@ export namespace syRender {
         "NULL"          //不用shader渲染
     ]
 
+    export const ShaderDefineString = {
+        Key:"Key",
+        SY_USE_MAT:"SY_USE_MAT",
+    }
+
     export enum CameraType {
         Projection = 0, //透视
         Ortho         //正交
@@ -251,7 +264,6 @@ export namespace syRender {
     //shader 中使用的宏
     export class DefineUse {
         public SY_USE_ALPHA_TEST: number = 0; //alpha测试
-        public SY_USE_MAT: number = 0;//使用万能矩阵
     }
 
     //绘制信息
@@ -785,9 +797,6 @@ export namespace syRender {
                         break;
                     case ShaderUseVariantType.Define_UseAlphaTest:
                         _shader.setCustomUniformFloat(syGL.AttributeUniform.DefineUseAlphaTest, this.defineUse.SY_USE_ALPHA_TEST)
-                        break;
-                    case ShaderUseVariantType.Define_UseMat:
-                        _shader.setCustomUniformFloat(syGL.AttributeUniform.DefineUseMat, this.defineUse.SY_USE_MAT)
                         break;
                     default:
                     // console.log("目前还没有处理这个矩阵类型");

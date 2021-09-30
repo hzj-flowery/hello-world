@@ -3,6 +3,7 @@ import { syRender } from "../data/RenderData";
 import box from "../primitive/box";
 import cone from "../primitive/cone";
 import sphere from "../primitive/sphere";
+import torus from "../primitive/torus";
 import { Object3D } from "./Object3D";
 
 /**
@@ -14,6 +15,7 @@ export class UCS extends SY.SpriteBase{
     private _objY:Object3D;
     private _objZ:Object3D;
     private _center:Object3D;
+    private _torus:Object3D;
     protected onInit(){
         var boxData = box({width:0.1,height:5,length:0.1});
         var coneData = cone();
@@ -45,6 +47,15 @@ export class UCS extends SY.SpriteBase{
         this._center.spriteFrame = "res/f-texture.png"
         this._center.pushPassContent(syRender.ShaderType.Sprite);
         this.addChild(this._center);
+
+        var torusData = torus()
+        var meshTorus = syRender.Mesh.create();
+        meshTorus.combine(torusData)
+        this._torus = new Object3D(meshTorus);
+        this._torus.spriteFrame = "res/f-texture.png"
+        this._torus.y = 2;
+        this._torus.pushPassContent(syRender.ShaderType.Sprite);
+        this.addChild(this._torus);
         
 
     }

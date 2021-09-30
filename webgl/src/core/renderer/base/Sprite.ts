@@ -445,7 +445,6 @@ export namespace SY {
             //宏-------------------------------------------------------------------------------------
             //是否支持png的使用
             rData.defineUse.SY_USE_ALPHA_TEST = (this.defineUse.SY_USE_ALPHA_TEST)
-            rData.defineUse.SY_USE_MAT = (this.defineUse.SY_USE_MAT)
 
             //节点自定义矩阵组------------------------------------------------------------------------
             rData.primitive.vertMatrix.glID = this.getGLID(SY.GLID_TYPE.VERT_MATRIX);

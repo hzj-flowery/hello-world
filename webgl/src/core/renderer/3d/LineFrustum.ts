@@ -4,6 +4,7 @@ import { SY } from "../base/Sprite";
 import { syRender } from "../data/RenderData";
 import { StateString, StateValueMap } from "../gfx/State";
 import { syGL } from "../gfx/syGLEnums";
+import { Pass } from "../shader/Pass";
 
 /**
  * 绘制的顶点数据
@@ -50,10 +51,12 @@ export class LineFrustum extends SY.SpriteBasePolygon {
         this._lightProjectInverseMatrix = glMatrix.mat4.identity(null);
         this._tempMatrix = glMatrix.mat4.identity(null);
         this.setColor(255,0,0,255);
-        this.defineUse.SY_USE_MAT = 0.1;
 
         this.pushPassContent(syRender.ShaderType.Line,[
             [StateString.primitiveType,StateValueMap.primitiveType.PT_LINES]
+        ],
+        [
+            [syRender.PassCustomString.DefineUse,syRender.ShaderDefineString.SY_USE_MAT]
         ]);
 
         super.onInit();

@@ -34,7 +34,7 @@ import { IGeometryOptions } from './define';
  * @zh
  * 环面参数选项。
  */
-interface ITorusOptions extends IGeometryOptions {
+export class ITorusOptions extends IGeometryOptions {
   radialSegments: number;
   tubularSegments: number;
   arc: number;
@@ -49,7 +49,7 @@ interface ITorusOptions extends IGeometryOptions {
  * @param tube 管形大小。
  * @param opts 参数选项。
  */
-export default function torus (radius = 0.4, tube = 0.1, opts:any = {}) {
+export default function torus (radius = 0.4, tube = 0.1, opts:any = new ITorusOptions()) {
     const radialSegments = opts.radialSegments || 32;
     const tubularSegments = opts.tubularSegments || 32;
     const arc = opts.arc || 2.0 * Math.PI;

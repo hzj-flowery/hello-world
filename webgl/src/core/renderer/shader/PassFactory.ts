@@ -5,12 +5,7 @@ import { Pass, PassType } from "./Pass"
 import { G_ShaderCenter } from "./ShaderCenter"
 import { G_ShaderFactory } from "./ShaderFactory";
 
-export enum PassCustomString{
-    offlineRender = "offlineRender", //离线渲染
-    drawInstanced = "drawInstanced", //实例化绘制
-    DrawingOrder = "DrawingOrder",//绘制顺序
-    ShaderType="ShaderType",//shader的类型
-}
+
 
 class PassFactory{
     constructor(){
@@ -103,21 +98,21 @@ class PassFactory{
             {
                 let key = customData[k]["key"];
                 let value = customData[k]["value"];
-                if(key==PassCustomString.offlineRender&&typeof(value)=="boolean")
+                if(key==syRender.PassCustomString.offlineRender&&typeof(value)=="boolean")
                 {
                     //离线渲染
                     pass.offlineRender = value;
                 }
-                else if(key==PassCustomString.drawInstanced&&typeof(value)=="boolean")
+                else if(key==syRender.PassCustomString.drawInstanced&&typeof(value)=="boolean")
                 {
                     //实例化渲染
                     pass.drawInstanced = value;
                 }
-                else if(key==PassCustomString.DrawingOrder&&typeof(value)=="number")
+                else if(key==syRender.PassCustomString.DrawingOrder&&typeof(value)=="number")
                 {
                     pass.drawingOrder = value;
                 }
-                else if(key==PassCustomString.ShaderType&&typeof(value)=="string")
+                else if(key==syRender.PassCustomString.ShaderType&&typeof(value)=="string")
                 {
                     var st = syRender.ShaderTypeString.indexOf(value);
                     if(st<0)
@@ -127,6 +122,10 @@ class PassFactory{
                     }
                     pass.shaderType = st;
                 }
+                else if(key==syRender.PassCustomString.DefineUse&&typeof(value)=="string"&&pass.defineUse.indexOf(value)<0)
+                {
+                    pass.defineUse.push(value)
+                }
 
             }
         }
@@ -135,6 +134,11 @@ class PassFactory{
             syRender.ShaderType.Spine_Skin,
             syRender.ShaderType.Obj,
         ]
+        
+        //关于宏预处理操作
+        vert = this.preShaderCodeAboutDefine(vert,pass.defineUse);
+        frag = this.preShaderCodeAboutDefine(frag,pass.defineUse);
+
         if(normalShaderType.indexOf(pass.shaderType)>=0)
         {
              var program = G_ShaderFactory.createProgramInfo(vert, frag);
@@ -150,6 +154,18 @@ class PassFactory{
         this._pass.push(pass);
 
         return pass
+    }
+    
+    /**
+     * 预处理顶点shader
+     * @param vert 
+     */
+    private preShaderCodeAboutDefine(code:string,custom:Array<string>):string{
+        if(!custom||custom.length<=0)return code;
+        custom.forEach((value,key)=>{
+            code = "#define "+value+"\n " + code;
+        })
+        return code;
     }
 } 
 

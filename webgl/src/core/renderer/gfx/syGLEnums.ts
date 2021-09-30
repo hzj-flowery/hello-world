@@ -207,7 +207,6 @@ export namespace syGL {
 
         DefineUseAlphaTest = "u_use_apha_test",//宏 判断是否使用png
 
-        DefineUseMat = "SY_USE_MAT",//宏 判断是否使用万能矩阵
     }
     // cull
     export const Cull = {

@@ -47,7 +47,7 @@ interface ICircleOptions extends IGeometryOptions {
  * 应用默认圆参数。
  * @param options 圆参数。
  */
-function applyDefaultCircleOptions (options?:any): ICircleOptions {
+function applyDefaultCircleOptions (options?:ICircleOptions): ICircleOptions {
     options = applyDefaultGeometryOptions<ICircleOptions>(options);
     options.segments = 64;
     return options as ICircleOptions;

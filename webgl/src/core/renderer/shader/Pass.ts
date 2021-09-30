@@ -34,6 +34,7 @@ export class Pass {
     public offlineRender:boolean = false; //是否是离线渲染
     public drawInstanced:boolean = false; //是否是实例化绘制
     public drawingOrder:syRender.DrawingOrder;//绘制的类型
+    public defineUse:Array<string> = [];//宏的使用
     public get type(){
         return this._type;
     } 

@@ -37,7 +37,7 @@ import { applyDefaultGeometryOptions, IGeometry, IGeometryOptions } from './defi
  * 生成一个四边形，宽高都为1，中心在原点。
  * @param options 参数选项。
  */
-export default function quad (options?: IGeometryOptions): IGeometry {
+export default function quad (options?: any): IGeometry {
     const normalizedOptions = applyDefaultGeometryOptions(options);
     const result: IGeometry = {
         positions: [

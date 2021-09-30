@@ -2,7 +2,6 @@
  * 加载管理员
  */
 import { syRender } from "./renderer/data/RenderData";
-import { PassCustomString } from "./renderer/shader/PassFactory";
 import { MathUtils } from "./utils/MathUtils";
 
 /**
@@ -557,7 +556,7 @@ export default class LoaderManager {
                 var customData = depthP[k].custom;
                 if (customData && customData.length > 0) {
                     for (let j = 0; j < customData.length; j++) {
-                        if (customData[j].key == PassCustomString.ShaderType && customData[j].value == tag) {
+                        if (customData[j].key == syRender.PassCustomString.ShaderType && customData[j].value == tag) {
                             return depthP[k];
                         }
                     }

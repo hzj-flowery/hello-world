@@ -35,7 +35,7 @@ import { IGeometry, IGeometryOptions } from './define';
  * @zh
  * 球参数选项。
  */
-interface ISphereOptions extends IGeometryOptions {
+export class ISphereOptions extends IGeometryOptions {
     segments: number;
 }
 
@@ -47,7 +47,7 @@ interface ISphereOptions extends IGeometryOptions {
  * @param radius 球半径。
  * @param options 参数选项。
  */
-export default function sphere (radius = 0.5, opts:any = {}): IGeometry {
+export default function sphere (radius = 0.5, opts:any = new ISphereOptions()): IGeometry {
     const segments = opts.segments !== undefined ? opts.segments : 32;
 
     // lat === latitude
