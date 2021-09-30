@@ -105,6 +105,16 @@ void main() {
   gl_FragColor = texture2D(u_Sampler,v_TexCoord);
 }
 
+#--------------------精度
+顶点着色器
+precision highp float;
+precision highp int;
+precision lowp sampler2D;
+precision lowp samplerCube;
+片元着色器
+precision mediump int;
+precision lowp sampler2D;
+precision lowp samplerCube;
 
 `
 

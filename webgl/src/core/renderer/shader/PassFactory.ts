@@ -161,11 +161,48 @@ class PassFactory{
      * @param vert 
      */
     private preShaderCodeAboutDefine(code:string,custom:Array<string>):string{
+
         if(!custom||custom.length<=0)return code;
+        
+        //前缀版本号控制
+        var versionString = code.match(/\s*#version\s*300\s*es\s*\n/)
+        if(versionString)
+        {
+            //预先将版本号剔除
+            code = code.replace(/\s*#version\s*300\s*es\s*\n/,"")
+        }
+    
         custom.forEach((value,key)=>{
-            code = "#define "+value+"\n " + code;
+            code = "\n #define "+value+"\n " + code;
         })
+
+        //再加上版本号
+        if(versionString)
+        {
+            code = "#version 300 es\n"+code
+        }
         return code;
+    }
+    private generatePrecision( parameters ) {
+
+        let precisionstring = 'precision ' + parameters.precision + ' float;\nprecision ' + parameters.precision + ' int;';
+    
+        if ( parameters.precision === 'highp' ) {
+    
+            precisionstring += '\n#define HIGH_PRECISION';
+    
+        } else if ( parameters.precision === 'mediump' ) {
+    
+            precisionstring += '\n#define MEDIUM_PRECISION';
+    
+        } else if ( parameters.precision === 'lowp' ) {
+    
+            precisionstring += '\n#define LOW_PRECISION';
+    
+        }
+    
+        return precisionstring;
+    
     }
 } 
 

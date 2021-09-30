@@ -1,4 +1,12 @@
-precision mediump float;        //精度
+#ifdef SY_HIGH_PRECISION
+precision highp float;
+#elif defined(SY_MEDIUM_PRECISION)
+precision mediump float;
+#elif defined(SY_LOW_PRECISION)
+precision lowp float;
+#else
+precision mediump float;
+#endif
    varying vec3 v_normal;          //法线
    uniform vec4 u_diffuse;         //漫反射
    uniform sampler2D u_texture;   //骨骼矩阵纹理

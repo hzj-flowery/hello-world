@@ -160,8 +160,10 @@ export namespace syRender {
     ]
 
     export const ShaderDefineString = {
-        Key:"Key",
         SY_USE_MAT:"SY_USE_MAT",
+        SY_HIGH_PRECISION:"SY_HIGH_PRECISION",    //高精度
+        SY_MEDIUM_PRECISION:"SY_MEDIUM_PRECISION", //中精度
+        SY_LOW_PRECISION:"SY_LOW_PRECISION",      //低精度
     }
 
     export enum CameraType {

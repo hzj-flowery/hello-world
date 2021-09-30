@@ -1,4 +1,13 @@
+#ifdef SY_HIGH_PRECISION
+precision highp float;
+#elif defined(SY_MEDIUM_PRECISION)
 precision mediump float;
+#elif defined(SY_LOW_PRECISION)
+precision lowp float;
+#else
+precision mediump float;
+#endif
+
 // Passed in from the vertex shader.
 varying vec3 v_normal;                //法线
 uniform vec3 u_parallelDir; //光的方向
