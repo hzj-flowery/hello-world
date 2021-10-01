@@ -131,6 +131,8 @@ export class Label extends SY.Sprite2D {
         super();
         this.pushPassContent(syRender.ShaderType.Sprite,[
           [StateString.primitiveType,StateValueMap.primitiveType.PT_TRIANGLES]
+        ],[
+          [syRender.PassCustomString.DefineUse,syRender.ShaderDefineString.SY_USE_ALPHA_TEST,0.1]
         ]);
     }
     
@@ -194,8 +196,6 @@ export class Label extends SY.Sprite2D {
             floorVertexIndices.push(j);
         }
         this.createIndexsBuffer(floorVertexIndices);
-
-        this.defineUse.SY_USE_ALPHA_TEST = (0.1);
     }
 }
 

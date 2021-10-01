@@ -124,7 +124,6 @@ export namespace SY {
         private _renderData: Array<syRender.QueueItemBaseData>;
         //参考glprimitive_type
         protected _sizeMode: SpriteSizeMode;//节点的尺寸模式
-        public defineUse: syRender.DefineUse = new syRender.DefineUse(); //是否支持png 
         constructor() {
             super();
             materialId++;
@@ -155,7 +154,14 @@ export namespace SY {
                 if (customArr && customArr.length) {
                     custom = []
                     for (let k = 0; k < customArr.length; k++) {
-                        custom.push({ "key": customArr[k][0], "value": customArr[k][1] });
+                        if(customArr[k].length==2)
+                        {
+                            custom.push({ "key": customArr[k][0], "value": customArr[k][1] });
+                        }
+                        else if(customArr[k].length==3)
+                        {
+                            custom.push({ "key": customArr[k][0], "value": customArr[k][1]+"$"+customArr[k][2]});
+                        }
                     }
                 }
                 this._passContent.push({ "name": "TemplatePass", "tag": tag, state: state,custom:custom});
@@ -442,10 +448,6 @@ export namespace SY {
             //自定义的矩阵
             rData.primitive.customMatrix = this._customMatrix;
 
-            //宏-------------------------------------------------------------------------------------
-            //是否支持png的使用
-            rData.defineUse.SY_USE_ALPHA_TEST = (this.defineUse.SY_USE_ALPHA_TEST)
-
             //节点自定义矩阵组------------------------------------------------------------------------
             rData.primitive.vertMatrix.glID = this.getGLID(SY.GLID_TYPE.VERT_MATRIX);
             if (rData.primitive.vertMatrix.glID != -1) {
@@ -716,7 +718,6 @@ export namespace SY {
         }
         protected onInit(){
             super.onInit()
-            this.defineUse.SY_USE_ALPHA_TEST = 0.1;
 
             this.pushPassContent(syRender.ShaderType.Sprite, [
                 //深度 
@@ -735,7 +736,6 @@ export namespace SY {
                 [StateString.stencilZFailOp,StateValueMap.stencilZFailOp.KEEP],
                 [StateString.stencilZPassOp,StateValueMap.stencilZPassOp.REPLACE],
     
-    
                 // [StateString.stencilTestFront,StateValueMap.stencilTestFront.ON],
                 // [StateString.stencilFuncFront,StateValueMap.stencilFuncFront.ALWAYS],
                 // [StateString.stencilRefFront,3],
@@ -743,6 +743,8 @@ export namespace SY {
                 // [StateString.stencilFailOpFront,StateValueMap.stencilFailOpFront.KEEP],
                 // [StateString.stencilZFailOpFront,StateValueMap.stencilZFailOpFront.KEEP],
                 // [StateString.stencilZPassOpFront,StateValueMap.stencilZPassOpFront.REPLACE],
+            ],[
+                [syRender.PassCustomString.DefineUse,syRender.ShaderDefineString.SY_USE_ALPHA_TEST,0.1]
             ])
         }
     }

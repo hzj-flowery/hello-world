@@ -161,6 +161,7 @@ export namespace syRender {
 
     export const ShaderDefineString = {
         SY_USE_MAT:"SY_USE_MAT",
+        SY_USE_ALPHA_TEST:"SY_USE_ALPHA_TEST",
         SY_HIGH_PRECISION:"SY_HIGH_PRECISION",    //高精度
         SY_MEDIUM_PRECISION:"SY_MEDIUM_PRECISION", //中精度
         SY_LOW_PRECISION:"SY_LOW_PRECISION",      //低精度
@@ -261,11 +262,6 @@ export namespace syRender {
         public itemSize: number;//单个buffer单元的数据数目
         public itemNums: number;//所有buffer单元数目
         public itemOffset:number=0;//从显存的buffer数组的哪一个位置开始读取数据
-    }
-
-    //shader 中使用的宏
-    export class DefineUse {
-        public SY_USE_ALPHA_TEST: number = 0; //alpha测试
     }
 
     //绘制信息
@@ -498,7 +494,6 @@ export namespace syRender {
 
             this.light = new Light.Center();
             this.primitive = new Primitive()
-            this.defineUse = new DefineUse();
             this._cameraPosition = new Vec3(0,0,0)
             this.reset();
         }
@@ -543,7 +538,6 @@ export namespace syRender {
         private _temp002_matrix;//
         private _temp003_matrix;//
         private _temp004_matrix;//
-        public defineUse: DefineUse;
         public reset(): void {
             this._pass = null;
             this._cameraPosition.x = 0;
@@ -796,9 +790,6 @@ export namespace syRender {
                     case ShaderUseVariantType.ShadowMap:
                         _shader.setUseDeferredTexture(this.light.shadow.map, useTextureAddres, syGL.AttributeUniform.SHADOW_MAP);
                         useTextureAddres++;
-                        break;
-                    case ShaderUseVariantType.Define_UseAlphaTest:
-                        _shader.setCustomUniformFloat(syGL.AttributeUniform.DefineUseAlphaTest, this.defineUse.SY_USE_ALPHA_TEST)
                         break;
                     default:
                     // console.log("目前还没有处理这个矩阵类型");

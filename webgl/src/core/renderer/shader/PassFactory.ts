@@ -173,7 +173,22 @@ class PassFactory{
         }
     
         custom.forEach((value,key)=>{
-            code = "\n #define "+value+"\n " + code;
+            if(typeof(value)=="string")
+            {
+                let valueStr = (value as string).split("$")
+                if(valueStr.length>=2)
+                {
+                    code = "\n #define "+valueStr[0]+"  " +valueStr[1]+"\n " + code;
+                }
+                else
+                {
+                    code = "\n #define "+value+"\n " + code;
+                }
+            }
+            else
+            {
+                code = "\n #define "+value+"\n " + code;
+            }
         })
 
         //再加上版本号

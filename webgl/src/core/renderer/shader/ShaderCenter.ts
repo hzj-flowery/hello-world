@@ -1,3 +1,4 @@
+import { MD5 } from "../../../tool/MD5";
 import Device from "../../Device";
 import { syRender } from "../data/RenderData";
 import { ShaderProgramBase } from "./Shader";
@@ -11,7 +12,7 @@ class ShaderCenter {
     constructor() {
         this._shaderCustomUUid = 0;
     }
-    private createShaderName(type: syRender.ShaderType): string {
+    private getShaderName(type: syRender.ShaderType,vert:string,frag:string): string {
 
         if(type==syRender.ShaderType.Custom)
         {
@@ -20,10 +21,12 @@ class ShaderCenter {
         }
         else
         {
+            //md5
             var str = syRender.ShaderTypeString[type];
             if(str&&str!="NULL")
             {
-               return str;
+               var targetKey = MD5.hex_md5(str+vert+frag)
+               return targetKey;
             }
             else
             {
@@ -37,8 +40,8 @@ class ShaderCenter {
      * @param vert 
      * @param frag 
      */
-    public createShader(type: syRender.ShaderType, vert?: string, frag?: string): ShaderProgramBase {
-        var oldShader = this.getShader(type);
+    public createShader(type: syRender.ShaderType, vert: string, frag: string): ShaderProgramBase {
+        var oldShader = this._shaderMap.get(this.getShaderName(type,vert,frag));
         if(oldShader)
         {
             //之前shader就已经创建好了啊
@@ -49,25 +52,10 @@ class ShaderCenter {
             return ;
         }
         var glID = G_ShaderFactory.createShader(vert, frag);
-        let name = this.createShaderName(type);
+        let name = this.getShaderName(type,vert,frag);
         let shader = new ShaderProgramBase(Device.Instance.gl, glID, name)
         this._shaderMap.set(name, shader);
         return shader;
-    }
-    public getCustomShader(name: string): ShaderProgramBase {
-        return this._shaderMap.get(name);
-    }
-    public getShader(type: syRender.ShaderType): ShaderProgramBase {
-        var name = syRender.ShaderTypeString[type];
-        if(!name||name=="NULL")
-        {
-            if(type!=syRender.ShaderType.Custom)
-            {
-                console.log("您输入的shader类型非法,", type);
-            }
-        }
-        if (name != "")
-            return this._shaderMap.get(name);
     }
 
 }

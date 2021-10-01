@@ -53,11 +53,13 @@ export default class Scene2D extends Scene {
         // // rectangle1.spriteFrame = "res/ground.png";
         // this.addChild(rectangle1);
 
-        // this._uvSprite = new SY.Sprite2D();
-        // this._uvSprite.pushPassContent(syRender.ShaderType.UvSprite)
-        // this._uvSprite.setPosition(Device.Instance.width/2,0.5,0);
-        // this._uvSprite.spriteFrame = "res/tree.png";
-        // this.addChild(this._uvSprite);
+        this._uvSprite = new SY.Sprite2D();
+        this._uvSprite.pushPassContent(syRender.ShaderType.UvSprite,[],[
+            [syRender.PassCustomString.DefineUse,syRender.ShaderDefineString.SY_USE_ALPHA_TEST,0.1]
+        ])
+        this._uvSprite.setPosition(Device.Instance.width/2,0.5,0);
+        this._uvSprite.spriteFrame = "res/tree.png";
+        this.addChild(this._uvSprite);
 
         // this._instantiateSprite = new InstantiateSprite();
         // this._instantiateSprite.setScale(0.5,0.5,0.5);
@@ -83,11 +85,11 @@ export default class Scene2D extends Scene {
 
 
 
-        // this._label = new Label();
-        // this._label.setPosition(0.0,0.0,0);
-        // this._label.spriteFrame = "res/8x8-font.png";
-        // this._label.content = "go"
-        // this.addChild(this._label);
+        this._label = new Label();
+        this._label.setPosition(0.0,0.0,0);
+        this._label.spriteFrame = "res/8x8-font.png";
+        this._label.content = "go"
+        this.addChild(this._label);
 
         G_InputControl.registerMouseDownEvent(handler(this, this.onMouseDown));
         G_InputControl.registerMouseMoveEvent(handler(this, this.onMouseMove));
@@ -210,7 +212,6 @@ export default class Scene2D extends Scene {
     private blendTest(): void {
         var rectangle1 = new SY.Sprite2D();
         rectangle1.alpha = 1.0;
-        rectangle1.defineUse.SY_USE_ALPHA_TEST = 0.1;
         rectangle1.pushPassContent(syRender.ShaderType.Sprite, [
             [StateString.blendSep, StateValueMap.blendSep.ON],
             [StateString.depthTest, StateValueMap.depthTest.ON],
@@ -219,7 +220,9 @@ export default class Scene2D extends Scene {
             [StateString.blendSrc, StateValueMap.blendSrc.SRC_ALPHA],
             [StateString.blendDst, StateValueMap.blendDst.ONE_MINUS_SRC_ALPHA],
             [StateString.blendSrcAlpha, StateValueMap.blendSrcAlpha.ZERO],
-            [StateString.blendDstAlpha, StateValueMap.blendDstAlpha.ONE],
+            [StateString.blendDstAlpha, StateValueMap.blendDstAlpha.ONE]
+        ],[
+            [syRender.PassCustomString.DefineUse,syRender.ShaderDefineString.SY_USE_ALPHA_TEST,0.1]
         ])
         rectangle1.setPosition(Device.Instance.width / 2, Device.Instance.height / 2 - 100, -100);
         rectangle1.spriteFrame = "res/ground.png";
@@ -228,7 +231,6 @@ export default class Scene2D extends Scene {
         this._mask = new SY.Sprite2D();
         this._mask.alpha = 1.0;
         this._mask.setScale(1.0, 1.0, 1.0)
-        this._mask.defineUse.SY_USE_ALPHA_TEST = 0.0;
         this._mask.pushPassContent(syRender.ShaderType.Sprite, [
             [StateString.blendSep, StateValueMap.blendSep.ON],
             [StateString.depthTest, StateValueMap.depthTest.ON],

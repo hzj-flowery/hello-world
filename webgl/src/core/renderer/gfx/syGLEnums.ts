@@ -204,9 +204,6 @@ export namespace syGL {
 
         POINT_SIZE = "u_point_size", //点的尺寸
 
-
-        DefineUseAlphaTest = "u_use_apha_test",//宏 判断是否使用png
-
     }
     // cull
     export const Cull = {
