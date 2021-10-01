@@ -159,9 +159,10 @@ export namespace syRender {
         "NULL"          //不用shader渲染
     ]
 
-    export const ShaderDefineString = {
+    export const ShaderDefineValue = {
         SY_USE_MAT:"SY_USE_MAT",
         SY_USE_ALPHA_TEST:"SY_USE_ALPHA_TEST",
+        SY_USE_RGB_TEST:"SY_USE_RGB_TEST",
         SY_HIGH_PRECISION:"SY_HIGH_PRECISION",    //高精度
         SY_MEDIUM_PRECISION:"SY_MEDIUM_PRECISION", //中精度
         SY_LOW_PRECISION:"SY_LOW_PRECISION",      //低精度

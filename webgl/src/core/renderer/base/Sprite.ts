@@ -744,7 +744,7 @@ export namespace SY {
                 // [StateString.stencilZFailOpFront,StateValueMap.stencilZFailOpFront.KEEP],
                 // [StateString.stencilZPassOpFront,StateValueMap.stencilZPassOpFront.REPLACE],
             ],[
-                [syRender.PassCustomString.DefineUse,syRender.ShaderDefineString.SY_USE_ALPHA_TEST,0.1]
+                [syRender.PassCustomString.DefineUse,syRender.ShaderDefineValue.SY_USE_ALPHA_TEST,0.1]
             ])
         }
     }

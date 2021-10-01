@@ -480,6 +480,18 @@ export class Node extends Ref {
         return [this.convertScreenSpaceToClipSpaceX(x), this.convertScreenSpaceToClipSpaceY(y)]
     }
 
+    /**
+     * uv坐标系：原点在左上角
+     * webgl坐标系：原点在左下角
+     * 将uv坐标系下的坐标转为webgl坐标系下的坐标
+     * @param u 
+     * @param v 
+     * @returns 
+     */
+    public convertUVSpaceToWebglSpace(u:number,v:number):Array<number>{
+         return [u,1.0-v]
+    }
+
 
     //----------------四元数 欧拉角 
     

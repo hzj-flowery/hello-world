@@ -53,13 +53,13 @@ export default class Scene2D extends Scene {
         // // rectangle1.spriteFrame = "res/ground.png";
         // this.addChild(rectangle1);
 
-        this._uvSprite = new SY.Sprite2D();
-        this._uvSprite.pushPassContent(syRender.ShaderType.UvSprite,[],[
-            [syRender.PassCustomString.DefineUse,syRender.ShaderDefineString.SY_USE_ALPHA_TEST,0.1]
-        ])
-        this._uvSprite.setPosition(Device.Instance.width/2,0.5,0);
-        this._uvSprite.spriteFrame = "res/tree.png";
-        this.addChild(this._uvSprite);
+        // this._uvSprite = new SY.Sprite2D();
+        // this._uvSprite.pushPassContent(syRender.ShaderType.UvSprite,[],[
+        //     [syRender.PassCustomString.DefineUse,syRender.ShaderDefineString.SY_USE_ALPHA_TEST,0.1]
+        // ])
+        // this._uvSprite.setPosition(Device.Instance.width/2,0.5,0);
+        // this._uvSprite.spriteFrame = "res/tree.png";
+        // this.addChild(this._uvSprite);
 
         // this._instantiateSprite = new InstantiateSprite();
         // this._instantiateSprite.setScale(0.5,0.5,0.5);
@@ -88,7 +88,7 @@ export default class Scene2D extends Scene {
         this._label = new Label();
         this._label.setPosition(0.0,0.0,0);
         this._label.spriteFrame = "res/8x8-font.png";
-        this._label.content = "go"
+        this._label.content = "a"
         this.addChild(this._label);
 
         G_InputControl.registerMouseDownEvent(handler(this, this.onMouseDown));
@@ -222,7 +222,7 @@ export default class Scene2D extends Scene {
             [StateString.blendSrcAlpha, StateValueMap.blendSrcAlpha.ZERO],
             [StateString.blendDstAlpha, StateValueMap.blendDstAlpha.ONE]
         ],[
-            [syRender.PassCustomString.DefineUse,syRender.ShaderDefineString.SY_USE_ALPHA_TEST,0.1]
+            [syRender.PassCustomString.DefineUse,syRender.ShaderDefineValue.SY_USE_ALPHA_TEST,0.1]
         ])
         rectangle1.setPosition(Device.Instance.width / 2, Device.Instance.height / 2 - 100, -100);
         rectangle1.spriteFrame = "res/ground.png";

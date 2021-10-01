@@ -77,33 +77,33 @@ var makeVerticesForString = function (fontInfo, s) {
       // 6 vertices per letter
       positions[offset + 0] = x;
       positions[offset + 1] = 0;
-      texcoords[offset + 0] = u1;
-      texcoords[offset + 1] = v1;
+      texcoords[offset + 0] = u1;   //--1
+      texcoords[offset + 1] = 1.0-v1;
 
       positions[offset + 2] = x2;
       positions[offset + 3] = 0;
-      texcoords[offset + 2] = u2;
-      texcoords[offset + 3] = v1;
+      texcoords[offset + 2] = u2;   //--2
+      texcoords[offset + 3] = 1.0-v1;
 
       positions[offset + 4] = x;
       positions[offset + 5] = fontInfo.letterHeight;
-      texcoords[offset + 4] = u1;
-      texcoords[offset + 5] = v2;
+      texcoords[offset + 4] = u1;   //--3
+      texcoords[offset + 5] = 1.0-v2;
 
       positions[offset + 6] = x;
       positions[offset + 7] = fontInfo.letterHeight;
-      texcoords[offset + 6] = u1;
-      texcoords[offset + 7] = v2;
+      texcoords[offset + 6] = u1;   //--4
+      texcoords[offset + 7] = 1.0-v2;
 
       positions[offset + 8] = x2;
       positions[offset + 9] = 0;
-      texcoords[offset + 8] = u2;
-      texcoords[offset + 9] = v1;
+      texcoords[offset + 8] = u2;  //--5
+      texcoords[offset + 9] = 1.0-v1;
 
       positions[offset + 10] = x2;
       positions[offset + 11] = fontInfo.letterHeight;
-      texcoords[offset + 10] = u2;
-      texcoords[offset + 11] = v2;
+      texcoords[offset + 10] = u2;  //--6
+      texcoords[offset + 11] = 1.0-v2;
 
       x += glyphInfo.width + fontInfo.spacing;
       offset += 12;
@@ -126,13 +126,18 @@ var makeVerticesForString = function (fontInfo, s) {
 }
 
 
-export class Label extends SY.Sprite2D {
+export class Label extends SY.SpriteBase {
     constructor() {
         super();
+
+        this._node__type = syRender.NodeType.D2;
+
+        // this._sizeMode = SY.SpriteSizeMode.CUSTOM;
+        // this.isUnpackY = true;
         this.pushPassContent(syRender.ShaderType.Sprite,[
           [StateString.primitiveType,StateValueMap.primitiveType.PT_TRIANGLES]
         ],[
-          [syRender.PassCustomString.DefineUse,syRender.ShaderDefineString.SY_USE_ALPHA_TEST,0.1]
+          [syRender.PassCustomString.DefineUse,syRender.ShaderDefineValue.SY_USE_RGB_TEST,0.1]
         ]);
     }
     
