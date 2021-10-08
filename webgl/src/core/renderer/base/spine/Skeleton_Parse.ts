@@ -126,7 +126,7 @@ export class Skeleton_Parse {
         const gltf = LoaderManager.instance.getRes(gltfPath);
         gltf.buffers = [LoaderManager.instance.getRes(bufferPath)];
 
-        // const compareTestData = LoaderManager.instance.getRes("res/models/gltf/Flamingo.glb")
+        const compareTestData = LoaderManager.instance.getRes("res/models/gltf/Flamingo.glb")
 
         // const gltf = compareTestData;
         

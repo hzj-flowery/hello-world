@@ -189,8 +189,7 @@ export default class LoaderManager {
 
     //加载json格式的二进制
     //就是将json转为二进制 然后以二进制读取再转会json
-    private loadJsonBlobData(path: string, callBackProgress?, callBackFinish?): void {
-        var _this = this;
+    private loadJsonBlobData(path: string, callBackProgress?, callBackFinish?, callBackError?): void {
         var request = new XMLHttpRequest();
         request.open("get", path);
         request.send(null);
@@ -201,16 +200,18 @@ export default class LoaderManager {
                 var fr = new FileReader(); //FileReader可以读取Blob内容  
                 fr.readAsArrayBuffer(request.response); //二进制转换成ArrayBuffer
                 fr.onload = function (e) {  //转换完成后，调用onload方法
-                    console.log("bin file---", fr.result);
                     var rawData = new Float32Array(fr.result as ArrayBuffer);
                     var str = "";
                     for (var i = 0; i < rawData.length; i++) {
                         str = str + String.fromCharCode((rawData[i]));
                     }
                     JSON.parse(str);
-                    console.log("result --", str);
                     if (callBackFinish) callBackFinish.call(null, fr.result, path);
                 }
+            }
+            else {
+                if (callBackError)
+                    callBackError(request, path)
             }
         }
     }
@@ -218,14 +219,13 @@ export default class LoaderManager {
     /**
      * 加载obj
      */
-    public loadObjData(path: string, callBackProgress?, callBackFinish?): void {
+    public loadObjData(path: string, callBackProgress?, callBackFinish?, callBackError?): void {
 
     }
 
 
     //加载二进制数据
-    private loadBlobData(path: string, callBackProgress?, callBackFinish?): void {
-        var _this = this;
+    private loadBlobData(path: string, callBackProgress?, callBackFinish?, callBackError?): void {
         var request = new XMLHttpRequest();
         request.open("get", path);
         request.send(null);
@@ -238,10 +238,13 @@ export default class LoaderManager {
                     if (callBackFinish) callBackFinish.call(null, fr.result, path);
                 }
             }
+            else {
+                if (callBackError)
+                    callBackError(request, path)
+            }
         }
     }
-    private loadGlbBlobData(path: string, callBackProgress?, callBackFinish?): void {
-        var _this = this;
+    private loadGlbBlobData(path: string, callBackProgress?, callBackFinish?, callBackError?): void {
         var request = new XMLHttpRequest();
         request.open("get", path);
         request.send(null);
@@ -252,12 +255,15 @@ export default class LoaderManager {
                 var result = JSON.parse(gltfbe.content as string);
                 if (callBackFinish) callBackFinish.call(null, result, path);
             }
+            else {
+                if (callBackError)
+                    callBackError(request, path)
+            }
         }
     }
     //加载json数据
-    private loadJsonData(path: string, callBackProgress?, callBackFinish?): void {
+    private loadJsonData(path: string, callBackProgress?, callBackFinish?, callBackError?): void {
         var request = new XMLHttpRequest();
-        var _this = this;
         request.open("get", path);
         request.send(null);
         request.responseType = "json";
@@ -266,12 +272,15 @@ export default class LoaderManager {
                 var jsonData = request.response;
                 if (callBackFinish) callBackFinish.call(null, jsonData, path);
             }
+            else {
+                if (callBackError)
+                    callBackError(request, path)
+            }
         }
     }
     //加载可以转化为json的数据
-    private loadJsonStringData(path: string, callBackProgress?, callBackFinish?): void {
+    private loadJsonStringData(path: string, callBackProgress?, callBackFinish?, callBackError?): void {
         var request = new XMLHttpRequest();
-        var _this = this;
         request.open("get", path);
         request.send(null);
         request.responseType = "text";
@@ -280,10 +289,14 @@ export default class LoaderManager {
                 var jsonData = JSON.parse(request.responseText);
                 if (callBackFinish) callBackFinish.call(null, jsonData, path);
             }
+            else {
+                if (callBackError)
+                    callBackError(request, path)
+            }
         }
     }
     //加载可以转化为json的数据
-    private loadGlslStringData(path: string, callBackProgress?, callBackFinish?): void {
+    private loadGlslStringData(path: string, callBackProgress?, callBackFinish?, callBackError?): void {
         var request = new XMLHttpRequest();
         request.open("get", path);
         request.send(null);
@@ -292,10 +305,14 @@ export default class LoaderManager {
             if (request.status == 0) {
                 if (callBackFinish) callBackFinish.call(null, request.responseText, path);
             }
+            else {
+                if (callBackError)
+                    callBackError(request, path)
+            }
         }
     }
     //加载可以转化为json的数据
-    private loadTextData(path: string, callBackProgress?, callBackFinish?): void {
+    private loadTextData(path: string, callBackProgress?, callBackFinish?, callBackError?): void {
         var request = new XMLHttpRequest();
         request.open("get", path);
         request.send(null);
@@ -312,11 +329,14 @@ export default class LoaderManager {
                 console.log(last);
                 if (callBackFinish) callBackFinish.call(null, request.responseText, path);
             }
+            else {
+                if (callBackError)
+                    callBackError(request, path)
+            }
         }
     }
     //加载骨骼数据
-    private loadSkelData(path: string, callBackProgress?, callBackFinish?): void {
-        var _this = this;
+    private loadSkelData(path: string, callBackProgress?, callBackFinish?, callBackError?): void {
         var request = new XMLHttpRequest();
         request.open("get", path);
         request.send(null);
@@ -325,38 +345,19 @@ export default class LoaderManager {
             if (request.status == 0) {
                 var fr = new FileReader(); //FileReader可以读取Blob内容  
                 fr.readAsArrayBuffer(request.response); //二进制转换成ArrayBuffer
-                // fr.readAsText(request.response);
                 fr.onload = function (e) {  //转换完成后，调用onload方法
-                    // console.log("加载二进制成功---",fr.result);
-
-                    // var uint8_msg = new Uint8Array(fr.result as ArrayBuffer);
-                    // // 解码成字符串
-                    // var decodedString = String.fromCharCode.apply(null, uint8_msg);
-                    // console.log("字符串--",decodedString); 
-                    // // parse,转成json数据
-                    // var data = JSON.parse(decodedString);
-                    // console.log(data);
-
-                    // let content = fr.result;//arraybuffer类型数据
-                    // let resBlob = new Blob([content])
-                    // let reader = new FileReader()
-                    // reader.readAsText(resBlob, "utf-8")
-                    // reader.onload = () => {
-                    //     console.log("gagag---",reader.result);
-                    //         let res = JSON.parse(reader.result as string)
-                    //         console.log(res);
-                    // }
-
-
                     if (callBackFinish) callBackFinish.call(null, fr.result, path);
                 }
+            }
+            else {
+                if (callBackError)
+                    callBackError(request, path)
             }
         }
     }
 
     //加载图片数据
-    private loadImageData(path: string, callBackProgress?, callBackFinish?): void {
-        console.log("path------", path);
+    private loadImageData(path: string, callBackProgress?, callBackFinish?, callBackError?): void {
         let isHttp = path.indexOf("http") >= 0;
         if (!isHttp) {
             //本地
@@ -369,37 +370,29 @@ export default class LoaderManager {
                 }
                 if (callBackFinish) callBackFinish.call(null, img, path);
             }.bind(this, img);
+            img.onerror = function (event) {
+                if (callBackError)
+                    callBackError(img, path)
+            }
             img.src = path;
         }
         else {
-            //远程加载
-            // fetch(path).then((response)=>{
-            //     console.log("response-------",response);
-            //     if(response.ok)
-            //     {
-            //         console.log("进来啦----");
-            //         let myBlob =  response.blob();
-            //         var objectURL = URL.createObjectURL(myBlob);
-            //         var img = new Image(); 
-            //         img.src = objectURL;
-            //         console.log("objectURL------",objectURL);
-            //         if (callBackFinish) callBackFinish.call(null, img, path); 
-            //     }
-            //     throw new Error('Network response was not ok.');
-            // }).catch((err)=>{
-            //     console.log("加载图片失败了啊");
-            // })
-
             var request = new XMLHttpRequest();
             request.open("get", path, true);
             request.send();
             request.responseType = "blob";
             request.onload = function () {
-                var objectURL = URL.createObjectURL(request.response);
-                var img = new Image();
-                img.crossOrigin = "anonymous";
-                img.src = objectURL;
-                if (callBackFinish) callBackFinish.call(null, img, path);
+                if (request.status == 0) {
+                    var objectURL = URL.createObjectURL(request.response);
+                    var img = new Image();
+                    img.crossOrigin = "anonymous";
+                    img.src = objectURL;
+                    if (callBackFinish) callBackFinish.call(null, img, path);
+                }
+                else {
+                    if (callBackError)
+                        callBackError(img, path)
+                }
             }
         }
     }
@@ -470,6 +463,16 @@ export default class LoaderManager {
                         if (callBackFinish) callBackFinish(resRet.length == 1 ? resRet[0] : resRet);
                     });
                 }
+            }, (res, path) => {
+                count++;
+                if (count == length) {
+                    this.onLoadFinish();
+                    //任何加载成功图片的逻辑 都必须等到下一帧再返回结果
+                    requestAnimationFrame(() => {
+                        if (callBackFinish) callBackFinish(resRet.length == 1 ? resRet[0] : resRet);
+                    });
+                }
+
             });
         }
     }
@@ -728,10 +731,10 @@ export default class LoaderManager {
         img = null;
     }
     public onLoadProgress(progress: number): void {
-        console.log("加载进度---------", progress);
+        // console.log("加载进度---------", progress);
     }
     public onLoadFinish(): void {
-        console.log("加载完成啦");
+        // console.log("加载完成啦");
     }
 
 }
