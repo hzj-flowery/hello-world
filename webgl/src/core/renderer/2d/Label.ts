@@ -129,15 +129,11 @@ var makeVerticesForString = function (fontInfo, s) {
 export class Label extends SY.SpriteBase {
     constructor() {
         super();
-
         this._node__type = syRender.NodeType.D2;
-
-        // this._sizeMode = SY.SpriteSizeMode.CUSTOM;
-        // this.isUnpackY = true;
         this.pushPassContent(syRender.ShaderType.Sprite,[
           [StateString.primitiveType,StateValueMap.primitiveType.PT_TRIANGLES]
         ],[
-          [syRender.PassCustomString.DefineUse,syRender.ShaderDefineValue.SY_USE_RGB_TEST,0.1]
+          [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_RGB_TEST,0.1]
         ]);
     }
     

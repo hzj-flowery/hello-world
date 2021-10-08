@@ -394,6 +394,8 @@ _textureFmtGL.set(syGL.TextureFormat.RGBA_ETC2, { format: gltex_fmt.RGBA, intern
 _textureFmtGL.set(syGL.TextureFormat.RGBA32F_2, { format: gltex_fmt.RGBA, internalFormat: gltex_fmt.RGBA32F, pixelType: syGL.PixelType.FLOAT });
 
 /*
+                      1  2  3  4  5  6  7  8
+一个字节：-------------0  0  0  0  0  0  0  0
 format                type            通道数 通道总字节数
 RGBA         	 UNSIGNED_BYTE	        4	    4
 RGB	             UNSIGNED_BYTE	        3	    3

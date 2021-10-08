@@ -56,7 +56,7 @@ export class LineFrustum extends SY.SpriteBasePolygon {
             [StateString.primitiveType,StateValueMap.primitiveType.PT_LINES]
         ],
         [
-            [syRender.PassCustomString.DefineUse,syRender.ShaderDefineValue.SY_USE_MAT]
+            [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_MAT]
         ]);
 
         super.onInit();

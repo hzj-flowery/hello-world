@@ -3,6 +3,7 @@ import { glEnums } from "../gfx/GLapi"
 import { State } from "../gfx/State";
 import { Pass, PassType } from "./Pass"
 import { G_ShaderCenter } from "./ShaderCenter"
+import { ShaderCode } from "./ShaderCode";
 import { G_ShaderFactory } from "./ShaderFactory";
 
 
@@ -98,21 +99,21 @@ class PassFactory{
             {
                 let key = customData[k]["key"];
                 let value = customData[k]["value"];
-                if(key==syRender.PassCustomString.offlineRender&&typeof(value)=="boolean")
+                if(key==syRender.PassCustomKey.offlineRender&&typeof(value)=="boolean")
                 {
                     //离线渲染
                     pass.offlineRender = value;
                 }
-                else if(key==syRender.PassCustomString.drawInstanced&&typeof(value)=="boolean")
+                else if(key==syRender.PassCustomKey.drawInstanced&&typeof(value)=="boolean")
                 {
                     //实例化渲染
                     pass.drawInstanced = value;
                 }
-                else if(key==syRender.PassCustomString.DrawingOrder&&typeof(value)=="number")
+                else if(key==syRender.PassCustomKey.DrawingOrder&&typeof(value)=="number")
                 {
                     pass.drawingOrder = value;
                 }
-                else if(key==syRender.PassCustomString.ShaderType&&typeof(value)=="string")
+                else if(key==syRender.PassCustomKey.ShaderType&&typeof(value)=="string")
                 {
                     var st = syRender.ShaderTypeString.indexOf(value);
                     if(st<0)
@@ -122,7 +123,7 @@ class PassFactory{
                     }
                     pass.shaderType = st;
                 }
-                else if(key==syRender.PassCustomString.DefineUse&&typeof(value)=="string"&&pass.defineUse.indexOf(value)<0)
+                else if(key==syRender.PassCustomKey.DefineUse&&typeof(value)=="string"&&pass.defineUse.indexOf(value)<0)
                 {
                     pass.defineUse.push(value)
                 }
@@ -136,8 +137,8 @@ class PassFactory{
         ]
         
         //关于宏预处理操作
-        vert = this.preShaderCodeAboutDefine(vert,pass.defineUse);
-        frag = this.preShaderCodeAboutDefine(frag,pass.defineUse);
+        vert = this.preShaderCodeAboutDefine(vert,pass.defineUse,0);
+        frag = this.preShaderCodeAboutDefine(frag,pass.defineUse,1);
 
         if(normalShaderType.indexOf(pass.shaderType)>=0)
         {
@@ -160,9 +161,12 @@ class PassFactory{
      * 预处理顶点shader
      * @param vert 
      */
-    private preShaderCodeAboutDefine(code:string,custom:Array<string>):string{
+    private preShaderCodeAboutDefine(code:string,custom:Array<string>,step:number):string{
 
         if(!custom||custom.length<=0)return code;
+
+        //删除注释
+        code = code.replace(/\/\/(.*)\s\n/g,"")
         
         //前缀版本号控制
         var versionString = code.match(/\s*#version\s*300\s*es\s*\n/)
@@ -170,6 +174,13 @@ class PassFactory{
         {
             //预先将版本号剔除
             code = code.replace(/\s*#version\s*300\s*es\s*\n/,"")
+        }
+        
+        //精度
+        var precision=code.match(/\s*precision\s*mediump\s*float\s*;\s*\n/)
+        if(precision)
+        {
+            code = code.replace(/\s*precision\s*mediump\s*float\s*;\s*\n/,"")
         }
     
         custom.forEach((value,key)=>{
@@ -183,18 +194,37 @@ class PassFactory{
                 else
                 {
                     code = "\n #define "+value+"\n " + code;
+                    //check add function
+                    var func = ShaderCode.commonFuncion.get(value);
+                    if(func&&step==1)
+                    {
+                        code = "\n "+func+"\n  " +code
+                    }
                 }
             }
             else
             {
                 code = "\n #define "+value+"\n " + code;
+
+                //check add function
+                var func = ShaderCode.commonFuncion.get(value);
+                if(func&&step==1)
+                {
+                    code = "\n "+func+"\n  " +code
+                }
             }
         })
+
+        //再加上精度
+        if(precision)
+        {
+            code = "\nprecision mediump float;\n"+code;
+        }
 
         //再加上版本号
         if(versionString)
         {
-            code = "#version 300 es\n"+code
+            code = "\n#version 300 es\n"+code
         }
         return code;
     }

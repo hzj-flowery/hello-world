@@ -2,7 +2,6 @@ import { MD5 } from "../../../tool/MD5";
 import Device from "../../Device";
 import { syRender } from "../data/RenderData";
 import { ShaderProgramBase } from "./Shader";
-import { ShaderCode } from "./ShaderCode";
 import { G_ShaderFactory } from "./ShaderFactory";
 
 

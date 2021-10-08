@@ -2,6 +2,7 @@ import { SY } from "../base/Sprite";
 import { syRender } from "../data/RenderData";
 import box from "../primitive/box";
 import cone from "../primitive/cone";
+import { syPrimitives } from "../primitive/Primitives";
 import sphere from "../primitive/sphere";
 import torus from "../primitive/torus";
 import { Object3D } from "./Object3D";
@@ -23,7 +24,7 @@ export class UCS extends SY.SpriteBase{
         var mesh = syRender.Mesh.create();
         mesh.combine(boxData,0,2.5,0)
         mesh.combine(coneData,0,5,0);
-
+ 
         this._objX = new Object3D(mesh);
         this._objX.spriteFrame = "res/bindu.jpg";
         this._objX.rotateZ = -90;

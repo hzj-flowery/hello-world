@@ -1,12 +1,4 @@
-#ifdef SY_HIGH_PRECISION
-precision highp float;
-#elif defined(SY_MEDIUM_PRECISION)
 precision mediump float;
-#elif defined(SY_LOW_PRECISION)
-precision lowp float;
-#else
-precision mediump float;
-#endif
   varying vec2 v_uv;
   varying vec3 v_normal;
   varying vec3 v_surfaceToLight;
@@ -23,7 +15,6 @@ precision mediump float;
   uniform float u_spotInnerLimit;//聚光的内部限制
   uniform float u_spotOuterLimit;//聚光的外部限制
 
-  
 
   void main() {
   vec4 materialColor = texture2D(u_texture, v_uv);//材质颜色

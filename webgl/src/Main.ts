@@ -14,6 +14,7 @@ import { G_DrawEngine } from "./core/renderer/base/DrawEngine";
 import { G_LightCenter } from "./core/renderer/light/LightCenter";
 import { G_LightModel } from "./core/renderer/light/LightModel";
 import { G_UISetting } from "./core/ui/UiSetting";
+import { ShaderCode } from "./core/renderer/shader/ShaderCode";
 
 
 
@@ -43,6 +44,7 @@ import { G_UISetting } from "./core/ui/UiSetting";
     "res/caustics.png",
     "res/models/killer_whale/whale.CYCLES.bin",
     "res/models/killer_whale/whale.CYCLES.gltf",
+    "res/models/gltf/Flamingo.glb",
     "res/models/HeadData/head.json",
     "res/models/char/F.json",
     "res/models/Robart/blockGuyNodeDescriptions.json",
@@ -81,12 +83,14 @@ import { G_UISetting } from "./core/ui/UiSetting";
 
 function runBeforeInit(){
     Device.Instance.init();
+    ShaderCode.init();
     G_DrawEngine.init(Device.Instance.gl);
     G_ShaderFactory.init(Device.Instance.gl);
     G_BufferManager.init(Device.Instance.gl);
     G_LightCenter.init();
     G_LightModel.init();
     G_UISetting.setUI();
+    
 }
 
 LoaderManager.instance.load(arr,null,function(){

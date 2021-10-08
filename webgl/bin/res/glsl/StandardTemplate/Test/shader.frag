@@ -1,14 +1,6 @@
 // #extension GL_EXT_draw_buffers : require
 
-#ifdef SY_HIGH_PRECISION
-precision highp float;
-#elif defined(SY_MEDIUM_PRECISION)
 precision mediump float;
-#elif defined(SY_LOW_PRECISION)
-precision lowp float;
-#else
-precision mediump float;
-#endif
 
 varying vec2 v_uv;
 uniform sampler2D gColor;

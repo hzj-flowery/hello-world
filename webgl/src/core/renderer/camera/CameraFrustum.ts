@@ -2,7 +2,7 @@ import Device from "../../Device";
 import { glMatrix } from "../../math/Matrix";
 import { MathUtils } from "../../utils/MathUtils";
 import { SY } from "../base/Sprite";
-import { syPrimitives } from "../shader/Primitives";
+import { syPrimitives } from "../primitive/Primitives";
 import { BufferAttribsData, ShaderProgram } from "../shader/Shader";
 import { G_ShaderFactory } from "../shader/ShaderFactory";
 

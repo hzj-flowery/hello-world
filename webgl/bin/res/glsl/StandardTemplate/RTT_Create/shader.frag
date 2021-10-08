@@ -1,13 +1,5 @@
 #version 300 es
-#ifdef SY_HIGH_PRECISION
-precision highp float;
-#elif defined(SY_MEDIUM_PRECISION)
 precision mediump float;
-#elif defined(SY_LOW_PRECISION)
-precision lowp float;
-#else
-precision mediump float;
-#endif
 /*
 惊喜发现：
 location=0 最好会默认输出到显示的帧缓冲中去 无论这个变量的名字叫啥

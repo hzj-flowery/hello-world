@@ -30,6 +30,7 @@
 
 import Vec3 from '../../value-types/vec3';
 import { IGeometry, IGeometryOptions } from './define';
+import { syPrimitives } from './Primitives';
 
 /**
  * @en
@@ -86,6 +87,7 @@ export class IBoxOptions extends IGeometryOptions {
      */
     lengthSegments?: number;
 }
+
 
 /**
  * @en
@@ -221,3 +223,4 @@ const c4 = new Vec3();
 const c5 = new Vec3();
 const c6 = new Vec3();
 const c7 = new Vec3();
+

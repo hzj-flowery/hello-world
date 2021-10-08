@@ -5,7 +5,7 @@ import { G_UISetting } from "../../ui/UiSetting";
 import { MathUtils } from "../../utils/MathUtils";
 import { Vec2 } from "../../value-types/vec2";
 import Vec3 from "../../value-types/vec3";
-import { syPrimitives } from "../shader/Primitives";
+import { syPrimitives } from "../primitive/Primitives";
 import { BufferAttribsData, ShaderProgram } from "../shader/Shader";
 import { G_ShaderFactory } from "../shader/ShaderFactory";
 

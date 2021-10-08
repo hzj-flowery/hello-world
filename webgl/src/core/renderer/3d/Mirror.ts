@@ -4,7 +4,7 @@ import { SY } from "../base/Sprite";
 import { syRender } from "../data/RenderData";
 import { syGL } from "../gfx/syGLEnums";
 import { G_LightCenter } from "../light/LightCenter";
-import { syPrimitives } from "../shader/Primitives";
+import { syPrimitives } from "../primitive/Primitives";
 
 export default class Mirror extends SY.SpriteBase {
     protected onInit() {

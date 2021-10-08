@@ -1077,29 +1077,27 @@ export default class Device {
         let y = object.y * this.height;
         let width = object.width * this.width;
         let height = object.height * this.height;
-        if (this._curViewPort == null ||
-            this._curViewPort.x != x ||
-            this._curViewPort.y != y || 
-            this._curViewPort.width != width ||
-             this._curViewPort.height != height) {
+        if (!this._curViewPort.equals(object)) {
             G_DrawEngine.viewport(x, y, width, height);
             this._curViewPort.set(object);
         }
 
     }
     //---------------------------------------------------------------------------------------------end---------------------------------
-
+    
+    /**
+     * 获取画布的宽度
+     * 单位 像素
+     */
     public get width() {
         return this._width;
     }
+    /**
+     * 获取画布的高度
+     * 单位 像素
+     */
     public get height() {
         return this._height;
-    }
-    public set width(width) {
-        this.width = width;
-    }
-    public set height(height) {
-        this._height = height;
     }
 
 

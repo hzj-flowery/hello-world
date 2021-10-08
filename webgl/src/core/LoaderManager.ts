@@ -4,6 +4,130 @@
 import { syRender } from "./renderer/data/RenderData";
 import { MathUtils } from "./utils/MathUtils";
 
+//--------------------------------------------------gltf
+
+namespace gltfHelper {
+    class LoaderUtils {
+        static decodeText(array) {
+            if (typeof TextDecoder !== 'undefined') {
+                return new TextDecoder().decode(array);
+            } // Avoid the String.fromCharCode.apply(null, array) shortcut, which
+            // throws a "maximum call stack size exceeded" error for large arrays.
+
+            let s = '';
+
+            for (let i = 0, il = array.length; i < il; i++) {
+                // Implicitly assumes little-endian.
+                s += String.fromCharCode(array[i]);
+            }
+
+            try {
+                // merges multi-byte utf-8 characters.
+                return decodeURIComponent(escape(s));
+            } catch (e) {
+                // see #16358
+                return s;
+            }
+        }
+        static extractUrlBase(url) {
+            const index = url.lastIndexOf('/');
+            if (index === -1) return './';
+            return url.substr(0, index + 1);
+        }
+
+    }
+
+    const EXTENSIONS = {
+        KHR_BINARY_GLTF: 'KHR_binary_glTF',
+        KHR_DRACO_MESH_COMPRESSION: 'KHR_draco_mesh_compression',
+        KHR_LIGHTS_PUNCTUAL: 'KHR_lights_punctual',
+        KHR_MATERIALS_CLEARCOAT: 'KHR_materials_clearcoat',
+        KHR_MATERIALS_IOR: 'KHR_materials_ior',
+        KHR_MATERIALS_PBR_SPECULAR_GLOSSINESS: 'KHR_materials_pbrSpecularGlossiness',
+        KHR_MATERIALS_SPECULAR: 'KHR_materials_specular',
+        KHR_MATERIALS_TRANSMISSION: 'KHR_materials_transmission',
+        KHR_MATERIALS_UNLIT: 'KHR_materials_unlit',
+        KHR_MATERIALS_VOLUME: 'KHR_materials_volume',
+        KHR_TEXTURE_BASISU: 'KHR_texture_basisu',
+        KHR_TEXTURE_TRANSFORM: 'KHR_texture_transform',
+        KHR_MESH_QUANTIZATION: 'KHR_mesh_quantization',
+        EXT_TEXTURE_WEBP: 'EXT_texture_webp',
+        EXT_MESHOPT_COMPRESSION: 'EXT_meshopt_compression'
+    };
+    const BINARY_EXTENSION_HEADER_MAGIC = 'glTF';
+    const BINARY_EXTENSION_HEADER_LENGTH = 12;
+    const BINARY_EXTENSION_CHUNK_TYPES = {
+        JSON: 0x4E4F534A,
+        BIN: 0x004E4942
+    };
+    export class GLTFBinaryExtension {
+
+        public name: string;
+        public content: any;
+        public body: any;
+        public header: any;
+        constructor(data) {
+
+            this.name = EXTENSIONS.KHR_BINARY_GLTF;
+            this.content = null;
+            this.body = null;
+            const headerView = new DataView(data, 0, BINARY_EXTENSION_HEADER_LENGTH);
+            this.header = {
+                magic: LoaderUtils.decodeText(new Uint8Array(data.slice(0, 4))),
+                version: headerView.getUint32(4, true),
+                length: headerView.getUint32(8, true)
+            };
+
+            if (this.header.magic !== BINARY_EXTENSION_HEADER_MAGIC) {
+
+                throw new Error('THREE.GLTFLoader: Unsupported glTF-Binary header.');
+
+            } else if (this.header.version < 2.0) {
+
+                throw new Error('THREE.GLTFLoader: Legacy binary file detected.');
+
+            }
+
+            const chunkContentsLength = this.header.length - BINARY_EXTENSION_HEADER_LENGTH;
+            const chunkView = new DataView(data, BINARY_EXTENSION_HEADER_LENGTH);
+            let chunkIndex = 0;
+
+            while (chunkIndex < chunkContentsLength) {
+
+                const chunkLength = chunkView.getUint32(chunkIndex, true);
+                chunkIndex += 4;
+                const chunkType = chunkView.getUint32(chunkIndex, true);
+                chunkIndex += 4;
+
+                if (chunkType === BINARY_EXTENSION_CHUNK_TYPES.JSON) {
+
+                    const contentArray = new Uint8Array(data, BINARY_EXTENSION_HEADER_LENGTH + chunkIndex, chunkLength);
+                    this.content = LoaderUtils.decodeText(contentArray);
+
+                } else if (chunkType === BINARY_EXTENSION_CHUNK_TYPES.BIN) {
+
+                    const byteOffset = BINARY_EXTENSION_HEADER_LENGTH + chunkIndex;
+                    this.body = data.slice(byteOffset, byteOffset + chunkLength);
+
+                } // Clients must ignore chunks with unknown types.
+
+
+                chunkIndex += chunkLength;
+
+            }
+
+            if (this.content === null) {
+
+                throw new Error('THREE.GLTFLoader: JSON content not found.');
+
+            }
+
+        }
+
+    }
+}
+//-----------------------------------------------------------------------------------------------------end
+
 /**
  var myHeaders = new Headers();
 var myInit:any = { method: 'GET',
@@ -113,6 +237,20 @@ export default class LoaderManager {
                 fr.onload = function (e) {  //转换完成后，调用onload方法
                     if (callBackFinish) callBackFinish.call(null, fr.result, path);
                 }
+            }
+        }
+    }
+    private loadGlbBlobData(path: string, callBackProgress?, callBackFinish?): void {
+        var _this = this;
+        var request = new XMLHttpRequest();
+        request.open("get", path);
+        request.send(null);
+        request.responseType = "arraybuffer";
+        request.onload = function () {
+            if (request.status == 0) {
+                var gltfbe = new gltfHelper.GLTFBinaryExtension(request.response);
+                var result = JSON.parse(gltfbe.content as string);
+                if (callBackFinish) callBackFinish.call(null, result, path);
             }
         }
     }
@@ -275,6 +413,7 @@ export default class LoaderManager {
             case "obj": return this.loadObjData;
             case "json": return this.loadJsonData;
             case "gltf": return this.loadJsonStringData;
+            case "glb": return this.loadGlbBlobData;
             case "skel": return this.loadSkelData;
             case "txt": return this.loadTextData;
             case "glsl": return this.loadGlslStringData;
@@ -556,7 +695,7 @@ export default class LoaderManager {
                 var customData = depthP[k].custom;
                 if (customData && customData.length > 0) {
                     for (let j = 0; j < customData.length; j++) {
-                        if (customData[j].key == syRender.PassCustomString.ShaderType && customData[j].value == tag) {
+                        if (customData[j].key == syRender.PassCustomKey.ShaderType && customData[j].value == tag) {
                             return depthP[k];
                         }
                     }

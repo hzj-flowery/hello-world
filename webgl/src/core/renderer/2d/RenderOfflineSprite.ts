@@ -12,7 +12,7 @@ export class RenderOfflineSprite extends SY.Sprite2D{
     protected onInit(): void {
         this.isUnpackY = true;
         this.pushPassContent(syRender.ShaderType.Sprite,[],[
-            [syRender.PassCustomString.offlineRender,true]
+            [syRender.PassCustomKey.offlineRender,true]
         ]);
         this.setContentSize(Device.Instance.width/4,Device.Instance.height/4);
     }

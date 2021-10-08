@@ -125,6 +125,11 @@ export class Skeleton_Parse {
     static parseGLTF(gl: WebGLRenderingContext, gltfPath: string = "res/models/killer_whale/whale.CYCLES.gltf", bufferPath: string = "res/models/killer_whale/whale.CYCLES.bin") {
         const gltf = LoaderManager.instance.getRes(gltfPath);
         gltf.buffers = [LoaderManager.instance.getRes(bufferPath)];
+
+        // const compareTestData = LoaderManager.instance.getRes("res/models/gltf/Flamingo.glb")
+
+        // const gltf = compareTestData;
+        
         //缺省的材质
         const defaultMaterial = {
             uniforms: {
@@ -138,6 +143,7 @@ export class Skeleton_Parse {
         let shaderNameReplace = {
             "a_POSITION": syGL.AttributeUniform.POSITION, //位置
             "a_NORMAL": syGL.AttributeUniform.NORMAL,    //法线
+            "a_COLOR_0":syGL.AttributeUniform.VERT_COLOR,//顶点颜色
             "a_TANGENT": syGL.AttributeUniform.TANGENT,  //切线
             "a_WEIGHTS_0": syGL.AttributeUniform.WEIGHTS, //权重
             "a_JOINTS_0": syGL.AttributeUniform.JOINTS,  //受到哪些骨骼节点的影响

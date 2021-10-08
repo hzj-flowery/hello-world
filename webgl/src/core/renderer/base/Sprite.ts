@@ -53,7 +53,6 @@ import { glBaseBuffer, G_BufferManager, IndexsBuffer, VertColorBuffer, VertMatri
 import enums from "../camera/enums";
 import { G_ShaderCenter } from "../shader/ShaderCenter";
 import { LightData } from "../data/LightData";
-import { ShaderCode } from "../shader/ShaderCode";
 import { syGL } from "../gfx/syGLEnums";
 import { G_DrawEngine } from "./DrawEngine";
 import { handler } from "../../../utils/handler";
@@ -498,8 +497,12 @@ export namespace SY {
         private _tempMatrix: Float32Array;
 
         protected onInit(): void {
-            this.pushPassContent(syRender.ShaderType.ShadowMap);
-            this.pushPassContent(syRender.ShaderType.Shadow);
+            this.pushPassContent(syRender.ShaderType.ShadowMap,[],[
+                [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_FUNC_PACK]
+            ]);
+            this.pushPassContent(syRender.ShaderType.Shadow,[],[
+                [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_FUNC_UNPACK]
+            ]);
         }
         protected collectRenderData(time: number) {
             glMatrix.mat4.copy(this._tempMatrix, this._customTempMatrix)
@@ -744,7 +747,7 @@ export namespace SY {
                 // [StateString.stencilZFailOpFront,StateValueMap.stencilZFailOpFront.KEEP],
                 // [StateString.stencilZPassOpFront,StateValueMap.stencilZPassOpFront.REPLACE],
             ],[
-                [syRender.PassCustomString.DefineUse,syRender.ShaderDefineValue.SY_USE_ALPHA_TEST,0.1]
+                [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_ALPHA_TEST,0.1]
             ])
         }
     }

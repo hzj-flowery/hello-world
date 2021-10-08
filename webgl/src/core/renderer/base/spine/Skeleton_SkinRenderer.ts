@@ -46,6 +46,8 @@ export class Skeleton_SkinRenderer {
             renderData._uniformData.push(primitive.material.uniforms);
             renderData._uniformData.push(sharedUniforms);
             renderData._attrbufferData = primitive.bufferInfo;
+            //绘制类型
+            renderData.primitive.type = pass.state.primitiveType;
             renderData.node = node as any;
             Device.Instance.collectData(renderData);
             j++;

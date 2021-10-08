@@ -8,7 +8,7 @@ import { G_Stage } from "../base/Stage";
 import enums from "../camera/enums";
 import { GameMainCamera} from "../camera/GameMainCamera";
 import { syRender } from "../data/RenderData";
-import { syPrimitives } from "../shader/Primitives";
+import { syPrimitives } from "../primitive/Primitives";
 import { BufferAttribsData, ShaderProgram } from "../shader/Shader";
 import { G_ShaderFactory } from "../shader/ShaderFactory";
 import { ShaderUseVariantType } from "../shader/ShaderUseVariantType";

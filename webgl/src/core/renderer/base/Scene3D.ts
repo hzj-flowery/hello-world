@@ -29,9 +29,6 @@ import ObjNode from "../3d/ObjNode";
 import { StateString, StateValueMap } from "../gfx/State";
 import Mirror from "../3d/Mirror";
 import { Object3D } from "../3d/Object3D";
-import capsule from "../primitive/capsule";
-import cone from "../primitive/cone";
-import box from "../primitive/box";
 import { UCS } from "../3d/UCS";
 
 export default class Scene3D extends Scene {

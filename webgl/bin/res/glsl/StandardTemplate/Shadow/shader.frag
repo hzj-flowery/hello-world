@@ -1,12 +1,4 @@
-#ifdef SY_HIGH_PRECISION
-precision highp float;
-#elif defined(SY_MEDIUM_PRECISION)
 precision mediump float;
-#elif defined(SY_LOW_PRECISION)
-precision lowp float;
-#else
-precision mediump float;
-#endif
 
     varying vec3 v_surfaceToLight; 
     varying vec3 v_surfaceToView;
@@ -48,10 +40,6 @@ precision mediump float;
       float shadowLight = (inRange(projectedTexcoord) && projectedDepth <= currentDepth) ? 0.0 : 1.0;//小于说明光看不见，则处于阴影中，否则正常显示
       return shadowLight;
     }
-    float unpack(const in vec4 rgbaDepth) {
-      const vec4 bitShift = vec4(1.0, 1.0/256.0, 1.0/(256.0*256.0), 1.0/(256.0*256.0*256.0));
-      return dot(rgbaDepth, bitShift);
-  }
     //软阴影
     //coordP在光照下的顶点坐标
     /*
@@ -77,7 +65,11 @@ precision mediump float;
                 rgbaDepth = texture2D(shadowMap, projectedTexcoord.xy+vec2(x,y)*texelSize);
                 //如果当前深度大于光照的最大深度 则表明处于阴影中
                 //否则可以看见
-                shadows += (isInRange&&curDepth>unpack(rgbaDepth)) ? 1.0 : 0.0;
+                #ifdef SY_FUNC_UNPACK
+                     shadows += (isInRange&&curDepth>unpack(rgbaDepth)) ? 1.0 : 0.0;
+                #else
+                     shadows += (isInRange&&curDepth>rgbaDepth.r) ? 1.0 : 0.0;
+                #endif
           }
       }
 

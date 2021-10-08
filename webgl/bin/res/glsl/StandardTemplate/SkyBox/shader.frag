@@ -1,12 +1,4 @@
-#ifdef SY_HIGH_PRECISION
-precision highp float;
-#elif defined(SY_MEDIUM_PRECISION)
 precision mediump float;
-#elif defined(SY_LOW_PRECISION)
-precision lowp float;
-#else
-precision mediump float;
-#endif
 
 uniform samplerCube u_skybox;
 uniform mat4 u_projection_view_I;

@@ -12,7 +12,7 @@ import { LightData } from "../data/LightData";
 import { syRender } from "../data/RenderData";
 import { syGL } from "../gfx/syGLEnums";
 import { G_LightCenter } from "../light/LightCenter";
-import { syPrimitives } from "../shader/Primitives";
+import { syPrimitives } from "../primitive/Primitives";
 import { Line } from "./Line";
 import { LineFrustum } from "./LineFrustum";
 import Sphere from "./Sphere";

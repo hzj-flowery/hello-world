@@ -3,7 +3,7 @@ import { SY } from "../base/Sprite";
 import CustomTextureData from "../data/CustomTextureData";
 import { syRender } from "../data/RenderData";
 import { G_LightCenter } from "../light/LightCenter";
-import { syPrimitives } from "../shader/Primitives";
+import { syPrimitives } from "../primitive/Primitives";
 
 /**
  * // 0. create depth cubemap transformation matrices

@@ -4,7 +4,7 @@ import LoaderManager from "../../LoaderManager";
 import { glMatrix } from "../../math/Matrix";
 import { SY } from "../base/Sprite";
 import { CubeData } from "../data/CubeData";
-import { syPrimitives } from "../shader/Primitives";
+import { syPrimitives } from "../primitive/Primitives";
 
 
 class SKeletonTRS {

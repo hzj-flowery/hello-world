@@ -1,5 +1,5 @@
 import { SY } from "../base/Sprite";
-import { syPrimitives } from "../shader/Primitives";
+import { syPrimitives } from "../primitive/Primitives";
 
 export class ThreeDF extends SY.SpriteBase{
     onInit(){

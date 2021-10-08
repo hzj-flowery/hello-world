@@ -19,12 +19,7 @@ import { ShaderUseVariantType } from "../shader/ShaderUseVariantType";
 let renderDataId: number = 0;
 export namespace syRender {
 
-    export var StateData = {
-        name: StateString,
-        value: StateValueMap
-    }
-
-    export enum PassCustomString{
+    export enum PassCustomKey{
         offlineRender = "offlineRender", //离线渲染
         drawInstanced = "drawInstanced", //实例化绘制
         DrawingOrder = "DrawingOrder",//绘制顺序
@@ -163,9 +158,10 @@ export namespace syRender {
         SY_USE_MAT:"SY_USE_MAT",
         SY_USE_ALPHA_TEST:"SY_USE_ALPHA_TEST",
         SY_USE_RGB_TEST:"SY_USE_RGB_TEST",
-        SY_HIGH_PRECISION:"SY_HIGH_PRECISION",    //高精度
-        SY_MEDIUM_PRECISION:"SY_MEDIUM_PRECISION", //中精度
-        SY_LOW_PRECISION:"SY_LOW_PRECISION",      //低精度
+
+        //下面是函数
+        SY_FUNC_PACK:"SY_FUNC_PACK",                        //压缩函数
+        SY_FUNC_UNPACK:"SY_FUNC_UNPACK",                        //解压缩函数
     }
 
     export enum CameraType {
@@ -820,7 +816,6 @@ export namespace syRender {
             this._uniformData = [];
             this._shaderData = null;
             this._attrbufferData = null;
-            this.primitive.type = syGL.PrimitiveType.TRIANGLES;
             glMatrix.mat4.identity(this._tempMatrix1);
         }
         public _shaderData: ShaderProgram;
