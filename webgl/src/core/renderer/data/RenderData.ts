@@ -25,6 +25,7 @@ export namespace syRender {
         DrawingOrder = "DrawingOrder",//绘制顺序
         ShaderType="ShaderType",//shader的类型
         DefineUse="DefineUse",//宏的使用
+        ProgramBaseType="ProgramBaseType",
     }
 
     export enum ColorMask {

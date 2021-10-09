@@ -8,6 +8,7 @@ import Vec3 from "../../value-types/vec3";
 import { syPrimitives } from "../primitive/Primitives";
 import { BufferAttribsData, ShaderProgram } from "../shader/Shader";
 import { G_ShaderFactory } from "../shader/ShaderFactory";
+import PerspectiveCamera from "./PerspectiveCamera";
 
 
 var baseVertexShader =
@@ -88,6 +89,7 @@ export class CameraModel {
         }
         this._isInit = true;
         this.gl = gl;
+        this._camera = new PerspectiveCamera(MathUtils.degToRad(60),gl.canvas.width/gl.canvas.height,0.1,1000)
         this._programInfor = G_ShaderFactory.createProgramInfo(this.solidcolorvertexshader, this.solidcolorfragmentshader);
         this._frustumCube = G_ShaderFactory.createProgramInfo(baseVertexShader, colorFragmentShader);
         this._modelBuffer = this.createCameraBufferInfo();
@@ -99,8 +101,6 @@ export class CameraModel {
         this._loacalInvertProj = glMatrix.mat4.identity(null);
         this._pvTemp1 = glMatrix.mat4.identity(null);
         this._viewMatrix = glMatrix.mat4.identity(null);
-        this._sceneCameraMatrix = glMatrix.mat4.identity(null);
-        this._sceneCameraProjectMatrix = glMatrix.mat4.identity(null);
         this._originPos = [0, 0, 0];
         var faceColors = [
             [1, 0, 0, 1,],
@@ -123,7 +123,7 @@ export class CameraModel {
         this._cubeBufferInfo = G_ShaderFactory.createBufferInfoFromArrays(cubeArrays);
 
         //场景摄像机
-        this.setSceneCamera();
+        this.updateSceneCamera();
 
     }
     private createClipspaceCubeBufferInfo() {
@@ -213,8 +213,8 @@ export class CameraModel {
         /**
          * 本地相机的投影矩阵和节点矩阵
          */
-        let projMatrix = this._sceneCameraProjectMatrix;
-        let cameraMatrix = this._sceneCameraMatrix;
+        let projMatrix = this._camera.getProjectionMatrix();
+        let cameraMatrix = this._camera.modelMatrix;
         var gl = this.gl;
         // draw object to represent first camera
         // Make a view matrix from the camera matrix.
@@ -291,31 +291,21 @@ export class CameraModel {
     }
 
     //设置场景相机-------------------------------------------------------------------------------------------------------
-    private _sceneCameraMatrix: Float32Array;
-    private _sceneCameraProjectMatrix: Float32Array;
     private _sceneCameraPosition: Vec3 = new Vec3(-70, 10, 10);
+    private _camera:PerspectiveCamera;
     public setSceneCameraPosition(pos: Vec3): void {
         this._sceneCameraPosition.set(pos);
-        this.setSceneCamera();
+        this.updateSceneCamera();
     }
-    private setSceneCamera(): void {
-        var gl = this.gl;
-        const effectiveWidth = gl.canvas.width / 2;
-        const aspect = effectiveWidth / gl.canvas.height;
-        const near = 1;
-        const far = 2000;
-        glMatrix.mat4.perspective(this._sceneCameraProjectMatrix, MathUtils.degToRad(60), aspect, near, far);
-        // Compute the cameras matrix using look at.
+    private updateSceneCamera(): void {
+        // // Compute the cameras matrix using look at.
         const cameraPosition2 = [this._sceneCameraPosition.x,this._sceneCameraPosition.y,this._sceneCameraPosition.z];
-        const target2 = [0, 0, 0];
-        const up2 = [0, 1, 0];
-        glMatrix.mat4.lookAt2(this._sceneCameraMatrix, cameraPosition2, target2, up2);
+        this._camera.setPosition(this._sceneCameraPosition.x,this._sceneCameraPosition.y,this._sceneCameraPosition.z)
+        this._camera.lookAt(cameraPosition2)
+        this._camera.visit(0);
     }
-    public getSceneCameraMatrix(): Float32Array {
-        return this._sceneCameraMatrix;
-    }
-    public getSceneProjectMatrix(): Float32Array {
-        return this._sceneCameraProjectMatrix;
+    public getSceneCamera():PerspectiveCamera{
+        return this._camera;
     }
 
     //------------------------------ui-------------------------------------------------------------------------------------
@@ -324,24 +314,24 @@ export class CameraModel {
 
 export class G_CameraModel{
        static modelMap:Map<number,CameraModel> = new Map()
-       static createCamera(VA,targetProjMatrix, targetCameraMatrix,pos:Vec3= new Vec3(-70, 10, 10)):CameraModel{
-            if(VA < 1)
+       static updateCamera(visualAngle,targetProjMatrix, targetCameraMatrix,pos:Vec3= new Vec3(-70, 10, 10)):CameraModel{
+            if(visualAngle < 1)
             {
                 return;
             } 
-            var model = this.modelMap.get(VA);
+            var model = this.modelMap.get(visualAngle);
             if(!model){
                 model = new CameraModel();
             }  
             model.draw(targetProjMatrix, targetCameraMatrix);
             model.setSceneCameraPosition(pos);
-            this.modelMap.set(VA,model)
+            this.modelMap.set(visualAngle,model)
             return model;
        }
        static getSceneProjectMatrix(VA:number){
-            return this.modelMap.get(VA).getSceneProjectMatrix()
+            return this.modelMap.get(VA).getSceneCamera().getProjectionMatrix()
        }
        static getSceneCameraMatrix(VA:number){
-        return this.modelMap.get(VA).getSceneCameraMatrix()
+        return this.modelMap.get(VA).getSceneCamera().modelMatrix;
        }
 }

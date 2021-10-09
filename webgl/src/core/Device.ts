@@ -906,7 +906,7 @@ export default class Device {
         //记录一下当前渲染的时间
         this._triggerRenderTime++;
         var cameraData = GameMainCamera.instance.getCameraByUUid(syRender.CameraUUid.base3D).getCameraData();
-        G_CameraModel.createCamera(crData.visualAngle, cameraData.projectMat, cameraData.modelMat, crData.visualAnglePosition);
+        G_CameraModel.updateCamera(crData.visualAngle, cameraData.projectMat, cameraData.modelMat, crData.visualAnglePosition);
         //提交数据给GPU 立即绘制
         for (var j = 0; j < queueItems.length; j++) {
             if (queueItems[j].isOffline && crData.fb) {

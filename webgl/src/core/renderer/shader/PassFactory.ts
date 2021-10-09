@@ -127,20 +127,19 @@ class PassFactory{
                 {
                     pass.defineUse.push(value)
                 }
+                else if(key==syRender.PassCustomKey.ProgramBaseType&&typeof(value)=="boolean")
+                {
+                    pass.ProgramBaseType = value;
+                }
 
             }
         }
-        var normalShaderType=[
-            syRender.ShaderType.Spine_Mesh,
-            syRender.ShaderType.Spine_Skin,
-            syRender.ShaderType.Obj,
-        ]
         
         //关于宏预处理操作
         vert = this.preShaderCodeAboutDefine(vert,pass.defineUse,0);
         frag = this.preShaderCodeAboutDefine(frag,pass.defineUse,1);
 
-        if(normalShaderType.indexOf(pass.shaderType)>=0)
+        if(pass.ProgramBaseType==false)
         {
              var program = G_ShaderFactory.createProgramInfo(vert, frag);
              pass.program = program

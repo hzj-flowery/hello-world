@@ -24,9 +24,11 @@ export class Pass {
         this._type=type;
         this.drawingOrder = syRender.DrawingOrder.Normal;
         this._shadeType = syRender.ShaderType.Custom;
+        this.ProgramBaseType = true;
     }
     public baseProgram:ShaderProgramBase; //shader 代码
     public program:ShaderProgram;
+    public ProgramBaseType:boolean;
     public state:State; //渲染状态
     private _type:PassType;
     private _shadeType:syRender.ShaderType;

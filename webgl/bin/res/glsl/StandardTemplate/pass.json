@@ -304,21 +304,24 @@
         "name": "Spine_Mesh/shader",
         "template":true,
         "custom":[
-            {"key":"ShaderType","value":"Spine_Mesh"}
+            {"key":"ShaderType","value":"Spine_Mesh"},
+            {"key":"ProgramBaseType","value":false}
         ]
     },
     {
         "name": "Spine_Skin/shader",
         "template":true,
         "custom":[
-            {"key":"ShaderType","value":"Spine_Skin"}
+            {"key":"ShaderType","value":"Spine_Skin"},
+            {"key":"ProgramBaseType","value":false}
         ]
     },
     {
         "name": "Obj/shader",
         "template":true,
         "custom":[
-            {"key":"ShaderType","value":"Obj"}
+            {"key":"ShaderType","value":"Obj"},
+            {"key":"ProgramBaseType","value":false}
         ]
     },
     {
