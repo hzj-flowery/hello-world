@@ -21,7 +21,7 @@ export default class Spine extends SY.SpriteBase {
         this.pushPassContent(syRender.ShaderType.Spine_Skin,[
             [StateString.primitiveType,StateValueMap.primitiveType.PT_TRIANGLES]
         ],[]);
-        // this.pushPassContent(syRender.ShaderType.Spine_Mesh);
+        this.pushPassContent(syRender.ShaderType.Spine_Mesh);
     }
     private animSkin(skin: Skeleton_Skin, a: number) {
         for (let i = 0; i < skin.jointNodes.length; ++i) {

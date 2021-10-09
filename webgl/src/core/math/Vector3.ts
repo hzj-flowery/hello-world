@@ -13,14 +13,14 @@ export class Vector3 {
         this.y = y;
         this.z = z;
     }
-    set(x, y, z) {
+    set(x:number, y:number, z?:number) {
         if (z === undefined) z = this.z; // sprite.scale.set(x,y)
         this.x = x;
         this.y = y;
         this.z = z;
         return this;
     }
-    setScalar(scalar) {
+    setScalar(scalar:number) {
         this.x = scalar;
         this.y = scalar;
         this.z = scalar;
@@ -64,7 +64,7 @@ export class Vector3 {
         this.z = v.z;
         return this;
     }
-    add(v, w) {
+    add(v, w?) {
         if (w !== undefined) {
             console.warn('THREE.Vector3: .add() now only accepts one argument. Use .addVectors( a, b ) instead.');
             return this.addVectors(v, w);
@@ -86,7 +86,7 @@ export class Vector3 {
         this.z = a.z + b.z;
         return this;
     }
-    addScaledVector(v, s) {
+    addScaledVector(v:Vector3, s:number) {
         this.x += v.x * s;
         this.y += v.y * s;
         this.z += v.z * s;
@@ -294,7 +294,7 @@ export class Vector3 {
         this.z = v1.z + (v2.z - v1.z) * alpha;
         return this;
     }
-    cross(v, w) {
+    cross(v, w?) {
         if (w !== undefined) {
             console.warn('THREE.Vector3: .cross() now only accepts one argument. Use .crossVectors( a, b ) instead.');
             return this.crossVectors(v, w);
@@ -397,7 +397,7 @@ export class Vector3 {
         array[offset + 2] = this.z;
         return array;
     }
-    fromBufferAttribute(attribute, index, offset) {
+    fromBufferAttribute(attribute, index, offset?) {
         if (offset !== undefined) {
             console.warn('THREE.Vector3: offset has been removed from .fromBufferAttribute().');
         }

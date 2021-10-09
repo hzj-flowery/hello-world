@@ -1,8 +1,8 @@
 import { Vec2 } from "../value-types/vec2";
 
 export class Vector2 {
-    private x:number;
-    private y:number;
+    public x:number;
+    public y:number;
 	constructor( x = 0, y = 0 ) {
 		Object.defineProperty( this, 'isVector2', { value: true } );
 		this.x = x;
@@ -61,7 +61,7 @@ export class Vector2 {
 		this.y = v.y;
 		return this;
 	}
-	add( v, w ) {
+	add( v:Vector2, w?) {
 		if ( w !== undefined ) {
 			console.warn( 'THREE.Vector2: .add() now only accepts one argument. Use .addVectors( a, b ) instead.' );
 			return this.addVectors( v, w );
@@ -85,7 +85,7 @@ export class Vector2 {
 		this.y += v.y * s;
 		return this;
 	}
-	sub( v, w ) {
+	sub( v:Vector2, w? ) {
 		if ( w !== undefined ) {
 			console.warn( 'THREE.Vector2: .sub() now only accepts one argument. Use .subVectors( a, b ) instead.' );
 			return this.subVectors( v, w );
