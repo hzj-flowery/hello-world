@@ -125,9 +125,6 @@ export class CameraModel {
         cubeArrays.color = colorVerts;
         this._cubeBufferInfo = G_ShaderFactory.createBufferInfoFromArrays(cubeArrays);
 
-        //场景摄像机
-        this.updateSceneCamera();
-
     }
     private createClipspaceCubeBufferInfo() {
         // first lets add a cube. It goes from 1 to 3
@@ -294,19 +291,7 @@ export class CameraModel {
     }
 
     //设置场景相机-------------------------------------------------------------------------------------------------------
-    private _sceneCameraPosition: Vec3 = new Vec3(-70, 10, 10);
     private _camera:PerspectiveCamera;
-    public setSceneCameraPosition(pos: Vec3): void {
-        this._sceneCameraPosition.set(pos);
-        this.updateSceneCamera();
-    }
-    private updateSceneCamera(): void {
-        // // Compute the cameras matrix using look at.
-        const cameraPosition2 = [this._sceneCameraPosition.x,this ._sceneCameraPosition.y,this._sceneCameraPosition.z];
-        this._camera.setPosition(this._sceneCameraPosition.x,this._sceneCameraPosition.y,this._sceneCameraPosition.z)
-        this._camera.lookAt([this._sceneCameraPosition.x,this ._sceneCameraPosition.y,this._sceneCameraPosition.z])
-        // this._camera.visit(0);
-    }
     public getSceneCamera():PerspectiveCamera{
         return this._camera;
     }
@@ -327,7 +312,7 @@ export class G_CameraModel{
                 model = new CameraModel();
             }  
             model.draw(targetProjMatrix, targetCameraMatrix);
-            model.setSceneCameraPosition(pos);
+            model.getSceneCamera().lookAt(pos.toArray())
             this.modelMap.set(visualAngle,model)
             return model;
        }
