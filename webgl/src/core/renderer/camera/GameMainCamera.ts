@@ -230,7 +230,7 @@ export class GameMainCamera {
 
   private renderCallBack(settings: any): void {
     let gl = Device.Instance.gl;
-    this.updateCameraData(syRender.CameraUUid.base3D, gl.canvas.width / gl.canvas.height, settings.cam3DFieldOfView, settings.cam3DNear, settings.cam3DFar);
+    this.updateCameraData(syRender.CameraUUid.base3D,settings.cam3DAspect, settings.cam3DFieldOfView, settings.cam3DNear, settings.cam3DFar);
     var base3D = this.getCameraByUUid(syRender.CameraUUid.base3D);
     if (base3D) {
       base3D.setPosition(settings.cam3DPosX, settings.cam3DPosY, settings.cam3DPosZ);

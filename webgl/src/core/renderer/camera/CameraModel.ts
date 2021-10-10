@@ -1,10 +1,12 @@
 import Device from "../../Device";
 import { Graphic } from "../../Graphic/Graphic";
 import { glMatrix } from "../../math/Matrix";
+import { Vector3 } from "../../math/Vector3";
 import { G_UISetting } from "../../ui/UiSetting";
 import { MathUtils } from "../../utils/MathUtils";
 import { Vec2 } from "../../value-types/vec2";
 import Vec3 from "../../value-types/vec3";
+import { G_Stage } from "../base/Stage";
 import { syPrimitives } from "../primitive/Primitives";
 import { BufferAttribsData, ShaderProgram } from "../shader/Shader";
 import { G_ShaderFactory } from "../shader/ShaderFactory";
@@ -89,7 +91,8 @@ export class CameraModel {
         }
         this._isInit = true;
         this.gl = gl;
-        this._camera = new PerspectiveCamera(MathUtils.degToRad(60),gl.canvas.width/gl.canvas.height,0.1,1000)
+        this._camera = new PerspectiveCamera(MathUtils.degToRad(60),(gl.canvas.width/2)/gl.canvas.height,0.1,1000)
+        G_Stage.addChild(this._camera)
         this._programInfor = G_ShaderFactory.createProgramInfo(this.solidcolorvertexshader, this.solidcolorfragmentshader);
         this._frustumCube = G_ShaderFactory.createProgramInfo(baseVertexShader, colorFragmentShader);
         this._modelBuffer = this.createCameraBufferInfo();
@@ -299,10 +302,10 @@ export class CameraModel {
     }
     private updateSceneCamera(): void {
         // // Compute the cameras matrix using look at.
-        const cameraPosition2 = [this._sceneCameraPosition.x,this._sceneCameraPosition.y,this._sceneCameraPosition.z];
+        const cameraPosition2 = [this._sceneCameraPosition.x,this ._sceneCameraPosition.y,this._sceneCameraPosition.z];
         this._camera.setPosition(this._sceneCameraPosition.x,this._sceneCameraPosition.y,this._sceneCameraPosition.z)
-        this._camera.lookAt(cameraPosition2)
-        this._camera.visit(0);
+        this._camera.lookAt([this._sceneCameraPosition.x,this ._sceneCameraPosition.y,this._sceneCameraPosition.z])
+        // this._camera.visit(0);
     }
     public getSceneCamera():PerspectiveCamera{
         return this._camera;

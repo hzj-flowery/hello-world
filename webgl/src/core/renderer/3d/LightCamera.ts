@@ -1,5 +1,6 @@
 import { sy } from "../../Director";
 import { glMatrix } from "../../math/Matrix";
+import { Vector3 } from "../../math/Vector3";
 import { G_UISetting } from "../../ui/UiSetting";
 import { MathUtils } from "../../utils/MathUtils";
 import { Node } from "../base/Node";
@@ -78,6 +79,23 @@ export class LightCamera extends Node {
         this.addChild(this._frustum);
     }
 
+    protected onUpdate():void{
+        glMatrix.mat4.copy(this._cameraMatrix,this._camera.modelMatrix);
+        glMatrix.vec3.normalize(this._lightReverseDir, this._cameraMatrix.slice(8, 11));
+        glMatrix.mat4.copy(this._projectMatrix,this._camera.getProjectionMatrix())
+        var lightData = G_LightCenter.lightData;
+        lightData.viewMatrix = this._cameraMatrix;
+        lightData.projectionMatrix = this._projectMatrix;
+        
+        //取摄像机的中心方向作为聚光灯的方向
+        lightData.spot.direction.x = this._lightReverseDir[0];
+        lightData.spot.direction.y = this._lightReverseDir[1];
+        lightData.spot.direction.z = this._lightReverseDir[2];
+        this._lightLine.updatePositionData(VertData.position.concat([0, 0, 0, lightData.parallel.direction.x, lightData.parallel.direction.y, lightData.parallel.direction.z]));
+        this._lightLine.setColor(lightData.parallel.color.r, lightData.parallel.color.g, lightData.parallel.color.b, lightData.parallel.color.a);
+        this._frustum.updateProjView(this._projectMatrix, this._cameraMatrix);
+    }
+
     private render(setting): void {
         this._camera.OrthoHeight = setting.lightProjHeight/2;
         this._camera.OrthoWidth = setting.lightProjWidth/2;
@@ -100,23 +118,7 @@ export class LightCamera extends Node {
         this._camera.lookAt([setting.eyeX, setting.eyeY, setting.eyeZ],
             [setting.lightTargetX, setting.lightTargetY, setting.lightTargetZ],
             [0, 1, 0]);
-        glMatrix.mat4.copy(this._cameraMatrix,this._camera.modelMatrix);
-        glMatrix.vec3.normalize(this._lightReverseDir, this._cameraMatrix.slice(8, 11));
-        this._camera.forceUpdateProjectMatrix()
-        glMatrix.mat4.copy(this._projectMatrix,this._camera.getProjectionMatrix())
-        
-        var lightData = G_LightCenter.lightData;
-        lightData.viewMatrix = this._cameraMatrix;
-        lightData.projectionMatrix = this._projectMatrix;
-        
-    
-        //取摄像机的中心方向作为聚光灯的方向
-        lightData.spot.direction.x = this._lightReverseDir[0];
-        lightData.spot.direction.y = this._lightReverseDir[1];
-        lightData.spot.direction.z = this._lightReverseDir[2];
-        this._lightLine.updatePositionData(VertData.position.concat([0, 0, 0, lightData.parallel.direction.x, lightData.parallel.direction.y, lightData.parallel.direction.z]));
-        this._lightLine.setColor(lightData.parallel.color.r, lightData.parallel.color.g, lightData.parallel.color.b, lightData.parallel.color.a);
-        this._frustum.updateProjView(this._projectMatrix, this._cameraMatrix);
+       
         this._sunSprite.setPosition(setting.eyeX, setting.eyeY, setting.eyeZ);
         this._lightLine.setPosition(setting.eyeX, setting.eyeY, setting.eyeZ);
 

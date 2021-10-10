@@ -9,6 +9,7 @@ export class UIStatusData {
     public static cam2DRotZ: number = 0;  // in degrees
 
     public static cam3DFieldOfView: number = 60;  // in degrees
+    public static cam3DAspect:number = 1;//横纵比
     public static cam3DPosX: number = 0;
     public static cam3DPosY: number = 2;
     public static cam3DPosZ: number = 20;
@@ -110,6 +111,7 @@ class UISetting {
         ]
         let camera3D = [
             //3d相机
+            { type: 'slider', key: 'cam3DAspect', min: 0, max: 10, change: render,precision: 2, step: 0.1 },
             { type: 'slider', key: 'cam3DFieldOfView', min: 0, max: 180, change: render, },
             { type: 'slider', key: 'cam3DPosX', min: -100, max: 100, change: render, },
             { type: 'slider', key: 'cam3DPosY', min: -100, max: 100, change: render, },
@@ -122,13 +124,13 @@ class UISetting {
         ]
         let light = [
             //平行光
-            { type: 'slider', key: 'parallelDirX', min: -10, max: 10, change: this.render.bind(this), precision: 2, step: 1, },
-            { type: 'slider', key: 'parallelDirY', min: -10, max: 10, change: this.render.bind(this), precision: 2, step: 1, },
-            { type: 'slider', key: 'parallelDirZ', min: -10, max: 10, change: this.render.bind(this), precision: 2, step: 1, },
-            { type: 'slider', key: 'parallelColR', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
-            { type: 'slider', key: 'parallelColG', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
-            { type: 'slider', key: 'parallelColB', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
-            { type: 'slider', key: 'parallelColA', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'parallelDirX', min: -10, max: 10, change: this.render.bind(this), precision: 2, step: 1, },
+            // { type: 'slider', key: 'parallelDirY', min: -10, max: 10, change: this.render.bind(this), precision: 2, step: 1, },
+            // { type: 'slider', key: 'parallelDirZ', min: -10, max: 10, change: this.render.bind(this), precision: 2, step: 1, },
+            // { type: 'slider', key: 'parallelColR', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'parallelColG', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'parallelColB', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'parallelColA', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
             
             //聚光
             // { type: 'slider', key: 'spotInnerLimit', min: 0, max: 180, change: this.render.bind(this), precision: 2, step: 1, },
@@ -168,14 +170,14 @@ class UISetting {
             // { type: 'slider', key: 'fogDensity', min: 0, max: 0.1, change: this.render.bind(this), precision: 3, step: 0.001, },
             
             
-            { type: 'slider', key: 'eyeX', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
-            { type: 'slider', key: 'eyeY', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
-            { type: 'slider', key: 'eyeZ', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
-            { type: 'slider', key: 'lightTargetX', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
-            { type: 'slider', key: 'lightTargetY', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
-            { type: 'slider', key: 'lightTargetZ', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
-            { type: 'slider', key: 'lightProjWidth', min: 1, max: 500, change: this.render.bind(this), precision: 2, step: 0.1, },
-            { type: 'slider', key: 'lightProjHeight', min: 1, max: 500, change: this.render.bind(this), precision: 2, step: 0.1, },
+            // { type: 'slider', key: 'eyeX', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'eyeY', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'eyeZ', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'lightTargetX', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'lightTargetY', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'lightTargetZ', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'lightProjWidth', min: 1, max: 500, change: this.render.bind(this), precision: 2, step: 0.1, },
+            // { type: 'slider', key: 'lightProjHeight', min: 1, max: 500, change: this.render.bind(this), precision: 2, step: 0.1, },
             // { type: 'slider', key: 'lightFieldOfView', min: 1, max: 179, change: this.render.bind(this), },
             // { type: 'slider', key: 'lightBias', min: 0.005, max: 0.001, change: this.render.bind(this), precision: 3, step: 0.001, },
         ]
@@ -187,7 +189,7 @@ class UISetting {
             { type: 'checkbox', key: 'ahead', min: 0, max: 1, change: this.render.bind(this, "ahead") },
             { type: 'checkbox', key: 'back', min: 0, max: 1, change: this.render.bind(this, "back") }
         ]
-        this.widgets = this.UI.setupUI(document.querySelector('#ui'), UIStatusData, [].concat(custom,light));
+        this.widgets = this.UI.setupUI(document.querySelector('#ui'), UIStatusData, [].concat(camera3D));
         this.render();
     }
 

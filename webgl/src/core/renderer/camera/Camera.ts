@@ -6,6 +6,8 @@ import { Node } from "../base/Node";
 import { glMatrix } from "../../math/Matrix";
 import { CameraData } from "../data/CameraData";
 import { syRender } from "../data/RenderData";
+import { Vector3 } from "../../math/Vector3";
+import { idText } from "typescript";
 
 /**
  * 
@@ -367,13 +369,18 @@ export default class Camera extends Node {
 
     public visit(time: number): void {
         this.updateProjectMatrix();
-        if (!this._lockLookAt)
+        if (!this._lockModelMatForLookAt)
             super.visit(time);
+        else
+        {
+            this._glMatrix.mat4.lookAt2(this.modelMatrix, this._eye.toArray(),this._target.toArray(),this._up.toArray());
+            this._updateLookAtFlag = true;
+        }
     }
     /**
      * 此函数务必调用
      * @param eye  相机的位置
-     * @param center 相机看向的位置
+     * @param target 相机看向的位置
      * @param up 
      * 按照我设定的默认参数，
      * 看向原点，此处的原点指的是屏幕的中心，
@@ -381,18 +388,33 @@ export default class Camera extends Node {
      * eye.z>=0,正面看屏幕的中心
      * eye.z<0,背面看屏幕的中心
      */
-    public lookAt(eye: Array<number>, center: Array<number> = [0, 0, 0], up: Array<number> = [0, 1, 0]): void {
-        this._lockLookAt = true;
-        // //摄像机的位置
-        this._glMatrix.mat4.lookAt2(this.modelMatrix, eye, center, up);
-        this._eye = eye;
+    public lookAt(eye: Array<number>, target: Array<number> = [0, 0, 0], up: Array<number> = [0, 1, 0]): void {
+        this._lockModelMatForLookAt = true;
+        if(!this._eye.equalsArray(eye))
+        {
+            this._eye.fromArray(eye);
+            this._updateLookAtFlag = true;
+        }
+        if(!this._target.equalsArray(target))
+        {
+            this._target.fromArray(target);
+            this._updateLookAtFlag = true;
+        }
+        if(!this._up.equalsArray(up))
+        {
+            this._up.fromArray(up);
+            this._updateLookAtFlag = true;
+        }
     }
     
-    private _eye:Array<number> = [];
+    private _eye:Vector3 = new Vector3();
+    private _target:Vector3  = new Vector3();
+    private _up:Vector3 = new Vector3();
     /**
      * 当调用lookat这个函数的时候 创建的模型矩阵不一样 所以需要锁住
      */
-    private _lockLookAt: boolean = false;
+    private _lockModelMatForLookAt: boolean = false;
+    private _updateLookAtFlag:boolean = false;
 
     /**
      * 获取相机数据
@@ -401,7 +423,7 @@ export default class Camera extends Node {
     public getCameraData(): CameraData {
         this._cameraData.modelMat = this.modelMatrix;
         this._cameraData.projectMat = this._projectionMatrix;
-        if(this._eye.length<=0)
+        if(!this._lockModelMatForLookAt)
         {
             var temp =  this.convertToWorldSpace([this.x, this.y, this.z]);
             this._cameraData.position.x = temp[0];

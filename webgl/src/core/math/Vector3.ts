@@ -58,7 +58,7 @@ export class Vector3 {
     clone() {
         return new Vector3(this.x, this.y, this.z);
     }
-    copy(v) {
+    copy(v:Vector3) {
         this.x = v.x;
         this.y = v.y;
         this.z = v.z;
@@ -382,8 +382,11 @@ export class Vector3 {
     setFromMatrix3Column(m, index) {
         return this.fromArray(m.elements, index * 3);
     }
-    equals(v) {
+    equals(v:Vector3) {
         return ((v.x === this.x) && (v.y === this.y) && (v.z === this.z));
+    }
+    equalsArray(v:Array<number>) {
+        return ((v[0] === this.x) && (v[1] === this.y) && (v[2] === this.z));
     }
     fromArray(array, offset = 0) {
         this.x = array[offset];
