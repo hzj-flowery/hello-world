@@ -60,11 +60,8 @@ export class CameraModel {
     private _viewMatrix: Float32Array;
     private _originPos: Array<number>;
     private _isInit: boolean = false;
-    public _isDrawClipSpaceFrustum: boolean = false;
+    public _isDrawClipSpaceFrustum: boolean = true;
     public _isDrawClipSpaceCube:boolean = false;
-    // uniforms.
-    private sharedUniforms = {
-    };
     private _frustumCubeUniforms = {
         u_color: [1, 1, 1, 0.4],
         u_worldViewProjection: new Float32Array(16),
@@ -280,11 +277,12 @@ export class CameraModel {
         var gl = this.gl;
         Device.Instance.cullFace(false);
         gl.useProgram(this._frustumCube.spGlID);
-        G_ShaderFactory.setBuffersAndAttributes(this._frustumCube.attrSetters, this._cubeBufferInfo);
+        
         glMatrix.mat4.translation(this._worldTemp, this._originPos[0], this._originPos[1], this._originPos[2]);
         glMatrix.mat4.multiply(this._worldTemp, this._loacalInvertProj, this._worldTemp);
         glMatrix.mat4.multiply(this._frustumCubeUniforms.u_worldViewProjection, this._pvTemp1, this._worldTemp); //pvm
-        G_ShaderFactory.setUniforms(this._frustumCube.uniSetters, this.sharedUniforms);
+        
+        G_ShaderFactory.setBuffersAndAttributes(this._frustumCube.attrSetters, this._cubeBufferInfo);
         G_ShaderFactory.setUniforms(this._frustumCube.uniSetters, this._frustumCubeUniforms);
         G_ShaderFactory.drawBufferInfo(this._cubeBufferInfo);
         Device.Instance.closeCullFace();
