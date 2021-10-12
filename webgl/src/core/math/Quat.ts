@@ -1,5 +1,5 @@
 import { MathUtils } from "../utils/MathUtils";
-import { Euler } from "./Euler";
+import { Euler, Euler_Order } from "./Euler";
 import { Vector3 } from "./Vector3";
 /**
  * 用户须知：
@@ -8,13 +8,12 @@ import { Vector3 } from "./Vector3";
  * 所有用于旋转的四元数都是单位四元数，即他们的模是1
  */
 
-export class Quaternion {
+export class Quat {
 	private _x: number;
 	private _y: number;
 	private _z: number;
 	private _w: number;
 	constructor(x = 0, y = 0, z = 0, w = 1) {
-		Object.defineProperty(this, 'isQuaternion', { value: true });
 		this._x = x;
 		this._y = y;
 		this._z = z;
@@ -116,7 +115,7 @@ export class Quaternion {
 		return this;
 	}
 	clone() {
-		return new Quaternion(this._x, this._y, this._z, this._w);
+		return new Quat(this._x, this._y, this._z, this._w);
 	}
 	copy(quaternion) {
 		this._x = quaternion.x;
@@ -133,10 +132,7 @@ export class Quaternion {
 	 * @param update 
 	 */
 	setFromEuler(euler:Euler, update?) {
-		if (!(euler && euler.isEuler)) {
-			throw new Error('THREE.Quaternion: .setFromEuler() now expects an Euler rotation rather than a Vector3 and order.');
-		}
-		const x = euler.x, y = euler.y, z = euler.z, order = euler.order;
+		const x = euler.x, y = euler.y, z = euler.z, order:Euler_Order = euler.order;
 		// http://www.mathworks.com/matlabcentral/fileexchange/
 		// 	20696-function-to-convert-between-dcm-euler-angles-quaternions-and-euler-vectors/
 		//	content/SpinCalc.m
@@ -149,37 +145,37 @@ export class Quaternion {
 		const s2 = sin(y / 2);
 		const s3 = sin(z / 2);
 		switch (order) {
-			case 'XYZ':
+			case Euler_Order.XYZ:
 				this._x = s1 * c2 * c3 + c1 * s2 * s3;
 				this._y = c1 * s2 * c3 - s1 * c2 * s3;
 				this._z = c1 * c2 * s3 + s1 * s2 * c3;
 				this._w = c1 * c2 * c3 - s1 * s2 * s3;
 				break;
-			case 'YXZ':
+			case Euler_Order.YXZ:
 				this._x = s1 * c2 * c3 + c1 * s2 * s3;
 				this._y = c1 * s2 * c3 - s1 * c2 * s3;
 				this._z = c1 * c2 * s3 - s1 * s2 * c3;
 				this._w = c1 * c2 * c3 + s1 * s2 * s3;
 				break;
-			case 'ZXY':
+			case Euler_Order.ZXY:
 				this._x = s1 * c2 * c3 - c1 * s2 * s3;
 				this._y = c1 * s2 * c3 + s1 * c2 * s3;
 				this._z = c1 * c2 * s3 + s1 * s2 * c3;
 				this._w = c1 * c2 * c3 - s1 * s2 * s3;
 				break;
-			case 'ZYX':
+			case Euler_Order.ZYX:
 				this._x = s1 * c2 * c3 - c1 * s2 * s3;
 				this._y = c1 * s2 * c3 + s1 * c2 * s3;
 				this._z = c1 * c2 * s3 - s1 * s2 * c3;
 				this._w = c1 * c2 * c3 + s1 * s2 * s3;
 				break;
-			case 'YZX':
+			case Euler_Order.YZX:
 				this._x = s1 * c2 * c3 + c1 * s2 * s3;
 				this._y = c1 * s2 * c3 + s1 * c2 * s3;
 				this._z = c1 * c2 * s3 - s1 * s2 * c3;
 				this._w = c1 * c2 * c3 - s1 * s2 * s3;
 				break;
-			case 'XZY':
+			case Euler_Order.XZY:
 				this._x = s1 * c2 * c3 - c1 * s2 * s3;
 				this._y = c1 * s2 * c3 - s1 * c2 * s3;
 				this._z = c1 * c2 * s3 + s1 * s2 * c3;

@@ -6,7 +6,7 @@ import enums from "../camera/enums";
 import { syGL } from "../gfx/syGLEnums";
 import { syRender } from "../data/RenderData";
 
-export default class MoreSprite extends SY.Sprite2D {
+export default class MoreSprite extends SY.UIImage {
     constructor() {
         super();
     }

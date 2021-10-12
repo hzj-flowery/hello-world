@@ -3602,7 +3602,7 @@ export namespace glMatrix {
      * @returns {mat4} out
      */
 
-    function perspective(out, fovy, aspect, near, far) {
+    function perspective(out, fovy:number, aspect:number, near:number, far:number) {
         out = out || new MatType(16);
         var f = 1.0 / Math.tan(fovy / 2),
             nf;

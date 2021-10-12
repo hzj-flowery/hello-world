@@ -611,7 +611,7 @@ export namespace SY {
      * 2：根据四个顶点坐标的索引来画两个三角形刚好可以组成一个四边形，这些索引就组成了一个索引数组发往GPU中
      * 3：传四个顶点的UV坐标到GPU的显存中
      */
-    export class Sprite2D extends SpriteBase {
+    export class UIImage extends SpriteBase {
         private _lt: Array<number> = [];//左上
         private _lb: Array<number> = [];//左下
         private _rt: Array<number> = [];//右上
@@ -715,7 +715,7 @@ export namespace SY {
     /**
      * mask
      */
-    export class Mask2D extends Sprite2D {
+    export class Mask2D extends UIImage {
         constructor() {
             super();
         }
@@ -770,7 +770,7 @@ export namespace SY {
      *  启用这个drawArraysInstanced方法以后，GPU就拿着上面顶点数据，沿着实例化的个数，逐一从上面取数组中的item来进行绘制
      * 
      */
-    export class Sprite2DInstance extends SY.Sprite2D {
+    export class Sprite2DInstance extends SY.UIImage {
         constructor() {
             super();
         }

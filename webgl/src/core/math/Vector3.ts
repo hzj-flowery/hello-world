@@ -1,5 +1,5 @@
 import { MathUtils } from "../utils/MathUtils";
-import { Quaternion } from "./Quaternion";
+import { Quat } from "./Quat";
 
 
 
@@ -409,6 +409,10 @@ export class Vector3 {
         this.z = attribute.getZ(index);
         return this;
     }
+    /**
+     * 产生一个随机的三维向量
+     * @returns 
+     */
     random() {
         this.x = Math.random();
         this.y = Math.random();
@@ -417,4 +421,4 @@ export class Vector3 {
     }
 }
 const _vector = /*@__PURE__*/ new Vector3();
-const _quaternion = /*@__PURE__*/ new Quaternion();
+const _quaternion = /*@__PURE__*/ new Quat();

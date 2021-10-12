@@ -1116,7 +1116,7 @@ export default class Device {
         const height = canvas.clientHeight * multiplier | 0;
         if (canvas.width !== width || canvas.height !== height) {
             canvas.width = width;
-            canvas.height = height;
+            canvas.height = height; 
             return true;
         }
         return false;

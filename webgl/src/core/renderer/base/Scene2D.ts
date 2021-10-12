@@ -16,13 +16,13 @@ import { SY } from "./Sprite";
 
 export default class Scene2D extends Scene {
 
-    private _mask: SY.Sprite2D;
+    private _mask: SY.UIImage;
     private _instantiateSprite: InstantiateSprite;
     private _label: Label;
     private _renderSprite: RenderOfflineSprite;
     private _pen: Pen;
     private _shadowMap: ShadowMap;//深度纹理
-    private _uvSprite: SY.Sprite2D;
+    private _uvSprite: SY.UIImage;
     constructor() {
         super();
     }
@@ -42,16 +42,12 @@ export default class Scene2D extends Scene {
         this._pen = new Pen();
         this._pen.spriteFrame = "res/bg_npc_06.png";
         this.addChild(this._pen);
-
-        // var rectangle1 = new SY.Sprite2D();
-        // rectangle1.alpha = 1.0;
-        // rectangle1.defineUse.SY_USE_ALPHA_TEST = 0.1;
-        // rectangle1.pushPassContent(syRender.ShaderType.RTT_Use,[])
-        // // rectangle1.setPosition(Device.Instance.width / 2, Device.Instance.height / 2 - 100, -100);
-        // rectangle1.setContentSize(Device.Instance.width,Device.Instance.height);
-        // rectangle1.setScale(1.0,1.0,1.0)
-        // // rectangle1.spriteFrame = "res/ground.png";
-        // this.addChild(rectangle1);
+        
+        var testHttp = new SY.UIImage();
+        testHttp.setPosition(100,200,-100)
+        testHttp.pushPassContent(syRender.ShaderType.Sprite)
+        testHttp.spriteFrame = "http://127.0.0.1:3000/res/caustics.sy";
+        this.addChild(testHttp);
 
         // this._uvSprite = new SY.Sprite2D();
         // this._uvSprite.pushPassContent(syRender.ShaderType.UvSprite,[],[
@@ -123,7 +119,7 @@ export default class Scene2D extends Scene {
 
     private stencilTest(): void {
 
-        var rectangle1 = new SY.Sprite2D();
+        var rectangle1 = new SY.UIImage();
         rectangle1.alpha = 1.0;
         rectangle1.gZOrder = 1001;
         rectangle1.pushPassContent(syRender.ShaderType.Sprite, [
@@ -210,7 +206,7 @@ export default class Scene2D extends Scene {
 
     //----------------------------------------------------------------------------------------------------------------------------------------------------------
     private blendTest(): void {
-        var rectangle1 = new SY.Sprite2D();
+        var rectangle1 = new SY.UIImage();
         rectangle1.alpha = 1.0;
         rectangle1.pushPassContent(syRender.ShaderType.Sprite, [
             [StateString.blendSep, StateValueMap.blendSep.ON],
@@ -228,7 +224,7 @@ export default class Scene2D extends Scene {
         rectangle1.spriteFrame = "res/ground.png";
         this.addChild(rectangle1);
 
-        this._mask = new SY.Sprite2D();
+        this._mask = new SY.UIImage();
         this._mask.alpha = 1.0;
         this._mask.setScale(1.0, 1.0, 1.0)
         this._mask.pushPassContent(syRender.ShaderType.Sprite, [

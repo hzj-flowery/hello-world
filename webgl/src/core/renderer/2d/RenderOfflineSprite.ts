@@ -5,7 +5,7 @@ import { RenderTexture } from "../base/texture/RenderTexture";
 import { syRender } from "../data/RenderData";
 
 
-export class RenderOfflineSprite extends SY.Sprite2D{
+export class RenderOfflineSprite extends SY.UIImage{
     constructor(){
         super();
     }

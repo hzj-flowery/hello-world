@@ -87,8 +87,9 @@ export class Texture2D extends Texture{
         this.upload();
         
         if(this._loadCallBack)
-        this._loadCallBack(image);
-        this.loaded = true;
+            this._loadCallBack(image);
+            this.loaded = true;
+       
     }
     public set textureOnLoad(cb:any){
         this._loadCallBack = cb;

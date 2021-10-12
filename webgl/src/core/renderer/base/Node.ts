@@ -3,6 +3,10 @@ import { glMatrix } from "../../math/Matrix";
 import Device from "../../Device";
 import { syRender } from "../data/RenderData";
 
+enum TransformWay {
+    Matrix=1,
+    Quat_Euler
+}
 /**
  * 递归渲染
  * 从根节点依次往下找 更新数据
@@ -316,6 +320,7 @@ export class Node extends Ref {
       平移变换不改变坐标轴走向，但改变原点位置，两个坐标系原点不再重合
     */
     private updateMatrixData(): void {
+
         if (this._updateModelMatrixFlag) {
             //初始化模型矩阵
             glMatrix.mat4.identity(this._modelMatrix);
@@ -334,7 +339,16 @@ export class Node extends Ref {
         //将本地矩阵拷贝过来
         glMatrix.mat4.copy(this._modelMatrix, this._localMatrix);
         glMatrix.mat4.multiply(this._modelMatrix, this._worldMatrix, this._modelMatrix);
+
+
         this._updateModelMatrixFlag = false;
+    }
+    
+    /**----------------------------------------------------------------------------------------------------------------------
+     * 计算模型矩阵完全通过矩阵的方式
+     */
+    private calculateModelMatrixByMatrix():void{
+
     }
     //缩放模型矩阵
     private scaleModelMatrix(): void {
@@ -369,8 +383,8 @@ export class Node extends Ref {
             glMatrix.mat4.identity(this._translateMatrix);
             glMatrix.mat4.translate(this._translateMatrix, this._translateMatrix, [this.x, this.y, this.z]);
         }
-
     }
+    //---------------------------------------------------------------------------------------------------------------
     /**
      * 模型世界矩阵
      */

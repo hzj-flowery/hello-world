@@ -6,7 +6,7 @@ import { syRender } from "../data/RenderData";
 import { G_LightCenter } from "../light/LightCenter";
 
 
-export class ShadowMap extends SY.Sprite2D{
+export class ShadowMap extends SY.UIImage{
     constructor(){
         super();
     }

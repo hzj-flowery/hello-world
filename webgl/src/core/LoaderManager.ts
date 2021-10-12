@@ -382,12 +382,50 @@ export default class LoaderManager {
             request.send();
             request.responseType = "blob";
             request.onload = function () {
-                if (request.status == 0) {
+                if (request.status == 200) {
                     var objectURL = URL.createObjectURL(request.response);
                     var img = new Image();
                     img.crossOrigin = "anonymous";
                     img.src = objectURL;
                     if (callBackFinish) callBackFinish.call(null, img, path);
+                }
+                else {
+                    if (callBackError)
+                        callBackError(img, path)
+                }
+            }
+        }
+    }
+    private loadsyData(path: string, callBackProgress?, callBackFinish?, callBackError?):void{
+        let isHttp = path.indexOf("http") >= 0;
+        if (!isHttp) {
+            //本地
+            var img = new Image();
+            img.crossOrigin = "anonymous";
+            img.onload = function (img: HTMLImageElement) {
+                if (callBackFinish) callBackFinish.call(null, img, path);
+            }.bind(this, img);
+            img.onerror = function (event) {
+                if (callBackError)
+                    callBackError(img, path)
+            }
+            img.src = path;
+        }
+        else {
+            var request = new XMLHttpRequest();
+            request.open("get", path, true);
+            request.send();
+            request.responseType = "blob";
+            request.onload = function () {
+                if (request.status == 200) {
+                    var objectURL = URL.createObjectURL(request.response);
+                    var img = new Image();
+                    img.crossOrigin = "anonymous";
+                    img.src = objectURL;
+                    img.decode().then(()=>{
+                        if (callBackFinish) callBackFinish.call(null, img, path);
+                    });
+                   
                 }
                 else {
                     if (callBackError)
@@ -412,6 +450,7 @@ export default class LoaderManager {
             case "glsl": return this.loadGlslStringData;
             case "frag": return this.loadGlslStringData;
             case "vert": return this.loadGlslStringData;
+            case "sy":return this.loadsyData;
             default: console.log("发现未知后缀名的文件----", path); null; break;
         }
     }
