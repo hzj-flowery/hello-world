@@ -1,6 +1,7 @@
 /**
  * 加载管理员
  */
+import { MD5 } from "../tool/MD5";
 import { syRender } from "./renderer/data/RenderData";
 import { MathUtils } from "./utils/MathUtils";
 
@@ -387,7 +388,10 @@ export default class LoaderManager {
                     var img = new Image();
                     img.crossOrigin = "anonymous";
                     img.src = objectURL;
-                    if (callBackFinish) callBackFinish.call(null, img, path);
+                     img.decode().then(()=>{
+                        //防止卡顿 图片预先解码
+                        if (callBackFinish) callBackFinish.call(null, img, path);
+                    });
                 }
                 else {
                     if (callBackError)
@@ -418,13 +422,84 @@ export default class LoaderManager {
             request.responseType = "blob";
             request.onload = function () {
                 if (request.status == 200) {
-                    var objectURL = URL.createObjectURL(request.response);
+                    //way1
+                    // var objectURL = URL.createObjectURL(request.response);
+                    // var img = new Image();
+                    // img.crossOrigin = "anonymous";
+                    // img.src = objectURL;
+                    // img.decode().then(()=>{
+                    //     //防止卡顿 图片预先解码
+                    //     if (callBackFinish) callBackFinish.call(null, img, path);
+                    // });
+
+                    //way2
+                    var fr = new FileReader(); //FileReader可以读取Blob内容  
+                    fr.readAsDataURL(request.response); //二进制转换成ArrayBuffer
+                    fr.onload = function (e) {  //转换完成后，调用onload方法
+                        var img = new Image();
+                        img.crossOrigin = "anonymous";
+                        img.src = fr.result as string;
+                        img.decode().then(()=>{
+                            //防止卡顿 图片预先解码
+                            if (callBackFinish) callBackFinish.call(null, img, path);
+                        });
+                        var waitWriteData = fr.result as string;
+                        //--------secret
+                        waitWriteData = waitWriteData.replace("data:text/plain;base64","zhangman")
+                        //--------------
+
+                        //-----------
+                        var targetPath = path.replace("//","/");
+                        var pathArr = targetPath.split("/");
+                        var targetfileName = pathArr[pathArr.length-1].split(".")[0]
+                        var file = new File([waitWriteData], targetfileName+".b64sy", { type: "text/plain;charset=utf-8" })
+                        window["saveAs"](file)
+                        //-----------
+                       
+                    }
+                }
+                else {
+                    if (callBackError)
+                        callBackError(img, path)
+                }
+            }
+        }
+    }
+    private loadb62syData(path: string, callBackProgress?, callBackFinish?, callBackError?):void{
+        let isHttp = path.indexOf("http") >= 0;
+        if (!isHttp) {
+            //本地
+            var img = new Image();
+            img.crossOrigin = "anonymous";
+            img.onload = function (img: HTMLImageElement) {
+                if (callBackFinish) callBackFinish.call(null, img, path);
+            }.bind(this, img);
+            img.onerror = function (event) {
+                if (callBackError)
+                    callBackError(img, path)
+            }
+            img.src = path;
+        }
+        else {
+            var request = new XMLHttpRequest();
+            request.open("get", path, true);
+            request.send();
+            request.responseType = "text";
+            request.onload = function () {
+                if (request.status == 200) {
                     var img = new Image();
-                    img.crossOrigin = "anonymous";
-                    img.src = objectURL;
-                    img.decode().then(()=>{
-                        if (callBackFinish) callBackFinish.call(null, img, path);
-                    });
+                        img.crossOrigin = "anonymous";
+                        var waitWriteData = request.response
+                        waitWriteData = waitWriteData.replace("zhangman","data:text/plain;base64")
+                        img.src = waitWriteData;
+                        img.decode().then(()=>{
+                            //防止卡顿 图片预先解码
+                            if (callBackFinish) callBackFinish.call(null, img, path);
+                        });
+                        img.onerror = function (event) {
+                            if (callBackError)
+                                callBackError(img, path)
+                        }
                    
                 }
                 else {
@@ -451,6 +526,7 @@ export default class LoaderManager {
             case "frag": return this.loadGlslStringData;
             case "vert": return this.loadGlslStringData;
             case "sy":return this.loadsyData;
+            case "b64sy":return this.loadb62syData;
             default: console.log("发现未知后缀名的文件----", path); null; break;
         }
     }

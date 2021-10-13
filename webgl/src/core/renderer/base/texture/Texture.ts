@@ -34,7 +34,7 @@ export class TextureOpts {
     public get data(){
         return this._data;
     }
-    private _data: Uint8Array|HTMLImageElement|Float32Array;
+    private _data: Uint8Array|HTMLImageElement|Float32Array|ImageData;
     private _format: number;
     private _internalFormat: number;
     /**
