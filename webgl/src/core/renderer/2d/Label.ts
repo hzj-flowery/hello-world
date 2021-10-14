@@ -6,6 +6,48 @@ import { syRender } from "../data/RenderData";
 import { StateString, StateValueMap } from "../gfx/State";
 import { syGL } from "../gfx/syGLEnums";
 
+var testLetterInfors = {
+  'a': { x: 0, y: 0, width: 8, height: 8 },
+  'b': { x: 8, y: 0, width: 8, height: 8 },
+  'c': { x: 16, y: 0, width: 8, height: 8 },
+  'd': { x: 24, y: 0, width: 8, height: 8 },
+  'e': { x: 32, y: 0, width: 8, height: 8 },
+  'f': { x: 40, y: 0, width: 8, height: 8 },
+  'g': { x: 48, y: 0, width: 8, height: 8 },
+  'h': { x: 56, y: 0, width: 8, height: 8 },
+  'i': { x: 0, y: 8, width: 8, height: 8 },
+  'j': { x: 8, y: 8, width: 8, height: 8 },
+  'k': { x: 16, y: 8, width: 8, height: 8 },
+  'l': { x: 24, y: 8, width: 8, height: 8 },
+  'm': { x: 32, y: 8, width: 8, height: 8 },
+  'n': { x: 40, y: 8, width: 8, height: 8 },
+  'o': { x: 48, y: 8, width: 8, height: 8 },
+  'p': { x: 56, y: 8, width: 8, height: 8 },
+  'q': { x: 0, y: 16, width: 8, height: 8 },
+  'r': { x: 8, y: 16, width: 8, height: 8 },
+  's': { x: 16, y: 16, width: 8, height: 8 },
+  't': { x: 24, y: 16, width: 8, height: 8 },
+  'u': { x: 32, y: 16, width: 8, height: 8 },
+  'v': { x: 40, y: 16, width: 8, height: 8 },
+  'w': { x: 48, y: 16, width: 8, height: 8 },
+  'x': { x: 56, y: 16, width: 8, height: 8 },
+  'y': { x: 0, y: 24, width: 8, height: 8 },
+  'z': { x: 8, y: 24, width: 8, height: 8 },
+  '0': { x: 16, y: 24, width: 8, height: 8 },
+  '1': { x: 24, y: 24, width: 8, height: 8 },
+  '2': { x: 32, y: 24, width: 8, height: 8 },
+  '3': { x: 40, y: 24, width: 8, height: 8 },
+  '4': { x: 48, y: 24, width: 8, height: 8 },
+  '5': { x: 56, y: 24, width: 8, height: 8 },
+  '6': { x: 0, y: 32, width: 8, height: 8 },
+  '7': { x: 8, y: 32, width: 8, height: 8 },
+  '8': { x: 16, y: 32, width: 8, height: 8 },
+  '9': { x: 24, y: 32, width: 8, height: 8 },
+  '-': { x: 32, y: 32, width: 8, height: 8 },
+  '*': { x: 40, y: 32, width: 8, height: 8 },
+  '!': { x: 48, y: 32, width: 8, height: 8 },
+  '?': { x: 56, y: 32, width: 8, height: 8 },
+}
 interface LetterInfo{
   x:number;
   y:number;
@@ -20,48 +62,8 @@ class FontInfo {
   public textureWidth: number = 64; //字符纹理的宽度
   public textureHeight: number = 40; //字符纹理的高度
   public fontSize:number = 26;//字体大小
-  public letterInfos = {
-    'a': { x: 0, y: 0, width: 8, height: 8 },
-    'b': { x: 8, y: 0, width: 8, height: 8 },
-    'c': { x: 16, y: 0, width: 8, height: 8 },
-    'd': { x: 24, y: 0, width: 8, height: 8 },
-    'e': { x: 32, y: 0, width: 8, height: 8 },
-    'f': { x: 40, y: 0, width: 8, height: 8 },
-    'g': { x: 48, y: 0, width: 8, height: 8 },
-    'h': { x: 56, y: 0, width: 8, height: 8 },
-    'i': { x: 0, y: 8, width: 8, height: 8 },
-    'j': { x: 8, y: 8, width: 8, height: 8 },
-    'k': { x: 16, y: 8, width: 8, height: 8 },
-    'l': { x: 24, y: 8, width: 8, height: 8 },
-    'm': { x: 32, y: 8, width: 8, height: 8 },
-    'n': { x: 40, y: 8, width: 8, height: 8 },
-    'o': { x: 48, y: 8, width: 8, height: 8 },
-    'p': { x: 56, y: 8, width: 8, height: 8 },
-    'q': { x: 0, y: 16, width: 8, height: 8 },
-    'r': { x: 8, y: 16, width: 8, height: 8 },
-    's': { x: 16, y: 16, width: 8, height: 8 },
-    't': { x: 24, y: 16, width: 8, height: 8 },
-    'u': { x: 32, y: 16, width: 8, height: 8 },
-    'v': { x: 40, y: 16, width: 8, height: 8 },
-    'w': { x: 48, y: 16, width: 8, height: 8 },
-    'x': { x: 56, y: 16, width: 8, height: 8 },
-    'y': { x: 0, y: 24, width: 8, height: 8 },
-    'z': { x: 8, y: 24, width: 8, height: 8 },
-    '0': { x: 16, y: 24, width: 8, height: 8 },
-    '1': { x: 24, y: 24, width: 8, height: 8 },
-    '2': { x: 32, y: 24, width: 8, height: 8 },
-    '3': { x: 40, y: 24, width: 8, height: 8 },
-    '4': { x: 48, y: 24, width: 8, height: 8 },
-    '5': { x: 56, y: 24, width: 8, height: 8 },
-    '6': { x: 0, y: 32, width: 8, height: 8 },
-    '7': { x: 8, y: 32, width: 8, height: 8 },
-    '8': { x: 16, y: 32, width: 8, height: 8 },
-    '9': { x: 24, y: 32, width: 8, height: 8 },
-    '-': { x: 32, y: 32, width: 8, height: 8 },
-    '*': { x: 40, y: 32, width: 8, height: 8 },
-    '!': { x: 48, y: 32, width: 8, height: 8 },
-    '?': { x: 56, y: 32, width: 8, height: 8 },
-  };
+  public lineHeight:number = 26;//行高
+  public letterInfos = testLetterInfors;
 
   public makeVerticesForString(content: string) {
     var len = content.length;
@@ -72,6 +74,7 @@ class FontInfo {
     var texcoords = new Float32Array(numVertices * 2);
     var offset = 0;
     var r_x = 0; //左x
+    var switchLineCount:number = 0;//换行次数
     /**
      * (0,0)**********
      * ***************
@@ -81,13 +84,19 @@ class FontInfo {
     for (var ii = 0; ii < len; ++ii) {
       var letter = content[ii];
       var Linfo:LetterInfo = this.letterInfos[letter];
-      if (Linfo) {
+      if(letter=='\n')
+      {
+          //换行
+          r_x = 0;
+          switchLineCount++;
+      }
+      else if (Linfo) {
         //右x
-        var l_x = r_x + Linfo.width;
+        var l_x = r_x + Linfo.width+Linfo.xoffset;
         //上y
-        var t_y = 0
+        var t_y = 0-switchLineCount*this.lineHeight+Linfo.yoffset;
         //下y
-        var b_y = Linfo.height
+        var b_y = t_y+Linfo.height
 
         //uv坐标
         var u1 = Linfo.x / this.textureWidth;
@@ -174,6 +183,8 @@ export class Label extends SY.SpriteBase {
     fontInfo.letterInfos = letter.letterInfos;
     fontInfo.textureHeight = letter.textureHeight;
     fontInfo.textureWidth = letter.textureWidth;
+    fontInfo.fontSize = letter.fontSize;
+    fontInfo.lineHeight = letter.lineHeight
     var data = fontInfo.makeVerticesForString(this._content);
 
     var arrPos = [];
@@ -181,17 +192,17 @@ export class Label extends SY.SpriteBase {
     var posData = (data.arrays.position.toString()).split(',');
     var uvData = (data.arrays.texcoord.toString()).split(',');
     
-    var changeScaleX = fontInfo.textureWidth/Device.Instance.width*2;
-    var changeScaleY = fontInfo.textureHeight/Device.Instance.height*2;
 
+    var changeScaleX = fontInfo.textureWidth/256;
+    var changeScaleX = fontInfo.textureHeight/256;
     for (var j = 0; j < posData.length; j++) {
       //归一化
       if (j % 2 == 0) {
-        arrPos.push(parseFloat(posData[j]) / fontInfo.textureWidth*changeScaleX);
+        arrPos.push(parseFloat(posData[j]) /fontInfo.textureWidth*changeScaleX);
         //宽
       }
       else if (j % 2 == 1) {
-        arrPos.push(parseFloat(posData[j]) / fontInfo.textureHeight*changeScaleY);
+        arrPos.push(parseFloat(posData[j]) /fontInfo.textureHeight*changeScaleX);
       }
 
 

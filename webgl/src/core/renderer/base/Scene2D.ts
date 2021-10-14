@@ -84,7 +84,7 @@ export default class Scene2D extends Scene {
         this._label = new Label();
         this._label.setPosition(0.0,0.0,0);
         this._label.spriteFrame = "res/fnt/word_0.png";
-        this._label.content = '做'
+        this._label.content = '好好做人\n认真做事\n张曼最棒\n你是我的眼带走不完的梦\n也许那样你才可按的清'
         this.addChild(this._label);
 
         G_InputControl.registerMouseDownEvent(handler(this, this.onMouseDown));
