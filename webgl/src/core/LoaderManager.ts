@@ -540,19 +540,21 @@ export default class LoaderManager {
                 var charsCount = getConfigByKey(lines[3], "count");
                 ret.lineHeight = getConfigByKey(lines[1], 'lineHeight');
                 ret.fontSize = getConfigByKey(lines[0], 'size');
-                ret.chars = {};
-
+                ret.textureWidth = getConfigByKey(lines[1], 'scaleW');
+                ret.textureHeight = getConfigByKey(lines[1], 'scaleH');
+                ret.letterInfos = {};
+                
                 for (var i = 4; i < 4 + charsCount; i++) {
                     var charText = lines[i];
                     var letter = String.fromCharCode(getConfigByKey(charText, "id"));  
                     var c = {};
-                    ret.chars[letter] = c;
+                    ret.letterInfos[letter] = c;
                     c["x"] = getConfigByKey(charText, "x");
                     c["y"] = getConfigByKey(charText, "y");
-                    c["w"] = getConfigByKey(charText, "width");
-                    c["h"] = getConfigByKey(charText, "height");
-                    c["offX"] = getConfigByKey(charText, "xoffset");
-                    c["offY"] = getConfigByKey(charText, "yoffset");
+                    c["width"] = getConfigByKey(charText, "width");
+                    c["height"] = getConfigByKey(charText, "height");
+                    c["xoffset"] = getConfigByKey(charText, "xoffset");
+                    c["yoffset"] = getConfigByKey(charText, "yoffset");
                     c["xadvance"] = getConfigByKey(charText, "xadvance");
                 }
                 console.log(ret)

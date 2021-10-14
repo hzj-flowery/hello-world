@@ -1,4 +1,6 @@
 "use strict";
+import Device from "../../Device";
+import LoaderManager from "../../LoaderManager";
 import { SY } from "../base/Sprite";
 import { syRender } from "../data/RenderData";
 import { StateString, StateValueMap } from "../gfx/State";
@@ -9,12 +11,15 @@ interface LetterInfo{
   y:number;
   width:number;
   height:number;
+  xoffset:number;
+  yoffset:number;
 }
 class FontInfo {
-  public spaceWidth: number = 8;
-  public spacing: number = -1;
-  public textureWidth: number = 64;
-  public textureHeight: number = 40;
+  public spaceWidth: number = 8; //空字符的宽度
+  public spacing: number = -1;   //字符间距
+  public textureWidth: number = 64; //字符纹理的宽度
+  public textureHeight: number = 40; //字符纹理的高度
+  public fontSize:number = 26;//字体大小
   public letterInfos = {
     'a': { x: 0, y: 0, width: 8, height: 8 },
     'b': { x: 8, y: 0, width: 8, height: 8 },
@@ -155,11 +160,8 @@ export class Label extends SY.SpriteBase {
     ]);
   }
 
-  private _realCharWidth: number = 0;
-  private _realCharHeight: number = 0;
-
   private _content: string = "zm520";
-
+  public fontSize:number;
   public set content(str: string) {
     this._content = str;
     this.onInit();
@@ -167,22 +169,32 @@ export class Label extends SY.SpriteBase {
   protected onInit(): void {
     if (!this._content) return;
     var fontInfo = new FontInfo();
+
+    var letter = LoaderManager.instance.getRes("res/fnt/word.fnt");
+    fontInfo.letterInfos = letter.letterInfos;
+    fontInfo.textureHeight = letter.textureHeight;
+    fontInfo.textureWidth = letter.textureWidth;
     var data = fontInfo.makeVerticesForString(this._content);
 
     var arrPos = [];
     var arrUV = [];
     var posData = (data.arrays.position.toString()).split(',');
     var uvData = (data.arrays.texcoord.toString()).split(',');
+    
+    var changeScaleX = fontInfo.textureWidth/Device.Instance.width*2;
+    var changeScaleY = fontInfo.textureHeight/Device.Instance.height*2;
 
     for (var j = 0; j < posData.length; j++) {
-
+      //归一化
       if (j % 2 == 0) {
-        arrPos.push(parseFloat(posData[j]) / fontInfo.textureWidth);
+        arrPos.push(parseFloat(posData[j]) / fontInfo.textureWidth*changeScaleX);
         //宽
       }
       else if (j % 2 == 1) {
-        arrPos.push(parseFloat(posData[j]) / fontInfo.textureHeight);
+        arrPos.push(parseFloat(posData[j]) / fontInfo.textureHeight*changeScaleY);
       }
+
+
       arrUV.push(parseFloat(uvData[j]));
 
       //0 1 2 3 4 5 6 7 8 9
@@ -192,18 +204,10 @@ export class Label extends SY.SpriteBase {
       }
     }
 
-    var itemNums = arrPos.length / 3;
-
-
+  
     this.createVertexsBuffer(arrPos, 3);
     this.createUVsBuffer(arrUV, 2);
 
-    // 索引数据
-    // var floorVertexIndices = [];
-    // for (var j = 0; j < itemNums; j++) {
-    //   floorVertexIndices.push(j);
-    // }
-    // this.createIndexsBuffer(floorVertexIndices);
   }
 }
 

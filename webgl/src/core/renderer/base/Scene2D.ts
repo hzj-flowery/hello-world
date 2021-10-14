@@ -83,8 +83,8 @@ export default class Scene2D extends Scene {
 
         this._label = new Label();
         this._label.setPosition(0.0,0.0,0);
-        this._label.spriteFrame = "res/8x8-font.png";
-        this._label.content = "abc"
+        this._label.spriteFrame = "res/fnt/word_0.png";
+        this._label.content = '做'
         this.addChild(this._label);
 
         G_InputControl.registerMouseDownEvent(handler(this, this.onMouseDown));
