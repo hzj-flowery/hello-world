@@ -43,11 +43,11 @@ export default class Scene2D extends Scene {
         this._pen.spriteFrame = "res/bg_npc_06.png";
         this.addChild(this._pen);
         
-        var testHttp = new SY.UIImage();
-        testHttp.setPosition(100,200,-100)
-        testHttp.pushPassContent(syRender.ShaderType.Sprite)
-        testHttp.spriteFrame = "http://127.0.0.1:3000/res/caustics.sy";
-        this.addChild(testHttp);
+        // var testHttp = new SY.UIImage();
+        // testHttp.setPosition(100,200,-100)
+        // testHttp.pushPassContent(syRender.ShaderType.Sprite)
+        // testHttp.spriteFrame = "http://127.0.0.1:3000/res/caustics.sy";
+        // this.addChild(testHttp);
 
         // this._uvSprite = new SY.Sprite2D();
         // this._uvSprite.pushPassContent(syRender.ShaderType.UvSprite,[],[
@@ -84,7 +84,7 @@ export default class Scene2D extends Scene {
         this._label = new Label();
         this._label.setPosition(0.0,0.0,0);
         this._label.spriteFrame = "res/8x8-font.png";
-        this._label.content = "a"
+        this._label.content = "abc"
         this.addChild(this._label);
 
         G_InputControl.registerMouseDownEvent(handler(this, this.onMouseDown));

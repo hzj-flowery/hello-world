@@ -388,7 +388,7 @@ export default class LoaderManager {
                     var img = new Image();
                     img.crossOrigin = "anonymous";
                     img.src = objectURL;
-                     img.decode().then(()=>{
+                    img.decode().then(() => {
                         //防止卡顿 图片预先解码
                         if (callBackFinish) callBackFinish.call(null, img, path);
                     });
@@ -400,7 +400,7 @@ export default class LoaderManager {
             }
         }
     }
-    private loadsyData(path: string, callBackProgress?, callBackFinish?, callBackError?):void{
+    private loadsyData(path: string, callBackProgress?, callBackFinish?, callBackError?): void {
         let isHttp = path.indexOf("http") >= 0;
         if (!isHttp) {
             //本地
@@ -439,23 +439,23 @@ export default class LoaderManager {
                         var img = new Image();
                         img.crossOrigin = "anonymous";
                         img.src = fr.result as string;
-                        img.decode().then(()=>{
+                        img.decode().then(() => {
                             //防止卡顿 图片预先解码
                             if (callBackFinish) callBackFinish.call(null, img, path);
                         });
                         var waitWriteData = fr.result as string;
                         //--------secret
-                        waitWriteData = waitWriteData.replace("data:text/plain;base64","zhangman")
+                        waitWriteData = waitWriteData.replace("data:text/plain;base64", "zhangman")
                         //--------------
 
                         //-----------
-                        var targetPath = path.replace("//","/");
+                        var targetPath = path.replace("//", "/");
                         var pathArr = targetPath.split("/");
-                        var targetfileName = pathArr[pathArr.length-1].split(".")[0]
-                        var file = new File([waitWriteData], targetfileName+".b64sy", { type: "text/plain;charset=utf-8" })
+                        var targetfileName = pathArr[pathArr.length - 1].split(".")[0]
+                        var file = new File([waitWriteData], targetfileName + ".b64sy", { type: "text/plain;charset=utf-8" })
                         window["saveAs"](file)
                         //-----------
-                       
+
                     }
                 }
                 else {
@@ -465,7 +465,7 @@ export default class LoaderManager {
             }
         }
     }
-    private loadb62syData(path: string, callBackProgress?, callBackFinish?, callBackError?):void{
+    private loadb62syData(path: string, callBackProgress?, callBackFinish?, callBackError?): void {
         let isHttp = path.indexOf("http") >= 0;
         if (!isHttp) {
             //本地
@@ -488,24 +488,79 @@ export default class LoaderManager {
             request.onload = function () {
                 if (request.status == 200) {
                     var img = new Image();
-                        img.crossOrigin = "anonymous";
-                        var waitWriteData = request.response
-                        waitWriteData = waitWriteData.replace("zhangman","data:text/plain;base64")
-                        img.src = waitWriteData;
-                        img.decode().then(()=>{
-                            //防止卡顿 图片预先解码
-                            if (callBackFinish) callBackFinish.call(null, img, path);
-                        });
-                        img.onerror = function (event) {
-                            if (callBackError)
-                                callBackError(img, path)
-                        }
-                   
+                    img.crossOrigin = "anonymous";
+                    var waitWriteData = request.response
+                    waitWriteData = waitWriteData.replace("zhangman", "data:text/plain;base64")
+                    img.src = waitWriteData;
+                    img.decode().then(() => {
+                        //防止卡顿 图片预先解码
+                        if (callBackFinish) callBackFinish.call(null, img, path);
+                    });
+                    img.onerror = function (event) {
+                        if (callBackError)
+                            callBackError(img, path)
+                    }
+
                 }
                 else {
                     if (callBackError)
                         callBackError(img, path)
                 }
+            }
+        }
+    }
+    //加载可以转化为json的数据
+    private loadFntData(path: string, callBackProgress?, callBackFinish?, callBackError?): void {
+
+        var getConfigByKey = function (configText, key) {
+            var itemConfigTextList = configText.split(" ");
+
+            for (var i = 0, length = itemConfigTextList.length; i < length; i++) {
+                var itemConfigText = itemConfigTextList[i];
+
+                if (key === itemConfigText.substring(0, key.length)) {
+                    var value = itemConfigText.substring(key.length + 1);
+                    return parseInt(value);
+                }
+            }
+
+            return 0;
+        }
+
+        var request = new XMLHttpRequest();
+        request.open("get", path);
+        request.send(null);
+        request.responseType = "text";
+        request.onload = function () {
+            if (request.status == 0) {
+                var ret: any = {}
+                let fntText = request.responseText;
+                fntText = fntText.split("\r\n").join("\n");
+                var lines = fntText.split("\n");
+                var charsCount = getConfigByKey(lines[3], "count");
+                ret.lineHeight = getConfigByKey(lines[1], 'lineHeight');
+                ret.fontSize = getConfigByKey(lines[0], 'size');
+                ret.chars = {};
+
+                for (var i = 4; i < 4 + charsCount; i++) {
+                    var charText = lines[i];
+                    var letter = String.fromCharCode(getConfigByKey(charText, "id"));  
+                    var c = {};
+                    ret.chars[letter] = c;
+                    c["x"] = getConfigByKey(charText, "x");
+                    c["y"] = getConfigByKey(charText, "y");
+                    c["w"] = getConfigByKey(charText, "width");
+                    c["h"] = getConfigByKey(charText, "height");
+                    c["offX"] = getConfigByKey(charText, "xoffset");
+                    c["offY"] = getConfigByKey(charText, "yoffset");
+                    c["xadvance"] = getConfigByKey(charText, "xadvance");
+                }
+                console.log(ret)
+                if (callBackFinish) callBackFinish.call(null, ret, path);
+            }
+            else {
+                if (callBackError)
+                    callBackError(request, path)
             }
         }
     }
@@ -525,8 +580,9 @@ export default class LoaderManager {
             case "glsl": return this.loadGlslStringData;
             case "frag": return this.loadGlslStringData;
             case "vert": return this.loadGlslStringData;
-            case "sy":return this.loadsyData;
-            case "b64sy":return this.loadb62syData;
+            case "sy": return this.loadsyData;
+            case "b64sy": return this.loadb62syData;
+            case "fnt": return this.loadFntData;
             default: console.log("发现未知后缀名的文件----", path); null; break;
         }
     }

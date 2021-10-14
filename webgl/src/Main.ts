@@ -48,6 +48,7 @@ import { ShaderCode } from "./core/renderer/shader/ShaderCode";
     "res/models/HeadData/head.json",
     "res/models/char/F.json",
     "res/models/Robart/blockGuyNodeDescriptions.json",
+    "res/fnt/word.fnt",
     "res/8x8-font.png",
     "res/wood.jpg",
     "res/tree.jpg",
