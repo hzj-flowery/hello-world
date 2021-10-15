@@ -36,6 +36,11 @@ varying vec2 v_uv;
     varying vec4 v_shadowProjectedTexcoord;
 #endif
 
+//使用雾
+#if defined(SY_USE_FOG)
+    varying vec3 v_fog_position;
+#endif
+
 void main(){
 
     vec4 worldPosition=u_world*vec4(a_position,1.0);
@@ -63,5 +68,10 @@ void main(){
     #if defined(SY_USE_SHADOW_PARALLEL)
         //算出投影纹理的uv
         v_shadowProjectedTexcoord = u_mat * worldPosition; 
+    #endif
+    
+    #if defined(SY_USE_FOG)
+        //算出雾的在视口坐标系下的位置
+        v_fog_position=(u_view*u_world*vec4(a_position,1.0)).xyz;
     #endif
 }

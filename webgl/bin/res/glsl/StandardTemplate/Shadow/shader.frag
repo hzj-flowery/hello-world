@@ -66,7 +66,7 @@ precision mediump float;
                 rgbaDepth = texture2D(shadowMap, projectedTexcoord.xy+vec2(x,y)*texelSize);
                 //如果当前深度大于光照的最大深度 则表明处于阴影中
                 //否则可以看见
-                #ifdef SY_FUNC_UNPACK
+                #ifdef SY_USE_FUNC_UNPACK
                      shadows += (isInRange&&curDepth>unpack(rgbaDepth)) ? 1.0 : 0.0;
                 #else
                      shadows += (isInRange&&curDepth>rgbaDepth.r) ? 1.0 : 0.0;

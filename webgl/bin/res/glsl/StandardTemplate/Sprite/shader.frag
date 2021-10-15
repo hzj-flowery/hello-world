@@ -181,7 +181,7 @@ uniform float u_alpha;
                         rgbaDepth=texture2D(shadowMap,projectedTexcoord.xy+vec2(x,y)*texelSize);
                         //如果当前深度大于光照的最大深度 则表明处于阴影中
                         //否则可以看见
-                        #ifdef SY_FUNC_UNPACK
+                        #ifdef SY_USE_FUNC_UNPACK
                         shadows+=(isInRange&&curDepth>unpack(rgbaDepth))?1.:0.;
                         #else
                         shadows+=(isInRange&&curDepth>rgbaDepth.r)?1.:0.;
@@ -194,6 +194,20 @@ uniform float u_alpha;
             return visibility;
             
       }
+#endif
+
+
+//使用雾
+#if defined(SY_USE_FOG)
+    varying vec3 v_fog_position;
+    uniform vec4 u_fog;
+    uniform float u_fogDensity;
+    vec4 getFogMixColor(vec4 fragColor,vec4 fogColor,float fogDensity,vec3 fogPos){
+            float fogDistance=length(fogPos);
+            float fogAmount=1.-exp2(-fogDensity*fogDensity*fogDistance*fogDistance*1.442695);
+            fogAmount=clamp(fogAmount,0.,1.);
+            return mix(fragColor,fogColor,fogAmount);
+    }
 #endif
 
 void main(){
@@ -282,13 +296,20 @@ void main(){
       
       //累加到片元颜色中
       fragColor.rgb = fragColor.rgb+diffuse.rgb;
+
+      #ifdef SY_USE_FOG
+           //使用雾
+           fragColor=getFogMixColor(fragColor,u_fog,u_fogDensity,v_fog_position);
+      #endif
+
       
       //做一些基础测试
       #ifdef SY_USE_ALPHA_TEST
-            if(surfaceBaseColor.a<SY_USE_ALPHA_TEST)discard;
+            if(fragColor.a<SY_USE_ALPHA_TEST)discard;
       #elif defined(SY_USE_RGB_TEST)
-            if(surfaceBaseColor.r+surfaceBaseColor.g+surfaceBaseColor.b<SY_USE_RGB_TEST)discard;
+            if(fragColor.r+fragColor.g+fragColor.b<SY_USE_RGB_TEST)discard;
       #endif
       
+
       gl_FragColor=fragColor;
 }

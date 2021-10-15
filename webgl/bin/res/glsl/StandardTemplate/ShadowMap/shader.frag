@@ -1,7 +1,7 @@
 precision mediump float;
 
 void main(){
-    #ifdef SY_FUNC_PACK
+    #ifdef SY_USE_FUNC_PACK
     gl_FragColor=pack(gl_FragCoord.z);
     #else
     gl_FragColor=vec4(gl_FragCoord.z,0.,0.,1.);

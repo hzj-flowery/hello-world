@@ -498,23 +498,24 @@ export namespace SY {
 
         protected onInit(): void {
             this.pushPassContent(syRender.ShaderType.ShadowMap,[],[
-                [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_FUNC_PACK]
+                [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_FUNC_PACK]
             ]);
             // this.pushPassContent(syRender.ShaderType.Shadow,[],[
-            //     [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_FUNC_UNPACK]
+            //     [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_FUNC_UNPACK]
             // ]);
 
             this.pushPassContent(syRender.ShaderType.Sprite,[],[
-                [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_FUNC_UNPACK],
+                [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_FUNC_UNPACK],
 
                 [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_NORMAL],
                 [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_MAT],
                 [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_AMBIENT],
-                // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_SPOT],
+                [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_SPOT],
                 // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_PARALLEL],
-                [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_POINT],
-                [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_SHADOW_PARALLEL],
-                [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_SPECULAR]
+                // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_POINT],
+                // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_SHADOW_PARALLEL],
+                // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_SPECULAR],
+                // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_FOG]
             ]);
         }
         protected collectRenderData(time: number) {

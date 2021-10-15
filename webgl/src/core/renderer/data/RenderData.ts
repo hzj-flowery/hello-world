@@ -168,9 +168,10 @@ export namespace syRender {
         SY_USE_LIGHT_POINT:"SY_USE_LIGHT_POINT",              //使用点光
         SY_USE_LIGHT_SPECULAR:"SY_USE_LIGHT_SPECULAR",        //使用高光
         SY_USE_SHADOW_PARALLEL:"SY_USE_SHADOW_PARALLEL",      //使用平行光阴影
+        SY_USE_FOG:"SY_USE_FOG",                              //使用雾
         //下面是函数
-        SY_FUNC_PACK:"SY_FUNC_PACK",                        //压缩函数
-        SY_FUNC_UNPACK:"SY_FUNC_UNPACK",                        //解压缩函数
+        SY_USE_FUNC_PACK:"SY_USE_FUNC_PACK",                        //压缩函数
+        SY_USE_FUNC_UNPACK:"SY_USE_FUNC_UNPACK",                        //解压缩函数
     }
 
     export enum CameraType {

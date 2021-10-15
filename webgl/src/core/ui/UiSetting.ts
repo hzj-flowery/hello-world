@@ -150,24 +150,24 @@ class UISetting {
             // { type: 'slider', key: 'ambientColA', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
 
             //高光
-            { type: 'slider', key: 'specularColR', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
-            { type: 'slider', key: 'specularColG', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
-            { type: 'slider', key: 'specularColB', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
-            { type: 'slider', key: 'specularColA', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
-            { type: 'slider', key: 'specularShininess', min: 0, max: 200, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'specularColR', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'specularColG', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'specularColB', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'specularColA', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'specularShininess', min: 0, max: 200, change: this.render.bind(this), precision: 2, step: 0.01, },
             
             //点光
-            { type: 'slider', key: 'pointColR', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
-            { type: 'slider', key: 'pointColG', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
-            { type: 'slider', key: 'pointColB', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
-            { type: 'slider', key: 'pointColA', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'pointColR', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'pointColG', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'pointColB', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'pointColA', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
 
             //雾
-            // { type: 'slider', key: 'fogColR', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
-            // { type: 'slider', key: 'fogColG', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
-            // { type: 'slider', key: 'fogColB', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
-            // { type: 'slider', key: 'fogColA', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
-            // { type: 'slider', key: 'fogDensity', min: 0, max: 0.1, change: this.render.bind(this), precision: 3, step: 0.001, },
+            { type: 'slider', key: 'fogColR', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            { type: 'slider', key: 'fogColG', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            { type: 'slider', key: 'fogColB', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            { type: 'slider', key: 'fogColA', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            { type: 'slider', key: 'fogDensity', min: 0, max: 0.1, change: this.render.bind(this), precision: 3, step: 0.001, },
             
             
             { type: 'slider', key: 'eyeX', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },

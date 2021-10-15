@@ -1,6 +1,5 @@
 import Scene from "./Scene";
 import Cube from "../3d/Cube";
-import LightCube from "../3d/ParallelLightCube";
 import SkyBox from "../3d/SkyBox";
 import { Node } from "./Node";
 import CustomTextureCube from "../3d/CustomTextureCube";
@@ -10,9 +9,6 @@ import Spine from "./spine/Spine";
 import MirrorCube from "../3d/MirrorCube";
 import { Line } from "../3d/Line";
 import { G_UISetting } from "../../ui/UiSetting";
-import PointLightCube from "../3d/PointLightCube";
-import SpotLightCube from "../3d/SpotLightCube";
-import { FogCube } from "../3d/FogCube";
 import { glMatrix } from "../../math/Matrix";
 import { syGL } from "../gfx/syGLEnums";
 import { DeferredShading } from "../3d/DeferredShading";
@@ -33,7 +29,7 @@ import { UCS } from "../3d/UCS";
 
 export default class Scene3D extends Scene {
 
-    private _lightCube: LightCube;
+    private _cube1: Cube;
     private _skybox: SkyBox;
     private _plane:Plane;
     private _cubeNode: Cube;
@@ -46,10 +42,10 @@ export default class Scene3D extends Scene {
     private _tableNode: Cube;
     private _alphaNode: Cube;
     private _spineNode: Spine;
-    private _pointLightCube: PointLightCube;
+    private _cube2: Cube;
     private _objNode:ObjNode;
-    private _spotLightCube: SpotLightCube;
-    private _fogCubeArr: Array<FogCube>;
+    private _spotLightCube: Cube;
+    private _fogCubeArr: Array<Cube>;
     private _customTexture: CustomTextureCube;
     private _centerNode: Node;
     private _shadowCube:ShadowCube;
@@ -187,12 +183,12 @@ export default class Scene3D extends Scene {
         this._rttTest.setPosition(-5, 10, 0);
         this._centerNode.addChild(this._rttTest);
 
-        // this._pointLightCube = new PointLightCube();
-        // this._pointLightCube.setScale(100,0.1,100.0);
-        // this._pointLightCube.setPosition(0, -10, 0);
-        // this._pointLightCube.spriteFrame = "res/dragon.jpg";
-        // this._centerNode.addChild(this._pointLightCube);
-        this._spotLightCube = new SpotLightCube();
+        // this._cube2 = new Cube();
+        // this._cube2.setScale(100,0.1,100.0);
+        // this._cube2.setPosition(0, -10, 0);
+        // this._cube2.spriteFrame = "res/dragon.jpg";
+        // this._centerNode.addChild(this._cube2);
+        this._spotLightCube = new Cube();
         this._spotLightCube.setScale(100,50.0,10.0);
         this._spotLightCube.setPosition(0, 0, -130);
         this._spotLightCube.spriteFrame = "res/dragon.jpg";
@@ -204,7 +200,7 @@ export default class Scene3D extends Scene {
         this._centerNode.addChild(fogNode);
         for(let j = 0;j<fogCubeNums;j++)
         {
-            let fog = new FogCube();
+            let fog = new Cube();
             fog.spriteFrame = "resources/f-texture.png";
             fog.setPosition(-2+j*1.1,0, j*2);
             fogNode.addChild(fog);
@@ -243,11 +239,11 @@ export default class Scene3D extends Scene {
             }
         }
         
-        // this._lightCube = new LightCube();
-        // this._lightCube.spriteFrame = "res/wicker.jpg";
-        // this._lightCube.setPosition(0,5,5);
-        // this._lightCube.setScale(0.5, 0.5, 0.5);
-        // this._centerNode.addChild(this._lightCube);
+        // this._cube1 = new Cube();
+        // this._cube1.spriteFrame = "res/wicker.jpg";
+        // this._cube1.setPosition(0,5,5);
+        // this._cube1.setScale(0.5, 0.5, 0.5);
+        // this._centerNode.addChild(this._cube1);
 
         
 
@@ -271,11 +267,11 @@ export default class Scene3D extends Scene {
             // this._robart.setPosition(-5,10,data.customValue?-data.customValue:0)
             // var cg = (data.customValue?-data.customValue:0.1)/10000;
             // this._robart.setScale(cg,cg,cg)
-            // this._pointLightCube.setPosition(0,data.customValue?-data.customValue:0,0)
+            // this._cube2.setPosition(0,data.customValue?-data.customValue:0,0)
             // this._spotLightCube.setPosition(0,0,data.customValue?-data.customValue:-130)
-        //     this._lightCube.setRotation(0,data.customValue?data.customValue:0,0)
-        //     this._lightCube.setPosition(0,data.customValue1?data.customValue1:0,5)
-        //     this._lightCube.setScale(data.customValue2?data.customValue2:1,data.customValue2?data.customValue2:1,data.customValue2?data.customValue2:1)
+        //     this._cube1.setRotation(0,data.customValue?data.customValue:0,0)
+        //     this._cube1.setPosition(0,data.customValue1?data.customValue1:0,5)
+        //     this._cube1.setScale(data.customValue2?data.customValue2:1,data.customValue2?data.customValue2:1,data.customValue2?data.customValue2:1)
         })
         this.setPosition(0, 0, 0);
         setTimeout(this.rotateCenterNode.bind(this), 20);
