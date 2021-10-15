@@ -128,7 +128,7 @@ export namespace syGL {
         //现阶段场景中只支持三束平行光VERT_
         //平行光只有方向和颜色没有位置
         LIGHT_PARALLEL = 'u_parallel',     //平行光的颜色
-        LIGHT_PARALLEL_DIR = 'u_parallelDir',//平行光的方向
+        LIGHT_PARALLEL_DIRECTION = 'u_parallelDirection',//平行光的方向
         LIGHT_COLOR1 = 'u_light1',
         LIGHT_COLOR_DIR1 = 'u_lightDir1',
         LIGHT_COLOR2 = 'u_light2',
@@ -140,7 +140,7 @@ export namespace syGL {
         LIGHT_SPOT_INNER_LIMIT = "u_spotInnerLimit",//聚光灯内部限制
         LIGHT_SPOT_OUTER_LIMIT = "u_spotOuterLimit",//聚光灯内部限制
         LIGHT_SPOT = "u_spot",//聚光灯的颜色
-        LIGHT_SPOT_DIRECTION = "u_spotDirection",//聚光灯的方向
+        LIGHT_SPOT_CENTER_DIRECTION = "u_spotCenterDirection",//聚光灯的中心方向
         FOG_COLOR = 'u_fog',//雾的颜色
         FOG_DENSITY = 'u_fogDensity',//雾的密度
         /**

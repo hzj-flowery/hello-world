@@ -144,10 +144,10 @@ class UISetting {
             // { type: 'slider', key: 'spotColA', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
 
             //环境光
-            // { type: 'slider', key: 'ambientColR', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
-            // { type: 'slider', key: 'ambientColG', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
-            // { type: 'slider', key: 'ambientColB', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
-            // { type: 'slider', key: 'ambientColA', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            { type: 'slider', key: 'ambientColR', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            { type: 'slider', key: 'ambientColG', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            { type: 'slider', key: 'ambientColB', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            { type: 'slider', key: 'ambientColA', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
 
             //高光
             // { type: 'slider', key: 'specularColR', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
@@ -170,16 +170,16 @@ class UISetting {
             // { type: 'slider', key: 'fogDensity', min: 0, max: 0.1, change: this.render.bind(this), precision: 3, step: 0.001, },
             
             
-            // { type: 'slider', key: 'eyeX', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
-            // { type: 'slider', key: 'eyeY', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
-            // { type: 'slider', key: 'eyeZ', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
-            // { type: 'slider', key: 'lightTargetX', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
-            // { type: 'slider', key: 'lightTargetY', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
-            // { type: 'slider', key: 'lightTargetZ', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
-            // { type: 'slider', key: 'lightProjWidth', min: 1, max: 500, change: this.render.bind(this), precision: 2, step: 0.1, },
-            // { type: 'slider', key: 'lightProjHeight', min: 1, max: 500, change: this.render.bind(this), precision: 2, step: 0.1, },
-            // { type: 'slider', key: 'lightFieldOfView', min: 1, max: 179, change: this.render.bind(this), },
-            // { type: 'slider', key: 'lightBias', min: 0.005, max: 0.001, change: this.render.bind(this), precision: 3, step: 0.001, },
+            { type: 'slider', key: 'eyeX', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
+            { type: 'slider', key: 'eyeY', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
+            { type: 'slider', key: 'eyeZ', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
+            { type: 'slider', key: 'lightTargetX', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
+            { type: 'slider', key: 'lightTargetY', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
+            { type: 'slider', key: 'lightTargetZ', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
+            { type: 'slider', key: 'lightProjWidth', min: 1, max: 500, change: this.render.bind(this), precision: 2, step: 0.1, },
+            { type: 'slider', key: 'lightProjHeight', min: 1, max: 500, change: this.render.bind(this), precision: 2, step: 0.1, },
+            { type: 'slider', key: 'lightFieldOfView', min: 1, max: 179, change: this.render.bind(this), },
+            { type: 'slider', key: 'lightBias', min: 0.005, max: 0.001, change: this.render.bind(this), precision: 3, step: 0.001, },
         ]
         let fish = [
             { type: 'checkbox', key: 'up', min: -10, max: 10, change: this.render.bind(this, "up") },
@@ -189,7 +189,7 @@ class UISetting {
             { type: 'checkbox', key: 'ahead', min: 0, max: 1, change: this.render.bind(this, "ahead") },
             { type: 'checkbox', key: 'back', min: 0, max: 1, change: this.render.bind(this, "back") }
         ]
-        this.widgets = this.UI.setupUI(document.querySelector('#ui'), UIStatusData, [].concat(camera3D));
+        this.widgets = this.UI.setupUI(document.querySelector('#ui'), UIStatusData, [].concat(light));
         this.render();
     }
 

@@ -156,10 +156,18 @@ export namespace syRender {
     ]
 
     export const ShaderDefineValue = {
-        SY_USE_MAT:"SY_USE_MAT",
-        SY_USE_ALPHA_TEST:"SY_USE_ALPHA_TEST",
-        SY_USE_RGB_TEST:"SY_USE_RGB_TEST",
 
+        SY_USE_NORMAL:"SY_USE_NORMAL",            //使用法线
+        SY_USE_MAT:"SY_USE_MAT",                  //万能矩阵
+        SY_USE_ALPHA_TEST:"SY_USE_ALPHA_TEST",    //alpha测试
+        SY_USE_RGB_TEST:"SY_USE_RGB_TEST",        //rgb测试
+        SY_USE_TEXTURE:"SY_USE_TEXTURE",          //使用纹理
+        SY_USE_LIGHT_AMBIENT:"SY_USE_LIGHT_AMBIENT",          //使用环境光
+        SY_USE_LIGHT_PARALLEL:"SY_USE_LIGHT_PARALLEL",        //使用平行光
+        SY_USE_LIGHT_SPOT:"SY_USE_LIGHT_SPOT",                //使用聚光
+        SY_USE_LIGHT_POINT:"SY_USE_LIGHT_POINT",              //使用点光
+        SY_USE_LIGHT_SPECULAR:"SY_USE_LIGHT_SPECULAR",        //使用高光
+        SY_USE_SHADOW:"SY_USE_SHADOW",                        //使用阴影
         //下面是函数
         SY_FUNC_PACK:"SY_FUNC_PACK",                        //压缩函数
         SY_FUNC_UNPACK:"SY_FUNC_UNPACK",                        //解压缩函数
@@ -741,12 +749,12 @@ export namespace syRender {
                     //平行光
                     case ShaderUseVariantType.ParallelLight:
                         _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.LIGHT_PARALLEL, this.light.parallel.color.toNormalizeArray())
-                        _shader.setCustomUniformFloatVec3(syGL.AttributeUniform.LIGHT_PARALLEL_DIR, this.light.parallel.direction.toArray())
+                        _shader.setCustomUniformFloatVec3(syGL.AttributeUniform.LIGHT_PARALLEL_DIRECTION, this.light.parallel.direction.toArray())
                         break;
                     //聚光灯
                     case ShaderUseVariantType.SpotLight:
                         _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.LIGHT_SPOT, this.light.spot.color.toNormalizeArray());
-                        _shader.setCustomUniformFloatVec3(syGL.AttributeUniform.LIGHT_SPOT_DIRECTION, this.light.spot.direction.toArray())
+                        _shader.setCustomUniformFloatVec3(syGL.AttributeUniform.LIGHT_SPOT_CENTER_DIRECTION, this.light.spot.direction.toArray())
                         _shader.setCustomUniformFloat(syGL.AttributeUniform.LIGHT_SPOT_INNER_LIMIT, this.light.spot.innerLimit)
                         _shader.setCustomUniformFloat(syGL.AttributeUniform.LIGHT_SPOT_OUTER_LIMIT, this.light.spot.outerLimit);
                         break;

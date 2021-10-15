@@ -705,7 +705,7 @@ export default class LoaderManager {
                     baseCustom.forEach((value, index) => {
                         let isExist: boolean = false;
                         v.custom.forEach((svalue, sindex) => {
-                            if (svalue.key == value.key) {
+                            if (svalue.key == value.key&&svalue.value ==value.value) {
                                 isExist = true;
                             }
                         })
@@ -822,7 +822,7 @@ export default class LoaderManager {
                                     templatePass.custom.forEach((value, index) => {
                                         let isExist: boolean = false;
                                         res[k].custom.forEach((svalue, sindex) => {
-                                            if (svalue.key == value.key) {
+                                            if (svalue.key == value.key&&svalue.value ==value.value) {
                                                 isExist = true;
                                             }
                                         })

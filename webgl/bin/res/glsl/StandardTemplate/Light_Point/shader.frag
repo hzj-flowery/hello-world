@@ -18,10 +18,10 @@ precision mediump float;
   vec3 surfaceToLightDirection = normalize(v_surfaceToLight); //表面指向光位置的方向
   vec3 surfaceToViewDirection = normalize(v_surfaceToView);   //表面指向摄像机位置的方向
   vec3 halfVector = normalize(surfaceToLightDirection + surfaceToViewDirection);//高光方向
-  float light = max(dot(normal, surfaceToLightDirection),0.0); //算出点光的入射强度
+  float lightDot = max(dot(normal, surfaceToLightDirection),0.0); //算出点光的入射强度
   float specular = 0.0;                                                  //高光强度
-  if (light > 0.0) {specular = pow(dot(normal, halfVector), u_specular_shininess);}
-  vec4 diffuseColor = surfaceBaseColor*u_point*light;//漫反射颜色
+  if (lightDot > 0.0) {specular = pow(dot(normal, halfVector), u_specular_shininess);}
+  vec4 diffuseColor = surfaceBaseColor*u_point*lightDot;//漫反射颜色
   vec4 specularColor = u_specular*specular;//高光颜色
   vec4 ambientColor = u_ambient*surfaceBaseColor;//环境光
   gl_FragColor = diffuseColor + specularColor+ambientColor;

@@ -500,8 +500,19 @@ export namespace SY {
             this.pushPassContent(syRender.ShaderType.ShadowMap,[],[
                 [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_FUNC_PACK]
             ]);
-            this.pushPassContent(syRender.ShaderType.Shadow,[],[
-                [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_FUNC_UNPACK]
+            // this.pushPassContent(syRender.ShaderType.Shadow,[],[
+            //     [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_FUNC_UNPACK]
+            // ]);
+
+            this.pushPassContent(syRender.ShaderType.Sprite,[],[
+                [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_FUNC_UNPACK],
+
+                [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_NORMAL],
+                [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_MAT],
+                [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_AMBIENT],
+                [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_SPOT],
+                // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_PARALLEL],
+                [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_SHADOW]
             ]);
         }
         protected collectRenderData(time: number) {

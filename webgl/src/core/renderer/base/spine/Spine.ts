@@ -61,7 +61,7 @@ export default class Spine extends SY.SpriteBase {
         time *= 0.001;  // convert to seconds
         this.animSkin(this.gltf.skins[0], Math.sin(time) * .5);
         this.sharedUniforms = {
-            u_spotDirection: this._lightDirection,
+            u_spotCenterDirection: this._lightDirection,
         };
         /**
          * 下面会遍历所有的骨骼节点

@@ -10,7 +10,7 @@ precision mediump float;
   
   uniform vec4 u_ambient;//环境光入射光的颜色
   
-  uniform vec3  u_spotDirection;//聚光的方向
+  uniform vec3  u_spotCenterDirection;//聚光的方向
   uniform vec4  u_spot;//聚光入射光的颜色
   uniform float u_spotInnerLimit;//聚光的内部限制
   uniform float u_spotOuterLimit;//聚光的外部限制
@@ -20,7 +20,7 @@ precision mediump float;
   vec4 materialColor = texture2D(u_texture, v_uv);//材质颜色
   vec4 surfaceBaseColor = u_color*materialColor;//表面基底颜色
   vec3 normal = normalize(v_normal); // 因为 v_normal 是可变量，被插值过，所以不是单位向量，单位可以让它成为再次成为单位向量
-  vec3 spotDirection = normalize(u_spotDirection);
+  vec3 spotDirection = normalize(u_spotCenterDirection);
   vec3 surfaceToLightDirection = normalize(v_surfaceToLight); //表面指向光位置的方向
   vec3 surfaceToViewDirection = normalize(v_surfaceToView);   //表面指向摄像机位置的方向
   vec3 halfVector = normalize(surfaceToLightDirection + surfaceToViewDirection);//高光方向

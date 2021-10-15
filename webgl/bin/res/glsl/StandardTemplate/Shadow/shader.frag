@@ -19,7 +19,8 @@ precision mediump float;
 
     
     uniform vec4 u_spot;//聚光的颜色
-    uniform vec3 u_spotDirection;  //聚光的方向
+    uniform vec3 u_spotCenterDirection;  //聚光的方向
+    uniform vec3 u_parallelDirection;//平行光的方向
     uniform float u_spotInnerLimit;//聚光的内部限制
     uniform float u_spotOuterLimit;//聚光的外部限制
     
@@ -158,20 +159,21 @@ precision mediump float;
         vec3 normal = normalize(v_normal);             //归一化法线
         vec3 surfaceToLightDirection = normalize(v_surfaceToLight); //表面指向光位置的方向
         vec3 surfaceToViewDirection = normalize(v_surfaceToView);   //表面指向摄像机位置的方向
-        vec3 spotDirection = normalize(u_spotDirection);
+        vec3 spotDirection = normalize(u_spotCenterDirection);
+        vec3 parallelDirection = normalize(u_parallelDirection);
 
-        float lightDot = getParallelLightDot(normal,spotDirection);    //算出平行光强度
-        // float lightDot = getSpotLightDot(normal,spotDirection,surfaceToLightDirection,u_spotInnerLimit,u_spotOuterLimit);    //算出聚光强度
+        // float lightDot = getParallelLightDot(normal,spotDirection);    //算出平行光强度
+        float lightDot = getSpotLightDot(normal,spotDirection,surfaceToLightDirection,u_spotInnerLimit,u_spotOuterLimit);    //算出聚光强度
 
         float shadowLight = getShadowLightRYY(v_projectedTexcoord,u_shadowMap,u_shadowInfo);
-        //通过uv贴图找出当前片元的颜色 该颜色常被称为自发光颜色或是当前顶点的颜色
-        vec4 texColor = texture2D(u_texture, v_uv) * u_color;
-        //漫反射光  顶点颜色* 光照强度 * 阴影bool值
-        vec3 diffuse = texColor.rgb*u_spot.rgb * lightDot * shadowLight; 
+        //通过uv贴图找出当前片元的纹理颜色*顶点颜色=表面基底色
+        vec4 surfaceBaseColor = texture2D(u_texture, v_uv) * u_color;
+        //漫反射光  表面基底色 *入射光颜色* 光照强度 * 阴影bool值  
+        vec3 diffuse = surfaceBaseColor.rgb*u_spot.rgb * lightDot * shadowLight; 
         //环境光 （它的值rgb最好都限定在0.2以下）
         //环境光的照亮范围是全部 他是要和其余光照结果进行叠加的，将会让光线更加强亮
-        vec4 ambient = vec4(texColor.rgb *u_ambient.rgb,1.0); //环境光的颜色需要和漫反射颜色融合
+        vec4 ambient = vec4(surfaceBaseColor.rgb *u_ambient.rgb,1.0); //环境光的颜色需要和漫反射颜色融合
         //vec3 specular = shadowLight<1.0?vec3(0.0,0.0,0.0):getSpecular(normal,u_specular,u_specular_shininess,v_surfaceToLight,v_surfaceToView);//阴影处没有高光
-        vec3 specular = shadowLight<1.0?vec3(0.0,0.0,0.0):getSpecularFengShi(normal,u_specular,u_specular_shininess,v_surfaceToLight,v_surfaceToView,u_spotDirection);//阴影处没有高光
-        gl_FragColor = vec4(diffuse+ambient.rgb+specular,texColor.a);
+        vec3 specular = shadowLight<1.0?vec3(0.0,0.0,0.0):getSpecularFengShi(normal,u_specular,u_specular_shininess,v_surfaceToLight,v_surfaceToView,u_spotCenterDirection);//阴影处没有高光
+        gl_FragColor = vec4(diffuse+ambient.rgb+specular,surfaceBaseColor.a);
     }

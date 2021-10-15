@@ -208,7 +208,8 @@
         "name": "Sprite/shader",
         "template":true,
         "custom":[
-            {"key":"ShaderType","value":"Sprite"}
+            {"key":"ShaderType","value":"Sprite"},
+            {"key":"DefineUse","value":"SY_USE_TEXTURE"}
         ]
     },
     {

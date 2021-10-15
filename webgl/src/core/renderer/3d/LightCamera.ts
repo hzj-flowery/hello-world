@@ -91,6 +91,11 @@ export class LightCamera extends Node {
         lightData.spot.direction.x = this._lightReverseDir[0];
         lightData.spot.direction.y = this._lightReverseDir[1];
         lightData.spot.direction.z = this._lightReverseDir[2];
+        
+        //也可是平行光
+        lightData.parallel.direction.x = this._lightReverseDir[0];
+        lightData.parallel.direction.y = this._lightReverseDir[1];
+        lightData.parallel.direction.z = this._lightReverseDir[2];
         this._lightLine.updatePositionData(VertData.position.concat([0, 0, 0, lightData.parallel.direction.x, lightData.parallel.direction.y, lightData.parallel.direction.z]));
         this._lightLine.setColor(lightData.parallel.color.r, lightData.parallel.color.g, lightData.parallel.color.b, lightData.parallel.color.a);
         this._frustum.updateProjView(this._projectMatrix, this._cameraMatrix);
