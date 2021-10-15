@@ -24,9 +24,9 @@ export class UIStatusData {
     public static parallelDirX: number = 8; //
     public static parallelDirY: number = 5; //
     public static parallelDirZ: number = -10;   //
-    public static parallelColR: number = 0.1; //
-    public static parallelColG: number = 0.1; //
-    public static parallelColB: number = 0.1;   //
+    public static parallelColR: number = 1; //
+    public static parallelColG: number = 1; //
+    public static parallelColB: number = 1;   //
     public static parallelColA: number = 1.0;   //
 
      //聚光
@@ -43,8 +43,8 @@ export class UIStatusData {
      //高光
      public static specularShininess:number = 140;
      public static specularColR: number = 1; //
-     public static specularColG: number = 0; //
-     public static specularColB: number = 0;   //
+     public static specularColG: number = 1; //
+     public static specularColB: number = 1;   //
      public static specularColA: number = 1.0;   //
      
      //环境光
@@ -54,9 +54,9 @@ export class UIStatusData {
      public static ambientColA: number = 1.0;   //
      
      //点光
-     public static pointColR: number = 0.1; //
-     public static pointColG: number = 0.1; //
-     public static pointColB: number = 0.1;   //
+     public static pointColR: number = 1; //
+     public static pointColG: number = 1; //
+     public static pointColB: number = 1;   //
      public static pointColA: number = 1.0;   //
      
      //雾
@@ -144,23 +144,23 @@ class UISetting {
             // { type: 'slider', key: 'spotColA', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
 
             //环境光
-            { type: 'slider', key: 'ambientColR', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
-            { type: 'slider', key: 'ambientColG', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
-            { type: 'slider', key: 'ambientColB', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
-            { type: 'slider', key: 'ambientColA', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'ambientColR', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'ambientColG', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'ambientColB', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'ambientColA', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
 
             //高光
-            // { type: 'slider', key: 'specularColR', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
-            // { type: 'slider', key: 'specularColG', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
-            // { type: 'slider', key: 'specularColB', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
-            // { type: 'slider', key: 'specularColA', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
-            // { type: 'slider', key: 'specularShininess', min: 0, max: 200, change: this.render.bind(this), precision: 2, step: 0.01, },
+            { type: 'slider', key: 'specularColR', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            { type: 'slider', key: 'specularColG', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            { type: 'slider', key: 'specularColB', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            { type: 'slider', key: 'specularColA', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            { type: 'slider', key: 'specularShininess', min: 0, max: 200, change: this.render.bind(this), precision: 2, step: 0.01, },
             
             //点光
-            // { type: 'slider', key: 'pointColR', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
-            // { type: 'slider', key: 'pointColG', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
-            // { type: 'slider', key: 'pointColB', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
-            // { type: 'slider', key: 'pointColA', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            { type: 'slider', key: 'pointColR', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            { type: 'slider', key: 'pointColG', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            { type: 'slider', key: 'pointColB', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            { type: 'slider', key: 'pointColA', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
 
             //雾
             // { type: 'slider', key: 'fogColR', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },

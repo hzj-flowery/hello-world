@@ -3,6 +3,7 @@ attribute vec3 a_position;
 attribute vec2 a_texcoord;
 
 uniform mat4 u_world;
+uniform mat4 u_world_I_T;
 uniform mat4 u_view;
 uniform mat4 u_projection;
 varying vec2 v_uv;
@@ -45,7 +46,9 @@ void main(){
     
     //法线
     #if defined(SY_USE_NORMAL)
-        v_normal=mat3(u_world)*a_normal;
+        //将法线转换到世界空间坐标系下
+        //乘以世界矩阵的逆矩阵的转置矩阵 可以防止物体被放大而带来的法线变形
+        v_normal=mat3(u_world_I_T)*a_normal;
     #endif
 
     //三种光

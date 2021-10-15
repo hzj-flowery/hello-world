@@ -6,10 +6,11 @@ precision mediump float;
   varying vec3 v_surfaceToView;
   uniform sampler2D u_texture;
   uniform vec4 u_color;     //节点的颜色
-  uniform float u_specular_shininess;
+  
   uniform vec4 u_point;//点光入射光的颜色
   uniform vec4 u_ambient;//环境光入射光的颜色
   uniform vec4 u_specular;//高光入射光颜色
+  uniform float u_specular_shininess;
 
   void main() {
   vec4 materialColor = texture2D(u_texture, v_uv);//材质颜色

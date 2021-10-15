@@ -510,9 +510,11 @@ export namespace SY {
                 [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_NORMAL],
                 [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_MAT],
                 [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_AMBIENT],
-                [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_SPOT],
+                // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_SPOT],
                 // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_PARALLEL],
-                [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_SHADOW]
+                [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_POINT],
+                [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_SHADOW],
+                [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_SPECULAR]
             ]);
         }
         protected collectRenderData(time: number) {

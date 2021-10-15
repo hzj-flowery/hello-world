@@ -19,6 +19,7 @@ uniform float u_alpha;
       uniform vec4 u_ambient;
 #endif
 
+//平行光
 #ifdef SY_USE_LIGHT_PARALLEL
       //光的方向
       uniform vec3 u_parallelDirection;
@@ -33,6 +34,7 @@ uniform float u_alpha;
       }
 #endif
 
+//聚光
 #ifdef SY_USE_LIGHT_SPOT
       //聚光的颜色
       uniform vec4 u_spot;
@@ -57,6 +59,73 @@ uniform float u_alpha;
             float light=inLight*max(dot(normal,surfaceToLightDirection),0.);
             return light;
       }
+#endif
+
+#ifdef SY_USE_LIGHT_POINT
+      //点光入射光的颜色
+      uniform vec4 u_point;
+#endif
+
+//高光
+#ifdef SY_USE_LIGHT_SPECULAR
+      //高光入射光颜色
+      uniform vec4 u_specular;
+      uniform float u_specular_shininess;
+    
+    //普通高光
+    /*
+    @param normal 法线
+    @param specularColor 高光的颜色
+    @param specular_shininess 高光的因子
+    @param surfaceToLight 表面点指向光位置的方向
+    @param surfaceToView  表面点指向摄像机位置的方向
+    */
+    vec3 getSpecular(vec3 normal,vec4 specularColor,float specular_shininess,vec3 surfaceToLight,vec3 surfaceToView){
+      vec3 surfaceToLightDirection = normalize(surfaceToLight);
+      vec3 surfaceToViewDirection = normalize(surfaceToView);
+      vec3 halfVector = normalize((surfaceToLightDirection + surfaceToViewDirection)); //算出高光的方向
+      float specularWeighting = pow(dot(normal, halfVector), specular_shininess);
+      vec3 specular = specularColor.rgb * specularWeighting;
+      return specular;
+    }
+    //宾式模型高光
+    /*
+    @param normal 法线
+    @param specularColor 高光的颜色
+    @param specular_shininess 高光的因子
+    @param surfaceToLight 表面点指向光位置的方向
+    @param surfaceToView  表面点指向摄像机位置的方向
+    @param lightDir 光的方向
+    */
+    vec3 getSpecularBingShi(vec3 normal,vec4 specularColor,float specular_shininess,vec3 surfaceToLight,vec3 surfaceToView,vec3 lightDir){
+      // 计算法向量和光线的点积
+      float cosTheta = max(dot(normal,lightDir), 0.0);
+      vec3 surfaceToLightDirection = normalize(surfaceToLight);
+      vec3 surfaceToViewDirection = normalize(surfaceToView);
+      vec3 halfVector = normalize(surfaceToLightDirection + surfaceToViewDirection); //算出高光的方向
+      float specularWeighting = pow(dot(normal, halfVector), specular_shininess);
+      vec3 specular = specularColor.rgb * specularWeighting * step(cosTheta,0.0);
+      return specular;
+    }
+    //冯氏模型高光
+    /*
+    @param normal 法线
+    @param specularColor 高光的颜色
+    @param specular_shininess 高光的因子
+    @param surfaceToLight 表面点指向光位置的方向
+    @param surfaceToView  表面点指向摄像机位置的方向
+    @param lightDir 光的方向
+    */
+    vec3 getSpecularFengShi(vec3 normal,vec4 specularColor,float specular_shininess,vec3 surfaceToLight,vec3 surfaceToView,vec3 lightDir){
+      vec3 surfaceToLightDirection = normalize(surfaceToLight);
+      vec3 surfaceToViewDirection = normalize(surfaceToView);
+      // 计算法向量和光线的点积
+      float cosTheta = max(dot(normal,lightDir), 0.0);
+      vec3 reflectionDirection = reflect(-surfaceToLightDirection, normal);
+      float specularWeighting = pow(max(dot(reflectionDirection, surfaceToViewDirection), 0.0), specular_shininess);
+      vec3 specular = specularColor.rgb * specularWeighting * step(cosTheta,0.0);
+      return specular;
+    }
 #endif
 
 //使用点光或者聚光会用到下面的数据
@@ -167,12 +236,20 @@ void main(){
       //最开始 漫反射==表面基底色
       vec3 diffuse = surfaceBaseColor.rgb;
 
+      //光的入射强度
+      float lightDot = 0.0;
+      //使用点光 
+      #ifdef SY_USE_LIGHT_POINT
+            //算出点光的入射强度
+            lightDot = max(dot(normal, surfaceToLightDirection),0.0);
+            //漫反射光  表面基底色 *入射光颜色* 光照强度 
+            diffuse = diffuse*u_point.rgb*lightDot;
       //使用平行光
-      #ifdef SY_USE_LIGHT_PARALLEL
+      #elif defined(SY_USE_LIGHT_PARALLEL)
             //顶点着色器传到片元着色器的方向会有插值，所以需要归一化
             vec3 parallelDirection=normalize(u_parallelDirection);
             //算出平行光强度
-            float lightDot=getParallelLightDot(normal,parallelDirection);
+            lightDot=getParallelLightDot(normal,parallelDirection);
             //漫反射光  表面基底色 *入射光颜色* 光照强度
             diffuse = diffuse * u_parallel.rgb * lightDot;
       //使用聚光
@@ -180,15 +257,30 @@ void main(){
             //顶点着色器传到片元着色器的方向会有插值，所以需要归一化
             vec3 spotDirection=normalize(u_spotCenterDirection);
             //算出聚光强度
-            float lightDot=getSpotLightDot(normal,spotDirection,surfaceToLightDirection,u_spotInnerLimit,u_spotOuterLimit);
+            lightDot=getSpotLightDot(normal,spotDirection,surfaceToLightDirection,u_spotInnerLimit,u_spotOuterLimit);
             //漫反射光  表面基底色 *入射光颜色* 光照强度
             diffuse = diffuse*u_spot.rgb * lightDot;
       #endif
       
+      //使用高光
+      #ifdef SY_USE_LIGHT_SPECULAR
+            //高光方向
+            vec3 halfVector = normalize(surfaceToLightDirection + surfaceToViewDirection);
+            //高光强度
+            float specularDot = 0.0;                                                  
+            if (lightDot > 0.0) {specularDot = pow(dot(normal, halfVector), u_specular_shininess);}
+            vec4 specular = u_specular*specularDot;//高光颜色
+            //累加到片元颜色中
+            fragColor.rgb = fragColor.rgb+specular.rgb;
+      #endif
+      
       //使用阴影
       #ifdef SY_USE_SHADOW
-             float shadowLight = getShadowLightRYY(v_projectedTexcoord,u_shadowMap,u_shadowInfo);
-             diffuse.rgb = diffuse * shadowLight;
+            //这个阴影只是平行光阴影
+            #ifndef SY_USE_LIGHT_POINT
+                  float shadowLight = getShadowLightRYY(v_projectedTexcoord,u_shadowMap,u_shadowInfo);
+                  diffuse.rgb = diffuse * shadowLight;
+            #endif
       #endif
       
       //累加到片元颜色中
@@ -196,9 +288,9 @@ void main(){
       
       //做一些基础测试
       #ifdef SY_USE_ALPHA_TEST
-      if(surfaceBaseColor.a<SY_USE_ALPHA_TEST)discard;
+            if(surfaceBaseColor.a<SY_USE_ALPHA_TEST)discard;
       #elif defined(SY_USE_RGB_TEST)
-      if(surfaceBaseColor.r+surfaceBaseColor.g+surfaceBaseColor.b<SY_USE_RGB_TEST)discard;
+            if(surfaceBaseColor.r+surfaceBaseColor.g+surfaceBaseColor.b<SY_USE_RGB_TEST)discard;
       #endif
       
       gl_FragColor=fragColor;
