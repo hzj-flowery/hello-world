@@ -32,8 +32,8 @@ varying vec2 v_uv;
 #endif
 
 //使用阴影会用到投影纹理的uv
-#if defined(SY_USE_SHADOW)
-    varying vec4 v_projectedTexcoord;
+#if defined(SY_USE_SHADOW_PARALLEL)
+    varying vec4 v_shadowProjectedTexcoord;
 #endif
 
 void main(){
@@ -60,8 +60,8 @@ void main(){
     #endif
 
     //阴影
-    #if defined(SY_USE_SHADOW)
+    #if defined(SY_USE_SHADOW_PARALLEL)
         //算出投影纹理的uv
-        v_projectedTexcoord = u_mat * worldPosition; 
+        v_shadowProjectedTexcoord = u_mat * worldPosition; 
     #endif
 }

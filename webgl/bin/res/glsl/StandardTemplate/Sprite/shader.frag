@@ -137,13 +137,13 @@ uniform float u_alpha;
 #endif
 
 //阴影
-#if defined(SY_USE_SHADOW)
+#if defined(SY_USE_SHADOW_PARALLEL)
       //阴影纹理
       uniform sampler2D u_shadowMap;
       //阴影信息
       uniform vec4 u_shadowInfo;
       //uv
-      varying vec4 v_projectedTexcoord;
+      varying vec4 v_shadowProjectedTexcoord;
       bool inRange(vec3 coordP){
             return coordP.x >= 0.0 && coordP.x <= 1.0 && coordP.y >= 0.0 && coordP.y <= 1.0; //uv纹理坐标必须处于【0，1】
       }
@@ -235,7 +235,8 @@ void main(){
       //漫反射
       //最开始 漫反射==表面基底色
       vec3 diffuse = surfaceBaseColor.rgb;
-
+       
+      //------------------------开始基于一组光照计算
       //光的入射强度
       float lightDot = 0.0;
       //使用点光 
@@ -261,26 +262,22 @@ void main(){
             //漫反射光  表面基底色 *入射光颜色* 光照强度
             diffuse = diffuse*u_spot.rgb * lightDot;
       #endif
+      //-------------------------------------光照计算结束---------------------
       
       //使用高光
       #ifdef SY_USE_LIGHT_SPECULAR
-            //高光方向
-            vec3 halfVector = normalize(surfaceToLightDirection + surfaceToViewDirection);
-            //高光强度
-            float specularDot = 0.0;                                                  
-            if (lightDot > 0.0) {specularDot = pow(dot(normal, halfVector), u_specular_shininess);}
-            vec4 specular = u_specular*specularDot;//高光颜色
-            //累加到片元颜色中
-            fragColor.rgb = fragColor.rgb+specular.rgb;
+            if (lightDot > 0.0)
+            {
+                  vec3 specular = getSpecular(normal,u_specular,u_specular_shininess,surfaceToLightDirection,surfaceToViewDirection);
+                  //累加到片元颜色中
+                  fragColor.rgb = fragColor.rgb+specular;
+            }
       #endif
       
       //使用阴影
-      #ifdef SY_USE_SHADOW
-            //这个阴影只是平行光阴影
-            #ifndef SY_USE_LIGHT_POINT
-                  float shadowLight = getShadowLightRYY(v_projectedTexcoord,u_shadowMap,u_shadowInfo);
-                  diffuse.rgb = diffuse * shadowLight;
-            #endif
+      #ifdef SY_USE_SHADOW_PARALLEL
+            float shadowLight = getShadowLightRYY(v_shadowProjectedTexcoord,u_shadowMap,u_shadowInfo);
+            diffuse.rgb = diffuse * shadowLight;
       #endif
       
       //累加到片元颜色中

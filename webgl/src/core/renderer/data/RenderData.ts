@@ -167,7 +167,7 @@ export namespace syRender {
         SY_USE_LIGHT_SPOT:"SY_USE_LIGHT_SPOT",                //使用聚光
         SY_USE_LIGHT_POINT:"SY_USE_LIGHT_POINT",              //使用点光
         SY_USE_LIGHT_SPECULAR:"SY_USE_LIGHT_SPECULAR",        //使用高光
-        SY_USE_SHADOW:"SY_USE_SHADOW",                        //使用阴影
+        SY_USE_SHADOW_PARALLEL:"SY_USE_SHADOW_PARALLEL",      //使用平行光阴影
         //下面是函数
         SY_FUNC_PACK:"SY_FUNC_PACK",                        //压缩函数
         SY_FUNC_UNPACK:"SY_FUNC_UNPACK",                        //解压缩函数

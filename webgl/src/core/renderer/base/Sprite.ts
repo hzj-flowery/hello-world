@@ -513,7 +513,7 @@ export namespace SY {
                 // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_SPOT],
                 // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_PARALLEL],
                 [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_POINT],
-                [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_SHADOW],
+                [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_SHADOW_PARALLEL],
                 [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_SPECULAR]
             ]);
         }
