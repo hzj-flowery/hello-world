@@ -1,6 +1,6 @@
 precision mediump float;
 
-varying vec2 v_uv;
+
 uniform vec4 u_color;//节点的颜色
 uniform float u_alpha;
 
@@ -12,6 +12,7 @@ uniform float u_alpha;
 //使用纹理
 #if defined(SY_USE_TEXTURE)
       uniform sampler2D u_texture;
+      varying vec2 v_uv;
 #endif
 
 //环境光
@@ -232,7 +233,7 @@ void main(){
       #ifdef SY_USE_TEXTURE
              vec4 surfaceBaseColor=texture2D(u_texture,v_uv)*u_color;
       #else
-            vec4 surfaceBaseColor=u_color;
+             vec4 surfaceBaseColor=u_color;
       #endif
       
       surfaceBaseColor=vec4(surfaceBaseColor.rgb,u_alpha*surfaceBaseColor.a);

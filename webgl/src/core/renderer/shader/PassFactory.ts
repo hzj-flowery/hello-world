@@ -188,7 +188,14 @@ class PassFactory{
                 let valueStr = (value as string).split("$")
                 if(valueStr.length>=2)
                 {
-                    code = "\n #define "+valueStr[0]+"  " +valueStr[1]+"\n " + code;
+                    if(valueStr[1]!=syRender.ShaderDefineValue.SY_USE_REMOVE_DEFINE)
+                    {
+                        code = "\n #define "+valueStr[0]+"  " +valueStr[1]+"\n " + code;
+                    }
+                    else
+                    {
+                        console.log("remove define----",valueStr[0]);
+                    }
                 }
                 else
                 {

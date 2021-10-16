@@ -702,17 +702,28 @@ export default class LoaderManager {
                     v.custom = MathUtils.clone(baseCustom)
                 }
                 else {
-                    baseCustom.forEach((value, index) => {
+                    baseCustom.forEach((tvalue, index) => {
                         let isExist: boolean = false;
                         v.custom.forEach((svalue, sindex) => {
-                            if (svalue.key == value.key&&svalue.value ==value.value) {
-                                isExist = true;
+                            if (svalue.key == tvalue.key) {
+                                if(svalue.value ==tvalue.value)
+                                {
+                                    isExist = true;
+                                }
+                                else if(typeof(svalue.value)=="string")
+                                {
+                                    let sValueArray = (svalue.value as string).split("$");
+                                    if(sValueArray[0]===tvalue.value)
+                                    {
+                                        isExist = true;
+                                    }
+                                }
                             }
                         })
                         //对于不存在的值 要以模板值为主
                         //对于存在的值，则以外围pass为主
                         if (!isExist) {
-                            v.custom.push(value);
+                            v.custom.push(tvalue);
                         }
                     })
                 }
@@ -819,17 +830,28 @@ export default class LoaderManager {
                             // res[k].custom = MathUtils.clone(templatePass.custom)
                             if (templatePass.custom && templatePass.custom.length > 0) {
                                 if (res[k].custom) {
-                                    templatePass.custom.forEach((value, index) => {
+                                    templatePass.custom.forEach((tvalue, index) => {
                                         let isExist: boolean = false;
                                         res[k].custom.forEach((svalue, sindex) => {
-                                            if (svalue.key == value.key&&svalue.value ==value.value) {
-                                                isExist = true;
+                                            if (svalue.key == tvalue.key) {
+                                                if(svalue.value ==tvalue.value)
+                                                {
+                                                    isExist = true;
+                                                }
+                                                else if(typeof(svalue.value)=="string")
+                                                {
+                                                    let sValueArray = (svalue.value as string).split("$");
+                                                    if(sValueArray[0]===tvalue.value)
+                                                    {
+                                                        isExist = true;
+                                                    }
+                                                }
                                             }
                                         })
                                         //对于不存在的值 要以模板值为主
                                         //对于存在的值，则以外围pass为主
                                         if (!isExist) {
-                                            res[k].custom.push(value);
+                                            res[k].custom.push(tvalue);
                                         }
                                     })
 

@@ -202,8 +202,6 @@ export namespace syGL {
         CUSTOM_FLOAT_VALUE = "u_float_custom",//一个自定义的值
         RESOLUTION = "u_resolution",//屏幕的设计分辨率
 
-        POINT_SIZE = "u_point_size", //点的尺寸
-
     }
     // cull
     export const Cull = {

@@ -52,11 +52,12 @@ export class LineFrustum extends SY.SpriteBasePolygon {
         this._tempMatrix = glMatrix.mat4.identity(null);
         this.setColor(255,0,0,255);
 
-        this.pushPassContent(syRender.ShaderType.Line,[
+        this.pushPassContent(syRender.ShaderType.Sprite,[
             [StateString.primitiveType,StateValueMap.primitiveType.PT_LINES]
-        ],
-        [
-            [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_MAT]
+        ],[
+            [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_MAT],
+            [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_ADD_POSITION_SPACE],
+            [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_TEXTURE,syRender.ShaderDefineValue.SY_USE_REMOVE_DEFINE]
         ]);
 
         super.onInit();

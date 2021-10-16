@@ -1,12 +1,18 @@
 
 attribute vec3 a_position;
-attribute vec2 a_texcoord;
+
 
 uniform mat4 u_world;
 uniform mat4 u_world_I_T;
 uniform mat4 u_view;
 uniform mat4 u_projection;
-varying vec2 v_uv;
+
+
+//使用纹理
+#if defined(SY_USE_TEXTURE)
+      attribute vec2 a_texcoord;
+      varying vec2 v_uv;
+#endif
 
 //法线
 #if defined(SY_USE_NORMAL)
@@ -42,12 +48,30 @@ varying vec2 v_uv;
 #endif
 
 void main(){
-
-    vec4 worldPosition=u_world*vec4(a_position,1.0);
+    
+    //强行塞入一个位置空间
+    #if defined(SY_USE_ADD_POSITION_SPACE) && defined(SY_USE_MAT)
+        vec4 worldPosition=u_world*u_mat*vec4(a_position,1.0);
+    #else
+         vec4 worldPosition=u_world*vec4(a_position,1.0);
+    #endif
     gl_Position=u_projection*u_view*worldPosition;
     
+    //设置点的大小
+    #ifdef SY_USE_POINT_SIZE
+         //glsl es 是一个强类型的语言 int() bool() float()
+         //必须要求等式两边类型一样才可以赋值
+         //此处外界传来的宏 是不确定的 整数就是 const int ,const float等 
+         gl_PointSize = float(SY_USE_POINT_SIZE); 
+    #endif
+    
     //传递-----值到片元着色器
-    v_uv=a_texcoord;
+    
+    //传递纹理坐标
+    #if defined(SY_USE_TEXTURE)
+        v_uv=a_texcoord;
+    #endif
+    
     
     //法线
     #if defined(SY_USE_NORMAL)

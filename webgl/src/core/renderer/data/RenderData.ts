@@ -169,9 +169,13 @@ export namespace syRender {
         SY_USE_LIGHT_SPECULAR:"SY_USE_LIGHT_SPECULAR",        //使用高光
         SY_USE_SHADOW_PARALLEL:"SY_USE_SHADOW_PARALLEL",      //使用平行光阴影
         SY_USE_FOG:"SY_USE_FOG",                              //使用雾
+        SY_USE_POINT_SIZE:"SY_USE_POINT_SIZE",                //点的大小
+        SY_USE_ADD_POSITION_SPACE:"SY_USE_ADD_POSITION_SPACE", //追加一个位置空间
         //下面是函数
         SY_USE_FUNC_PACK:"SY_USE_FUNC_PACK",                        //压缩函数
         SY_USE_FUNC_UNPACK:"SY_USE_FUNC_UNPACK",                        //解压缩函数
+
+        SY_USE_REMOVE_DEFINE:"SY_USE_REMOVE_DEFINE",//任何一个宏与这个宏 "$"使用 就是删除不使用的意思
     }
 
     export enum CameraType {
