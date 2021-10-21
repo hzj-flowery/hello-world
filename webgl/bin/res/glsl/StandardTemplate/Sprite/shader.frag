@@ -203,11 +203,11 @@ uniform float u_alpha;
     varying vec3 v_fog_position;
     uniform vec4 u_fog;
     uniform float u_fogDensity;
-    vec4 getFogMixColor(vec4 fragColor,vec4 fogColor,float fogDensity,vec3 fogPos){
-            float fogDistance=length(fogPos);
-            float fogAmount=1.-exp2(-fogDensity*fogDensity*fogDistance*fogDistance*1.442695);
+    vec4 getFogMixColor(vec4 fragColor){
+            float fogDistance=length(v_fog_position);
+            float fogAmount=1.-exp2(-u_fogDensity*u_fogDensity*fogDistance*fogDistance*1.442695);
             fogAmount=clamp(fogAmount,0.,1.);
-            return mix(fragColor,fogColor,fogAmount);
+            return mix(fragColor,u_fog,fogAmount);
     }
 #endif
 
@@ -300,7 +300,7 @@ void main(){
 
       #ifdef SY_USE_FOG
            //使用雾
-           fragColor=getFogMixColor(fragColor,u_fog,u_fogDensity,v_fog_position);
+           fragColor=getFogMixColor(fragColor);
       #endif
 
       
