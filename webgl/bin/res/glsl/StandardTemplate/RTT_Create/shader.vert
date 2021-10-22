@@ -9,6 +9,7 @@ out vec3 vPosition;
 out vec3 vNormal;
 out vec2 v_uv;
 
+
 void main() {
   gl_Position = u_projection * u_view * u_world * a_position;
   vNormal = vec3(transpose(inverse(u_world)) * a_normal);

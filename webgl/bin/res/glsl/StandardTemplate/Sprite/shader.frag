@@ -200,11 +200,11 @@ uniform float u_alpha;
 
 //使用雾
 #if defined(SY_USE_FOG)
-    varying vec3 v_fog_position;
+    varying vec3 v_fog_view_world_position;
     uniform vec4 u_fog;
     uniform float u_fogDensity;
     vec4 getFogMixColor(vec4 fragColor){
-            float fogDistance=length(v_fog_position);
+            float fogDistance=length(v_fog_view_world_position);
             float fogAmount=1.-exp2(-u_fogDensity*u_fogDensity*fogDistance*fogDistance*1.442695);
             fogAmount=clamp(fogAmount,0.,1.);
             return mix(fragColor,u_fog,fogAmount);

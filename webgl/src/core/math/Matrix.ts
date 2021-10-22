@@ -2599,6 +2599,7 @@ export namespace glMatrix {
         return out;
     }
     /**
+     * 平移矩阵
      * Translate a mat4 by the given vector
      *0  4   8   12   x
       1  5   9   13   y
@@ -2654,6 +2655,7 @@ export namespace glMatrix {
             out[9] = a21;
             out[10] = a22;
             out[11] = a23;
+            
             out[12] = a00 * x + a10 * y + a20 * z + a[12];
             out[13] = a01 * x + a11 * y + a21 * z + a[13];
             out[14] = a02 * x + a12 * y + a22 * z + a[14];
@@ -2664,6 +2666,7 @@ export namespace glMatrix {
     }
 
     /**
+     * 创建一个缩放矩阵
      * Makes a scale matrix
      * @param {number} sx x scale.
      * @param {number} sy y scale.
@@ -2679,18 +2682,21 @@ export namespace glMatrix {
         dst[ 1] = 0;
         dst[ 2] = 0;
         dst[ 3] = 0;
+
         dst[ 4] = 0;
         dst[ 5] = sy;
         dst[ 6] = 0;
         dst[ 7] = 0;
+
         dst[ 8] = 0;
         dst[ 9] = 0;
         dst[10] = sz;
         dst[11] = 0;
+
         dst[12] = 0;
         dst[13] = 0;
         dst[14] = 0;
-        dst[15] = 1;
+        dst[15] = 1; //w
     
         return dst;
       }
@@ -2709,17 +2715,20 @@ export namespace glMatrix {
         var x = v[0],
             y = v[1],
             z = v[2];
+
         out[0] = a[0] * x;
         out[1] = a[1] * x;
-        out[2] = a[2] * x;   
+        out[2] = a[2] * x;   //对x轴进行缩放
         out[3] = a[3] * x;
+
         out[4] = a[4] * y;
         out[5] = a[5] * y;
-        out[6] = a[6] * y;
+        out[6] = a[6] * y;   //对y轴进行缩放
         out[7] = a[7] * y;
+
         out[8] = a[8] * z;
         out[9] = a[9] * z;
-        out[10] = a[10] * z;
+        out[10] = a[10] * z;  //对z轴进行缩放
         out[11] = a[11] * z;
 
         out[12] = a[12];

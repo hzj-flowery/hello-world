@@ -44,8 +44,11 @@ uniform mat4 u_projection;
 
 //使用雾
 #if defined(SY_USE_FOG)
-    varying vec3 v_fog_position;
+    varying vec3 v_fog_view_world_position;
 #endif
+
+
+
 
 void main(){
     
@@ -96,6 +99,6 @@ void main(){
     
     #if defined(SY_USE_FOG)
         //算出雾的在视口坐标系下的位置
-        v_fog_position=(u_view*u_world*vec4(a_position,1.0)).xyz;
+        v_fog_view_world_position=(u_view*u_world*vec4(a_position,1.0)).xyz;
     #endif
 }

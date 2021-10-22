@@ -43,7 +43,7 @@ export class Line {
     delta(target) {
 
         return target.subVectors(this.end, this.start);
-
+  
     }
 
     distanceSq() {

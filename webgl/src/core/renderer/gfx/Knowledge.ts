@@ -148,5 +148,87 @@ precision lowp samplerCube;
   环境光是没有方向的
 */
 
+内置api解析
+第一个通用函数：float abs(float x)
+此函数会返回x的无符号绝对值，即如果x大于0则返回x，否则返回-x。
+
+第二个通用函数：float sign(float x)
+此函数又称为符号函数，如果x>0返回1.0，如果x=0返回0.0，否则返回-1.0
+
+第三个通用函数：float floor(float x)
+此函数会返回小于等于x并且最接近x的整数，通俗来说就是像下取整。
+
+第四个通用函数：float ceil(float x)
+此函数会返回大于等于x并且最接近x的整数，通俗来说就是向上取整。
+
+第五个通用函数：float fract(float x)
+此函数会返回x的小数部分，即x-floor(x)。
+
+第六个通用函数：float mod(float x, float y)
+此函数会返回x除以y的余数。
+
+ 为什么这个图像和fract函数的图像这个相似呢？因为mod的这个函数图像的第二个参数我写的是1.0
+第七个通用函数：float min(float x, float y)
+此函数会返回x和y两个值中的最小值。
+
+第八个通用函数：float max(float x, float y)
+此函数会返回x和y两个值中的最大值。
+
+第九个通用函数：float clamp(float x, float minVal, float maxVal)
+此函数会将x限制在minVal和maxVal之间。
+
+上面的图像中我将minVal的值调节为0.0，将maxVal的值调节为1.0，那么x的值比0.0小的时候，就会返回0.0，在0.0到1.0之间就会返回x值本身，而大于1.0的时候就会返回1.0。
+
+第十个通用函数：float mix(float x, float y, float a)
+此函数会返回x和y的线性混合，即x*(1-a)+y*a
+下面我们看一下y = mix(0.,1.,x);这个函数的图像。
+
+第十一个通用函数：float step(float edge, float)
+此函数会根据两个数值生成阶梯函数，如果x<edge则返回0.0，否则返回1.0
+
+第十二个通用函数：float smoothstep(float edge0, float edge1, float x) 如果x<=edge0则返回0.0，如果x>=edge1则返回1.0,否则
+t=clamp((x-edge0)/(edge1-edge0), 0, 1)
+return t*t(3-2*t)
+
+内置变量------------------------------------------------------------------------------------------------------------
+
+gl_PointSize
+访问地方：顶点着色器
+GLSL定义了一个叫做gl_PointSize输出变量，它是一个float变量，你可以使用它来设置点的宽高（像素）。
+在顶点着色器中修改点的大小的话，你就能对每个顶点设置不同的值了
+
+gl_VertexID
+访问地方：顶点着色器
+gl_Position和gl_PointSize都是输出变量，因为它们的值是作为顶点着色器的输出被读取的。我们可以对它们进行写入，来改变结果。
+顶点着色器还为我们提供了一个有趣的输入变量，我们只能对它进行读取，它叫做gl_VertexID。
+整型变量gl_VertexID储存了正在绘制顶点的当前ID。当（使用glDrawElements）进行索引渲染的时候，这个变量会存储正在绘制顶点的当前索引。
+当（使用glDrawArrays）不使用索引进行绘制的时候，这个变量会储存从渲染调用开始的已处理顶点数量。
+虽然现在它没有什么具体的用途，但知道我们能够访问这个信息总是好的
+
+gl_FragCoord
+访问地方：顶点着色器
+在讨论深度测试的时候，我们已经见过gl_FragCoord很多次了，因为gl_FragCoord的z分量等于对应片段的深度值。
+然而，我们也能使用它的x和y分量来实现一些有趣的效果。
+gl_FragCoord的x和y分量是片段的窗口空间(Window-space)坐标，其原点为窗口的左下角。
+我们已经使用glViewport设定了一个800x600的窗口了，所以片段窗口空间坐标的x分量将在0到800之间，y分量在0到600之间。
+通过利用片段着色器，我们可以根据片段的窗口坐标，计算出不同的颜色。
+gl_FragCoord的一个常见用处是用于对比不同片段计算的视觉输出效果，这在技术演示中可以经常看到。
+比如说，我们能够将屏幕分成两部分，在窗口的左侧渲染一种输出，在窗口的右侧渲染另一种输出
+
+gl_FrontFacing
+访问地方：片元着色器
+gl_FrontFacing变量是一个bool，如果当前片段是正向面的一部分那么就是true，否则就是false
+注意，如果你开启了面剔除，你就看不到箱子内部的面了，所以现在再使用gl_FrontFacing就没有意义了
+
+gl_FragDepth
+访问地方：片元着色器
+要想设置深度值，我们直接写入一个0.0到1.0之间的float值到输出变量就可以了：
+gl_FragDepth = 0.0; // 这个片段现在的深度值为 0.0
+如果着色器没有写入值到gl_FragDepth，它会自动取用gl_FragCoord.z的值。
+然而，由我们自己设置深度值有一个很大的缺点，只要我们在片段着色器中对gl_FragDepth进行写入，
+OpenGL就会（像深度测试小节中讨论的那样）禁用所有的提前深度测试(Early Depth Testing)。
+它被禁用的原因是，OpenGL无法在片段着色器运行之前得知片段将拥有的深度值，因为片段着色器可能会完全修改这个深度值
+
+
 `
 
