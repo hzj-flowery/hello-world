@@ -25,7 +25,7 @@ export default class ObjNode extends SY.SpriteBase {
   private _renderDataArray: Array<syRender.QueueItemData> = [];
   protected onInit() {
     this.pushPassContent(syRender.ShaderType.Obj,[
-      [StateString.primitiveType,StateValueMap.primitiveType.PT_TRIANGLE_STRIP]
+      [StateString.primitiveType,StateValueMap.primitiveType.PT_TRIANGLES]
     ])
   }
 
@@ -54,6 +54,7 @@ export default class ObjNode extends SY.SpriteBase {
         }
         renderData._shaderData = this.pass[k].program;
         renderData.pass = this.pass[k];
+        renderData.primitive.type = this.pass[k].state.primitiveType;
         renderData._uniformData.push({
           u_world: this.modelMatrix
         });
