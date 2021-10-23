@@ -75,7 +75,7 @@ export class RenderTexture extends Texture2D {
     private _frameBuffer: WebGLFramebuffer;//帧缓冲的glID
     private _renderBuffer_Depth: WebGLRenderbuffer;//深度渲染缓冲的glID
     private _renderBuffer_Depth_Stencil: WebGLRenderbuffer;//深度和模板渲染缓存的glID
-    private _deferredTexMap: Map<syRender.DeferredTexture, WebGLTexture>;
+    private _deferredTexMap: Map<syRender.BuiltinTexture, WebGLTexture>;
     private _deferredTexMapPos:Map<number,WebGLTexture>;
     public get frameBuffer() {
         return this._frameBuffer;
@@ -155,11 +155,11 @@ export class RenderTexture extends Texture2D {
         let startCount = 0;
         for (let i = 0; i < texData.length; i++) {
             var texType = texData[i].type;
-            if (texType == syRender.DeferredTexture.None) {
+            if (texType == syRender.BuiltinTexture.None) {
                 this._gl.deleteTexture(this.glID);
                 var tempTex = G_TextureManager.createTexture(texData[i].value);
                 this.glID = tempTex.glID;
-                this._deferredTexMap.set(syRender.DeferredTexture.None, this.glID)
+                this._deferredTexMap.set(syRender.BuiltinTexture.None, this.glID)
                 continue;
             }
             let textureID = gl.createTexture();
@@ -188,7 +188,7 @@ export class RenderTexture extends Texture2D {
      * @param ty 
      * @returns 
      */
-    public getDeferredTex(ty: syRender.DeferredTexture): WebGLTexture {
+    public getDeferredTex(ty: syRender.BuiltinTexture): WebGLTexture {
         return this._deferredTexMap.get(ty)
     }
 
@@ -200,7 +200,7 @@ export class RenderTexture extends Texture2D {
         if (!this._deferredTexMap) {
             return 0;
         }
-        if (this._deferredTexMap.get(syRender.DeferredTexture.None)) {
+        if (this._deferredTexMap.get(syRender.BuiltinTexture.None)) {
             //普通的纹理不能包含在里面
             return this._deferredTexMap.size - 1;
         }

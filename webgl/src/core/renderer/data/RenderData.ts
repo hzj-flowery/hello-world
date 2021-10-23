@@ -169,6 +169,8 @@ export namespace syRender {
         SY_USE_LIGHT_SPECULAR:"SY_USE_LIGHT_SPECULAR",        //使用高光
         SY_USE_SHADOW_PARALLEL:"SY_USE_SHADOW_PARALLEL",      //使用平行光阴影
         SY_USE_FOG:"SY_USE_FOG",                              //使用雾
+        SY_USE_FOG_EXP:"SY_USE_FOG_EXP",
+        SY_USE_FOG_EXP2:"SY_USE_FOG_EXP2",
         SY_USE_POINT_SIZE:"SY_USE_POINT_SIZE",                //点的大小
         SY_USE_ADD_POSITION_SPACE:"SY_USE_ADD_POSITION_SPACE", //追加一个位置空间
         SY_USE_EMISSIVE:"SY_USE_EMISSIVE",                              //使用自发光
@@ -245,27 +247,35 @@ export namespace syRender {
     }
 
     /**
-     * 延迟渲染纹理
+     * 内置纹理
      */
-    export enum DeferredTexture {
-        Position = 1, //位置纹理
-        Normal,  //法线纹理
-        Color,  //颜色纹理
-        UV,     //uv纹理
-        Depth,  //深度纹理
+    export enum BuiltinTexture {
+        DeferredPosition = 1, //延迟渲染--位置纹理
+        DeferredNormal,  //延迟渲染--法线纹理
+        DeferredColor,  //延迟渲染--颜色纹理
+        DeferredUV,     //延迟渲染--uv纹理
+        DeferredDepth,  //延迟渲染--深度纹理
         Custom, //自定义
+
+        ShadowMap,//阴影贴图
+        LightMap,//光照贴图
+        NormalMap,//法线贴图
+        DiffuseMap,//漫反射贴图
+        SpecularMap,//高光贴图
+        JointMap,   //谷歌贴图
+
         None   //非延迟渲染输出的纹理 
     }
     /**
      * 延迟渲染所有类型的纹理
      */
     export var DeferredAllTypeTexture = [
-        DeferredTexture.None,
-        DeferredTexture.Position,
-        DeferredTexture.Normal,
-        DeferredTexture.Color,
-        DeferredTexture.UV,
-        DeferredTexture.Depth
+        BuiltinTexture.None,
+        BuiltinTexture.DeferredPosition,
+        BuiltinTexture.DeferredNormal,
+        BuiltinTexture.DeferredColor,
+        BuiltinTexture.DeferredUV,
+        BuiltinTexture.DeferredDepth
     ];
 
     //bufferData
@@ -542,7 +552,7 @@ export namespace syRender {
         private _id: number;//每一个渲染数据都一个唯一的id
         private _texture2DGLIDArray: Array<WebGLTexture>;//2d纹理
         private _textureCubeGLIDArray: Array<WebGLTexture>;//立方体纹理
-        private _texture2DGLIDMap: Map<DeferredTexture, WebGLTexture> = new Map()
+        private _texture2DGLIDMap: Map<BuiltinTexture, WebGLTexture> = new Map()
         private _temp_model_view_matrix;//视口模型矩阵
         private _temp_model_view_matrix_inverse_transform;//视口模型矩阵逆矩阵的转置矩阵
         private _temp_model_inverse_matrix;//模型世界矩阵的逆矩阵
@@ -583,8 +593,8 @@ export namespace syRender {
             return false
         }
 
-        public push2DTexture(texture: WebGLTexture, deferredTex: DeferredTexture = DeferredTexture.None): void {
-            if (deferredTex == DeferredTexture.None) {
+        public push2DTexture(texture: WebGLTexture, deferredTex: BuiltinTexture = BuiltinTexture.None): void {
+            if (deferredTex == BuiltinTexture.None) {
                 if (this._texture2DGLIDArray.indexOf(texture) < 0) {
                     this._texture2DGLIDArray.push(texture);
                 }
@@ -672,28 +682,28 @@ export namespace syRender {
                         useTextureAddres++;
                         break;
                     case ShaderUseVariantType.GPosition:
-                        _shader.setUseDeferredTexture(this._texture2DGLIDMap.get(DeferredTexture.Position), useTextureAddres, syGL.AttributeUniform.TEX_GPosition);
+                        _shader.setUseBuiltinTexture(this._texture2DGLIDMap.get(BuiltinTexture.DeferredPosition), useTextureAddres, syGL.AttributeUniform.TEX_GPosition);
                         useTextureAddres++;
                         break;
                     case ShaderUseVariantType.GNormal:
-                        _shader.setUseDeferredTexture(this._texture2DGLIDMap.get(DeferredTexture.Normal), useTextureAddres, syGL.AttributeUniform.TEX_GNormal);
+                        _shader.setUseBuiltinTexture(this._texture2DGLIDMap.get(BuiltinTexture.DeferredNormal), useTextureAddres, syGL.AttributeUniform.TEX_GNormal);
                         useTextureAddres++;
                         break;
                     case ShaderUseVariantType.GColor:
-                        _shader.setUseDeferredTexture(this._texture2DGLIDMap.get(DeferredTexture.Color), useTextureAddres, syGL.AttributeUniform.TEX_GColor);
+                        _shader.setUseBuiltinTexture(this._texture2DGLIDMap.get(BuiltinTexture.DeferredColor), useTextureAddres, syGL.AttributeUniform.TEX_GColor);
                         useTextureAddres++;
                         break;
                     case ShaderUseVariantType.GUv:
-                        _shader.setUseDeferredTexture(this._texture2DGLIDMap.get(DeferredTexture.UV), useTextureAddres, syGL.AttributeUniform.TEX_GUv);
+                        _shader.setUseBuiltinTexture(this._texture2DGLIDMap.get(BuiltinTexture.DeferredUV), useTextureAddres, syGL.AttributeUniform.TEX_GUv);
                         useTextureAddres++;
                         break;
                     case ShaderUseVariantType.GDepth:
-                        _shader.setUseDeferredTexture(this._texture2DGLIDMap.get(DeferredTexture.Depth), useTextureAddres, syGL.AttributeUniform.TEX_GDepth);
+                        _shader.setUseBuiltinTexture(this._texture2DGLIDMap.get(BuiltinTexture.DeferredDepth), useTextureAddres, syGL.AttributeUniform.TEX_GDepth);
                         useTextureAddres++;
                         break;
                     case ShaderUseVariantType.TEX_CUSTOM:
                         //延迟渲染中的万能矩阵
-                        _shader.setUseDeferredTexture(this._texture2DGLIDMap.get(DeferredTexture.Custom), useTextureAddres, syGL.AttributeUniform.TEX_CUSTOM);
+                        _shader.setUseBuiltinTexture(this._texture2DGLIDMap.get(BuiltinTexture.Custom), useTextureAddres, syGL.AttributeUniform.TEX_CUSTOM);
                         useTextureAddres++;
                         break;
                     case ShaderUseVariantType.Projection:
@@ -805,7 +815,7 @@ export namespace syRender {
                         _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.SHADOW_INFO, this.light.shadow.info);
                         break;
                     case ShaderUseVariantType.ShadowMap:
-                        _shader.setUseDeferredTexture(this.light.shadow.map, useTextureAddres, syGL.AttributeUniform.SHADOW_MAP);
+                        _shader.setUseBuiltinTexture(this.light.shadow.map, useTextureAddres, syGL.AttributeUniform.SHADOW_MAP);
                         useTextureAddres++;
                         break;
                     default:

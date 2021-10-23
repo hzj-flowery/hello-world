@@ -206,14 +206,28 @@ uniform float u_alpha;
 
 //使用雾
 #if defined(SY_USE_FOG)
+    //视口坐标系下的位置
     varying vec3 v_fog_view_world_position;
     uniform vec4 u_fog;
     uniform float u_fogDensity;
     vec4 getFogMixColor(vec4 fragColor){
-            float fogDistance=length(v_fog_view_world_position);
-            float fogAmount=1.-exp2(-u_fogDensity*u_fogDensity*fogDistance*fogDistance*1.442695);
-            fogAmount=clamp(fogAmount,0.,1.);
-            return mix(fragColor,u_fog,fogAmount);
+            #ifdef SY_USE_FOG_EXP
+                  float fogDepth = -v_fog_view_world_position.z;
+		      float fogFactor = 1.0 - exp( - u_fogDensity * u_fogDensity * fogDepth * fogDepth );
+            #elif defined(SY_USE_FOG_EXP2)
+                  //雾距离眼睛的位置
+                  float fogDistance=length(v_fog_view_world_position);
+                  float fogFactor=1.-exp2(-u_fogDensity*u_fogDensity*fogDistance*fogDistance*1.442695);
+                  fogFactor=clamp(fogFactor,0.,1.);
+            #else
+                  //能看见的最近距离
+                  float fogNear = 1.0;
+                  //能看见的最远距离
+                  float fogFar = 200.0;
+                  float fogDepth = -v_fog_view_world_position.z;
+                  float fogFactor = smoothstep( fogNear, fogFar, fogDepth);
+            #endif
+            return mix(fragColor,u_fog,fogFactor);
     }
 #endif
 

@@ -1,6 +1,7 @@
 import Device from "../../Device";
 import { SY } from "../base/Sprite";
 import { syRender } from "../data/RenderData";
+import { StateString, StateValueMap } from "../gfx/State";
 import { OBJParseHelper } from "../parse/OBJParseHelper";
 var OBJRes = [
   "http:localhost:3000/res/models/windmill/windmill.obj",
@@ -23,11 +24,13 @@ export default class ObjNode extends SY.SpriteBase {
   private _objData: any;
   private _renderDataArray: Array<syRender.QueueItemData> = [];
   protected onInit() {
-    this.pushPassContent(syRender.ShaderType.Obj)
+    this.pushPassContent(syRender.ShaderType.Obj,[
+      [StateString.primitiveType,StateValueMap.primitiveType.PT_TRIANGLE_STRIP]
+    ])
   }
 
   private async load() {
-    this._objData = await OBJParseHelper.load(this.gl, OBJRes[OBJRes.length - 1]);
+    this._objData = await OBJParseHelper.load(this.gl, OBJRes[OBJRes.length-2]);
   }
 
   protected onLoadShaderFinish(): void {
@@ -39,7 +42,6 @@ export default class ObjNode extends SY.SpriteBase {
     if (!this.pass || this.pass.length < 0 || !this._objData) {
       return;
     }
-    this.setScale(0.2, 0.2, 0.2);
     this.rotateX = 0;
     for (let k = 0; k < this.pass.length; k++) {
       let j = 0;

@@ -98,11 +98,11 @@ export default class Scene3D extends Scene {
         this._spineNode.y = 10;
         this.addChild(this._spineNode);
 
-        // this._objNode = new ObjNode();
-        // this._objNode.x = 5;
-        // this._objNode.y = 10;
-        // this._objNode.z = -10;
-        // this.addChild(this._objNode);
+        this._objNode = new ObjNode();
+        this._objNode.x = 5;
+        this._objNode.y = 10;
+        this._objNode.z = -10;
+        this.addChild(this._objNode);
 
         this._customTexture = new CustomTextureCube();
         this._customTexture.spriteFrame = CustomTextureData.getRandomData(3, 5, syGL.TextureFormat.RGB8);
@@ -148,40 +148,40 @@ export default class Scene3D extends Scene {
         // this._centerNode.addChild(this._renderSprite1);
 
 
-        this._rtt = new RTT();
-        this._rtt.gZOrder = 500;
-        this._rtt.spriteFrame = {
-            place: syRender.AttachPlace.MoreColor,
-            param: [
-                { type: syRender.DeferredTexture.None, value: "res/deferred.png" },
-                { type: syRender.DeferredTexture.Color, value: null },
-                { type: syRender.DeferredTexture.Position, value: null },
-                { type: syRender.DeferredTexture.Normal, value: null },
-                { type: syRender.DeferredTexture.UV, value: null },
-                { type: syRender.DeferredTexture.Depth, value: null }
-            ]
-        }
-        this._rtt.setPosition(-6, 10, 0);
-        this._centerNode.addChild(this._rtt);
+        // this._rtt = new RTT();
+        // this._rtt.gZOrder = 500;
+        // this._rtt.spriteFrame = {
+        //     place: syRender.AttachPlace.MoreColor,
+        //     param: [
+        //         { type: syRender.BuiltinTexture.None, value: "res/deferred.png" },
+        //         { type: syRender.BuiltinTexture.DeferredColor, value: null },
+        //         { type: syRender.BuiltinTexture.DeferredPosition, value: null },
+        //         { type: syRender.BuiltinTexture.DeferredNormal, value: null },
+        //         { type: syRender.BuiltinTexture.DeferredUV, value: null },
+        //         { type: syRender.BuiltinTexture.DeferredDepth, value: null }
+        //     ]
+        // }
+        // this._rtt.setPosition(-6, 10, 0);
+        // this._centerNode.addChild(this._rtt);
 
 
-        setTimeout(()=>{
-            this._rtt.pushPassContent(syRender.ShaderType.RTT_Use,[
-                [StateString.blend,StateValueMap.blend.ON],
-                [StateString.blendSep,StateValueMap.blendSep.OFF],
-                [StateString.blendSrc,StateValueMap.blendSrc.SRC_ALPHA],
-                [StateString.blendDst,StateValueMap.blendDst.ONE_MINUS_SRC_ALPHA],
+        // setTimeout(()=>{
+        //     this._rtt.pushPassContent(syRender.ShaderType.RTT_Use,[
+        //         [StateString.blend,StateValueMap.blend.ON],
+        //         [StateString.blendSep,StateValueMap.blendSep.OFF],
+        //         [StateString.blendSrc,StateValueMap.blendSrc.SRC_ALPHA],
+        //         [StateString.blendDst,StateValueMap.blendDst.ONE_MINUS_SRC_ALPHA],
 
-                [StateString.depthWrite,StateValueMap.depthWrite.OFF], //关闭深度写入
-            ],[],true)
-        },1000)
+        //         [StateString.depthWrite,StateValueMap.depthWrite.OFF], //关闭深度写入
+        //     ],[],true)
+        // },1000)
 
       
-        this._rttTest = new RTTTest();
-        this._rttTest.pushPassContent(syRender.ShaderType.RTT_Use)
-        this._rttTest.gZOrder = 501;
-        this._rttTest.setPosition(-5, 10, 0);
-        this._centerNode.addChild(this._rttTest);
+        // this._rttTest = new RTTTest();
+        // this._rttTest.pushPassContent(syRender.ShaderType.RTT_Use)
+        // this._rttTest.gZOrder = 501;
+        // this._rttTest.setPosition(-5, 10, 0);
+        // this._centerNode.addChild(this._rttTest);
 
         // this._cube2 = new Cube();
         // this._cube2.setScale(100,0.1,100.0);

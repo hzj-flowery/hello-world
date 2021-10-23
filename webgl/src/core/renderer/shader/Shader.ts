@@ -315,7 +315,6 @@ export class ShaderProgramBase {
     //注意如果此处不重新设置使用的纹理，那么会默认使用上一次绘制时的纹理
     public setUseTexture(glID: WebGLTexture, pos = 0, is2D: boolean = true): void {
         if (is2D) {
-            // let loc: string = "u_texCoord" + pos + "_loc";
             let loc = getLocName(texture2DConstBridge[pos],true)
             if (this.checklocValid(this[loc])) {
                 G_DrawEngine.activeTexture(this._gl.TEXTURE_2D, glID, this[loc], pos)
@@ -329,12 +328,12 @@ export class ShaderProgramBase {
         }
     }
     /**
-     * 设置延迟渲染的位置纹理
+     * 设置使用纹理
      * @param glID 
      * @param pos 
      * @param locType  a代表属性变量 u代表uniform变量
      */
-    public setUseDeferredTexture(glID: WebGLTexture, pos: number, uniforName: syGL.AttributeUniform): void {
+    public setUseBuiltinTexture(glID: WebGLTexture, pos: number, uniforName: syGL.AttributeUniform): void {
         var loc = getLocName(uniforName,true);
         if (this.checklocValid(this[loc])) {
             G_DrawEngine.activeTexture(this._gl.TEXTURE_2D, glID, this[loc], pos)
