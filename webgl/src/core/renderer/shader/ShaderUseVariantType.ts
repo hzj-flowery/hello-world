@@ -50,6 +50,7 @@ export enum ShaderUseVariantType {
     Fog,                //雾
     Time,               //时间
     Color,                    //节点颜色
+    EMISSIVE,             //自发光
     Diffuse,             //漫反射
     Alpha,                  //节点的透明度
     VertColor,          //顶点颜色

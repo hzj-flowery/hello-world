@@ -2,11 +2,17 @@ precision mediump float;
 
 
 uniform vec4 u_color;//节点的颜色
+
 uniform float u_alpha;
 
 //使用法线
 #if defined(SY_USE_NORMAL)
       varying vec3 v_normal;
+#endif
+
+//自发光
+#if defined(SY_USE_EMISSIVE)
+    uniform vec4 u_emissive;
 #endif
 
 //使用纹理
@@ -295,8 +301,15 @@ void main(){
             diffuse.rgb = diffuse * shadowLight;
       #endif
       
+      //自发光
+      #if defined(SY_USE_EMISSIVE)
+          fragColor.rgb =  fragColor.rgb+u_emissive.rgb;
+      #endif
+      
       //累加到片元颜色中
       fragColor.rgb = fragColor.rgb+diffuse.rgb;
+
+
 
       #ifdef SY_USE_FOG
            //使用雾

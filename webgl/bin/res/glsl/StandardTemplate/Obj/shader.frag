@@ -19,12 +19,17 @@ precision mediump float;
   uniform vec3 u_ambientLight;
 
   void main () {
+    //世界空间下的法线
     vec3 normal = normalize(v_normal) * ( float( gl_FrontFacing ) * 2.0 - 1.0 );
+    //世界空间下的切线
     vec3 tangent = normalize(v_tangent) * ( float( gl_FrontFacing ) * 2.0 - 1.0 );
-    vec3 bitangent = normalize(cross(normal, tangent));
 
+    //副切线
+    vec3 bitangent = normalize(cross(normal, tangent));
+    
+    //创建一个矩阵 切线 副切线 法线
     mat3 tbn = mat3(tangent, bitangent, normal);
-    normal = texture2D(normalMap, v_texcoord).rgb * 2. - 1.;
+    normal = texture2D(normalMap, v_texcoord).rgb * 2. - 1.; 
     normal = normalize(tbn * normal);
 
     vec3 surfaceToViewDirection = normalize(v_surfaceToView);

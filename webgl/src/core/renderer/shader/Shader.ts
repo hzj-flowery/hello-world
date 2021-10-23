@@ -66,6 +66,7 @@ mapTree_a.set(syGL.AttributeUniform.VERT_Matrix,ShaderUseVariantType.VertMatrix)
 mapTree_u.set(syGL.AttributeUniform.TIME,ShaderUseVariantType.Time);
 mapTree_u.set(syGL.AttributeUniform.CUSTOM_FLOAT_VALUE,ShaderUseVariantType.Custom_Float_Value);
 mapTree_u.set(syGL.AttributeUniform.COLOR,ShaderUseVariantType.Color);
+mapTree_u.set(syGL.AttributeUniform.EMISSIVE,ShaderUseVariantType.EMISSIVE);
 mapTree_u.set(syGL.AttributeUniform.DIFFUSE,ShaderUseVariantType.Diffuse);
 mapTree_u.set(syGL.AttributeUniform.ALPHA,ShaderUseVariantType.Alpha);
 mapTree_u.set(syGL.AttributeUniform.LIGHT_AMBIENT,ShaderUseVariantType.AmbientLight);

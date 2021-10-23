@@ -124,6 +124,7 @@ export namespace syGL {
         TIME = 'u_time',//时间
         COLOR = 'u_color', //节点颜色
         DIFFUSE = 'u_diffuse',//漫反射
+        EMISSIVE="u_emissive",//自发光
         ALPHA = 'u_alpha',//节点透明度
         //现阶段场景中只支持三束平行光VERT_
         //平行光只有方向和颜色没有位置

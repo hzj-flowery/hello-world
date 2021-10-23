@@ -1,4 +1,4 @@
-import { isThisTypeNode } from "typescript";
+import { ColonToken, isThisTypeNode } from "typescript";
 import Device from "../../Device";
 import { G_InputControl } from "../../InputControl";
 import { glMatrix } from "../../math/Matrix";
@@ -171,6 +171,7 @@ export namespace syRender {
         SY_USE_FOG:"SY_USE_FOG",                              //使用雾
         SY_USE_POINT_SIZE:"SY_USE_POINT_SIZE",                //点的大小
         SY_USE_ADD_POSITION_SPACE:"SY_USE_ADD_POSITION_SPACE", //追加一个位置空间
+        SY_USE_EMISSIVE:"SY_USE_EMISSIVE",                              //使用自发光
         //下面是函数
         SY_USE_FUNC_PACK:"SY_USE_FUNC_PACK",                        //压缩函数
         SY_USE_FUNC_UNPACK:"SY_USE_FUNC_UNPACK",                        //解压缩函数
@@ -287,6 +288,7 @@ export namespace syRender {
             this.type = syGL.PrimitiveType.TRIANGLE_STRIP;
             this.customMatrix = glMatrix.mat4.identity(null);
             this.color = new Color(255,255,255,255);
+            this.emissive = new Color(0,0,0,255);
         }
         public nodeVertColor: WebGLBufferData;//节点自定义顶点颜色
         public vertMatrix: WebGLBufferData;//节点自定义矩阵
@@ -296,6 +298,7 @@ export namespace syRender {
         public normal: WebGLBufferData;//法线buffer
 
         public color: Color;//节点自定义颜色
+        public emissive:Color;//自发光
         public diffuse: Array<number>; //漫反射颜色
         public customFloatValue: number; //一个自定义的值
         public alpha: number;        //节点自定义透明度
@@ -769,6 +772,9 @@ export namespace syRender {
                         break;
                     case ShaderUseVariantType.Color:
                         _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.COLOR, this.primitive.color.toNormalizeArray());
+                        break;
+                    case ShaderUseVariantType.EMISSIVE:
+                        _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.EMISSIVE, this.primitive.emissive.toNormalizeArray());
                         break;
                     case ShaderUseVariantType.Diffuse:
                         _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.DIFFUSE, this.primitive.diffuse);
