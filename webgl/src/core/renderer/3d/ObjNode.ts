@@ -30,7 +30,12 @@ export default class ObjNode extends SY.SpriteBase {
   }
 
   private async load() {
-    this._objData = await OBJParseHelper.load(this.gl, OBJRes[OBJRes.length-2]);
+    this._objData = await OBJParseHelper.load(this.gl, OBJRes[0]);
+
+  }
+
+  protected onUpdate():void{
+    this.rotateY = this.rotateY+Math.random()*2;
   }
 
   protected onLoadShaderFinish(): void {

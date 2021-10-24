@@ -122,9 +122,9 @@ export namespace syGL {
         VERT_Matrix = 'a_matrix',//顶点矩阵
 
         TIME = 'u_time',//时间
-        COLOR = 'u_color', //节点颜色
+        COLOR = 'u_color', //节点颜色 人为设定的
         DIFFUSE = 'u_diffuse',//漫反射
-        EMISSIVE="u_emissive",//自发光
+        EMISSIVE="u_emissive",//自发光 属于光的一种
         ALPHA = 'u_alpha',//节点透明度
         //现阶段场景中只支持三束平行光VERT_
         //平行光只有方向和颜色没有位置
@@ -151,7 +151,25 @@ export namespace syGL {
          * u_shadowInfo[3]:shadowOpacity  阴影的alpha值,值越小暗度越深
          */
         SHADOW_INFO = 'u_shadowInfo',//阴影信息
-        SHADOW_MAP = 'u_shadowMap',//阴影贴图
+        SHADOW_MAP  = 'u_shadowMap',//阴影贴图
+        EMISSIVE_MAP= "u_emissiveMap",//自发光贴图
+        DIFFUSE_MAP = 'u_diffuseMap',//漫反射贴图
+        NORMAL_MAP  = 'u_normalMap' ,//法线贴图
+        SPECULAR_MAP= 'specularMap', //高光贴图
+        
+        /**
+         *  //缺省的材料
+      const defaultMaterial = {
+        diffuse: [1, 1, 1],
+        diffuseMap: textures.defaultWhite,
+        normalMap: textures.defaultNormal,
+        ambient: [0, 0, 0],
+        specular: [1, 1, 1],
+        specularMap: textures.defaultWhite,
+        shininess: 400,
+        opacity: 1,
+      };
+         */
 
         TEXTURE_COORD0 = 'a_texcoord', //纹理坐标
         TEXTURE_COORD1 = 'a_texcoord1',

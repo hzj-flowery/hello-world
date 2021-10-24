@@ -3,6 +3,7 @@
 
 import { glMatrix } from "../../math/Matrix";
 import { MathUtils } from "../../utils/MathUtils";
+import { syGL } from "../gfx/syGLEnums";
 import { G_ShaderFactory } from "../shader/ShaderFactory";
 
 export namespace OBJParseHelper {
@@ -283,7 +284,8 @@ export namespace OBJParseHelper {
       // TODO: handle options
       return unparsedArgs;
     }
-  
+    
+    //解析材料
     function parseMTL(text) {
       const materials = {};
       let material;
@@ -294,16 +296,16 @@ export namespace OBJParseHelper {
           materials[unparsedArgs] = material;
         },
         /* eslint brace-style:0 */
-        Ns(parts) { material.shininess = parseFloat(parts[0]); }, //反射高光度 指定材质的反射指数
-        Ka(parts) { material.ambient = parts.map(parseFloat); }, //环境色
-        Kd(parts) { material.diffuse = parts.map(parseFloat); }, //漫反射色
-        Ks(parts) { material.specular = parts.map(parseFloat); }, //高光色
-        Ke(parts) { material.emissive = parts.map(parseFloat); },
-        map_Kd(parts, unparsedArgs) { material.diffuseMap = parseMapArgs(unparsedArgs); },
-        map_Ns(parts, unparsedArgs) { material.specularMap = parseMapArgs(unparsedArgs); },
-        map_Bump(parts, unparsedArgs) { material.normalMap = parseMapArgs(unparsedArgs); },
+        Ns(parts) { material[syGL.AttributeUniform.LIGHT_SPECULAR_SHININESS] = parseFloat(parts[0]); }, //反射高光度 指定材质的反射指数
+        Ka(parts) { material[syGL.AttributeUniform.LIGHT_AMBIENT] = parts.map(parseFloat); }, //环境色
+        Kd(parts) { material[syGL.AttributeUniform.DIFFUSE] = parts.map(parseFloat); }, //漫反射色
+        Ks(parts) { material[syGL.AttributeUniform.LIGHT_SPECULAR] = parts.map(parseFloat); }, //高光色
+        Ke(parts) { material[syGL.AttributeUniform.EMISSIVE] = parts.map(parseFloat); },                              //自发光
+        map_Kd(parts, unparsedArgs) { material[syGL.AttributeUniform.DIFFUSE_MAP] = parseMapArgs(unparsedArgs); },    //漫反射贴图
+        map_Ns(parts, unparsedArgs) { material[syGL.AttributeUniform.SPECULAR_MAP] = parseMapArgs(unparsedArgs); },   //高光贴图
+        map_Bump(parts, unparsedArgs) { material[syGL.AttributeUniform.NORMAL_MAP] = parseMapArgs(unparsedArgs); },   //法线贴图
         Ni(parts) { material.opticalDensity = parseFloat(parts[0]); }, //折射值 指定材质表面的光密度
-        d(parts) { material.opacity = parseFloat(parts[0]); },         //透明度
+        d(parts) { material[syGL.AttributeUniform.ALPHA] = parseFloat(parts[0]); },         //透明度
         illum(parts) { material.illum = parseInt(parts[0]); },
       };
   
@@ -366,19 +368,20 @@ export namespace OBJParseHelper {
       }
       // hack the materials so we can see the specular map
       Object.values(materials).forEach((m: any) => {
-        m.shininess = 25;
-        m.specular = [3, 2, 1];
+        m[syGL.AttributeUniform.LIGHT_SPECULAR_SHININESS] = 25;
+        m[syGL.AttributeUniform.LIGHT_SPECULAR] = [3, 2, 1];
       });
-  
+      
+      //缺省的材料
       const defaultMaterial = {
-        diffuse: [1, 1, 1],
-        diffuseMap: textures.defaultWhite,
-        normalMap: textures.defaultNormal,
-        ambient: [0, 0, 0],
-        specular: [1, 1, 1],
-        specularMap: textures.defaultWhite,
-        shininess: 400,
-        opacity: 1,
+        [syGL.AttributeUniform.DIFFUSE]: [1, 1, 1],
+        [syGL.AttributeUniform.DIFFUSE_MAP]: textures.defaultWhite,
+        [syGL.AttributeUniform.NORMAL_MAP]: textures.defaultNormal,
+        [syGL.AttributeUniform.LIGHT_AMBIENT]: [0, 0, 0],
+        [syGL.AttributeUniform.LIGHT_SPECULAR]: [1, 1, 1],
+        [syGL.AttributeUniform.SPECULAR_MAP]: textures.defaultWhite,
+        [syGL.AttributeUniform.LIGHT_SPECULAR_SHININESS]: 400,
+        [syGL.AttributeUniform.ALPHA]: 1,
       };
   
       const parts = obj.geometries.map(({ material, data }) => {
@@ -432,7 +435,8 @@ export namespace OBJParseHelper {
         for (var j in defaultMaterial) {
           retData.material[j] = defaultMaterial[j];
         }
-        for (let j in materials[material]) {
+        var materialSource = materials[material]
+        for (let j in materialSource) {
           retData.material[j] = materials[material][j];
         }
         return retData;
