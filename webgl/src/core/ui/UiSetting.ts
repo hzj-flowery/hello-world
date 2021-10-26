@@ -1,6 +1,11 @@
 
 
 export class UIStatusData {
+
+    public static customValueX:number = 0;
+    public static customValueY:number = 0;
+    public static customValueZ:number = 0;
+
     public static cam2DPosX: number = 0;
     public static cam2DPosY: number = 0;
     public static cam2DPosZ: number = 0;
@@ -98,7 +103,9 @@ class UISetting {
         var render = this.render.bind(this);
         this.UI = window["webglLessonsUI"];
         let custom = [
-            { type: 'slider', key: 'customValue', min: 0, max: 360, change: render, },
+            { type: 'slider', key: 'customValueX', min: -50, max: 50, change: render, },
+            { type: 'slider', key: 'customValueY', min: -50, max: 50, change: render, },
+            { type: 'slider', key: 'customValueZ', min: -50, max: 50, change: render, },
         ]
         let camera2D = [
             //2d相机
@@ -163,11 +170,11 @@ class UISetting {
             // { type: 'slider', key: 'pointColA', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
 
             //雾
-            { type: 'slider', key: 'fogColR', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
-            { type: 'slider', key: 'fogColG', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
-            { type: 'slider', key: 'fogColB', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
-            { type: 'slider', key: 'fogColA', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
-            { type: 'slider', key: 'fogDensity', min: 0, max: 0.1, change: this.render.bind(this), precision: 3, step: 0.001, },
+            // { type: 'slider', key: 'fogColR', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'fogColG', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'fogColB', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'fogColA', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'fogDensity', min: 0, max: 0.1, change: this.render.bind(this), precision: 3, step: 0.001, },
             
             
             { type: 'slider', key: 'eyeX', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
@@ -189,7 +196,7 @@ class UISetting {
             { type: 'checkbox', key: 'ahead', min: 0, max: 1, change: this.render.bind(this, "ahead") },
             { type: 'checkbox', key: 'back', min: 0, max: 1, change: this.render.bind(this, "back") }
         ]
-        this.widgets = this.UI.setupUI(document.querySelector('#ui'), UIStatusData, [].concat(light));
+        this.widgets = this.UI.setupUI(document.querySelector('#ui'), UIStatusData, [].concat(custom,light));
         this.render();
     }
 
