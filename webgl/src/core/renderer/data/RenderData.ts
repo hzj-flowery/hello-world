@@ -309,7 +309,7 @@ export namespace syRender {
 
         public color: Color;//节点自定义颜色
         public emissive:Color;//自发光
-        public diffuse: Array<number>; //漫反射颜色
+        public diffuse:Color; //漫反射颜色
         public customFloatValue: number; //一个自定义的值
         public alpha: number;        //节点自定义透明度
         public customMatrix: Float32Array;//自定义矩阵
@@ -787,7 +787,7 @@ export namespace syRender {
                         _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.EMISSIVE, this.primitive.emissive.toNormalizeArray());
                         break;
                     case ShaderUseVariantType.Diffuse:
-                        _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.DIFFUSE, this.primitive.diffuse);
+                        _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.DIFFUSE, this.primitive.diffuse.toNormalizeArray());
                         break;
                     case ShaderUseVariantType.Alpha:
                         _shader.setCustomUniformFloat(syGL.AttributeUniform.ALPHA, this.primitive.alpha);

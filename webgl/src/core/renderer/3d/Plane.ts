@@ -1,4 +1,5 @@
 import { glMatrix } from "../../math/Matrix";
+import { G_BufferManager } from "../base/buffer/BufferManager";
 import { SY } from "../base/Sprite";
 import CustomTextureData from "../data/CustomTextureData";
 import { syRender } from "../data/RenderData";
@@ -73,10 +74,10 @@ export class Plane extends SY.ShadowSprite{
             this._subdivisionAcross,   // subdivisions across
             this._subdivisionDown,   // subdivisions down
             );
-        this.createIndexsBuffer(vertexData.indices);
-        this.createNormalsBuffer(vertexData.normal, 3);
-        this.createUVsBuffer(vertexData.texcoord, 2);
-        this.createVertexsBuffer(vertexData.position, 3);
+        G_BufferManager.createBuffer(SY.GLID_TYPE.INDEX,this.materialId,vertexData.indices,1);
+        G_BufferManager.createBuffer(SY.GLID_TYPE.NORMAL,this.materialId,vertexData.normal, 3);
+        G_BufferManager.createBuffer(SY.GLID_TYPE.UV,this.materialId,vertexData.texcoord, 2);
+        G_BufferManager.createBuffer(SY.GLID_TYPE.VERTEX,this.materialId,vertexData.position, 3)
         
         this.setColor(122.5,122.5,255,255);
     }

@@ -258,7 +258,7 @@ class BufferManager {
      * @param itemSize 一个单元的数据个数
      * @param preAllocateLen 
      */
-    public createBuffer(type: SY.GLID_TYPE, materialId: string = "default", data: Array<number>, itemSize: number, preAllocateLen: number): glBaseBuffer {
+    public createBuffer(type: SY.GLID_TYPE, materialId: string = "default", data: Array<number>, itemSize: number, preAllocateLen: number=0): glBaseBuffer {
         switch (type) {
             case SY.GLID_TYPE.VERTEX:
                 return this.createVertex(materialId, data, itemSize, preAllocateLen);

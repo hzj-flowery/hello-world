@@ -1,4 +1,5 @@
 
+import { G_BufferManager } from "../base/buffer/BufferManager";
 import { SY } from "../base/Sprite";
 
 /**
@@ -31,7 +32,7 @@ export default class InstantiateSprite extends SY.Sprite2DInstance {
                 byteOffsetToMatrix,
                 numFloatsForView));
         }
-        this.createVertMatrixBuffer([], 4, this.matrixData.byteLength);
+        G_BufferManager.createBuffer(SY.GLID_TYPE.VERT_MATRIX, this.materialId,[], 4, this.matrixData.byteLength);
         var colorData = [];
         for (var j = 0; j < this.numInstances; j++) {
             var res = this.getRandowColor();
@@ -40,7 +41,7 @@ export default class InstantiateSprite extends SY.Sprite2DInstance {
             colorData.push(res[2]);
             colorData.push(res[3]);
         }
-        this.createNodeVertColorBuffer(colorData, 4);
+        G_BufferManager.createBuffer(SY.GLID_TYPE.VERT_COLOR, this.materialId,colorData, 4);
         super.onLoadShaderFinish()
     }
     private produceRandomPosArray(): void {

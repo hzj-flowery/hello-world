@@ -1,4 +1,5 @@
 
+import { G_BufferManager } from "../base/buffer/BufferManager";
 import { SY } from "../base/Sprite";
 import { CubeData } from "../data/CubeData";
 import { syRender } from "../data/RenderData";
@@ -15,8 +16,8 @@ export default class SkyBox extends SY.SpriteBase {
      }
      protected onInit(): void {
           var rd = CubeData.getData();
-          this.createVertexsBuffer(rd.vertex, rd.dF.vertex_item_size);
-          this.createIndexsBuffer(rd.indexs);
+          G_BufferManager.createBuffer(SY.GLID_TYPE.VERTEX,this.materialId,rd.vertex, rd.dF.vertex_item_size)
+          G_BufferManager.createBuffer(SY.GLID_TYPE.INDEX,this.materialId,rd.indexs,1);
           this.pushPassContent(syRender.ShaderType.SkyBox);
      }
      // private defaultPath = [

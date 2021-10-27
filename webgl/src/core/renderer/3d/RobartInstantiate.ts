@@ -2,6 +2,7 @@
 import { handler } from "../../../utils/handler";
 import LoaderManager from "../../LoaderManager";
 import { glMatrix } from "../../math/Matrix";
+import { G_BufferManager } from "../base/buffer/BufferManager";
 import { SY } from "../base/Sprite";
 import { CubeData } from "../data/CubeData";
 import { syPrimitives } from "../primitive/Primitives";
@@ -119,10 +120,10 @@ export default class RobartInstantiate extends SY.Sprite3DInstance {
 
     protected onInit():void{
         var cubeArrays = syPrimitives.createCubeVertices(1);
-        this.createIndexsBuffer(cubeArrays.indices);
-        this.createNormalsBuffer(cubeArrays.normal, 3);
-        this.createUVsBuffer(cubeArrays.texcoord, 2);
-        this.createVertexsBuffer(cubeArrays.position, 3);
+        G_BufferManager.createBuffer(SY.GLID_TYPE.INDEX,this.materialId,cubeArrays.indices,1);
+        G_BufferManager.createBuffer(SY.GLID_TYPE.NORMAL,this.materialId,cubeArrays.normal, 3);
+        G_BufferManager.createBuffer(SY.GLID_TYPE.UV,this.materialId,cubeArrays.texcoord, 2);
+        G_BufferManager.createBuffer(SY.GLID_TYPE.VERTEX,this.materialId,cubeArrays.position, 3)
         this.InstanceVertNums = cubeArrays.position.length/3;
         this._skeletonNode = [];
         this.nodeInfosByName = {};
@@ -145,7 +146,7 @@ export default class RobartInstantiate extends SY.Sprite3DInstance {
                 byteOffsetToMatrix,
                 numFloatsForView));
         }
-        this.createVertMatrixBuffer([], 4, this.matrixData.byteLength);
+        G_BufferManager.createBuffer(SY.GLID_TYPE.VERT_MATRIX, this.materialId,[], 4, this.matrixData.byteLength);
         var colorData = [];
         for (var j = 0; j < this.numInstances; j++) {
             var res = this.getRandowColor();
@@ -154,7 +155,7 @@ export default class RobartInstantiate extends SY.Sprite3DInstance {
             colorData.push(res[2]);
             colorData.push(res[3]);
         }
-        this.createNodeVertColorBuffer(colorData, 4);
+        G_BufferManager.createBuffer(SY.GLID_TYPE.VERT_COLOR, this.materialId,colorData, 4);
         super.onLoadShaderFinish()
     }
 

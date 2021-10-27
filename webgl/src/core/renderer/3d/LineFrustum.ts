@@ -1,5 +1,6 @@
 
 import { glMatrix } from "../../math/Matrix";
+import { G_BufferManager } from "../base/buffer/BufferManager";
 import { SY } from "../base/Sprite";
 import { syRender } from "../data/RenderData";
 import { StateString, StateValueMap } from "../gfx/State";
@@ -46,7 +47,7 @@ export class LineFrustum extends SY.SpriteBasePolygon {
     private _lightProjectInverseMatrix: Float32Array;
     private _tempMatrix:Float32Array;
     onInit(): void {
-        this.createIndexsBuffer(VertData.indices);
+        G_BufferManager.createBuffer(SY.GLID_TYPE.INDEX,this.materialId,VertData.indices,1);
         this._lightWorldMatrix = glMatrix.mat4.identity(null);
         this._lightProjectInverseMatrix = glMatrix.mat4.identity(null);
         this._tempMatrix = glMatrix.mat4.identity(null);

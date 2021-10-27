@@ -1,4 +1,5 @@
 
+import { G_BufferManager } from "../base/buffer/BufferManager";
 import { SY } from "../base/Sprite";
 import { syRender } from "../data/RenderData";
 import { StateString, StateValueMap } from "../gfx/State";
@@ -105,8 +106,8 @@ export default class CustomTextureCube extends SY.SpriteBase {
             1, 1,
         ]
 
-        this.createVertexsBuffer(positions, 3);
-        this.createUVsBuffer(uvs, 2);
+        G_BufferManager.createBuffer(SY.GLID_TYPE.VERTEX,this.materialId,positions, 3)
+        G_BufferManager.createBuffer(SY.GLID_TYPE.UV,this.materialId,uvs, 2);
         
         this.pushPassContent(syRender.ShaderType.Sprite,[
             [StateString.primitiveType,StateValueMap.primitiveType.PT_TRIANGLES]

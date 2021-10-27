@@ -43,7 +43,6 @@ import Device from "../../Device";
 import LoaderManager from "../../LoaderManager";
 import { CameraData } from "../data/CameraData";
 import { syRender } from "../data/RenderData";
-import { G_ShaderFactory } from "../shader/ShaderFactory";
 import { Node } from "./Node";
 import { Texture, TextureOpts } from "./texture/Texture";
 import { Texture2D } from "./texture/Texture2D";
@@ -113,7 +112,7 @@ export namespace SY {
         private _passContent: Array<any> = [];//pass的内容
 
         private _color: Color;//节点自定义颜色
-        private _diffuse: Array<number>;//漫反射颜色
+        private _diffuse: Color;//漫反射颜色
         private _alpha: number = 1;//节点自定义透明度
         private _customMatrix: Float32Array = glMatrix.mat4.identity(null);//节点自定义矩阵
       
@@ -130,12 +129,16 @@ export namespace SY {
             this.gl = Device.Instance.gl;
             this._renderData = []
             this._color = new Color(255,255,255,255);//默认颜色为白色
-            this._diffuse = [1.0, 1.0, 1.0, 1.0];//默认颜色为白色
+            this._diffuse = new Color(255,255,255,255);//默认颜色为白色
             this._sizeMode = SpriteSizeMode.CUSTOM;//默认加载图片的尺寸大小为自定义
             this.init();
         }
         private init(): void {
             this.onInit();
+        }
+
+        public get materialId(){
+            return this._materialId;
         }
 
         public pushPassContent(shaderTy: syRender.ShaderType, stateArr?: Array<Array<any>>,customArr?:Array<Array<any>>,isForce?:boolean): void {
@@ -236,67 +239,6 @@ export namespace SY {
             }, this._passContent);
 
         }
-        //创建顶点缓冲
-        /**
-         * 
-         * @param vertexs 
-         * @param itemSize 
-         * @param preAllocateLen 
-         */
-        public createVertexsBuffer(vertexs: Array<number>, itemSize: number=3, preAllocateLen: number = 0): VertexsBuffer {
-            return G_BufferManager.createBuffer(GLID_TYPE.VERTEX,
-                this._materialId, vertexs, itemSize, preAllocateLen) as VertexsBuffer;
-        }
-        //创建法线缓冲
-        /**
-         * 
-         * @param normals 
-         * @param itemSize 
-         * @param preAllocateLen 
-         */
-        public createNormalsBuffer(normals: Array<number>, itemSize: number=3, preAllocateLen: number = 0): NormalBuffer {
-            return G_BufferManager.createBuffer(GLID_TYPE.NORMAL,
-                this._materialId, normals, itemSize, preAllocateLen) as NormalBuffer;
-        }
-        //创建索引缓冲
-        //索引缓冲的单位数据个数肯定为1
-        /**
-         * 
-         * @param indexs 
-         */
-        public createIndexsBuffer(indexs: Array<number>, preAllocateLen: number = 0): IndexsBuffer {
-            return G_BufferManager.createBuffer(GLID_TYPE.INDEX,
-                this._materialId, indexs, 1, preAllocateLen) as IndexsBuffer;
-        }
-        //创建uv缓冲
-        /**
-         * 
-         * @param uvs 
-         * @param itemSize 
-         * @param preAllocateLen 
-         */
-        public createUVsBuffer(uvs: Array<number>, itemSize: number=2, preAllocateLen: number = 0): UVsBuffer {
-            return G_BufferManager.createBuffer(GLID_TYPE.UV,
-                this._materialId, uvs, itemSize, preAllocateLen) as UVsBuffer;
-        }
-        //创建顶点自定义矩阵buffer
-        /**
-         * 
-         * @param matrix 
-         * @param itemSize 
-         * @param preAllocateLen 
-         */
-        public createVertMatrixBuffer(matrix: Array<number>, itemSize: number, preAllocateLen: number = 0): VertMatrixBuffer {
-            return G_BufferManager.createBuffer(GLID_TYPE.VERT_MATRIX, this._materialId, matrix, itemSize, preAllocateLen) as VertMatrixBuffer;
-        }
-        /** 
-         * @param color 
-         * @param itemSize 
-         * @param preAllocateLen 
-         */
-        public createNodeVertColorBuffer(color: Array<number>, itemSize: number, preAllocateLen: number = 0): VertColorBuffer {
-            return G_BufferManager.createBuffer(GLID_TYPE.VERT_COLOR, this._materialId, color, itemSize, preAllocateLen) as VertColorBuffer;
-        }
         public createCustomMatrix(mat): void {
             this._customMatrix = mat;
         }
@@ -313,11 +255,11 @@ export namespace SY {
         /**
          * 设置慢反射颜色
          */
-        public set diffuse(diffuse: Array<number>) {
-            this._diffuse[0] = diffuse[0] != null ? diffuse[0] : this._diffuse[0];
-            this._diffuse[1] = diffuse[1] != null ? diffuse[1] : this._diffuse[1];
-            this._diffuse[2] = diffuse[2] != null ? diffuse[2] : this._diffuse[2];
-            this._diffuse[3] = diffuse[3] != null ? diffuse[3] : this._diffuse[3];
+        public setDiffuse(r: number = 0, g: number = 0, b: number = 0, a: number = 255) {
+            this._diffuse.r = r;
+            this._diffuse.g = g;
+            this._diffuse.b = b;
+            this._diffuse.a = a;
         }
         /**
          * 设置节点的透明度
@@ -578,7 +520,7 @@ export namespace SY {
         }
         private check(): void {
             if (!this._polygon) {
-                this.createVertexsBuffer([], 3, 10);
+                G_BufferManager.createBuffer(SY.GLID_TYPE.VERTEX,this.materialId,[], 3, 10)
             }
         }
         protected collectRenderData(time): void {
@@ -653,10 +595,10 @@ export namespace SY {
                 0.0, 1.0, //v0
             ];
 
-            this.createUVsBuffer(this.isUnpackY?texCoordinates_webgl:texCoordinates_uv, 2);
+            G_BufferManager.createBuffer(SY.GLID_TYPE.UV,this.materialId,this.isUnpackY?texCoordinates_webgl:texCoordinates_uv, 2);
             // 索引数据
             var floorVertexIndices = [0, 1, 2, 3, 0];
-            this.createIndexsBuffer(floorVertexIndices);
+            G_BufferManager.createBuffer(SY.GLID_TYPE.INDEX,this.materialId,floorVertexIndices,1);
 
         }
 
@@ -716,7 +658,7 @@ export namespace SY {
 
 
             var pos = [].concat(this._lb, this._rb, this._rt, this._lt);
-            this.createVertexsBuffer(pos, 3);
+            G_BufferManager.createBuffer(SY.GLID_TYPE.VERTEX,this.materialId,pos, 3)
             this.updateUV();
         }
 

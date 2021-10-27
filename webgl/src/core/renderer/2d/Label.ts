@@ -1,6 +1,7 @@
 "use strict";
 import Device from "../../Device";
 import LoaderManager from "../../LoaderManager";
+import { G_BufferManager } from "../base/buffer/BufferManager";
 import { SY } from "../base/Sprite";
 import { syRender } from "../data/RenderData";
 import { StateString, StateValueMap } from "../gfx/State";
@@ -216,8 +217,8 @@ export class Label extends SY.SpriteBase {
     }
 
   
-    this.createVertexsBuffer(arrPos, 3);
-    this.createUVsBuffer(arrUV, 2);
+    G_BufferManager.createBuffer(SY.GLID_TYPE.VERTEX,this.materialId,arrPos, 3)
+    G_BufferManager.createBuffer(SY.GLID_TYPE.UV,this.materialId,arrUV, 2);
 
   }
 }

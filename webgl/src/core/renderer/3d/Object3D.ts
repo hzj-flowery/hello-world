@@ -1,4 +1,5 @@
 
+import { G_BufferManager } from "../base/buffer/BufferManager";
 import { SY } from "../base/Sprite";
 import { syRender } from "../data/RenderData";
 
@@ -10,10 +11,10 @@ export class Object3D extends SY.SpriteBase {
         this.localInit();
     }
     private localInit(): void {
-        this.createVertexsBuffer(this._mesh.positions);
-        this.createUVsBuffer(this._mesh.uvs);
-        this.createNormalsBuffer(this._mesh.normals)
-        this.createIndexsBuffer(this._mesh.indices);
+        G_BufferManager.createBuffer(SY.GLID_TYPE.VERTEX,this.materialId,this._mesh.positions,3)
+        G_BufferManager.createBuffer(SY.GLID_TYPE.UV,this.materialId,this._mesh.uvs,2);
+        G_BufferManager.createBuffer(SY.GLID_TYPE.NORMAL,this.materialId,this._mesh.normals,3)
+        G_BufferManager.createBuffer(SY.GLID_TYPE.INDEX,this.materialId,this._mesh.indices,1);
     }
 
     protected collectRenderData(time:number){
