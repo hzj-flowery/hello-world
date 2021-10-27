@@ -11,10 +11,10 @@ export class Object3D extends SY.SpriteBase {
         this.localInit();
     }
     private localInit(): void {
-        G_BufferManager.createBuffer(SY.GLID_TYPE.VERTEX,this.materialId,this._mesh.positions,3)
-        G_BufferManager.createBuffer(SY.GLID_TYPE.UV,this.materialId,this._mesh.uvs,2);
-        G_BufferManager.createBuffer(SY.GLID_TYPE.NORMAL,this.materialId,this._mesh.normals,3)
-        G_BufferManager.createBuffer(SY.GLID_TYPE.INDEX,this.materialId,this._mesh.indices,1);
+        G_BufferManager.createBuffer(SY.GLID_TYPE.VERTEX,this.attributeId,this._mesh.positions,3)
+        G_BufferManager.createBuffer(SY.GLID_TYPE.UV,this.attributeId,this._mesh.uvs,2);
+        G_BufferManager.createBuffer(SY.GLID_TYPE.NORMAL,this.attributeId,this._mesh.normals,3)
+        G_BufferManager.createBuffer(SY.GLID_TYPE.INDEX,this.attributeId,this._mesh.indices,1);
     }
 
     protected collectRenderData(time:number){

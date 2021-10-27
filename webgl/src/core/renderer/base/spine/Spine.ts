@@ -6,6 +6,7 @@ import { Skeleton_Skin } from "./Skeleton_Skin";
 import { glMatrix } from "../../../math/Matrix";
 import { syRender } from "../../data/RenderData";
 import { StateString, StateValueMap } from "../../gfx/State";
+import Device from "../../../Device";
 //骨骼节点
 export default class Spine extends SY.SpriteBase {
     private gltf;
@@ -14,7 +15,7 @@ export default class Spine extends SY.SpriteBase {
     private _tempMatrix: Float32Array;
     private _lightDirection: Float32Array;
     protected onInit(): void {
-        this.gltf = Skeleton_Parse.parseGLTF(this.gl);
+        this.gltf = Skeleton_Parse.parseGLTF(Device.Instance.gl);
         this._tempMatrix = glMatrix.mat4.identity(null);
         this._lightDirection = glMatrix.vec3.create() as Float32Array;
         this._glMatrix.vec3.normalize(this._lightDirection, [-1, 3, 5]);

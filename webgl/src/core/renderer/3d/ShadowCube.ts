@@ -12,10 +12,10 @@ export default class ShadowCube extends SY.ShadowSprite {
 
   protected onInit() {
     var rd = CubeData.getData();
-    G_BufferManager.createBuffer(SY.GLID_TYPE.VERTEX,this.materialId,rd.vertex, rd.dF.vertex_item_size)
-    G_BufferManager.createBuffer(SY.GLID_TYPE.INDEX,this.materialId,rd.indexs,1);
-    G_BufferManager.createBuffer(SY.GLID_TYPE.NORMAL,this.materialId,rd.normals, rd.dF.normal_item_size);
-    G_BufferManager.createBuffer(SY.GLID_TYPE.UV,this.materialId,rd.uvData, rd.dF.uv_item_size);
+    G_BufferManager.createBuffer(SY.GLID_TYPE.VERTEX,this.attributeId,rd.vertex, rd.dF.vertex_item_size)
+    G_BufferManager.createBuffer(SY.GLID_TYPE.INDEX,this.attributeId,rd.indexs,1);
+    G_BufferManager.createBuffer(SY.GLID_TYPE.NORMAL,this.attributeId,rd.normals, rd.dF.normal_item_size);
+    G_BufferManager.createBuffer(SY.GLID_TYPE.UV,this.attributeId,rd.uvData, rd.dF.uv_item_size);
     super.onInit();
   }
 

@@ -101,14 +101,14 @@ export namespace SY {
          */
         RAW
     }
-    var materialId: number = 0;//材质id
+    var attributeId: number = 0;//材质id
     /**
      * 这个渲染类可以用于基础研究
      * 数据生成 绑定  
      */
     export class SpriteBase extends Node {
         
-        private _materialId: string;//这里存放一个材质id
+        private _attributeId: string;//这里存放一个材质id
         private _passContent: Array<any> = [];//pass的内容
 
         private _color: Color;//节点自定义颜色
@@ -117,16 +117,14 @@ export namespace SY {
         private _customMatrix: Float32Array = glMatrix.mat4.identity(null);//节点自定义矩阵
       
         protected _texture: Texture;
-        protected gl: WebGL2RenderingContext;
         private _pass: Array<Pass>;
         private _renderData: Array<syRender.QueueItemBaseData>;
         //参考glprimitive_type
         protected _sizeMode: SpriteSizeMode;//节点的尺寸模式
         constructor() {
             super();
-            materialId++;
-            this._materialId = "materialId_" + materialId;
-            this.gl = Device.Instance.gl;
+            attributeId++;
+            this._attributeId = "materialId_" + attributeId;
             this._renderData = []
             this._color = new Color(255,255,255,255);//默认颜色为白色
             this._diffuse = new Color(255,255,255,255);//默认颜色为白色
@@ -137,8 +135,8 @@ export namespace SY {
             this.onInit();
         }
 
-        public get materialId(){
-            return this._materialId;
+        public get attributeId(){
+            return this._attributeId;
         }
 
         public pushPassContent(shaderTy: syRender.ShaderType, stateArr?: Array<Array<any>>,customArr?:Array<Array<any>>,isForce?:boolean): void {
@@ -310,7 +308,7 @@ export namespace SY {
          * @param type 
          */
         public getBuffer(type: GLID_TYPE): glBaseBuffer {
-            return G_BufferManager.getBuffer(type,this._materialId)
+            return G_BufferManager.getBuffer(type,this._attributeId)
         }
         protected getBufferItemSize(type: GLID_TYPE): number {
             var buffer = this.getBuffer(type);
@@ -520,7 +518,7 @@ export namespace SY {
         }
         private check(): void {
             if (!this._polygon) {
-                G_BufferManager.createBuffer(SY.GLID_TYPE.VERTEX,this.materialId,[], 3, 10)
+                G_BufferManager.createBuffer(SY.GLID_TYPE.VERTEX,this.attributeId,[], 3, 10)
             }
         }
         protected collectRenderData(time): void {
@@ -595,10 +593,10 @@ export namespace SY {
                 0.0, 1.0, //v0
             ];
 
-            G_BufferManager.createBuffer(SY.GLID_TYPE.UV,this.materialId,this.isUnpackY?texCoordinates_webgl:texCoordinates_uv, 2);
+            G_BufferManager.createBuffer(SY.GLID_TYPE.UV,this.attributeId,this.isUnpackY?texCoordinates_webgl:texCoordinates_uv, 2);
             // 索引数据
             var floorVertexIndices = [0, 1, 2, 3, 0];
-            G_BufferManager.createBuffer(SY.GLID_TYPE.INDEX,this.materialId,floorVertexIndices,1);
+            G_BufferManager.createBuffer(SY.GLID_TYPE.INDEX,this.attributeId,floorVertexIndices,1);
 
         }
 
@@ -658,7 +656,7 @@ export namespace SY {
 
 
             var pos = [].concat(this._lb, this._rb, this._rt, this._lt);
-            G_BufferManager.createBuffer(SY.GLID_TYPE.VERTEX,this.materialId,pos, 3)
+            G_BufferManager.createBuffer(SY.GLID_TYPE.VERTEX,this.attributeId,pos, 3)
             this.updateUV();
         }
 

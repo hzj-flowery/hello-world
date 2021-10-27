@@ -16,8 +16,8 @@ export default class SkyBox extends SY.SpriteBase {
      }
      protected onInit(): void {
           var rd = CubeData.getData();
-          G_BufferManager.createBuffer(SY.GLID_TYPE.VERTEX,this.materialId,rd.vertex, rd.dF.vertex_item_size)
-          G_BufferManager.createBuffer(SY.GLID_TYPE.INDEX,this.materialId,rd.indexs,1);
+          G_BufferManager.createBuffer(SY.GLID_TYPE.VERTEX,this.attributeId,rd.vertex, rd.dF.vertex_item_size)
+          G_BufferManager.createBuffer(SY.GLID_TYPE.INDEX,this.attributeId,rd.indexs,1);
           this.pushPassContent(syRender.ShaderType.SkyBox);
      }
      // private defaultPath = [

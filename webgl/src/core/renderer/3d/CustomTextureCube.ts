@@ -106,8 +106,8 @@ export default class CustomTextureCube extends SY.SpriteBase {
             1, 1,
         ]
 
-        G_BufferManager.createBuffer(SY.GLID_TYPE.VERTEX,this.materialId,positions, 3)
-        G_BufferManager.createBuffer(SY.GLID_TYPE.UV,this.materialId,uvs, 2);
+        G_BufferManager.createBuffer(SY.GLID_TYPE.VERTEX,this.attributeId,positions, 3)
+        G_BufferManager.createBuffer(SY.GLID_TYPE.UV,this.attributeId,uvs, 2);
         
         this.pushPassContent(syRender.ShaderType.Sprite,[
             [StateString.primitiveType,StateValueMap.primitiveType.PT_TRIANGLES]

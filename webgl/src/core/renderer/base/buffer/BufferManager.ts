@@ -253,42 +253,46 @@ class BufferManager {
     /**
      * 
      * @param type buffer类型
-     * @param materialId 材质的id
+     * @param attributeId 属性id
      * @param data 顶点源数据
      * @param itemSize 一个单元的数据个数
      * @param preAllocateLen 
      */
-    public createBuffer(type: SY.GLID_TYPE, materialId: string = "default", data: Array<number>, itemSize: number, preAllocateLen: number=0): glBaseBuffer {
+    public createBuffer(type: SY.GLID_TYPE, attributeId: string, data: Array<number>, itemSize: number, preAllocateLen: number=0): glBaseBuffer {
         switch (type) {
             case SY.GLID_TYPE.VERTEX:
-                return this.createVertex(materialId, data, itemSize, preAllocateLen);
+                itemSize = 3; //(x,y,z)数组中每三个值代表顶点坐标
+                return this.createVertex(attributeId, data, itemSize, preAllocateLen);
             case SY.GLID_TYPE.INDEX:
-                return this.createIndex(materialId, data, itemSize, preAllocateLen);
+                itemSize = 1;//(1,2,3,4)数组中每一个值代表一个顶点
+                return this.createIndex(attributeId, data, itemSize, preAllocateLen);
             case SY.GLID_TYPE.NORMAL:
-                return this.createNormal(materialId, data, itemSize, preAllocateLen);
+                itemSize = 3;//(x,y,z)数组中每三个值代表一个法线
+                return this.createNormal(attributeId, data, itemSize, preAllocateLen);
             case SY.GLID_TYPE.UV:
-                return this.createUV(materialId, data, itemSize, preAllocateLen);
+                itemSize = 2;//(u,v)数组中每两个值代表一个uv坐标
+                return this.createUV(attributeId, data, itemSize, preAllocateLen);
             case SY.GLID_TYPE.VERT_COLOR:
-                return this.createVertColor(materialId, data, itemSize, preAllocateLen);
+                return this.createVertColor(attributeId, data, itemSize, preAllocateLen);
             case SY.GLID_TYPE.VERT_MATRIX:
-                return this.createMatrix(materialId, data, itemSize, preAllocateLen);
+                return this.createMatrix(attributeId, data, itemSize, preAllocateLen);
             default: break;
         }
     }
-    public getBuffer(type: SY.GLID_TYPE, materialId: string): glBaseBuffer {
+    public getBuffer(type: SY.GLID_TYPE, attributeId: string): glBaseBuffer {
         switch (type) {
             case SY.GLID_TYPE.VERTEX:
-                return this._mapVertexBuffer.get(materialId);
+                return this._mapVertexBuffer.get(attributeId);
             case SY.GLID_TYPE.INDEX:
-                return this._mapIndexBuffer.get(materialId);
+                return this._mapIndexBuffer.get(attributeId);
             case SY.GLID_TYPE.NORMAL:
-                return this._mapNormalBuffer.get(materialId);
+                return this._mapNormalBuffer.get(attributeId);
             case SY.GLID_TYPE.UV:
-                return this._mapUVBuffer.get(materialId);
+                return this._mapUVBuffer.get(attributeId);
             case SY.GLID_TYPE.VERT_COLOR:
-                return this._mapVertColorBuffer.get(materialId);
+                return this._mapVertColorBuffer.get(attributeId);
             case SY.GLID_TYPE.VERT_MATRIX:
-                return this._mapVertMatrixBuffer.get(materialId);
+                return this._mapVertMatrixBuffer.get(attributeId);
             default: console.log("未知类型，请指明类型"); break;
         }
     }

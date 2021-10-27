@@ -17,7 +17,7 @@ export default class MoreSprite extends SY.UIImage {
         this.setContentSize(100,200);
         this._colorLoc = this.baseProgram.getCustomAttributeLocation("a_color");
         this._matrixLoc = this.baseProgram.getCustomAttributeLocation('a_matrix');
-        var gl = this.gl;
+        var gl = Device.Instance.gl;
         // setup matrixes, one per instance
         this.numInstances = 3;
         // make a typed array with one view per matrix
@@ -32,14 +32,14 @@ export default class MoreSprite extends SY.UIImage {
                 numFloatsForView));
         }
         this.matrixBuffer = gl.createBuffer();
-        this.gl.bindBuffer(gl.ARRAY_BUFFER, this.matrixBuffer);
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.matrixBuffer);
         // just allocate the buffer
-        this.gl.bufferData(gl.ARRAY_BUFFER, this.matrixData.byteLength, gl.DYNAMIC_DRAW);
+        gl.bufferData(gl.ARRAY_BUFFER, this.matrixData.byteLength, gl.DYNAMIC_DRAW);
 
 
         // setup colors, one per instance
         this.colorBuffer = gl.createBuffer();
-        this.gl.bindBuffer(gl.ARRAY_BUFFER, this.colorBuffer);
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.colorBuffer);
 
         var colorData = [];
         for (var j = 0; j < this.numInstances; j++) {
@@ -49,7 +49,7 @@ export default class MoreSprite extends SY.UIImage {
             colorData.push(res[2]);
             colorData.push(res[3]);
         }
-        this.gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colorData), gl.STATIC_DRAW);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colorData), gl.STATIC_DRAW);
 
     }
     private getRandowColor() {
@@ -79,7 +79,7 @@ export default class MoreSprite extends SY.UIImage {
         }
     }
     public drawWebgl2(time): void {
-        var gl = this.gl;
+        var gl = Device.Instance.gl;
         const numVertices = 4;
         time *= 0.001; // seconds
 
@@ -109,8 +109,8 @@ export default class MoreSprite extends SY.UIImage {
             this._glMatrix.mat4.rotateZ(mat, mat, time * (0.1 + 0.1 * ndx));
         });
         // upload the new matrix data
-        this.gl.bindBuffer(gl.ARRAY_BUFFER, this.matrixBuffer);
-        this.gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.matrixData);
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.matrixBuffer);
+        gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.matrixData);
         // set all 4 attributes for matrix
         // 解析 
         // 每一个矩阵的大小是四行四列，矩阵中元素的类型是gl.FLOAT,即元素占用四个字节
@@ -166,7 +166,7 @@ export default class MoreSprite extends SY.UIImage {
     public drawWebgl1(time): void {
 
         var testgl = Device.Instance.getWebglContext();
-        var gl = this.gl;
+        var gl = Device.Instance.gl;
         const ext = gl.getExtension('ANGLE_instanced_arrays');
         if (!ext) {
             console.log("no support ANGLE_instanced_arrays");
@@ -203,8 +203,8 @@ export default class MoreSprite extends SY.UIImage {
             this._glMatrix.mat4.rotateZ(mat, mat, time * (0.1 + 0.1 * ndx));
         });
         // upload the new matrix data
-        this.gl.bindBuffer(gl.ARRAY_BUFFER, this.matrixBuffer);
-        this.gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.matrixData);
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.matrixBuffer);
+        gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.matrixData);
         // set all 4 attributes for matrix
         const bytesPerMatrix = 4 * 16;
         for (let i = 0; i < 4; ++i) {

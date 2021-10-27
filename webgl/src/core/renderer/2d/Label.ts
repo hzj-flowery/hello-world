@@ -217,8 +217,8 @@ export class Label extends SY.SpriteBase {
     }
 
   
-    G_BufferManager.createBuffer(SY.GLID_TYPE.VERTEX,this.materialId,arrPos, 3)
-    G_BufferManager.createBuffer(SY.GLID_TYPE.UV,this.materialId,arrUV, 2);
+    G_BufferManager.createBuffer(SY.GLID_TYPE.VERTEX,this.attributeId,arrPos, 3)
+    G_BufferManager.createBuffer(SY.GLID_TYPE.UV,this.attributeId,arrUV, 2);
 
   }
 }

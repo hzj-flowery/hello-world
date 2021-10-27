@@ -11,9 +11,9 @@ export default class MirrorCube extends SY.SpriteBase {
     }
     protected onInit(): void {
         var rd = CubeData.getData();
-        G_BufferManager.createBuffer(SY.GLID_TYPE.VERTEX,this.materialId,rd.vertex,rd.dF.vertex_item_size)
-        G_BufferManager.createBuffer(SY.GLID_TYPE.INDEX,this.materialId,rd.indexs,1);
-        G_BufferManager.createBuffer(SY.GLID_TYPE.NORMAL,this.materialId,rd.normals,rd.dF.normal_item_size);
+        G_BufferManager.createBuffer(SY.GLID_TYPE.VERTEX,this.attributeId,rd.vertex,rd.dF.vertex_item_size)
+        G_BufferManager.createBuffer(SY.GLID_TYPE.INDEX,this.attributeId,rd.indexs,1);
+        G_BufferManager.createBuffer(SY.GLID_TYPE.NORMAL,this.attributeId,rd.normals,rd.dF.normal_item_size);
         this.pushPassContent(syRender.ShaderType.Mirror)
     }
 //     private defaultPath = [
