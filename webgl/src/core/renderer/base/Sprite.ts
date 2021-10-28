@@ -75,6 +75,7 @@ export namespace SY {
         INDEX,   //索引
         NORMAL, //法线
         UV,     //uv
+        TANGENT, //切线
         VERT_COLOR,  //顶点颜色
         VERT_MATRIX,//节点自定义矩阵
         TEXTURE_2D, //2D纹理

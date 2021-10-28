@@ -54,7 +54,7 @@ export class Vector2 {
 		}
 	}
 	clone() {
-		return new Vec2( this.x, this.y );
+		return new Vector2( this.x, this.y );
 	}
 	copy( v ) {
 		this.x = v.x;

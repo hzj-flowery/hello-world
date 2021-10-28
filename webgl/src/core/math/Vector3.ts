@@ -1,3 +1,4 @@
+import { glBaseBuffer } from "../renderer/base/buffer/BufferManager";
 import { MathUtils } from "../utils/MathUtils";
 import { Quat } from "./Quat";
 
@@ -400,7 +401,7 @@ export class Vector3 {
         array[offset + 2] = this.z;
         return array;
     }
-    fromBufferAttribute(attribute, index, offset?) {
+    fromBufferAttribute(attribute:glBaseBuffer, index, offset?) {
         if (offset !== undefined) {
             console.warn('THREE.Vector3: offset has been removed from .fromBufferAttribute().');
         }

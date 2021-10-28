@@ -30,10 +30,10 @@
  *
  **/
 
-import { MathUtils } from "../utils/MathUtils";
-import { Matrix4 } from "./Matrix4";
-import { Vector2 } from "./Vector2";
-import { Vector3 } from "./Vector3";
+import { MathUtils } from "../../utils/MathUtils";
+import { Matrix4 } from "../Matrix4";
+import { Vector2 } from "../Vector2";
+import { Vector3 } from "../Vector3";
 
 export class Curve {
     

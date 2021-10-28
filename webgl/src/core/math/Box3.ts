@@ -1,3 +1,4 @@
+import { glBaseBuffer } from "../renderer/base/buffer/BufferManager";
 import { Vector3 } from "./Vector3";
 
 
@@ -54,7 +55,7 @@ export class Box3 {
 
     }
 
-    setFromBufferAttribute(attribute) {
+    setFromBufferAttribute(attribute:glBaseBuffer) {
 
         let minX = + Infinity;
         let minY = + Infinity;

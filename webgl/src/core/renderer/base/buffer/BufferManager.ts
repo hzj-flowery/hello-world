@@ -79,11 +79,11 @@ export abstract class glBaseBuffer {
         }
     }
     // private _mapSourceData: Map<number, Array<number>> = new Map();//源数据
-    private _sourceData: Array<number>;
+    private _sourceData:Array<number>;
     private _itemBytes: number = 2;    //每个数据的存储字节数
     private _curMapTotalBytes: number;//当前map中含有的总的字节数
     private _itemSize: number = 0;     //在缓冲区中，一个单元有几个数据组成
-    private _itemNums: number = 0;     //在缓冲区中，一共含有多少个单元
+    private _itemNums: number = 0;     //在缓冲区中，一共含有多少个单元(一个顶点就一个单元 一个法线叫一个单元 一个uv叫一个单元)
     private _itemOffset:number = 0;    //在缓冲区中，从哪一个位置开始存储这个数据
     private _glID: WebGLBuffer;//显存存储数据的地址
     /**
@@ -96,7 +96,9 @@ export abstract class glBaseBuffer {
     private _preAllocateLen: number;//动态预分配的字节长度
     private _hasAllocateByteLen: number;//已经分配的字节长度
     protected gl: WebGLRenderingContext;
-
+    
+    public needsUpdate:boolean = true;//是否需要更新
+    public isGLBufferAttribute:boolean=false;//
     protected useDynamicUsage() {
         this._usage = syGL.BufferUsage.DYNAMIC;
     }
@@ -112,6 +114,9 @@ export abstract class glBaseBuffer {
     public get itemNums(): number {
         return this._itemNums;
     }
+    public get count(){
+        return this._itemNums;
+    }
     //数据存储在显存的buffer的偏移地址
     public get itemOffset(): number {
         return this._itemOffset;
@@ -125,11 +130,12 @@ export abstract class glBaseBuffer {
     private uploadData2GPU(data: Array<number>) {
         this._curMapTotalBytes = data.length * this._itemBytes;
         this._itemNums = data.length / this._itemSize;
-        this._sourceData = data;
+        
         this.bufferSet();
-        let Arr = this.getBytesArray();
-        this.gl.bindBuffer(this._arrayBufferType, this.glID),
-        this.gl.bufferData(this._arrayBufferType, new Arr(this._sourceData), this._usage)
+        this._sourceData = data;
+        var arr = this.getBytesArray();
+        this.gl.bindBuffer(this._arrayBufferType, this.glID);
+        this.gl.bufferData(this._arrayBufferType, new arr(this._sourceData), this._usage)
     }
     public updateSubData(data: Float32Array): void {
         this.gl.bindBuffer(this._arrayBufferType, this.glID);
@@ -162,6 +168,62 @@ export abstract class glBaseBuffer {
             case 8: return Float64Array;
         }
     }
+
+    ///---------------------------------------------------
+    //获取源数据
+    public get sourceData(){
+        return this._sourceData;
+    }
+    getX( index ) {
+		return this._sourceData[ index * this.itemSize ];
+	}
+	setX( index, x ) {
+		this._sourceData[ index * this.itemSize ] = x;
+		return this;
+	}
+	getY( index ) {
+		return this._sourceData[ index * this.itemSize + 1 ];
+	}
+	setY( index, y ) {
+		this._sourceData[ index * this.itemSize + 1 ] = y;
+		return this;
+	}
+	getZ( index ) {
+		return this._sourceData[ index * this.itemSize + 2 ];
+	}
+	setZ( index, z ) {
+		this._sourceData[ index * this.itemSize + 2 ] = z;
+		return this;
+	}
+	getW( index ) {
+		return this._sourceData[ index * this.itemSize + 3 ];
+	}
+	setW( index, w ) {
+		this._sourceData[ index * this.itemSize + 3 ] = w;
+		return this;
+	}
+    public setXY( index, x, y ) {
+		index *= this.itemSize;
+		this._sourceData[ index + 0 ] = x;
+		this._sourceData[ index + 1 ] = y;
+		return this;
+	}
+    public setXYZ( index, x, y, z ) {
+		index *= this.itemSize;
+		this._sourceData[ index + 0 ] = x;
+		this._sourceData[ index + 1 ] = y;
+		this._sourceData[ index + 2 ] = z;
+		return this;
+	}
+    public setXYZW( index, x, y, z, w ) {
+		index *= this.itemSize;
+		this._sourceData[ index + 0 ] = x;
+		this._sourceData[ index + 1 ] = y;
+		this._sourceData[ index + 2 ] = z;
+		this._sourceData[ index + 3 ] = w;
+		return this;
+	}
+    //--
     protected abstract bufferSet();
 
     /**
@@ -181,6 +243,16 @@ export abstract class glBaseBuffer {
 export class VertexsBuffer extends glBaseBuffer {
     constructor(gl, vertexs: Array<number>, itemSize: number, preAllocateLen: number) {
         super(gl, vertexs, itemSize, gl.ARRAY_BUFFER, 4, preAllocateLen);
+
+    }
+    bufferSet(): void {
+        this.useDynamicUsage();
+    }
+}
+//切线buffer
+export class TangentsBuffer extends glBaseBuffer {
+    constructor(gl, tangents: Array<number>, itemSize: number, preAllocateLen: number) {
+        super(gl, tangents, itemSize, gl.ARRAY_BUFFER, 4, preAllocateLen);
 
     }
     bufferSet(): void {
@@ -248,6 +320,7 @@ class BufferManager {
     private _mapIndexBuffer: Map<string, IndexsBuffer> = new Map();
     private _mapNormalBuffer: Map<string, NormalBuffer> = new Map();
     private _mapUVBuffer: Map<string, UVsBuffer> = new Map();
+    private _mapTangentBuffer:Map<string,TangentsBuffer> = new Map();
     private _mapVertColorBuffer: Map<string, VertColorBuffer> = new Map();
     private _mapVertMatrixBuffer: Map<string, VertMatrixBuffer> = new Map();
     /**
@@ -263,6 +336,9 @@ class BufferManager {
             case SY.GLID_TYPE.VERTEX:
                 itemSize = 3; //(x,y,z)数组中每三个值代表顶点坐标
                 return this.createVertex(attributeId, data, itemSize, preAllocateLen);
+            case SY.GLID_TYPE.TANGENT:
+                itemSize = 4;
+                return this.createTangent(attributeId, data, itemSize, preAllocateLen);
             case SY.GLID_TYPE.INDEX:
                 itemSize = 1;//(1,2,3,4)数组中每一个值代表一个顶点
                 return this.createIndex(attributeId, data, itemSize, preAllocateLen);
@@ -283,6 +359,8 @@ class BufferManager {
         switch (type) {
             case SY.GLID_TYPE.VERTEX:
                 return this._mapVertexBuffer.get(attributeId);
+            case SY.GLID_TYPE.TANGENT:
+                 return this._mapTangentBuffer.get(attributeId);
             case SY.GLID_TYPE.INDEX:
                 return this._mapIndexBuffer.get(attributeId);
             case SY.GLID_TYPE.NORMAL:
@@ -298,6 +376,11 @@ class BufferManager {
     }
     private createVertex(id: string, data: Array<number>, itemSize: number, preAllocateLen: number): VertexsBuffer {
         let buffer = new VertexsBuffer(this._gl, data, itemSize, preAllocateLen);
+        this._mapVertexBuffer.set(id, buffer);
+        return buffer;
+    }
+    private createTangent(id: string, data: Array<number>, itemSize: number, preAllocateLen: number): VertexsBuffer {
+        let buffer = new TangentsBuffer(this._gl, data, itemSize, preAllocateLen);
         this._mapVertexBuffer.set(id, buffer);
         return buffer;
     }

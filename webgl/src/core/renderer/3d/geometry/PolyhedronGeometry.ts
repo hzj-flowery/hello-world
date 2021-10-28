@@ -37,15 +37,15 @@ export class PolyhedronGeometry extends Geometry {
 
        super.build();
 
-        // if (detail === 0) {
+        if (detail === 0) {
 
-        //     this.computeVertexNormals(); // flat normals
+            this.computeVertexNormals(); // flat normals
 
-        // } else {
+        } else {
 
-        //     this.normalizeNormals(); // smooth normals
+            this.normalizeNormals(); // smooth normals
 
-        // }
+        }
     }
 
     // helper functions
