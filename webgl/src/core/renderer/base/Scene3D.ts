@@ -27,6 +27,8 @@ import Mirror from "../3d/Mirror";
 import { Object3D } from "../3d/Object3D";
 import { UCS } from "../3d/UCS";
 import { GameMainCamera } from "../camera/GameMainCamera";
+import { BoxGeometry } from "../3d/geometry/BoxGeometry";
+import { CircleGeometry } from "../3d/geometry/CircleGeometry";
 
 export default class Scene3D extends Scene {
 
@@ -252,6 +254,22 @@ export default class Scene3D extends Scene {
         this._skybox.setDefaultUrl();
         this.addChild(this._skybox);
 
+        var boxG = new BoxGeometry(5);
+        boxG.pushPassContent(syRender.ShaderType.Sprite)
+        boxG.spriteFrame = "res/wicker.jpg";
+        boxG.setPosition(-3,5,5);
+        this.addChild(boxG);
+
+        var circleG = new CircleGeometry(5);
+        circleG.pushPassContent(syRender.ShaderType.Sprite)
+        circleG.spriteFrame = "res/wicker.jpg";
+        circleG.setPosition(3,5,5);
+        this.addChild(circleG);
+
+        
+
+        
+
         this._mirrorCube = new MirrorCube();
         this._mirrorCube.setDefaultUrl();
         this._mirrorCube.setPosition(-13,3.0,0);
@@ -263,10 +281,10 @@ export default class Scene3D extends Scene {
         // this.addChild(this._mirror);
 
         this._centerNode.addChild(new LightCamera());
-        var camera = GameMainCamera.instance.getCameraByUUid(syRender.CameraUUid.base3D)
-        var diff = [camera.x,camera.y,camera.z]
+        // var camera = GameMainCamera.instance.getCameraByUUid(syRender.CameraUUid.base3D)
+        // var diff = [camera.x,camera.y,camera.z]
         G_UISetting.pushRenderCallBack((data)=>{
-            this._robart.setPosition(data.customValueX,data.customValueY,data.customValueZ)
+            // this._robart.setPosition(data.customValueX,data.customValueY,data.customValueZ)
             // var cg = (data.customValue?-data.customValue:0.1)/10000;
             // this._robart.setScale(cg,cg,cg)
             // this._cube2.setPosition(0,data.customValue?-data.customValue:0,0)
@@ -276,7 +294,7 @@ export default class Scene3D extends Scene {
         //     this._cube1.setScale(data.customValue2?data.customValue2:1,data.customValue2?data.customValue2:1,data.customValue2?data.customValue2:1)
 
             
-            camera.lookAt([data.customValueX+diff[0],data.customValueY+diff[1],data.customValueZ+diff[2]],[data.customValueX,data.customValueY,data.customValueZ])
+            // camera.lookAt([data.customValueX+diff[0],data.customValueY+diff[1],data.customValueZ+diff[2]],[data.customValueX,data.customValueY,data.customValueZ])
         })
         this.setPosition(0, 0, 0);
         setTimeout(this.rotateCenterNode.bind(this), 20);
