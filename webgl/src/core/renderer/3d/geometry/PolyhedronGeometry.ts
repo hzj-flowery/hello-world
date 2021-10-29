@@ -3,8 +3,8 @@ import { Vector3 } from "../../../math/Vector3";
 import { Geometry } from "./Geometry";
 
 export class PolyhedronGeometry extends Geometry {
-    private radius: number;
-    private detail: number;
+    protected radius: number;
+    protected detail: number;
     private vertexBuffer:Array<number>;
     private uvBuffer:Array<number>;
     constructor(vertices: Array<number>, indices: Array<number>, radius = 1, detail = 0) {
@@ -17,20 +17,16 @@ export class PolyhedronGeometry extends Geometry {
         this.detail = detail;
 
         // default buffer data
-
         this.vertexBuffer = [];
         this.uvBuffer = [];
 
         // the subdivision creates the vertex buffer data
-
         this.subdivide(detail);
 
         // all vertices should lie on a conceptual sphere with a given radius
-
         this.applyRadius(radius);
 
         // finally, create the uv data
-
         this.generateUVs();
 
         // build non-indexed geometry
@@ -38,13 +34,9 @@ export class PolyhedronGeometry extends Geometry {
        super.build();
 
         if (detail === 0) {
-
             this.computeVertexNormals(); // flat normals
-
         } else {
-
             this.normalizeNormals(); // smooth normals
-
         }
     }
 

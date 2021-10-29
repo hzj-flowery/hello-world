@@ -54,12 +54,12 @@ export abstract class glBaseBuffer {
      * @param itemBytes 存储每一个数据的字节数
      * @param preAllocateLen  预先分配的长度 一般默认为0 否则第一次只是在显存中分配内存 后边才会更新和赋值到这块内存区域
      */
-    constructor(gl: WebGLRenderingContext, data: Array<number>, itemSize: number, arrbufferType: number, itemBytes: number, preAllocateLen: number) {
+    constructor(gl: WebGLRenderingContext, data: Array<number>, itemSize: number, arrbufferType: number, elementBytes: number, preAllocateLen: number) {
         this.glID = gl.createBuffer();
         this._itemSize = itemSize;
         this.gl = gl;
         this._arrayBufferType = arrbufferType;
-        this._itemBytes = itemBytes;
+        this._elementBytes = elementBytes;
         // //默认使用以下数据
         this._usage = syGL.BufferUsage.STATIC;
 
@@ -78,13 +78,12 @@ export abstract class glBaseBuffer {
             console.log("无法创建，您传入的参数不合法！！！！！！");
         }
     }
-    // private _mapSourceData: Map<number, Array<number>> = new Map();//源数据
-    private _sourceData:Array<number>;
-    private _itemBytes: number = 2;    //每个数据的存储字节数
+    private _sourceData: Array<number>;  //源数据
+    private _elementBytes: number = 2;    //每个数据的存储字节数
     private _curMapTotalBytes: number;//当前map中含有的总的字节数
     private _itemSize: number = 0;     //在缓冲区中，一个单元有几个数据组成
     private _itemNums: number = 0;     //在缓冲区中，一共含有多少个单元(一个顶点就一个单元 一个法线叫一个单元 一个uv叫一个单元)
-    private _itemOffset:number = 0;    //在缓冲区中，从哪一个位置开始存储这个数据
+    private _itemOffset: number = 0;    //在缓冲区中，从哪一个位置开始存储这个数据
     private _glID: WebGLBuffer;//显存存储数据的地址
     /**
      * 只有两个值：
@@ -96,15 +95,11 @@ export abstract class glBaseBuffer {
     private _preAllocateLen: number;//动态预分配的字节长度
     private _hasAllocateByteLen: number;//已经分配的字节长度
     protected gl: WebGLRenderingContext;
-    
-    public needsUpdate:boolean = true;//是否需要更新
-    public isGLBufferAttribute:boolean=false;//
+
+    public needsUpdate: boolean = true;//是否需要更新
+    public isGLBufferAttribute: boolean = false;//
     protected useDynamicUsage() {
         this._usage = syGL.BufferUsage.DYNAMIC;
-    }
-    //一个数据有几个字节组成
-    public get itemBytes(): number {
-        return this._itemBytes;
     }
     //一个单元有多少个数据
     public get itemSize(): number {
@@ -114,7 +109,7 @@ export abstract class glBaseBuffer {
     public get itemNums(): number {
         return this._itemNums;
     }
-    public get count(){
+    public get count() {
         return this._itemNums;
     }
     //数据存储在显存的buffer的偏移地址
@@ -124,30 +119,40 @@ export abstract class glBaseBuffer {
     public get glID(): WebGLBuffer {
         return this._glID;
     }
-    public set glID(glID:WebGLBuffer) {
+    public set glID(glID: WebGLBuffer) {
         this._glID = glID;
     }
     private uploadData2GPU(data: Array<number>) {
-        this._curMapTotalBytes = data.length * this._itemBytes;
+        this._curMapTotalBytes = data.length * this._elementBytes;
         this._itemNums = data.length / this._itemSize;
-        
+
         this.bufferSet();
         this._sourceData = data;
         var arr = this.getBytesArray();
         this.gl.bindBuffer(this._arrayBufferType, this.glID);
         this.gl.bufferData(this._arrayBufferType, new arr(this._sourceData), this._usage)
+        this.needsUpdate = false;
     }
-    public updateSubData(data: Float32Array): void {
+    public updateSubData(data: Float32Array, offset: number = 0): void {
         this.gl.bindBuffer(this._arrayBufferType, this.glID);
         let curByteLen = data.byteLength;
         if (this._hasAllocateByteLen < curByteLen) {
             //说明当前显存中对于这块数据的存储内存不够用了，需要加
             this.gl.bufferData(this._arrayBufferType, curByteLen, this._usage);
         }
-        this.gl.bufferSubData(this._arrayBufferType, 0, data);
+        this.gl.bufferSubData(this._arrayBufferType, offset, data);
         this._hasAllocateByteLen = curByteLen;
         this._itemNums = data.length / this._itemSize;
-        this._curMapTotalBytes = data.length * this._itemBytes;
+        this._curMapTotalBytes = data.length * this._elementBytes;
+        this.needsUpdate = false;
+    }
+
+    public update(): void {
+        if (!this.needsUpdate) return;
+        var arr = this.getBytesArray();
+        this.gl.bindBuffer(this._arrayBufferType, this.glID);
+        this.gl.bufferData(this._arrayBufferType, new arr(this._sourceData), this._usage)
+        this.needsUpdate = false;
     }
     /**
      * 在GPU显存中预分配一块内存为该buffer
@@ -161,7 +166,7 @@ export abstract class glBaseBuffer {
      * 获取字节数组
      */
     private getBytesArray() {
-        switch (this._itemBytes) {
+        switch (this._elementBytes) {
             case 1: return Uint8Array;
             case 2: return Uint16Array;
             case 4: return Float32Array;
@@ -171,58 +176,58 @@ export abstract class glBaseBuffer {
 
     ///---------------------------------------------------
     //获取源数据
-    public get sourceData(){
+    public get sourceData() {
         return this._sourceData;
     }
-    getX( index ) {
-		return this._sourceData[ index * this.itemSize ];
-	}
-	setX( index, x ) {
-		this._sourceData[ index * this.itemSize ] = x;
-		return this;
-	}
-	getY( index ) {
-		return this._sourceData[ index * this.itemSize + 1 ];
-	}
-	setY( index, y ) {
-		this._sourceData[ index * this.itemSize + 1 ] = y;
-		return this;
-	}
-	getZ( index ) {
-		return this._sourceData[ index * this.itemSize + 2 ];
-	}
-	setZ( index, z ) {
-		this._sourceData[ index * this.itemSize + 2 ] = z;
-		return this;
-	}
-	getW( index ) {
-		return this._sourceData[ index * this.itemSize + 3 ];
-	}
-	setW( index, w ) {
-		this._sourceData[ index * this.itemSize + 3 ] = w;
-		return this;
-	}
-    public setXY( index, x, y ) {
-		index *= this.itemSize;
-		this._sourceData[ index + 0 ] = x;
-		this._sourceData[ index + 1 ] = y;
-		return this;
-	}
-    public setXYZ( index, x, y, z ) {
-		index *= this.itemSize;
-		this._sourceData[ index + 0 ] = x;
-		this._sourceData[ index + 1 ] = y;
-		this._sourceData[ index + 2 ] = z;
-		return this;
-	}
-    public setXYZW( index, x, y, z, w ) {
-		index *= this.itemSize;
-		this._sourceData[ index + 0 ] = x;
-		this._sourceData[ index + 1 ] = y;
-		this._sourceData[ index + 2 ] = z;
-		this._sourceData[ index + 3 ] = w;
-		return this;
-	}
+    getX(index) {
+        return this._sourceData[index * this.itemSize];
+    }
+    setX(index, x) {
+        this._sourceData[index * this.itemSize] = x;
+        return this;
+    }
+    getY(index) {
+        return this._sourceData[index * this.itemSize + 1];
+    }
+    setY(index, y) {
+        this._sourceData[index * this.itemSize + 1] = y;
+        return this;
+    }
+    getZ(index) {
+        return this._sourceData[index * this.itemSize + 2];
+    }
+    setZ(index, z) {
+        this._sourceData[index * this.itemSize + 2] = z;
+        return this;
+    }
+    getW(index) {
+        return this._sourceData[index * this.itemSize + 3];
+    }
+    setW(index, w) {
+        this._sourceData[index * this.itemSize + 3] = w;
+        return this;
+    }
+    public setXY(index, x, y) {
+        index *= this.itemSize;
+        this._sourceData[index + 0] = x;
+        this._sourceData[index + 1] = y;
+        return this;
+    }
+    public setXYZ(index, x, y, z) {
+        index *= this.itemSize;
+        this._sourceData[index + 0] = x;
+        this._sourceData[index + 1] = y;
+        this._sourceData[index + 2] = z;
+        return this;
+    }
+    public setXYZW(index, x, y, z, w) {
+        index *= this.itemSize;
+        this._sourceData[index + 0] = x;
+        this._sourceData[index + 1] = y;
+        this._sourceData[index + 2] = z;
+        this._sourceData[index + 3] = w;
+        return this;
+    }
     //--
     protected abstract bufferSet();
 
@@ -320,7 +325,7 @@ class BufferManager {
     private _mapIndexBuffer: Map<string, IndexsBuffer> = new Map();
     private _mapNormalBuffer: Map<string, NormalBuffer> = new Map();
     private _mapUVBuffer: Map<string, UVsBuffer> = new Map();
-    private _mapTangentBuffer:Map<string,TangentsBuffer> = new Map();
+    private _mapTangentBuffer: Map<string, TangentsBuffer> = new Map();
     private _mapVertColorBuffer: Map<string, VertColorBuffer> = new Map();
     private _mapVertMatrixBuffer: Map<string, VertMatrixBuffer> = new Map();
     /**
@@ -331,7 +336,7 @@ class BufferManager {
      * @param itemSize 一个单元的数据个数
      * @param preAllocateLen 
      */
-    public createBuffer(type: SY.GLID_TYPE, attributeId: string, data: Array<number>, itemSize: number, preAllocateLen: number=0): glBaseBuffer {
+    public createBuffer(type: SY.GLID_TYPE, attributeId: string, data: Array<number>, itemSize: number, preAllocateLen: number = 0): glBaseBuffer {
         switch (type) {
             case SY.GLID_TYPE.VERTEX:
                 itemSize = 3; //(x,y,z)数组中每三个值代表顶点坐标
@@ -360,7 +365,7 @@ class BufferManager {
             case SY.GLID_TYPE.VERTEX:
                 return this._mapVertexBuffer.get(attributeId);
             case SY.GLID_TYPE.TANGENT:
-                 return this._mapTangentBuffer.get(attributeId);
+                return this._mapTangentBuffer.get(attributeId);
             case SY.GLID_TYPE.INDEX:
                 return this._mapIndexBuffer.get(attributeId);
             case SY.GLID_TYPE.NORMAL:
@@ -408,6 +413,33 @@ class BufferManager {
         let buffer = new VertMatrixBuffer(this._gl, data, itemSize, preAllocateLen);
         this._mapVertMatrixBuffer.set(id, buffer);
         return buffer;
+    }
+    
+    /**
+     * 更新缓冲
+     */
+    public updateBuffer(): void {
+        this._mapVertexBuffer.forEach((buffer, key) => {
+            buffer.update();
+        })
+        this._mapIndexBuffer.forEach((buffer, key) => {
+            buffer.update();
+        })
+        this._mapNormalBuffer.forEach((buffer, key) => {
+            buffer.update();
+        })
+        this._mapUVBuffer.forEach((buffer, key) => {
+            buffer.update();
+        })
+        this._mapTangentBuffer.forEach((buffer, key) => {
+            buffer.update();
+        })
+        this._mapVertColorBuffer.forEach((buffer, key) => {
+            buffer.update();
+        })
+        this._mapVertMatrixBuffer.forEach((buffer, key) => {
+            buffer.update();
+        })
     }
 }
 

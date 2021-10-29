@@ -26,6 +26,7 @@ import { MathUtils } from "./utils/MathUtils";
 import { Rect } from "./value-types/rect";
 import Vec4 from "./value-types/vec4";
 import { couldStartTrivia } from "typescript";
+import { G_BufferManager } from "./renderer/base/buffer/BufferManager";
 
 /**
  渲染流程：
@@ -815,6 +816,9 @@ export default class Device {
         this.onBeforeRender();
         this.visitRenderTree(time, stage);
         this.sortTreeData();
+        //
+        G_BufferManager.updateBuffer();
+
         var cameraData = GameMainCamera.instance.getRenderData();
         cameraData.sort(function (a, b) {
             if (a.drawingOrder != b.drawingOrder)

@@ -3,7 +3,7 @@ import { Matrix4 } from "../../../math/Matrix4";
 import { Sphere } from "../../../math/Sphere";
 import { Vector2 } from "../../../math/Vector2";
 import { Vector3 } from "../../../math/Vector3";
-import { G_BufferManager } from "../../base/buffer/BufferManager";
+import { glBaseBuffer, G_BufferManager } from "../../base/buffer/BufferManager";
 import { SY } from "../../base/Sprite";
 import { syGL } from "../../gfx/syGLEnums";
 import { Object3D } from "../Object3D";
@@ -19,13 +19,26 @@ interface Groups {
 	count: number;
 	materialIndex: number;
 }
-export class Geometry extends SY.SpriteBase {
-	protected indices: Array<number> = [];
-	protected vertices: Array<number> = [];
-	protected normals: Array<number> = [];
-	protected uvs: Array<number> = [];
 
-	protected groups: Array<Groups> = [];
+interface Attribute {
+     indices: glBaseBuffer;
+	 vertices: glBaseBuffer;
+	 normals: glBaseBuffer;
+	 tangents:glBaseBuffer;
+     binormals:glBaseBuffer;
+	 uvs: glBaseBuffer;
+}
+export class Geometry extends SY.SpriteBase {
+	protected indices: Array<number>;
+	protected vertices: Array<number>;
+	protected normals: Array<number>;
+	protected tangents:Array<number>;
+    protected binormals:Array<number>;
+	protected uvs: Array<number>;
+
+	public groups: Array<Groups>;
+
+	public attributes:Attribute;
 
 	protected boundingSphere: Sphere;
 	protected boundingBox: Box3;
@@ -40,21 +53,27 @@ export class Geometry extends SY.SpriteBase {
 		this.vertices = [];
 		this.normals = [];
 		this.uvs = [];
-		this.groups = [];
 
+		this.tangents = [];
+
+		this.binormals = [];
+
+		this.groups = [];
+        
+		this.attributes = {indices:null,vertices:null,normals:null,tangents:null,binormals:null,uvs:null};
 		this.morphAttributes = {};
 		this.morphTargetsRelative = false;
 	}
 
 	protected build(): void {
 		if (this.vertices.length > 0)
-			G_BufferManager.createBuffer(SY.GLID_TYPE.VERTEX, this.attributeId, this.vertices, 3)
+		this.attributes.vertices = G_BufferManager.createBuffer(SY.GLID_TYPE.VERTEX, this.attributeId, this.vertices, 3)
 		if (this.uvs.length > 0)
-			G_BufferManager.createBuffer(SY.GLID_TYPE.UV, this.attributeId, this.uvs, 2);
+		this.attributes.uvs =G_BufferManager.createBuffer(SY.GLID_TYPE.UV, this.attributeId, this.uvs, 2);
 		if (this.normals.length > 0)
-			G_BufferManager.createBuffer(SY.GLID_TYPE.NORMAL, this.attributeId, this.normals, 3)
+		this.attributes.normals = G_BufferManager.createBuffer(SY.GLID_TYPE.NORMAL, this.attributeId, this.normals, 3)
 		if (this.indices.length > 0)
-			G_BufferManager.createBuffer(SY.GLID_TYPE.INDEX, this.attributeId, this.indices, 1);
+		this.attributes.indices = G_BufferManager.createBuffer(SY.GLID_TYPE.INDEX, this.attributeId, this.indices, 1);
 	}
 
 	computeBoundingBox() {
@@ -130,7 +149,7 @@ export class Geometry extends SY.SpriteBase {
 
 	computeBoundingSphere() {
 
-		if (this.boundingSphere === null) {
+		if (!this.boundingSphere) {
 
 			this.boundingSphere = new Sphere();
 
@@ -547,6 +566,108 @@ export class Geometry extends SY.SpriteBase {
 	clearGroups() {
 
 		this.groups = [];
+
+	}
+
+	toNonIndexed() {
+
+		// function convertBufferAttribute( attribute:glBaseBuffer, indices ) {
+
+		// 	const array = attribute.sourceData;
+		// 	const itemSize = attribute.itemSize;
+		// 	const normalized = attribute.normalized;
+
+		// 	const array2 = new array( indices.length * itemSize );
+
+		// 	let index = 0, index2 = 0;
+
+		// 	for ( let i = 0, l = indices.length; i < l; i ++ ) {
+
+		// 		if ( attribute.isInterleavedBufferAttribute ) {
+
+		// 			index = indices[ i ] * attribute.data.stride + attribute.offset;
+
+		// 		} else {
+
+		// 			index = indices[ i ] * itemSize;
+
+		// 		}
+
+		// 		for ( let j = 0; j < itemSize; j ++ ) {
+
+		// 			array2[ index2 ++ ] = array[ index ++ ];
+
+		// 		}
+
+		// 	}
+
+		// 	return new BufferAttribute( array2, itemSize, normalized );
+
+		// }
+
+		// //
+
+		// if ( this.index === null ) {
+
+		// 	console.warn( 'THREE.BufferGeometry.toNonIndexed(): BufferGeometry is already non-indexed.' );
+		// 	return this;
+
+		// }
+
+		// const geometry2 = new Geometry();
+
+		// const indices = G_BufferManager.getBuffer(SY.GLID_TYPE.INDEX,this.attributeId);
+		// const attributes = this.attributes;
+
+		// // attributes
+
+		// for ( const name in attributes ) {
+
+		// 	const attribute = attributes[ name ];
+
+		// 	const newAttribute = convertBufferAttribute( attribute, indices );
+
+		// 	geometry2.setAttribute( name, newAttribute );
+
+		// }
+
+		// // morph attributes
+
+		// const morphAttributes = this.morphAttributes;
+
+		// for ( const name in morphAttributes ) {
+
+		// 	const morphArray = [];
+		// 	const morphAttribute = morphAttributes[ name ]; // morphAttribute: array of Float32BufferAttributes
+
+		// 	for ( let i = 0, il = morphAttribute.length; i < il; i ++ ) {
+
+		// 		const attribute = morphAttribute[ i ];
+
+		// 		const newAttribute = convertBufferAttribute( attribute, indices );
+
+		// 		morphArray.push( newAttribute );
+
+		// 	}
+
+		// 	geometry2.morphAttributes[ name ] = morphArray;
+
+		// }
+
+		// geometry2.morphTargetsRelative = this.morphTargetsRelative;
+
+		// // groups
+
+		// const groups = this.groups;
+
+		// for ( let i = 0, l = groups.length; i < l; i ++ ) {
+
+		// 	const group = groups[ i ];
+		// 	geometry2.addGroup( group.start, group.count, group.materialIndex );
+
+		// }
+
+		// return geometry2;
 
 	}
 

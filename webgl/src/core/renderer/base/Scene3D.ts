@@ -29,6 +29,14 @@ import { UCS } from "../3d/UCS";
 import { GameMainCamera } from "../camera/GameMainCamera";
 import { BoxGeometry } from "../3d/geometry/BoxGeometry";
 import { CircleGeometry } from "../3d/geometry/CircleGeometry";
+import { TeapotGeometry } from "../3d/geometry/TeapotGeometry";
+import { TubeGeometry } from "../3d/geometry/TubeGeometry";
+import { IcosahedronGeometry } from "../3d/geometry/IcosahedronGeometry";
+import { DodecahedronGeometry } from "../3d/geometry/DodecahedronGeometry";
+import { RingGeometry } from "../3d/geometry/RingGeometry";
+import { WireframeGeometry } from "../3d/geometry/WireframeGeometry";
+import { LatheGeometry } from "../3d/geometry/LatheGeometry";
+import { SphereGeometry } from "../3d/geometry/SphereGeometry";
 
 export default class Scene3D extends Scene {
 
@@ -260,15 +268,39 @@ export default class Scene3D extends Scene {
         boxG.setPosition(-3,5,5);
         this.addChild(boxG);
 
-        var circleG = new CircleGeometry(5);
-        circleG.pushPassContent(syRender.ShaderType.Sprite)
-        circleG.spriteFrame = "res/wicker.jpg";
-        circleG.setPosition(3,5,5);
-        this.addChild(circleG);
+        // var circleG = new CircleGeometry(5);
+        // circleG.pushPassContent(syRender.ShaderType.Sprite)
+        // circleG.spriteFrame = "res/wicker.jpg";
+        // circleG.setPosition(3,5,5);
+        // this.addChild(circleG);
 
-        
+        // var teapotG = new TeapotGeometry(1);
+        // teapotG.pushPassContent(syRender.ShaderType.Sprite,[
+        //     [StateString.primitiveType,StateValueMap.primitiveType.PT_TRIANGLES]
+        // ],[
+        //     // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_TEXTURE,syRender.ShaderDefineValue.SY_USE_REMOVE_DEFINE]
+        // ]
+        // )
+        // teapotG.spriteFrame = "res/1.jpg";
+        // // teapotG.setColor(255,0.0,0.0,255)
+        // teapotG.setPosition(3,5,5);
+        // this.addChild(teapotG);
 
-        
+
+        var ringG = new SphereGeometry();
+        ringG.pushPassContent(syRender.ShaderType.Sprite,[],[])
+        ringG.spriteFrame = "res/wicker.jpg";
+        ringG.setPosition(3,8,5);
+        this.addChild(ringG);
+
+        var wireG = new WireframeGeometry(new SphereGeometry())
+        wireG.pushPassContent(syRender.ShaderType.Sprite,[
+            [StateString.primitiveType,StateValueMap.primitiveType.PT_LINES]
+        ],[
+            [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_TEXTURE,syRender.ShaderDefineValue.SY_USE_REMOVE_DEFINE]
+        ])
+        wireG.setPosition(3,5,5);
+        this.addChild(wireG);
 
         this._mirrorCube = new MirrorCube();
         this._mirrorCube.setDefaultUrl();
