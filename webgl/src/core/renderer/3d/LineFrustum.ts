@@ -3,7 +3,7 @@ import { glMatrix } from "../../math/Matrix";
 import { G_BufferManager } from "../base/buffer/BufferManager";
 import { SY } from "../base/Sprite";
 import { syRender } from "../data/RenderData";
-import { StateString, StateValueMap } from "../gfx/State";
+import { syStateStringKey, syStateStringValue } from "../gfx/State";
 import { syGL } from "../gfx/syGLEnums";
 import { Pass } from "../shader/Pass";
 
@@ -54,7 +54,7 @@ export class LineFrustum extends SY.SpriteBasePolygon {
         this.setColor(255,0,0,255);
 
         this.pushPassContent(syRender.ShaderType.Sprite,[
-            [StateString.primitiveType,StateValueMap.primitiveType.PT_LINES]
+            [syStateStringKey.primitiveType,syStateStringValue.primitiveType.PT_LINES]
         ],[
             [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_MAT],
             [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_ADD_POSITION_SPACE],

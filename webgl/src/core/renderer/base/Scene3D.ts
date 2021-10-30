@@ -22,7 +22,7 @@ import { Plane } from "../3d/Plane";
 import { ThreeDF } from "../3d/ThreeDF";
 import RobartInstantiate from "../3d/RobartInstantiate";
 import ObjNode from "../3d/ObjNode";
-import { StateString, StateValueMap } from "../gfx/State";
+import { syStateStringKey, syStateStringValue } from "../gfx/State";
 import Mirror from "../3d/Mirror";
 import { Object3D } from "../3d/Object3D";
 import { UCS } from "../3d/UCS";
@@ -37,6 +37,9 @@ import { RingGeometry } from "../3d/geometry/RingGeometry";
 import { WireframeGeometry } from "../3d/geometry/WireframeGeometry";
 import { LatheGeometry } from "../3d/geometry/LatheGeometry";
 import { SphereGeometry } from "../3d/geometry/SphereGeometry";
+import { TorusKnotGeometry } from "../3d/geometry/TorusKnotGeometry";
+import { TorusGeometry } from "../3d/geometry/TorusGeometry";
+import { Vector2 } from "../../math/Vector2";
 
 export default class Scene3D extends Scene {
 
@@ -178,12 +181,12 @@ export default class Scene3D extends Scene {
 
         // setTimeout(()=>{
         //     this._rtt.pushPassContent(syRender.ShaderType.RTT_Use,[
-        //         [StateString.blend,StateValueMap.blend.ON],
-        //         [StateString.blendSep,StateValueMap.blendSep.OFF],
-        //         [StateString.blendSrc,StateValueMap.blendSrc.SRC_ALPHA],
-        //         [StateString.blendDst,StateValueMap.blendDst.ONE_MINUS_SRC_ALPHA],
+        //         [syStateStringKey.blend,syStateStringValue.blend.ON],
+        //         [syStateStringKey.blendSep,syStateStringValue.blendSep.OFF],
+        //         [syStateStringKey.blendSrc,syStateStringValue.blendSrc.SRC_ALPHA],
+        //         [syStateStringKey.blendDst,syStateStringValue.blendDst.ONE_MINUS_SRC_ALPHA],
 
-        //         [StateString.depthWrite,StateValueMap.depthWrite.OFF], //关闭深度写入
+        //         [syStateStringKey.depthWrite,syStateStringValue.depthWrite.OFF], //关闭深度写入
         //     ],[],true)
         // },1000)
 
@@ -276,7 +279,7 @@ export default class Scene3D extends Scene {
 
         // var teapotG = new TeapotGeometry(1);
         // teapotG.pushPassContent(syRender.ShaderType.Sprite,[
-        //     [StateString.primitiveType,StateValueMap.primitiveType.PT_TRIANGLES]
+        //     [syStateStringKey.primitiveType,syStateStringValue.primitiveType.PT_TRIANGLES]
         // ],[
         //     // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_TEXTURE,syRender.ShaderDefineValue.SY_USE_REMOVE_DEFINE]
         // ]
@@ -286,16 +289,17 @@ export default class Scene3D extends Scene {
         // teapotG.setPosition(3,5,5);
         // this.addChild(teapotG);
 
-
-        var ringG = new SphereGeometry();
-        ringG.pushPassContent(syRender.ShaderType.Sprite,[],[])
-        ringG.spriteFrame = "res/wicker.jpg";
-        ringG.setPosition(3,8,5);
-        this.addChild(ringG);
+      
+        // var ringG = new LatheGeometry(points,20);
+        // ringG.pushPassContent(syRender.ShaderType.Sprite,[
+        // ],[])
+        // ringG.spriteFrame = "res/uv_grid_opengl.jpg";
+        // ringG.setPosition(3,8,-100);
+        // this.addChild(ringG);
 
         var wireG = new WireframeGeometry(new SphereGeometry())
         wireG.pushPassContent(syRender.ShaderType.Sprite,[
-            [StateString.primitiveType,StateValueMap.primitiveType.PT_LINES]
+            [syStateStringKey.primitiveType,syStateStringValue.primitiveType.PT_LINES]
         ],[
             [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_TEXTURE,syRender.ShaderDefineValue.SY_USE_REMOVE_DEFINE]
         ])

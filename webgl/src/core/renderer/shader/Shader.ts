@@ -120,6 +120,7 @@ mapTree_u.set(syGL.AttributeUniform.LightWorldPosition,ShaderUseVariantType.Ligh
 
 mapTree_u.set(syGL.AttributeUniform.MOUSE,ShaderUseVariantType.Mouse);
 mapTree_u.set(syGL.AttributeUniform.RESOLUTION,ShaderUseVariantType.Resolution)
+mapTree_u.set(syGL.AttributeUniform.FLOAT_ARRAY,ShaderUseVariantType.FloatArray)
 /**
  * 获取当前对象记载显存地址的key
  * @param pName 
@@ -254,6 +255,18 @@ export class ShaderProgramBase {
         var loc = getLocName(uniforName,true);
         if (this.checklocValid(this[loc])) {
             G_DrawEngine.setUniformFloatVec4(this[loc], data);
+        }
+    }
+
+    /**
+     * 设置自定义使用的统一变量
+     * @param uniforName shader代码中变量的名字
+     * @param data 数组中包含四个元素 shader那边是一个vec4
+     */
+     public setCustomUniformFloatArray(uniforName:syGL.AttributeUniform,data:Array<number>):void{
+        var loc = getLocName(uniforName,true);
+        if (this.checklocValid(this[loc])) {
+            G_DrawEngine.setUniform1fv(this[loc], data);
         }
     }
 

@@ -8,7 +8,7 @@ import Vec3 from "../../value-types/vec3";
 import { Node } from "../base/Node";
 import { GameMainCamera } from "../camera/GameMainCamera";
 import { glEnums } from "../gfx/GLapi";
-import { State, StateString, StateValueMap } from "../gfx/State";
+import { State, syStateStringKey, syStateStringValue } from "../gfx/State";
 import { syGL } from "../gfx/syGLEnums";
 import { IGeometry } from "../primitive/define";
 import { Pass } from "../shader/Pass";
@@ -159,6 +159,7 @@ export namespace syRender {
 
         SY_USE_NORMAL:"SY_USE_NORMAL",            //使用法线
         SY_USE_MAT:"SY_USE_MAT",                  //万能矩阵
+        SY_USE_FLOAT_ARRAY_LENGTH:"SY_USE_FLOAT_ARRAY_LENGTH",//使用float数组 定义其长度 
         SY_USE_ALPHA_TEST:"SY_USE_ALPHA_TEST",    //alpha测试
         SY_USE_RGB_TEST:"SY_USE_RGB_TEST",        //rgb测试
         SY_USE_TEXTURE:"SY_USE_TEXTURE",          //使用纹理
@@ -813,6 +814,9 @@ export namespace syRender {
                         break;
                     case ShaderUseVariantType.ShadowInfo:
                         _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.SHADOW_INFO, this.light.shadow.info);
+                        break;
+                    case ShaderUseVariantType.FloatArray:
+                        _shader.setCustomUniformFloatArray(syGL.AttributeUniform.FLOAT_ARRAY,[0,0,0,0,0,0,0,1])
                         break;
                     case ShaderUseVariantType.ShadowMap:
                         _shader.setUseBuiltinTexture(this.light.shadow.map, useTextureAddres, syGL.AttributeUniform.SHADOW_MAP);

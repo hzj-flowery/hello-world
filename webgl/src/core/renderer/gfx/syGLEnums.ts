@@ -220,7 +220,7 @@ export namespace syGL {
         MOUSE = "u_mouse",//鼠标位置数据
         CUSTOM_FLOAT_VALUE = "u_float_custom",//一个自定义的值
         RESOLUTION = "u_resolution",//屏幕的设计分辨率
-
+        FLOAT_ARRAY = "u_float_array[0]",    //数组
     }
     // cull
     export const Cull = {

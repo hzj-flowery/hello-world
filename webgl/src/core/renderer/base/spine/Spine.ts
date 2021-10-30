@@ -5,7 +5,7 @@ import { Skeleton_Node } from "./Skeleton_Node";
 import { Skeleton_Skin } from "./Skeleton_Skin";
 import { glMatrix } from "../../../math/Matrix";
 import { syRender } from "../../data/RenderData";
-import { StateString, StateValueMap } from "../../gfx/State";
+import { syStateStringKey, syStateStringValue } from "../../gfx/State";
 import Device from "../../../Device";
 //骨骼节点
 export default class Spine extends SY.SpriteBase {
@@ -20,7 +20,7 @@ export default class Spine extends SY.SpriteBase {
         this._lightDirection = glMatrix.vec3.create() as Float32Array;
         this._glMatrix.vec3.normalize(this._lightDirection, [-1, 3, 5]);
         this.pushPassContent(syRender.ShaderType.Spine_Skin,[
-            [StateString.primitiveType,StateValueMap.primitiveType.PT_TRIANGLES]
+            [syStateStringKey.primitiveType,syStateStringValue.primitiveType.PT_TRIANGLES]
         ],[]);
         this.pushPassContent(syRender.ShaderType.Spine_Mesh);
     }

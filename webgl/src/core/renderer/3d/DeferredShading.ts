@@ -4,7 +4,7 @@ import { RenderTexture } from "../base/texture/RenderTexture";
 import {GameMainCamera} from "../camera/GameMainCamera";
 import { CubeData } from "../data/CubeData";
 import { syRender } from "../data/RenderData";
-import { StateString, StateValueMap } from "../gfx/State";
+import { syStateStringKey, syStateStringValue } from "../gfx/State";
 
 /**
  * 延迟渲染

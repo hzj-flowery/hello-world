@@ -1,7 +1,7 @@
 import Device from "../../Device";
 import { SY } from "../base/Sprite";
 import { syRender } from "../data/RenderData";
-import { StateString, StateValueMap } from "../gfx/State";
+import { syStateStringKey, syStateStringValue } from "../gfx/State";
 import { OBJParseHelper } from "../parse/OBJParseHelper";
 var OBJRes = [
   "http:localhost:3000/res/models/windmill/windmill.obj",
@@ -25,7 +25,7 @@ export default class ObjNode extends SY.SpriteBase {
   private _renderDataArray: Array<syRender.QueueItemData> = [];
   protected onInit() {
     this.pushPassContent(syRender.ShaderType.Obj,[
-      [StateString.primitiveType,StateValueMap.primitiveType.PT_TRIANGLES]
+      [syStateStringKey.primitiveType,syStateStringValue.primitiveType.PT_TRIANGLES]
     ])
   }
 

@@ -1,3 +1,7 @@
+import { Matrix3 } from "../../../math/Matrix3";
+import { Matrix4 } from "../../../math/Matrix4";
+import { Vector2 } from "../../../math/Vector2";
+import { Vector3 } from "../../../math/Vector3";
 import { syGL } from "../../gfx/syGLEnums";
 import { SY } from "../Sprite";
 /**
@@ -13,7 +17,6 @@ import { SY } from "../Sprite";
  * 索引：为了节省字节而产生的，他有单独的索引缓冲存放 
  *
  */
-
 /**
  * 顶点buffer:若干字节组成一个数据，若干数据组成一个单元，若干单元组成一个图形
  * 一般情况：存储顶点buffer的数组都是float类型，所以一个顶点的坐标便是4个字节，一个顶点有三个坐标（x,y,z）,所以就有三个数据组成一个顶点，一个顶点就代表一个单元
@@ -22,7 +25,6 @@ import { SY } from "../Sprite";
  * 单元是如何分布的，比如点分布，线分布，三角形分布
  * 
  */
-
 /**
  * 缓冲区中的数据就是一个二进制流，一般我们会按照字节处理，八个二进制为一个字节，又称字节流
  * 我们用字节流来表示数据，一个数据可以用若干个字节来表示
@@ -44,7 +46,9 @@ gl.DYNAMIC_DRAW：代码经常更新其内容，用于绘制或者用于拷贝�
 gl.DYNAMIC_READ：OpenGL输出经常更新其内容，代码经常查询。
 gl.DYNAMIC_COPY：OpenGL输出经常更新其内容，用于绘制或者用于拷贝至图片，使用频率高。
  */
-export abstract class glBaseBuffer {
+const _vector = /*@__PURE__*/ new Vector3();
+const _vector2 = /*@__PURE__*/ new Vector2();
+export abstract class BufferAttribute {
     /**
      * 构造一个buffer对象
      * @param gl 
@@ -62,7 +66,6 @@ export abstract class glBaseBuffer {
         this._elementBytes = elementBytes;
         // //默认使用以下数据
         this._usage = syGL.BufferUsage.STATIC;
-
         this._curMapTotalBytes = 0;
         this._hasAllocateByteLen = 0;
         if (preAllocateLen == 0) {
@@ -95,9 +98,9 @@ export abstract class glBaseBuffer {
     private _preAllocateLen: number;//动态预分配的字节长度
     private _hasAllocateByteLen: number;//已经分配的字节长度
     protected gl: WebGLRenderingContext;
-
     public needsUpdate: boolean = true;//是否需要更新
     public isGLBufferAttribute: boolean = false;//
+    public normalized:boolean;//是否归一化
     protected useDynamicUsage() {
         this._usage = syGL.BufferUsage.DYNAMIC;
     }
@@ -125,7 +128,6 @@ export abstract class glBaseBuffer {
     private uploadData2GPU(data: Array<number>) {
         this._curMapTotalBytes = data.length * this._elementBytes;
         this._itemNums = data.length / this._itemSize;
-
         this.bufferSet();
         this._sourceData = data;
         var arr = this.getBytesArray();
@@ -146,7 +148,36 @@ export abstract class glBaseBuffer {
         this._curMapTotalBytes = data.length * this._elementBytes;
         this.needsUpdate = false;
     }
-
+    transformDirection( m:Matrix4) {
+		for ( let i = 0, l = this.count; i < l; i ++ ) {
+			_vector.x = this.getX( i );
+			_vector.y = this.getY( i );
+			_vector.z = this.getZ( i );
+			_vector.transformDirection( m );
+			this.setXYZ( i, _vector.x, _vector.y, _vector.z );
+		}
+		return this;
+	}
+    public applyNormalMatrix( m:Matrix3 ) {
+		for ( let i = 0, l = this.count; i < l; i ++ ) {
+			_vector.x = this.getX( i );
+			_vector.y = this.getY( i );
+			_vector.z = this.getZ( i );
+			_vector.applyNormalMatrix( m );
+			this.setXYZ( i, _vector.x, _vector.y, _vector.z );
+		}
+		return this;
+	}
+    public applyMatrix4(m:Matrix4){
+        for ( let i = 0, l = this.count; i < l; i ++ ) {
+			_vector.x = this.getX( i );
+			_vector.y = this.getY( i );
+			_vector.z = this.getZ( i );
+			_vector.applyMatrix4( m );
+			this.setXYZ( i, _vector.x, _vector.y, _vector.z );
+		}
+		return this;
+    }
     public update(): void {
         if (!this.needsUpdate) return;
         var arr = this.getBytesArray();
@@ -173,7 +204,6 @@ export abstract class glBaseBuffer {
             case 8: return Float64Array;
         }
     }
-
     ///---------------------------------------------------
     //获取源数据
     public get sourceData() {
@@ -230,7 +260,6 @@ export abstract class glBaseBuffer {
     }
     //--
     protected abstract bufferSet();
-
     /**
    * @method destroy
    */
@@ -243,29 +272,26 @@ export abstract class glBaseBuffer {
         this.glID = -1;
     }
 }
-
 //顶点buffer
-export class VertexsBuffer extends glBaseBuffer {
+export class VertexsBuffer extends BufferAttribute {
     constructor(gl, vertexs: Array<number>, itemSize: number, preAllocateLen: number) {
         super(gl, vertexs, itemSize, gl.ARRAY_BUFFER, 4, preAllocateLen);
-
     }
     bufferSet(): void {
         this.useDynamicUsage();
     }
 }
 //切线buffer
-export class TangentsBuffer extends glBaseBuffer {
+export class TangentsBuffer extends BufferAttribute {
     constructor(gl, tangents: Array<number>, itemSize: number, preAllocateLen: number) {
         super(gl, tangents, itemSize, gl.ARRAY_BUFFER, 4, preAllocateLen);
-
     }
     bufferSet(): void {
         this.useDynamicUsage();
     }
 }
 //索引buffer
-export class IndexsBuffer extends glBaseBuffer {
+export class IndexsBuffer extends BufferAttribute {
     constructor(gl, indexs: Array<number>, itemSize: number, preAllocateLen: number) {
         super(gl, indexs, itemSize, gl.ELEMENT_ARRAY_BUFFER, 2, preAllocateLen);
     }
@@ -274,7 +300,7 @@ export class IndexsBuffer extends glBaseBuffer {
     }
 }
 //uvbuffer
-export class UVsBuffer extends glBaseBuffer {
+export class UVsBuffer extends BufferAttribute {
     constructor(gl, uvs: Array<number>, itemSize: number, preAllocateLen: number) {
         super(gl, uvs, itemSize, gl.ARRAY_BUFFER, 4, preAllocateLen);
     }
@@ -283,7 +309,7 @@ export class UVsBuffer extends glBaseBuffer {
     }
 }
 //法线buffer
-export class NormalBuffer extends glBaseBuffer {
+export class NormalBuffer extends BufferAttribute {
     constructor(gl, normals: Array<number>, itemSize: number, preAllocateLen: number) {
         super(gl, normals, itemSize, gl.ARRAY_BUFFER, 4, preAllocateLen);
     }
@@ -292,7 +318,7 @@ export class NormalBuffer extends glBaseBuffer {
     }
 }
 //顶点矩阵buffer
-export class VertMatrixBuffer extends glBaseBuffer {
+export class VertMatrixBuffer extends BufferAttribute {
     constructor(gl, matrix: Array<number>, itemSize: number, preAllocateLen: number) {
         super(gl, matrix, itemSize, gl.ARRAY_BUFFER, 4, preAllocateLen);
     }
@@ -301,7 +327,7 @@ export class VertMatrixBuffer extends glBaseBuffer {
     }
 }
 //顶点颜色buffer
-export class VertColorBuffer extends glBaseBuffer {
+export class VertColorBuffer extends BufferAttribute {
     constructor(gl, color: Array<number>, itemSize: number, preAllocateLen: number) {
         super(gl, color, itemSize, gl.ARRAY_BUFFER, 4, preAllocateLen);
     }
@@ -309,13 +335,11 @@ export class VertColorBuffer extends glBaseBuffer {
         // this.useDynamicUsage();
     }
 }
-
 /**
  * buffer 管理员
  */
 class BufferManager {
     constructor() {
-
     }
     public init(gl: WebGLRenderingContext): void {
         this._gl = gl;
@@ -336,7 +360,7 @@ class BufferManager {
      * @param itemSize 一个单元的数据个数
      * @param preAllocateLen 
      */
-    public createBuffer(type: SY.GLID_TYPE, attributeId: string, data: Array<number>, itemSize: number, preAllocateLen: number = 0): glBaseBuffer {
+    public createBuffer(type: SY.GLID_TYPE, attributeId: string, data: Array<number>, itemSize: number, preAllocateLen: number = 0): BufferAttribute {
         switch (type) {
             case SY.GLID_TYPE.VERTEX:
                 itemSize = 3; //(x,y,z)数组中每三个值代表顶点坐标
@@ -360,7 +384,7 @@ class BufferManager {
             default: break;
         }
     }
-    public getBuffer(type: SY.GLID_TYPE, attributeId: string): glBaseBuffer {
+    public getBuffer(type: SY.GLID_TYPE, attributeId: string): BufferAttribute {
         switch (type) {
             case SY.GLID_TYPE.VERTEX:
                 return this._mapVertexBuffer.get(attributeId);
@@ -414,7 +438,6 @@ class BufferManager {
         this._mapVertMatrixBuffer.set(id, buffer);
         return buffer;
     }
-    
     /**
      * 更新缓冲
      */
@@ -442,5 +465,4 @@ class BufferManager {
         })
     }
 }
-
 export var G_BufferManager = new BufferManager();

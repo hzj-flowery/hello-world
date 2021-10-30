@@ -2,7 +2,7 @@
 import { G_BufferManager } from "../base/buffer/BufferManager";
 import { SY } from "../base/Sprite";
 import { syRender } from "../data/RenderData";
-import { StateString, StateValueMap } from "../gfx/State";
+import { syStateStringKey, syStateStringValue } from "../gfx/State";
 import { syGL } from "../gfx/syGLEnums";
 
 
@@ -110,7 +110,7 @@ export default class CustomTextureCube extends SY.SpriteBase {
         G_BufferManager.createBuffer(SY.GLID_TYPE.UV,this.attributeId,uvs, 2);
         
         this.pushPassContent(syRender.ShaderType.Sprite,[
-            [StateString.primitiveType,StateValueMap.primitiveType.PT_TRIANGLES]
+            [syStateStringKey.primitiveType,syStateStringValue.primitiveType.PT_TRIANGLES]
         ])
     }
 }

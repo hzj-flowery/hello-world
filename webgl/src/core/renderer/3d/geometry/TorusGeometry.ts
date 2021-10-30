@@ -1,6 +1,8 @@
 import { Vector3 } from "../../../math/Vector3";
 import { Geometry } from "./Geometry";
-
+/**
+ * 立体环
+ */
 export class TorusGeometry extends Geometry {
     private radius: number;
     private tube: number;

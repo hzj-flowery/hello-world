@@ -4,7 +4,9 @@ import { MathUtils } from "../../../utils/MathUtils";
 import { G_BufferManager } from "../../base/buffer/BufferManager";
 import { SY } from "../../base/Sprite";
 import { Geometry } from "./Geometry";
-
+/**
+ * 罐子
+ */
 export class LatheGeometry extends Geometry {
     points: Array<Vector2>;
     segments: number;

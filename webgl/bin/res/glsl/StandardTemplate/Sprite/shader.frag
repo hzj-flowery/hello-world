@@ -5,6 +5,13 @@ uniform vec4 u_color;//节点的颜色
 
 uniform float u_alpha;
 
+
+//传递数组        
+#ifdef SY_USE_FLOAT_ARRAY_LENGTH
+       if(SY_USE_FLOAT_ARRAY_LENGTH>0)
+       uniform float u_float_array[SY_USE_FLOAT_ARRAY_LENGTH];
+#endif
+
 //使用法线
 #if defined(SY_USE_NORMAL)
       varying vec3 v_normal;

@@ -48,7 +48,7 @@ import { Texture, TextureOpts } from "./texture/Texture";
 import { Texture2D } from "./texture/Texture2D";
 import TextureCube from "./texture/TextureCube";
 import TextureCustom from "./texture/TextureCustom";
-import { glBaseBuffer, G_BufferManager, IndexsBuffer, VertColorBuffer, VertMatrixBuffer, NormalBuffer, UVsBuffer, VertexsBuffer } from "./buffer/BufferManager";
+import { BufferAttribute, G_BufferManager, IndexsBuffer, VertColorBuffer, VertMatrixBuffer, NormalBuffer, UVsBuffer, VertexsBuffer } from "./buffer/BufferManager";
 import enums from "../camera/enums";
 import { G_ShaderCenter } from "../shader/ShaderCenter";
 import { LightData } from "../data/LightData";
@@ -61,7 +61,7 @@ import { Pass } from "../shader/Pass";
 import { RenderTexture } from "./texture/RenderTexture";
 import { glMatrix } from "../../math/Matrix";
 import { glEnums } from "../gfx/GLapi";
-import { StateString, StateValueMap } from "../gfx/State";
+import { syStateStringKey, syStateStringValue } from "../gfx/State";
 import { GameMainCamera } from "../camera/GameMainCamera";
 import { Color } from "../../value-types/color";
 
@@ -308,7 +308,7 @@ export namespace SY {
          * 获取顶点数据的buffer
          * @param type 
          */
-        public getBuffer(type: GLID_TYPE): glBaseBuffer {
+        public getBuffer(type: GLID_TYPE): BufferAttribute {
             return G_BufferManager.getBuffer(type,this._attributeId)
         }
         protected getBufferItemSize(type: GLID_TYPE): number {
@@ -679,28 +679,28 @@ export namespace SY {
 
             this.pushPassContent(syRender.ShaderType.Sprite, [
                 //深度 
-                [StateString.depthTest,StateValueMap.depthTest.ON],
-                [StateString.depthFunc,StateValueMap.depthFunc.LEQUAL],
-                [StateString.depthWrite,StateValueMap.depthWrite.ON],
+                [syStateStringKey.depthTest,syStateStringValue.depthTest.ON],
+                [syStateStringKey.depthFunc,syStateStringValue.depthFunc.LEQUAL],
+                [syStateStringKey.depthWrite,syStateStringValue.depthWrite.ON],
                 
-                [StateString.blendColorMask,syRender.ColorMask.NONE],
+                [syStateStringKey.blendColorMask,syRender.ColorMask.NONE],
     
-                [StateString.stencilTest,StateValueMap.stencilTest.ON],
-                [StateString.stencilSep,StateValueMap.stencilSep.OFF],
-                [StateString.stencilFunc,StateValueMap.stencilFunc.ALWAYS],
-                [StateString.stencilRef,10],
-                [StateString.stencilMask,0xffff],
-                [StateString.stencilFailOp,StateValueMap.stencilFailOp.KEEP],
-                [StateString.stencilZFailOp,StateValueMap.stencilZFailOp.KEEP],
-                [StateString.stencilZPassOp,StateValueMap.stencilZPassOp.REPLACE],
+                [syStateStringKey.stencilTest,syStateStringValue.stencilTest.ON],
+                [syStateStringKey.stencilSep,syStateStringValue.stencilSep.OFF],
+                [syStateStringKey.stencilFunc,syStateStringValue.stencilFunc.ALWAYS],
+                [syStateStringKey.stencilRef,10],
+                [syStateStringKey.stencilMask,0xffff],
+                [syStateStringKey.stencilFailOp,syStateStringValue.stencilFailOp.KEEP],
+                [syStateStringKey.stencilZFailOp,syStateStringValue.stencilZFailOp.KEEP],
+                [syStateStringKey.stencilZPassOp,syStateStringValue.stencilZPassOp.REPLACE],
     
-                // [StateString.stencilTestFront,StateValueMap.stencilTestFront.ON],
-                // [StateString.stencilFuncFront,StateValueMap.stencilFuncFront.ALWAYS],
-                // [StateString.stencilRefFront,3],
-                // [StateString.stencilMaskFront,0xffff],
-                // [StateString.stencilFailOpFront,StateValueMap.stencilFailOpFront.KEEP],
-                // [StateString.stencilZFailOpFront,StateValueMap.stencilZFailOpFront.KEEP],
-                // [StateString.stencilZPassOpFront,StateValueMap.stencilZPassOpFront.REPLACE],
+                // [syStateStringKey.stencilTestFront,syStateStringValue.stencilTestFront.ON],
+                // [syStateStringKey.stencilFuncFront,syStateStringValue.stencilFuncFront.ALWAYS],
+                // [syStateStringKey.stencilRefFront,3],
+                // [syStateStringKey.stencilMaskFront,0xffff],
+                // [syStateStringKey.stencilFailOpFront,syStateStringValue.stencilFailOpFront.KEEP],
+                // [syStateStringKey.stencilZFailOpFront,syStateStringValue.stencilZFailOpFront.KEEP],
+                // [syStateStringKey.stencilZPassOpFront,syStateStringValue.stencilZPassOpFront.REPLACE],
             ],[
                 [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_ALPHA_TEST,0.1]
             ])

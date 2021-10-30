@@ -188,7 +188,16 @@ class DrawEngine {
     public useProgram(glID: WebGLProgram): void {
         this.gl.useProgram(glID);
     }
-
+    
+    /**
+     * 传递一个数组
+     * 
+     * @param loc 
+     * @param v  Float32Array or Array<number>
+     */
+    public setUniform1fv(loc:WebGLUniformLocation, v:Float32List): void {
+        this.gl.uniform1fv(loc, v);
+    }
     /**
      * 设置一个uniform的float变量
      * @param loc 

@@ -59,6 +59,7 @@ export enum ShaderUseVariantType {
     ShadowMap,              //阴影的深度纹理
     Mouse,             //鼠标按下的位置信息
     Resolution,       //设计分辨率
+    FloatArray,            //数组
     Custom_Float_Value, //自定义一个float 变量
     UndefinedMax,//无效
 }

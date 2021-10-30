@@ -4,7 +4,7 @@ import LoaderManager from "../../LoaderManager";
 import { G_BufferManager } from "../base/buffer/BufferManager";
 import { SY } from "../base/Sprite";
 import { syRender } from "../data/RenderData";
-import { StateString, StateValueMap } from "../gfx/State";
+import { syStateStringKey, syStateStringValue } from "../gfx/State";
 import { syGL } from "../gfx/syGLEnums";
 
 var testLetterInfors = {
@@ -164,7 +164,7 @@ export class Label extends SY.SpriteBase {
     super();
     this._node__type = syRender.NodeType.D2;
     this.pushPassContent(syRender.ShaderType.Sprite, [
-      [StateString.primitiveType, StateValueMap.primitiveType.PT_TRIANGLES]
+      [syStateStringKey.primitiveType, syStateStringValue.primitiveType.PT_TRIANGLES]
     ], [
       [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_RGB_TEST, 0.1]
     ]);

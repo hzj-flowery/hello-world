@@ -1,7 +1,9 @@
 import { Vector3 } from "../../../math/Vector3";
 import { SY } from "../../base/Sprite";
 import { Geometry } from "./Geometry";
-
+/**
+ * 立体环状缠绕
+ */
 export class TorusKnotGeometry extends Geometry {
     private radius: number;
     private tube: number;

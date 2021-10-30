@@ -11,7 +11,7 @@ import { Pen } from "../2d/Pen";
 import { G_InputControl } from "../../InputControl";
 import { handler } from "../../../utils/handler";
 import { glEnums } from "../gfx/GLapi";
-import { StateString, StateValueMap } from "../gfx/State";
+import { syStateStringKey, syStateStringValue } from "../gfx/State";
 import { SY } from "./Sprite";
 
 export default class Scene2D extends Scene {
@@ -124,29 +124,29 @@ export default class Scene2D extends Scene {
         rectangle1.gZOrder = 1001;
         rectangle1.pushPassContent(syRender.ShaderType.Sprite, [
 
-            [StateString.depthTest, StateValueMap.depthTest.OFF],
-            [StateString.depthFunc, StateValueMap.depthFunc.LEQUAL],
-            [StateString.depthWrite, StateValueMap.depthWrite.ON],
+            [syStateStringKey.depthTest, syStateStringValue.depthTest.OFF],
+            [syStateStringKey.depthFunc, syStateStringValue.depthFunc.LEQUAL],
+            [syStateStringKey.depthWrite, syStateStringValue.depthWrite.ON],
 
-            // [StateString.blendColorMask,syRender.ColorMask.ALL],
+            // [syStateStringKey.blendColorMask,syRender.ColorMask.ALL],
 
-            [StateString.stencilTest, StateValueMap.stencilTest.ON],
-            [StateString.stencilSep, StateValueMap.stencilSep.OFF],
-            [StateString.stencilFunc, StateValueMap.stencilFunc.EQUAL],
-            [StateString.stencilRef, 10],
-            [StateString.stencilMask, 0xffff],
-            [StateString.stencilFailOp, StateValueMap.stencilFailOp.KEEP],
-            [StateString.stencilZFailOp, StateValueMap.stencilZFailOp.KEEP],
-            [StateString.stencilZPassOp, StateValueMap.stencilZPassOp.KEEP],
+            [syStateStringKey.stencilTest, syStateStringValue.stencilTest.ON],
+            [syStateStringKey.stencilSep, syStateStringValue.stencilSep.OFF],
+            [syStateStringKey.stencilFunc, syStateStringValue.stencilFunc.EQUAL],
+            [syStateStringKey.stencilRef, 10],
+            [syStateStringKey.stencilMask, 0xffff],
+            [syStateStringKey.stencilFailOp, syStateStringValue.stencilFailOp.KEEP],
+            [syStateStringKey.stencilZFailOp, syStateStringValue.stencilZFailOp.KEEP],
+            [syStateStringKey.stencilZPassOp, syStateStringValue.stencilZPassOp.KEEP],
 
-            // [StateString.stencilTestFront,StateValueMap.stencilTestFront.ON],
-            // [StateString.stencilSep,StateValueMap.stencilSep.ON],
-            // [StateString.stencilFuncFront,StateValueMap.stencilFuncFront.EQUAL],
-            // [StateString.stencilRefFront,3],
-            // [StateString.stencilMaskFront,0xffff],
-            // [StateString.stencilFailOpFront,StateValueMap.stencilFailOpFront.KEEP],
-            // [StateString.stencilZFailOpFront,StateValueMap.stencilZFailOpFront.KEEP],
-            // [StateString.stencilZPassOpFront,StateValueMap.stencilZPassOpFront.KEEP],
+            // [syStateStringKey.stencilTestFront,syStateStringValue.stencilTestFront.ON],
+            // [syStateStringKey.stencilSep,syStateStringValue.stencilSep.ON],
+            // [syStateStringKey.stencilFuncFront,syStateStringValue.stencilFuncFront.EQUAL],
+            // [syStateStringKey.stencilRefFront,3],
+            // [syStateStringKey.stencilMaskFront,0xffff],
+            // [syStateStringKey.stencilFailOpFront,syStateStringValue.stencilFailOpFront.KEEP],
+            // [syStateStringKey.stencilZFailOpFront,syStateStringValue.stencilZFailOpFront.KEEP],
+            // [syStateStringKey.stencilZPassOpFront,syStateStringValue.stencilZPassOpFront.KEEP],
         ])
         rectangle1.setPosition(Device.Instance.width / 2, Device.Instance.height / 2 - 100, -100);
         rectangle1.spriteFrame = "res/1.png";
@@ -209,14 +209,14 @@ export default class Scene2D extends Scene {
         var rectangle1 = new SY.UIImage();
         rectangle1.alpha = 1.0;
         rectangle1.pushPassContent(syRender.ShaderType.Sprite, [
-            [StateString.blendSep, StateValueMap.blendSep.ON],
-            [StateString.depthTest, StateValueMap.depthTest.ON],
-            [StateString.depthWrite, StateValueMap.depthWrite.ON],
-            [StateString.depthFunc, StateValueMap.depthFunc.LEQUAL],
-            [StateString.blendSrc, StateValueMap.blendSrc.SRC_ALPHA],
-            [StateString.blendDst, StateValueMap.blendDst.ONE_MINUS_SRC_ALPHA],
-            [StateString.blendSrcAlpha, StateValueMap.blendSrcAlpha.ZERO],
-            [StateString.blendDstAlpha, StateValueMap.blendDstAlpha.ONE]
+            [syStateStringKey.blendSep, syStateStringValue.blendSep.ON],
+            [syStateStringKey.depthTest, syStateStringValue.depthTest.ON],
+            [syStateStringKey.depthWrite, syStateStringValue.depthWrite.ON],
+            [syStateStringKey.depthFunc, syStateStringValue.depthFunc.LEQUAL],
+            [syStateStringKey.blendSrc, syStateStringValue.blendSrc.SRC_ALPHA],
+            [syStateStringKey.blendDst, syStateStringValue.blendDst.ONE_MINUS_SRC_ALPHA],
+            [syStateStringKey.blendSrcAlpha, syStateStringValue.blendSrcAlpha.ZERO],
+            [syStateStringKey.blendDstAlpha, syStateStringValue.blendDstAlpha.ONE]
         ],[
             [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_ALPHA_TEST,0.1]
         ])
@@ -228,14 +228,14 @@ export default class Scene2D extends Scene {
         this._mask.alpha = 1.0;
         this._mask.setScale(1.0, 1.0, 1.0)
         this._mask.pushPassContent(syRender.ShaderType.Sprite, [
-            [StateString.blendSep, StateValueMap.blendSep.ON],
-            [StateString.depthTest, StateValueMap.depthTest.ON],
-            [StateString.depthWrite, StateValueMap.depthWrite.ON],
-            [StateString.depthFunc, StateValueMap.depthFunc.LEQUAL],
-            [StateString.blendSrc, StateValueMap.blendSrc.SRC_ALPHA],
-            [StateString.blendDst, StateValueMap.blendDst.ONE_MINUS_SRC_ALPHA],
-            [StateString.blendSrcAlpha, StateValueMap.blendSrcAlpha.ZERO],
-            [StateString.blendDstAlpha, StateValueMap.blendDstAlpha.ONE],
+            [syStateStringKey.blendSep, syStateStringValue.blendSep.ON],
+            [syStateStringKey.depthTest, syStateStringValue.depthTest.ON],
+            [syStateStringKey.depthWrite, syStateStringValue.depthWrite.ON],
+            [syStateStringKey.depthFunc, syStateStringValue.depthFunc.LEQUAL],
+            [syStateStringKey.blendSrc, syStateStringValue.blendSrc.SRC_ALPHA],
+            [syStateStringKey.blendDst, syStateStringValue.blendDst.ONE_MINUS_SRC_ALPHA],
+            [syStateStringKey.blendSrcAlpha, syStateStringValue.blendSrcAlpha.ZERO],
+            [syStateStringKey.blendDstAlpha, syStateStringValue.blendDstAlpha.ONE],
         ])
         this._mask.setPosition(Device.Instance.width / 2, Device.Instance.height / 2, 0);
         this._mask.spriteFrame = "res/png/player_watch/104.png";

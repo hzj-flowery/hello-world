@@ -1,5 +1,6 @@
-import { glBaseBuffer } from "../renderer/base/buffer/BufferManager";
+import { BufferAttribute } from "../renderer/base/buffer/BufferManager";
 import { MathUtils } from "../utils/MathUtils";
+import { Matrix4 } from "./Matrix4";
 import { Quat } from "./Quat";
 
 
@@ -157,7 +158,7 @@ export class Vector3 {
     applyNormalMatrix(m) {
         return this.applyMatrix3(m).normalize();
     }
-    applyMatrix4(m) {
+    applyMatrix4(m:Matrix4) {
         const x = this.x, y = this.y, z = this.z;
         const e = m.elements;
         const w = 1 / (e[3] * x + e[7] * y + e[11] * z + e[15]);
@@ -186,7 +187,7 @@ export class Vector3 {
     unproject(camera) {
         return this.applyMatrix4(camera.projectionMatrixInverse).applyMatrix4(camera.matrixWorld);
     }
-    transformDirection(m) {
+    transformDirection(m:Matrix4) {
         // input: THREE.Matrix4 affine matrix
         // vector interpreted as a direction
         const x = this.x, y = this.y, z = this.z;
@@ -401,7 +402,7 @@ export class Vector3 {
         array[offset + 2] = this.z;
         return array;
     }
-    fromBufferAttribute(attribute:glBaseBuffer, index, offset?) {
+    fromBufferAttribute(attribute:BufferAttribute, index, offset?) {
         if (offset !== undefined) {
             console.warn('THREE.Vector3: offset has been removed from .fromBufferAttribute().');
         }

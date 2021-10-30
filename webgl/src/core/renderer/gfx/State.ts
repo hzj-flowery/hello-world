@@ -154,7 +154,7 @@ const _default = {
 
 };
 
-export const StateValueMap = {
+export const syStateStringValue = {
 
     /**
      * 是否开启alpha混合
@@ -308,7 +308,7 @@ export const StateValueMap = {
     primitiveType: sy_temp_pt,
 }
 
-export const StateString = {
+export const syStateStringKey = {
     vertexBuffers: "vertexBuffers",
     vertexBufferOffsets: "vertexBufferOffsets",
     textureUnits: "textureUnits",
