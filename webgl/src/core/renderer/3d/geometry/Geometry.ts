@@ -27,7 +27,8 @@ interface Attribute {
 	uvs: BufferAttribute;
 }
 interface MorphAttribute {
-	positions: Array<BufferAttribute>
+	positions: Array<BufferAttribute>;
+	morphTargetInfluences: Array<number>;
 }
 export class Geometry extends SY.SpriteBase {
 	protected indices: Array<number>;
@@ -53,7 +54,7 @@ export class Geometry extends SY.SpriteBase {
 		this.binormals = [];
 		this.groups = [];
 		this.attributes = { indices: null, vertices: null, normals: null, tangents: null, binormals: null, uvs: null };
-		this.morphAttributes = { positions: [] };
+		this.morphAttributes = { positions: [], morphTargetInfluences: [] };
 		this.morphTargetsRelative = false;
 	}
 	protected build(): void {
@@ -65,7 +66,97 @@ export class Geometry extends SY.SpriteBase {
 			this.attributes.normals = G_BufferManager.createBuffer(SY.GLID_TYPE.NORMAL, this.attributeId, this.normals, 3)
 		if (this.indices.length > 0)
 			this.attributes.indices = G_BufferManager.createBuffer(SY.GLID_TYPE.INDEX, this.attributeId, this.indices, 1);
+		if (this.tangents.length > 0)
+			this.attributes.tangents = G_BufferManager.createBuffer(SY.GLID_TYPE.TANGENT, this.attributeId, this.tangents, 4)
 	}
+
+	protected onUpdate(): void {
+		// this.trigerMorph();
+		super.onUpdate()
+	}
+    
+	/**
+	 * 触发变形
+	 */
+	public trigerMorph():void{
+		var len = this.morphAttributes.positions.length;
+		var len1 = this.morphAttributes.morphTargetInfluences.length;
+
+		if (len > 0 && len1 > 0 && len == len1) {
+			const positions = this.attributes.vertices.sourceData;
+			var isNeedUpdate = false;
+			var renderMorphPosition = []
+			for (let i = 0, l = positions.length; i < l; i += 3) {
+				let x = positions[i];
+				let y = positions[i + 1];
+				let z = positions[i + 2];
+				for (let t = 0; t < len; t++) {
+					var influence = this.morphAttributes.morphTargetInfluences[t];
+					if (influence === 0) continue;
+					isNeedUpdate = true;
+					const target = this.morphAttributes.positions[t];
+
+					if (this.morphTargetsRelative) {
+						x += target.getX(i / 3) * influence;
+						y += target.getY(i / 3) * influence;
+						z += target.getZ(i / 3) * influence;
+					} else {
+						x += (target.getX(i / 3) - positions[i]) * influence;
+						y += (target.getY(i / 3) - positions[i + 1]) * influence;
+						z += (target.getZ(i / 3) - positions[i + 2]) * influence;
+					}
+
+				}
+				renderMorphPosition.push(x,y,z);
+			}
+			this.attributes.vertices.needsMorphUpdate = true;
+			this.attributes.vertices.updateMorph(renderMorphPosition)
+		}
+	}
+
+	public addGeometry() {
+
+		// create an empty array to  hold targets for the attribute we want to morph
+		// morphing positions and normals is supported
+		this.morphAttributes.positions = [];
+
+		// the original positions of the cube's vertices
+		const positionAttribute = this.attributes.vertices;
+
+		// for the first morph target we'll move the cube's vertices onto the surface of a sphere
+		const spherePositions = [];
+
+		// for the second morph target, we'll twist the cubes vertices
+		const twistPositions = [];
+		const direction = new Vector3(1, 0, 0);
+		const vertex = new Vector3();
+
+		for (let i = 0; i < positionAttribute.count; i++) {
+			const x = positionAttribute.getX(i);
+			const y = positionAttribute.getY(i);
+			const z = positionAttribute.getZ(i);
+			spherePositions.push(
+				x * Math.sqrt(1 - (y * y / 2) - (z * z / 2) + (y * y * z * z / 3)),
+				y * Math.sqrt(1 - (z * z / 2) - (x * x / 2) + (z * z * x * x / 3)),
+				z * Math.sqrt(1 - (x * x / 2) - (y * y / 2) + (x * x * y * y / 3))
+			);
+			// stretch along the x-axis so we can see the twist better
+			vertex.set(x * 2, y, z);
+			vertex.applyAxisAngle(direction, Math.PI * x / 2).toArray(twistPositions, twistPositions.length);
+		}
+
+		// add the spherical positions as the first morph target
+		this.morphAttributes.positions[0] = G_BufferManager.createBuffer(SY.GLID_TYPE.VERTEX, (this.attributeId + "spherePositions"), spherePositions, 3);
+		this.morphAttributes.morphTargetInfluences[0] = 0;
+		// add the twisted positions as the second morph target
+		this.morphAttributes.positions[1] = G_BufferManager.createBuffer(SY.GLID_TYPE.VERTEX, (this.attributeId + "twistPositions"), twistPositions, 3);
+		this.morphAttributes.morphTargetInfluences[1] = 0;
+	}
+
+	public setMorphTargetInfluences(index: number, value: number): void {
+		this.morphAttributes.morphTargetInfluences[index] = value;
+	}
+
 	/**
 	 * 
 	 * @param name 

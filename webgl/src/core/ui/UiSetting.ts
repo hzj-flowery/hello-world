@@ -5,6 +5,7 @@ export class UIStatusData {
     public static customValueX:number = 0;
     public static customValueY:number = 0;
     public static customValueZ:number = 0;
+    public static customValue:number = 0;
 
     public static cam2DPosX: number = 0;
     public static cam2DPosY: number = 0;
@@ -103,9 +104,10 @@ class UISetting {
         var render = this.render.bind(this);
         this.UI = window["webglLessonsUI"];
         let custom = [
-            { type: 'slider', key: 'customValueX', min: -50, max: 50, change: render, },
+            { type: 'slider', key: 'customValueX', min: -50, max: 50, change: render,precision: 2, step: 0.001, },
             { type: 'slider', key: 'customValueY', min: -50, max: 50, change: render, },
             { type: 'slider', key: 'customValueZ', min: -50, max: 50, change: render, },
+            { type: 'slider', key: 'customValue', min: 0, max: 1, change: render,precision: 2, step: 0.001, },
         ]
         let camera2D = [
             //2d相机

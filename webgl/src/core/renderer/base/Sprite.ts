@@ -244,6 +244,10 @@ export namespace SY {
 
         /**
          * 设置节点颜色
+         * @param r [0-255]
+         * @param g [0-255]
+         * @param b [0-255]
+         * @param a [0-255]
          */
         public setColor(r: number = 0, g: number = 0, b: number = 0, a: number = 255) {
             this._color.r = r;

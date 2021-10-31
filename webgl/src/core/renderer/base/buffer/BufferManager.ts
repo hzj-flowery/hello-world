@@ -99,6 +99,7 @@ export abstract class BufferAttribute {
     private _hasAllocateByteLen: number;//已经分配的字节长度
     protected gl: WebGLRenderingContext;
     public needsUpdate: boolean = true;//是否需要更新
+    public needsMorphUpdate: boolean = false;//是否需要更新
     public isGLBufferAttribute: boolean = false;//
     public normalized:boolean;//是否归一化
     protected useDynamicUsage() {
@@ -184,6 +185,14 @@ export abstract class BufferAttribute {
         this.gl.bindBuffer(this._arrayBufferType, this.glID);
         this.gl.bufferData(this._arrayBufferType, new arr(this._sourceData), this._usage)
         this.needsUpdate = false;
+    }
+
+    public updateMorph(mortphData:Array<number>):void{
+        if (!this.needsMorphUpdate) return;
+        var arr = this.getBytesArray();
+        this.gl.bindBuffer(this._arrayBufferType, this.glID);
+        this.gl.bufferData(this._arrayBufferType, new arr(mortphData), this._usage)
+        this.needsMorphUpdate = false;
     }
     /**
      * 在GPU显存中预分配一块内存为该buffer

@@ -290,21 +290,24 @@ export default class Scene3D extends Scene {
         // this.addChild(teapotG);
 
       
-        // var ringG = new LatheGeometry(points,20);
-        // ringG.pushPassContent(syRender.ShaderType.Sprite,[
-        // ],[])
-        // ringG.spriteFrame = "res/uv_grid_opengl.jpg";
-        // ringG.setPosition(3,8,-100);
-        // this.addChild(ringG);
-
-        var wireG = new WireframeGeometry(new SphereGeometry())
-        wireG.pushPassContent(syRender.ShaderType.Sprite,[
-            [syStateStringKey.primitiveType,syStateStringValue.primitiveType.PT_LINES]
+        var boxG = new BoxGeometry(2, 2, 2, 32, 32, 32);
+        boxG.addGeometry()
+        boxG.pushPassContent(syRender.ShaderType.Sprite,[
         ],[
             [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_TEXTURE,syRender.ShaderDefineValue.SY_USE_REMOVE_DEFINE]
         ])
-        wireG.setPosition(3,5,5);
-        this.addChild(wireG);
+        boxG.setColor(255,0,0,255)
+        boxG.setPosition(3,8,5);
+        this.addChild(boxG);
+
+        // var wireG = new WireframeGeometry(new TeapotGeometry(5))
+        // wireG.pushPassContent(syRender.ShaderType.Sprite,[
+        //     [syStateStringKey.primitiveType,syStateStringValue.primitiveType.PT_LINES]
+        // ],[
+        //     [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_TEXTURE,syRender.ShaderDefineValue.SY_USE_REMOVE_DEFINE]
+        // ])
+        // wireG.setPosition(3,5,5);
+        // this.addChild(wireG);
 
         this._mirrorCube = new MirrorCube();
         this._mirrorCube.setDefaultUrl();
@@ -319,7 +322,10 @@ export default class Scene3D extends Scene {
         this._centerNode.addChild(new LightCamera());
         // var camera = GameMainCamera.instance.getCameraByUUid(syRender.CameraUUid.base3D)
         // var diff = [camera.x,camera.y,camera.z]
+        
         G_UISetting.pushRenderCallBack((data)=>{
+            boxG.setMorphTargetInfluences(1,data.customValue?data.customValue:0)
+            boxG.trigerMorph();
             // this._robart.setPosition(data.customValueX,data.customValueY,data.customValueZ)
             // var cg = (data.customValue?-data.customValue:0.1)/10000;
             // this._robart.setScale(cg,cg,cg)
