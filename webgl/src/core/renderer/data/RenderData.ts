@@ -19,13 +19,13 @@ import { ShaderUseVariantType } from "../shader/ShaderUseVariantType";
 let renderDataId: number = 0;
 export namespace syRender {
 
-    export enum PassCustomKey{
+    export enum PassCustomKey {
         offlineRender = "offlineRender", //离线渲染
         drawInstanced = "drawInstanced", //实例化绘制
         DrawingOrder = "DrawingOrder",//绘制顺序
-        ShaderType="ShaderType",//shader的类型
-        DefineUse="DefineUse",//宏的使用
-        ProgramBaseType="ProgramBaseType",
+        ShaderType = "ShaderType",//shader的类型
+        DefineUse = "DefineUse",//宏的使用
+        ProgramBaseType = "ProgramBaseType",
     }
 
     export enum ColorMask {
@@ -36,64 +36,60 @@ export namespace syRender {
         A = 0x8, //00001000
         ALL = R | G | B | A,//表示全部开启
     }
-    
+
     /**
      * 网格数据
      */
-    export class Mesh{
-        constructor(){
+    export class Mesh {
+        constructor() {
             this.positions = [];
             this.normals = [];
             this.uvs = [];
             this.indices = [];
         }
-        positions:Array<number>;
-        normals:Array<number>;
-        uvs:Array<number>;
-        indices:Array<number>;
-        static create():Mesh{
-             return new Mesh();
+        positions: Array<number>;
+        normals: Array<number>;
+        uvs: Array<number>;
+        indices: Array<number>;
+        static create(): Mesh {
+            return new Mesh();
         }
-        
+
         /**
          * 网格合并
          */
-        public combine(data:IGeometry,offsetX:number=0,offsetY:number=0,offsetZ:number=0):void{
-            
-           var curPosLen = this.positions.length/3;
-           var tempPositions = [].concat(data.positions);
-           if(offsetX!=0||offsetY!=0||offsetZ!=0)
-           {
-               //需要对位置进行整体调整
-               for(let k=0;k<tempPositions.length;k=k+3)
-               {
-                  tempPositions[k] = tempPositions[k] + offsetX;
-                  tempPositions[k+1] = tempPositions[k+1] + offsetY;
-                  tempPositions[k+2] = tempPositions[k+2] + offsetZ;
-               }
-           }
-           //新的位置数据
-           this.positions = [].concat(this.positions,tempPositions);
-           //新的法线数据
-           this.normals = [].concat(this.normals,data.normals);
-           //新的uv数据
-           this.uvs = [].concat(this.uvs,data.uvs);
-           
-           if(curPosLen>0)
-           {
-               //三角形管带绘制
-               //输入两个不存在的索引，让其无法绘制三角形 从而让网格断开
-               // (尾-2 尾-1 尾) ==> (尾-1 尾 -1) (尾 -1 -1) (-1 -1 头) (-1 头 头+1) ==>(头 头+1 头+2)
-               this.indices.push(-1)
-               this.indices.push(-1)
-           }
-           //新的索引数据
-           let newIndices = [];
-           for(let k=0;k<data.indices.length;k++)
-           {
-              newIndices.push(data.indices[k]+curPosLen);
-           }
-           this.indices = [].concat(this.indices,newIndices)
+        public combine(data: IGeometry, offsetX: number = 0, offsetY: number = 0, offsetZ: number = 0): void {
+
+            var curPosLen = this.positions.length / 3;
+            var tempPositions = [].concat(data.positions);
+            if (offsetX != 0 || offsetY != 0 || offsetZ != 0) {
+                //需要对位置进行整体调整
+                for (let k = 0; k < tempPositions.length; k = k + 3) {
+                    tempPositions[k] = tempPositions[k] + offsetX;
+                    tempPositions[k + 1] = tempPositions[k + 1] + offsetY;
+                    tempPositions[k + 2] = tempPositions[k + 2] + offsetZ;
+                }
+            }
+            //新的位置数据
+            this.positions = [].concat(this.positions, tempPositions);
+            //新的法线数据
+            this.normals = [].concat(this.normals, data.normals);
+            //新的uv数据
+            this.uvs = [].concat(this.uvs, data.uvs);
+
+            if (curPosLen > 0) {
+                //三角形管带绘制
+                //输入两个不存在的索引，让其无法绘制三角形 从而让网格断开
+                // (尾-2 尾-1 尾) ==> (尾-1 尾 -1) (尾 -1 -1) (-1 -1 头) (-1 头 头+1) ==>(头 头+1 头+2)
+                this.indices.push(-1)
+                this.indices.push(-1)
+            }
+            //新的索引数据
+            let newIndices = [];
+            for (let k = 0; k < data.indices.length; k++) {
+                newIndices.push(data.indices[k] + curPosLen);
+            }
+            this.indices = [].concat(this.indices, newIndices)
 
         }
     }
@@ -157,29 +153,33 @@ export namespace syRender {
 
     export const ShaderDefineValue = {
 
-        SY_USE_NORMAL:"SY_USE_NORMAL",            //使用法线
-        SY_USE_MAT:"SY_USE_MAT",                  //万能矩阵
-        SY_USE_FLOAT_ARRAY_LENGTH:"SY_USE_FLOAT_ARRAY_LENGTH",//使用float数组 定义其长度 
-        SY_USE_ALPHA_TEST:"SY_USE_ALPHA_TEST",    //alpha测试
-        SY_USE_RGB_TEST:"SY_USE_RGB_TEST",        //rgb测试
-        SY_USE_TEXTURE:"SY_USE_TEXTURE",          //使用纹理
-        SY_USE_LIGHT_AMBIENT:"SY_USE_LIGHT_AMBIENT",          //使用环境光
-        SY_USE_LIGHT_PARALLEL:"SY_USE_LIGHT_PARALLEL",        //使用平行光
-        SY_USE_LIGHT_SPOT:"SY_USE_LIGHT_SPOT",                //使用聚光
-        SY_USE_LIGHT_POINT:"SY_USE_LIGHT_POINT",              //使用点光
-        SY_USE_LIGHT_SPECULAR:"SY_USE_LIGHT_SPECULAR",        //使用高光
-        SY_USE_SHADOW_PARALLEL:"SY_USE_SHADOW_PARALLEL",      //使用平行光阴影
-        SY_USE_FOG:"SY_USE_FOG",                              //使用雾
-        SY_USE_FOG_EXP:"SY_USE_FOG_EXP",
-        SY_USE_FOG_EXP2:"SY_USE_FOG_EXP2",
-        SY_USE_POINT_SIZE:"SY_USE_POINT_SIZE",                //点的大小
-        SY_USE_ADD_POSITION_SPACE:"SY_USE_ADD_POSITION_SPACE", //追加一个位置空间
-        SY_USE_EMISSIVE:"SY_USE_EMISSIVE",                              //使用自发光
+        SY_USE_NORMAL: "SY_USE_NORMAL",            //使用法线
+        SY_USE_MAT: "SY_USE_MAT",                  //万能矩阵
+        SY_USE_FLOAT_ARRAY_LENGTH: "SY_USE_FLOAT_ARRAY_LENGTH",//使用float数组 定义其长度 
+        SY_USE_ALPHA_TEST: "SY_USE_ALPHA_TEST",    //alpha测试
+        SY_USE_RGB_TEST: "SY_USE_RGB_TEST",        //rgb测试
+        SY_USE_TEXTURE: "SY_USE_TEXTURE",          //使用纹理
+        SY_USE_LIGHT_AMBIENT: "SY_USE_LIGHT_AMBIENT",          //使用环境光
+        SY_USE_LIGHT_PARALLEL: "SY_USE_LIGHT_PARALLEL",        //使用平行光
+        SY_USE_LIGHT_SPOT: "SY_USE_LIGHT_SPOT",                //使用聚光
+        SY_USE_LIGHT_POINT: "SY_USE_LIGHT_POINT",              //使用点光
+        SY_USE_LIGHT_SPECULAR: "SY_USE_LIGHT_SPECULAR",        //使用高光
+        SY_USE_SHADOW_PARALLEL: "SY_USE_SHADOW_PARALLEL",      //使用平行光阴影
+        SY_USE_FOG: "SY_USE_FOG",                              //使用雾
+        SY_USE_FOG_EXP: "SY_USE_FOG_EXP",
+        SY_USE_FOG_EXP2: "SY_USE_FOG_EXP2",
+        SY_USE_POINT_SIZE: "SY_USE_POINT_SIZE",                //点的大小
+        SY_USE_ADD_POSITION_SPACE: "SY_USE_ADD_POSITION_SPACE", //追加一个位置空间
+        SY_USE_EMISSIVE: "SY_USE_EMISSIVE",                              //使用自发光
         //下面是函数
-        SY_USE_FUNC_PACK:"SY_USE_FUNC_PACK",                        //压缩函数
-        SY_USE_FUNC_UNPACK:"SY_USE_FUNC_UNPACK",                        //解压缩函数
+        SY_USE_FUNC_PACK: "SY_USE_FUNC_PACK",                        //压缩函数
+        SY_USE_FUNC_UNPACK: "SY_USE_FUNC_UNPACK",                        //解压缩函数
 
-        SY_USE_REMOVE_DEFINE:"SY_USE_REMOVE_DEFINE",//任何一个宏与这个宏 "$"使用 就是删除不使用的意思
+        //变形目标
+        SY_USE_MORPHTARGETS: "SY_USE_MORPHTARGETS",                      //变形目标
+        SY_USE_MORPHTARGETS_RELATIVE: "SY_USE_MORPHTARGETS_RELATIVE",                      //变形目标 减去当前位置
+
+        SY_USE_REMOVE_DEFINE: "SY_USE_REMOVE_DEFINE",//任何一个宏与这个宏 "$"使用 就是删除不使用的意思
     }
 
     export enum CameraType {
@@ -284,7 +284,7 @@ export namespace syRender {
         public glID: WebGLBuffer;//显存地址
         public itemSize: number;//单个buffer单元的数据数目
         public itemNums: number;//所有buffer单元数目
-        public itemOffset:number=0;//从显存的buffer数组的哪一个位置开始读取数据
+        public itemOffset: number = 0;//从显存的buffer数组的哪一个位置开始读取数据
     }
 
     //绘制信息
@@ -292,25 +292,25 @@ export namespace syRender {
         constructor() {
             this.nodeVertColor = new WebGLBufferData()
             this.vertMatrix = new WebGLBufferData()
-            this.vert = new WebGLBufferData()
+            this.position = new WebGLBufferData()
             this.index = new WebGLBufferData()
             this.uv = new WebGLBufferData()
             this.normal = new WebGLBufferData();
             this.type = syGL.PrimitiveType.TRIANGLE_STRIP;
             this.customMatrix = glMatrix.mat4.identity(null);
-            this.color = new Color(255,255,255,255);
-            this.emissive = new Color(0,0,0,255);
+            this.color = new Color(255, 255, 255, 255);
+            this.emissive = new Color(0, 0, 0, 255);
         }
         public nodeVertColor: WebGLBufferData;//节点自定义顶点颜色
         public vertMatrix: WebGLBufferData;//节点自定义矩阵
-        public vert: WebGLBufferData;//顶点buffer
+        public position: WebGLBufferData;//顶点buffer
         public index: WebGLBufferData;//索引buffer
         public uv: WebGLBufferData;//uv buffer
         public normal: WebGLBufferData;//法线buffer
 
         public color: Color;//节点自定义颜色
-        public emissive:Color;//自发光
-        public diffuse:Color; //漫反射颜色
+        public emissive: Color;//自发光
+        public diffuse: Color; //漫反射颜色
         public customFloatValue: number; //一个自定义的值
         public alpha: number;        //节点自定义透明度
         public customMatrix: Float32Array;//自定义矩阵
@@ -320,6 +320,13 @@ export namespace syRender {
         public instancedNums: number = 0;//实例的数目
         public instancedVertNums: number = 0;//每个实例的顶点数目
 
+
+        //变形
+        public morphPositions: Array<WebGLBufferData>;
+        //变形目标的数量
+        public morphTargetCount: number = 0;
+        //变形因子
+        public morphTargetInfluences: Array<number> = [];
         public reset() {
             glMatrix.mat4.identity(this.customMatrix);
             this.modelMatrix = null;
@@ -336,18 +343,18 @@ export namespace syRender {
             constructor() {
 
             }
-            public color = new Color(0,0,0,255);
-            public position = new Vec3(0,0,0);
-            public direction = new Vec3(0,0,0);
+            public color = new Color(0, 0, 0, 255);
+            public position = new Vec3(0, 0, 0);
+            public direction = new Vec3(0, 0, 0);
             public reset(): void {
-                
+
                 this.color.r = 255;
                 this.color.g = 0;
                 this.color.b = 0;
                 this.color.a = 255;//默认的颜色
                 this.direction.x = 1;
-                this.direction.y=1;
-                this.direction.z =1;
+                this.direction.y = 1;
+                this.direction.z = 1;
             }
         }
         export class Spot extends BaseData {
@@ -471,7 +478,7 @@ export namespace syRender {
                 this.point = new Light.Point();
                 this.ambient = new Light.Ambient();
                 this.shadow = new Light.Shadow();
-                this.position = new Vec3(0,0,0);
+                this.position = new Vec3(0, 0, 0);
             }
             public spot: Light.Spot;    //聚光灯
             public fog: Light.Fog;     //雾
@@ -480,7 +487,7 @@ export namespace syRender {
             public point: Light.Point;     //点光
             public shadow: Light.Shadow;    //阴影
             public ambient: Light.Ambient;//环境光
-            public position:Vec3; //光的位置
+            public position: Vec3; //光的位置
 
             public viewMatrix: Float32Array;//光照摄像机的视口
             public projectionMatrix: Float32Array;//光照摄像机的投影
@@ -519,7 +526,7 @@ export namespace syRender {
 
             this.light = new Light.Center();
             this.primitive = new Primitive()
-            this._cameraPosition = new Vec3(0,0,0)
+            this._cameraPosition = new Vec3(0, 0, 0)
             this.reset();
         }
         /**
@@ -539,7 +546,7 @@ export namespace syRender {
         }
 
         public node: Node;//渲染的节点
-        public _cameraPosition:Vec3;//相机的位置
+        public _cameraPosition: Vec3;//相机的位置
         private _pass: Pass;
         public light: Light.Center;
         public primitive: Primitive;
@@ -620,7 +627,7 @@ export namespace syRender {
             useVariantType.forEach((value: ShaderUseVariantType) => {
                 switch (value) {
                     case ShaderUseVariantType.Position:
-                        _shader.setUseVertexAttribPointer(syGL.AttributeUniform.POSITION, this.primitive.vert.glID, this.primitive.vert.itemSize);
+                        _shader.setUseVertexAttribPointer(syGL.AttributeUniform.POSITION, this.primitive.position.glID, this.primitive.position.itemSize);
                         break;
                     case ShaderUseVariantType.Normal:
                         _shader.setUseVertexAttribPointer(syGL.AttributeUniform.NORMAL, this.primitive.normal.glID, this.primitive.normal.itemSize);
@@ -816,11 +823,46 @@ export namespace syRender {
                         _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.SHADOW_INFO, this.light.shadow.info);
                         break;
                     case ShaderUseVariantType.FloatArray:
-                        _shader.setCustomUniformFloatArray(syGL.AttributeUniform.FLOAT_ARRAY,[0,0,0,0,0,0,0,1])
+                        _shader.setCustomUniformFloatArray(syGL.AttributeUniform.FLOAT_ARRAY, [0, 0, 0, 0, 0, 0, 0, 1])
                         break;
                     case ShaderUseVariantType.ShadowMap:
                         _shader.setUseBuiltinTexture(this.light.shadow.map, useTextureAddres, syGL.AttributeUniform.SHADOW_MAP);
                         useTextureAddres++;
+                        break;
+                    case ShaderUseVariantType.MORPH_TARGET_0:
+                        if(this.primitive.morphPositions[0])
+                        _shader.setUseVertexAttribPointer(syGL.AttributeUniform.MORPH_TARGET_0, this.primitive.morphPositions[0].glID, this.primitive.morphPositions[0].itemSize);
+                        break;
+                    case ShaderUseVariantType.MORPH_TARGET_1:
+                        if(this.primitive.morphPositions[1])
+                        _shader.setUseVertexAttribPointer(syGL.AttributeUniform.MORPH_TARGET_1, this.primitive.morphPositions[1].glID, this.primitive.morphPositions[1].itemSize);
+                        break;
+                    case ShaderUseVariantType.MORPH_TARGET_2:
+                        if(this.primitive.morphPositions[2])
+                        _shader.setUseVertexAttribPointer(syGL.AttributeUniform.MORPH_TARGET_2, this.primitive.morphPositions[2].glID, this.primitive.morphPositions[2].itemSize);
+                        break;
+                    case ShaderUseVariantType.MORPH_TARGET_3:
+                        if(this.primitive.morphPositions[3])
+                        _shader.setUseVertexAttribPointer(syGL.AttributeUniform.MORPH_TARGET_3, this.primitive.morphPositions[3].glID, this.primitive.morphPositions[3].itemSize);
+                        break;
+                    case ShaderUseVariantType.MORPH_TARGET_4:
+                        if(this.primitive.morphPositions[4])
+                        _shader.setUseVertexAttribPointer(syGL.AttributeUniform.MORPH_TARGET_4, this.primitive.morphPositions[4].glID, this.primitive.morphPositions[4].itemSize);
+                        break;
+                    case ShaderUseVariantType.MORPH_TARGET_5:
+                        if(this.primitive.morphPositions[5])
+                        _shader.setUseVertexAttribPointer(syGL.AttributeUniform.MORPH_TARGET_5, this.primitive.morphPositions[5].glID, this.primitive.morphPositions[5].itemSize);
+                        break;
+                    case ShaderUseVariantType.MORPH_TARGET_6:
+                        if(this.primitive.morphPositions[6])
+                        _shader.setUseVertexAttribPointer(syGL.AttributeUniform.MORPH_TARGET_6, this.primitive.morphPositions[6].glID, this.primitive.morphPositions[6].itemSize);
+                        break;
+                    case ShaderUseVariantType.MORPH_TARGET_7:
+                        if(this.primitive.morphPositions[7])
+                        _shader.setUseVertexAttribPointer(syGL.AttributeUniform.MORPH_TARGET_7, this.primitive.morphPositions[7].glID, this.primitive.morphPositions[7].itemSize);
+                        break;
+                    case ShaderUseVariantType.MORPH_TARGET_INFLUENCES:
+                        _shader.setCustomUniformFloatArray(syGL.AttributeUniform.MORPH_TARGET_INFLUENCES,  this.primitive.morphTargetInfluences)
                         break;
                     default:
                     // console.log("目前还没有处理这个矩阵类型");

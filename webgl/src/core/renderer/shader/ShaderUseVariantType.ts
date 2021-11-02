@@ -61,5 +61,16 @@ export enum ShaderUseVariantType {
     Resolution,       //设计分辨率
     FloatArray,            //数组
     Custom_Float_Value, //自定义一个float 变量
+
+    MORPH_TARGET_0,//变形目标 0
+    MORPH_TARGET_1,//变形目标 1
+    MORPH_TARGET_2,//变形目标 2
+    MORPH_TARGET_3,//变形目标 3
+    MORPH_TARGET_4,//变形目标 4
+    MORPH_TARGET_5,//变形目标 5
+    MORPH_TARGET_6,//变形目标 6
+    MORPH_TARGET_7,//变形目标 7
+
+    MORPH_TARGET_INFLUENCES,//变形目标因子
     UndefinedMax,//无效
 }

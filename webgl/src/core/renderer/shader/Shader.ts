@@ -121,6 +121,17 @@ mapTree_u.set(syGL.AttributeUniform.LightWorldPosition,ShaderUseVariantType.Ligh
 mapTree_u.set(syGL.AttributeUniform.MOUSE,ShaderUseVariantType.Mouse);
 mapTree_u.set(syGL.AttributeUniform.RESOLUTION,ShaderUseVariantType.Resolution)
 mapTree_u.set(syGL.AttributeUniform.FLOAT_ARRAY,ShaderUseVariantType.FloatArray)
+
+mapTree_a.set(syGL.AttributeUniform.MORPH_TARGET_0,ShaderUseVariantType.MORPH_TARGET_0);
+mapTree_a.set(syGL.AttributeUniform.MORPH_TARGET_1,ShaderUseVariantType.MORPH_TARGET_1);
+mapTree_a.set(syGL.AttributeUniform.MORPH_TARGET_2,ShaderUseVariantType.MORPH_TARGET_2);
+mapTree_a.set(syGL.AttributeUniform.MORPH_TARGET_3,ShaderUseVariantType.MORPH_TARGET_3);
+mapTree_a.set(syGL.AttributeUniform.MORPH_TARGET_4,ShaderUseVariantType.MORPH_TARGET_4);
+mapTree_a.set(syGL.AttributeUniform.MORPH_TARGET_5,ShaderUseVariantType.MORPH_TARGET_5);
+mapTree_a.set(syGL.AttributeUniform.MORPH_TARGET_6,ShaderUseVariantType.MORPH_TARGET_6);
+mapTree_a.set(syGL.AttributeUniform.MORPH_TARGET_7,ShaderUseVariantType.MORPH_TARGET_7);
+mapTree_u.set(syGL.AttributeUniform.MORPH_TARGET_INFLUENCES,ShaderUseVariantType.MORPH_TARGET_INFLUENCES);
+
 /**
  * 获取当前对象记载显存地址的key
  * @param pName 

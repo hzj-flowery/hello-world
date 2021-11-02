@@ -101,7 +101,7 @@ export abstract class BufferAttribute {
     public needsUpdate: boolean = true;//是否需要更新
     public needsMorphUpdate: boolean = false;//是否需要更新
     public isGLBufferAttribute: boolean = false;//
-    public normalized:boolean;//是否归一化
+    public normalized: boolean;//是否归一化
     protected useDynamicUsage() {
         this._usage = syGL.BufferUsage.DYNAMIC;
     }
@@ -149,35 +149,35 @@ export abstract class BufferAttribute {
         this._curMapTotalBytes = data.length * this._elementBytes;
         this.needsUpdate = false;
     }
-    transformDirection( m:Matrix4) {
-		for ( let i = 0, l = this.count; i < l; i ++ ) {
-			_vector.x = this.getX( i );
-			_vector.y = this.getY( i );
-			_vector.z = this.getZ( i );
-			_vector.transformDirection( m );
-			this.setXYZ( i, _vector.x, _vector.y, _vector.z );
-		}
-		return this;
-	}
-    public applyNormalMatrix( m:Matrix3 ) {
-		for ( let i = 0, l = this.count; i < l; i ++ ) {
-			_vector.x = this.getX( i );
-			_vector.y = this.getY( i );
-			_vector.z = this.getZ( i );
-			_vector.applyNormalMatrix( m );
-			this.setXYZ( i, _vector.x, _vector.y, _vector.z );
-		}
-		return this;
-	}
-    public applyMatrix4(m:Matrix4){
-        for ( let i = 0, l = this.count; i < l; i ++ ) {
-			_vector.x = this.getX( i );
-			_vector.y = this.getY( i );
-			_vector.z = this.getZ( i );
-			_vector.applyMatrix4( m );
-			this.setXYZ( i, _vector.x, _vector.y, _vector.z );
-		}
-		return this;
+    transformDirection(m: Matrix4) {
+        for (let i = 0, l = this.count; i < l; i++) {
+            _vector.x = this.getX(i);
+            _vector.y = this.getY(i);
+            _vector.z = this.getZ(i);
+            _vector.transformDirection(m);
+            this.setXYZ(i, _vector.x, _vector.y, _vector.z);
+        }
+        return this;
+    }
+    public applyNormalMatrix(m: Matrix3) {
+        for (let i = 0, l = this.count; i < l; i++) {
+            _vector.x = this.getX(i);
+            _vector.y = this.getY(i);
+            _vector.z = this.getZ(i);
+            _vector.applyNormalMatrix(m);
+            this.setXYZ(i, _vector.x, _vector.y, _vector.z);
+        }
+        return this;
+    }
+    public applyMatrix4(m: Matrix4) {
+        for (let i = 0, l = this.count; i < l; i++) {
+            _vector.x = this.getX(i);
+            _vector.y = this.getY(i);
+            _vector.z = this.getZ(i);
+            _vector.applyMatrix4(m);
+            this.setXYZ(i, _vector.x, _vector.y, _vector.z);
+        }
+        return this;
     }
     public update(): void {
         if (!this.needsUpdate) return;
@@ -187,7 +187,7 @@ export abstract class BufferAttribute {
         this.needsUpdate = false;
     }
 
-    public updateMorph(mortphData:Array<number>):void{
+    public updateMorph(mortphData: Array<number>): void {
         if (!this.needsMorphUpdate) return;
         var arr = this.getBytesArray();
         this.gl.bindBuffer(this._arrayBufferType, this.glID);
@@ -390,6 +390,30 @@ class BufferManager {
                 return this.createVertColor(attributeId, data, itemSize, preAllocateLen);
             case SY.GLID_TYPE.VERT_MATRIX:
                 return this.createMatrix(attributeId, data, itemSize, preAllocateLen);
+            case SY.GLID_TYPE.MORPH_TARGET_POSITION0:
+                itemSize = 3; //(x,y,z)数组中每三个值代表顶点坐标
+                return this.createVertex(this.getMorphTargetPositionId(type,attributeId), data, itemSize, preAllocateLen);
+            case SY.GLID_TYPE.MORPH_TARGET_POSITION1:
+                itemSize = 3; //(x,y,z)数组中每三个值代表顶点坐标
+                return this.createVertex(this.getMorphTargetPositionId(type,attributeId), data, itemSize, preAllocateLen);
+            case SY.GLID_TYPE.MORPH_TARGET_POSITION2:
+                itemSize = 3; //(x,y,z)数组中每三个值代表顶点坐标
+                return this.createVertex(this.getMorphTargetPositionId(type,attributeId), data, itemSize, preAllocateLen);
+            case SY.GLID_TYPE.MORPH_TARGET_POSITION3:
+                itemSize = 3; //(x,y,z)数组中每三个值代表顶点坐标
+                return this.createVertex(this.getMorphTargetPositionId(type,attributeId), data, itemSize, preAllocateLen);
+            case SY.GLID_TYPE.MORPH_TARGET_POSITION4:
+                itemSize = 3; //(x,y,z)数组中每三个值代表顶点坐标
+                return this.createVertex(this.getMorphTargetPositionId(type,attributeId), data, itemSize, preAllocateLen);
+            case SY.GLID_TYPE.MORPH_TARGET_POSITION5:
+                itemSize = 3; //(x,y,z)数组中每三个值代表顶点坐标
+                return this.createVertex(this.getMorphTargetPositionId(type,attributeId), data, itemSize, preAllocateLen);
+            case SY.GLID_TYPE.MORPH_TARGET_POSITION6:
+                itemSize = 3; //(x,y,z)数组中每三个值代表顶点坐标
+                return this.createVertex(this.getMorphTargetPositionId(type,attributeId), data, itemSize, preAllocateLen);
+            case SY.GLID_TYPE.MORPH_TARGET_POSITION7:
+                itemSize = 3; //(x,y,z)数组中每三个值代表顶点坐标
+                return this.createVertex(this.getMorphTargetPositionId(type,attributeId), data, itemSize, preAllocateLen);
             default: break;
         }
     }
@@ -409,8 +433,47 @@ class BufferManager {
                 return this._mapVertColorBuffer.get(attributeId);
             case SY.GLID_TYPE.VERT_MATRIX:
                 return this._mapVertMatrixBuffer.get(attributeId);
+            case SY.GLID_TYPE.MORPH_TARGET_POSITION0:
+                return this._mapVertexBuffer.get(this.getMorphTargetPositionId(type,attributeId));
+            case SY.GLID_TYPE.MORPH_TARGET_POSITION1:
+                return this._mapVertexBuffer.get(this.getMorphTargetPositionId(type,attributeId));
+            case SY.GLID_TYPE.MORPH_TARGET_POSITION2:
+                return this._mapVertexBuffer.get(this.getMorphTargetPositionId(type,attributeId));
+            case SY.GLID_TYPE.MORPH_TARGET_POSITION3:
+                return this._mapVertexBuffer.get(this.getMorphTargetPositionId(type,attributeId));
+            case SY.GLID_TYPE.MORPH_TARGET_POSITION4:
+                return this._mapVertexBuffer.get(this.getMorphTargetPositionId(type,attributeId));
+            case SY.GLID_TYPE.MORPH_TARGET_POSITION5:
+                return this._mapVertexBuffer.get(this.getMorphTargetPositionId(type,attributeId));
+            case SY.GLID_TYPE.MORPH_TARGET_POSITION6:
+                return this._mapVertexBuffer.get(this.getMorphTargetPositionId(type,attributeId));
+            case SY.GLID_TYPE.MORPH_TARGET_POSITION7:
+                return this._mapVertexBuffer.get(this.getMorphTargetPositionId(type,attributeId));
             default: console.log("未知类型，请指明类型"); break;
         }
+    }
+    private getMorphTargetPositionId(glidType:SY.GLID_TYPE,attributeId:string){
+       var id = 0;
+       switch(glidType)
+       {
+        case SY.GLID_TYPE.MORPH_TARGET_POSITION0:
+            id = 0;break;
+        case SY.GLID_TYPE.MORPH_TARGET_POSITION1:
+            id = 1;break;
+        case SY.GLID_TYPE.MORPH_TARGET_POSITION2:
+            id = 2;break;
+        case SY.GLID_TYPE.MORPH_TARGET_POSITION3:
+            id = 3;break;
+        case SY.GLID_TYPE.MORPH_TARGET_POSITION4:
+            id = 4;break;
+        case SY.GLID_TYPE.MORPH_TARGET_POSITION5:
+            id = 5;break;
+        case SY.GLID_TYPE.MORPH_TARGET_POSITION6:
+            id = 6;break;
+        case SY.GLID_TYPE.MORPH_TARGET_POSITION7:
+            id = 7;break;
+       }
+       return attributeId + "morphtarget"+ id;
     }
     private createVertex(id: string, data: Array<number>, itemSize: number, preAllocateLen: number): VertexsBuffer {
         let buffer = new VertexsBuffer(this._gl, data, itemSize, preAllocateLen);

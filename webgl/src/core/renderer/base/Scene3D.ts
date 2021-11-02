@@ -291,12 +291,13 @@ export default class Scene3D extends Scene {
 
       
         var boxG = new BoxGeometry(2, 2, 2, 32, 32, 32);
-        boxG.addGeometry()
+        boxG.addMorphGeometry()
         boxG.pushPassContent(syRender.ShaderType.Sprite,[
         ],[
-            [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_TEXTURE,syRender.ShaderDefineValue.SY_USE_REMOVE_DEFINE]
+            // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_TEXTURE,syRender.ShaderDefineValue.SY_USE_REMOVE_DEFINE]
+            [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_MORPHTARGETS]
         ])
-        boxG.setColor(255,0,0,255)
+        boxG.spriteFrame = "res/1.jpg";
         boxG.setPosition(3,8,5);
         this.addChild(boxG);
 
@@ -324,8 +325,8 @@ export default class Scene3D extends Scene {
         // var diff = [camera.x,camera.y,camera.z]
         
         G_UISetting.pushRenderCallBack((data)=>{
+            boxG.setMorphTargetInfluences(0,data.customValueZ?data.customValueZ:0)
             boxG.setMorphTargetInfluences(1,data.customValue?data.customValue:0)
-            boxG.trigerMorph();
             // this._robart.setPosition(data.customValueX,data.customValueY,data.customValueZ)
             // var cg = (data.customValue?-data.customValue:0.1)/10000;
             // this._robart.setScale(cg,cg,cg)

@@ -221,6 +221,17 @@ export namespace syGL {
         CUSTOM_FLOAT_VALUE = "u_float_custom",//一个自定义的值
         RESOLUTION = "u_resolution",//屏幕的设计分辨率
         FLOAT_ARRAY = "u_float_array[0]",    //数组
+
+        //变形动画
+        MORPH_TARGET_INFLUENCES = "u_morphTargetInfluences[0]",//变形因子
+        MORPH_TARGET_0          = "a_morphTarget0",//变形目标
+        MORPH_TARGET_1          = "a_morphTarget1",//变形目标
+        MORPH_TARGET_2          = "a_morphTarget2",//变形目标
+        MORPH_TARGET_3          = "a_morphTarget3",//变形目标
+        MORPH_TARGET_4          = "a_morphTarget4",//变形目标
+        MORPH_TARGET_5          = "a_morphTarget5",//变形目标
+        MORPH_TARGET_6          = "a_morphTarget6",//变形目标
+        MORPH_TARGET_7          = "a_morphTarget7",//变形目标
     }
     // cull
     export const Cull = {

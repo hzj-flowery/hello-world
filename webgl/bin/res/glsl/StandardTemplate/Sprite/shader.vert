@@ -47,16 +47,58 @@ uniform mat4 u_projection;
     varying vec3 v_fog_view_world_position;
 #endif
 
+//使用变形目标(最多有8个)
+#if defined(SY_USE_MORPHTARGETS)
+    attribute vec3 a_morphTarget0;
+    attribute vec3 a_morphTarget1;
+    attribute vec3 a_morphTarget2;
+    attribute vec3 a_morphTarget3;
+    attribute vec3 a_morphTarget4;
+    attribute vec3 a_morphTarget5;
+    attribute vec3 a_morphTarget6;
+    attribute vec3 a_morphTarget7;
+    uniform float u_morphTargetInfluences[8];//最多只允许有八个影响
+    //获取变形后顶点的位置
+    vec3 getMorphPosition(vec3 transformed){
+        vec3 ret = transformed;
+        #if defined(SY_USE_MORPHTARGETS_RELATIVE)
+        ret += (a_morphTarget0-transformed) * u_morphTargetInfluences[ 0 ];
+		ret += (a_morphTarget1-transformed) * u_morphTargetInfluences[ 1 ];
+		ret += (a_morphTarget2-transformed) * u_morphTargetInfluences[ 2 ];
+		ret += (a_morphTarget3-transformed) * u_morphTargetInfluences[ 3 ];
+        ret += (a_morphTarget4-transformed) * u_morphTargetInfluences[ 4 ];
+        ret += (a_morphTarget5-transformed) * u_morphTargetInfluences[ 5 ];
+        ret += (a_morphTarget6-transformed) * u_morphTargetInfluences[ 6 ];
+        ret += (a_morphTarget7-transformed) * u_morphTargetInfluences[ 7 ];
+        #else
+        ret += a_morphTarget0 * u_morphTargetInfluences[ 0 ];
+		ret += a_morphTarget1 * u_morphTargetInfluences[ 1 ];
+		ret += a_morphTarget2 * u_morphTargetInfluences[ 2 ];
+		ret += a_morphTarget3 * u_morphTargetInfluences[ 3 ];
+        ret += a_morphTarget4 * u_morphTargetInfluences[ 4 ];
+        ret += a_morphTarget5 * u_morphTargetInfluences[ 5 ];
+        ret += a_morphTarget6 * u_morphTargetInfluences[ 6 ];
+        ret += a_morphTarget7 * u_morphTargetInfluences[ 7 ];
+        #endif
+        return ret;
+    }
+#endif
+
 
 
 
 void main(){
     
+    vec3 position = a_position;
+    #if defined(SY_USE_MORPHTARGETS)
+        position = getMorphPosition(position);
+    #endif
+
     //强行塞入一个位置空间
     #if defined(SY_USE_ADD_POSITION_SPACE) && defined(SY_USE_MAT)
-        vec4 worldPosition=u_world*u_mat*vec4(a_position,1.0);
+        vec4 worldPosition=u_world*u_mat*vec4(position,1.0);
     #else
-         vec4 worldPosition=u_world*vec4(a_position,1.0);
+        vec4 worldPosition=u_world*vec4(position,1.0);
     #endif
     gl_Position=u_projection*u_view*worldPosition;
     
@@ -99,6 +141,6 @@ void main(){
     
     #if defined(SY_USE_FOG)
         //算出雾的在视口坐标系下的位置
-        v_fog_view_world_position=(u_view*u_world*vec4(a_position,1.0)).xyz;
+        v_fog_view_world_position=(u_view*u_world*vec4(position,1.0)).xyz;
     #endif
 }

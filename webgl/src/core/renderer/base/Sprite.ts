@@ -79,7 +79,16 @@ export namespace SY {
         VERT_COLOR,  //顶点颜色
         VERT_MATRIX,//节点自定义矩阵
         TEXTURE_2D, //2D纹理
-        TEXTURE_CUBE //立方体纹理
+        TEXTURE_CUBE, //立方体纹理
+
+        MORPH_TARGET_POSITION0,//变形目标顶点
+        MORPH_TARGET_POSITION1,//变形目标顶点
+        MORPH_TARGET_POSITION2,//变形目标顶点
+        MORPH_TARGET_POSITION3,//变形目标顶点
+        MORPH_TARGET_POSITION4,//变形目标顶点
+        MORPH_TARGET_POSITION5,//变形目标顶点
+        MORPH_TARGET_POSITION6,//变形目标顶点
+        MORPH_TARGET_POSITION7,//变形目标顶点
     }
 
     export enum SpriteSizeMode {
@@ -360,9 +369,9 @@ export namespace SY {
         }
         private updateRenderData(rData: syRender.QueueItemBaseData): void {
             //顶点组----------------------------------------------------------------------
-            rData.primitive.vert.glID = this.getGLID(SY.GLID_TYPE.VERTEX);
-            rData.primitive.vert.itemSize = this.getBufferItemSize(SY.GLID_TYPE.VERTEX);
-            rData.primitive.vert.itemNums = this.getBuffer(SY.GLID_TYPE.VERTEX).itemNums;
+            rData.primitive.position.glID = this.getGLID(SY.GLID_TYPE.VERTEX);
+            rData.primitive.position.itemSize = this.getBufferItemSize(SY.GLID_TYPE.VERTEX);
+            rData.primitive.position.itemNums = this.getBuffer(SY.GLID_TYPE.VERTEX).itemNums;
             //索引组----------------------------------------------------------------------
             rData.primitive.index.glID = this.getGLID(SY.GLID_TYPE.INDEX);
             if (rData.primitive.index.glID != -1) {

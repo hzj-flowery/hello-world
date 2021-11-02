@@ -150,7 +150,7 @@ class DrawEngine {
                 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexglID),
                 this.drawElements(rd.primitive.type, rd.primitive.index.itemNums, gl.UNSIGNED_SHORT, 0)
             ) : (
-                    this.drawArrays(rd.primitive.type, 0, rd.primitive.vert.itemNums)
+                    this.drawArrays(rd.primitive.type, 0, rd.primitive.position.itemNums)
                 )
         }
         else {
