@@ -295,7 +295,8 @@ export default class Scene3D extends Scene {
         boxG.pushPassContent(syRender.ShaderType.Sprite,[
         ],[
             // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_TEXTURE,syRender.ShaderDefineValue.SY_USE_REMOVE_DEFINE]
-            [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_MORPHTARGETS]
+            [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_MORPHTARGETS],
+            [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_MORPHTARGETS_RELATIVE]
         ])
         boxG.spriteFrame = "res/1.jpg";
         boxG.setPosition(3,8,5);

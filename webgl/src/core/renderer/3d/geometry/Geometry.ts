@@ -71,46 +71,41 @@ export class Geometry extends SY.SpriteBase {
 			this.attributes.tangents = G_BufferManager.createBuffer(SY.GLID_TYPE.TANGENT, this.attributeId, this.tangents, 4)
 	}
 
-	protected onUpdate(): void {
-		// this.trigerMorph();
-		super.onUpdate()
-	}
-
 	/**
-	 * 触发变形
+	 * 在cpu端触发变形
 	 */
-	public trigerMorph(): void {
-		// var len = this.morphAttributes.positions.length;
-		// var len1 = this.morphAttributes.morphTargetInfluences.length;
+	protected trigerMorphOnCPU(): void {
+		var len = this.morphAttributes.positions.length;
+		var len1 = this.morphAttributes.morphTargetInfluences.length;
 
-		// if (len > 0 && len1 > 0 && len <= len1) {
-		// 	const positions = this.attributes.vertices.sourceData;
-		// 	var renderMorphPosition = []
-		// 	for (let i = 0, l = positions.length; i < l; i += 3) {
-		// 		let x = positions[i];
-		// 		let y = positions[i + 1];
-		// 		let z = positions[i + 2];
-		// 		for (let t = 0; t < len; t++) {
-		// 			var influence = this.morphAttributes.morphTargetInfluences[t];
-		// 			if (influence === 0) continue;
-		// 			const target = this.morphAttributes.positions[t];
+		if (len > 0 && len1 > 0 && len <= len1) {
+			const positions = this.attributes.vertices.sourceData;
+			var renderMorphPosition = []
+			for (let i = 0, l = positions.length; i < l; i += 3) {
+				let x = positions[i];
+				let y = positions[i + 1];
+				let z = positions[i + 2];
+				for (let t = 0; t < len; t++) {
+					var influence = this.morphAttributes.morphTargetInfluences[t];
+					if (influence === 0) continue;
+					const target = this.morphAttributes.positions[t];
 
-		// 			if (this.morphTargetsRelative) {
-		// 				x += target.getX(i / 3) * influence;
-		// 				y += target.getY(i / 3) * influence;
-		// 				z += target.getZ(i / 3) * influence;
-		// 			} else {
-		// 				x += (target.getX(i / 3) - positions[i]) * influence;
-		// 				y += (target.getY(i / 3) - positions[i + 1]) * influence;
-		// 				z += (target.getZ(i / 3) - positions[i + 2]) * influence;
-		// 			}
+					if (this.morphTargetsRelative) {
+						x += target.getX(i / 3) * influence;
+						y += target.getY(i / 3) * influence;
+						z += target.getZ(i / 3) * influence;
+					} else {
+						x += (target.getX(i / 3) - positions[i]) * influence;
+						y += (target.getY(i / 3) - positions[i + 1]) * influence;
+						z += (target.getZ(i / 3) - positions[i + 2]) * influence;
+					}
 
-		// 		}
-		// 		renderMorphPosition.push(x, y, z);
-		// 	}
-		// 	this.attributes.vertices.needsMorphUpdate = true;
-		// 	this.attributes.vertices.updateMorph(renderMorphPosition)
-		// }
+				}
+				renderMorphPosition.push(x, y, z);
+			}
+			this.attributes.vertices.needsMorphUpdate = true;
+			this.attributes.vertices.updateMorph(renderMorphPosition)
+		}
 	}
 
 	/**
