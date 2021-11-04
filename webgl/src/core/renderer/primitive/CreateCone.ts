@@ -28,7 +28,7 @@
  * @module 3d/primitive
  */
 
-import cylinder, { ICylinderOptions } from './cylinder';
+import cylinder, { ICylinderOptions } from './CreateCylinder';
 import { IGeometry } from './define';
 
 type IConeOptions = ICylinderOptions;

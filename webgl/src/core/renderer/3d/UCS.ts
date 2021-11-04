@@ -1,10 +1,10 @@
 import { SY } from "../base/Sprite";
 import { syRender } from "../data/RenderData";
-import box from "../primitive/box";
-import cone from "../primitive/cone";
+import box from "../primitive/CreateBox";
+import cone from "../primitive/CreateCone";
 import { syPrimitives } from "../primitive/Primitives";
-import sphere from "../primitive/sphere";
-import torus from "../primitive/torus";
+import sphere from "../primitive/CreateSphere";
+import torus from "../primitive/CreateTorus";
 import { Object3D } from "./Object3D";
 
 /**
