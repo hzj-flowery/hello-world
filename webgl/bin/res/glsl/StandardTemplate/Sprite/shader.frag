@@ -345,6 +345,10 @@ void main(){
             if(fragColor.r+fragColor.g+fragColor.b<SY_USE_RGB_TEST)discard;
       #endif
       
+      #ifdef SY_USE_FUNC_UNPACK_CUSTOM_TONE_MAPPING
+             fragColor.rgb = toneMapping(fragColor.rgb);
+      #endif
+      
 
       gl_FragColor=fragColor;
 }

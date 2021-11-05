@@ -7,6 +7,45 @@ import { ShaderCode } from "./ShaderCode";
 import { G_ShaderFactory } from "./ShaderFactory";
 
 
+function getToneMappingFunction(functionName?, toneMapping?:syRender.ToneMapping ) {
+
+	let toneMappingName;
+
+    functionName = functionName?functionName:"toneMapping";
+    toneMapping = toneMapping?toneMapping:syRender.ToneMapping.LinearToneMapping;
+
+	switch ( toneMapping ) {
+
+		case syRender.ToneMapping.LinearToneMapping:
+			toneMappingName = 'Linear';
+			break;
+
+		case syRender.ToneMapping.ReinhardToneMapping:
+			toneMappingName = 'Reinhard';
+			break;
+
+		case syRender.ToneMapping.CineonToneMapping:
+			toneMappingName = 'OptimizedCineon';
+			break;
+
+		case syRender.ToneMapping.ACESFilmicToneMapping:
+			toneMappingName = 'ACESFilmic';
+			break;
+
+		case syRender.ToneMapping.CustomToneMapping:
+			toneMappingName = 'Custom';
+			break;
+
+		default:
+			console.warn( 'THREE.WebGLProgram: Unsupported toneMapping:', toneMapping );
+			toneMappingName = 'Linear';
+
+	}
+
+	return 'vec3 ' + functionName + '( vec3 color ) { return ' + toneMappingName + 'ToneMapping( color ); }';
+
+}
+
 
 class PassFactory{
     constructor(){
@@ -190,7 +229,16 @@ class PassFactory{
                 {
                     if(valueStr[1]!=syRender.ShaderDefineValue.SY_USE_REMOVE_DEFINE)
                     {
-                        code = "\n #define "+valueStr[0]+"  " +valueStr[1]+"\n " + code;
+                        if(valueStr[0]==syRender.ShaderDefineValue.SY_USE_FUNC_UNPACK_CUSTOM_TONE_MAPPING&&step==1)
+                        {
+                                var func  = ShaderCode.commonFuncion.get(valueStr[0]);
+                                var addFunc = getToneMappingFunction(null,parseInt(valueStr[1]));
+                                code = "\n #define "+valueStr[0]+"\n "+func+"\n  " +addFunc+"\n"+code;
+                        }
+                        else
+                        {
+                            code = "\n #define "+valueStr[0]+"  " +valueStr[1]+"\n " + code;
+                        }
                     }
                     else
                     {

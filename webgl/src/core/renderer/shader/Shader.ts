@@ -122,6 +122,9 @@ mapTree_u.set(syGL.AttributeUniform.MOUSE,ShaderUseVariantType.Mouse);
 mapTree_u.set(syGL.AttributeUniform.RESOLUTION,ShaderUseVariantType.Resolution)
 mapTree_u.set(syGL.AttributeUniform.FLOAT_ARRAY,ShaderUseVariantType.FloatArray)
 
+mapTree_u.set(syGL.AttributeUniform.TONEMAPPINGExposure,ShaderUseVariantType.TONEMAPPINGExposure)
+
+
 mapTree_a.set(syGL.AttributeUniform.MORPH_TARGET_0,ShaderUseVariantType.MORPH_TARGET_0);
 mapTree_a.set(syGL.AttributeUniform.MORPH_TARGET_1,ShaderUseVariantType.MORPH_TARGET_1);
 mapTree_a.set(syGL.AttributeUniform.MORPH_TARGET_2,ShaderUseVariantType.MORPH_TARGET_2);

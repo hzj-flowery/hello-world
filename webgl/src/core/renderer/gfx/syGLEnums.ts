@@ -222,6 +222,8 @@ export namespace syGL {
         RESOLUTION = "u_resolution",//屏幕的设计分辨率
         FLOAT_ARRAY = "u_float_array[0]",    //数组
 
+        TONEMAPPINGExposure = "u_toneMappingExposure",//色调映射的曝光级别。默认是1
+
         //变形动画
         MORPH_TARGET_INFLUENCES = "u_morphTargetInfluences[0]",//变形因子
         MORPH_TARGET_0          = "a_morphTarget0",//变形目标

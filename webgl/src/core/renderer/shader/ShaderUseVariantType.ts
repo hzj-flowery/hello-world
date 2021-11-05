@@ -60,6 +60,7 @@ export enum ShaderUseVariantType {
     Mouse,             //鼠标按下的位置信息
     Resolution,       //设计分辨率
     FloatArray,            //数组
+    TONEMAPPINGExposure,   //色调级别映射
     Custom_Float_Value, //自定义一个float 变量
 
     MORPH_TARGET_0,//变形目标 0

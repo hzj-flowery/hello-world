@@ -296,7 +296,8 @@ export default class Scene3D extends Scene {
         ],[
             // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_TEXTURE,syRender.ShaderDefineValue.SY_USE_REMOVE_DEFINE]
             [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_MORPHTARGETS],
-            [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_MORPHTARGETS_RELATIVE]
+            [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_MORPHTARGETS_RELATIVE],
+            [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_FUNC_UNPACK_CUSTOM_TONE_MAPPING,syRender.ToneMapping.ACESFilmicToneMapping]
         ])
         boxG.spriteFrame = "res/1.jpg";
         boxG.setPosition(3,8,5);
