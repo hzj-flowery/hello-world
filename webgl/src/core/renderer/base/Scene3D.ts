@@ -40,6 +40,7 @@ import { SphereGeometry } from "../3d/geometry/SphereGeometry";
 import { TorusKnotGeometry } from "../3d/geometry/TorusKnotGeometry";
 import { TorusGeometry } from "../3d/geometry/TorusGeometry";
 import { Vector2 } from "../../math/Vector2";
+import { PlaneGeometry } from "../3d/geometry/PlaneGeometry";
 
 export default class Scene3D extends Scene {
 
@@ -78,14 +79,21 @@ export default class Scene3D extends Scene {
         this.addChild(this._centerNode);
 
 
-        this._plane = new Plane(200,200);
-        this._plane.setCellCounts(40,40);
-        this._plane.pushPassContent(syRender.ShaderType.Sprite,[],[
-            [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_TEXTURE_ONE]
+        this._plane = new Plane(500,500,100,20);
+        // this._plane.setCellCounts(40,40);
+        this._plane.rotateX = 90;
+        this._plane.setScale(0.05,0.05,0.05)
+        this._plane.pushPassContent(syRender.ShaderType.Sprite,[
+            [syStateStringKey.cullMode,syStateStringValue.cullMode.NONE],
+            [syStateStringKey.primitiveType,syStateStringValue.primitiveType.PT_TRIANGLES]
+        ],[
+            [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_TEXTURE_ONE],
+            [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_FUNC_RIVER_FLOW]
         ]);
+        this._plane.spriteFrame = "res/river.jpg"
         this.addChild(this._plane);
-
         this._plane.spriteFrame = "res/caustics.png";
+
 
         
         this._shadowCube = new ShadowCube();
@@ -213,6 +221,7 @@ export default class Scene3D extends Scene {
         this._spotLightCube.spriteFrame = "res/dragon.jpg";
         this._centerNode.addChild(this._spotLightCube);
 
+
         this._fogCubeArr = [];
         let fogCubeNums = 40;
         let fogNode = new Node();
@@ -270,11 +279,11 @@ export default class Scene3D extends Scene {
         this._skybox.setDefaultUrl();
         this.addChild(this._skybox);
 
-        var boxG = new BoxGeometry(5);
-        boxG.pushPassContent(syRender.ShaderType.Sprite)
-        boxG.spriteFrame = "res/wicker.jpg";
-        boxG.setPosition(-3,5,5);
-        this.addChild(boxG);
+        // var boxG = new BoxGeometry(5);
+        // boxG.pushPassContent(syRender.ShaderType.Sprite)
+        // boxG.spriteFrame = "res/wicker.jpg";
+        // boxG.setPosition(-3,5,5);
+        // this.addChild(boxG);
 
         // var circleG = new CircleGeometry(5);
         // circleG.pushPassContent(syRender.ShaderType.Sprite)
@@ -308,7 +317,7 @@ export default class Scene3D extends Scene {
         boxG.setPosition(3,8,5);
         this.addChild(boxG);
 
-        // var wireG = new WireframeGeometry(new TeapotGeometry(5))
+        // var wireG = new WireframeGeometry(new PlaneGeometry(5,5,1,1))
         // wireG.pushPassContent(syRender.ShaderType.Sprite,[
         //     [syStateStringKey.primitiveType,syStateStringValue.primitiveType.PT_LINES]
         // ],[

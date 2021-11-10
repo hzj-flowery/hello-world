@@ -178,6 +178,8 @@ export namespace syRender {
 
         SY_USE_FUNC_UNPACK_CUSTOM_TONE_MAPPING: "SY_USE_FUNC_UNPACK_CUSTOM_TONE_MAPPING", //色调映射
 
+        SY_USE_FUNC_RIVER_FLOW:"SY_USE_FUNC_RIVER_FLOW",//模拟水面流动
+
         //变形目标
         SY_USE_MORPHTARGETS: "SY_USE_MORPHTARGETS",                      //变形目标
         SY_USE_MORPHTARGETS_RELATIVE: "SY_USE_MORPHTARGETS_RELATIVE",                      //变形目标 减去当前位置

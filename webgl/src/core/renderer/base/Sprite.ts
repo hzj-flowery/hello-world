@@ -151,13 +151,6 @@ export namespace SY {
         }
 
         public pushPassContent(shaderTy: syRender.ShaderType, stateArr?: Array<Array<any>>, customArr?: Array<Array<any>>, isForce?: boolean, isNew: boolean = false): void {
-            this.pushPass(shaderTy, stateArr, customArr, isNew);
-            if (isForce) {
-                this.handleShader();
-            }
-        };
-
-        private pushPass(shaderTy: syRender.ShaderType, stateArr?: Array<Array<any>>, customArr?: Array<Array<any>>, isNew: boolean = false): void {
             var tag = syRender.ShaderTypeString[shaderTy]
             if (tag==null) {
                 return
@@ -197,7 +190,10 @@ export namespace SY {
                     }
                 }
             }
-        }
+            if (isForce) {
+                this.handleShader();
+            }
+        };
 
 
         /**

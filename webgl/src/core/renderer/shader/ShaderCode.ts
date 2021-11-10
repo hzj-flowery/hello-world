@@ -21,6 +21,45 @@ export namespace ShaderCode {
             return dot(rgbaDepth, bitShift);
         }
         `)
+        commonFuncion.set(syRender.ShaderDefineValue.SY_USE_FUNC_RIVER_FLOW,`
+        vec3 getRiverFlowPosition(vec3 position,float time){
+            float x = position.x;
+            float y = position.y;
+            float PI = 3.141592653589;
+        
+            float sx = 0.0;
+            float sy = 0.0;
+            float sz = 0.0;
+        
+            float ti = 0.0;
+            float index = 1.0;
+            //水波方向
+            vec2 dir;
+            for(int i = 0;i<3;i++){
+                ti = ti + 0.0005;
+                index +=1.0;
+                if(mod(index,2.0)==0.0){
+                    dir = vec2(1.0,ti);
+                }else{
+                    dir = vec2(-1.0,ti);
+                }
+                //波长
+                float l1 = 2.0 * PI / (0.5 + ti);
+                //速度
+                float s1 = 20.0 * 2.0 / l1;
+                // float time=mod(u_time/1000.,90.);
+                float x1 = 1.0 * dir.x * sin(dot(normalize(dir),vec2(x,y)) * l1 + time * s1);
+                float y1 = 1.0 * dir.y * sin(dot(normalize(dir),vec2(x,y)) * l1 + time * s1);
+                float z1 = 1.0 * sin(dot(normalize(dir),vec2(x,y)) * l1 + time * s1);
+                sx +=x1;
+                sy +=y1;
+                sz +=z1;
+            }
+            sx = x + sx;
+            sy = y + sy;
+            return vec3(sx,sy,position.z+sin(sz)*10.0);
+        }
+        `)
         commonFuncion.set(syRender.ShaderDefineValue.SY_USE_FUNC_UNPACK_CUSTOM_TONE_MAPPING, `
         #ifndef saturate
         // <common> may have defined saturate() already

@@ -1,4 +1,4 @@
-
+precision mediump float;
 attribute vec3 a_position;
 
 
@@ -6,6 +6,8 @@ uniform mat4 u_world;
 uniform mat4 u_world_I_T;
 uniform mat4 u_view;
 uniform mat4 u_projection;
+
+uniform float u_time;
 
 
 //使用纹理
@@ -87,11 +89,18 @@ uniform mat4 u_projection;
 
 
 
+
+
 void main(){
     
     vec3 position = a_position;
     #if defined(SY_USE_MORPHTARGETS)
         position = getMorphPosition(position);
+    #endif
+
+    #if defined(SY_USE_FUNC_RIVER_FLOW)
+        float time=mod(u_time/1000.,90.);
+        position = getRiverFlowPosition(position,time);
     #endif
 
     //强行塞入一个位置空间

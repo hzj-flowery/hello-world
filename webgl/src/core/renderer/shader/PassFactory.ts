@@ -229,7 +229,7 @@ class PassFactory{
                 {
                     if(valueStr[1]!=syRender.ShaderDefineValue.SY_USE_REMOVE_DEFINE)
                     {
-                        if(valueStr[0]==syRender.ShaderDefineValue.SY_USE_FUNC_UNPACK_CUSTOM_TONE_MAPPING&&step==1)
+                        if(valueStr[0]==syRender.ShaderDefineValue.SY_USE_FUNC_UNPACK_CUSTOM_TONE_MAPPING)
                         {
                                 var func  = ShaderCode.commonFuncion.get(valueStr[0]);
                                 var addFunc = getToneMappingFunction(null,parseInt(valueStr[1]));
@@ -250,7 +250,7 @@ class PassFactory{
                     code = "\n #define "+value+"\n " + code;
                     //check add function
                     var func = ShaderCode.commonFuncion.get(value);
-                    if(func&&step==1)
+                    if(func)
                     {
                         code = "\n "+func+"\n  " +code
                     }
@@ -262,7 +262,7 @@ class PassFactory{
 
                 //check add function
                 var func = ShaderCode.commonFuncion.get(value);
-                if(func&&step==1)
+                if(func)
                 {
                     code = "\n "+func+"\n  " +code
                 }
