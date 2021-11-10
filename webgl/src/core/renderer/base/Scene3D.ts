@@ -80,7 +80,12 @@ export default class Scene3D extends Scene {
 
         this._plane = new Plane(200,200);
         this._plane.setCellCounts(40,40);
+        this._plane.pushPassContent(syRender.ShaderType.Sprite,[],[
+            [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_TEXTURE_ONE]
+        ]);
         this.addChild(this._plane);
+
+        this._plane.spriteFrame = "res/caustics.png";
 
         
         this._shadowCube = new ShadowCube();

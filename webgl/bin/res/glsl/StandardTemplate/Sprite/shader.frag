@@ -5,6 +5,7 @@ uniform vec4 u_color;//节点的颜色
 
 uniform float u_alpha;
 
+uniform float u_time;
 
 //传递数组        
 #ifdef SY_USE_FLOAT_ARRAY_LENGTH
@@ -22,11 +23,17 @@ uniform float u_alpha;
     uniform vec4 u_emissive;
 #endif
 
-//使用纹理
+//使用纹理0号单元
 #if defined(SY_USE_TEXTURE)
       uniform sampler2D u_texture;
       varying vec2 v_uv;
 #endif
+
+//使用纹理1号单元
+#if defined(SY_USE_TEXTURE_ONE)
+      uniform sampler2D u_texture1;
+#endif
+
 
 //环境光
 #if defined(SY_USE_LIGHT_AMBIENT)
@@ -261,6 +268,12 @@ void main(){
              vec4 surfaceBaseColor=texture2D(u_texture,v_uv)*u_color;
       #else
              vec4 surfaceBaseColor=u_color;
+      #endif
+      
+      //使用1号纹理单元
+      #if defined(SY_USE_TEXTURE_ONE)
+          float time=mod(u_time/1000.,90.);
+          surfaceBaseColor = surfaceBaseColor+texture2D(u_texture1,v_uv+sin(time));
       #endif
       
       surfaceBaseColor=vec4(surfaceBaseColor.rgb,u_alpha*surfaceBaseColor.a);

@@ -158,7 +158,8 @@ export namespace syRender {
         SY_USE_FLOAT_ARRAY_LENGTH: "SY_USE_FLOAT_ARRAY_LENGTH",//使用float数组 定义其长度 
         SY_USE_ALPHA_TEST: "SY_USE_ALPHA_TEST",    //alpha测试
         SY_USE_RGB_TEST: "SY_USE_RGB_TEST",        //rgb测试
-        SY_USE_TEXTURE: "SY_USE_TEXTURE",          //使用纹理
+        SY_USE_TEXTURE: "SY_USE_TEXTURE",          //使用0号纹理单元
+        SY_USE_TEXTURE_ONE: "SY_USE_TEXTURE_ONE",          //使用1号纹理单元
         SY_USE_LIGHT_AMBIENT: "SY_USE_LIGHT_AMBIENT",          //使用环境光
         SY_USE_LIGHT_PARALLEL: "SY_USE_LIGHT_PARALLEL",        //使用平行光
         SY_USE_LIGHT_SPOT: "SY_USE_LIGHT_SPOT",                //使用聚光

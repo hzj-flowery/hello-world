@@ -117,7 +117,7 @@ export namespace SY {
      * 数据生成 绑定  
      */
     export class SpriteBase extends Node {
-        
+
         private _attributeId: string;//这里存放一个材质id
         private _passContent: Array<any> = [];//pass的内容
 
@@ -125,8 +125,8 @@ export namespace SY {
         private _diffuse: Color;//漫反射颜色
         private _alpha: number = 1;//节点自定义透明度
         private _customMatrix: Float32Array = glMatrix.mat4.identity(null);//节点自定义矩阵
-      
-        protected _texture: Texture;
+
+        private _textures: Array<Texture>;
         private _pass: Array<Pass>;
         private _renderData: Array<syRender.QueueItemBaseData>;
         //参考glprimitive_type
@@ -136,52 +136,70 @@ export namespace SY {
             attributeId++;
             this._attributeId = "materialId_" + attributeId;
             this._renderData = []
-            this._color = new Color(255,255,255,255);//默认颜色为白色
-            this._diffuse = new Color(255,255,255,255);//默认颜色为白色
+            this._color = new Color(255, 255, 255, 255);//默认颜色为白色
+            this._diffuse = new Color(255, 255, 255, 255);//默认颜色为白色
             this._sizeMode = SpriteSizeMode.CUSTOM;//默认加载图片的尺寸大小为自定义
+            this._textures = [];
             this.init();
         }
         private init(): void {
             this.onInit();
         }
 
-        public get attributeId(){
+        public get attributeId() {
             return this._attributeId;
         }
 
-        public pushPassContent(shaderTy: syRender.ShaderType, stateArr?: Array<Array<any>>,customArr?:Array<Array<any>>,isForce?:boolean): void {
-
-            var tag = syRender.ShaderTypeString[shaderTy]
-            if (tag) {
-                var state = null;
-                if (stateArr && stateArr.length) {
-                    state = []
-                    for (let k = 0; k < stateArr.length; k++) {
-                        state.push({ "key": stateArr[k][0], "value": stateArr[k][1] });
-                    }
-                }
-                var custom = null;
-                if (customArr && customArr.length) {
-                    custom = []
-                    for (let k = 0; k < customArr.length; k++) {
-                        if(customArr[k].length==2)
-                        {
-                            custom.push({ "key": customArr[k][0], "value": customArr[k][1] });
-                        }
-                        else if(customArr[k].length==3)
-                        {
-                            custom.push({ "key": customArr[k][0], "value": customArr[k][1]+"$"+customArr[k][2]});
-                        }
-                    }
-                }
-                this._passContent.push({ "name": "TemplatePass", "tag": tag, state: state,custom:custom});
-            }
-
-            if(isForce)
-            {
+        public pushPassContent(shaderTy: syRender.ShaderType, stateArr?: Array<Array<any>>, customArr?: Array<Array<any>>, isForce?: boolean, isNew: boolean = false): void {
+            this.pushPass(shaderTy, stateArr, customArr, isNew);
+            if (isForce) {
                 this.handleShader();
             }
         };
+
+        private pushPass(shaderTy: syRender.ShaderType, stateArr?: Array<Array<any>>, customArr?: Array<Array<any>>, isNew: boolean = false): void {
+            var tag = syRender.ShaderTypeString[shaderTy]
+            if (tag==null) {
+                return
+            }
+            var content = null;
+            if (!isNew) {
+                for (let k=0; k < this._passContent.length; k++) {
+                    var v = this._passContent[k];
+                    if (v.tag == tag) {
+                        content = v;
+                        break;
+                    }
+                }
+            }
+            if (!content) {
+                content = { "name": "TemplatePass", "tag": tag, state: null, custom: null };
+                this._passContent.push(content);
+            }
+
+            //状态
+            if (stateArr && stateArr.length) {
+                content.state = content.state ? content.state : []
+                for (let k = 0; k < stateArr.length; k++) {
+                    content.state.push({ "key": stateArr[k][0], "value": stateArr[k][1] });
+                }
+            }
+
+            //宏
+            if (customArr && customArr.length) {
+                content.custom = content.custom ? content.custom : [];
+                for (let k = 0; k < customArr.length; k++) {
+                    if (customArr[k].length == 2) {
+                        content.custom.push({ "key": customArr[k][0], "value": customArr[k][1] });
+                    }
+                    else if (customArr[k].length == 3) {
+                        content.custom.push({ "key": customArr[k][0], "value": customArr[k][1] + "$" + customArr[k][2] });
+                    }
+                }
+            }
+        }
+
+
         /**
          * 设置精灵图片的尺寸模式
          */
@@ -210,28 +228,24 @@ export namespace SY {
          * 获取当前正在使用的shader
          */
         protected get baseProgram() {
-            if(this._pass&&this._pass.length>0)
-            {
+            if (this._pass && this._pass.length > 0) {
                 return this._pass[0].baseProgram;
             }
-            else
-            {
+            else {
                 console.error("当前还没创建pass")
             }
         }
 
-        protected get program(){
-            if(this._pass&&this._pass.length>0)
-            {
+        protected get program() {
+            if (this._pass && this._pass.length > 0) {
                 return this._pass[0].program;
             }
-            else
-            {
+            else {
                 console.error("当前还没创建pass")
             }
         }
 
-        protected get pass(){
+        protected get pass() {
             return this._pass;
         }
         /**
@@ -286,23 +300,23 @@ export namespace SY {
             return this._alpha
         }
         public set spriteFrame(url: string | Array<string> | TextureOpts | Object) {
-            this._texture = G_TextureManager.createTexture(url);
+            this.texture = G_TextureManager.createTexture(url);
             this.onSetTextureUrl();
         }
         /**
          * 直接设置纹理
          */
         public set texture(tex: Texture) {
-            if (this._texture == tex) {
-                //纹理相同 无需重新设置
-                return;
+            var isExist = false
+            this._textures.forEach((value, index) => {
+                if (value == tex) {
+                    isExist = true;
+                }
+            })
+            if (!isExist) {
+                this._textures.push(tex);
+                this.onSetTextureUrl();
             }
-            if (this._texture) {
-                //之前存在纹理 需要将其销毁
-                this._texture.destroy();
-            }
-            this._texture = tex;
-            this.onSetTextureUrl();
         }
         /**
          * 设置完纹理之后调用
@@ -310,19 +324,12 @@ export namespace SY {
         protected onSetTextureUrl(): void {
 
         }
-        protected getGLID(type: GLID_TYPE): any {
-            switch (type) {
-                case GLID_TYPE.TEXTURE_2D: return this._texture ? this._texture.glID : -1;
-                case GLID_TYPE.TEXTURE_CUBE: return this._texture ? this._texture.glID : -1;
-                default: var buffer = this.getBuffer(type); return buffer ? buffer.glID : -1;
-            }
-        }
         /**
          * 获取顶点数据的buffer
          * @param type 
          */
         public getBuffer(type: GLID_TYPE): BufferAttribute {
-            return G_BufferManager.getBuffer(type,this._attributeId)
+            return G_BufferManager.getBuffer(type, this._attributeId)
         }
         protected getBufferItemSize(type: GLID_TYPE): number {
             var buffer = this.getBuffer(type);
@@ -341,10 +348,15 @@ export namespace SY {
          * @param texture 纹理的GLID
          */
         protected collectRenderData(time: number): void {
-            if (this._texture && this._texture.loaded == false) {
+            if (this._textures && this._textures.length > 0) {
                 //说明使用了纹理 但纹理还没有被加载完成
-                return;
+                for (let k = 0; k < this._textures.length; k++) {
+                    if (this._textures[k].loaded == false) {
+                        return;
+                    }
+                }
             }
+
             this.onCollectRenderDataBefore();
             if (!this._pass || this._pass.length == 0) {
                 //一次渲染shader是必不可少的
@@ -361,7 +373,7 @@ export namespace SY {
                 this._renderData[i].node = this as Node;
                 this._renderData[i].pass = pass;
                 this._renderData[i].time = time;
-               
+
                 this.updateRenderData(this._renderData[i]);
                 this.onCollectRenderDataAfter(this._renderData[i])
                 Device.Instance.collectData(this._renderData[i]);
@@ -369,27 +381,34 @@ export namespace SY {
         }
         private updateRenderData(rData: syRender.QueueItemBaseData): void {
             //顶点组----------------------------------------------------------------------
-            rData.primitive.position.glID = this.getGLID(SY.GLID_TYPE.VERTEX);
+            rData.primitive.position.glID = this.getBuffer(SY.GLID_TYPE.VERTEX).glID;
             rData.primitive.position.itemSize = this.getBufferItemSize(SY.GLID_TYPE.VERTEX);
             rData.primitive.position.itemNums = this.getBuffer(SY.GLID_TYPE.VERTEX).itemNums;
             //索引组----------------------------------------------------------------------
-            rData.primitive.index.glID = this.getGLID(SY.GLID_TYPE.INDEX);
-            if (rData.primitive.index.glID != -1) {
-                rData.primitive.index.itemSize = this.getBuffer(SY.GLID_TYPE.INDEX).itemSize;
-                rData.primitive.index.itemNums = this.getBuffer(SY.GLID_TYPE.INDEX).itemNums;
+            var indexBufferAttribute = this.getBuffer(SY.GLID_TYPE.INDEX);
+            if (indexBufferAttribute) {
+                rData.primitive.index.glID = indexBufferAttribute.glID;
+                rData.primitive.index.itemSize = indexBufferAttribute.itemSize;
+                rData.primitive.index.itemNums = indexBufferAttribute.itemNums;
             }
             //uv组-------------------------------------------------------------------------
-            rData.primitive.uv.glID = this.getGLID(SY.GLID_TYPE.UV);
-            rData.primitive.uv.itemSize = this.getBufferItemSize(SY.GLID_TYPE.UV);
+            var uvBufferAttribute = this.getBuffer(SY.GLID_TYPE.UV)
+            if (uvBufferAttribute) {
+                rData.primitive.uv.glID = uvBufferAttribute.glID;
+                rData.primitive.uv.itemSize = uvBufferAttribute.itemSize;
+            }
             //法线组-----------------------------------------------------------------------
-            rData.primitive.normal.glID = this.getGLID(SY.GLID_TYPE.NORMAL);
-            rData.primitive.normal.itemSize = this.getBufferItemSize(SY.GLID_TYPE.NORMAL);
-
+            var normalBufferAttribute = this.getBuffer(SY.GLID_TYPE.NORMAL);
+            if (normalBufferAttribute) {
+                rData.primitive.normal.glID = normalBufferAttribute.glID;
+                rData.primitive.normal.itemSize = normalBufferAttribute.itemSize;
+            }
             //节点自定义顶点颜色组----------------------------------------------------------
-            rData.primitive.nodeVertColor.glID = this.getGLID(SY.GLID_TYPE.VERT_COLOR);
-            if (rData.primitive.nodeVertColor.glID != -1) {
-                rData.primitive.nodeVertColor.itemSize = this.getBuffer(SY.GLID_TYPE.VERT_COLOR).itemSize;
-                rData.primitive.nodeVertColor.itemNums = this.getBuffer(SY.GLID_TYPE.VERT_COLOR).itemNums;
+            var vertcolorBufferAttribute = this.getBuffer(SY.GLID_TYPE.VERT_COLOR);
+            if (vertcolorBufferAttribute) {
+                rData.primitive.nodeVertColor.glID = vertcolorBufferAttribute.glID
+                rData.primitive.nodeVertColor.itemSize = vertcolorBufferAttribute.itemSize;
+                rData.primitive.nodeVertColor.itemNums = vertcolorBufferAttribute.itemNums;
             }
 
             //节点的颜色
@@ -402,40 +421,51 @@ export namespace SY {
             rData.primitive.customMatrix = this._customMatrix;
 
             //节点自定义矩阵组------------------------------------------------------------------------
-            rData.primitive.vertMatrix.glID = this.getGLID(SY.GLID_TYPE.VERT_MATRIX);
-            if (rData.primitive.vertMatrix.glID != -1) {
-                rData.primitive.vertMatrix.itemSize = this.getBuffer(SY.GLID_TYPE.VERT_MATRIX).itemSize;
-                rData.primitive.vertMatrix.itemNums = this.getBuffer(SY.GLID_TYPE.VERT_MATRIX).itemNums;
+            var vertmatrixBufferAttribute = this.getBuffer(SY.GLID_TYPE.VERT_MATRIX);
+            if (vertmatrixBufferAttribute) {
+                rData.primitive.vertMatrix.glID = vertmatrixBufferAttribute.glID;
+                rData.primitive.vertMatrix.itemSize = vertmatrixBufferAttribute.itemSize;
+                rData.primitive.vertMatrix.itemNums = vertmatrixBufferAttribute.itemNums;
             }
+
+            //模型矩阵
             rData.primitive.modelMatrix = this.modelMatrix;
-            if (this._texture instanceof RenderTexture && (this._texture as RenderTexture).isDeferred()) {
-                syRender.DeferredAllTypeTexture.forEach((value, index) => {
-                    var texS = (this._texture as RenderTexture).getDeferredTex(value);
-                    texS ? rData.push2DTexture(texS, value) : null;
-                })
-            }
-            else if(rData.pass.shaderType == syRender.ShaderType.RTT_Use)
-            {
-                //mrt
-                var mrtTex = GameMainCamera.instance.getRenderTexture(syRender.RenderTextureUUid.RTT)
-                syRender.DeferredAllTypeTexture.forEach((value, index) => {
-                    var texS = mrtTex.getDeferredTex(value);
-                    texS ? rData.push2DTexture(texS, value) : null;
-                })
-            }
-            else if (this._texture && this._texture.glID) {
-                if (this._texture.isTexture2D)
-                    rData.push2DTexture(this.getGLID(SY.GLID_TYPE.TEXTURE_2D));
-                else if (this._texture.isTextureCube)
-                    rData.pushCubeTexture(this.getGLID(SY.GLID_TYPE.TEXTURE_CUBE));
+
+            for (let k = 0; k < this._textures.length; k++) {
+                var targetTexture = this._textures[k];
+                if (targetTexture instanceof RenderTexture && (targetTexture as RenderTexture).isDeferred()) {
+                    syRender.DeferredAllTypeTexture.forEach((value, index) => {
+                        var texS = (targetTexture as RenderTexture).getDeferredTex(value);
+                        texS ? rData.push2DTexture(texS, value) : null;
+                    })
+                }
+                else if (rData.pass.shaderType == syRender.ShaderType.RTT_Use) {
+                    //mrt
+                    var mrtTex = GameMainCamera.instance.getRenderTexture(syRender.RenderTextureUUid.RTT)
+                    syRender.DeferredAllTypeTexture.forEach((value, index) => {
+                        var texS = mrtTex.getDeferredTex(value);
+                        texS ? rData.push2DTexture(texS, value) : null;
+                    })
+                }
+                else if (targetTexture && targetTexture.glID) {
+                    if (targetTexture.isTexture2D)
+                        rData.push2DTexture(targetTexture.glID);
+                    else if (targetTexture.isTextureCube)
+                        rData.pushCubeTexture(targetTexture.glID);
+                }
             }
             rData.primitive.type = rData.pass.state.primitiveType;
         }
+        /**
+         * 默认返回第一个纹理
+         */
         public get texture(): Texture {
-            return this._texture;
+            return this._textures[0];
         }
         public destroy(): void {
-            this._texture.destroy();
+            this._textures.forEach((value, index) => {
+                value.destroy();
+            })
         }
     }
     /**
@@ -451,25 +481,22 @@ export namespace SY {
         private _tempMatrix: Float32Array;
 
         protected onInit(): void {
-            this.pushPassContent(syRender.ShaderType.ShadowMap,[],[
-                [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_FUNC_PACK]
+            this.pushPassContent(syRender.ShaderType.ShadowMap, [], [
+                [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_FUNC_PACK]
             ]);
-            // this.pushPassContent(syRender.ShaderType.Shadow,[],[
-            //     [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_FUNC_UNPACK]
-            // ]);
 
-            this.pushPassContent(syRender.ShaderType.Sprite,[],[
-                [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_FUNC_UNPACK],
+            this.pushPassContent(syRender.ShaderType.Sprite, [], [
+                [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_FUNC_UNPACK],
 
-                [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_NORMAL],
-                [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_MAT],
-                [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_AMBIENT],
+                [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_NORMAL],
+                [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_MAT],
+                [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_LIGHT_AMBIENT],
                 // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_SPOT],
-                [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_PARALLEL],
+                [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_LIGHT_PARALLEL],
                 // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_POINT],
-                // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_SHADOW_PARALLEL],
+                [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_SHADOW_PARALLEL],
                 // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_SPECULAR],
-                [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_FOG]
+                [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_FOG]
             ]);
         }
         protected collectRenderData(time: number) {
@@ -532,7 +559,7 @@ export namespace SY {
         }
         private check(): void {
             if (!this._polygon) {
-                G_BufferManager.createBuffer(SY.GLID_TYPE.VERTEX,this.attributeId,[], 3, 10)
+                G_BufferManager.createBuffer(SY.GLID_TYPE.VERTEX, this.attributeId, [], 3, 10)
             }
         }
         protected collectRenderData(time): void {
@@ -584,20 +611,20 @@ export namespace SY {
         private _lb: Array<number> = [];//左下
         private _rt: Array<number> = [];//右上
         private _rb: Array<number> = [];//右下
-        private _mask:Mask2D;//遮罩
+        private _mask: Mask2D;//遮罩
         constructor() {
             super();
             this._node__type = syRender.NodeType.D2;
             this._sizeMode = SpriteSizeMode.RAW;
         }
-        protected isUnpackY:boolean = false;
+        protected isUnpackY: boolean = false;
         private updateUV(): void {
             //uv 数据
             var texCoordinates_uv = [
-                0.0,1.0, //v0
-                1.0,1.0, //v1
-                1.0,0.0, //v2    //标准的uv坐标 左上角为原点 
-                0.0,0.0  //v3
+                0.0, 1.0, //v0
+                1.0, 1.0, //v1
+                1.0, 0.0, //v2    //标准的uv坐标 左上角为原点 
+                0.0, 0.0  //v3
             ];
 
             var texCoordinates_webgl = [
@@ -607,16 +634,16 @@ export namespace SY {
                 0.0, 1.0, //v0
             ];
 
-            G_BufferManager.createBuffer(SY.GLID_TYPE.UV,this.attributeId,this.isUnpackY?texCoordinates_webgl:texCoordinates_uv, 2);
+            G_BufferManager.createBuffer(SY.GLID_TYPE.UV, this.attributeId, this.isUnpackY ? texCoordinates_webgl : texCoordinates_uv, 2);
             // 索引数据
             var floorVertexIndices = [0, 1, 2, 3, 0];
-            G_BufferManager.createBuffer(SY.GLID_TYPE.INDEX,this.attributeId,floorVertexIndices,1);
+            G_BufferManager.createBuffer(SY.GLID_TYPE.INDEX, this.attributeId, floorVertexIndices, 1);
 
         }
 
         protected onSetTextureUrl(): void {
-            if (this._texture)
-                (this._texture as Texture2D).textureOnLoad = this.onTextureLoaded.bind(this);
+            if (this.texture)
+                (this.texture as Texture2D).textureOnLoad = this.onTextureLoaded.bind(this);
         }
 
         /**
@@ -670,12 +697,11 @@ export namespace SY {
 
 
             var pos = [].concat(this._lb, this._rb, this._rt, this._lt);
-            G_BufferManager.createBuffer(SY.GLID_TYPE.VERTEX,this.attributeId,pos, 3)
+            G_BufferManager.createBuffer(SY.GLID_TYPE.VERTEX, this.attributeId, pos, 3)
             this.updateUV();
         }
 
-        public set mask(mk)
-        {
+        public set mask(mk) {
             this._mask = mk;
         }
     }
@@ -687,26 +713,26 @@ export namespace SY {
         constructor() {
             super();
         }
-        protected onInit(){
+        protected onInit() {
             super.onInit()
 
             this.pushPassContent(syRender.ShaderType.Sprite, [
                 //深度 
-                [syStateStringKey.depthTest,syStateStringValue.depthTest.ON],
-                [syStateStringKey.depthFunc,syStateStringValue.depthFunc.LEQUAL],
-                [syStateStringKey.depthWrite,syStateStringValue.depthWrite.ON],
-                
-                [syStateStringKey.blendColorMask,syRender.ColorMask.NONE],
-    
-                [syStateStringKey.stencilTest,syStateStringValue.stencilTest.ON],
-                [syStateStringKey.stencilSep,syStateStringValue.stencilSep.OFF],
-                [syStateStringKey.stencilFunc,syStateStringValue.stencilFunc.ALWAYS],
-                [syStateStringKey.stencilRef,10],
-                [syStateStringKey.stencilMask,0xffff],
-                [syStateStringKey.stencilFailOp,syStateStringValue.stencilFailOp.KEEP],
-                [syStateStringKey.stencilZFailOp,syStateStringValue.stencilZFailOp.KEEP],
-                [syStateStringKey.stencilZPassOp,syStateStringValue.stencilZPassOp.REPLACE],
-    
+                [syStateStringKey.depthTest, syStateStringValue.depthTest.ON],
+                [syStateStringKey.depthFunc, syStateStringValue.depthFunc.LEQUAL],
+                [syStateStringKey.depthWrite, syStateStringValue.depthWrite.ON],
+
+                [syStateStringKey.blendColorMask, syRender.ColorMask.NONE],
+
+                [syStateStringKey.stencilTest, syStateStringValue.stencilTest.ON],
+                [syStateStringKey.stencilSep, syStateStringValue.stencilSep.OFF],
+                [syStateStringKey.stencilFunc, syStateStringValue.stencilFunc.ALWAYS],
+                [syStateStringKey.stencilRef, 10],
+                [syStateStringKey.stencilMask, 0xffff],
+                [syStateStringKey.stencilFailOp, syStateStringValue.stencilFailOp.KEEP],
+                [syStateStringKey.stencilZFailOp, syStateStringValue.stencilZFailOp.KEEP],
+                [syStateStringKey.stencilZPassOp, syStateStringValue.stencilZPassOp.REPLACE],
+
                 // [syStateStringKey.stencilTestFront,syStateStringValue.stencilTestFront.ON],
                 // [syStateStringKey.stencilFuncFront,syStateStringValue.stencilFuncFront.ALWAYS],
                 // [syStateStringKey.stencilRefFront,3],
@@ -714,8 +740,8 @@ export namespace SY {
                 // [syStateStringKey.stencilFailOpFront,syStateStringValue.stencilFailOpFront.KEEP],
                 // [syStateStringKey.stencilZFailOpFront,syStateStringValue.stencilZFailOpFront.KEEP],
                 // [syStateStringKey.stencilZPassOpFront,syStateStringValue.stencilZPassOpFront.REPLACE],
-            ],[
-                [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_ALPHA_TEST,0.1]
+            ], [
+                [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_ALPHA_TEST, 0.1]
             ])
         }
     }

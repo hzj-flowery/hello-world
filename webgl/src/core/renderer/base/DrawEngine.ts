@@ -145,7 +145,7 @@ class DrawEngine {
         rd.node ? rd.node.onDrawBefore(rd.time,rd) : null;
         if (!rd.isDrawInstanced) {
             var indexglID = rd.primitive.index.glID;
-            indexglID != -1 ? (
+            indexglID? (
                 //绑定索引缓冲
                 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexglID),
                 this.drawElements(rd.primitive.type, rd.primitive.index.itemNums, gl.UNSIGNED_SHORT, 0)
