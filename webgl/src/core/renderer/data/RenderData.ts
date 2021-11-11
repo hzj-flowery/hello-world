@@ -834,7 +834,7 @@ export namespace syRender {
                         break;
                     case ShaderUseVariantType.Mouse:
                         var p = G_InputControl.getLastPressPos();
-                        _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.MOUSE, [p[0], p[1], 0, 0]);
+                        _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.MOUSE, [p[0]==null?0:p[0], p[1]==null?0:p[1], 0, 0]);
                         break;
                     case ShaderUseVariantType.ShadowInfo:
                         _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.SHADOW_INFO, this.light.shadow.info);

@@ -481,7 +481,9 @@ export namespace SY {
                 [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_FUNC_PACK]
             ]);
 
-            this.pushPassContent(syRender.ShaderType.Sprite, [], [
+            this.pushPassContent(syRender.ShaderType.Sprite, [
+                // [syStateStringKey.primitiveType,syStateStringValue.primitiveType.PT_LINES]
+            ], [
                 [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_FUNC_UNPACK],
 
                 [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_NORMAL],

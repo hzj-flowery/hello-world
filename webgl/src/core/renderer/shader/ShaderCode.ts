@@ -22,7 +22,8 @@ export namespace ShaderCode {
         }
         `)
         commonFuncion.set(syRender.ShaderDefineValue.SY_USE_FUNC_RIVER_FLOW,`
-        vec3 getRiverFlowPosition(vec3 position,float time){
+        //水面 波谷陡峭明显 适合大海 惊涛澎湃
+        vec3 getRiverFlowPositionOne(vec3 position,float time){
             float x = position.x;
             float y = position.y;
             float PI = 3.141592653589;
@@ -59,6 +60,36 @@ export namespace ShaderCode {
             sy = y + sy;
             return vec3(sx,sy,position.z+sin(sz)*10.0);
         }
+        //水面 波浪明显
+        vec3 getRiverFlowPositionTwo(vec3 position,float time){
+            float x = position.x;
+            float y = position.y;
+            float PI = 3.141592653589;
+
+            float sz = 0.0;
+            float ti = 0.06;
+            float index = 1.0;
+            vec2 dir;//波的方向
+            //四条正弦波相加
+            for(int i = 0;i<4;i++){
+                ti = ti + 0.0005;
+                index = index + 0.1;
+                if(mod(index,2.0)==0.0){
+                    dir = vec2(1.0,ti);
+                }else{
+                    dir = vec2(-1.0,ti);
+                }
+                float l1 = 2.0 * PI / (0.5);//波长
+                float s1 = 10.0 * 2.0 / l1;//速度
+                float z1 = 1.0 * sin(dot(normalize(dir),vec2(x,y)) * l1 + time * s1);//正弦波方程式
+                sz +=z1;
+            }
+            return vec3(x,y,position.z+sin(sz)*10.0);
+        }
+        vec3 getRiverFlowPosition(vec3 position,float time){
+            return getRiverFlowPositionTwo(position,time);
+        }
+
         `)
         commonFuncion.set(syRender.ShaderDefineValue.SY_USE_FUNC_UNPACK_CUSTOM_TONE_MAPPING, `
         #ifndef saturate

@@ -1,4 +1,5 @@
 import { glMatrix } from "../../math/Matrix";
+import { MathUtils } from "../../utils/MathUtils";
 import { G_BufferManager } from "../base/buffer/BufferManager";
 import { SY } from "../base/Sprite";
 import CustomTextureData from "../data/CustomTextureData";
@@ -54,87 +55,20 @@ import { syPrimitives } from "../primitive/Primitives";
  */
 
 export class Plane extends SY.ShadowSprite {
-
-    protected indices: Array<number>;
-    protected vertices: Array<number>;
-    protected normals: Array<number>;
-    protected tangents: Array<number>;
-    protected binormals: Array<number>;
-    protected uvs: Array<number>;
-
     constructor(width = 1, height = 1, widthSegments = 1, heightSegments = 1) {
         super();
 
-        this.indices = [];
-        this.vertices = [];
-        this.normals = [];
-        this.uvs = [];
-        this.tangents = [];
-        this.binormals = [];
-
         this._planeHeight = width;
         this._planeWidth = width;
-
-
         this.width = width;
         this.height = height;
         this._widthSegments = widthSegments;
         this._heightSegments = heightSegments;
-
-        const width_half = width / 2;
-        const height_half = height / 2;
-
-        const gridX = Math.floor(widthSegments);
-        const gridY = Math.floor(heightSegments);
-
-        const gridX1 = gridX + 1;
-        const gridY1 = gridY + 1;
-
-        const segment_width = width / gridX;
-        const segment_height = height / gridY;
-
-
-        for (let iy = 0; iy < gridY1; iy++) {
-
-            const y = iy * segment_height - height_half;
-
-            for (let ix = 0; ix < gridX1; ix++) {
-
-                const x = ix * segment_width - width_half;
-
-                this.vertices.push(x, - y, 0);
-
-                this.normals.push(0, 0, 1);
-
-                this.uvs.push(ix / gridX);
-                this.uvs.push(1 - (iy / gridY));
-
-            }
-
-        }
-
-        for (let iy = 0; iy < gridY; iy++) {
-
-            for (let ix = 0; ix < gridX; ix++) {
-
-                const a = ix + gridX1 * iy;
-                const b = ix + gridX1 * (iy + 1);
-                const c = (ix + 1) + gridX1 * (iy + 1);
-                const d = (ix + 1) + gridX1 * iy;
-
-                this.indices.push(a, b, d);
-                this.indices.push(b, c, d);
-
-            }
-
-        }
-
-        G_BufferManager.createBuffer(SY.GLID_TYPE.INDEX, this.attributeId, this.indices, 1);
-        G_BufferManager.createBuffer(SY.GLID_TYPE.NORMAL, this.attributeId, this.normals, 3);
-        G_BufferManager.createBuffer(SY.GLID_TYPE.UV, this.attributeId, this.uvs, 2);
-        G_BufferManager.createBuffer(SY.GLID_TYPE.VERTEX, this.attributeId, this.vertices, 3)
-
-
+        var vertexData = MathUtils.splitRect(width,height,widthSegments,heightSegments)
+        G_BufferManager.createBuffer(SY.GLID_TYPE.INDEX, this.attributeId, vertexData.indices, 1);
+        G_BufferManager.createBuffer(SY.GLID_TYPE.NORMAL, this.attributeId, vertexData.normals, 3);
+        G_BufferManager.createBuffer(SY.GLID_TYPE.UV, this.attributeId, vertexData.uvs, 2);
+        G_BufferManager.createBuffer(SY.GLID_TYPE.VERTEX, this.attributeId, vertexData.vertices, 3)
     }
     private _planeWidth: number = 5;//地形宽度
     private _planeHeight: number = 5;//地形高度

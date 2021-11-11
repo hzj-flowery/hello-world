@@ -890,11 +890,28 @@ export default class Device {
     }
 
     /**
-     * 触发渲染的时间 
+     * 触发渲染的时间 启动时间
      */
-    private _triggerRenderTime: number = 0;
+    private _triggerRenderStartTime: number = 0;
+    /**
+     * 触发渲染的次数
+     */
+    private _triggerRenderCount: number = 0;
     public get triggerRenderTime() {
-        return this._triggerRenderTime;
+        return this._triggerRenderCount;
+    }
+    //记录触发渲染
+    private recordTriggerRender():void{
+        if(this._triggerRenderCount==0)
+        {
+            this._triggerRenderStartTime =  performance.now();
+        }
+        this._triggerRenderCount++;
+        if(this._triggerRenderCount>100000)
+        {
+            //重置
+            this._triggerRenderCount = 1;
+        }
     }
     /**
      * 触发常规渲染
@@ -908,7 +925,7 @@ export default class Device {
         //设置帧缓冲区
         this.readyForOneFrame(crData);
         //记录一下当前渲染的时间
-        this._triggerRenderTime++;
+        this.recordTriggerRender();
         var cameraData = GameMainCamera.instance.getCameraByUUid(syRender.CameraUUid.base3D).getCameraData();
         G_CameraModel.updateCamera(crData.visualAngle, cameraData.projectMat, cameraData.modelMat, crData.visualAnglePosition);
         //提交数据给GPU 立即绘制
