@@ -86,8 +86,21 @@ export namespace ShaderCode {
             }
             return vec3(x,y,position.z+sin(sz)*10.0);
         }
+        //上下波动的小红旗
+        vec3 getRiverFlowPositionThree(vec3 position,float time)
+        {   
+            //波长
+            float sin_lamda = 5.0;
+            //周期
+            float sin_T = 1.0;
+            //振幅
+            float sin_A = 0.2;
+            //y = A sin{ 2π ( t/T - x/λ ) }
+            position.y = position.y + sin_A*sin(2.0*3.141592653*(time/sin_T - position.x/sin_lamda));
+            return position;
+        }
         vec3 getRiverFlowPosition(vec3 position,float time){
-            return getRiverFlowPositionTwo(position,time);
+            return getRiverFlowPositionOne(position,time);
         }
 
         `)

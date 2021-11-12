@@ -99,7 +99,7 @@ void main(){
     #endif
 
     #if defined(SY_USE_FUNC_RIVER_FLOW)
-        float time=mod(u_time/1000.,90.);
+        float time=mod(u_time/1000.,90.)*5.0;
         position = getRiverFlowPosition(position,time);
     #endif
 

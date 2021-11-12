@@ -43,12 +43,12 @@ export default class Scene2D extends Scene {
         this._pen.spriteFrame = "res/bg_npc_06.png";
         this.addChild(this._pen);
         
-        var testHttp = new SY.UIImage();
-        // testHttp.setPosition(200,200,-100)
-        // testHttp.setScale(0.2,0.2,1.0);
-        testHttp.pushPassContent(syRender.ShaderType.Test)
-        testHttp.spriteFrame = "res/uv_grid_opengl.jpg";
-        this.addChild(testHttp);
+        // var testHttp = new SY.UIImage();
+        // // testHttp.setPosition(200,200,-100)
+        // // testHttp.setScale(0.2,0.2,1.0);
+        // testHttp.pushPassContent(syRender.ShaderType.Sprite)
+        // testHttp.spriteFrame = "res/uv_grid_opengl.jpg";
+        // this.addChild(testHttp);
 
         // this._uvSprite = new SY.Sprite2D();
         // this._uvSprite.pushPassContent(syRender.ShaderType.UvSprite,[],[
