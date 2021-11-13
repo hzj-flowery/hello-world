@@ -7,6 +7,10 @@ uniform float u_alpha;
 
 uniform float u_time;
 
+uniform vec4 u_resolution;
+
+uniform vec4 u_mouse;
+
 //传递数组        
 #ifdef SY_USE_FLOAT_ARRAY_LENGTH
        if(SY_USE_FLOAT_ARRAY_LENGTH>0)
@@ -245,6 +249,8 @@ uniform float u_time;
     }
 #endif
 
+
+
 void main(){
       
       //归一化法线
@@ -265,7 +271,12 @@ void main(){
       
       //表面基底色
       #ifdef SY_USE_TEXTURE
-             vec4 surfaceBaseColor=texture2D(u_texture,v_uv)*u_color;
+            #ifdef SY_USE_FUNC_MAGNIFIER
+                  vec4 surfaceBaseColor=texture2D(u_texture,v_uv+getUVOffsetByMagnifier(v_uv,u_resolution.xy,u_mouse.xy,0.1,0.3))*u_color;
+            #else
+                  vec4 surfaceBaseColor=texture2D(u_texture,v_uv)*u_color;
+            #endif
+             
       #else
              vec4 surfaceBaseColor=u_color;
       #endif
@@ -350,6 +361,8 @@ void main(){
            fragColor=getFogMixColor(fragColor);
       #endif
 
+
+
       
       //做一些基础测试
       #ifdef SY_USE_ALPHA_TEST
@@ -361,10 +374,14 @@ void main(){
       #ifdef SY_USE_FUNC_UNPACK_CUSTOM_TONE_MAPPING
              fragColor.rgb = toneMapping(fragColor.rgb);
       #endif
-
+      
+      //着火
       #ifdef SY_USE_FUNC_CATCH_FIRE 
             fragColor = getCatchFire(fragColor,v_uv,vec2(0.5, 0.5),vec4(0.0, 0., 0., 1.),mod(u_time/1000.,90.),1.0,1.0);
       #endif
+      
+     
+
       
 
       gl_FragColor=fragColor;

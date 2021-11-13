@@ -87,6 +87,25 @@ export namespace ShaderCode {
             return fv4 + fv2 + fv3 + fv1;
             }
         `)
+        commonFuncion.set(syRender.ShaderDefineValue.SY_USE_FUNC_MAGNIFIER,`
+        /*
+        获取放大镜下的uv偏移
+        v_uv:uv坐标
+        resolution:屏幕分辨率
+        mouse：鼠标位置
+        circleRidus：放大镜半径 经验值 0.1
+        zoomFact：放大倍数 经验值 0.3
+        */
+            vec2 getUVOffsetByMagnifier(vec2 v_uv,vec2 resolution,vec2 mouse,float circleRidus,float zoomFact){
+                vec2 widthHeightScale = vec2(resolution.x/resolution.y,1.0);
+                vec2 center = mouse.xy/resolution.xy;
+                vec2 dir = center - v_uv;
+                float circleEdgeStrength = 0.05;
+                float dis = length(dir*widthHeightScale);
+                float isZoomArea = smoothstep(circleRidus+circleEdgeStrength,circleRidus,dis);
+                return dir*zoomFact*isZoomArea;
+            }
+        `)
         commonFuncion.set(syRender.ShaderDefineValue.SY_USE_FUNC_RIVER_FLOW, `
         //水面 波谷陡峭明显 适合大海 惊涛澎湃
         vec3 getRiverFlowPositionOne(vec3 position,float time){

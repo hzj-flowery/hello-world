@@ -181,6 +181,7 @@ export namespace syRender {
         SY_USE_FUNC_RIVER_FLOW:"SY_USE_FUNC_RIVER_FLOW",//模拟水面流动
 
         SY_USE_FUNC_CATCH_FIRE:"SY_USE_FUNC_CATCH_FIRE",//着火
+        SY_USE_FUNC_MAGNIFIER:"SY_USE_FUNC_MAGNIFIER",//放大镜
 
         //变形目标
         SY_USE_MORPHTARGETS: "SY_USE_MORPHTARGETS",                      //变形目标
