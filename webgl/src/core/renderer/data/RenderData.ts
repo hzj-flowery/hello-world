@@ -180,6 +180,8 @@ export namespace syRender {
 
         SY_USE_FUNC_RIVER_FLOW:"SY_USE_FUNC_RIVER_FLOW",//模拟水面流动
 
+        SY_USE_FUNC_CATCH_FIRE:"SY_USE_FUNC_CATCH_FIRE",//着火
+
         //变形目标
         SY_USE_MORPHTARGETS: "SY_USE_MORPHTARGETS",                      //变形目标
         SY_USE_MORPHTARGETS_RELATIVE: "SY_USE_MORPHTARGETS_RELATIVE",                      //变形目标 减去当前位置

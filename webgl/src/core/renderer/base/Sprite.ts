@@ -668,7 +668,6 @@ export namespace SY {
             var clipH = this.height / Device.Instance.height;
 
             var z = -1;
-
             //[-1,1] = >[0,1]
             var w = 2 * clipW;
             var h = 2 * clipH;

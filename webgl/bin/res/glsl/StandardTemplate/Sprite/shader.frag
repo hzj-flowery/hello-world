@@ -361,6 +361,10 @@ void main(){
       #ifdef SY_USE_FUNC_UNPACK_CUSTOM_TONE_MAPPING
              fragColor.rgb = toneMapping(fragColor.rgb);
       #endif
+
+      #ifdef SY_USE_FUNC_CATCH_FIRE 
+            fragColor = getCatchFire(fragColor,v_uv,vec2(0.5, 0.5),vec4(0.0, 0., 0., 1.),mod(u_time/1000.,90.),1.0,1.0);
+      #endif
       
 
       gl_FragColor=fragColor;

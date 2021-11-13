@@ -41,6 +41,8 @@ import { TorusKnotGeometry } from "../3d/geometry/TorusKnotGeometry";
 import { TorusGeometry } from "../3d/geometry/TorusGeometry";
 import { Vector2 } from "../../math/Vector2";
 import { PlaneGeometry } from "../3d/geometry/PlaneGeometry";
+import { sy } from "../../Director";
+import { SY } from "./Sprite";
 
 export default class Scene3D extends Scene {
 
@@ -93,6 +95,8 @@ export default class Scene3D extends Scene {
         this._plane.spriteFrame = "res/river.jpg"
         this.addChild(this._plane);
         this._plane.spriteFrame = "res/caustics.png";
+
+      
 
 
         
@@ -311,11 +315,19 @@ export default class Scene3D extends Scene {
             // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_TEXTURE,syRender.ShaderDefineValue.SY_USE_REMOVE_DEFINE]
             [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_MORPHTARGETS],
             [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_MORPHTARGETS_RELATIVE],
+            [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_FUNC_CATCH_FIRE],
             [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_FUNC_UNPACK_CUSTOM_TONE_MAPPING,syRender.ToneMapping.ACESFilmicToneMapping]
         ])
         boxG.spriteFrame = "res/1.jpg";
         boxG.setPosition(3,8,5);
         this.addChild(boxG);
+
+        // var planeG = new PlaneGeometry(20, 20,100,10);
+        // planeG.pushPassContent(syRender.ShaderType.Test,[
+        // ],[
+        // ])
+        // planeG.setPosition(3,8,5);
+        // this.addChild(planeG);
 
         // var wireG = new WireframeGeometry(new PlaneGeometry(5,5,1,1))
         // wireG.pushPassContent(syRender.ShaderType.Sprite,[

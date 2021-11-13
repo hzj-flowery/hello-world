@@ -21,7 +21,73 @@ export namespace ShaderCode {
             return dot(rgbaDepth, bitShift);
         }
         `)
-        commonFuncion.set(syRender.ShaderDefineValue.SY_USE_FUNC_RIVER_FLOW,`
+        commonFuncion.set(syRender.ShaderDefineValue.SY_USE_FUNC_CATCH_FIRE, `
+            /*
+            fragColor: 片元的颜色
+            v_uv:纹理的uv
+            centerPos:设置目标的中心位置
+            fireColor:火的颜色
+            time:时间
+            c2s:从目标中心向四周扩散，默认值为1.0，否则传入小于1.0的值
+            f2b：燃烧过的地方为黑色，没有燃烧为纹理颜色，默认值为1.0，否则传入小于1.0的值
+            */
+            vec4 getCatchFire(vec4 fragColor,vec2 v_uv,vec2 centerPos,vec4 fireColor,float time,float c2s,float f2b){
+
+                //取噪声的值
+            vec2 pos = vec2(v_uv * 100.0);
+            // float n = noise(pos);
+
+            vec2 noise_i = floor(pos);
+            vec2 noise_f = fract(pos);
+            float noise_a = fract(sin(dot(noise_i.xy, vec2(12.9898,78.233))) * 43758.5453123);
+            float noise_b = fract(sin(dot((noise_i + vec2(1.0, 0.0)).xy, vec2(12.9898,78.233))) * 43758.5453123);
+            float noise_c = fract(sin(dot((noise_i + vec2(0.0, 1.0)).xy, vec2(12.9898,78.233))) * 43758.5453123);
+            float noise_d = fract(sin(dot((noise_i + vec2(1.0, 1.0)).xy, vec2(12.9898,78.233))) * 43758.5453123);
+            vec2 noise_u = sin(noise_f * 3.1415926 / 2.);
+            float n = mix(mix(noise_a, noise_b, noise_u.x), mix(noise_c,noise_d, noise_u.x), noise_u.y);
+
+
+            //设置火焰燃烧的走势
+            //设置目标中心点 
+            vec2 ct = centerPos;
+            //方案1 由四周向设置的中心集中
+            // float d = 1. - distance (v_uv, ct) / sqrt(0.5);    //直接输出vec4(d, d, d, 1.)见图2
+            //方案2 由设置的中心向四周扩散
+            // float d = distance (v_uv, ct) / sqrt(0.5);    //直接输出vec4(d, d, d, 1.)见图2
+
+            c2s = step(1.0,c2s);
+            float d = c2s*distance (v_uv, ct) / sqrt(0.5)+(1.0-c2s)*(1. - distance (v_uv, ct) / sqrt(0.5));
+
+
+            //设置火焰区域的紧密程度
+            //方案1  火焰燃烧过的地方为纹理的颜色，没有燃烧到的地方是黑色 一点点向四周扩散
+            // float s = 1. - smoothstep(d - 0.3, d + 0.3, time);
+            //方案2 火焰燃烧过的地方为黑色 没有燃烧到的地方是纹理的颜色
+            // float s = smoothstep(d - 0.3, d + 0.3, time);
+
+            f2b = step(1.0,f2b);
+            float s = f2b*smoothstep(d - 0.3, d + 0.3, time)+(1.0-f2b)*(1. - smoothstep(d - 0.3, d + 0.3, time));
+            s = mix(mix(n, d, 0.5), (s - 0.5) * 4., 0.5);		//直接输出vec4(s, s, s, 1.)见图3
+
+
+
+            //燃烧后的颜色
+            float f1 = step(0.3, s);
+            vec4 fv1 = f1 * fireColor;
+            //将要燃烧的区域
+            float f2 = smoothstep(-0.2, 0.3, s) * step(s, 0.3);
+            vec4 fv2 = f2 * vec4(-0.5, -1., -1., 0.);
+            //燃烧的火焰的区域
+            float f3 = step(s, 0.31) * step(0.3, s);
+            vec4 fv3 = f3 * vec4(1.0, 1.0, 0., 1.);
+            //未燃烧的区域
+            float f4 = step(s, 0.3);
+            vec4 fv4 = f4 * fragColor;
+
+            return fv4 + fv2 + fv3 + fv1;
+            }
+        `)
+        commonFuncion.set(syRender.ShaderDefineValue.SY_USE_FUNC_RIVER_FLOW, `
         //水面 波谷陡峭明显 适合大海 惊涛澎湃
         vec3 getRiverFlowPositionOne(vec3 position,float time){
             float x = position.x;
