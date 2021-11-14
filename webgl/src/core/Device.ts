@@ -907,7 +907,7 @@ export default class Device {
             this._triggerRenderStartTime =  performance.now();
         }
         this._triggerRenderCount++;
-        if(this._triggerRenderCount>1000)
+        if(this._triggerRenderCount>100000)
         {
             //重置
             this._triggerRenderCount = 1;
