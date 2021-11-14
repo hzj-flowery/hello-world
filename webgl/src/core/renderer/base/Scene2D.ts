@@ -45,9 +45,10 @@ export default class Scene2D extends Scene {
         
         var testHttp = new SY.UIImage();
         testHttp.setPosition(480,320,-100)
-        testHttp.pushPassContent(syRender.ShaderType.Sprite,[],[
-            [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_FUNC_MAGNIFIER]
+        testHttp.pushPassContent(syRender.ShaderType.Test,[],[
+            // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_FUNC_MAGNIFIER]
         ])
+        // testHttp.setContentSize(300,500);
         testHttp.spriteFrame = "res/shufa.jpg";
         this.addChild(testHttp);
 
