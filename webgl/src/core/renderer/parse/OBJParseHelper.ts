@@ -296,15 +296,17 @@ export namespace OBJParseHelper {
           materials[unparsedArgs] = material;
         },
         /* eslint brace-style:0 */
-        Ns(parts) { material[syGL.AttributeUniform.LIGHT_SPECULAR_SHININESS] = parseFloat(parts[0]); }, //反射高光度 指定材质的反射指数
-        Ka(parts) { material[syGL.AttributeUniform.LIGHT_AMBIENT] = parts.map(parseFloat); }, //环境色
-        Kd(parts) { material[syGL.AttributeUniform.DIFFUSE] = parts.map(parseFloat); }, //漫反射色
-        Ks(parts) { material[syGL.AttributeUniform.LIGHT_SPECULAR] = parts.map(parseFloat); }, //高光色
-        Ke(parts) { material[syGL.AttributeUniform.EMISSIVE] = parts.map(parseFloat); },                              //自发光
-        map_Kd(parts, unparsedArgs) { material[syGL.AttributeUniform.DIFFUSE_MAP] = parseMapArgs(unparsedArgs); },    //漫反射贴图
-        map_Ns(parts, unparsedArgs) { material[syGL.AttributeUniform.SPECULAR_MAP] = parseMapArgs(unparsedArgs); },   //高光贴图
-        map_Bump(parts, unparsedArgs) { material[syGL.AttributeUniform.NORMAL_MAP] = parseMapArgs(unparsedArgs); },   //法线贴图
-        Ni(parts) { material.opticalDensity = parseFloat(parts[0]); }, //折射值 指定材质表面的光密度
+        ns(parts) { material[syGL.AttributeUniform.LIGHT_SPECULAR_SHININESS] = parseFloat(parts[0]); }, //反射高光度 指定材质的反射指数
+        ka(parts) { material[syGL.AttributeUniform.LIGHT_AMBIENT] = parts.map(parseFloat); }, //环境色
+        kd(parts) { material[syGL.AttributeUniform.DIFFUSE] = parts.map(parseFloat); }, //漫反射色
+        ks(parts) { material[syGL.AttributeUniform.LIGHT_SPECULAR] = parts.map(parseFloat); }, //高光色
+        ke(parts) { material[syGL.AttributeUniform.EMISSIVE] = parts.map(parseFloat); },                              //自发光
+        map_kd(parts, unparsedArgs) { material[syGL.AttributeUniform.DIFFUSE_MAP] = parseMapArgs(unparsedArgs); },    //漫反射贴图
+        map_ns(parts, unparsedArgs) { material[syGL.AttributeUniform.SPECULAR_MAP] = parseMapArgs(unparsedArgs); },   //高光贴图
+        map_bump(parts, unparsedArgs) { material[syGL.AttributeUniform.BUMP_MAP] = parseMapArgs(unparsedArgs); },   //凹凸贴图
+        bump(parts, unparsedArgs) { material[syGL.AttributeUniform.BUMP_MAP] = parseMapArgs(unparsedArgs); },   //凹凸贴图
+        norm(parts, unparsedArgs) { material[syGL.AttributeUniform.NORMAL_MAP] = parseMapArgs(unparsedArgs); },   //法线贴图
+        ni(parts) { material.opticalDensity = parseFloat(parts[0]); }, //折射值 指定材质表面的光密度
         d(parts) { material[syGL.AttributeUniform.ALPHA] = parseFloat(parts[0]); },         //透明度
         illum(parts) { material.illum = parseInt(parts[0]); },
       };
@@ -314,7 +316,7 @@ export namespace OBJParseHelper {
       for (let lineNo = 0; lineNo < lines.length; ++lineNo) {
         const line = lines[lineNo].trim();
         if (line === '' || line.startsWith('#')) {
-          continue;
+          continue; 
         }
         const m = keywordRE.exec(line);
         if (!m) {
@@ -322,7 +324,7 @@ export namespace OBJParseHelper {
         }
         const [, keyword, unparsedArgs] = m;
         const parts = line.split(/\s+/).slice(1);
-        const handler = keywords[keyword];
+        const handler = keywords[keyword.toLowerCase()];
         if (!handler) {
           console.warn('unhandled keyword:', keyword);  // eslint-disable-line no-console
           continue;

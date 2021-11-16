@@ -155,6 +155,7 @@ export namespace syGL {
         EMISSIVE_MAP= "u_emissiveMap",//自发光贴图
         DIFFUSE_MAP = 'u_diffuseMap',//漫反射贴图
         NORMAL_MAP  = 'u_normalMap' ,//法线贴图
+        BUMP_MAP    = 'u_bumpMap',     //凹凸贴图
         SPECULAR_MAP= 'specularMap', //高光贴图
         
         /**

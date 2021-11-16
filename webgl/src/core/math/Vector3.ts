@@ -66,7 +66,7 @@ export class Vector3 {
         this.z = v.z;
         return this;
     }
-    add(v, w?) {
+    add(v:Vector3, w?) {
         if (w !== undefined) {
             console.warn('THREE.Vector3: .add() now only accepts one argument. Use .addVectors( a, b ) instead.');
             return this.addVectors(v, w);
@@ -76,13 +76,13 @@ export class Vector3 {
         this.z += v.z;
         return this;
     }
-    addScalar(s) {
+    addScalar(s:number) {
         this.x += s;
         this.y += s;
         this.z += s;
         return this;
     }
-    addVectors(a, b) {
+    addVectors(a:Vector3, b:Vector3) {
         this.x = a.x + b.x;
         this.y = a.y + b.y;
         this.z = a.z + b.z;
@@ -94,7 +94,7 @@ export class Vector3 {
         this.z += v.z * s;
         return this;
     }
-    sub(v, w?) {
+    sub(v:Vector3, w?) {
         if (w !== undefined) {
             console.warn('THREE.Vector3: .sub() now only accepts one argument. Use .subVectors( a, b ) instead.');
             return this.subVectors(v, w);
@@ -104,19 +104,19 @@ export class Vector3 {
         this.z -= v.z;
         return this;
     }
-    subScalar(s) {
+    subScalar(s:number) {
         this.x -= s;
         this.y -= s;
         this.z -= s;
         return this;
     }
-    subVectors(a, b) {
+    subVectors(a:Vector3, b:Vector3) {
         this.x = a.x - b.x;
         this.y = a.y - b.y;
         this.z = a.z - b.z;
         return this;
     }
-    multiply(v, w) {
+    multiply(v:Vector3, w) {
         if (w !== undefined) {
             console.warn('THREE.Vector3: .multiply() now only accepts one argument. Use .multiplyVectors( a, b ) instead.');
             return this.multiplyVectors(v, w);
@@ -126,13 +126,13 @@ export class Vector3 {
         this.z *= v.z;
         return this;
     }
-    multiplyScalar(scalar) {
+    multiplyScalar(scalar:number) {
         this.x *= scalar;
         this.y *= scalar;
         this.z *= scalar;
         return this;
     }
-    multiplyVectors(a, b) {
+    multiplyVectors(a:Vector3, b:Vector3) {
         this.x = a.x * b.x;
         this.y = a.y * b.y;
         this.z = a.z * b.z;
@@ -336,7 +336,12 @@ export class Vector3 {
     distanceTo(v) {
         return Math.sqrt(this.distanceToSquared(v));
     }
-    distanceToSquared(v) {
+    /**
+     * 距离某一个点的距离的平房
+     * @param v 
+     * @returns 
+     */
+    distanceToSquared(v:Vector3) {
         const dx = this.x - v.x, dy = this.y - v.y, dz = this.z - v.z;
         return dx * dx + dy * dy + dz * dz;
     }

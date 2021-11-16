@@ -131,7 +131,7 @@ export default class Scene3D extends Scene {
 
         this._objNode = new ObjNode();
         this._objNode.x = 5;
-        this._objNode.y = 10;
+        this._objNode.y = 0;
         this._objNode.z = -10;
         this.addChild(this._objNode);
 
