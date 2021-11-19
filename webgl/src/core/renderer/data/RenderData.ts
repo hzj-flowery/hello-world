@@ -178,10 +178,10 @@ export namespace syRender {
 
         SY_USE_FUNC_UNPACK_CUSTOM_TONE_MAPPING: "SY_USE_FUNC_UNPACK_CUSTOM_TONE_MAPPING", //色调映射
 
-        SY_USE_FUNC_RIVER_FLOW:"SY_USE_FUNC_RIVER_FLOW",//模拟水面流动
+        SY_USE_FUNC_RIVER_FLOW: "SY_USE_FUNC_RIVER_FLOW",//模拟水面流动
 
-        SY_USE_FUNC_CATCH_FIRE:"SY_USE_FUNC_CATCH_FIRE",//着火
-        SY_USE_FUNC_MAGNIFIER:"SY_USE_FUNC_MAGNIFIER",//放大镜
+        SY_USE_FUNC_CATCH_FIRE: "SY_USE_FUNC_CATCH_FIRE",//着火
+        SY_USE_FUNC_MAGNIFIER: "SY_USE_FUNC_MAGNIFIER",//放大镜
 
         //变形目标
         SY_USE_MORPHTARGETS: "SY_USE_MORPHTARGETS",                      //变形目标
@@ -267,33 +267,41 @@ export namespace syRender {
      * 内置纹理
      */
     export enum BuiltinTexture {
-        DeferredPosition = 1, //延迟渲染--位置纹理
-        DeferredNormal,  //延迟渲染--法线纹理
-        DeferredColor,  //延迟渲染--颜色纹理
-        DeferredUV,     //延迟渲染--uv纹理
-        DeferredDepth,  //延迟渲染--深度纹理
-        Custom, //自定义
 
-        ShadowMap,//阴影贴图
-        LightMap,//光照贴图
-        NormalMap,//法线贴图
-        DiffuseMap,//漫反射贴图
-        SpecularMap,//高光贴图
-        JointMap,   //谷歌贴图
+        TEXTURE0 = 1, //纹理0号单元
+        TEXTURE1, //纹理1号单元
+        TEXTURE2, //纹理2号单元
+        TEXTURE3, //纹理3号单元
+        TEXTURE4, //纹理4号单元
+        TEXTURE5, //纹理5号单元
+        TEXTURE6, //纹理6号单元
+        TEXTURE7, //纹理7号单元
+        TEXTURE8, //纹理8号单元
+
+        MAP_G_POSITION, //延迟渲染--位置纹理
+        MAP_G_NORMAL,  //延迟渲染--法线纹理
+        MAP_G_COLOR,  //延迟渲染--颜色纹理
+        MAP_G_UV,     //延迟渲染--uv纹理
+        MAP_G_DEPTH,  //延迟渲染--深度纹理
+        MAP_CUSTOM, //自定义
+
+        MAP_SHADOW,  //阴影贴图
+        MAP_LIGHT,   //光照贴图
+        MAP_EMISSIVE,//自发光贴图
+        MAP_DIFFUSE,//漫反射贴图
+        MAP_NORMAL,//法线贴图
+        MAP_BUMP,     //凹凸贴图
+        BUMP_SCALE,   //凹凸贴图因子
+        MAP_AMBIENT,//环境贴图
+        MAP_ALPHA,     //alpha贴图
+        MAP_SPECULAR, //高光贴图
+        MAP_JOINT,   //骨骼贴图
+
 
         None   //非延迟渲染输出的纹理 
     }
-    /**
-     * 延迟渲染所有类型的纹理
-     */
-    export var DeferredAllTypeTexture = [
-        BuiltinTexture.None,
-        BuiltinTexture.DeferredPosition,
-        BuiltinTexture.DeferredNormal,
-        BuiltinTexture.DeferredColor,
-        BuiltinTexture.DeferredUV,
-        BuiltinTexture.DeferredDepth
-    ];
+
+
 
     //bufferData
     export class WebGLBufferData {
@@ -545,6 +553,39 @@ export namespace syRender {
             this._cameraPosition = new Vec3(0, 0, 0)
             this.reset();
         }
+
+        public static BuiltinTextureMap = {
+            [ShaderUseVariantType.TEXTURE0]: [BuiltinTexture.TEXTURE0, syGL.AttributeUniform.TEXTURE0],  //常规贴图 
+            [ShaderUseVariantType.TEXTURE1]: [BuiltinTexture.TEXTURE1, syGL.AttributeUniform.TEXTURE1],  //常规贴图 
+            [ShaderUseVariantType.TEXTURE2]: [BuiltinTexture.TEXTURE2, syGL.AttributeUniform.TEXTURE2],  //常规贴图 
+            [ShaderUseVariantType.TEXTURE3]: [BuiltinTexture.TEXTURE3, syGL.AttributeUniform.TEXTURE3],  //常规贴图 
+            [ShaderUseVariantType.TEXTURE4]: [BuiltinTexture.TEXTURE4, syGL.AttributeUniform.TEXTURE4],  //常规贴图 
+            [ShaderUseVariantType.TEXTURE5]: [BuiltinTexture.TEXTURE5, syGL.AttributeUniform.TEXTURE5],  //常规贴图 
+            [ShaderUseVariantType.TEXTURE6]: [BuiltinTexture.TEXTURE6, syGL.AttributeUniform.TEXTURE6],  //常规贴图 
+            [ShaderUseVariantType.TEXTURE7]: [BuiltinTexture.TEXTURE7, syGL.AttributeUniform.TEXTURE7],  //常规贴图
+            [ShaderUseVariantType.TEXTURE8]: [BuiltinTexture.TEXTURE8, syGL.AttributeUniform.TEXTURE8],  //常规贴图
+
+
+            [ShaderUseVariantType.MAP_G_POSITION]: [BuiltinTexture.MAP_G_POSITION, syGL.AttributeUniform.MAP_G_POSITION],  //延迟渲染位置贴图
+            [ShaderUseVariantType.MAP_G_NORMAL]: [BuiltinTexture.MAP_G_NORMAL, syGL.AttributeUniform.MAP_G_NORMAL],  //延迟渲染法线贴图
+            [ShaderUseVariantType.MAP_G_COLOR]: [BuiltinTexture.MAP_G_COLOR, syGL.AttributeUniform.MAP_G_COLOR],  //延迟渲染颜色贴图
+            [ShaderUseVariantType.MAP_G_UV]: [BuiltinTexture.MAP_G_UV, syGL.AttributeUniform.MAP_G_UV],  //延迟渲染uv贴图
+            [ShaderUseVariantType.MAP_G_DEPTH]: [BuiltinTexture.MAP_G_DEPTH, syGL.AttributeUniform.MAP_G_DEPTH],  //延迟渲染深度贴图
+            [ShaderUseVariantType.MAP_CUSTOM]: [BuiltinTexture.MAP_CUSTOM, syGL.AttributeUniform.MAP_CUSTOM],  //延迟渲染万能贴图
+
+            [ShaderUseVariantType.MAP_SHADOW]: [BuiltinTexture.MAP_SHADOW, syGL.AttributeUniform.MAP_SHADOW],  //阴影贴图
+            [ShaderUseVariantType.MAP_LIGHT]: [BuiltinTexture.MAP_LIGHT, syGL.AttributeUniform.MAP_LIGHT],   //光照贴图
+            [ShaderUseVariantType.MAP_EMISSIVE]: [BuiltinTexture.MAP_EMISSIVE, syGL.AttributeUniform.MAP_EMISSIVE],//自发光贴图
+            [ShaderUseVariantType.MAP_DIFFUSE]: [BuiltinTexture.MAP_DIFFUSE, syGL.AttributeUniform.MAP_DIFFUSE],//漫反射贴图
+            [ShaderUseVariantType.MAP_NORMAL]: [BuiltinTexture.MAP_NORMAL, syGL.AttributeUniform.MAP_NORMAL],//法线贴图
+            [ShaderUseVariantType.MAP_BUMP]: [BuiltinTexture.MAP_BUMP, syGL.AttributeUniform.MAP_BUMP],     //凹凸贴图
+            [ShaderUseVariantType.BUMP_SCALE]: [BuiltinTexture.BUMP_SCALE, syGL.AttributeUniform.BUMP_SCALE],   //凹凸贴图因子
+            [ShaderUseVariantType.MAP_AMBIENT]: [BuiltinTexture.MAP_AMBIENT, syGL.AttributeUniform.MAP_AMBIENT],//环境贴图
+            [ShaderUseVariantType.MAP_ALPHA]: [BuiltinTexture.MAP_ALPHA, syGL.AttributeUniform.MAP_ALPHA],     //alpha贴图
+            [ShaderUseVariantType.MAP_SPECULAR]: [BuiltinTexture.MAP_SPECULAR, syGL.AttributeUniform.MAP_SPECULAR], //高光贴图
+            [ShaderUseVariantType.MAP_JOINT]: [BuiltinTexture.MAP_JOINT, syGL.AttributeUniform.MAP_JOINT],   //骨骼贴图
+        }
+
         /**
          * 唯一id
          */
@@ -574,7 +615,6 @@ export namespace syRender {
         protected _type: syRender.QueueItemType;
 
         private _id: number;//每一个渲染数据都一个唯一的id
-        private _texture2DGLIDArray: Array<WebGLTexture>;//2d纹理
         private _textureCubeGLIDArray: Array<WebGLTexture>;//立方体纹理
         private _texture2DGLIDMap: Map<BuiltinTexture, WebGLTexture> = new Map()
         private _temp_model_view_matrix;//视口模型矩阵
@@ -594,7 +634,6 @@ export namespace syRender {
             this.light.reset();
             this.primitive.reset();
             this._texture2DGLIDMap.clear();
-            this._texture2DGLIDArray = [];
             this._textureCubeGLIDArray = [];
             this.time = 0;
             this.useFlag = false;
@@ -617,15 +656,8 @@ export namespace syRender {
             return false
         }
 
-        public push2DTexture(texture: WebGLTexture, deferredTex: BuiltinTexture = BuiltinTexture.None): void {
-            if (deferredTex == BuiltinTexture.None) {
-                if (this._texture2DGLIDArray.indexOf(texture) < 0) {
-                    this._texture2DGLIDArray.push(texture);
-                }
-            }
-            else {
-                this._texture2DGLIDMap.set(deferredTex, texture);
-            }
+        public push2DTexture(texture: WebGLTexture, builtTex: BuiltinTexture): void {
+            this._texture2DGLIDMap.set(builtTex, texture);
         }
         public pushCubeTexture(texture: WebGLTexture): void {
             if (this._textureCubeGLIDArray.indexOf(texture) < 0) {
@@ -642,55 +674,19 @@ export namespace syRender {
             let useVariantType = _shader.useVariantType;
             useVariantType.forEach((value: ShaderUseVariantType) => {
                 switch (value) {
-                    case ShaderUseVariantType.Position:
+                    case ShaderUseVariantType.POSITION:
                         _shader.setUseVertexAttribPointer(syGL.AttributeUniform.POSITION, this.primitive.position.glID, this.primitive.position.itemSize);
                         break;
-                    case ShaderUseVariantType.Normal:
+                    case ShaderUseVariantType.NORMAL:
                         _shader.setUseVertexAttribPointer(syGL.AttributeUniform.NORMAL, this.primitive.normal.glID, this.primitive.normal.itemSize);
                         break;
                     case ShaderUseVariantType.TEXTURE_COORD0:
                         _shader.setUseVertexAttribPointer(syGL.AttributeUniform.TEXTURE_COORD0, this.primitive.uv.glID, this.primitive.uv.itemSize);
                         break;
-                    case ShaderUseVariantType.TEXTURE0:
-                        _shader.setUseTexture(this._texture2DGLIDArray[0], useTextureAddres);
-                        useTextureAddres++;
-                        break;
-                    case ShaderUseVariantType.TEXTURE1:
-                        _shader.setUseTexture(this._texture2DGLIDArray[1], useTextureAddres);
-                        useTextureAddres++;
-                        break;
-                    case ShaderUseVariantType.TEXTURE2:
-                        _shader.setUseTexture(this._texture2DGLIDArray[2], useTextureAddres);
-                        useTextureAddres++;
-                        break;
-                    case ShaderUseVariantType.TEXTURE3:
-                        _shader.setUseTexture(this._texture2DGLIDArray[3], useTextureAddres);
-                        useTextureAddres++;
-                        break;
-                    case ShaderUseVariantType.TEXTURE4:
-                        _shader.setUseTexture(this._texture2DGLIDArray[4], useTextureAddres);
-                        useTextureAddres++;
-                        break;
-                    case ShaderUseVariantType.TEXTURE5:
-                        _shader.setUseTexture(this._texture2DGLIDArray[5], useTextureAddres);
-                        useTextureAddres++;
-                        break;
-                    case ShaderUseVariantType.TEXTURE6:
-                        _shader.setUseTexture(this._texture2DGLIDArray[6], useTextureAddres);
-                        useTextureAddres++;
-                        break;
-                    case ShaderUseVariantType.TEXTURE7:
-                        _shader.setUseTexture(this._texture2DGLIDArray[7], useTextureAddres);
-                        useTextureAddres++;
-                        break;
-                    case ShaderUseVariantType.TEXTURE8:
-                        _shader.setUseTexture(this._texture2DGLIDArray[8], useTextureAddres);
-                        useTextureAddres++;
-                        break;
                     case ShaderUseVariantType.CUBE_TEXTURE:
                         //立方体纹理数据
                         //-****-------------
-                        _shader.setUseTexture(this._textureCubeGLIDArray[0], useTextureAddres, false);
+                        _shader.setUseCubeTexture(this._textureCubeGLIDArray[0], useTextureAddres);
                         useTextureAddres++;
                         break;
                     //天空盒
@@ -703,31 +699,6 @@ export namespace syRender {
                         glMatrix.mat4.multiply(this._temp002_matrix, proj, this._temp001_matrix);
                         glMatrix.mat4.invert(this._temp001_matrix, this._temp002_matrix);
                         _shader.bindMatrixToShader(syGL.AttributeUniform.PV_Mat_I, this._temp001_matrix);
-                        useTextureAddres++;
-                        break;
-                    case ShaderUseVariantType.GPosition:
-                        _shader.setUseBuiltinTexture(this._texture2DGLIDMap.get(BuiltinTexture.DeferredPosition), useTextureAddres, syGL.AttributeUniform.TEX_GPosition);
-                        useTextureAddres++;
-                        break;
-                    case ShaderUseVariantType.GNormal:
-                        _shader.setUseBuiltinTexture(this._texture2DGLIDMap.get(BuiltinTexture.DeferredNormal), useTextureAddres, syGL.AttributeUniform.TEX_GNormal);
-                        useTextureAddres++;
-                        break;
-                    case ShaderUseVariantType.GColor:
-                        _shader.setUseBuiltinTexture(this._texture2DGLIDMap.get(BuiltinTexture.DeferredColor), useTextureAddres, syGL.AttributeUniform.TEX_GColor);
-                        useTextureAddres++;
-                        break;
-                    case ShaderUseVariantType.GUv:
-                        _shader.setUseBuiltinTexture(this._texture2DGLIDMap.get(BuiltinTexture.DeferredUV), useTextureAddres, syGL.AttributeUniform.TEX_GUv);
-                        useTextureAddres++;
-                        break;
-                    case ShaderUseVariantType.GDepth:
-                        _shader.setUseBuiltinTexture(this._texture2DGLIDMap.get(BuiltinTexture.DeferredDepth), useTextureAddres, syGL.AttributeUniform.TEX_GDepth);
-                        useTextureAddres++;
-                        break;
-                    case ShaderUseVariantType.TEX_CUSTOM:
-                        //延迟渲染中的万能矩阵
-                        _shader.setUseBuiltinTexture(this._texture2DGLIDMap.get(BuiltinTexture.Custom), useTextureAddres, syGL.AttributeUniform.TEX_CUSTOM);
                         useTextureAddres++;
                         break;
                     case ShaderUseVariantType.Projection:
@@ -827,7 +798,7 @@ export namespace syRender {
                         break;
                     case ShaderUseVariantType.TONEMAPPINGExposure:
                         //色调映射 曝光级别
-                        _shader.setCustomUniformFloat(syGL.AttributeUniform.TONEMAPPINGExposure,1.0);
+                        _shader.setCustomUniformFloat(syGL.AttributeUniform.TONEMAPPINGExposure, 1.0);
                         break;
                     case ShaderUseVariantType.Custom_Float_Value:
                         _shader.setCustomUniformFloat(syGL.AttributeUniform.CUSTOM_FLOAT_VALUE, this.primitive.customFloatValue);
@@ -837,7 +808,7 @@ export namespace syRender {
                         break;
                     case ShaderUseVariantType.Mouse:
                         var p = G_InputControl.getLastPressPos();
-                        _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.MOUSE, [p[0]==null?0:p[0], p[1]==null?0:p[1], 0, 0]);
+                        _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.MOUSE, [p[0] == null ? 0 : p[0], p[1] == null ? 0 : p[1], 0, 0]);
                         break;
                     case ShaderUseVariantType.ShadowInfo:
                         _shader.setCustomUniformFloatVec4(syGL.AttributeUniform.SHADOW_INFO, this.light.shadow.info);
@@ -845,8 +816,8 @@ export namespace syRender {
                     case ShaderUseVariantType.FloatArray:
                         _shader.setCustomUniformFloatArray(syGL.AttributeUniform.FLOAT_ARRAY, [0, 0, 0, 0, 0, 0, 0, 1])
                         break;
-                    case ShaderUseVariantType.ShadowMap:
-                        _shader.setUseBuiltinTexture(this.light.shadow.map, useTextureAddres, syGL.AttributeUniform.SHADOW_MAP);
+                    case ShaderUseVariantType.MAP_SHADOW:
+                        _shader.setUseBuiltinTexture(this.light.shadow.map, useTextureAddres, syGL.AttributeUniform.MAP_SHADOW);
                         useTextureAddres++;
                         break;
                     case ShaderUseVariantType.MORPH_TARGET_0:
@@ -885,6 +856,11 @@ export namespace syRender {
                         _shader.setCustomUniformFloatArray(syGL.AttributeUniform.MORPH_TARGET_INFLUENCES, this.primitive.morphTargetInfluences)
                         break;
                     default:
+                        if (QueueItemBaseData.BuiltinTextureMap[value]) {
+                            _shader.setUseBuiltinTexture(this._texture2DGLIDMap.get(QueueItemBaseData.BuiltinTextureMap[value][0]), 
+                            useTextureAddres, QueueItemBaseData.BuiltinTextureMap[value][1]);
+                            useTextureAddres++;
+                        }
                     // console.log("目前还没有处理这个矩阵类型");
                 }
             })

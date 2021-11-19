@@ -1,4 +1,5 @@
 import Device from "../../../Device";
+import { syRender } from "../../data/RenderData";
 import {syGL} from "../../gfx/syGLEnums";
 
 
@@ -169,6 +170,8 @@ export class Texture {
     protected _id: number;
 
     public loaded: boolean = false;//是否加载到内存
+
+    public builtType:syRender.BuiltinTexture=syRender.BuiltinTexture.TEXTURE0;//内置纹理的类型
 
     protected _bites: number = 0;//纹理在GPU端所占的内存
 

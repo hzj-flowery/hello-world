@@ -151,13 +151,17 @@ export namespace syGL {
          * u_shadowInfo[3]:shadowOpacity  阴影的alpha值,值越小暗度越深
          */
         SHADOW_INFO = 'u_shadowInfo',//阴影信息
-        SHADOW_MAP  = 'u_shadowMap',//阴影贴图
-        EMISSIVE_MAP= "u_emissiveMap",//自发光贴图
-        DIFFUSE_MAP = 'u_diffuseMap',//漫反射贴图
-        NORMAL_MAP  = 'u_normalMap' ,//法线贴图
-        BUMP_MAP    = 'u_bumpMap',     //凹凸贴图
-        SPECULAR_MAP= 'specularMap', //高光贴图
-        
+        MAP_SHADOW  = 'u_shadowMap',//阴影贴图
+        MAP_LIGHT = "u_lightMap",   //光照贴图
+        MAP_EMISSIVE= "u_emissiveMap",//自发光贴图
+        MAP_DIFFUSE = 'u_diffuseMap',//漫反射贴图
+        MAP_NORMAL  = 'u_normalMap' ,//法线贴图
+        MAP_BUMP    = 'u_bumpMap',     //凹凸贴图
+        BUMP_SCALE = "u_bumpScale",   //凹凸贴图因子
+        MAP_AMBIENT = "u_ambientMap",//环境贴图
+        MAP_ALPHA    = 'u_alphaMap',     //alpha贴图
+        MAP_SPECULAR= 'u_specularMap', //高光贴图
+        MAP_JOINT = 'u_jointMap',       //骨骼贴图
         /**
          *  //缺省的材料
       const defaultMaterial = {
@@ -191,15 +195,15 @@ export namespace syGL {
         TEXTURE6 = 'u_texture6',
         TEXTURE7 = 'u_texture7',
         TEXTURE8 = 'u_texture8',
-        TEX_CUSTOM = 'u_customTexture',//自定义纹理 万能纹理
+        MAP_CUSTOM = 'u_customTexture',//自定义纹理 万能纹理
 
 
         //延迟渲染  第一次应该是从属性变量获取 第二次是uniform变量
-        TEX_GPosition = "gPosition",//位置信息
-        TEX_GNormal = "gNormal",//法线信息
-        TEX_GColor = "gColor",  //颜色信息
-        TEX_GUv = "gUv",  //uv信息
-        TEX_GDepth = "gDepth",//深度纹理
+        MAP_G_POSITION = "gPosition",//位置信息
+        MAP_G_NORMAL = "gNormal",//法线信息
+        MAP_G_COLOR = "gColor",  //颜色信息
+        MAP_G_UV = "gUv",  //uv信息
+        MAP_G_DEPTH = "gDepth",//深度纹理
 
         SKYBOX = "u_skybox",
         Matrix = 'u_mat',      //万能矩阵

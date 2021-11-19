@@ -1,6 +1,7 @@
 import { G_BufferManager } from "../base/buffer/BufferManager";
 import { SY } from "../base/Sprite";
 import { RenderTexture } from "../base/texture/RenderTexture";
+import { Texture } from "../base/texture/Texture";
 import { GameMainCamera } from "../camera/GameMainCamera";
 import { CubeData } from "../data/CubeData";
 import { syRender } from "../data/RenderData";
@@ -20,8 +21,8 @@ export class RenderOffline3DSprite extends SY.SpriteBase{
         G_BufferManager.createBuffer(SY.GLID_TYPE.INDEX,this.attributeId,rd.indexs,1);
         this.pushPassContent(syRender.ShaderType.Sprite)
     }
-    protected onSetTextureUrl():void{
-        GameMainCamera.instance.pushRenderTexture(this._rtuuid,this.texture as RenderTexture)
+    protected onSetTextureUrl(tex:Texture):void{
+        GameMainCamera.instance.pushRenderTexture(this._rtuuid,tex as RenderTexture)
     }
     public setRenderTextureUUid(uuid:syRender.RenderTextureUUid):void{
         this._rtuuid = uuid;

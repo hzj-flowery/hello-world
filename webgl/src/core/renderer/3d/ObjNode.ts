@@ -30,7 +30,7 @@ export default class ObjNode extends SY.SpriteBase {
   }
 
   private async load() {
-    this._objData = await OBJParseHelper.load(Device.Instance.gl, OBJRes[0]);
+    this._objData = await OBJParseHelper.load(Device.Instance.gl, OBJRes[4]);
 
   }
 

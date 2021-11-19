@@ -296,18 +296,22 @@ export namespace OBJParseHelper {
           materials[unparsedArgs] = material;
         },
         /* eslint brace-style:0 */
-        ns(parts) { material[syGL.AttributeUniform.LIGHT_SPECULAR_SHININESS] = parseFloat(parts[0]); }, //反射高光度 指定材质的反射指数
-        ka(parts) { material[syGL.AttributeUniform.LIGHT_AMBIENT] = parts.map(parseFloat); }, //环境色
-        kd(parts) { material[syGL.AttributeUniform.DIFFUSE] = parts.map(parseFloat); }, //漫反射色
-        ks(parts) { material[syGL.AttributeUniform.LIGHT_SPECULAR] = parts.map(parseFloat); }, //高光色
-        ke(parts) { material[syGL.AttributeUniform.EMISSIVE] = parts.map(parseFloat); },                              //自发光
-        map_kd(parts, unparsedArgs) { material[syGL.AttributeUniform.DIFFUSE_MAP] = parseMapArgs(unparsedArgs); },    //漫反射贴图
-        map_ns(parts, unparsedArgs) { material[syGL.AttributeUniform.SPECULAR_MAP] = parseMapArgs(unparsedArgs); },   //高光贴图
-        map_bump(parts, unparsedArgs) { material[syGL.AttributeUniform.BUMP_MAP] = parseMapArgs(unparsedArgs); },   //凹凸贴图
-        bump(parts, unparsedArgs) { material[syGL.AttributeUniform.BUMP_MAP] = parseMapArgs(unparsedArgs); },   //凹凸贴图
-        norm(parts, unparsedArgs) { material[syGL.AttributeUniform.NORMAL_MAP] = parseMapArgs(unparsedArgs); },   //法线贴图
-        ni(parts) { material.opticalDensity = parseFloat(parts[0]); }, //折射值 指定材质表面的光密度
-        d(parts) { material[syGL.AttributeUniform.ALPHA] = parseFloat(parts[0]); },         //透明度
+        ns(parts) { material[syGL.AttributeUniform.LIGHT_SPECULAR_SHININESS] = parseFloat(parts[0]); },            //反射高光度 指定材质的反射指数
+        ka(parts) { material[syGL.AttributeUniform.LIGHT_AMBIENT] = parts.map(parseFloat); },                      //环境色
+        kd(parts) { material[syGL.AttributeUniform.DIFFUSE] = parts.map(parseFloat); },                            //漫反射色
+        ks(parts) { material[syGL.AttributeUniform.LIGHT_SPECULAR] = parts.map(parseFloat); },                     //高光色
+        ke(parts) { material[syGL.AttributeUniform.EMISSIVE] = parts.map(parseFloat); },                           //自发光
+        map_ka(parts, unparsedArgs) { material[syGL.AttributeUniform.MAP_AMBIENT] = parseMapArgs(unparsedArgs); }, //环境贴图
+        map_kd(parts, unparsedArgs) { material[syGL.AttributeUniform.MAP_DIFFUSE] = parseMapArgs(unparsedArgs); }, //漫反射贴图
+        map_ns(parts, unparsedArgs) { material[syGL.AttributeUniform.MAP_SPECULAR] = parseMapArgs(unparsedArgs); },//高光贴图
+        map_bump(parts, unparsedArgs) { material[syGL.AttributeUniform.MAP_BUMP] = parseMapArgs(unparsedArgs); },  //凹凸贴图
+        map_ke(parts, unparsedArgs){material[syGL.AttributeUniform.MAP_EMISSIVE] = parseMapArgs(unparsedArgs); },  //自发光贴图
+        map_d(parts, unparsedArgs){material[syGL.AttributeUniform.MAP_ALPHA] = parseMapArgs(unparsedArgs); },      //透明度贴图
+        bump(parts, unparsedArgs) { material[syGL.AttributeUniform.MAP_BUMP] = parseMapArgs(unparsedArgs); },      //凹凸贴图
+        norm(parts, unparsedArgs) { material[syGL.AttributeUniform.MAP_NORMAL] = parseMapArgs(unparsedArgs); },    //法线贴图
+        ni(parts) { material.opticalDensity = parseFloat(parts[0]); },                                             //折射值 指定材质表面的光密度
+        d(parts) { material[syGL.AttributeUniform.ALPHA] = parseFloat(parts[0]); },                                //透明度
+        tr(parts) { material[syGL.AttributeUniform.ALPHA] = 1.0-parseFloat(parts[0]); },                           //透明度
         illum(parts) { material.illum = parseInt(parts[0]); },
       };
   
@@ -377,11 +381,11 @@ export namespace OBJParseHelper {
       //缺省的材料
       const defaultMaterial = {
         [syGL.AttributeUniform.DIFFUSE]: [1, 1, 1],
-        [syGL.AttributeUniform.DIFFUSE_MAP]: textures.defaultWhite,
-        [syGL.AttributeUniform.NORMAL_MAP]: textures.defaultNormal,
+        [syGL.AttributeUniform.MAP_DIFFUSE]: textures.defaultWhite,
+        [syGL.AttributeUniform.MAP_NORMAL]: textures.defaultNormal,
         [syGL.AttributeUniform.LIGHT_AMBIENT]: [0, 0, 0],
         [syGL.AttributeUniform.LIGHT_SPECULAR]: [1, 1, 1],
-        [syGL.AttributeUniform.SPECULAR_MAP]: textures.defaultWhite,
+        [syGL.AttributeUniform.MAP_SPECULAR]: textures.defaultWhite,
         [syGL.AttributeUniform.LIGHT_SPECULAR_SHININESS]: 400,
         [syGL.AttributeUniform.ALPHA]: 1,
       };

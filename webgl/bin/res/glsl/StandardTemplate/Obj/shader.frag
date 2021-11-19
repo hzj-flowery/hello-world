@@ -11,7 +11,7 @@ precision mediump float;
   uniform vec3 u_ambient;
   uniform vec3 u_emissive;
   uniform vec3 u_specular;
-  uniform sampler2D specularMap;
+  uniform sampler2D u_specularMap;
   uniform float u_specular_shininess;
   uniform sampler2D u_normalMap;
   uniform float u_alpha;
@@ -37,8 +37,8 @@ precision mediump float;
 
     float fakeLight = dot(u_lightDirection, normal) * .5 + .5;
     float specularLight = clamp(dot(normal, halfVector), 0.0, 1.0);
-    vec4 specularMapColor = texture2D(specularMap, v_texcoord);
-    vec3 effectiveSpecular = u_specular * specularMapColor.rgb;
+    vec4 u_specularMapColor = texture2D(u_specularMap, v_texcoord);
+    vec3 effectiveSpecular = u_specular * u_specularMapColor.rgb;
 
     vec4 diffuseMapColor = texture2D(u_diffuseMap, v_texcoord);
     vec3 effectiveDiffuse = u_diffuse * diffuseMapColor.rgb * v_color.rgb;

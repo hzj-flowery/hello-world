@@ -16,6 +16,11 @@ uniform float u_time;
       varying vec2 v_uv;
 #endif
 
+//使用凹凸贴图
+#ifdef SY_USE_BUMPMAP
+     varying vec3 v_vmPosition;
+#endif
+
 //法线
 #if defined(SY_USE_NORMAL)
     attribute vec3 a_normal;
@@ -94,6 +99,9 @@ uniform float u_time;
 void main(){
     
     vec3 position = a_position;
+
+    
+
     #if defined(SY_USE_MORPHTARGETS)
         position = getMorphPosition(position);
     #endif
@@ -103,12 +111,19 @@ void main(){
         position = getRiverFlowPosition(position,time);
     #endif
 
+
     //强行塞入一个位置空间
     #if defined(SY_USE_ADD_POSITION_SPACE) && defined(SY_USE_MAT)
         vec4 worldPosition=u_world*u_mat*vec4(position,1.0);
     #else
         vec4 worldPosition=u_world*vec4(position,1.0);
     #endif
+    
+    //凹凸贴图
+    #ifdef SY_USE_BUMPMAP
+           v_vmPosition=(u_view*worldPosition).xyz;
+    #endif
+
     gl_Position=u_projection*u_view*worldPosition;
     
     //设置点的大小

@@ -1,8 +1,8 @@
 export enum ShaderUseVariantType {
     UndefinedMin = 0,
 
-    Position,  //顶点缓冲
-    Normal, //法线缓冲
+    POSITION,  //顶点缓冲
+    NORMAL, //法线缓冲
     Tangent, //切线
     TEXTURE_COORD0,    //uv坐标缓冲
 
@@ -18,13 +18,26 @@ export enum ShaderUseVariantType {
     TEXTURE8, //纹理8号单元
     CUBE_TEXTURE, //立方体纹理单元
     SKYBOX,//cube纹理单元
-    TEX_CUSTOM, //自定义纹理 万能纹理
+    MAP_CUSTOM, //自定义纹理 万能纹理
     
-    GPosition,//延迟渲染--位置纹理
-    GNormal,  //延迟渲染--法线纹理
-    GColor,   //延迟渲染--颜色纹理
-    GUv,      //延迟渲染--uv纹理
-    GDepth,   //延迟渲染--深度纹理
+    MAP_G_POSITION,//延迟渲染--位置纹理
+    MAP_G_NORMAL,  //延迟渲染--法线纹理
+    MAP_G_COLOR,   //延迟渲染--颜色纹理
+    MAP_G_UV,      //延迟渲染--uv纹理
+    MAP_G_DEPTH,   //延迟渲染--深度纹理
+    
+    MAP_LIGHT,//光照贴图
+    MAP_SHADOW,//阴影贴图
+    MAP_EMISSIVE,//自发光贴图
+    ShadowInfo,             //阴影信息
+    MAP_DIFFUSE ,//漫反射贴图
+    MAP_NORMAL ,//法线贴图
+    MAP_BUMP ,     //凹凸贴图
+    BUMP_SCALE ,   //凹凸贴图因子
+    MAP_AMBIENT ,//环境贴图
+    MAP_ALPHA ,     //alpha贴图
+    MAP_SPECULAR, //高光贴图
+    MAP_JOINT,    //骨骼贴图
 
     Model,  //模型世界矩阵
     View,       //视口矩阵
@@ -55,8 +68,7 @@ export enum ShaderUseVariantType {
     Alpha,                  //节点的透明度
     VertColor,          //顶点颜色
     VertMatrix,         //顶点矩阵
-    ShadowInfo,             //阴影信息
-    ShadowMap,              //阴影的深度纹理
+    
     Mouse,             //鼠标按下的位置信息
     Resolution,       //设计分辨率
     FloatArray,            //数组

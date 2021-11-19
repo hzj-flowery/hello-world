@@ -3,6 +3,7 @@ import Device from "../../Device";
 import {GameMainCamera} from "../camera/GameMainCamera";
 import { RenderTexture } from "../base/texture/RenderTexture";
 import { syRender } from "../data/RenderData";
+import { Texture } from "../base/texture/Texture";
 
 
 export class RenderOfflineSprite extends SY.UIImage{
@@ -16,8 +17,8 @@ export class RenderOfflineSprite extends SY.UIImage{
         ]);
         this.setContentSize(Device.Instance.width/4,Device.Instance.height/4);
     }
-    protected onSetTextureUrl():void{
-        GameMainCamera.instance.pushRenderTexture(syRender.RenderTextureUUid.offline2D,this.texture as RenderTexture)
+    protected onSetTextureUrl(tex:Texture):void{
+        GameMainCamera.instance.pushRenderTexture(syRender.RenderTextureUUid.offline2D,tex as RenderTexture)
         
     }
 }

@@ -4,6 +4,7 @@ import {GameMainCamera} from "../camera/GameMainCamera";
 import { RenderTexture } from "../base/texture/RenderTexture";
 import { syRender } from "../data/RenderData";
 import { G_LightCenter } from "../light/LightCenter";
+import { Texture } from "../base/texture/Texture";
 
 
 export class ShadowMap extends SY.UIImage{
@@ -16,8 +17,8 @@ export class ShadowMap extends SY.UIImage{
             [syRender.PassCustomKey.offlineRender,true]
         ]);
     }
-    protected onSetTextureUrl():void{
-        GameMainCamera.instance.pushRenderTexture(syRender.RenderTextureUUid.shadowMap,this.texture as RenderTexture)
-        G_LightCenter.lightData.shadow.map = this.texture.glID;
+    protected onSetTextureUrl(tex:Texture):void{
+        GameMainCamera.instance.pushRenderTexture(syRender.RenderTextureUUid.shadowMap,tex as RenderTexture)
+        G_LightCenter.lightData.shadow.map = tex.glID;
     }
 }

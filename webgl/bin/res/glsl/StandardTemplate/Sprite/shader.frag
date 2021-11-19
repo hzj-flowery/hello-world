@@ -250,6 +250,40 @@ uniform vec4 u_mouse;
 #endif
 
 
+//凹凸贴图
+#ifdef SY_USE_BUMPMAP
+	uniform sampler2D u_bumpMap;
+	uniform float u_bumpScale;
+      varying vec3 v_vmPosition;
+      // Bump Mapping Unparametrized Surfaces on the GPU by Morten S. Mikkelsen
+	// http://api.unrealengine.com/attachments/Engine/Rendering/LightingAndShadows/BumpMappingWithoutTangentSpace/mm_sfgrad_bump.pdf
+	// Evaluate the derivative of the height w.r.t. screen-space using forward differencing (listing 2)
+	vec2 dHdxy_fwd(vec2 vUv) {
+	      vec2 dSTdx = dFdx( vUv );
+		vec2 dSTdy = dFdy( vUv );
+		float Hll = u_bumpScale * texture2D( u_bumpMap, vUv ).x;
+		float dBx = u_bumpScale * texture2D( u_bumpMap, vUv + dSTdx ).x - Hll;
+		float dBy = u_bumpScale * texture2D( u_bumpMap, vUv + dSTdy ).x - Hll;
+		return vec2( dBx, dBy );
+	}
+      /*
+      surf_pos:视口坐标系下的位置
+      surf_norm:法线
+      */
+	vec3 perturbNormalArb( vec3 surf_pos, vec3 surf_norm, vec2 dHdxy, float faceDirection ) {
+		// Workaround for Adreno 3XX dFd*( vec3 ) bug. See #9988
+		vec3 vSigmaX = vec3( dFdx( surf_pos.x ), dFdx( surf_pos.y ), dFdx( surf_pos.z ) );
+		vec3 vSigmaY = vec3( dFdy( surf_pos.x ), dFdy( surf_pos.y ), dFdy( surf_pos.z ) );
+		vec3 vN = surf_norm;		// normalized
+		vec3 R1 = cross( vSigmaY, vN );
+		vec3 R2 = cross( vN, vSigmaX );
+		float fDet = dot( vSigmaX, R1 ) * faceDirection;
+		vec3 vGrad = sign( fDet ) * ( dHdxy.x * R1 + dHdxy.y * R2 );
+		return normalize( abs( fDet ) * surf_norm - vGrad );
+	}
+#endif
+
+
 
 void main(){
       
@@ -257,6 +291,13 @@ void main(){
       #ifdef SY_USE_NORMAL
             //顶点着色器传到片元着色器的方向会有插值，所以需要归一化
             vec3 normal=normalize(v_normal);
+      #endif
+      
+      //使用凹凸贴图
+      #ifdef SY_USE_BUMPMAP
+             //面的朝向
+             float faceDirection = gl_FrontFacing ? 1.0 : - 1.0;
+             normal = perturbNormalArb(normalize(v_vmPosition),normal,dHdxy(v_uv),faceDirection)
       #endif
 
       //使用点光或者聚光会用到下面的数据

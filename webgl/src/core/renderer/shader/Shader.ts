@@ -56,8 +56,8 @@ export class BufferAttribsData {
 
 var mapTree_a: Map<syGL.AttributeUniform, ShaderUseVariantType> = new Map();
 var mapTree_u: Map<syGL.AttributeUniform, ShaderUseVariantType> = new Map();
-mapTree_a.set(syGL.AttributeUniform.POSITION,ShaderUseVariantType.Position);
-mapTree_a.set(syGL.AttributeUniform.NORMAL,ShaderUseVariantType.Normal);
+mapTree_a.set(syGL.AttributeUniform.POSITION,ShaderUseVariantType.POSITION);
+mapTree_a.set(syGL.AttributeUniform.NORMAL,ShaderUseVariantType.NORMAL);
 mapTree_a.set(syGL.AttributeUniform.TEXTURE_COORD0,ShaderUseVariantType.TEXTURE_COORD0);
 mapTree_a.set(syGL.AttributeUniform.TANGENT,ShaderUseVariantType.Tangent);
 mapTree_a.set(syGL.AttributeUniform.VERT_COLOR,ShaderUseVariantType.VertColor);
@@ -84,6 +84,8 @@ mapTree_u.set(syGL.AttributeUniform.P_Mat,ShaderUseVariantType.Projection);
 mapTree_u.set(syGL.AttributeUniform.Matrix,ShaderUseVariantType.CustomMatrix);
 mapTree_u.set(syGL.AttributeUniform.FOG_COLOR,ShaderUseVariantType.Fog);
 mapTree_u.set(syGL.AttributeUniform.FOG_DENSITY,ShaderUseVariantType.Fog);
+
+
 mapTree_u.set(syGL.AttributeUniform.TEXTURE0,ShaderUseVariantType.TEXTURE0);
 mapTree_u.set(syGL.AttributeUniform.TEXTURE1,ShaderUseVariantType.TEXTURE1);
 mapTree_u.set(syGL.AttributeUniform.TEXTURE2,ShaderUseVariantType.TEXTURE2);
@@ -94,17 +96,30 @@ mapTree_u.set(syGL.AttributeUniform.TEXTURE6,ShaderUseVariantType.TEXTURE6);
 mapTree_u.set(syGL.AttributeUniform.TEXTURE7,ShaderUseVariantType.TEXTURE7);
 mapTree_u.set(syGL.AttributeUniform.TEXTURE8,ShaderUseVariantType.TEXTURE8);
 mapTree_u.set(syGL.AttributeUniform.CUBE_TEXTURE,ShaderUseVariantType.CUBE_TEXTURE);
-mapTree_u.set(syGL.AttributeUniform.TEX_CUSTOM,ShaderUseVariantType.TEX_CUSTOM);
+mapTree_u.set(syGL.AttributeUniform.MAP_CUSTOM,ShaderUseVariantType.MAP_CUSTOM);
 // mapTree_u.set(syGL.AttributeUniform.SKYBOX,ShaderUseVariantType.SKYBOX);  --天空盒异常手动处理
 //uniform
-mapTree_u.set(syGL.AttributeUniform.TEX_GPosition,ShaderUseVariantType.GPosition);
-mapTree_u.set(syGL.AttributeUniform.TEX_GNormal,ShaderUseVariantType.GNormal);
-mapTree_u.set(syGL.AttributeUniform.TEX_GColor,ShaderUseVariantType.GColor);
-mapTree_u.set(syGL.AttributeUniform.TEX_GUv,ShaderUseVariantType.GUv);
-mapTree_u.set(syGL.AttributeUniform.TEX_GDepth,ShaderUseVariantType.GDepth);
+//--------内置贴图
+mapTree_u.set(syGL.AttributeUniform.MAP_G_POSITION,ShaderUseVariantType.MAP_G_POSITION);
+mapTree_u.set(syGL.AttributeUniform.MAP_G_NORMAL,ShaderUseVariantType.MAP_G_NORMAL);
+mapTree_u.set(syGL.AttributeUniform.MAP_G_COLOR,ShaderUseVariantType.MAP_G_COLOR);
+mapTree_u.set(syGL.AttributeUniform.MAP_G_UV,ShaderUseVariantType.MAP_G_UV);
+mapTree_u.set(syGL.AttributeUniform.MAP_G_DEPTH,ShaderUseVariantType.MAP_G_DEPTH);
 
+
+mapTree_u.set(syGL.AttributeUniform.MAP_LIGHT,ShaderUseVariantType.MAP_LIGHT);
+mapTree_u.set(syGL.AttributeUniform.MAP_EMISSIVE,ShaderUseVariantType.MAP_EMISSIVE);
+mapTree_u.set(syGL.AttributeUniform.MAP_DIFFUSE,ShaderUseVariantType.MAP_DIFFUSE);
+mapTree_u.set(syGL.AttributeUniform.MAP_NORMAL,ShaderUseVariantType.MAP_NORMAL);
+mapTree_u.set(syGL.AttributeUniform.MAP_BUMP,ShaderUseVariantType.MAP_BUMP);
+mapTree_u.set(syGL.AttributeUniform.BUMP_SCALE,ShaderUseVariantType.BUMP_SCALE);
+mapTree_u.set(syGL.AttributeUniform.MAP_AMBIENT,ShaderUseVariantType.MAP_AMBIENT);
+mapTree_u.set(syGL.AttributeUniform.MAP_ALPHA,ShaderUseVariantType.MAP_ALPHA);
+mapTree_u.set(syGL.AttributeUniform.MAP_SPECULAR,ShaderUseVariantType.MAP_SPECULAR);
 mapTree_u.set(syGL.AttributeUniform.SHADOW_INFO,ShaderUseVariantType.ShadowInfo);
-mapTree_u.set(syGL.AttributeUniform.SHADOW_MAP,ShaderUseVariantType.ShadowMap);
+mapTree_u.set(syGL.AttributeUniform.MAP_SHADOW,ShaderUseVariantType.MAP_SHADOW);
+mapTree_u.set(syGL.AttributeUniform.MAP_JOINT,ShaderUseVariantType.MAP_JOINT);
+
 mapTree_u.set(syGL.AttributeUniform.PVW_Mat,ShaderUseVariantType.ProjectionViewModel);
 mapTree_u.set(syGL.AttributeUniform.VW_Mat_I_T,ShaderUseVariantType.ViewModelInverseTransform);
 mapTree_u.set(syGL.AttributeUniform.PVW_Mat_I,ShaderUseVariantType.ProjectionViewModelInverse);
@@ -340,18 +355,10 @@ export class ShaderProgramBase {
     }
     //设置使用的纹理
     //注意如果此处不重新设置使用的纹理，那么会默认使用上一次绘制时的纹理
-    public setUseTexture(glID: WebGLTexture, pos = 0, is2D: boolean = true): void {
-        if (is2D) {
-            let loc = getLocName(texture2DConstBridge[pos],true)
-            if (this.checklocValid(this[loc])) {
-                G_DrawEngine.activeTexture(this._gl.TEXTURE_2D, glID, this[loc], pos)
-            }
-        }
-        else {
-            var loc = getLocName(syGL.AttributeUniform.CUBE_TEXTURE,true)
-            if (this.checklocValid(this[loc])) {
-                G_DrawEngine.activeTexture(this._gl.TEXTURE_CUBE_MAP, glID, this[loc], pos)
-            }
+    public setUseCubeTexture(glID: WebGLTexture, pos = 0): void {
+        var loc = getLocName(syGL.AttributeUniform.CUBE_TEXTURE,true)
+        if (this.checklocValid(this[loc])) {
+            G_DrawEngine.activeTexture(this._gl.TEXTURE_CUBE_MAP, glID, this[loc], pos)
         }
     }
     /**

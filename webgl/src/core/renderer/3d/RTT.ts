@@ -2,6 +2,7 @@ import Device from "../../Device";
 import { G_BufferManager } from "../base/buffer/BufferManager";
 import { SY } from "../base/Sprite";
 import { RenderTexture } from "../base/texture/RenderTexture";
+import { Texture } from "../base/texture/Texture";
 import { GameMainCamera } from "../camera/GameMainCamera";
 import { CubeData } from "../data/CubeData";
 import { syRender } from "../data/RenderData";
@@ -21,8 +22,8 @@ import { syRender } from "../data/RenderData";
         GameMainCamera.instance.createBaseVituralCamera(syRender.RenderTextureUUid.RTT, syRender.DrawingOrder.Middle);
         this.pushPassContent(syRender.ShaderType.RTT_Create)
     }
-    protected onSetTextureUrl(): void {
-        GameMainCamera.instance.pushRenderTexture(syRender.RenderTextureUUid.RTT,this.texture as RenderTexture);
+    protected onSetTextureUrl(tex:Texture): void {
+        GameMainCamera.instance.pushRenderTexture(syRender.RenderTextureUUid.RTT,tex as RenderTexture);
     }
 }
 

@@ -52,6 +52,23 @@ var server = http.createServer(function (req, res) {
     case "api":handleAPI(res,req,realPath);break;
     case "chat":handleChat(res,req,realPath);break;
     case "close":handleCloseServer(res,req,server);break;
+    case "copyTitle_bt":
+      console.log("copyTitle_bt---------");
+      const shell = require('shelljs');
+      const util = require('util');
+      const child_process = require('child_process')
+      // 调用util.promisify方法，返回一个promise,如const { stdout, stderr } = await exec('rm -rf build')
+      const exec = util.promisify(child_process.exec);
+      const appPath = path.join(__dirname, 'app');
+      const runClean = async function () {
+      // cwd指定子进程的当前工作目录 这里的rm -rf build为删除指定目录下的一个文件夹
+         await exec(`rm -rf d:\\Users\\pc\\Desktop\\share\\layertitle\\bt\\build`, { cwd: appPath });
+      }
+      runClean();
+      break;
+    case "copyTitle_ly":
+      console.log("copyTitle_ly---------");
+      break;
   }
 });
 server.listen(PORT); //监听端口

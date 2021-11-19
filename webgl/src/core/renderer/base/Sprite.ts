@@ -296,28 +296,46 @@ export namespace SY {
             return this._alpha
         }
         public set spriteFrame(url: string | Array<string> | TextureOpts | Object) {
-            this.texture = G_TextureManager.createTexture(url);
-            this.onSetTextureUrl();
+            var tex = G_TextureManager.createTexture(url);
+            if(tex.isTexture2D&&!(tex instanceof RenderTexture) )
+            {
+                tex.builtType = syRender.BuiltinTexture.TEXTURE0+this._textures.length;
+                 //2d
+                 this._textures.forEach((value,index)=>{
+                     if((value as Texture2D).url==url)
+                     {
+                         //删掉重复的值
+                        this._textures.splice(index)
+                     }
+                 })
+            }
+            this._textures.push(tex); 
+            this.onSetTextureUrl(tex);
+        }
+        
+        /**
+         * 设置内置的纹理
+         * @param url 
+         * @param builtTexType 
+         */
+        public setBuiltSpriteFrame(url: string,builtTexType:syRender.BuiltinTexture):void{
+             var tex = G_TextureManager.createTexture(url);
+             if(tex)
+             {
+                tex.builtType = builtTexType;
+                this._textures.push(tex);
+             }
         }
         /**
          * 直接设置纹理
          */
         public set texture(tex: Texture) {
-            var isExist = false
-            this._textures.forEach((value, index) => {
-                if (value == tex) {
-                    isExist = true;
-                }
-            })
-            if (!isExist) {
-                this._textures.push(tex);
-                this.onSetTextureUrl();
-            }
+            
         }
         /**
          * 设置完纹理之后调用
          */
-        protected onSetTextureUrl(): void {
+        protected onSetTextureUrl(tex:Texture): void {
 
         }
         /**
@@ -426,26 +444,25 @@ export namespace SY {
 
             //模型矩阵
             rData.primitive.modelMatrix = this.modelMatrix;
-
+            
+            if(rData.pass.shaderType == syRender.ShaderType.RTT_Use)
+            {
+                 //mrt
+                 var mrtTex = GameMainCamera.instance.getRenderTexture(syRender.RenderTextureUUid.RTT)
+                 mrtTex.getDeferredTex().forEach((texS, index) => {
+                     texS ? rData.push2DTexture(texS, index) : null;})
+            }
             for (let k = 0; k < this._textures.length; k++) {
                 var targetTexture = this._textures[k];
                 if (targetTexture instanceof RenderTexture && (targetTexture as RenderTexture).isDeferred()) {
-                    syRender.DeferredAllTypeTexture.forEach((value, index) => {
-                        var texS = (targetTexture as RenderTexture).getDeferredTex(value);
-                        texS ? rData.push2DTexture(texS, value) : null;
-                    })
-                }
-                else if (rData.pass.shaderType == syRender.ShaderType.RTT_Use) {
-                    //mrt
-                    var mrtTex = GameMainCamera.instance.getRenderTexture(syRender.RenderTextureUUid.RTT)
-                    syRender.DeferredAllTypeTexture.forEach((value, index) => {
-                        var texS = mrtTex.getDeferredTex(value);
-                        texS ? rData.push2DTexture(texS, value) : null;
-                    })
+                    (targetTexture as RenderTexture).getDeferredTex().forEach((texS, index) => {
+                                texS ? rData.push2DTexture(texS, index) : null;
+                        })
                 }
                 else if (targetTexture && targetTexture.glID) {
+
                     if (targetTexture.isTexture2D)
-                        rData.push2DTexture(targetTexture.glID);
+                        rData.push2DTexture(targetTexture.glID,targetTexture.builtType);
                     else if (targetTexture.isTextureCube)
                         rData.pushCubeTexture(targetTexture.glID);
                 }
@@ -639,9 +656,9 @@ export namespace SY {
 
         }
 
-        protected onSetTextureUrl(): void {
-            if (this.texture)
-                (this.texture as Texture2D).textureOnLoad = this.onTextureLoaded.bind(this);
+        protected onSetTextureUrl(tex:Texture): void {
+            if (tex)
+                (tex as Texture2D).textureOnLoad = this.onTextureLoaded.bind(this);
         }
 
         /**
