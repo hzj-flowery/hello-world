@@ -177,7 +177,6 @@ class PassFactory{
         //关于宏预处理操作
         vert = this.preShaderCodeAboutDefine(vert,pass.defineUse,0);
         frag = this.preShaderCodeAboutDefine(frag,pass.defineUse,1);
-
         if(pass.ProgramBaseType==false)
         {
              var program = G_ShaderFactory.createProgramInfo(vert, frag);
@@ -278,7 +277,7 @@ class PassFactory{
         //再加上版本号
         if(versionString)
         {
-            code = "\n#version 300 es\n"+code
+            code = "#version 300 es\n"+code
         }
         return code;
     }

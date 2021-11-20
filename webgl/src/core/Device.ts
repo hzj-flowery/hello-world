@@ -1238,6 +1238,10 @@ export default class Device {
                 try {
                     let ext = gl.getExtension(vendorPrefixes[j] + name);
                     if (ext) {
+                        //存入支持的扩展
+                        //在shader顶部加入
+                        //#extension GL_EXT_frag_depth : enable
+                        //#extension GL_EXT_draw_buffers : require
                         this._extensions[name] = ext;
                         break;
                     }

@@ -1,5 +1,5 @@
+#version 300 es
 precision mediump float;
-
 
 uniform vec4 u_color;//节点的颜色
 
@@ -11,6 +11,8 @@ uniform vec4 u_resolution;
 
 uniform vec4 u_mouse;
 
+layout (location = 0) out vec4 FragColor;   // 颜色
+
 //传递数组        
 #ifdef SY_USE_FLOAT_ARRAY_LENGTH
        if(SY_USE_FLOAT_ARRAY_LENGTH>0)
@@ -19,7 +21,7 @@ uniform vec4 u_mouse;
 
 //使用法线
 #if defined(SY_USE_NORMAL)
-      varying vec3 v_normal;
+      in vec3 v_normal;
 #endif
 
 //自发光
@@ -30,7 +32,7 @@ uniform vec4 u_mouse;
 //使用纹理0号单元
 #if defined(SY_USE_TEXTURE)
       uniform sampler2D u_texture;
-      varying vec2 v_uv;
+      in vec2 v_uv;
 #endif
 
 //使用纹理1号单元
@@ -156,9 +158,9 @@ uniform vec4 u_mouse;
 //使用点光或者聚光会用到下面的数据
 #if defined(SY_USE_LIGHT_SPOT)||defined(SY_USE_LIGHT_POINT)||defined(SY_USE_LIGHT_SPECULAR)
       //顶点到光的方向
-      varying vec3 v_surfaceToLight;
+      in vec3 v_surfaceToLight;
       //顶点到相机的方向
-      varying vec3 v_surfaceToView;
+      in vec3 v_surfaceToView;
 #endif
 
 //阴影
@@ -168,7 +170,7 @@ uniform vec4 u_mouse;
       //阴影信息
       uniform vec4 u_shadowInfo;
       //uv
-      varying vec4 v_shadowProjectedTexcoord;
+      in vec4 v_shadowProjectedTexcoord;
       bool inRange(vec3 coordP){
             return coordP.x >= 0.0 && coordP.x <= 1.0 && coordP.y >= 0.0 && coordP.y <= 1.0; //uv纹理坐标必须处于【0，1】
       }
@@ -177,7 +179,7 @@ uniform vec4 u_mouse;
             vec3 projectedTexcoord = coordP.xyz / coordP.w;   //手动进行齐次除法
             projectedTexcoord = projectedTexcoord.xyz / 2.0 + 0.5;                     //转为屏幕坐标
             float currentDepth = projectedTexcoord.z + shadowInfo.x;                          //Z2  当前顶点的深度值
-            float projectedDepth = texture2D(shadowMap, projectedTexcoord.xy).r; //取出深度z值 Z1
+            float projectedDepth = texture(shadowMap, projectedTexcoord.xy).r; //取出深度z值 Z1
             float shadowLight = (inRange(projectedTexcoord) && projectedDepth <= currentDepth) ? 0.0 : 1.0;//小于说明光看不见，则处于阴影中，否则正常显示
             return shadowLight;
       }
@@ -203,7 +205,7 @@ uniform vec4 u_mouse;
             for(float y=-1.5;y<=1.5;y+=1.){
                   for(float x=-1.5;x<=1.5;x+=1.){
                         //找出光照条件下的当前位置的最大深度
-                        rgbaDepth=texture2D(shadowMap,projectedTexcoord.xy+vec2(x,y)*texelSize);
+                        rgbaDepth=texture(shadowMap,projectedTexcoord.xy+vec2(x,y)*texelSize);
                         //如果当前深度大于光照的最大深度 则表明处于阴影中
                         //否则可以看见
                         #ifdef SY_USE_FUNC_UNPACK
@@ -225,7 +227,7 @@ uniform vec4 u_mouse;
 //使用雾
 #if defined(SY_USE_FOG)
     //视口坐标系下的位置
-    varying vec3 v_fog_view_world_position;
+    in vec3 v_fog_view_world_position;
     uniform vec4 u_fog;
     uniform float u_fogDensity;
     vec4 getFogMixColor(vec4 fragColor){
@@ -251,19 +253,20 @@ uniform vec4 u_mouse;
 
 
 //凹凸贴图
-#ifdef SY_USE_BUMPMAP
+#ifdef SY_USE_MAP_BUMP
 	uniform sampler2D u_bumpMap;
-	uniform float u_bumpScale;
-      varying vec3 v_vmPosition;
+	// uniform float u_bumpScale;
+      float u_bumpScale = 0.8;
+      in vec3 v_vmPosition;
       // Bump Mapping Unparametrized Surfaces on the GPU by Morten S. Mikkelsen
 	// http://api.unrealengine.com/attachments/Engine/Rendering/LightingAndShadows/BumpMappingWithoutTangentSpace/mm_sfgrad_bump.pdf
 	// Evaluate the derivative of the height w.r.t. screen-space using forward differencing (listing 2)
 	vec2 dHdxy_fwd(vec2 vUv) {
 	      vec2 dSTdx = dFdx( vUv );
 		vec2 dSTdy = dFdy( vUv );
-		float Hll = u_bumpScale * texture2D( u_bumpMap, vUv ).x;
-		float dBx = u_bumpScale * texture2D( u_bumpMap, vUv + dSTdx ).x - Hll;
-		float dBy = u_bumpScale * texture2D( u_bumpMap, vUv + dSTdy ).x - Hll;
+		float Hll = u_bumpScale * texture( u_bumpMap, vUv ).x;
+		float dBx = u_bumpScale * texture( u_bumpMap, vUv + dSTdx ).x - Hll;
+		float dBy = u_bumpScale * texture( u_bumpMap, vUv + dSTdy ).x - Hll;
 		return vec2( dBx, dBy );
 	}
       /*
@@ -294,10 +297,10 @@ void main(){
       #endif
       
       //使用凹凸贴图
-      #ifdef SY_USE_BUMPMAP
+      #ifdef SY_USE_MAP_BUMP
              //面的朝向
              float faceDirection = gl_FrontFacing ? 1.0 : - 1.0;
-             normal = perturbNormalArb(normalize(v_vmPosition),normal,dHdxy(v_uv),faceDirection)
+             normal = perturbNormalArb(normalize(v_vmPosition),normal,dHdxy_fwd(v_uv),faceDirection);
       #endif
 
       //使用点光或者聚光会用到下面的数据
@@ -313,9 +316,9 @@ void main(){
       //表面基底色
       #ifdef SY_USE_TEXTURE
             #ifdef SY_USE_FUNC_MAGNIFIER
-                  vec4 surfaceBaseColor=texture2D(u_texture,v_uv+getUVOffsetByMagnifier(v_uv,u_resolution.xy,u_mouse.xy,0.1,0.3))*u_color;
+                  vec4 surfaceBaseColor=texture(u_texture,v_uv+getUVOffsetByMagnifier(v_uv,u_resolution.xy,u_mouse.xy,0.1,0.3))*u_color;
             #else
-                  vec4 surfaceBaseColor=texture2D(u_texture,v_uv)*u_color;
+                  vec4 surfaceBaseColor=texture(u_texture,v_uv)*u_color;
             #endif
              
       #else
@@ -325,7 +328,7 @@ void main(){
       //使用1号纹理单元
       #if defined(SY_USE_TEXTURE_ONE)
           float time=mod(u_time/1000.,90.);
-          surfaceBaseColor = surfaceBaseColor+texture2D(u_texture1,v_uv+sin(time));
+          surfaceBaseColor = surfaceBaseColor+texture(u_texture1,v_uv+sin(time));
       #endif
       
       surfaceBaseColor=vec4(surfaceBaseColor.rgb,u_alpha*surfaceBaseColor.a);
@@ -425,5 +428,5 @@ void main(){
 
       
 
-      gl_FragColor=fragColor;
+      FragColor=fragColor;
 }

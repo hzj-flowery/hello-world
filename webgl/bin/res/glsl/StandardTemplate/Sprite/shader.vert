@@ -1,5 +1,6 @@
+#version 300 es
 precision mediump float;
-attribute vec3 a_position;
+in vec3 a_position;
 
 
 uniform mat4 u_world;
@@ -12,19 +13,19 @@ uniform float u_time;
 
 //使用纹理
 #if defined(SY_USE_TEXTURE)
-      attribute vec2 a_texcoord;
-      varying vec2 v_uv;
+      in vec2 a_texcoord;
+      out vec2 v_uv;
 #endif
 
 //使用凹凸贴图
-#ifdef SY_USE_BUMPMAP
-     varying vec3 v_vmPosition;
+#ifdef SY_USE_MAP_BUMP
+     out vec3 v_vmPosition;
 #endif
 
 //法线
 #if defined(SY_USE_NORMAL)
-    attribute vec3 a_normal;
-    varying vec3 v_normal;
+    in vec3 a_normal;
+    out vec3 v_normal;
 #endif
 
 //万能矩阵
@@ -39,31 +40,31 @@ uniform float u_time;
     //相机的位置
     uniform vec3 u_cameraWorldPosition;
     //顶点到光的方向
-    varying vec3 v_surfaceToLight;
+    out vec3 v_surfaceToLight;
     //顶点到相机的方向
-    varying vec3 v_surfaceToView;
+    out vec3 v_surfaceToView;
 #endif
 
 //使用阴影会用到投影纹理的uv
 #if defined(SY_USE_SHADOW_PARALLEL)
-    varying vec4 v_shadowProjectedTexcoord;
+    out vec4 v_shadowProjectedTexcoord;
 #endif
 
 //使用雾
 #if defined(SY_USE_FOG)
-    varying vec3 v_fog_view_world_position;
+    out vec3 v_fog_view_world_position;
 #endif
 
 //使用变形目标(最多有8个)
 #if defined(SY_USE_MORPHTARGETS)
-    attribute vec3 a_morphTarget0;
-    attribute vec3 a_morphTarget1;
-    attribute vec3 a_morphTarget2;
-    attribute vec3 a_morphTarget3;
-    attribute vec3 a_morphTarget4;
-    attribute vec3 a_morphTarget5;
-    attribute vec3 a_morphTarget6;
-    attribute vec3 a_morphTarget7;
+    in vec3 a_morphTarget0;
+    in vec3 a_morphTarget1;
+    in vec3 a_morphTarget2;
+    in vec3 a_morphTarget3;
+    in vec3 a_morphTarget4;
+    in vec3 a_morphTarget5;
+    in vec3 a_morphTarget6;
+    in vec3 a_morphTarget7;
     uniform float u_morphTargetInfluences[8];//最多只允许有八个影响
     //获取变形后顶点的位置
     vec3 getMorphPosition(vec3 transformed){
@@ -120,7 +121,7 @@ void main(){
     #endif
     
     //凹凸贴图
-    #ifdef SY_USE_BUMPMAP
+    #ifdef SY_USE_MAP_BUMP
            v_vmPosition=(u_view*worldPosition).xyz;
     #endif
 

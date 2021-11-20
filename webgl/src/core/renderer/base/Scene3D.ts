@@ -50,6 +50,7 @@ export default class Scene3D extends Scene {
     private _skybox: SkyBox;
     private _plane:Plane;
     private _cubeNode: Cube;
+    private _cubebumpNode: Cube;
     private _testAlphaCube:Cube;
     private _deferredShading: DeferredShading;
     private _renderSprite: RenderOffline3DSprite;
@@ -195,8 +196,6 @@ export default class Scene3D extends Scene {
         this._rtt.setPosition(-6, 10, 0);
         this._centerNode.addChild(this._rtt);
 
-
-      
         this._rttTest = new RTTTest();
         this._rttTest.pushPassContent(syRender.ShaderType.RTT_Use)
         this._rttTest.gZOrder = 501;
@@ -233,10 +232,22 @@ export default class Scene3D extends Scene {
         
            
         this._cubeNode = new Cube();
-        this._cubeNode.spriteFrame = "res/wicker.jpg";
-        this._cubeNode.setPosition(0, 1.7, 0);
-        this._cubeNode.setScale(0.5, 0.5, 0.5);
+        this._cubeNode.spriteFrame = "res/normal/brick_diffuse.jpg";
+        this._cubeNode.setPosition(-3, 3.7, 5);
         this._centerNode.addChild(this._cubeNode);
+
+        this._cubebumpNode = new Cube();
+        this._cubebumpNode.spriteFrame = "res/normal/brick_diffuse.jpg";
+        this._cubebumpNode.setPosition(-6, 3.7, 5);
+        this._cubebumpNode.pushPassContent(syRender.ShaderType.Sprite,[],[
+            [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_MAP_BUMP]
+        ])
+        this._cubebumpNode.setBuiltSpriteFrame("res/normal/brick_bump.jpg",syRender.BuiltinTexture.MAP_BUMP)
+        this._centerNode.addChild(this._cubebumpNode);
+
+        
+
+
         this._tableNode = new Cube();
         this._tableNode.spriteFrame = "res/wood.jpg";
         this._tableNode.setPosition(0, 1, 0);
@@ -344,6 +355,9 @@ export default class Scene3D extends Scene {
         G_UISetting.pushRenderCallBack((data)=>{
             boxG.setMorphTargetInfluences(0,data.customValueZ?data.customValueZ:0)
             boxG.setMorphTargetInfluences(1,data.customValue?data.customValue:0)
+
+            this._cubeNode.setPosition(-3, 3.7, data.customValueY?data.customValueY:0)
+            this._cubebumpNode.setPosition(-6, 3.7, data.customValueY?data.customValueY:0);
             // this._robart.setPosition(data.customValueX,data.customValueY,data.customValueZ)
             // var cg = (data.customValue?-data.customValue:0.1)/10000;
             // this._robart.setScale(cg,cg,cg)
