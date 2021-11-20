@@ -83,7 +83,7 @@ export enum ShaderUseVariantType {
     MORPH_TARGET_5,//变形目标 5
     MORPH_TARGET_6,//变形目标 6
     MORPH_TARGET_7,//变形目标 7
-
     MORPH_TARGET_INFLUENCES,//变形目标因子
+    
     UndefinedMax,//无效
 }

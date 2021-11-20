@@ -553,7 +553,20 @@ export namespace syRender {
             this._cameraPosition = new Vec3(0, 0, 0)
             this.reset();
         }
-
+        
+        //内置变形变量
+        private static BuiltinMorphTargetMap={
+            [ShaderUseVariantType.MORPH_TARGET_0]:[0,syGL.AttributeUniform.MORPH_TARGET_0],
+            [ShaderUseVariantType.MORPH_TARGET_1]:[1,syGL.AttributeUniform.MORPH_TARGET_1],
+            [ShaderUseVariantType.MORPH_TARGET_2]:[2,syGL.AttributeUniform.MORPH_TARGET_2],
+            [ShaderUseVariantType.MORPH_TARGET_3]:[3,syGL.AttributeUniform.MORPH_TARGET_3],
+            [ShaderUseVariantType.MORPH_TARGET_4]:[4,syGL.AttributeUniform.MORPH_TARGET_4],
+            [ShaderUseVariantType.MORPH_TARGET_5]:[5,syGL.AttributeUniform.MORPH_TARGET_5],
+            [ShaderUseVariantType.MORPH_TARGET_6]:[6,syGL.AttributeUniform.MORPH_TARGET_6],
+            [ShaderUseVariantType.MORPH_TARGET_7]:[7,syGL.AttributeUniform.MORPH_TARGET_7],
+            [ShaderUseVariantType.MORPH_TARGET_INFLUENCES]:[8,syGL.AttributeUniform.MORPH_TARGET_INFLUENCES],
+        }
+        //内置纹理map
         public static BuiltinTextureMap = {
             [ShaderUseVariantType.TEXTURE0]: [BuiltinTexture.TEXTURE0, syGL.AttributeUniform.TEXTURE0],  //常规贴图 
             [ShaderUseVariantType.TEXTURE1]: [BuiltinTexture.TEXTURE1, syGL.AttributeUniform.TEXTURE1],  //常规贴图 
@@ -820,43 +833,21 @@ export namespace syRender {
                         _shader.setUseBuiltinTexture(this.light.shadow.map, useTextureAddres, syGL.AttributeUniform.MAP_SHADOW);
                         useTextureAddres++;
                         break;
-                    case ShaderUseVariantType.MORPH_TARGET_0:
-                        if (this.primitive.morphPositions[0])
-                            _shader.setUseVertexAttribPointer(syGL.AttributeUniform.MORPH_TARGET_0, this.primitive.morphPositions[0].glID, this.primitive.morphPositions[0].itemSize);
-                        break;
-                    case ShaderUseVariantType.MORPH_TARGET_1:
-                        if (this.primitive.morphPositions[1])
-                            _shader.setUseVertexAttribPointer(syGL.AttributeUniform.MORPH_TARGET_1, this.primitive.morphPositions[1].glID, this.primitive.morphPositions[1].itemSize);
-                        break;
-                    case ShaderUseVariantType.MORPH_TARGET_2:
-                        if (this.primitive.morphPositions[2])
-                            _shader.setUseVertexAttribPointer(syGL.AttributeUniform.MORPH_TARGET_2, this.primitive.morphPositions[2].glID, this.primitive.morphPositions[2].itemSize);
-                        break;
-                    case ShaderUseVariantType.MORPH_TARGET_3:
-                        if (this.primitive.morphPositions[3])
-                            _shader.setUseVertexAttribPointer(syGL.AttributeUniform.MORPH_TARGET_3, this.primitive.morphPositions[3].glID, this.primitive.morphPositions[3].itemSize);
-                        break;
-                    case ShaderUseVariantType.MORPH_TARGET_4:
-                        if (this.primitive.morphPositions[4])
-                            _shader.setUseVertexAttribPointer(syGL.AttributeUniform.MORPH_TARGET_4, this.primitive.morphPositions[4].glID, this.primitive.morphPositions[4].itemSize);
-                        break;
-                    case ShaderUseVariantType.MORPH_TARGET_5:
-                        if (this.primitive.morphPositions[5])
-                            _shader.setUseVertexAttribPointer(syGL.AttributeUniform.MORPH_TARGET_5, this.primitive.morphPositions[5].glID, this.primitive.morphPositions[5].itemSize);
-                        break;
-                    case ShaderUseVariantType.MORPH_TARGET_6:
-                        if (this.primitive.morphPositions[6])
-                            _shader.setUseVertexAttribPointer(syGL.AttributeUniform.MORPH_TARGET_6, this.primitive.morphPositions[6].glID, this.primitive.morphPositions[6].itemSize);
-                        break;
-                    case ShaderUseVariantType.MORPH_TARGET_7:
-                        if (this.primitive.morphPositions[7])
-                            _shader.setUseVertexAttribPointer(syGL.AttributeUniform.MORPH_TARGET_7, this.primitive.morphPositions[7].glID, this.primitive.morphPositions[7].itemSize);
-                        break;
-                    case ShaderUseVariantType.MORPH_TARGET_INFLUENCES:
-                        _shader.setCustomUniformFloatArray(syGL.AttributeUniform.MORPH_TARGET_INFLUENCES, this.primitive.morphTargetInfluences)
-                        break;
                     default:
-                        if (QueueItemBaseData.BuiltinTextureMap[value]) {
+                        if (QueueItemBaseData.BuiltinMorphTargetMap[value])
+                        {
+                            var st = QueueItemBaseData.BuiltinMorphTargetMap[value][0]
+                            if(st<=7)
+                            {
+                                if(this.primitive.morphPositions[st])
+                                _shader.setUseVertexAttribPointer(QueueItemBaseData.BuiltinMorphTargetMap[value][1], this.primitive.morphPositions[st].glID, this.primitive.morphPositions[st].itemSize);
+                            }
+                            else
+                            {
+                                _shader.setCustomUniformFloatArray(QueueItemBaseData.BuiltinMorphTargetMap[value][1], this.primitive.morphTargetInfluences) 
+                            }
+                        }
+                        else if (QueueItemBaseData.BuiltinTextureMap[value]) {
                             _shader.setUseBuiltinTexture(this._texture2DGLIDMap.get(QueueItemBaseData.BuiltinTextureMap[value][0]), 
                             useTextureAddres, QueueItemBaseData.BuiltinTextureMap[value][1]);
                             useTextureAddres++;
