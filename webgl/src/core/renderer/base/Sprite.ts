@@ -64,6 +64,7 @@ import { glEnums } from "../gfx/GLapi";
 import { syStateStringKey, syStateStringValue } from "../gfx/State";
 import { GameMainCamera } from "../camera/GameMainCamera";
 import { Color } from "../../value-types/color";
+import { Material } from "./material/Material";
 
 /**
  * 显示节点
@@ -129,6 +130,10 @@ export namespace SY {
         private _textures: Array<Texture>;
         private _pass: Array<Pass>;
         private _renderData: Array<syRender.QueueItemBaseData>;
+        
+        //材料
+        public material:Material;
+
         //参考glprimitive_type
         protected _sizeMode: SpriteSizeMode;//节点的尺寸模式
         constructor() {
@@ -140,6 +145,7 @@ export namespace SY {
             this._diffuse = new Color(255, 255, 255, 255);//默认颜色为白色
             this._sizeMode = SpriteSizeMode.CUSTOM;//默认加载图片的尺寸大小为自定义
             this._textures = [];
+            this.material = new Material();
             this.init();
         }
         private init(): void {
@@ -324,6 +330,23 @@ export namespace SY {
              {
                 tex.builtType = builtTexType;
                 this._textures.push(tex);
+                if(builtTexType == syRender.BuiltinTexture.MAP_BUMP)
+                {
+                    //凹凸贴图
+                    this.material.bumpMap = tex;
+                    this.material.bumpScale = 0.01;
+                    this.pushPassContent(syRender.ShaderType.Sprite,[],[
+                        [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_MAP_BUMP]
+                    ])
+                }
+                else if(builtTexType==syRender.BuiltinTexture.MAP_NORMAL)
+                {
+                    this.material.normalMap = tex;
+                    this.material.normalMapScale = 1.0;
+                    this.pushPassContent(syRender.ShaderType.Sprite,[],[
+                        [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_TANGENTSPACE_NORMALMAP_WITHOUT_TBN]
+                    ])
+                }
              }
         }
         /**
@@ -509,7 +532,6 @@ export namespace SY {
                 // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_SPOT],
                 [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_LIGHT_PARALLEL],
                 // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_POINT],
-                [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_SHADOW_PARALLEL],
                 // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_SPECULAR],
                 [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_FOG]
             ]);

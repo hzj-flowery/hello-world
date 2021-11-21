@@ -107,7 +107,7 @@ class UISetting {
             { type: 'slider', key: 'customValueX', min: -50, max: 50, change: render,precision: 2, step: 0.001, },
             { type: 'slider', key: 'customValueY', min: -50, max: 50, change: render, },
             { type: 'slider', key: 'customValueZ', min: 0, max: 1, change: render,precision: 2, step: 0.001, },
-            { type: 'slider', key: 'customValue', min: 0, max: 2, change: render,precision: 2, step: 0.001, },
+            { type: 'slider', key: 'customValue', min: 0, max: 5, change: render,precision: 2, step: 0.01, },
         ]
         let camera2D = [
             //2d相机

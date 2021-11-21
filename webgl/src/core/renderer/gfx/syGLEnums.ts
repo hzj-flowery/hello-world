@@ -156,8 +156,9 @@ export namespace syGL {
         MAP_EMISSIVE= "u_emissiveMap",//自发光贴图
         MAP_DIFFUSE = 'u_diffuseMap',//漫反射贴图
         MAP_NORMAL  = 'u_normalMap' ,//法线贴图
+        MAP_NORMAL_SCALE  = 'u_normalMapScale' ,//法线贴图因子
         MAP_BUMP    = 'u_bumpMap',     //凹凸贴图
-        BUMP_SCALE = "u_bumpScale",   //凹凸贴图因子
+        MAP_BUMP_SCALE = "u_bumpScale",   //凹凸贴图因子
         MAP_AMBIENT = "u_ambientMap",//环境贴图
         MAP_ALPHA    = 'u_alphaMap',     //alpha贴图
         MAP_SPECULAR= 'u_specularMap', //高光贴图

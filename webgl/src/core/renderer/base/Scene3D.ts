@@ -232,17 +232,14 @@ export default class Scene3D extends Scene {
         
            
         this._cubeNode = new Cube();
-        this._cubeNode.spriteFrame = "res/normal/brick_diffuse.jpg";
+        this._cubeNode.spriteFrame = "res/normal/normal/brick_diffuse.jpg";
         this._cubeNode.setPosition(-3, 3.7, 5);
         this._centerNode.addChild(this._cubeNode);
 
         this._cubebumpNode = new Cube();
-        this._cubebumpNode.spriteFrame = "res/normal/brick_diffuse.jpg";
+        this._cubebumpNode.spriteFrame = "res/normal/normal/brick_diffuse.jpg";
         this._cubebumpNode.setPosition(-6, 3.7, 5);
-        this._cubebumpNode.pushPassContent(syRender.ShaderType.Sprite,[],[
-            [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_MAP_BUMP]
-        ])
-        this._cubebumpNode.setBuiltSpriteFrame("res/normal/brick_bump.jpg",syRender.BuiltinTexture.MAP_BUMP)
+        this._cubebumpNode.setBuiltSpriteFrame("res/normal/normal/brick_normal.jpg",syRender.BuiltinTexture.MAP_NORMAL)
         this._centerNode.addChild(this._cubebumpNode);
 
         
@@ -358,6 +355,8 @@ export default class Scene3D extends Scene {
 
             this._cubeNode.setPosition(-3, 3.7, data.customValueY?data.customValueY:0)
             this._cubebumpNode.setPosition(-6, 3.7, data.customValueY?data.customValueY:0);
+
+            this._cubebumpNode.material.bumpScale = data.customValue?data.customValue:1;
             // this._robart.setPosition(data.customValueX,data.customValueY,data.customValueZ)
             // var cg = (data.customValue?-data.customValue:0.1)/10000;
             // this._robart.setScale(cg,cg,cg)

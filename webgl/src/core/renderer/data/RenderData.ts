@@ -6,6 +6,7 @@ import { MathUtils } from "../../utils/MathUtils";
 import { Color } from "../../value-types/color";
 import Vec3 from "../../value-types/vec3";
 import { Node } from "../base/Node";
+import { SY } from "../base/Sprite";
 import { GameMainCamera } from "../camera/GameMainCamera";
 import { glEnums } from "../gfx/GLapi";
 import { State, syStateStringKey, syStateStringValue } from "../gfx/State";
@@ -161,6 +162,7 @@ export namespace syRender {
         SY_USE_TEXTURE: "SY_USE_TEXTURE",          //使用0号纹理单元
         SY_USE_TEXTURE_ONE: "SY_USE_TEXTURE_ONE",          //使用1号纹理单元
         SY_USE_MAP_BUMP: "SY_USE_MAP_BUMP",          //使用凹凸贴图
+        SY_USE_TANGENTSPACE_NORMALMAP_WITHOUT_TBN:"SY_USE_TANGENTSPACE_NORMALMAP_WITHOUT_TBN",//使用法线贴图 该法线位于切线空间下 且没有事先计算tbn矩阵
         SY_USE_LIGHT_AMBIENT: "SY_USE_LIGHT_AMBIENT",          //使用环境光
         SY_USE_LIGHT_PARALLEL: "SY_USE_LIGHT_PARALLEL",        //使用平行光
         SY_USE_LIGHT_SPOT: "SY_USE_LIGHT_SPOT",                //使用聚光
@@ -292,7 +294,7 @@ export namespace syRender {
         MAP_DIFFUSE,//漫反射贴图
         MAP_NORMAL,//法线贴图
         MAP_BUMP,     //凹凸贴图
-        BUMP_SCALE,   //凹凸贴图因子
+        MAP_BUMP_SCALE,   //凹凸贴图因子
         MAP_AMBIENT,//环境贴图
         MAP_ALPHA,     //alpha贴图
         MAP_SPECULAR, //高光贴图
@@ -593,7 +595,7 @@ export namespace syRender {
             [ShaderUseVariantType.MAP_DIFFUSE]: [BuiltinTexture.MAP_DIFFUSE, syGL.AttributeUniform.MAP_DIFFUSE],//漫反射贴图
             [ShaderUseVariantType.MAP_NORMAL]: [BuiltinTexture.MAP_NORMAL, syGL.AttributeUniform.MAP_NORMAL],//法线贴图
             [ShaderUseVariantType.MAP_BUMP]: [BuiltinTexture.MAP_BUMP, syGL.AttributeUniform.MAP_BUMP],     //凹凸贴图
-            [ShaderUseVariantType.BUMP_SCALE]: [BuiltinTexture.BUMP_SCALE, syGL.AttributeUniform.BUMP_SCALE],   //凹凸贴图因子
+            // [ShaderUseVariantType.MAP_BUMP_SCALE]: [BuiltinTexture.MAP_BUMP_SCALE, syGL.AttributeUniform.MAP_BUMP_SCALE],   //凹凸贴图因子
             [ShaderUseVariantType.MAP_AMBIENT]: [BuiltinTexture.MAP_AMBIENT, syGL.AttributeUniform.MAP_AMBIENT],//环境贴图
             [ShaderUseVariantType.MAP_ALPHA]: [BuiltinTexture.MAP_ALPHA, syGL.AttributeUniform.MAP_ALPHA],     //alpha贴图
             [ShaderUseVariantType.MAP_SPECULAR]: [BuiltinTexture.MAP_SPECULAR, syGL.AttributeUniform.MAP_SPECULAR], //高光贴图
@@ -829,6 +831,14 @@ export namespace syRender {
                         break;
                     case ShaderUseVariantType.FloatArray:
                         _shader.setCustomUniformFloatArray(syGL.AttributeUniform.FLOAT_ARRAY, [0, 0, 0, 0, 0, 0, 0, 1])
+                        break;
+                    case ShaderUseVariantType.MAP_BUMP_SCALE:
+                        //影响凹凸贴图的因子
+                        _shader.setCustomUniformFloat(syGL.AttributeUniform.MAP_BUMP_SCALE,(this.node as SY.SpriteBase).material.bumpScale);
+                        break;
+                    case ShaderUseVariantType.MAP_NORMAL_SCALE:
+                        //影响法线贴图的因子
+                        _shader.setCustomUniformFloat(syGL.AttributeUniform.MAP_NORMAL_SCALE,(this.node as SY.SpriteBase).material.normalMapScale);
                         break;
                     case ShaderUseVariantType.MAP_SHADOW:
                         _shader.setUseBuiltinTexture(this.light.shadow.map, useTextureAddres, syGL.AttributeUniform.MAP_SHADOW);

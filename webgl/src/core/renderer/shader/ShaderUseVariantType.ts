@@ -32,8 +32,9 @@ export enum ShaderUseVariantType {
     ShadowInfo,             //阴影信息
     MAP_DIFFUSE ,//漫反射贴图
     MAP_NORMAL ,//法线贴图
+    MAP_NORMAL_SCALE,//法线贴图因子
     MAP_BUMP ,     //凹凸贴图
-    BUMP_SCALE ,   //凹凸贴图因子
+    MAP_BUMP_SCALE ,   //凹凸贴图因子
     MAP_AMBIENT ,//环境贴图
     MAP_ALPHA ,     //alpha贴图
     MAP_SPECULAR, //高光贴图
@@ -84,6 +85,6 @@ export enum ShaderUseVariantType {
     MORPH_TARGET_6,//变形目标 6
     MORPH_TARGET_7,//变形目标 7
     MORPH_TARGET_INFLUENCES,//变形目标因子
-    
+
     UndefinedMax,//无效
 }

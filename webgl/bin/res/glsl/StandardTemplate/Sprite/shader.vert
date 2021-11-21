@@ -18,7 +18,7 @@ uniform float u_time;
 #endif
 
 //使用凹凸贴图
-#ifdef SY_USE_MAP_BUMP
+#if defined(SY_USE_MAP_BUMP) || defined(SY_USE_TANGENTSPACE_NORMALMAP_WITHOUT_TBN)
      out vec3 v_vmPosition;
 #endif
 
@@ -121,7 +121,7 @@ void main(){
     #endif
     
     //凹凸贴图
-    #ifdef SY_USE_MAP_BUMP
+    #if defined(SY_USE_MAP_BUMP) || defined(SY_USE_TANGENTSPACE_NORMALMAP_WITHOUT_TBN)
            v_vmPosition=(u_view*worldPosition).xyz;
     #endif
 
