@@ -130,10 +130,6 @@ export default class Scene3D extends Scene {
         this.addChild(this._spineNode);
 
         this._objNode = new ObjNode();
-        // this._objNode.setScale(0.2,0.2,0.2)
-        // this._objNode.x = 5;
-        // this._objNode.y = 0;
-        // this._objNode.z = -10;
         this.addChild(this._objNode);
 
         this._customTexture = new CustomTextureCube();
@@ -231,16 +227,16 @@ export default class Scene3D extends Scene {
         
         
            
-        this._cubeNode = new Cube();
-        this._cubeNode.spriteFrame = "res/normal/normal/brick_diffuse.jpg";
-        this._cubeNode.setPosition(-3, 3.7, 5);
-        this._centerNode.addChild(this._cubeNode);
+        // this._cubeNode = new Cube();
+        // this._cubeNode.spriteFrame = "res/normal/normal/brick_diffuse.jpg";
+        // this._cubeNode.setPosition(-3, 3.7, 5);
+        // this._centerNode.addChild(this._cubeNode);
 
-        this._cubebumpNode = new Cube();
-        this._cubebumpNode.spriteFrame = "res/normal/normal/brick_diffuse.jpg";
-        this._cubebumpNode.setPosition(-6, 3.7, 5);
-        this._cubebumpNode.setBuiltSpriteFrame("res/normal/normal/brick_normal.jpg",syRender.BuiltinTexture.MAP_NORMAL)
-        this._centerNode.addChild(this._cubebumpNode);
+        // this._cubebumpNode = new Cube();
+        // this._cubebumpNode.spriteFrame = "res/normal/normal/brick_diffuse.jpg";
+        // this._cubebumpNode.setPosition(-6, 3.7, 5);
+        // this._cubebumpNode.setBuiltSpriteFrame("res/normal/normal/brick_normal.jpg",syRender.BuiltinTexture.MAP_NORMAL)
+        // this._centerNode.addChild(this._cubebumpNode);
 
         
 
@@ -305,26 +301,70 @@ export default class Scene3D extends Scene {
         // this.addChild(teapotG);
 
       
+        // var boxG = new BoxGeometry(2, 2, 2, 32, 32, 32);
+        // boxG.addMorphGeometry()
+        // boxG.pushPassContent(syRender.ShaderType.Sprite,[
+        // ],[
+        //     // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_TEXTURE,syRender.ShaderDefineValue.SY_USE_REMOVE_DEFINE]
+        //     [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_MORPHTARGETS],
+        //     [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_MORPHTARGETS_RELATIVE],
+        //     [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_FUNC_CATCH_FIRE],
+        //     [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_FUNC_UNPACK_CUSTOM_TONE_MAPPING,syRender.ToneMapping.ACESFilmicToneMapping]
+        // ])
+        // boxG.spriteFrame = "res/1.jpg";
+        // boxG.setPosition(3,8,5);
+        // this.addChild(boxG);
+
         var boxG = new BoxGeometry(2, 2, 2, 32, 32, 32);
-        boxG.addMorphGeometry()
-        boxG.pushPassContent(syRender.ShaderType.Sprite,[
-        ],[
-            // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_TEXTURE,syRender.ShaderDefineValue.SY_USE_REMOVE_DEFINE]
-            [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_MORPHTARGETS],
-            [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_MORPHTARGETS_RELATIVE],
-            [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_FUNC_CATCH_FIRE],
-            [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_FUNC_UNPACK_CUSTOM_TONE_MAPPING,syRender.ToneMapping.ACESFilmicToneMapping]
-        ])
-        boxG.spriteFrame = "res/1.jpg";
-        boxG.setPosition(3,8,5);
+
+        boxG.pushPassContent(syRender.ShaderType.ShadowMap, [], [
+            [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_FUNC_PACK]
+        ]);
+
+        boxG.pushPassContent(syRender.ShaderType.Sprite, [], [
+            [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_FUNC_UNPACK],
+
+            [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_NORMAL],
+            [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_MAT],
+            [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_LIGHT_AMBIENT],
+            // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_SPOT],
+            [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_LIGHT_PARALLEL],
+            // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_POINT],
+            // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_SPECULAR],
+            [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_FOG]
+        ]);
+        boxG.spriteFrame = "res/normal/normal/brick_diffuse.jpg";
+        boxG.setPosition(0,8,5);
         this.addChild(boxG);
 
-        // var planeG = new PlaneGeometry(20, 20,100,10);
-        // planeG.pushPassContent(syRender.ShaderType.Test,[
-        // ],[
-        // ])
-        // planeG.setPosition(3,8,5);
-        // this.addChild(planeG);
+
+        var boxG1 = new BoxGeometry(2, 2, 2, 32, 32, 32);
+        boxG1.pushPassContent(syRender.ShaderType.ShadowMap, [], [
+            [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_FUNC_PACK]
+        ]);
+        boxG1.pushPassContent(syRender.ShaderType.Sprite, [], [
+            [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_FUNC_UNPACK],
+            [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_NORMAL],
+            [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_TANGENT],
+            [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_MAT],
+            [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_LIGHT_AMBIENT],
+            // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_SPOT],
+            [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_LIGHT_PARALLEL],
+            // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_POINT],
+            // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_SPECULAR],
+            [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_FOG]
+        ]);
+        boxG1.spriteFrame = "res/normal/normal/brick_diffuse.jpg";
+        boxG1.setBuiltSpriteFrame("res/normal/normal/brick_normal.jpg",syRender.BuiltinTexture.MAP_NORMAL)
+        boxG1.setPosition(-3,8,5);
+        this.addChild(boxG1);
+
+        var planeG = new PlaneGeometry(20, 20,100,10);
+        planeG.pushPassContent(syRender.ShaderType.Test,[
+        ],[
+        ])
+        planeG.setPosition(3,8,5);
+        this.addChild(planeG);
 
         // var wireG = new WireframeGeometry(new PlaneGeometry(5,5,1,1))
         // wireG.pushPassContent(syRender.ShaderType.Sprite,[
@@ -350,13 +390,13 @@ export default class Scene3D extends Scene {
         // var diff = [camera.x,camera.y,camera.z]
         
         G_UISetting.pushRenderCallBack((data)=>{
-            boxG.setMorphTargetInfluences(0,data.customValueZ?data.customValueZ:0)
-            boxG.setMorphTargetInfluences(1,data.customValue?data.customValue:0)
+            // boxG.setMorphTargetInfluences(0,data.customValueZ?data.customValueZ:0)
+            // boxG.setMorphTargetInfluences(1,data.customValue?data.customValue:0)
 
-            this._cubeNode.setPosition(-3, 3.7, data.customValueY?data.customValueY:0)
-            this._cubebumpNode.setPosition(-6, 3.7, data.customValueY?data.customValueY:0);
+            // this._cubeNode.setPosition(-3, 3.7, data.customValueY?data.customValueY:0)
+            // this._cubebumpNode.setPosition(-6, 3.7, data.customValueY?data.customValueY:0);
 
-            this._cubebumpNode.material.bumpScale = data.customValue?data.customValue:1;
+            // this._cubebumpNode.material.bumpScale = data.customValue?data.customValue:1;
             // this._robart.setPosition(data.customValueX,data.customValueY,data.customValueZ)
             // var cg = (data.customValue?-data.customValue:0.1)/10000;
             // this._robart.setScale(cg,cg,cg)

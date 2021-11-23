@@ -40,8 +40,10 @@ export class BoxGeometry extends Geometry {
         this.buildPlane('x', 'z', 'y', 1, - 1, this.width, this.depth, - this.height, this.widthSegments, this.depthSegments, 3); // ny
         this.buildPlane('x', 'y', 'z', 1, - 1, this.width, this.height, this.depth, this.widthSegments, this.heightSegments, 4); // pz
         this.buildPlane('x', 'y', 'z', - 1, - 1, this.width, this.height, - this.depth, this.widthSegments, this.heightSegments, 5); // nz
-
+        
         super.build();
+
+        this.computeTangents();
     }
 
     private buildPlane(u, v, w, udir, vdir, width, height, depth, gridX, gridY, materialIndex) {

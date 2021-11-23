@@ -17,8 +17,8 @@ uniform float u_time;
       out vec2 v_uv;
 #endif
 
-//使用凹凸贴图
-#if defined(SY_USE_MAP_BUMP) || defined(SY_USE_TANGENTSPACE_NORMALMAP_WITHOUT_TBN)
+//使用凹凸贴图,法线贴图
+#if defined(SY_USE_MAP_BUMP) || defined(SY_USE_TANGENTSPACE_NORMALMAP)
      out vec3 v_vmPosition;
 #endif
 
@@ -26,6 +26,12 @@ uniform float u_time;
 #if defined(SY_USE_NORMAL)
     in vec3 a_normal;
     out vec3 v_normal;
+#endif
+
+//切线
+#if defined(SY_USE_TANGENT)
+      in vec3 a_tangent;
+      out vec3 v_tangent;
 #endif
 
 //万能矩阵
@@ -121,7 +127,7 @@ void main(){
     #endif
     
     //凹凸贴图
-    #if defined(SY_USE_MAP_BUMP) || defined(SY_USE_TANGENTSPACE_NORMALMAP_WITHOUT_TBN)
+    #if defined(SY_USE_MAP_BUMP) || defined(SY_USE_TANGENTSPACE_NORMALMAP)
            v_vmPosition=(u_view*worldPosition).xyz;
     #endif
 
@@ -148,6 +154,11 @@ void main(){
         //将法线转换到世界空间坐标系下
         //乘以世界矩阵的逆矩阵的转置矩阵 可以防止物体被放大而带来的法线变形
         v_normal=mat3(u_world_I_T)*a_normal;
+    #endif
+    
+    //切线
+    #if defined(SY_USE_TANGENT)
+        v_tangent = mat3(u_world)*a_tangent.xyz;
     #endif
 
     //三种光

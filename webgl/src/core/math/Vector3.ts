@@ -303,7 +303,7 @@ export class Vector3 {
         }
         return this.crossVectors(this, v);
     }
-    crossVectors(a, b) {
+    crossVectors(a:Vector3, b:Vector3) {
         const ax = a.x, ay = a.y, az = a.z;
         const bx = b.x, by = b.y, bz = b.z;
         this.x = ay * bz - az * by;

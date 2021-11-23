@@ -55,7 +55,7 @@ export abstract class BufferAttribute {
      * @param data 顶点数据（pos,uv,normal,切线，节点颜色，节点矩阵）
      * @param itemSize 一个单元数据有多少个数据组成
      * @param arrbufferType 顶点缓冲的类型
-     * @param itemBytes 存储每一个数据的字节数
+     * @param elementBytes 存储每一个数据的字节数
      * @param preAllocateLen  预先分配的长度 一般默认为0 否则第一次只是在显存中分配内存 后边才会更新和赋值到这块内存区域
      */
     constructor(gl: WebGLRenderingContext, data: Array<number>, itemSize: number, arrbufferType: number, elementBytes: number, preAllocateLen: number) {
@@ -181,6 +181,7 @@ export abstract class BufferAttribute {
     }
     public update(): void {
         if (!this.needsUpdate) return;
+        if(!this._sourceData)return;
         var arr = this.getBytesArray();
         this.gl.bindBuffer(this._arrayBufferType, this.glID);
         this.gl.bufferData(this._arrayBufferType, new arr(this._sourceData), this._usage)
@@ -375,7 +376,7 @@ class BufferManager {
                 itemSize = 3; //(x,y,z)数组中每三个值代表顶点坐标
                 return this.createVertex(attributeId, data, itemSize, preAllocateLen);
             case SY.GLID_TYPE.TANGENT:
-                itemSize = 4;
+                itemSize = 3;
                 return this.createTangent(attributeId, data, itemSize, preAllocateLen);
             case SY.GLID_TYPE.INDEX:
                 itemSize = 1;//(1,2,3,4)数组中每一个值代表一个顶点
@@ -482,7 +483,7 @@ class BufferManager {
     }
     private createTangent(id: string, data: Array<number>, itemSize: number, preAllocateLen: number): VertexsBuffer {
         let buffer = new TangentsBuffer(this._gl, data, itemSize, preAllocateLen);
-        this._mapVertexBuffer.set(id, buffer);
+        this._mapTangentBuffer.set(id, buffer);
         return buffer;
     }
     private createIndex(id: string, data: Array<number>, itemSize: number, preAllocateLen: number): IndexsBuffer {

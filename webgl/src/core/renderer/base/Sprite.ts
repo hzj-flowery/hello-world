@@ -344,7 +344,7 @@ export namespace SY {
                     this.material.normalMap = tex;
                     this.material.normalMapScale = 1.0;
                     this.pushPassContent(syRender.ShaderType.Sprite,[],[
-                        [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_TANGENTSPACE_NORMALMAP_WITHOUT_TBN]
+                        [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_TANGENTSPACE_NORMALMAP]
                     ])
                 }
              }

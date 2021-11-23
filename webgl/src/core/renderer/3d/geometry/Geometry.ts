@@ -8,6 +8,7 @@ import { BufferAttribute, G_BufferManager } from "../../base/buffer/BufferManage
 import { SY } from "../../base/Sprite";
 import { syRender } from "../../data/RenderData";
 import { syGL } from "../../gfx/syGLEnums";
+import { OBJParseHelper } from "../../parse/OBJParseHelper";
 import { Object3D } from "../Object3D";
 const _m1 = /*@__PURE__*/ new Matrix4();
 const _offset = /*@__PURE__*/ new Vector3();
@@ -67,8 +68,6 @@ export class Geometry extends SY.SpriteBase {
 			this.attributes.normals = G_BufferManager.createBuffer(SY.GLID_TYPE.NORMAL, this.attributeId, this.normals, 3)
 		if (this.indices.length > 0)
 			this.attributes.indices = G_BufferManager.createBuffer(SY.GLID_TYPE.INDEX, this.attributeId, this.indices, 1);
-		if (this.tangents.length > 0)
-			this.attributes.tangents = G_BufferManager.createBuffer(SY.GLID_TYPE.TANGENT, this.attributeId, this.tangents, 4)
 	}
 
 	/**
@@ -316,7 +315,7 @@ export class Geometry extends SY.SpriteBase {
 			position: G_BufferManager.getBuffer(SY.GLID_TYPE.VERTEX, this.attributeId),
 			normal: G_BufferManager.getBuffer(SY.GLID_TYPE.NORMAL, this.attributeId),
 			uv: G_BufferManager.getBuffer(SY.GLID_TYPE.UV, this.attributeId),
-			tangent: G_BufferManager.getBuffer(SY.GLID_TYPE.UV, this.attributeId)
+			tangent: G_BufferManager.getBuffer(SY.GLID_TYPE.TANGENT, this.attributeId)
 		};
 		// based on http://www.terathon.com/code/tangent.html
 		// (per vertex tangents)
@@ -333,17 +332,16 @@ export class Geometry extends SY.SpriteBase {
 		const uvs = attributes.uv.sourceData;
 		const nVertices = positions.length / 3;
 		if (!attributes.tangent) {
-			var tempTangents = []
+			this.tangents = []
 			for (let k = 0; k < nVertices; k++) {
-				tempTangents.push(0);
-				tempTangents.push(0);
-				tempTangents.push(0);
-				tempTangents.push(0);
+				this.tangents.push(0);
+				this.tangents.push(0);
+				this.tangents.push(0);
 			}
-			attributes.tangent = G_BufferManager.createBuffer(SY.GLID_TYPE.TANGENT, this.attributeId, tempTangents, 4)
+			attributes.tangent = G_BufferManager.createBuffer(SY.GLID_TYPE.TANGENT, this.attributeId, this.tangents, 3)
 		}
 		const tangents = attributes.tangent.sourceData;
-		const tan1 = [], tan2 = [];
+		const tan1:Array<Vector3> = [], tan2:Array<Vector3> = [];
 		for (let i = 0; i < nVertices; i++) {
 			tan1[i] = new Vector3();
 			tan2[i] = new Vector3();
@@ -356,7 +354,7 @@ export class Geometry extends SY.SpriteBase {
 			uvC = new Vector2(),
 			sdir = new Vector3(),
 			tdir = new Vector3();
-		function handleTriangle(a, b, c) {
+		function handleTriangle(a:number, b:number, c:number) {
 			vA.fromArray(positions, a * 3);
 			vB.fromArray(positions, b * 3);
 			vC.fromArray(positions, c * 3);
@@ -401,7 +399,7 @@ export class Geometry extends SY.SpriteBase {
 		}
 		const tmp = new Vector3(), tmp2 = new Vector3();
 		const n = new Vector3(), n2 = new Vector3();
-		function handleVertex(v) {
+		function handleVertex(v:number) {
 			n.fromArray(normals, v * 3);
 			n2.copy(n);
 			const t = tan1[v];
@@ -412,10 +410,10 @@ export class Geometry extends SY.SpriteBase {
 			tmp2.crossVectors(n2, t);
 			const test = tmp2.dot(tan2[v]);
 			const w = (test < 0.0) ? - 1.0 : 1.0;
-			tangents[v * 4] = tmp.x;
-			tangents[v * 4 + 1] = tmp.y;
-			tangents[v * 4 + 2] = tmp.z;
-			tangents[v * 4 + 3] = w;
+			tangents[v * 3] =tmp.x;
+			tangents[v * 3 + 1] = tmp.y;
+			tangents[v * 3 + 2] = -tmp.z;
+			// tangents[v * 4 + 3] = w;
 		}
 		for (let i = 0, il = groups.length; i < il; ++i) {
 			const group = groups[i];
@@ -427,6 +425,7 @@ export class Geometry extends SY.SpriteBase {
 				handleVertex(indices[j + 2]);
 			}
 		}
+		attributes.tangent.needsUpdate = true;
 	}
 	/**
 	 * 计算顶点法线

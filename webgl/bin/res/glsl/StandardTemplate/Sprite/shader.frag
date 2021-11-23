@@ -24,6 +24,11 @@ layout (location = 0) out vec4 FragColor;   // 颜色
       in vec3 v_normal;
 #endif
 
+#if defined(SY_USE_TANGENT)
+      //世界空间下的切线
+      in vec3 v_tangent;
+#endif
+
 //自发光
 #if defined(SY_USE_EMISSIVE)
     uniform vec4 u_emissive;
@@ -251,7 +256,7 @@ layout (location = 0) out vec4 FragColor;   // 颜色
     }
 #endif
 
-
+//----------------------------------------------------法线贴图---------------------------------------------------------------------
 //凹凸贴图
 #ifdef SY_USE_MAP_BUMP
 	uniform sampler2D u_bumpMap;
@@ -290,44 +295,62 @@ layout (location = 0) out vec4 FragColor;   // 颜色
 		vec3 vGrad = sign( fDet ) * ( dHdxy.x * R1 + dHdxy.y * R2 );
 		return normalize( abs( fDet ) * surf_norm - vGrad );
 	}
-//没有传入tbn数据的切线空间下的法线贴图
-#elif defined(SY_USE_TANGENTSPACE_NORMALMAP_WITHOUT_TBN)
+//切线空间下的法线贴图
+#elif defined(SY_USE_TANGENTSPACE_NORMALMAP)
       //切线空间下的法线贴图  没有传入tbn矩阵 需要自己计算
       uniform sampler2D u_normalMap;
-      //经测试 此值0.02最好
-	uniform float u_normalMapScale;
-      in vec3 v_vmPosition;
-      /*
-      surf_V_M_pos:视口坐标系下的位置
-      surf_norm:法线
-      surf_uv:表面顶点对应的uv
-      */
-      vec3 perturbNormal2Arb( vec3 surf_V_M_pos, vec3 surf_norm, vec2 surf_uv) {
-            
-            vec3 mapN = texture( u_normalMap, surf_uv ).xyz * 2.0 - 1.0;
-	      mapN.xy *= u_normalMapScale;
-
-		// Workaround for Adreno 3XX dFd*( vec3 ) bug. See #9988
-            float faceDirection = gl_FrontFacing ? 1.0 : - 1.0;
-		vec3 q0 = vec3( dFdx( surf_V_M_pos.x ), dFdx( surf_V_M_pos.y ), dFdx( surf_V_M_pos.z ) );
-		vec3 q1 = vec3( dFdy( surf_V_M_pos.x ), dFdy( surf_V_M_pos.y ), dFdy( surf_V_M_pos.z ) );
-		vec2 st0 = dFdx( surf_uv.st );
-		vec2 st1 = dFdy( surf_uv.st );
-            
-            // normalized
-		vec3 N = surf_norm; 
-
-		vec3 q1perp = cross( q1, N );
-		vec3 q0perp = cross( N, q0 );
-		vec3 T = q1perp * st0.x + q0perp * st1.x;
-		vec3 B = q1perp * st0.y + q0perp * st1.y;
-		float det = max( dot( T, T ), dot( B, B ) );
-		float scale = ( det == 0.0 ) ? 0.0 : faceDirection * inversesqrt( det );
-		return normalize( T * ( mapN.x * scale ) + B * ( mapN.y * scale ) + N * mapN.z );
-
-	}
+      #if defined(SY_USE_TANGENT)
+            /*
+            surf_norm:世界空间下的切线
+            surf_norm:世界空间下的法线
+            surf_uv:uv
+            */
+            vec3 perturbNormal3Arb(vec3 surf_tangent,vec3 surf_norm, vec2 surf_uv) {
+                  float faceDirection = gl_FrontFacing ? 1.0 : - 1.0;
+                  //世界空间下的法线
+                  vec3 normal = normalize(surf_norm) * faceDirection;
+                  //世界空间下的切线
+                  vec3 tangent = normalize(surf_tangent) * faceDirection;
+                  //副切线
+                  vec3 bitangent = normalize(cross(normal, tangent));
+                  //创建一个矩阵 切线 副切线 法线
+                  mat3 tbn = mat3(tangent, bitangent, normal);
+                  normal = texture(u_normalMap, surf_uv).rgb * 2. - 1.; 
+                  normal = normalize(tbn * normal);
+                  return normal;
+            } 
+      #else
+            //使用内置的算法求切线
+            //经测试 此值0.02最好
+            uniform float u_normalMapScale;
+            in vec3 v_vmPosition;
+            /*
+            surf_V_M_pos:视口坐标系下的位置
+            surf_norm:法线
+            surf_uv:表面顶点对应的uv
+            */
+            vec3 perturbNormal2Arb( vec3 surf_V_M_pos, vec3 surf_norm, vec2 surf_uv) {
+                  vec3 mapN = texture( u_normalMap, surf_uv ).xyz * 2.0 - 1.0;
+                  mapN.xy *= u_normalMapScale;
+                  // Workaround for Adreno 3XX dFd*( vec3 ) bug. See #9988
+                  float faceDirection = gl_FrontFacing ? 1.0 : - 1.0;
+                  vec3 q0 = vec3( dFdx( surf_V_M_pos.x ), dFdx( surf_V_M_pos.y ), dFdx( surf_V_M_pos.z ) );
+                  vec3 q1 = vec3( dFdy( surf_V_M_pos.x ), dFdy( surf_V_M_pos.y ), dFdy( surf_V_M_pos.z ) );
+                  vec2 st0 = dFdx( surf_uv.st );
+                  vec2 st1 = dFdy( surf_uv.st );
+                  // normalized
+                  vec3 N = surf_norm; 
+                  vec3 q1perp = cross( q1, N );
+                  vec3 q0perp = cross( N, q0 );
+                  vec3 T = q1perp * st0.x + q0perp * st1.x;
+                  vec3 B = q1perp * st0.y + q0perp * st1.y;
+                  float det = max( dot( T, T ), dot( B, B ) );
+                  float scale = ( det == 0.0 ) ? 0.0 : faceDirection * inversesqrt( det );
+                  return normalize( T * ( mapN.x * scale ) + B * ( mapN.y * scale ) + N * mapN.z );
+            }
+      #endif
 #endif
-
+//-----------------------------------------------------------------------------------------------------------------
 
 
 void main(){
@@ -341,8 +364,12 @@ void main(){
       //使用凹凸贴图
       #ifdef SY_USE_MAP_BUMP
              normal = perturbNormalArb(normalize(v_vmPosition),normal,v_uv);
-      #elif defined(SY_USE_TANGENTSPACE_NORMALMAP_WITHOUT_TBN)
-             normal = perturbNormal2Arb(normalize(v_vmPosition),normal,v_uv);
+      #elif defined(SY_USE_TANGENTSPACE_NORMALMAP)
+            #if defined(SY_USE_TANGENT)
+            normal = perturbNormal3Arb(v_tangent,normal,v_uv);
+            #else
+            normal = perturbNormal2Arb(normalize(v_vmPosition),normal,v_uv);
+            #endif
       #endif
 
       //使用点光或者聚光会用到下面的数据

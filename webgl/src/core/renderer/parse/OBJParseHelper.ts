@@ -55,7 +55,7 @@ export namespace OBJParseHelper {
     }
     const subtractVector2 = (a, b) => a.map((v, ndx) => v - b[ndx]);
     //构造切线
-    function generateTangents(position, texcoord, indices?):Array<number> {
+    export function generateTangents(position, texcoord, indices?):Array<number> {
       const getNextIndex = indices ? makeIndexIterator(indices) : makeUnindexedIterator(position);
       const numFaceVerts = getNextIndex.numElements;
       const numFaces = numFaceVerts / 3;
@@ -80,7 +80,7 @@ export namespace OBJParseHelper {
         const duv13 = subtractVector2(uv3, uv1);
   
         const f = 1.0 / (duv12[0] * duv13[1] - duv13[0] * duv12[1]);
-        const tangent = Number.isFinite(f)
+        var tangent = Number.isFinite(f)
           ? glMatrix.vec3.normalize(null,
             glMatrix.mat4.scaleVector(null, glMatrix.mat4.subtractVectors(null, glMatrix.mat4.scaleVector(null, dp12, duv13[1]), glMatrix.mat4.scaleVector(null, dp13, duv12[1]),), f))
           : [1, 0, 0];

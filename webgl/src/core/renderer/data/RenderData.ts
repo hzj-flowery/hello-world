@@ -162,7 +162,8 @@ export namespace syRender {
         SY_USE_TEXTURE: "SY_USE_TEXTURE",          //使用0号纹理单元
         SY_USE_TEXTURE_ONE: "SY_USE_TEXTURE_ONE",          //使用1号纹理单元
         SY_USE_MAP_BUMP: "SY_USE_MAP_BUMP",          //使用凹凸贴图
-        SY_USE_TANGENTSPACE_NORMALMAP_WITHOUT_TBN:"SY_USE_TANGENTSPACE_NORMALMAP_WITHOUT_TBN",//使用法线贴图 该法线位于切线空间下 且没有事先计算tbn矩阵
+        SY_USE_TANGENTSPACE_NORMALMAP:"SY_USE_TANGENTSPACE_NORMALMAP",//使用法线贴图 该法线位于切线空间下 且没有事先计算tbn矩阵
+        SY_USE_TANGENT:"SY_USE_TANGENT",//使用切线
         SY_USE_LIGHT_AMBIENT: "SY_USE_LIGHT_AMBIENT",          //使用环境光
         SY_USE_LIGHT_PARALLEL: "SY_USE_LIGHT_PARALLEL",        //使用平行光
         SY_USE_LIGHT_SPOT: "SY_USE_LIGHT_SPOT",                //使用聚光
