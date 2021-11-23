@@ -59,7 +59,7 @@ var mapTree_u: Map<syGL.AttributeUniform, ShaderUseVariantType> = new Map();
 mapTree_a.set(syGL.AttributeUniform.POSITION,ShaderUseVariantType.POSITION);
 mapTree_a.set(syGL.AttributeUniform.NORMAL,ShaderUseVariantType.NORMAL);
 mapTree_a.set(syGL.AttributeUniform.TEXTURE_COORD0,ShaderUseVariantType.TEXTURE_COORD0);
-mapTree_a.set(syGL.AttributeUniform.TANGENT,ShaderUseVariantType.Tangent);
+mapTree_a.set(syGL.AttributeUniform.TANGENT,ShaderUseVariantType.TANGENT);
 mapTree_a.set(syGL.AttributeUniform.VERT_COLOR,ShaderUseVariantType.VertColor);
 mapTree_a.set(syGL.AttributeUniform.VERT_Matrix,ShaderUseVariantType.VertMatrix);
 

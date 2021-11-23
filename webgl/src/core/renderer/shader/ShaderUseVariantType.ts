@@ -3,7 +3,7 @@ export enum ShaderUseVariantType {
 
     POSITION,  //顶点缓冲
     NORMAL, //法线缓冲
-    Tangent, //切线
+    TANGENT, //切线
     TEXTURE_COORD0,    //uv坐标缓冲
 
     //目前支持同时使用9块纹理单元

@@ -129,8 +129,7 @@ export default class Scene3D extends Scene {
         this._spineNode.y = 10;
         this.addChild(this._spineNode);
 
-        this._objNode = new ObjNode();
-        this.addChild(this._objNode);
+       
 
         this._customTexture = new CustomTextureCube();
         this._customTexture.spriteFrame = CustomTextureData.getRandomData(3, 5, syGL.TextureFormat.RGB8);
@@ -358,6 +357,9 @@ export default class Scene3D extends Scene {
         boxG1.setBuiltSpriteFrame("res/normal/normal/brick_normal.jpg",syRender.BuiltinTexture.MAP_NORMAL)
         boxG1.setPosition(-3,8,5);
         this.addChild(boxG1);
+
+        // this._objNode = new ObjNode();
+        // this.addChild(this._objNode);
 
         var planeG = new PlaneGeometry(20, 20,100,10);
         planeG.pushPassContent(syRender.ShaderType.Test,[

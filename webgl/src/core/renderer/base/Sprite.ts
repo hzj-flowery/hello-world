@@ -440,6 +440,12 @@ export namespace SY {
                 rData.primitive.normal.glID = normalBufferAttribute.glID;
                 rData.primitive.normal.itemSize = normalBufferAttribute.itemSize;
             }
+            //切线组-----------------------------------------------------------------------
+            var tagentBufferAttribute = this.getBuffer(SY.GLID_TYPE.TANGENT);
+            if (tagentBufferAttribute) {
+                rData.primitive.tagent.glID = tagentBufferAttribute.glID;
+                rData.primitive.tagent.itemSize = tagentBufferAttribute.itemSize;
+            }
             //节点自定义顶点颜色组----------------------------------------------------------
             var vertcolorBufferAttribute = this.getBuffer(SY.GLID_TYPE.VERT_COLOR);
             if (vertcolorBufferAttribute) {

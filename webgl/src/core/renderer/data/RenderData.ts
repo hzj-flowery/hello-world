@@ -324,6 +324,7 @@ export namespace syRender {
             this.index = new WebGLBufferData()
             this.uv = new WebGLBufferData()
             this.normal = new WebGLBufferData();
+            this.tagent = new WebGLBufferData();
             this.type = syGL.PrimitiveType.TRIANGLE_STRIP;
             this.customMatrix = glMatrix.mat4.identity(null);
             this.color = new Color(255, 255, 255, 255);
@@ -335,6 +336,7 @@ export namespace syRender {
         public index: WebGLBufferData;//索引buffer
         public uv: WebGLBufferData;//uv buffer
         public normal: WebGLBufferData;//法线buffer
+        public tagent:WebGLBufferData;//切线buffer
 
         public color: Color;//节点自定义颜色
         public emissive: Color;//自发光
@@ -696,6 +698,9 @@ export namespace syRender {
                         break;
                     case ShaderUseVariantType.NORMAL:
                         _shader.setUseVertexAttribPointer(syGL.AttributeUniform.NORMAL, this.primitive.normal.glID, this.primitive.normal.itemSize);
+                        break;
+                    case ShaderUseVariantType.TANGENT:
+                        _shader.setUseVertexAttribPointer(syGL.AttributeUniform.TANGENT, this.primitive.tagent.glID, this.primitive.tagent.itemSize);
                         break;
                     case ShaderUseVariantType.TEXTURE_COORD0:
                         _shader.setUseVertexAttribPointer(syGL.AttributeUniform.TEXTURE_COORD0, this.primitive.uv.glID, this.primitive.uv.itemSize);
