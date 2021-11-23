@@ -10,9 +10,7 @@ uniform mat4 u_projection;
 
 uniform float u_time;
 
-
-//使用纹理
-#if defined(SY_USE_TEXTURE)
+#if defined(SY_USE_UV)
       in vec2 a_texcoord;
       out vec2 v_uv;
 #endif
@@ -144,7 +142,7 @@ void main(){
     //传递-----值到片元着色器
     
     //传递纹理坐标
-    #if defined(SY_USE_TEXTURE)
+    #if defined(SY_USE_UV)
         v_uv=a_texcoord;
     #endif
     

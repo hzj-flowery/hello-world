@@ -322,8 +322,6 @@ export default class Scene3D extends Scene {
 
         boxG.pushPassContent(syRender.ShaderType.Sprite, [], [
             [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_FUNC_UNPACK],
-
-            [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_NORMAL],
             [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_MAT],
             [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_LIGHT_AMBIENT],
             // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_SPOT],
@@ -343,8 +341,6 @@ export default class Scene3D extends Scene {
         ]);
         boxG1.pushPassContent(syRender.ShaderType.Sprite, [], [
             [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_FUNC_UNPACK],
-            [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_NORMAL],
-            [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_TANGENT],
             [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_MAT],
             [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_LIGHT_AMBIENT],
             // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_SPOT],

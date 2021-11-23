@@ -155,6 +155,10 @@ export namespace syRender {
     export const ShaderDefineValue = {
 
         SY_USE_NORMAL: "SY_USE_NORMAL",            //使用法线
+        SY_USE_TANGENT:"SY_USE_TANGENT",//使用切线
+        SY_USE_UV:"SY_USE_UV",//使用切线
+        SY_USE_VERT_COLOR:"SY_USE_VERT_COLOR",//使用顶点颜色
+        SY_USE_VERT_MATRIX:"SY_USE_VERT_MATRIX",//使用顶点矩阵
         SY_USE_MAT: "SY_USE_MAT",                  //万能矩阵
         SY_USE_FLOAT_ARRAY_LENGTH: "SY_USE_FLOAT_ARRAY_LENGTH",//使用float数组 定义其长度 
         SY_USE_ALPHA_TEST: "SY_USE_ALPHA_TEST",    //alpha测试
@@ -163,7 +167,6 @@ export namespace syRender {
         SY_USE_TEXTURE_ONE: "SY_USE_TEXTURE_ONE",          //使用1号纹理单元
         SY_USE_MAP_BUMP: "SY_USE_MAP_BUMP",          //使用凹凸贴图
         SY_USE_TANGENTSPACE_NORMALMAP:"SY_USE_TANGENTSPACE_NORMALMAP",//使用法线贴图 该法线位于切线空间下 且没有事先计算tbn矩阵
-        SY_USE_TANGENT:"SY_USE_TANGENT",//使用切线
         SY_USE_LIGHT_AMBIENT: "SY_USE_LIGHT_AMBIENT",          //使用环境光
         SY_USE_LIGHT_PARALLEL: "SY_USE_LIGHT_PARALLEL",        //使用平行光
         SY_USE_LIGHT_SPOT: "SY_USE_LIGHT_SPOT",                //使用聚光

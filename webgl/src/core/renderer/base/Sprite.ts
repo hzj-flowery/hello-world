@@ -250,11 +250,45 @@ export namespace SY {
         protected get pass() {
             return this._pass;
         }
+
+        private handleBuiltDefine():void{
+			
+		  var builtDefine = G_BufferManager.getBuiltDefine(this.attributeId);
+          if(builtDefine&&builtDefine.length>0&&this._passContent.length>0)
+          {
+            builtDefine.forEach((defineStr,index)=>{
+               for(let k = 0;k<this._passContent.length;k++)
+               {
+                   let content = this._passContent[k];
+                   if(!content.custom)
+                   content.custom = [];
+                   var isExist = false;
+                   content.custom.forEach((value,key) => {
+                       if(value.key==syRender.PassCustomKey.DefineUse&&value.value==defineStr)
+                       isExist = true;
+                   });
+                   if(!isExist)
+                   {
+                       //插入
+                       this._passContent[k].custom.push({ "key": syRender.PassCustomKey.DefineUse, "value": defineStr});
+                   }
+               }
+            })
+            
+          }
+
+
+            
+            
+        }
         /**
          * 处理着色器
          */
         private handleShader() {
             this._pass = []
+
+            //内置宏
+            this.handleBuiltDefine();
             let name = this.name;
             LoaderManager.instance.loadGlsl(name, (res) => {
                 this._pass.push(G_PassFactory.createPass(res[0], res[1], res[2]));
@@ -341,6 +375,7 @@ export namespace SY {
                 }
                 else if(builtTexType==syRender.BuiltinTexture.MAP_NORMAL)
                 {
+                    //法线贴图
                     this.material.normalMap = tex;
                     this.material.normalMapScale = 1.0;
                     this.pushPassContent(syRender.ShaderType.Sprite,[],[
@@ -532,7 +567,6 @@ export namespace SY {
             ], [
                 [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_FUNC_UNPACK],
 
-                [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_NORMAL],
                 [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_MAT],
                 [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_LIGHT_AMBIENT],
                 // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_SPOT],

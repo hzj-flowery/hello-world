@@ -37,6 +37,8 @@ layout (location = 0) out vec4 FragColor;   // 颜色
 //使用纹理0号单元
 #if defined(SY_USE_TEXTURE)
       uniform sampler2D u_texture;
+#endif
+#if defined(SY_USE_UV)
       in vec2 v_uv;
 #endif
 

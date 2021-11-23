@@ -2,6 +2,7 @@ import { Matrix3 } from "../../../math/Matrix3";
 import { Matrix4 } from "../../../math/Matrix4";
 import { Vector2 } from "../../../math/Vector2";
 import { Vector3 } from "../../../math/Vector3";
+import { syRender } from "../../data/RenderData";
 import { syGL } from "../../gfx/syGLEnums";
 import { SY } from "../Sprite";
 /**
@@ -353,6 +354,11 @@ class BufferManager {
     }
     public init(gl: WebGLRenderingContext): void {
         this._gl = gl;
+        this._mapDefine.set(SY.GLID_TYPE.UV,syRender.ShaderDefineValue.SY_USE_UV);
+        this._mapDefine.set(SY.GLID_TYPE.NORMAL,syRender.ShaderDefineValue.SY_USE_NORMAL);
+        this._mapDefine.set(SY.GLID_TYPE.TANGENT,syRender.ShaderDefineValue.SY_USE_TANGENT);
+        this._mapDefine.set(SY.GLID_TYPE.VERT_COLOR,syRender.ShaderDefineValue.SY_USE_VERT_COLOR);
+        this._mapDefine.set(SY.GLID_TYPE.VERT_MATRIX,syRender.ShaderDefineValue.SY_USE_VERT_MATRIX);
     }
     private _gl: WebGLRenderingContext;
     private _mapVertexBuffer: Map<string, VertexsBuffer> = new Map();
@@ -362,6 +368,18 @@ class BufferManager {
     private _mapTangentBuffer: Map<string, TangentsBuffer> = new Map();
     private _mapVertColorBuffer: Map<string, VertColorBuffer> = new Map();
     private _mapVertMatrixBuffer: Map<string, VertMatrixBuffer> = new Map();
+    private _mapDefine:Map<SY.GLID_TYPE,string> = new Map();
+
+    public getBuiltDefine(attributeId:string):Array<string>{
+       var ret = [];
+       this._mapDefine.forEach((value,key)=>{
+            if(this.getBuffer(key,attributeId))
+            {
+                ret.push(value)
+            }
+       })
+       return ret;
+    }
     /**
      * 
      * @param type buffer类型
