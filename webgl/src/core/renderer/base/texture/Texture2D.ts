@@ -85,12 +85,19 @@ export class Texture2D extends Texture{
         options.unpackFlipY = false;
         options.magFilter = syGL.TexFilter.LINEAR;
         options.minFilter = syGL.TexFilter.LINEAR_MIPMAP_LINEAR;
+
+        options.wrapT = syGL.TextureWrap.CLAMP;
+        options.wrapS = syGL.TextureWrap.CLAMP;
+
+        if(this._loadCallBack)
+        this._loadCallBack(image,options);
+
         options.checkValid();
+       
         this.updateOptions(options);
         this.upload();
         
-        if(this._loadCallBack)
-            this._loadCallBack(image);
+        
             this.loaded = true;
        
     }

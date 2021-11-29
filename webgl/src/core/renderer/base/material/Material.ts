@@ -4,6 +4,8 @@ import { Texture } from "../texture/Texture";
  * 材质
  */
 export class Material {
+
+    //------------------贴图
     public bumpMap:Texture;
     public bumpScale:number;
 
@@ -12,7 +14,6 @@ export class Material {
     constructor(){
         this.bumpMap = null;
         this.bumpScale = 1;
-
         this.normalMap = null;
         this.normalMapScale = 1;
     }

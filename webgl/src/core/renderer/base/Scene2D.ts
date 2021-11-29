@@ -43,14 +43,20 @@ export default class Scene2D extends Scene {
         this._pen.spriteFrame = "res/bg_npc_06.png";
         this.addChild(this._pen);
         
-        // var testHttp = new SY.UIImage();
-        // testHttp.setPosition(480,320,-100)
-        // testHttp.pushPassContent(syRender.ShaderType.Test,[],[
-        //     // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_FUNC_MAGNIFIER]
-        // ])
-        // // testHttp.setContentSize(300,500);
-        // testHttp.spriteFrame = "res/shufa.jpg";
-        // this.addChild(testHttp);
+        var testHttp = new SY.UIImage();
+        testHttp.setPosition(480,320,-100)
+        testHttp.pushPassContent(syRender.ShaderType.Sprite,[
+            [syStateStringKey.blend,syStateStringValue.blend.ON],
+            [syStateStringKey.blendSrc,syStateStringValue.blendSrc.SRC_ALPHA],
+            [syStateStringKey.blendDst,syStateStringValue.blendDst.ONE_MINUS_SRC_ALPHA],
+            [syStateStringKey.depthWrite,syStateStringValue.depthWrite.OFF]
+        ],[
+            // [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_ALPHA_TEST, 0.1]
+        ])
+        testHttp.alpha = 0.99;
+        testHttp.spriteFrame = "res/grass.png";
+        testHttp.sizeMode = SY.SpriteSizeMode.RAW;
+        this.addChild(testHttp);
 
         // this._uvSprite = new SY.Sprite2D();
         // this._uvSprite.pushPassContent(syRender.ShaderType.UvSprite,[],[
