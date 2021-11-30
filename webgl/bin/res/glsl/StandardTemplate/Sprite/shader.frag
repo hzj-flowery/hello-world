@@ -13,6 +13,12 @@ uniform vec4 u_mouse;
 
 layout (location = 0) out vec4 FragColor;   // 颜色
 
+
+#ifndef saturate
+// <tonemapping_pars_fragment> may have defined saturate() already
+#define saturate( a ) clamp( a, 0.0, 1.0 )
+#endif
+
 //传递数组        
 #ifdef SY_USE_FLOAT_ARRAY_LENGTH
        if(SY_USE_FLOAT_ARRAY_LENGTH>0)
@@ -55,30 +61,54 @@ layout (location = 0) out vec4 FragColor;   // 颜色
 #endif
 
 //平行光
-#ifdef SY_USE_LIGHT_PARALLEL
-      //光的方向
-      uniform vec3 u_parallelDirection;
-      //平行光
-      uniform vec4 u_parallel;
+#ifdef SY_USE_LIGHT_PARALLEL_NUM
+      struct DirLight {
+            vec3 direction;
+            vec3 ambient;
+            vec3 diffuse;
+            vec3 specular;
+      };  
+      uniform DirLight u_dirLights[SY_USE_LIGHT_PARALLEL_NUM];
       /*
-      获取平行光的光照强度
+      计算平行光
       */
-      float getParallelLightDot(vec3 normal,vec3 lightDirection){
-            float lightDot=clamp(dot(normal,lightDirection),0.,1.);
-            return lightDot;
+      vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir,float mShininess,vec2 TexCoords,sampler2D mapDiffuse,sampler2D mapSpecular)
+      {
+            vec3 lightDir = normalize(-light.direction);
+            // 计算漫反射强度
+            float diff = max(dot(normal, lightDir), 0.0);
+            // 计算镜面反射强度
+            vec3 reflectDir = reflect(-lightDir, normal);
+            float spec = pow(max(dot(viewDir, reflectDir), 0.0), mShininess);
+            // 合并各个光照分量
+            vec3 ambient  = light.ambient  * vec3(texture(mapDiffuse, TexCoords));
+            vec3 diffuse  = light.diffuse  * diff * vec3(texture(mapDiffuse, TexCoords));
+            vec3 specular = light.specular * spec * vec3(texture(mapSpecular, TexCoords));
+            return (ambient + diffuse + specular);
       }
+      /*
+      计算平行光
+      */
+      vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir,float mShininess,vec3 cDiffuse,vec3 cSpecular)
+      {
+            //确定此值是否取反
+            vec3 lightDir = normalize(light.direction);
+            // 计算漫反射强度
+            float diff = max(dot(normal, lightDir), 0.0);
+            // 计算镜面反射强度
+            vec3 reflectDir = reflect(-lightDir, normal);
+            float spec = pow(max(dot(viewDir, reflectDir), 0.0), mShininess);
+            // 合并各个光照分量
+            vec3 ambient  = light.ambient  * cDiffuse;
+            vec3 diffuse  = light.diffuse  * diff * cDiffuse;
+            vec3 specular = light.specular * spec * cSpecular;
+            return (ambient + diffuse + specular);
+      } 
+
 #endif
 
 //聚光
-#ifdef SY_USE_LIGHT_SPOT
-      //聚光的颜色
-      uniform vec4 u_spot;
-      //聚光的方向
-      uniform vec3 u_spotCenterDirection;
-      //聚光的内部限制
-      uniform float u_spotInnerLimit;
-      //聚光的外部限制
-      uniform float u_spotOuterLimit;
+#ifdef SY_USE_LIGHT_SPOT_NUM
       /*
       获取聚光灯的光照强度
       @param normal 法线
@@ -94,19 +124,146 @@ layout (location = 0) out vec4 FragColor;   // 颜色
             float light=inLight*max(dot(normal,surfaceToLightDirection),0.);
             return light;
       }
+      struct SpotLight {
+             //聚光的内部限制
+            float innerLimit;
+            //聚光的外部限制
+            float outerLimit;
+            //聚光灯的中间方向
+            vec3 direction;
+            //光的位置
+            vec3 position;
+            //0.5 此值越小 越亮
+            float constant;
+            //0.09
+            float linear;
+            //0.032
+            float quadratic;
+              
+            vec3 ambient;
+            vec3 diffuse;
+            vec3 specular;
+      };  
+      uniform SpotLight u_spotLights[SY_USE_LIGHT_SPOT_NUM];
+      /*
+        PointLight light:光的信息
+        vec3 normal:世界法线
+        vec3 fragPos:片元在世界空间下的位置
+        vec3 surfaceToView: 片元位置指向相机位置
+        float mShininess：高光强度
+        vec3 cDiffuse:漫反射颜色
+        vec3 cSpecular：高光颜色
+      */
+      vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 surfaceToView,float mShininess,vec3 cDiffuse,vec3 cSpecular)
+      {
+            vec3 lightDir = normalize(light.position - fragPos);
+
+            float dotFromDirection=dot(lightDir,normalize(light.direction));
+            float inLight=smoothstep(light.outerLimit,light.innerLimit,dotFromDirection);
+            //算出点光的入射强度
+            float dotLight=inLight*max(dot(normal,lightDir),0.);
+
+            vec3 viewDir = normalize(surfaceToView);
+            // 计算漫反射强度
+            float diff = max(dot(normal, lightDir), 0.0);
+            // 计算镜面反射
+            vec3 reflectDir = reflect(-lightDir, normal);
+            float spec = pow(max(dot(viewDir, reflectDir), 0.0), mShininess);
+            // 计算衰减
+            float dis    = length(light.position - fragPos);
+            float attenuation = 1.0f / (light.constant + light.linear * dis + light.quadratic * (dis * dis));
+            // 将各个分量合并
+            vec3 ambient  = light.ambient  * cDiffuse;
+            vec3 diffuse  = light.diffuse  * diff * cDiffuse;
+            vec3 specular = light.specular * spec * cSpecular;
+            ambient  *= attenuation;
+            diffuse  *= attenuation;
+            specular *= attenuation;
+            return (ambient + diffuse + specular)*dotLight;
+      }
 #endif
 
-#ifdef SY_USE_LIGHT_POINT
-      //点光入射光的颜色
-      uniform vec4 u_point;
+#ifdef SY_USE_LIGHT_POINT_NUM
+      struct PointLight {
+            //光的位置
+            vec3 position;
+            //0.5 此值越小 越亮
+            float constant;
+            //0.09
+            float linear;
+            //0.032
+            float quadratic;
+
+            vec3 ambient;
+            vec3 diffuse;
+            vec3 specular;
+      };  
+      uniform PointLight u_pointLights[SY_USE_LIGHT_POINT_NUM];
+      // 计算定点光在确定位置的光照颜色
+      /*
+        PointLight light:光的信息
+        vec3 normal:世界法线
+        vec3 fragPos：片元位置
+        vec3 viewDir:视线方向
+        vec2 TexCoords：uv坐标
+        float mShininess：高光强度
+        sampler2D mapDiffuse：漫反射贴图
+        sampler2D mapSpecular：高光贴图
+      */
+      vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir,vec2 TexCoords,float mShininess,sampler2D mapDiffuse,sampler2D mapSpecular)
+      {
+            vec3 lightDir = normalize(light.position - fragPos);
+            // 计算漫反射强度
+            float diff = max(dot(normal, lightDir), 0.0);
+            // 计算镜面反射
+            vec3 reflectDir = reflect(-lightDir, normal);
+            float spec = pow(max(dot(viewDir, reflectDir), 0.0), mShininess);
+            // 计算衰减
+            float dis    = length(light.position - fragPos);
+            float attenuation = 1.0f / (light.constant + light.linear * dis + light.quadratic * (dis * dis));
+            // 将各个分量合并
+            vec3 ambient  = light.ambient  * vec3(texture(mapDiffuse, TexCoords));
+            vec3 diffuse  = light.diffuse  * diff * vec3(texture(mapDiffuse, TexCoords));
+            vec3 specular = light.specular * spec * vec3(texture(mapSpecular, TexCoords));
+            ambient  *= attenuation;
+            diffuse  *= attenuation;
+            specular *= attenuation;
+            return (ambient + diffuse + specular);
+      }
+      /*
+        PointLight light:光的信息
+        vec3 normal:世界法线
+        vec3 fragPos:片元在世界空间下的位置
+        vec3 surfaceToView: 片元位置指向相机位置
+        float mShininess：高光强度
+        vec3 cDiffuse:漫反射颜色
+        vec3 cSpecular：高光颜色
+      */
+      vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 surfaceToView,float mShininess,vec3 cDiffuse,vec3 cSpecular)
+      {
+            vec3 lightDir = normalize(light.position - fragPos);
+            vec3 viewDir = normalize(surfaceToView);
+            // 计算漫反射强度
+            float diff = max(dot(normal, lightDir), 0.0);
+            // 计算镜面反射
+            vec3 reflectDir = reflect(-lightDir, normal);
+            float spec = pow(max(dot(viewDir, reflectDir), 0.0), mShininess);
+            // 计算衰减
+            float dis    = length(light.position - fragPos);
+            float attenuation = 1.0f / (light.constant + light.linear * dis + light.quadratic * (dis * dis));
+            // 将各个分量合并
+            vec3 ambient  = light.ambient  * cDiffuse;
+            vec3 diffuse  = light.diffuse  * diff * cDiffuse;
+            vec3 specular = light.specular * spec * cSpecular;
+            ambient  *= attenuation;
+            diffuse  *= attenuation;
+            specular *= attenuation;
+            return (ambient + diffuse + specular);
+      }
 #endif
 
 //高光
 #ifdef SY_USE_LIGHT_SPECULAR
-      //高光入射光颜色
-      uniform vec4 u_specular;
-      uniform float u_specular_shininess;
-    
     //普通高光
     /*
     @param normal 法线
@@ -164,11 +321,13 @@ layout (location = 0) out vec4 FragColor;   // 颜色
 #endif
 
 //使用点光或者聚光会用到下面的数据
-#if defined(SY_USE_LIGHT_SPOT)||defined(SY_USE_LIGHT_POINT)||defined(SY_USE_LIGHT_SPECULAR)
+#if defined(SY_USE_LIGHT_SPOT_NUM)||defined(SY_USE_LIGHT_POINT_NUM)||defined(SY_USE_LIGHT_PARALLEL_NUM)
       //顶点到光的方向
       in vec3 v_surfaceToLight;
       //顶点到相机的方向
       in vec3 v_surfaceToView;
+      //顶点在世界空间下的位置
+      in vec3 v_surfacePosition;
 #endif
 
 //阴影
@@ -376,7 +535,7 @@ void main(){
       #endif
 
       //使用点光或者聚光会用到下面的数据
-      #if defined(SY_USE_LIGHT_SPOT)||defined(SY_USE_LIGHT_POINT)||defined(SY_USE_LIGHT_SPECULAR)
+      #if defined(SY_USE_LIGHT_SPOT_NUM)||defined(SY_USE_LIGHT_POINT_NUM)||defined(SY_USE_LIGHT_PARALLEL_NUM)
           //顶点着色器传到片元着色器的方向会有插值，所以需要归一化
           //表面指向光位置的方向
           vec3 surfaceToLightDirection = normalize(v_surfaceToLight);
@@ -419,42 +578,17 @@ void main(){
       vec3 diffuse = surfaceBaseColor.rgb;
        
       //------------------------开始基于一组光照计算
-      //光的入射强度
-      float lightDot = 0.0;
       //使用点光 
-      #ifdef SY_USE_LIGHT_POINT
-            //算出点光的入射强度
-            lightDot = max(dot(normal, surfaceToLightDirection),0.0);
-            //漫反射光  表面基底色 *入射光颜色* 光照强度 
-            diffuse = diffuse*u_point.rgb*lightDot;
+      #ifdef SY_USE_LIGHT_POINT_NUM
+            diffuse = CalcPointLight(u_pointLights[0],normal,v_surfacePosition,normalize(v_surfaceToView),32.0,diffuse,vec3(1.0,1.0,1.0));
       //使用平行光
-      #elif defined(SY_USE_LIGHT_PARALLEL)
-            //顶点着色器传到片元着色器的方向会有插值，所以需要归一化
-            vec3 parallelDirection=normalize(u_parallelDirection);
-            //算出平行光强度
-            lightDot=getParallelLightDot(normal,parallelDirection);
-            //漫反射光  表面基底色 *入射光颜色* 光照强度
-            diffuse = diffuse * u_parallel.rgb * lightDot;
+      #elif defined(SY_USE_LIGHT_PARALLEL_NUM)
+            diffuse = CalcDirLight(u_dirLights[0],normal,normalize(v_surfaceToView),32.0,diffuse,vec3(1.0,1.0,1.0));
       //使用聚光
-      #elif defined(SY_USE_LIGHT_SPOT)
-            //顶点着色器传到片元着色器的方向会有插值，所以需要归一化
-            vec3 spotDirection=normalize(u_spotCenterDirection);
-            //算出聚光强度
-            lightDot=getSpotLightDot(normal,spotDirection,surfaceToLightDirection,u_spotInnerLimit,u_spotOuterLimit);
-            //漫反射光  表面基底色 *入射光颜色* 光照强度
-            diffuse = diffuse*u_spot.rgb * lightDot;
+      #elif defined(SY_USE_LIGHT_SPOT_NUM)
+            diffuse = CalcSpotLight(u_spotLights[0],normal,v_surfacePosition,normalize(v_surfaceToView),32.0,diffuse,vec3(1.0,1.0,1.0));
       #endif
       //-------------------------------------光照计算结束---------------------
-      
-      //使用高光
-      #ifdef SY_USE_LIGHT_SPECULAR
-            if (lightDot > 0.0)
-            {
-                  vec3 specular = getSpecular(normal,u_specular,u_specular_shininess,surfaceToLightDirection,surfaceToViewDirection);
-                  //累加到片元颜色中
-                  fragColor.rgb = fragColor.rgb+specular;
-            }
-      #endif
       
       //使用阴影
       #ifdef SY_USE_SHADOW_PARALLEL

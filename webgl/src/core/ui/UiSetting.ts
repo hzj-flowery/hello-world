@@ -133,13 +133,13 @@ class UISetting {
         ]
         let light = [
             //平行光
-            // { type: 'slider', key: 'parallelDirX', min: -10, max: 10, change: this.render.bind(this), precision: 2, step: 1, },
-            // { type: 'slider', key: 'parallelDirY', min: -10, max: 10, change: this.render.bind(this), precision: 2, step: 1, },
-            // { type: 'slider', key: 'parallelDirZ', min: -10, max: 10, change: this.render.bind(this), precision: 2, step: 1, },
-            // { type: 'slider', key: 'parallelColR', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
-            // { type: 'slider', key: 'parallelColG', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
-            // { type: 'slider', key: 'parallelColB', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
-            // { type: 'slider', key: 'parallelColA', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            { type: 'slider', key: 'parallelDirX', min: -10, max: 10, change: this.render.bind(this), precision: 2, step: 1, },
+            { type: 'slider', key: 'parallelDirY', min: -10, max: 10, change: this.render.bind(this), precision: 2, step: 1, },
+            { type: 'slider', key: 'parallelDirZ', min: -10, max: 10, change: this.render.bind(this), precision: 2, step: 1, },
+            { type: 'slider', key: 'parallelColR', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            { type: 'slider', key: 'parallelColG', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            { type: 'slider', key: 'parallelColB', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            { type: 'slider', key: 'parallelColA', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
             
             //聚光
             // { type: 'slider', key: 'spotInnerLimit', min: 0, max: 180, change: this.render.bind(this), precision: 2, step: 1, },
@@ -179,9 +179,9 @@ class UISetting {
             // { type: 'slider', key: 'fogDensity', min: 0, max: 0.1, change: this.render.bind(this), precision: 3, step: 0.001, },
             
             
-            { type: 'slider', key: 'eyeX', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
-            { type: 'slider', key: 'eyeY', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
-            { type: 'slider', key: 'eyeZ', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
+            { type: 'slider', key: 'eyeX', min: -500, max: 500, change: this.render.bind(this), precision: 2, step: 1, },
+            { type: 'slider', key: 'eyeY', min: -500, max: 500, change: this.render.bind(this), precision: 2, step: 1, },
+            { type: 'slider', key: 'eyeZ', min: -500, max: 500, change: this.render.bind(this), precision: 2, step: 1, },
             { type: 'slider', key: 'lightTargetX', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
             { type: 'slider', key: 'lightTargetY', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
             { type: 'slider', key: 'lightTargetZ', min: -50, max: 50, change: this.render.bind(this), precision: 2, step: 0.01, },
@@ -198,7 +198,7 @@ class UISetting {
             { type: 'checkbox', key: 'ahead', min: 0, max: 1, change: this.render.bind(this, "ahead") },
             { type: 'checkbox', key: 'back', min: 0, max: 1, change: this.render.bind(this, "back") }
         ]
-        this.widgets = this.UI.setupUI(document.querySelector('#ui'), UIStatusData, [].concat(custom,light));
+        this.widgets = this.UI.setupUI(document.querySelector('#ui'), UIStatusData, [].concat(light));
         this.render();
     }
 

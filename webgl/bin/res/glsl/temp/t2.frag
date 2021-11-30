@@ -17,7 +17,7 @@ struct PointLight {
 	float line;
 	float quad;
 };
-uniform PointLight pointLights[10];
+uniform PointLight u_pointLights[10];
 
 struct SpotLight { 
 	vec3 position; 
@@ -38,9 +38,9 @@ out vec4 FragColor;
 vec3 getPointLights(vec3 fragPos, vec3 normal, vec3 color, vec3 viewDir) {
 	vec3 ret = vec3(0.0);
 	for(int i = 0; i < 10; i++) {
-		vec3 lightPos = pointLights[i].position;
-		vec3 lightColor = pointLights[i].color;
-		float lightShininess = pointLights[i].shininess;
+		vec3 lightPos = u_pointLights[i].position;
+		vec3 lightColor = u_pointLights[i].color;
+		float lightShininess = u_pointLights[i].shininess;
 
 		vec3 lightDir = normalize(lightPos - fragPos);
 		float cosTheta = max(dot(lightDir, normal), 0.0);
@@ -51,7 +51,7 @@ vec3 getPointLights(vec3 fragPos, vec3 normal, vec3 color, vec3 viewDir) {
 		vec3 specular = lightColor * specularIntensity;
 		// \u5149\u5F3A\u8870\u51CF
 		float dis = distance(lightPos, fragPos);
-		float att = 1.0 / (1.0 + pointLights[i].line * dis + pointLights[i].quad * (dis * dis));
+		float att = 1.0 / (1.0 + u_pointLights[i].line * dis + u_pointLights[i].quad * (dis * dis));
 
 		ret += (diffuse + specular) * att;
 	}

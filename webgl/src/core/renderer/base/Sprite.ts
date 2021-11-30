@@ -568,11 +568,11 @@ export namespace SY {
 
                 [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_MAT],
                 [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_LIGHT_AMBIENT],
-                // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_SPOT],
-                [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_LIGHT_PARALLEL],
-                // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_POINT],
+                // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_SPOT_NUM,1],
+                [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_LIGHT_PARALLEL_NUM,1],
+                // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_POINT_NUM,1],
                 // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_SPECULAR],
-                [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_FOG]
+                // [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_FOG]
             ]);
         }
         protected collectRenderData(time: number) {
@@ -730,7 +730,7 @@ export namespace SY {
         /**
         * 加载纹理之后调用
         */
-        public onTextureLoaded(image: HTMLImageElement): void {
+        public onTextureLoaded(image: HTMLImageElement,options:TextureOpts): void {
             if (image) {
                 if (this._sizeMode == SpriteSizeMode.RAW) {
                     this.setContentSize(image.width, image.height);

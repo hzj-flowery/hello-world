@@ -63,21 +63,21 @@ gl.MIRRORED_REPEAT: 镜像对称的重复纹理
 gl.CLAMP_TO_EDGE: 使用纹理图像边缘值
 */
 
-export class Texture2D extends Texture{
-    constructor(){
+export class Texture2D extends Texture {
+    constructor() {
         super();
         this._target = this._gl.TEXTURE_2D;
     }
-    private _url:string;
-    private _loadCallBack:any;
-    public set url(soucePath){
+    private _url: string;
+    private _loadCallBack: any;
+    public set url(soucePath) {
         this._url = soucePath;
-        LoaderManager.instance.load(this._url,null,this.onLoadFinish.bind(this));
+        LoaderManager.instance.load(this._url, null, this.onLoadFinish.bind(this));
     }
-    public get url(){
+    public get url() {
         return this._url;
     }
-    private onLoadFinish(image:HTMLImageElement):void{
+    private onLoadFinish(image: HTMLImageElement): void {
         var options = new TextureOpts();
         options.data = image;
         options.width = image.width;
@@ -89,19 +89,19 @@ export class Texture2D extends Texture{
         options.wrapT = syGL.TextureWrap.CLAMP;
         options.wrapS = syGL.TextureWrap.CLAMP;
 
-        if(this._loadCallBack)
-        this._loadCallBack(image,options);
+        if (this._loadCallBack)
+            this._loadCallBack(image, options);
 
         options.checkValid();
-       
+
         this.updateOptions(options);
         this.upload();
-        
-        
-            this.loaded = true;
-       
+
+
+        this.loaded = true;
+
     }
-    public set textureOnLoad(cb:any){
+    public set textureOnLoad(cb: any) {
         this._loadCallBack = cb;
     }
 

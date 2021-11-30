@@ -5,12 +5,14 @@ import { glMatrix } from "../../math/Matrix";
 import { MathUtils } from "../../utils/MathUtils";
 import { Color } from "../../value-types/color";
 import Vec3 from "../../value-types/vec3";
+import { G_DrawEngine } from "../base/DrawEngine";
 import { Node } from "../base/Node";
 import { SY } from "../base/Sprite";
 import { GameMainCamera } from "../camera/GameMainCamera";
 import { glEnums } from "../gfx/GLapi";
 import { State, syStateStringKey, syStateStringValue } from "../gfx/State";
 import { syGL } from "../gfx/syGLEnums";
+import { G_LightCenter } from "../light/LightCenter";
 import { IGeometry } from "../primitive/define";
 import { Pass } from "../shader/Pass";
 import { BufferAttribsData, ShaderProgramBase, ShaderProgram } from "../shader/Shader";
@@ -169,9 +171,9 @@ export namespace syRender {
         SY_USE_TANGENTSPACE_NORMALMAP:"SY_USE_TANGENTSPACE_NORMALMAP",//使用法线贴图 该法线位于切线空间下
         SY_USE_CLEARCOAT_NORMALMAP:"SY_USE_CLEARCOAT_NORMALMAP", //透明涂层双法线
         SY_USE_LIGHT_AMBIENT: "SY_USE_LIGHT_AMBIENT",          //使用环境光
-        SY_USE_LIGHT_PARALLEL: "SY_USE_LIGHT_PARALLEL",        //使用平行光
-        SY_USE_LIGHT_SPOT: "SY_USE_LIGHT_SPOT",                //使用聚光
-        SY_USE_LIGHT_POINT: "SY_USE_LIGHT_POINT",              //使用点光
+        SY_USE_LIGHT_PARALLEL_NUM: "SY_USE_LIGHT_PARALLEL_NUM",        //使用平行光
+        SY_USE_LIGHT_SPOT_NUM: "SY_USE_LIGHT_SPOT_NUM",                //使用聚光
+        SY_USE_LIGHT_POINT_NUM: "SY_USE_LIGHT_POINT_NUM",              //使用点光
         SY_USE_LIGHT_SPECULAR: "SY_USE_LIGHT_SPECULAR",        //使用高光
         SY_USE_SHADOW_PARALLEL: "SY_USE_SHADOW_PARALLEL",      //使用平行光阴影
         SY_USE_FOG: "SY_USE_FOG",                              //使用雾
@@ -423,6 +425,21 @@ export namespace syRender {
             public get outerLimit(): number {
                 return Math.cos(MathUtils.degToRad(this._outerLimitAngle));
             }
+            static structNames =  {
+                innerLimit:"innerLimit",
+                outerLimit:"outerLimit",
+                direction:"direction",
+                position:"position",
+                ambient:"ambient",
+                diffuse:"diffuse",
+                specular:"specular",
+                constant:"constant",
+                linear:"linear",
+                quadratic:"quadratic",
+            }
+            public static getPreStructName(pointNum){
+                return "u_spotLights[" + pointNum + "].";
+            }
         }
         export class Fog extends BaseData {
             constructor() {
@@ -439,7 +456,17 @@ export namespace syRender {
         export class Parallel extends BaseData {
             constructor() {
                 super()
-                this.reset()
+                this.reset();
+               
+            }
+            static structNames = {
+                direction:"direction",
+                ambient:"ambient",
+                diffuse:"diffuse",
+                specular:"specular",
+            }
+            public static getPreStructName(lightNum){
+                return "u_dirLights[" + lightNum + "].";
             }
         }
         //聚光灯
@@ -467,7 +494,20 @@ export namespace syRender {
         export class Point extends BaseData {
             constructor() {
                 super()
-                this.reset()
+                this.reset();
+               
+            }
+            static structNames =  {
+                position:"position",
+                ambient:"ambient",
+                diffuse:"diffuse",
+                specular:"specular",
+                constant:"constant",
+                linear:"linear",
+                quadratic:"quadratic",
+            }
+            public static getPreStructName(pointNum){
+                return "u_pointLights[" + pointNum + "].";
             }
         }
         //幻境光
@@ -885,7 +925,90 @@ export namespace syRender {
         public bindGPUBufferData(view, proj, shader: ShaderProgramBase): void {
             //激活shader
             shader.active();
+            this.handleLight(shader.getGLID());
             this.updateShaderVariant(view, proj, shader);
+        }
+        
+        /**
+         * 处理光照
+         */
+        private handleLight(glID:WebGLProgram):void{
+            
+            var structNames: Map<string, any> = new Map();
+            
+            //平行光
+            var dirNum = 0;
+            var preName = Light.Parallel.getPreStructName(dirNum);
+            structNames.clear();
+            structNames.set(Light.Parallel.structNames.direction, this.light.parallel.direction.toArray())
+            structNames.set(Light.Parallel.structNames.ambient, [0.05, 0.05, 0.05])
+            structNames.set(Light.Parallel.structNames.diffuse, this.light.parallel.color.toArray())
+            structNames.set(Light.Parallel.structNames.specular, [1.0, 1.0, 1.0])
+            structNames.forEach((value, index) => {
+                var name = preName + index
+                var loc = G_DrawEngine.getUniformLocation(glID, name);
+                if (loc!=null) {
+                    if (value instanceof Array) {
+                        G_DrawEngine.setUniformFloatVec3(loc as number, value);
+                    }
+                    else {
+                        G_DrawEngine.setUniform1f(loc as number, value);
+                    }
+                }
+            })
+
+            //点光
+            var pointNum = 0;
+            var preName = Light.Point.getPreStructName(pointNum);
+            structNames.clear();
+            structNames.set(Light.Point.structNames.position, this.light.point.position.toArray())
+            structNames.set(Light.Point.structNames.ambient, [0.05, 0.05, 0.05])
+            structNames.set(Light.Point.structNames.diffuse, [0.0, 0.9, 0.0])
+            structNames.set(Light.Point.structNames.specular, [1.0, 1.0, 1.0])
+            structNames.set(Light.Point.structNames.constant, 0.5)
+            structNames.set(Light.Point.structNames.linear, 0.09)
+            structNames.set(Light.Point.structNames.quadratic, 0.032)
+            structNames.forEach((value, index) => {
+                var name = preName + index
+                var loc = G_DrawEngine.getUniformLocation(glID, name);
+                if (loc!=null) {
+                    if (value instanceof Array) {
+                        G_DrawEngine.setUniformFloatVec3(loc as number, value);
+                    }
+                    else {
+                        G_DrawEngine.setUniform1f(loc as number, value);
+                    }
+                }
+            })
+
+            //聚光
+            structNames.clear();
+            var spotNum = 0;
+            var preName = Light.Spot.getPreStructName(spotNum);
+            structNames.clear();
+            structNames.set(Light.Spot.structNames.innerLimit, this.light.spot.innerLimit)
+            structNames.set(Light.Spot.structNames.outerLimit, this.light.spot.outerLimit)
+            structNames.set(Light.Spot.structNames.direction, this.light.spot.direction.toArray())
+            structNames.set(Light.Spot.structNames.position, this.light.spot.position.toArray())
+            structNames.set(Light.Spot.structNames.ambient, [0.05, 0.05, 0.05])
+            structNames.set(Light.Spot.structNames.diffuse, this.light.spot.color.toArray())
+            structNames.set(Light.Spot.structNames.specular, [1.0, 1.0, 1.0])
+            structNames.set(Light.Spot.structNames.constant, 0.05)
+            structNames.set(Light.Spot.structNames.linear, 0.09)
+            structNames.set(Light.Spot.structNames.quadratic, 0.032)
+            structNames.forEach((value, index) => {
+                var name = preName + index
+                var loc = G_DrawEngine.getUniformLocation(glID, name);
+                if (loc!=null) {
+                    if (value instanceof Array) {
+                        G_DrawEngine.setUniformFloatVec3(loc as number, value);
+                    }
+                    else {
+                        G_DrawEngine.setUniform1f(loc as number, value);
+                    }
+                }
+            })
+
         }
     }
 

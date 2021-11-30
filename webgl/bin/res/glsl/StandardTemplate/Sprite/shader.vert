@@ -38,7 +38,7 @@ uniform float u_time;
 #endif
 
 //使用点光或者聚光会用到下面的数据
-#if defined(SY_USE_LIGHT_SPOT)||defined(SY_USE_LIGHT_POINT)||defined(SY_USE_LIGHT_SPECULAR)
+#if defined(SY_USE_LIGHT_SPOT_NUM)||defined(SY_USE_LIGHT_POINT_NUM)||defined(SY_USE_LIGHT_PARALLEL_NUM)
     //光的位置
     uniform vec3 u_lightWorldPosition;
     //相机的位置
@@ -47,6 +47,8 @@ uniform float u_time;
     out vec3 v_surfaceToLight;
     //顶点到相机的方向
     out vec3 v_surfaceToView;
+    //顶点世界位置
+    out vec3 v_surfacePosition;
 #endif
 
 //使用阴影会用到投影纹理的uv
@@ -160,11 +162,12 @@ void main(){
     #endif
 
     //三种光
-    //聚光 点光 高光
-    #if defined(SY_USE_LIGHT_SPOT)||defined(SY_USE_LIGHT_POINT)||defined(SY_USE_LIGHT_SPECULAR)
+    //聚光 点光 平行光
+    #if defined(SY_USE_LIGHT_SPOT_NUM)||defined(SY_USE_LIGHT_POINT_NUM)||defined(SY_USE_LIGHT_PARALLEL_NUM)
         //将当前顶点的坐标转换到世界空间坐标系中
         v_surfaceToLight=u_lightWorldPosition-worldPosition.rgb;
         v_surfaceToView=u_cameraWorldPosition-worldPosition.rgb;
+        v_surfacePosition = worldPosition.rgb;
     #endif
 
     //阴影

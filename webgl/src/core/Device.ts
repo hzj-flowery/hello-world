@@ -1003,14 +1003,18 @@ export default class Device {
         rData._cameraPosition.set(cData.position);
         rData.light.ambient.color.set(G_LightCenter.lightData.ambient.color);//环境光
         rData.light.point.color.set(G_LightCenter.lightData.point.color);//点光
+        rData.light.point.position.set(G_LightCenter.lightData.position)
         rData.light.specular.shininess = G_LightCenter.lightData.specular.shininess;
         rData.light.specular.color.set(G_LightCenter.lightData.specular.color);
         rData.light.position.set(G_LightCenter.lightData.position);
+
+        
 
         rData.light.spot.direction.set(G_LightCenter.lightData.spot.direction);
         rData.light.spot.color.set(G_LightCenter.lightData.spot.color);
         rData.light.spot.innerLimitAngle = G_LightCenter.lightData.spot.innerLimitAngle;
         rData.light.spot.outerLimitAngle = G_LightCenter.lightData.spot.outerLimitAngle;
+        rData.light.spot.position.set(G_LightCenter.lightData.position)
 
         rData.light.fog.color.set(G_LightCenter.lightData.fog.color);
         rData.light.fog.density = G_LightCenter.lightData.fog.density;

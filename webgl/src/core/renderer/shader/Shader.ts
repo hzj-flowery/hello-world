@@ -2,6 +2,7 @@
 import { G_DrawEngine } from "../base/DrawEngine";
 import { syRender } from "../data/RenderData";
 import { syGL } from "../gfx/syGLEnums";
+import { G_LightCenter } from "../light/LightCenter";
 import { ShaderUseVariantType } from "./ShaderUseVariantType";
 
 
@@ -160,16 +161,6 @@ function getLocName(pName:syGL.AttributeUniform,isUniform:boolean) {
     return "u_"+pName+"_loc";
     return "a_"+pName+"_loc";
 }
-var texture2DConstBridge:Array<syGL.AttributeUniform> = [];
-texture2DConstBridge.push(syGL.AttributeUniform.TEXTURE0);
-texture2DConstBridge.push(syGL.AttributeUniform.TEXTURE1);
-texture2DConstBridge.push(syGL.AttributeUniform.TEXTURE2);
-texture2DConstBridge.push(syGL.AttributeUniform.TEXTURE3);
-texture2DConstBridge.push(syGL.AttributeUniform.TEXTURE4);
-texture2DConstBridge.push(syGL.AttributeUniform.TEXTURE5);
-texture2DConstBridge.push(syGL.AttributeUniform.TEXTURE6);
-texture2DConstBridge.push(syGL.AttributeUniform.TEXTURE7);
-texture2DConstBridge.push(syGL.AttributeUniform.TEXTURE8);
 
 export class ShaderProgramBase {
     private u_skybox_loc;//天空盒属性位置
@@ -196,11 +187,11 @@ export class ShaderProgramBase {
             if (!uniformInfo) {
                 break;
             }
-            // let name  = uniformInfo.name;
-            // // remove the array suffix.
-            // if (name.substr(-3) === '[0]') {
-            //     name = name.substr(0, name.length - 3);
-            // }
+            let name  = uniformInfo.name;
+            // remove the array suffix.
+            if (name.substr(-3) === '[0]') {
+                name = name.substr(0, name.length - 3);
+            }
             let SUVType = mapTree_u.get(uniformInfo.name as any)
             if (SUVType) {
                 //合法

@@ -870,6 +870,11 @@ export class Color extends ValueType {
         this._val = (a & 0xff000000) | (b & 0x00ff0000) | (g & 0x0000ff00) | (r & 0x000000ff);
         return this;
     }
+
+    toArray():Array<number>
+    {
+        return [this.r/255,this.g/255,this.b/255]
+    }
 }
 
 

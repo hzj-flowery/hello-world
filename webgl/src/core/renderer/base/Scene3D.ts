@@ -81,6 +81,22 @@ export default class Scene3D extends Scene {
         this._centerNode.setPosition(0, 1.1, 0);
         this.addChild(this._centerNode);
 
+        var cube1 = new Cube();
+        cube1.setScale(100,50.0,10.0);
+        cube1.setPosition(0, 0, -130);
+        cube1.spriteFrame = "res/dragon.jpg";
+        this._centerNode.addChild(cube1);
+
+
+
+        var cube2 = new Cube();
+        cube2.setScale(100,50.0,1.0);
+        cube2.setPosition(0, -10, -0);
+        cube2.rotateX = 90;
+        cube2.spriteFrame = "res/dragon.jpg";
+        this._centerNode.addChild(cube2);
+
+
 
         // this._plane = new Plane(500,500,100,20);
         // this._plane.rotateX = 90;
@@ -90,7 +106,7 @@ export default class Scene3D extends Scene {
         //     [syStateStringKey.primitiveType,syStateStringValue.primitiveType.PT_TRIANGLES]
         // ],[
         //     [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_TEXTURE_ONE],
-        //     [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_FUNC_RIVER_FLOW]
+        //     [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_FUNC_RIVER_FLOW],
         // ]);
         // this._plane.spriteFrame = "res/river.jpg"
         // this.addChild(this._plane);
@@ -385,9 +401,9 @@ export default class Scene3D extends Scene {
             [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_FUNC_UNPACK],
             [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_MAT],
             [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_LIGHT_AMBIENT],
-            // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_SPOT],
-            [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_LIGHT_PARALLEL],
-            // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_POINT],
+            // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_SPOT_NUM,1],
+            [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_LIGHT_PARALLEL_NUM,1],
+            // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_POINT_NUM,1],
             // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_SPECULAR],
             [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_FOG]
         ]);
@@ -404,9 +420,9 @@ export default class Scene3D extends Scene {
             [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_FUNC_UNPACK],
             [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_MAT],
             [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_LIGHT_AMBIENT],
-            // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_SPOT],
-            [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_LIGHT_PARALLEL],
-            // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_POINT],
+            // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_SPOT_NUM,1],
+            [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_LIGHT_PARALLEL_NUM,1],
+            // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_POINT_NUM,1],
             // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_SPECULAR],
             [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_FOG]
         ]);
