@@ -1,10 +1,19 @@
 
 
 export class UIStatusData {
-
+    
+    public static constant = 0.05;
+    public static linear = 0.09;
+    public static quadratic = 0.032;
     public static customValueX:number = 0;
     public static customValueY:number = 0;
     public static customValueZ:number = 0;
+    public static customValueX1:number = 0;
+    public static customValueY1:number = 0;
+    public static customValueZ1:number = 0;
+    public static customColorValueX:number = 0;
+    public static customColorValueY:number = 0;
+    public static customColorValueZ:number = 0;
     public static customValue:number = 0;
 
     public static cam2DPosX: number = 0;
@@ -104,10 +113,25 @@ class UISetting {
         var render = this.render.bind(this);
         this.UI = window["webglLessonsUI"];
         let custom = [
-            { type: 'slider', key: 'customValueX', min: -50, max: 50, change: render,precision: 2, step: 0.001, },
+              
+
+            { type: 'slider', key: 'constant', min:0, max:1, change: render,precision: 3, step:0.001, },
+            { type: 'slider', key: 'linear', min:0, max: 1, change: render,precision: 3, step: 0.001, },
+            { type: 'slider', key: 'quadratic', min:0, max:0, change: render,precision: 3, step:0.001, },
+
+            { type: 'slider', key: 'customValueX', min: -50, max: 50, change: render,precision: 2, step: 1, },
             { type: 'slider', key: 'customValueY', min: -50, max: 50, change: render, },
-            { type: 'slider', key: 'customValueZ', min: 0, max: 1, change: render,precision: 2, step: 0.001, },
-            { type: 'slider', key: 'customValue', min: 0, max: 5, change: render,precision: 2, step: 0.01, },
+            { type: 'slider', key: 'customValueZ', min: -50, max: 50, change: render,precision: 2, step: 1, },
+
+            { type: 'slider', key: 'customValueX1', min: -50, max: 50, change: render,precision: 2, step: 1, },
+            { type: 'slider', key: 'customValueY1', min: -50, max: 50, change: render, },
+            { type: 'slider', key: 'customValueZ1', min: -50, max: 50, change: render,precision: 2, step: 1, },
+
+            { type: 'slider', key: 'customColorValueX', min: 0, max: 255, change: render,precision: 2, step: 1, },
+            { type: 'slider', key: 'customColorValueY', min: 0, max: 255, change: render,precision: 2, step: 1},
+            { type: 'slider', key: 'customColorValueZ', min: 0, max: 255, change: render,precision: 2, step: 1, },
+
+            { type: 'slider', key: 'customValue', min: 0, max: 5, change: render,precision: 2, step: 1, },
         ]
         let camera2D = [
             //2d相机
@@ -133,13 +157,13 @@ class UISetting {
         ]
         let light = [
             //平行光
-            { type: 'slider', key: 'parallelDirX', min: -10, max: 10, change: this.render.bind(this), precision: 2, step: 1, },
-            { type: 'slider', key: 'parallelDirY', min: -10, max: 10, change: this.render.bind(this), precision: 2, step: 1, },
-            { type: 'slider', key: 'parallelDirZ', min: -10, max: 10, change: this.render.bind(this), precision: 2, step: 1, },
-            { type: 'slider', key: 'parallelColR', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
-            { type: 'slider', key: 'parallelColG', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
-            { type: 'slider', key: 'parallelColB', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
-            { type: 'slider', key: 'parallelColA', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'parallelDirX', min: -10, max: 10, change: this.render.bind(this), precision: 2, step: 1, },
+            // { type: 'slider', key: 'parallelDirY', min: -10, max: 10, change: this.render.bind(this), precision: 2, step: 1, },
+            // { type: 'slider', key: 'parallelDirZ', min: -10, max: 10, change: this.render.bind(this), precision: 2, step: 1, },
+            // { type: 'slider', key: 'parallelColR', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'parallelColG', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'parallelColB', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
+            // { type: 'slider', key: 'parallelColA', min: 0, max: 1, change: this.render.bind(this), precision: 2, step: 0.01, },
             
             //聚光
             // { type: 'slider', key: 'spotInnerLimit', min: 0, max: 180, change: this.render.bind(this), precision: 2, step: 1, },
@@ -198,7 +222,7 @@ class UISetting {
             { type: 'checkbox', key: 'ahead', min: 0, max: 1, change: this.render.bind(this, "ahead") },
             { type: 'checkbox', key: 'back', min: 0, max: 1, change: this.render.bind(this, "back") }
         ]
-        this.widgets = this.UI.setupUI(document.querySelector('#ui'), UIStatusData, [].concat(light));
+        this.widgets = this.UI.setupUI(document.querySelector('#ui'), UIStatusData, [].concat(custom,light));
         this.render();
     }
 

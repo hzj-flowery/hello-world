@@ -43,6 +43,7 @@ import { Vector2 } from "../../math/Vector2";
 import { PlaneGeometry } from "../3d/geometry/PlaneGeometry";
 import { sy } from "../../Director";
 import { SY } from "./Sprite";
+import { MathUtils } from "../../utils/MathUtils";
 
 export default class Scene3D extends Scene {
 
@@ -55,6 +56,8 @@ export default class Scene3D extends Scene {
     private _deferredShading: DeferredShading;
     private _renderSprite: RenderOffline3DSprite;
     private _ucs: UCS;
+    private _ucs1: UCS;
+    private _ucs2: UCS;
     private _rtt: RTT;
     private _rttTest:RTTTest;
     private _tableNode: Cube;
@@ -73,6 +76,10 @@ export default class Scene3D extends Scene {
     private _sphere: Sphere;
     constructor() {
         super();
+    }
+
+    onUpdate():void{
+        
     }
     public init(): void {
 
@@ -119,8 +126,19 @@ export default class Scene3D extends Scene {
         
 
         this._ucs = new UCS();
-        this._ucs.setPosition(-10,12,0);
-        this._centerNode.addChild(this._ucs)
+        this._ucs.tag = 0;
+        this._ucs.setPosition(0,-2,0)
+        this.addChild(this._ucs)
+
+        this._ucs1 = new UCS();
+        this._ucs1.tag = 1;
+        this._ucs1.setPosition(3,-2,0)
+        this.addChild(this._ucs1)
+
+        this._ucs2 = new UCS();
+        this._ucs2.tag = 2;
+        this._ucs2.setPosition(-3,-2,0)
+        this.addChild(this._ucs2)
 
     
         this._spineNode = new Spine();
@@ -196,7 +214,7 @@ export default class Scene3D extends Scene {
             // camera.lookAt([data.customValueX+diff[0],data.customValueY+diff[1],data.customValueZ+diff[2]],[data.customValueX,data.customValueY,data.customValueZ])
         })
         this.setPosition(0, 0, 0);
-        setTimeout(this.rotateCenterNode.bind(this), 20);
+        setTimeout(this.rotateCenterNode.bind(this), 1000);
 
     }
 
@@ -210,7 +228,16 @@ export default class Scene3D extends Scene {
     public rotateCenterNode() {
         // this._centerNode.rotate(0, 1, 0);
         this._mirrorCube.rotate(1,-1,-0.2);
-        setTimeout(this.rotateCenterNode.bind(this), 20);
+        var maxX = 10;
+        var maxY = 5;
+        var maxZ = 10;
+        var minX = -10;
+        var minY = -5;
+        var minZ = -10;
+        this._ucs.setPosition(MathUtils.randFloat(minX,maxX),MathUtils.randFloat(minY,maxY),MathUtils.randFloat(minZ,maxZ))
+        this._ucs1.setPosition(MathUtils.randFloat(minX,maxX),MathUtils.randFloat(minY,maxY),MathUtils.randFloat(minZ,maxZ))
+        this._ucs2.setPosition(MathUtils.randFloat(minX,maxX),MathUtils.randFloat(minY,maxY),MathUtils.randFloat(minZ,maxZ))
+        setTimeout(this.rotateCenterNode.bind(this), 1000);
     }
     private readyRenderDraw(): void {
 

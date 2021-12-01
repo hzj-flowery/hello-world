@@ -568,8 +568,8 @@ export namespace SY {
 
                 [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_MAT],
                 [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_LIGHT_AMBIENT],
-                // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_SPOT_NUM,1],
-                [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_LIGHT_PARALLEL_NUM,1],
+                [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_SPOT_NUM,3],
+                // [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_LIGHT_PARALLEL_NUM,1],
                 // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_POINT_NUM,1],
                 // [syRender.PassCustomKey.DefineUse,syRender.ShaderDefineValue.SY_USE_LIGHT_SPECULAR],
                 // [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_FOG]

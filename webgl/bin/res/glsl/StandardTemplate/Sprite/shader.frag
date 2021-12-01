@@ -586,7 +586,12 @@ void main(){
             diffuse = CalcDirLight(u_dirLights[0],normal,normalize(v_surfaceToView),32.0,diffuse,vec3(1.0,1.0,1.0));
       //使用聚光
       #elif defined(SY_USE_LIGHT_SPOT_NUM)
-            diffuse = CalcSpotLight(u_spotLights[0],normal,v_surfacePosition,normalize(v_surfaceToView),32.0,diffuse,vec3(1.0,1.0,1.0));
+           vec3 tempSpot = vec3(0.0,0.0,0.0);
+           for(int k=0;k<SY_USE_LIGHT_SPOT_NUM;k++)
+           {
+                 tempSpot = tempSpot+CalcSpotLight(u_spotLights[k],normal,v_surfacePosition,normalize(v_surfaceToView),32.0,diffuse,vec3(1.0,1.0,1.0));
+           }
+           diffuse = tempSpot;
       #endif
       //-------------------------------------光照计算结束---------------------
       

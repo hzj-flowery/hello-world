@@ -75,4 +75,28 @@ export default class CustomTextureData {
          urlData.data = new Uint8Array(colorData)
           return urlData;
     }
+
+    static getData(width:number,height:number,colorKinds:Array<number> = [1,1,1,1]):TextureOpts{
+        let cformat = syGL.TextureFormat.RGBA8;
+        var urlData: TextureOpts = new TextureOpts();
+        urlData.configFormat = cformat;
+        urlData.width = width;
+        urlData.height = height;
+        urlData.magFilter = syGL.TexFilter.NEAREST;
+        urlData.minFilter = syGL.TexFilter.NEAREST_MIPMAP_NEAREST;
+        urlData.genMipmaps = true;
+        var colorData = [];
+        for(let i=1;i<=width;i++)
+        {
+            for(let j = 1;j<=height;j++)
+            {
+                colorData.push(colorKinds[0])
+                colorData.push(colorKinds[1])
+                colorData.push(colorKinds[2])
+                colorData.push(colorKinds[3])
+            }
+        }
+        urlData.data = new Uint8Array(colorData)
+        return urlData;
+   }
 }

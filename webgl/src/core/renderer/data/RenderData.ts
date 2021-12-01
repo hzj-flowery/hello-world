@@ -5,6 +5,7 @@ import { glMatrix } from "../../math/Matrix";
 import { MathUtils } from "../../utils/MathUtils";
 import { Color } from "../../value-types/color";
 import Vec3 from "../../value-types/vec3";
+import { UCS } from "../3d/UCS";
 import { G_DrawEngine } from "../base/DrawEngine";
 import { Node } from "../base/Node";
 import { SY } from "../base/Sprite";
@@ -17,6 +18,7 @@ import { IGeometry } from "../primitive/define";
 import { Pass } from "../shader/Pass";
 import { BufferAttribsData, ShaderProgramBase, ShaderProgram } from "../shader/Shader";
 import { ShaderUseVariantType } from "../shader/ShaderUseVariantType";
+import { LightData } from "./LightData";
 
 
 let renderDataId: number = 0;
@@ -936,79 +938,83 @@ export namespace syRender {
             
             var structNames: Map<string, any> = new Map();
             
-            //平行光
-            var dirNum = 0;
-            var preName = Light.Parallel.getPreStructName(dirNum);
-            structNames.clear();
-            structNames.set(Light.Parallel.structNames.direction, this.light.parallel.direction.toArray())
-            structNames.set(Light.Parallel.structNames.ambient, [0.05, 0.05, 0.05])
-            structNames.set(Light.Parallel.structNames.diffuse, this.light.parallel.color.toArray())
-            structNames.set(Light.Parallel.structNames.specular, [1.0, 1.0, 1.0])
-            structNames.forEach((value, index) => {
-                var name = preName + index
-                var loc = G_DrawEngine.getUniformLocation(glID, name);
-                if (loc!=null) {
-                    if (value instanceof Array) {
-                        G_DrawEngine.setUniformFloatVec3(loc as number, value);
-                    }
-                    else {
-                        G_DrawEngine.setUniform1f(loc as number, value);
-                    }
-                }
-            })
+            // //平行光
+            // var dirNum = 0;
+            // var preName = Light.Parallel.getPreStructName(dirNum);
+            // structNames.clear();
+            // structNames.set(Light.Parallel.structNames.direction, this.light.parallel.direction.toArray())
+            // structNames.set(Light.Parallel.structNames.ambient, [0.05, 0.05, 0.05])
+            // structNames.set(Light.Parallel.structNames.diffuse, this.light.parallel.color.toArray())
+            // structNames.set(Light.Parallel.structNames.specular, [1.0, 1.0, 1.0])
+            // structNames.forEach((value, index) => {
+            //     var name = preName + index
+            //     var loc = G_DrawEngine.getUniformLocation(glID, name);
+            //     if (loc!=null) {
+            //         if (value instanceof Array) {
+            //             G_DrawEngine.setUniformFloatVec3(loc as number, value);
+            //         }
+            //         else {
+            //             G_DrawEngine.setUniform1f(loc as number, value);
+            //         }
+            //     }
+            // })
 
-            //点光
-            var pointNum = 0;
-            var preName = Light.Point.getPreStructName(pointNum);
-            structNames.clear();
-            structNames.set(Light.Point.structNames.position, this.light.point.position.toArray())
-            structNames.set(Light.Point.structNames.ambient, [0.05, 0.05, 0.05])
-            structNames.set(Light.Point.structNames.diffuse, [0.0, 0.9, 0.0])
-            structNames.set(Light.Point.structNames.specular, [1.0, 1.0, 1.0])
-            structNames.set(Light.Point.structNames.constant, 0.5)
-            structNames.set(Light.Point.structNames.linear, 0.09)
-            structNames.set(Light.Point.structNames.quadratic, 0.032)
-            structNames.forEach((value, index) => {
-                var name = preName + index
-                var loc = G_DrawEngine.getUniformLocation(glID, name);
-                if (loc!=null) {
-                    if (value instanceof Array) {
-                        G_DrawEngine.setUniformFloatVec3(loc as number, value);
-                    }
-                    else {
-                        G_DrawEngine.setUniform1f(loc as number, value);
-                    }
-                }
-            })
+            // //点光
+            // var pointNum = 0;
+            // var preName = Light.Point.getPreStructName(pointNum);
+            // structNames.clear();
+            // structNames.set(Light.Point.structNames.position,  LightData.structValues.position)
+            // structNames.set(Light.Point.structNames.ambient, [0.05, 0.05, 0.05])
+            // structNames.set(Light.Point.structNames.diffuse,LightData.structValues.diffuse)
+            // structNames.set(Light.Point.structNames.specular, [1.0, 1.0, 1.0])
+            // structNames.set(Light.Point.structNames.constant, LightData.structValues.constant)
+            // structNames.set(Light.Point.structNames.linear, LightData.structValues.linear)
+            // structNames.set(Light.Point.structNames.quadratic,LightData.structValues.quadratic)
+            // structNames.forEach((value, index) => {
+            //     var name = preName + index
+            //     var loc = G_DrawEngine.getUniformLocation(glID, name);
+            //     if (loc!=null) {
+            //         if (value instanceof Array) {
+            //             G_DrawEngine.setUniformFloatVec3(loc as number, value);
+            //         }
+            //         else {
+            //             G_DrawEngine.setUniform1f(loc as number, value);
+            //         }
+            //     }
+            // })
 
+            
             //聚光
-            structNames.clear();
+            var lDatas = LightData.StructValuesArray;
             var spotNum = 0;
-            var preName = Light.Spot.getPreStructName(spotNum);
-            structNames.clear();
-            structNames.set(Light.Spot.structNames.innerLimit, this.light.spot.innerLimit)
-            structNames.set(Light.Spot.structNames.outerLimit, this.light.spot.outerLimit)
-            structNames.set(Light.Spot.structNames.direction, this.light.spot.direction.toArray())
-            structNames.set(Light.Spot.structNames.position, this.light.spot.position.toArray())
-            structNames.set(Light.Spot.structNames.ambient, [0.05, 0.05, 0.05])
-            structNames.set(Light.Spot.structNames.diffuse, this.light.spot.color.toArray())
-            structNames.set(Light.Spot.structNames.specular, [1.0, 1.0, 1.0])
-            structNames.set(Light.Spot.structNames.constant, 0.05)
-            structNames.set(Light.Spot.structNames.linear, 0.09)
-            structNames.set(Light.Spot.structNames.quadratic, 0.032)
-            structNames.forEach((value, index) => {
-                var name = preName + index
-                var loc = G_DrawEngine.getUniformLocation(glID, name);
-                if (loc!=null) {
-                    if (value instanceof Array) {
-                        G_DrawEngine.setUniformFloatVec3(loc as number, value);
+            lDatas.forEach((lData,k)=>{
+                structNames.clear();
+                var preName = Light.Spot.getPreStructName(spotNum);
+                spotNum++;
+                structNames.clear();
+                structNames.set(Light.Spot.structNames.innerLimit, this.light.spot.innerLimit)
+                structNames.set(Light.Spot.structNames.outerLimit, this.light.spot.outerLimit)
+                structNames.set(Light.Spot.structNames.direction,lData.direction)
+                structNames.set(Light.Spot.structNames.position, lData.position)
+                structNames.set(Light.Spot.structNames.ambient, lData.ambient)
+                structNames.set(Light.Spot.structNames.diffuse, lData.diffuse)
+                structNames.set(Light.Spot.structNames.specular, lData.specular)
+                structNames.set(Light.Spot.structNames.constant, lData.constant)
+                structNames.set(Light.Spot.structNames.linear,lData.linear)
+                structNames.set(Light.Spot.structNames.quadratic,lData.quadratic)
+                structNames.forEach((value, index) => {
+                    var name = preName + index
+                    var loc = G_DrawEngine.getUniformLocation(glID, name);
+                    if (loc!=null) {
+                        if (value instanceof Array) {
+                            G_DrawEngine.setUniformFloatVec3(loc as number, value);
+                        }
+                        else {
+                            G_DrawEngine.setUniform1f(loc as number, value);
+                        }
                     }
-                    else {
-                        G_DrawEngine.setUniform1f(loc as number, value);
-                    }
-                }
+                })
             })
-
         }
     }
 

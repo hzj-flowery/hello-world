@@ -39,6 +39,19 @@ export enum LightType {
     Point,     //点光
     Spot       //聚光
 }
+
+export interface structValueNames{
+    innerLimit:number,
+    outerLimit:number,
+    direction:Array<number>,
+    position:Array<number>,
+    ambient:Array<number>,
+    diffuse:Array<number>,
+    specular:Array<number>,
+    constant:number,
+    linear:number,
+    quadratic:number,
+}
 /**
  * 光照数据
  */
@@ -51,15 +64,15 @@ export class LightData {
     private _projHeight: number = 10;
     private _perspective: boolean = false;//是否为透视
 
-    public viewMatrix:Float32Array;//光照摄像机的视口
-    public projectionMatrix:Float32Array;//光照摄像机的投影
+    public viewMatrix: Float32Array;//光照摄像机的视口
+    public projectionMatrix: Float32Array;//光照摄像机的投影
 
     public reset(): void {
         this.position.x = 0;
         this.position.y = 0;
-        this.position.z = 0;  
-        this.parallel.direction.x=8;//平行光的方向 
-        this.parallel.direction.y=5;
+        this.position.z = 0;
+        this.parallel.direction.x = 8;//平行光的方向 
+        this.parallel.direction.y = 5;
         this.parallel.direction.z = -10;
         this.parallel.color.r = 25.5;////平行光的颜色
         this.parallel.color.g = 25.5;
@@ -91,8 +104,8 @@ export class LightData {
         this.spot.direction.y = 0;
         this.spot.direction.z = 1;
 
-        this.fog.color.r = 255*0.8; //雾
-        this.fog.color.g = 255*0.9;
+        this.fog.color.r = 255 * 0.8; //雾
+        this.fog.color.g = 255 * 0.9;
         this.fog.color.b = 255;
         this.fog.color.a = 255;
         this.fog.density = 0.092;
@@ -116,13 +129,13 @@ export class LightData {
     /**
      * 光看向的位置
      */
-    public target:Vec3 = new Vec3(0,0,0)
+    public target: Vec3 = new Vec3(0, 0, 0)
     //眼睛的位置
-    public position:Vec3 = new Vec3(0,0,0)
+    public position: Vec3 = new Vec3(0, 0, 0)
 
     public shadow = new syRender.Light.Shadow();
     //雾
-    public fog:syRender.Light.Fog = new syRender.Light.Fog();
+    public fog: syRender.Light.Fog = new syRender.Light.Fog();
     //聚光
     public spot: syRender.Light.Spot = new syRender.Light.Spot();
 
@@ -136,4 +149,28 @@ export class LightData {
 
     //点光
     public point: syRender.Light.Point = new syRender.Light.Point();
+
+    private static structValues = {
+        innerLimit: 10,
+        outerLimit: 20,
+        direction: [0, 0, 1],
+        position: [0, 0, 0],
+        ambient: [0.05, 0.05, 0.05],
+        diffuse: [1.0, 1.0, 1.0],
+        specular: [1.0, 1.0, 1.0],
+        constant: 0.05,
+        linear: 0.09,
+        quadratic: 0.032,
+    }
+    static StructValuesArray: Map<number,structValueNames> = new Map();
+    static pushStructValues(tag:number,data:structValueNames): void {
+        
+        var ret:any = {}
+        for(var k in LightData.structValues)
+        {
+            var temp = data[k]
+            ret[k] = temp!=null?temp:LightData.structValues[k]
+        }
+        LightData.StructValuesArray.set(tag,ret)
+    }
 }

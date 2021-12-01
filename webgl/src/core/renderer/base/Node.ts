@@ -45,6 +45,9 @@ export class Node extends Ref {
     public anchorX: number = 0.5;//x轴锚点
     public anchorY: number = 0.5;//y轴锚点
 
+
+    public tag:number = 0;
+
     protected name: string;
     /**
      * 设置全局的渲染顺序
@@ -331,6 +334,7 @@ export class Node extends Ref {
             this.rotateModelMatrix();
             //最后平移
             this.translateModelMatrix();
+            this.onDataDirty();
         }
         if (!this._baseFatherOriginTransform&&this._updateModelMatrixFlag) { 
             glMatrix.mat4.multiply(this._localMatrix, this._rotateMatrix, this._scaleMatrix)
@@ -342,6 +346,10 @@ export class Node extends Ref {
 
 
         this._updateModelMatrixFlag = false;
+    }
+
+    protected onDataDirty():void{
+
     }
     
     /**----------------------------------------------------------------------------------------------------------------------
