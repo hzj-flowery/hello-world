@@ -72,9 +72,10 @@ layout (location = 0) out vec4 FragColor;   // 颜色
       /*
       计算平行光
       */
-      vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir,float mShininess,vec2 TexCoords,sampler2D mapDiffuse,sampler2D mapSpecular)
+      vec3 CalcDirLight(DirLight light, vec3 normal, vec3 surfaceToView,float mShininess,vec2 TexCoords,sampler2D mapDiffuse,sampler2D mapSpecular)
       {
             vec3 lightDir = normalize(-light.direction);
+             vec3 viewDir = normalize(surfaceToView);
             // 计算漫反射强度
             float diff = max(dot(normal, lightDir), 0.0);
             // 计算镜面反射强度
@@ -89,10 +90,11 @@ layout (location = 0) out vec4 FragColor;   // 颜色
       /*
       计算平行光
       */
-      vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir,float mShininess,vec3 cDiffuse,vec3 cSpecular)
+      vec3 CalcDirLight(DirLight light, vec3 normal, vec3 surfaceToView,float mShininess,vec3 cDiffuse,vec3 cSpecular)
       {
             //确定此值是否取反
-            vec3 lightDir = normalize(light.direction);
+            vec3 lightDir = normalize(-light.direction);
+            vec3 viewDir = normalize(surfaceToView);
             // 计算漫反射强度
             float diff = max(dot(normal, lightDir), 0.0);
             // 计算镜面反射强度
@@ -195,9 +197,10 @@ layout (location = 0) out vec4 FragColor;   // 颜色
         sampler2D mapDiffuse：漫反射贴图
         sampler2D mapSpecular：高光贴图
       */
-      vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir,vec2 TexCoords,float mShininess,sampler2D mapDiffuse,sampler2D mapSpecular)
+      vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 surfaceToView,vec2 TexCoords,float mShininess,sampler2D mapDiffuse,sampler2D mapSpecular)
       {
             vec3 lightDir = normalize(light.position - fragPos);
+            vec3 viewDir = normalize(surfaceToView);
             // 计算漫反射强度
             float diff = max(dot(normal, lightDir), 0.0);
             // 计算镜面反射
@@ -253,12 +256,9 @@ layout (location = 0) out vec4 FragColor;   // 颜色
       in vec3 v_surfaceToView;
       //顶点在世界空间下的位置
       in vec3 v_surfacePosition;
-#endif
-
-
-//高光
-#ifdef SY_USE_LIGHT_SPECULAR
-    //普通高光
+      uniform vec4 u_specular;
+      uniform float u_specularShininess;
+      //普通高光
     /*
     @param normal 法线
     @param specularColor 高光的颜色
@@ -519,14 +519,6 @@ void main(){
             normal = perturbNormal2Arb(normalize(v_vmPosition),normal,v_uv);
             #endif
       #endif
-
-      //使用点光或者聚光会用到下面的数据
-      #if defined(SY_USE_LIGHT_SPOT_NUM)||defined(SY_USE_LIGHT_POINT_NUM)||defined(SY_USE_LIGHT_PARALLEL_NUM)
-          //顶点着色器传到片元着色器的方向会有插值，所以需要归一化
-          //顶点着色器传到片元着色器的方向会有插值，所以需要归一化
-          //表面指向摄像机位置的方向 
-          vec3 surfaceToViewDirection = normalize(v_surfaceToView);   
-      #endif
       
       //表面基底色
       #ifdef SY_USE_TEXTURE
@@ -567,12 +559,12 @@ void main(){
       //使用点光 
       #ifdef SY_USE_LIGHT_POINT_NUM
             #if SY_USE_LIGHT_POINT_NUM == 1
-                  accumulation = accumulation+CalcPointLight(u_pointLights[0],normal,v_surfacePosition,normalize(v_surfaceToView),32.0,tempDiffuse,vec3(1.0,1.0,1.0));
+                  accumulation = accumulation+CalcPointLight(u_pointLights[0],normal,v_surfacePosition,v_surfaceToView,u_specularShininess,tempDiffuse,u_specular.rgb);
                   flagLight = 1.0;
             #elif SY_USE_LIGHT_POINT_NUM > 1
                   for(int k=0;k<SY_USE_LIGHT_POINT_NUM;k++)
                   {
-                     accumulation = accumulation+CalcPointLight(u_pointLights[k],normal,v_surfacePosition,normalize(v_surfaceToView),32.0,tempDiffuse,vec3(1.0,1.0,1.0));
+                     accumulation = accumulation+CalcPointLight(u_pointLights[k],normal,v_surfacePosition,v_surfaceToView,u_specularShininess,tempDiffuse,u_specular.rgb);
                   }
                   flagLight = 1.0;
             #endif
@@ -580,12 +572,12 @@ void main(){
       //使用平行光
       #ifdef SY_USE_LIGHT_PARALLEL_NUM
            #if SY_USE_LIGHT_PARALLEL_NUM == 1 
-               accumulation = accumulation +CalcDirLight(u_dirLights[0],normal,normalize(v_surfaceToView),32.0,tempDiffuse,vec3(1.0,1.0,1.0));
+               accumulation = accumulation +CalcDirLight(u_dirLights[0],normal,v_surfaceToView,u_specularShininess,tempDiffuse,u_specular.rgb);
                flagLight = 1.0; 
            #elif SY_USE_LIGHT_PARALLEL_NUM > 1
                for(int k=0;k<SY_USE_LIGHT_PARALLEL_NUM;k++)
                {
-                  accumulation = accumulation +CalcDirLight(u_dirLights[k],normal,normalize(v_surfaceToView),32.0,tempDiffuse,vec3(1.0,1.0,1.0));
+                  accumulation = accumulation +CalcDirLight(u_dirLights[k],normal,v_surfaceToView,u_specularShininess,tempDiffuse,u_specular.rgb);
                }
                flagLight = 1.0; 
             #endif
@@ -593,12 +585,12 @@ void main(){
       //使用聚光
       #ifdef SY_USE_LIGHT_SPOT_NUM
            #if SY_USE_LIGHT_SPOT_NUM == 1
-               accumulation = accumulation+CalcSpotLight(u_spotLights[0],normal,v_surfacePosition,normalize(v_surfaceToView),32.0,tempDiffuse,vec3(1.0,1.0,1.0));
+               accumulation = accumulation+CalcSpotLight(u_spotLights[0],normal,v_surfacePosition,v_surfaceToView,u_specularShininess,tempDiffuse,u_specular.rgb);
                flagLight = 1.0;
            #elif SY_USE_LIGHT_SPOT_NUM > 1
                for(int k=0;k<SY_USE_LIGHT_SPOT_NUM;k++)
                {
-                  accumulation = accumulation+CalcSpotLight(u_spotLights[k],normal,v_surfacePosition,normalize(v_surfaceToView),32.0,tempDiffuse,vec3(1.0,1.0,1.0));
+                  accumulation = accumulation+CalcSpotLight(u_spotLights[k],normal,v_surfacePosition,v_surfaceToView,u_specularShininess,tempDiffuse,u_specular.rgb);
                }
                flagLight = 1.0;
            #endif 

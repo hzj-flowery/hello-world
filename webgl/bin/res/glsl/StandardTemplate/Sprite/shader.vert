@@ -39,8 +39,6 @@ uniform float u_time;
 
 //使用点光或者聚光会用到下面的数据
 #if defined(SY_USE_LIGHT_SPOT_NUM)||defined(SY_USE_LIGHT_POINT_NUM)||defined(SY_USE_LIGHT_PARALLEL_NUM)
-    //光的位置
-    uniform vec3 u_lightWorldPosition;
     //相机的位置
     uniform vec3 u_cameraWorldPosition;
     //顶点到相机的方向

@@ -176,7 +176,6 @@ export namespace syRender {
         SY_USE_LIGHT_PARALLEL_NUM: "SY_USE_LIGHT_PARALLEL_NUM",        //使用平行光
         SY_USE_LIGHT_SPOT_NUM: "SY_USE_LIGHT_SPOT_NUM",                //使用聚光
         SY_USE_LIGHT_POINT_NUM: "SY_USE_LIGHT_POINT_NUM",              //使用点光
-        SY_USE_LIGHT_SPECULAR: "SY_USE_LIGHT_SPECULAR",        //使用高光
         SY_USE_SHADOW_PARALLEL: "SY_USE_SHADOW_PARALLEL",      //使用平行光阴影
         SY_USE_FOG: "SY_USE_FOG",                              //使用雾
         SY_USE_FOG_EXP: "SY_USE_FOG_EXP",

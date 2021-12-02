@@ -100,9 +100,9 @@ export class UCS extends SY.SpriteBase {
             this._Line.updatePositionData([0, 0, 0, targetPos[0], targetPos[1], targetPos[2]]);
             this._objPoint.setPosition(targetPos[0], targetPos[1], targetPos[2])
             this._lightData.direction = [];
-            this._lightData.direction[0] = 0 - targetPos[0]
-            this._lightData.direction[1] = 0 - targetPos[1]
-            this._lightData.direction[2] = 0 - targetPos[2]
+            this._lightData.direction[0] = targetPos[0]
+            this._lightData.direction[1] = targetPos[1]
+            this._lightData.direction[2] = targetPos[2]
             this._lightData.position = [this.x, this.y, this.z]
             this._lightData.constant = data.constant ? data.constant : 0.05;
             this._lightData.linear = data.linear ? data.linear : 0.09;

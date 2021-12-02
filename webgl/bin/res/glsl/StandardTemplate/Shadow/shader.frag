@@ -24,7 +24,7 @@ precision mediump float;
     uniform float u_spotInnerLimit;//聚光的内部限制
     uniform float u_spotOuterLimit;//聚光的外部限制
     
-    uniform float u_specular_shininess;//光照因子
+    uniform float u_specularShininess;//光照因子
     uniform vec4 u_specular;//高光的颜色
 
     uniform vec4 u_ambient;//环境光
@@ -173,7 +173,7 @@ precision mediump float;
         //环境光 （它的值rgb最好都限定在0.2以下）
         //环境光的照亮范围是全部 他是要和其余光照结果进行叠加的，将会让光线更加强亮
         vec4 ambient = vec4(surfaceBaseColor.rgb *u_ambient.rgb,1.0); //环境光的颜色需要和漫反射颜色融合
-        //vec3 specular = shadowLight<1.0?vec3(0.0,0.0,0.0):getSpecular(normal,u_specular,u_specular_shininess,v_surfaceToLight,v_surfaceToView);//阴影处没有高光
-        vec3 specular = shadowLight<1.0?vec3(0.0,0.0,0.0):getSpecularFengShi(normal,u_specular,u_specular_shininess,v_surfaceToLight,v_surfaceToView,u_spotCenterDirection);//阴影处没有高光
+        //vec3 specular = shadowLight<1.0?vec3(0.0,0.0,0.0):getSpecular(normal,u_specular,u_specularShininess,v_surfaceToLight,v_surfaceToView);//阴影处没有高光
+        vec3 specular = shadowLight<1.0?vec3(0.0,0.0,0.0):getSpecularFengShi(normal,u_specular,u_specularShininess,v_surfaceToLight,v_surfaceToView,u_spotCenterDirection);//阴影处没有高光
         gl_FragColor = vec4(diffuse+ambient.rgb+specular,surfaceBaseColor.a);
     }

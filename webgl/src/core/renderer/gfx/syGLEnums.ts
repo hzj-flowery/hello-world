@@ -137,7 +137,7 @@ export namespace syGL {
         LIGHT_POINT = 'u_point',//点光
         LIGHT_AMBIENT = "u_ambient",//环境光
         LIGHT_SPECULAR = 'u_specular', //高光
-        LIGHT_SPECULAR_SHININESS = 'u_specular_shininess',//高光亮度 光泽度
+        LIGHT_SPECULAR_SHININESS = 'u_specularShininess',//高光亮度 光泽度
         LIGHT_SPOT_INNER_LIMIT = "u_spotInnerLimit",//聚光灯内部限制
         LIGHT_SPOT_OUTER_LIMIT = "u_spotOuterLimit",//聚光灯内部限制
         LIGHT_SPOT = "u_spot",//聚光灯的颜色

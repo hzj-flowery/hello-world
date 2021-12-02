@@ -12,7 +12,7 @@ precision mediump float;
   uniform vec3 u_emissive;
   uniform vec3 u_specular;
   uniform sampler2D u_specularMap;
-  uniform float u_specular_shininess;
+  uniform float u_specularShininess;
   uniform sampler2D u_normalMap;
   uniform float u_alpha;
   uniform vec3 u_lightDirection;
@@ -48,6 +48,6 @@ precision mediump float;
         u_emissive +
         u_ambient * u_ambientLight +
         effectiveDiffuse * fakeLight +
-        effectiveSpecular * pow(specularLight, u_specular_shininess),
+        effectiveSpecular * pow(specularLight, u_specularShininess),
         effectiveOpacity);
   }

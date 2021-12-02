@@ -10,7 +10,7 @@ precision mediump float;
   uniform vec4 u_point;//点光入射光的颜色
   uniform vec4 u_ambient;//环境光入射光的颜色
   uniform vec4 u_specular;//高光入射光颜色
-  uniform float u_specular_shininess;
+  uniform float u_specularShininess;
 
   void main() {
   vec4 materialColor = texture2D(u_texture, v_uv);//材质颜色
@@ -21,7 +21,7 @@ precision mediump float;
   vec3 halfVector = normalize(surfaceToLightDirection + surfaceToViewDirection);//高光方向
   float lightDot = max(dot(normal, surfaceToLightDirection),0.0); //算出点光的入射强度
   float specular = 0.0;                                                  //高光强度
-  if (lightDot > 0.0) {specular = pow(dot(normal, halfVector), u_specular_shininess);}
+  if (lightDot > 0.0) {specular = pow(dot(normal, halfVector), u_specularShininess);}
   vec4 diffuseColor = surfaceBaseColor*u_point*lightDot;//漫反射颜色
   vec4 specularColor = u_specular*specular;//高光颜色
   vec4 ambientColor = u_ambient*surfaceBaseColor;//环境光
