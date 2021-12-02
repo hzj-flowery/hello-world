@@ -46,15 +46,14 @@ export default class Scene2D extends Scene {
         // var testHttp = new SY.UIImage();
         // testHttp.setPosition(480,320,-100)
         // testHttp.pushPassContent(syRender.ShaderType.Sprite,[
-        //     [syStateStringKey.blend,syStateStringValue.blend.ON],
-        //     [syStateStringKey.blendSrc,syStateStringValue.blendSrc.SRC_ALPHA],
-        //     [syStateStringKey.blendDst,syStateStringValue.blendDst.ONE_MINUS_SRC_ALPHA],
-        //     [syStateStringKey.depthWrite,syStateStringValue.depthWrite.OFF]
-        // ],[
-        //     // [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_ALPHA_TEST, 0.1]
+        //     // [syStateStringKey.blend,syStateStringValue.blend.ON],
+        //     // [syStateStringKey.blendSrc,syStateStringValue.blendSrc.SRC_ALPHA],
+            
+        //     // [syStateStringKey.depthWrite,syStateStringValue.depthWrite.OFF]
+        // ],[ 
+        //     [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_FUNC_DITHERING]
         // ])
-        // testHttp.alpha = 0.99;
-        // testHttp.spriteFrame = "res/grass.png";
+        // testHttp.spriteFrame = "res/good.png";
         // testHttp.sizeMode = SY.SpriteSizeMode.RAW;
         // this.addChild(testHttp);
 

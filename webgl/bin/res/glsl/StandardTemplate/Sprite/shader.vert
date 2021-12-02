@@ -10,6 +10,8 @@ uniform mat4 u_projection;
 
 uniform float u_time;
 
+out vec3 FragCoord;
+
 #if defined(SY_USE_UV)
       in vec2 a_texcoord;
       out vec2 v_uv;

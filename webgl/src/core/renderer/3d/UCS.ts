@@ -96,13 +96,7 @@ export class UCS extends SY.SpriteBase {
 
     onEnter():void{
         G_UISetting.pushRenderCallBack((data) => {
-            var targetPos = [data.customValueX?data.customValueX:0, data.customValueY?data.customValueY:0, data.customValueZ?data.customValueZ:0]
-            this._Line.updatePositionData([0, 0, 0, targetPos[0], targetPos[1], targetPos[2]]);
-            this._objPoint.setPosition(targetPos[0], targetPos[1], targetPos[2])
-            this._lightData.direction = [];
-            this._lightData.direction[0] = targetPos[0]
-            this._lightData.direction[1] = targetPos[1]
-            this._lightData.direction[2] = targetPos[2]
+            this.setDirection(data.customValueX?data.customValueX:0, data.customValueY?data.customValueY:0, data.customValueZ?data.customValueZ:0)
             this._lightData.position = [this.x, this.y, this.z]
             this._lightData.constant = data.constant ? data.constant : 0.05;
             this._lightData.linear = data.linear ? data.linear : 0.09;
@@ -113,6 +107,16 @@ export class UCS extends SY.SpriteBase {
 
             LightData.pushStructValues(this._lightType,this.tag, this._lightData)
         })
+    }
+
+    public setDirection(x:number,y:number,z:number):void{
+        var targetPos = [x,y,z]
+        this._lightData.direction = [];
+        this._lightData.direction[0] = 0-targetPos[0]
+        this._lightData.direction[1] = 0-targetPos[1]
+        this._lightData.direction[2] = 0-targetPos[2]
+        this._Line.updatePositionData([0, 0, 0, targetPos[0], targetPos[1], targetPos[2]]);
+        this._objPoint.setPosition(targetPos[0], targetPos[1], targetPos[2])
     }
     /**
      * 设置漫反射颜色

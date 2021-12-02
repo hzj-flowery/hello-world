@@ -188,7 +188,7 @@ export namespace syRender {
         SY_USE_FUNC_UNPACK: "SY_USE_FUNC_UNPACK",                        //解压缩函数
 
         SY_USE_FUNC_UNPACK_CUSTOM_TONE_MAPPING: "SY_USE_FUNC_UNPACK_CUSTOM_TONE_MAPPING", //色调映射
-
+        SY_USE_FUNC_DITHERING:"SY_USE_FUNC_DITHERING",//抖动
         SY_USE_FUNC_RIVER_FLOW: "SY_USE_FUNC_RIVER_FLOW",//模拟水面流动
 
         SY_USE_FUNC_CATCH_FIRE: "SY_USE_FUNC_CATCH_FIRE",//着火

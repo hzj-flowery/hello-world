@@ -51,7 +51,7 @@ export class UIStatusData {
      public static spotColA: number = 1;   //
     
      //高光
-     public static specularShininess:number = 140;
+     public static specularShininess:number = 32;
      public static specularColR: number = 1; //
      public static specularColG: number = 1; //
      public static specularColB: number = 1;   //

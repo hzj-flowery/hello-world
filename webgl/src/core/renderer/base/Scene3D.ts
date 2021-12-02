@@ -81,6 +81,8 @@ export default class Scene3D extends Scene {
     private _mirror:Mirror;
     private _robart:RobartInstantiate;
     private _sphere: Sphere;
+
+    private _lightNode:Array<UCS> = [];
     constructor() {
         super();
     }
@@ -131,41 +133,48 @@ export default class Scene3D extends Scene {
         this._shadowCube.setPosition(-10,0,0);
         this._centerNode.addChild(this._shadowCube);
         
-
+        this._lightNode = []
         this._ucs = new UCS(LightType.Spot);
         this._ucs.setDiffuse(1.0,0.0,0.0)
         this._ucs.setPosition(0,-2,0)
         this.addChild(this._ucs)
+        this._lightNode.push(this._ucs)
 
         this._ucs1 = new UCS(LightType.Spot);
         this._ucs1.setDiffuse(0.0,1.0,0.0)
         this._ucs1.setPosition(3,-2,0)
         this.addChild(this._ucs1)
+        this._lightNode.push(this._ucs1)
 
         this._ucs2 = new UCS(LightType.Spot);
         this._ucs2.setDiffuse(0.0,0.0,1.0)
         this._ucs2.setPosition(-3,-2,0)
         this.addChild(this._ucs2)
+        this._lightNode.push(this._ucs2)
 
         this._ucs3 = new UCS(LightType.Point);
         this._ucs3.setDiffuse(0.0,0.5,1.0)
         this._ucs3.setPosition(5,-2,-5)
         this.addChild(this._ucs3)
+        this._lightNode.push(this._ucs3)
 
         this._ucs4 = new UCS(LightType.Point);
         this._ucs4.setDiffuse(1.0,0.5,0.0)
         this._ucs4.setPosition(0,-3,0)
         this.addChild(this._ucs4)
+        this._lightNode.push(this._ucs4)
 
         this._ucs5 = new UCS(LightType.Point);
         this._ucs5.setDiffuse(0.5,0.5,0.0)
         this._ucs5.setPosition(-5,-5,0)
         this.addChild(this._ucs5)
+        this._lightNode.push(this._ucs5)
 
         this._ucs6 = new UCS(LightType.Parallel);
         this._ucs6.setDiffuse(0.1,0.1,0.1)
         this._ucs6.setPosition(-5,0,0)
         this.addChild(this._ucs6)
+        this._lightNode.push(this._ucs6)
 
     
         this._spineNode = new Spine();
@@ -255,15 +264,16 @@ export default class Scene3D extends Scene {
     public rotateCenterNode() {
         // this._centerNode.rotate(0, 1, 0);
         this._mirrorCube.rotate(1,-1,-0.2);
-        var maxX = 10;
-        var maxY = 5;
-        var maxZ = 10;
-        var minX = -10;
+        var maxX = 20;
+        var maxY = 0;
+        var maxZ = 5;
+        var minX = -20;
         var minY = -5;
-        var minZ = -10;
-        this._ucs.setPosition(MathUtils.randFloat(minX,maxX),MathUtils.randFloat(minY,maxY),MathUtils.randFloat(minZ,maxZ))
-        this._ucs1.setPosition(MathUtils.randFloat(minX,maxX),MathUtils.randFloat(minY,maxY),MathUtils.randFloat(minZ,maxZ))
-        this._ucs2.setPosition(MathUtils.randFloat(minX,maxX),MathUtils.randFloat(minY,maxY),MathUtils.randFloat(minZ,maxZ))
+        var minZ = -20;
+        this._lightNode.forEach((nodeL)=>{
+            nodeL.setDirection(MathUtils.randFloat(-50,50),MathUtils.randFloat(-20,20),MathUtils.randFloat(-10,10))
+            nodeL.setPosition(MathUtils.randFloat(minX,maxX),MathUtils.randFloat(minY,maxY),MathUtils.randFloat(minZ,maxZ))
+        })
         setTimeout(this.rotateCenterNode.bind(this), 1000);
     }
     private readyRenderDraw(): void {

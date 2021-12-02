@@ -74,7 +74,7 @@ layout (location = 0) out vec4 FragColor;   // 颜色
       */
       vec3 CalcDirLight(DirLight light, vec3 normal, vec3 surfaceToView,float mShininess,vec2 TexCoords,sampler2D mapDiffuse,sampler2D mapSpecular)
       {
-            vec3 lightDir = normalize(-light.direction);
+            vec3 lightDir = normalize(light.direction);
              vec3 viewDir = normalize(surfaceToView);
             // 计算漫反射强度
             float diff = max(dot(normal, lightDir), 0.0);
@@ -93,7 +93,7 @@ layout (location = 0) out vec4 FragColor;   // 颜色
       vec3 CalcDirLight(DirLight light, vec3 normal, vec3 surfaceToView,float mShininess,vec3 cDiffuse,vec3 cSpecular)
       {
             //确定此值是否取反
-            vec3 lightDir = normalize(-light.direction);
+            vec3 lightDir = normalize(light.direction);
             vec3 viewDir = normalize(surfaceToView);
             // 计算漫反射强度
             float diff = max(dot(normal, lightDir), 0.0);
