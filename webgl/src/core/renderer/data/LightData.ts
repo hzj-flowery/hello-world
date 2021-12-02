@@ -153,8 +153,8 @@ export class LightData {
     public point: syRender.Light.Point = new syRender.Light.Point();
 
     private static structValues = {
-        innerLimit: 10,
-        outerLimit: 20,
+        innerLimit: Math.cos(MathUtils.degToRad(10)),
+        outerLimit: Math.cos(MathUtils.degToRad(20)),
         direction: [0, 0, 1],
         position: [0, 0, 0],
         ambient: [0.05, 0.05, 0.05],

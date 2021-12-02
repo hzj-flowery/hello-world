@@ -1,7 +1,8 @@
 
 
 export class UIStatusData {
-    
+    public static innerLimit: number = 10;//点光内围
+    public static outerLimit: number = 20;//点光外围
     public static constant = 0.05;
     public static linear = 0.09;
     public static quadratic = 0.032;
@@ -108,7 +109,8 @@ class UISetting {
         this.UI = window["webglLessonsUI"];
         let custom = [
               
-
+            { type: 'slider', key: 'innerLimit', min: 0, max: 180, change: this.render.bind(this), precision: 2, step: 1, },
+            { type: 'slider', key: 'outerLimit', min: 0, max: 180, change: this.render.bind(this), precision: 2, step: 1, },
             { type: 'slider', key: 'constant', min:0, max:1, change: render,precision: 3, step:0.001, },
             { type: 'slider', key: 'linear', min:0, max: 1, change: render,precision: 3, step: 0.001, },
             { type: 'slider', key: 'quadratic', min:0, max:0, change: render,precision: 3, step:0.001, },

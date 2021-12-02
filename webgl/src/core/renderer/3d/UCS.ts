@@ -11,6 +11,7 @@ import CustomTextureData from "../data/CustomTextureData";
 import { LightData, LightType, structValueNames } from "../data/LightData";
 import { Vector3 } from "../../math/Vector3";
 import { Line } from "./Line";
+import { MathUtils } from "../../utils/MathUtils";
 
 /**
  * 坐标系
@@ -89,6 +90,10 @@ export class UCS extends SY.SpriteBase {
        
     }
 
+    public getLimit(limit): number {
+        return Math.cos(MathUtils.degToRad(limit));
+    }
+
     onEnter():void{
         G_UISetting.pushRenderCallBack((data) => {
             var targetPos = [data.customValueX?data.customValueX:0, data.customValueY?data.customValueY:0, data.customValueZ?data.customValueZ:0]
@@ -102,6 +107,10 @@ export class UCS extends SY.SpriteBase {
             this._lightData.constant = data.constant ? data.constant : 0.05;
             this._lightData.linear = data.linear ? data.linear : 0.09;
             this._lightData.quadratic = data.quadratic ? data.quadratic : 0.032;
+
+            this._lightData.innerLimit = Math.cos(MathUtils.degToRad(data.innerLimit?data.innerLimit:10))
+            this._lightData.outerLimit = Math.cos(MathUtils.degToRad(data.outerLimit?data.outerLimit:20))
+
             LightData.pushStructValues(this._lightType,this.tag, this._lightData)
         })
     }

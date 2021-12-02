@@ -1002,8 +1002,8 @@ export namespace syRender {
                 var preName = Light.Spot.getPreStructName(spotNum);
                 spotNum++;
                 structNames.clear();
-                structNames.set(Light.Spot.structNames.innerLimit, this.light.spot.innerLimit)
-                structNames.set(Light.Spot.structNames.outerLimit, this.light.spot.outerLimit)
+                structNames.set(Light.Spot.structNames.innerLimit, lData.innerLimit)
+                structNames.set(Light.Spot.structNames.outerLimit, lData.outerLimit)
                 structNames.set(Light.Spot.structNames.direction,lData.direction)
                 structNames.set(Light.Spot.structNames.position, lData.position)
                 structNames.set(Light.Spot.structNames.ambient, lData.ambient)

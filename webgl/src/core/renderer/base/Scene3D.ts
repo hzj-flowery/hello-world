@@ -163,7 +163,7 @@ export default class Scene3D extends Scene {
         this.addChild(this._ucs5)
 
         this._ucs6 = new UCS(LightType.Parallel);
-        this._ucs6.setDiffuse(0,0,1.0)
+        this._ucs6.setDiffuse(0.1,0.1,0.1)
         this._ucs6.setPosition(-5,0,0)
         this.addChild(this._ucs6)
 

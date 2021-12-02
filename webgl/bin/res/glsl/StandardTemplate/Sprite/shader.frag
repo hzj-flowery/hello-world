@@ -109,21 +109,6 @@ layout (location = 0) out vec4 FragColor;   // 颜色
 
 //聚光
 #ifdef SY_USE_LIGHT_SPOT_NUM
-      /*
-      获取聚光灯的光照强度
-      @param normal 法线
-      @param spotDirection 聚光灯的方向
-      @param surfaceToLightDirection 表面指向聚光灯位置的方向
-      @param spotInnerLimit  聚光灯的最小范围
-      @param spotOuterLimit  聚光灯的最大范围
-      */
-      float getSpotLightDot(vec3 normal,vec3 spotDirection,vec3 surfaceToLightDirection,float spotInnerLimit,float spotOuterLimit){
-            float dotFromDirection=dot(surfaceToLightDirection,spotDirection);
-            float inLight=smoothstep(spotOuterLimit,spotInnerLimit,dotFromDirection);
-            //算出点光的入射强度
-            float light=inLight*max(dot(normal,surfaceToLightDirection),0.);
-            return light;
-      }
       struct SpotLight {
              //聚光的内部限制
             float innerLimit;
@@ -262,6 +247,15 @@ layout (location = 0) out vec4 FragColor;   // 颜色
       }
 #endif
 
+//使用点光或者聚光会用到下面的数据
+#if defined(SY_USE_LIGHT_SPOT_NUM)||defined(SY_USE_LIGHT_POINT_NUM)||defined(SY_USE_LIGHT_PARALLEL_NUM)
+      //顶点到相机的方向
+      in vec3 v_surfaceToView;
+      //顶点在世界空间下的位置
+      in vec3 v_surfacePosition;
+#endif
+
+
 //高光
 #ifdef SY_USE_LIGHT_SPECULAR
     //普通高光
@@ -320,15 +314,7 @@ layout (location = 0) out vec4 FragColor;   // 颜色
     }
 #endif
 
-//使用点光或者聚光会用到下面的数据
-#if defined(SY_USE_LIGHT_SPOT_NUM)||defined(SY_USE_LIGHT_POINT_NUM)||defined(SY_USE_LIGHT_PARALLEL_NUM)
-      //顶点到光的方向
-      in vec3 v_surfaceToLight;
-      //顶点到相机的方向
-      in vec3 v_surfaceToView;
-      //顶点在世界空间下的位置
-      in vec3 v_surfacePosition;
-#endif
+
 
 //阴影
 #if defined(SY_USE_SHADOW_PARALLEL)
@@ -537,8 +523,6 @@ void main(){
       //使用点光或者聚光会用到下面的数据
       #if defined(SY_USE_LIGHT_SPOT_NUM)||defined(SY_USE_LIGHT_POINT_NUM)||defined(SY_USE_LIGHT_PARALLEL_NUM)
           //顶点着色器传到片元着色器的方向会有插值，所以需要归一化
-          //表面指向光位置的方向
-          vec3 surfaceToLightDirection = normalize(v_surfaceToLight);
           //顶点着色器传到片元着色器的方向会有插值，所以需要归一化
           //表面指向摄像机位置的方向 
           vec3 surfaceToViewDirection = normalize(v_surfaceToView);   
@@ -582,27 +566,42 @@ void main(){
       float flagLight = 0.0;
       //使用点光 
       #ifdef SY_USE_LIGHT_POINT_NUM
-            for(int k=0;k<SY_USE_LIGHT_POINT_NUM;k++)
-            {
-                  accumulation = accumulation+CalcPointLight(u_pointLights[k],normal,v_surfacePosition,normalize(v_surfaceToView),32.0,tempDiffuse,vec3(1.0,1.0,1.0));
-            }
-            flagLight = 1.0;
+            #if SY_USE_LIGHT_POINT_NUM == 1
+                  accumulation = accumulation+CalcPointLight(u_pointLights[0],normal,v_surfacePosition,normalize(v_surfaceToView),32.0,tempDiffuse,vec3(1.0,1.0,1.0));
+                  flagLight = 1.0;
+            #elif SY_USE_LIGHT_POINT_NUM > 1
+                  for(int k=0;k<SY_USE_LIGHT_POINT_NUM;k++)
+                  {
+                     accumulation = accumulation+CalcPointLight(u_pointLights[k],normal,v_surfacePosition,normalize(v_surfaceToView),32.0,tempDiffuse,vec3(1.0,1.0,1.0));
+                  }
+                  flagLight = 1.0;
+            #endif
       #endif
       //使用平行光
       #ifdef SY_USE_LIGHT_PARALLEL_NUM
-           for(int k=0;k<SY_USE_LIGHT_PARALLEL_NUM;k++)
-           {
-                accumulation = accumulation +CalcDirLight(u_dirLights[k],normal,normalize(v_surfaceToView),32.0,tempDiffuse,vec3(1.0,1.0,1.0));
-           }
-           flagLight = 1.0; 
+           #if SY_USE_LIGHT_PARALLEL_NUM == 1 
+               accumulation = accumulation +CalcDirLight(u_dirLights[0],normal,normalize(v_surfaceToView),32.0,tempDiffuse,vec3(1.0,1.0,1.0));
+               flagLight = 1.0; 
+           #elif SY_USE_LIGHT_PARALLEL_NUM > 1
+               for(int k=0;k<SY_USE_LIGHT_PARALLEL_NUM;k++)
+               {
+                  accumulation = accumulation +CalcDirLight(u_dirLights[k],normal,normalize(v_surfaceToView),32.0,tempDiffuse,vec3(1.0,1.0,1.0));
+               }
+               flagLight = 1.0; 
+            #endif
       #endif
       //使用聚光
       #ifdef SY_USE_LIGHT_SPOT_NUM
-           for(int k=0;k<SY_USE_LIGHT_SPOT_NUM;k++)
-           {
-                 accumulation = accumulation+CalcSpotLight(u_spotLights[k],normal,v_surfacePosition,normalize(v_surfaceToView),32.0,tempDiffuse,vec3(1.0,1.0,1.0));
-           }
-           flagLight = 1.0;
+           #if SY_USE_LIGHT_SPOT_NUM == 1
+               accumulation = accumulation+CalcSpotLight(u_spotLights[0],normal,v_surfacePosition,normalize(v_surfaceToView),32.0,tempDiffuse,vec3(1.0,1.0,1.0));
+               flagLight = 1.0;
+           #elif SY_USE_LIGHT_SPOT_NUM > 1
+               for(int k=0;k<SY_USE_LIGHT_SPOT_NUM;k++)
+               {
+                  accumulation = accumulation+CalcSpotLight(u_spotLights[k],normal,v_surfacePosition,normalize(v_surfaceToView),32.0,tempDiffuse,vec3(1.0,1.0,1.0));
+               }
+               flagLight = 1.0;
+           #endif 
       #endif
       diffuse = accumulation*flagLight+tempDiffuse*(1.0-flagLight);
       //-------------------------------------光照计算结束---------------------

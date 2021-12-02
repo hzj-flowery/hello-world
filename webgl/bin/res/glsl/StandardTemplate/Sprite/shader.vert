@@ -43,8 +43,6 @@ uniform float u_time;
     uniform vec3 u_lightWorldPosition;
     //相机的位置
     uniform vec3 u_cameraWorldPosition;
-    //顶点到光的方向
-    out vec3 v_surfaceToLight;
     //顶点到相机的方向
     out vec3 v_surfaceToView;
     //顶点世界位置
@@ -164,8 +162,6 @@ void main(){
     //三种光
     //聚光 点光 平行光
     #if defined(SY_USE_LIGHT_SPOT_NUM)||defined(SY_USE_LIGHT_POINT_NUM)||defined(SY_USE_LIGHT_PARALLEL_NUM)
-        //将当前顶点的坐标转换到世界空间坐标系中
-        v_surfaceToLight=u_lightWorldPosition-worldPosition.rgb;
         v_surfaceToView=u_cameraWorldPosition-worldPosition.rgb;
         v_surfacePosition = worldPosition.rgb;
     #endif
