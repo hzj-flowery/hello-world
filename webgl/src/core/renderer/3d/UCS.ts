@@ -25,7 +25,7 @@ export class UCS extends SY.SpriteBase {
     private _torus: Object3D;
     private _Line: Line;
 
-    private _tempLightData: any = {};
+    private _lightData: any = {};
     protected onInit() {
         var boxData = box({ width: 0.1, height: 5, length: 0.1 });
         var coneData = cone();
@@ -81,44 +81,45 @@ export class UCS extends SY.SpriteBase {
         this._torus.y = 2;
         this._torus.pushPassContent(syRender.ShaderType.Sprite);
         this.addChild(this._torus);
+       
+    }
+
+    onEnter():void{
         G_UISetting.pushRenderCallBack((data) => {
-
-            var targetPos = [data.customValueX1 ? data.customValueX1 : 0, data.customValueY1 ? data.customValueY1 : 0, data.customValueZ1 ? data.customValueZ1 : 0]
-            // var originPos = [data.customValueX?data.customValueX:0, data.customValueY?data.customValueY:0, data.customValueZ?data.customValueZ:0]
-            var originPos = [this.x, this.y, this.z]
-            var colorData = [data.customColorValueX ? data.customColorValueX : 0, data.customColorValueY ? data.customColorValueY : 0, data.customColorValueZ ? data.customColorValueZ : 0]
-            this.setPosition(originPos[0], originPos[1], originPos[2])
-            var color = CustomTextureData.getData(100, 100, colorData);
-            this._objPoint.texture.reUpload(color.data as Uint8Array)
-            this._center.texture.reUpload(color.data as Uint8Array)
-
-
+            var targetPos = [data.customValueX?data.customValueX:0, data.customValueY?data.customValueY:0, data.customValueZ?data.customValueZ:0]
             this._Line.updatePositionData([0, 0, 0, targetPos[0], targetPos[1], targetPos[2]]);
-
             this._objPoint.setPosition(targetPos[0], targetPos[1], targetPos[2])
-            this._tempLightData = {};
-            this._tempLightData.diffuse = [colorData[0] / 255, colorData[1] / 255, colorData[2] / 255]
-            this._tempLightData.direction = [];
-            this._tempLightData.direction[0] = 0 - targetPos[0]
-            this._tempLightData.direction[1] = 0 - targetPos[1]
-            this._tempLightData.direction[2] = 0 - targetPos[2]
-            this._tempLightData.position = originPos
-            this._tempLightData.constant = data.constant ? data.constant : 0.05;
-            this._tempLightData.linear = data.linear ? data.linear : 0.09;
-            this._tempLightData.quadratic = data.quadratic ? data.quadratic : 0.032;
-
-            LightData.pushStructValues(this.tag, this._tempLightData)
-
-
+            this._lightData.direction = [];
+            this._lightData.direction[0] = 0 - targetPos[0]
+            this._lightData.direction[1] = 0 - targetPos[1]
+            this._lightData.direction[2] = 0 - targetPos[2]
+            this._lightData.position = [this.x, this.y, this.z]
+            this._lightData.constant = data.constant ? data.constant : 0.05;
+            this._lightData.linear = data.linear ? data.linear : 0.09;
+            this._lightData.quadratic = data.quadratic ? data.quadratic : 0.032;
+            LightData.pushStructValues(this.tag, this._lightData)
         })
-
+    }
+    /**
+     * 设置漫反射颜色
+     * @param r 
+     * @param g 
+     * @param b 
+     */
+    public setDiffuse(r:number,g:number,b:number):void{
+        this._lightData.diffuse = [r,g,b]
+        var color = CustomTextureData.getData(100, 100,[r*255,g*255,b*255]);
+        this._Line.setColor(r*255,g*255,b*255);
+        this._objPoint.texture.reUpload(color.data as Uint8Array)
+        this._center.texture.reUpload(color.data as Uint8Array)
+        LightData.pushStructValues(this.tag, this._lightData)
     }
     /**
        * updatePosData
        */
      onDataDirty() {
         var originPos = [this.x, this.y, this.z]
-        this._tempLightData.position = originPos
-        LightData.pushStructValues(this.tag, this._tempLightData)
+        this._lightData.position = originPos
+        LightData.pushStructValues(this.tag, this._lightData)
     }
 }

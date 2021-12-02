@@ -8,12 +8,6 @@ export class UIStatusData {
     public static customValueX:number = 0;
     public static customValueY:number = 0;
     public static customValueZ:number = 0;
-    public static customValueX1:number = 0;
-    public static customValueY1:number = 0;
-    public static customValueZ1:number = 0;
-    public static customColorValueX:number = 0;
-    public static customColorValueY:number = 0;
-    public static customColorValueZ:number = 0;
     public static customValue:number = 0;
 
     public static cam2DPosX: number = 0;
@@ -122,14 +116,6 @@ class UISetting {
             { type: 'slider', key: 'customValueX', min: -50, max: 50, change: render,precision: 2, step: 1, },
             { type: 'slider', key: 'customValueY', min: -50, max: 50, change: render, },
             { type: 'slider', key: 'customValueZ', min: -50, max: 50, change: render,precision: 2, step: 1, },
-
-            { type: 'slider', key: 'customValueX1', min: -50, max: 50, change: render,precision: 2, step: 1, },
-            { type: 'slider', key: 'customValueY1', min: -50, max: 50, change: render, },
-            { type: 'slider', key: 'customValueZ1', min: -50, max: 50, change: render,precision: 2, step: 1, },
-
-            { type: 'slider', key: 'customColorValueX', min: 0, max: 255, change: render,precision: 2, step: 1, },
-            { type: 'slider', key: 'customColorValueY', min: 0, max: 255, change: render,precision: 2, step: 1},
-            { type: 'slider', key: 'customColorValueZ', min: 0, max: 255, change: render,precision: 2, step: 1, },
 
             { type: 'slider', key: 'customValue', min: 0, max: 5, change: render,precision: 2, step: 1, },
         ]

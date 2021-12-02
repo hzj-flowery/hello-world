@@ -126,16 +126,19 @@ export default class Scene3D extends Scene {
         
 
         this._ucs = new UCS();
+        this._ucs.setDiffuse(1.0,0.0,0.0)
         this._ucs.tag = 0;
         this._ucs.setPosition(0,-2,0)
         this.addChild(this._ucs)
 
         this._ucs1 = new UCS();
+        this._ucs1.setDiffuse(0.0,1.0,0.0)
         this._ucs1.tag = 1;
         this._ucs1.setPosition(3,-2,0)
         this.addChild(this._ucs1)
 
         this._ucs2 = new UCS();
+        this._ucs2.setDiffuse(0.0,0.0,1.0)
         this._ucs2.tag = 2;
         this._ucs2.setPosition(-3,-2,0)
         this.addChild(this._ucs2)
