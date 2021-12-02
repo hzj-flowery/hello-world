@@ -938,54 +938,64 @@ export namespace syRender {
             
             var structNames: Map<string, any> = new Map();
             
-            // //平行光
-            // var dirNum = 0;
-            // var preName = Light.Parallel.getPreStructName(dirNum);
-            // structNames.clear();
-            // structNames.set(Light.Parallel.structNames.direction, this.light.parallel.direction.toArray())
-            // structNames.set(Light.Parallel.structNames.ambient, [0.05, 0.05, 0.05])
-            // structNames.set(Light.Parallel.structNames.diffuse, this.light.parallel.color.toArray())
-            // structNames.set(Light.Parallel.structNames.specular, [1.0, 1.0, 1.0])
-            // structNames.forEach((value, index) => {
-            //     var name = preName + index
-            //     var loc = G_DrawEngine.getUniformLocation(glID, name);
-            //     if (loc!=null) {
-            //         if (value instanceof Array) {
-            //             G_DrawEngine.setUniformFloatVec3(loc as number, value);
-            //         }
-            //         else {
-            //             G_DrawEngine.setUniform1f(loc as number, value);
-            //         }
-            //     }
-            // })
+            //平行光
+            var lDatas = LightData.ParallelStructValuesArray;
+            var dirNum = 0;
+            lDatas.forEach((lData,k)=>{
+                var preName = Light.Parallel.getPreStructName(dirNum);
+                dirNum++;
+                structNames.clear();
+                structNames.set(Light.Parallel.structNames.direction,lData.direction)
+                structNames.set(Light.Parallel.structNames.ambient, lData.ambient)
+                structNames.set(Light.Parallel.structNames.diffuse, lData.diffuse)
+                structNames.set(Light.Parallel.structNames.specular,lData.specular)
+                structNames.forEach((value, index) => {
+                    var name = preName + index
+                    var loc = G_DrawEngine.getUniformLocation(glID, name);
+                    if (loc!=null) {
+                        if (value instanceof Array) {
+                            G_DrawEngine.setUniformFloatVec3(loc as number, value);
+                        }
+                        else {
+                            G_DrawEngine.setUniform1f(loc as number, value);
+                        }
+                    }
+                })     
+            })
+           
 
-            // //点光
-            // var pointNum = 0;
-            // var preName = Light.Point.getPreStructName(pointNum);
-            // structNames.clear();
-            // structNames.set(Light.Point.structNames.position,  LightData.structValues.position)
-            // structNames.set(Light.Point.structNames.ambient, [0.05, 0.05, 0.05])
-            // structNames.set(Light.Point.structNames.diffuse,LightData.structValues.diffuse)
-            // structNames.set(Light.Point.structNames.specular, [1.0, 1.0, 1.0])
-            // structNames.set(Light.Point.structNames.constant, LightData.structValues.constant)
-            // structNames.set(Light.Point.structNames.linear, LightData.structValues.linear)
-            // structNames.set(Light.Point.structNames.quadratic,LightData.structValues.quadratic)
-            // structNames.forEach((value, index) => {
-            //     var name = preName + index
-            //     var loc = G_DrawEngine.getUniformLocation(glID, name);
-            //     if (loc!=null) {
-            //         if (value instanceof Array) {
-            //             G_DrawEngine.setUniformFloatVec3(loc as number, value);
-            //         }
-            //         else {
-            //             G_DrawEngine.setUniform1f(loc as number, value);
-            //         }
-            //     }
-            // })
+            //点光
+            var lDatas = LightData.PointStructValuesArray;
+            var pointNum = 0;
+            lDatas.forEach((lData,k)=>{
+                var preName = Light.Point.getPreStructName(pointNum);
+                pointNum++;
+                structNames.clear();
+                structNames.set(Light.Point.structNames.position,  lData.position)
+                structNames.set(Light.Point.structNames.ambient, lData.ambient)
+                structNames.set(Light.Point.structNames.diffuse,lData.diffuse)
+                structNames.set(Light.Point.structNames.specular, lData.specular)
+                structNames.set(Light.Point.structNames.constant, lData.constant)
+                structNames.set(Light.Point.structNames.linear, lData.linear)
+                structNames.set(Light.Point.structNames.quadratic,lData.quadratic)
+                structNames.forEach((value, index) => {
+                    var name = preName + index
+                    var loc = G_DrawEngine.getUniformLocation(glID, name);
+                    if (loc!=null) {
+                        if (value instanceof Array) {
+                            G_DrawEngine.setUniformFloatVec3(loc as number, value);
+                        }
+                        else {
+                            G_DrawEngine.setUniform1f(loc as number, value);
+                        }
+                    }
+                })
+            })
+           
 
             
             //聚光
-            var lDatas = LightData.StructValuesArray;
+            var lDatas = LightData.SpotStructValuesArray;
             var spotNum = 0;
             lDatas.forEach((lData,k)=>{
                 structNames.clear();

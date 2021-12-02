@@ -576,23 +576,35 @@ void main(){
       //漫反射
       //最开始 漫反射==表面基底色
       vec3 diffuse = surfaceBaseColor.rgb;
-       
-      //------------------------开始基于一组光照计算
+      //------------------------开始基于一组光照计算----------------------------
+      vec3 tempDiffuse = vec3(diffuse.x,diffuse.y,diffuse.z);
+      vec3 accumulation = vec3(0.0,0.0,0.0);
+      float flagLight = 0.0;
       //使用点光 
       #ifdef SY_USE_LIGHT_POINT_NUM
-            diffuse = CalcPointLight(u_pointLights[0],normal,v_surfacePosition,normalize(v_surfaceToView),32.0,diffuse,vec3(1.0,1.0,1.0));
+            for(int k=0;k<SY_USE_LIGHT_POINT_NUM;k++)
+            {
+                  accumulation = accumulation+CalcPointLight(u_pointLights[k],normal,v_surfacePosition,normalize(v_surfaceToView),32.0,tempDiffuse,vec3(1.0,1.0,1.0));
+            }
+            flagLight = 1.0;
+      #endif
       //使用平行光
-      #elif defined(SY_USE_LIGHT_PARALLEL_NUM)
-            diffuse = CalcDirLight(u_dirLights[0],normal,normalize(v_surfaceToView),32.0,diffuse,vec3(1.0,1.0,1.0));
+      #ifdef SY_USE_LIGHT_PARALLEL_NUM
+           for(int k=0;k<SY_USE_LIGHT_PARALLEL_NUM;k++)
+           {
+                accumulation = accumulation +CalcDirLight(u_dirLights[k],normal,normalize(v_surfaceToView),32.0,tempDiffuse,vec3(1.0,1.0,1.0));
+           }
+           flagLight = 1.0; 
+      #endif
       //使用聚光
-      #elif defined(SY_USE_LIGHT_SPOT_NUM)
-           vec3 tempSpot = vec3(0.0,0.0,0.0);
+      #ifdef SY_USE_LIGHT_SPOT_NUM
            for(int k=0;k<SY_USE_LIGHT_SPOT_NUM;k++)
            {
-                 tempSpot = tempSpot+CalcSpotLight(u_spotLights[k],normal,v_surfacePosition,normalize(v_surfaceToView),32.0,diffuse,vec3(1.0,1.0,1.0));
+                 accumulation = accumulation+CalcSpotLight(u_spotLights[k],normal,v_surfacePosition,normalize(v_surfaceToView),32.0,tempDiffuse,vec3(1.0,1.0,1.0));
            }
-           diffuse = tempSpot;
+           flagLight = 1.0;
       #endif
+      diffuse = accumulation*flagLight+tempDiffuse*(1.0-flagLight);
       //-------------------------------------光照计算结束---------------------
       
       //使用阴影

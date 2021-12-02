@@ -8,7 +8,7 @@ import torus from "../primitive/CreateTorus";
 import { Object3D } from "./Object3D";
 import { G_UISetting } from "../../ui/UiSetting";
 import CustomTextureData from "../data/CustomTextureData";
-import { LightData, structValueNames } from "../data/LightData";
+import { LightData, LightType, structValueNames } from "../data/LightData";
 import { Vector3 } from "../../math/Vector3";
 import { Line } from "./Line";
 
@@ -16,7 +16,11 @@ import { Line } from "./Line";
  * 坐标系
  */
 export class UCS extends SY.SpriteBase {
-
+    constructor(lightType:LightType){
+        super();
+        this._lightType = lightType;
+        this.tag = LightData.getLightCount();
+    }
     private _objX: Object3D;
     private _objY: Object3D;
     private _objZ: Object3D;
@@ -26,6 +30,7 @@ export class UCS extends SY.SpriteBase {
     private _Line: Line;
 
     private _lightData: any = {};
+    private _lightType:LightType;
     protected onInit() {
         var boxData = box({ width: 0.1, height: 5, length: 0.1 });
         var coneData = cone();
@@ -97,7 +102,7 @@ export class UCS extends SY.SpriteBase {
             this._lightData.constant = data.constant ? data.constant : 0.05;
             this._lightData.linear = data.linear ? data.linear : 0.09;
             this._lightData.quadratic = data.quadratic ? data.quadratic : 0.032;
-            LightData.pushStructValues(this.tag, this._lightData)
+            LightData.pushStructValues(this._lightType,this.tag, this._lightData)
         })
     }
     /**
@@ -112,7 +117,7 @@ export class UCS extends SY.SpriteBase {
         this._Line.setColor(r*255,g*255,b*255);
         this._objPoint.texture.reUpload(color.data as Uint8Array)
         this._center.texture.reUpload(color.data as Uint8Array)
-        LightData.pushStructValues(this.tag, this._lightData)
+        LightData.pushStructValues(this._lightType,this.tag, this._lightData)
     }
     /**
        * updatePosData
@@ -120,6 +125,6 @@ export class UCS extends SY.SpriteBase {
      onDataDirty() {
         var originPos = [this.x, this.y, this.z]
         this._lightData.position = originPos
-        LightData.pushStructValues(this.tag, this._lightData)
+        LightData.pushStructValues(this._lightType,this.tag, this._lightData)
     }
 }

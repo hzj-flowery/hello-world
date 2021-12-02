@@ -44,6 +44,7 @@ import { PlaneGeometry } from "../3d/geometry/PlaneGeometry";
 import { sy } from "../../Director";
 import { SY } from "./Sprite";
 import { MathUtils } from "../../utils/MathUtils";
+import { LightType } from "../data/LightData";
 
 export default class Scene3D extends Scene {
 
@@ -58,6 +59,12 @@ export default class Scene3D extends Scene {
     private _ucs: UCS;
     private _ucs1: UCS;
     private _ucs2: UCS;
+
+    private _ucs3: UCS;
+    private _ucs4: UCS;
+    private _ucs5: UCS;
+
+    private _ucs6: UCS;
     private _rtt: RTT;
     private _rttTest:RTTTest;
     private _tableNode: Cube;
@@ -125,23 +132,40 @@ export default class Scene3D extends Scene {
         this._centerNode.addChild(this._shadowCube);
         
 
-        this._ucs = new UCS();
+        this._ucs = new UCS(LightType.Spot);
         this._ucs.setDiffuse(1.0,0.0,0.0)
-        this._ucs.tag = 0;
         this._ucs.setPosition(0,-2,0)
         this.addChild(this._ucs)
 
-        this._ucs1 = new UCS();
+        this._ucs1 = new UCS(LightType.Spot);
         this._ucs1.setDiffuse(0.0,1.0,0.0)
-        this._ucs1.tag = 1;
         this._ucs1.setPosition(3,-2,0)
         this.addChild(this._ucs1)
 
-        this._ucs2 = new UCS();
+        this._ucs2 = new UCS(LightType.Spot);
         this._ucs2.setDiffuse(0.0,0.0,1.0)
-        this._ucs2.tag = 2;
         this._ucs2.setPosition(-3,-2,0)
         this.addChild(this._ucs2)
+
+        this._ucs3 = new UCS(LightType.Point);
+        this._ucs3.setDiffuse(0.0,0.5,1.0)
+        this._ucs3.setPosition(5,-2,-5)
+        this.addChild(this._ucs3)
+
+        this._ucs4 = new UCS(LightType.Point);
+        this._ucs4.setDiffuse(1.0,0.5,0.0)
+        this._ucs4.setPosition(0,-3,0)
+        this.addChild(this._ucs4)
+
+        this._ucs5 = new UCS(LightType.Point);
+        this._ucs5.setDiffuse(0.5,0.5,0.0)
+        this._ucs5.setPosition(-5,-5,0)
+        this.addChild(this._ucs5)
+
+        this._ucs6 = new UCS(LightType.Parallel);
+        this._ucs6.setDiffuse(0,0,1.0)
+        this._ucs6.setPosition(-5,0,0)
+        this.addChild(this._ucs6)
 
     
         this._spineNode = new Spine();

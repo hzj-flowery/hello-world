@@ -35,10 +35,12 @@ import { syRender } from "./RenderData";
 */
 
 export enum LightType {
-    Parallel,  //平行光
+    Parallel=1,  //平行光
     Point,     //点光
     Spot       //聚光
 }
+
+var _lightCount = 0;
 
 export interface structValueNames{
     innerLimit:number,
@@ -162,8 +164,10 @@ export class LightData {
         linear: 0.09,
         quadratic: 0.032,
     }
-    static StructValuesArray: Map<number,structValueNames> = new Map();
-    static pushStructValues(tag:number,data:structValueNames): void {
+    static PointStructValuesArray: Map<number,structValueNames> = new Map();
+    static SpotStructValuesArray: Map<number,structValueNames> = new Map();
+    static ParallelStructValuesArray: Map<number,structValueNames> = new Map();
+    static pushStructValues(lightType:LightType,tag:number,data:structValueNames): void {
         
         var ret:any = {}
         for(var k in LightData.structValues)
@@ -171,6 +175,17 @@ export class LightData {
             var temp = data[k]
             ret[k] = temp!=null?temp:LightData.structValues[k]
         }
-        LightData.StructValuesArray.set(tag,ret)
+        if(lightType==LightType.Spot)
+        LightData.SpotStructValuesArray.set(tag,ret);
+        else if(lightType==LightType.Point)
+        LightData.PointStructValuesArray.set(tag,ret);
+        else if(lightType==LightType.Parallel)
+        LightData.ParallelStructValuesArray.set(tag,ret);
+    }
+
+    static getLightCount(){
+        var ret = _lightCount;
+        _lightCount++;
+        return ret;
     }
 }
