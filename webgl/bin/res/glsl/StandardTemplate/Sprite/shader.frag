@@ -13,6 +13,7 @@ uniform vec4 u_mouse;
 
 layout (location = 0) out vec4 FragColor;   // 颜色
 
+in vec3 FragCoord;
 
 #ifndef saturate
 // <tonemapping_pars_fragment> may have defined saturate() already
@@ -639,7 +640,9 @@ void main(){
       #endif
       
      
-
+      #ifdef SY_USE_FUNC_DITHERING 
+           fragColor.rgb = dithering(fragColor.rgb,FragCoord);
+      #endif
       
 
       FragColor=fragColor;

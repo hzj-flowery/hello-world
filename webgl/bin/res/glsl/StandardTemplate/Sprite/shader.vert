@@ -130,6 +130,8 @@ void main(){
     #endif
 
     gl_Position=u_projection*u_view*worldPosition;
+
+    FragCoord = vec3(gl_Position.xyz/gl_Position.w);
     
     //设置点的大小
     #ifdef SY_USE_POINT_SIZE

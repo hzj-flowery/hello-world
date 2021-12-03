@@ -23,10 +23,16 @@ export namespace ShaderCode {
         `)
 
         commonFuncion.set(syRender.ShaderDefineValue.SY_USE_FUNC_DITHERING, `
+        float rand( vec2 seed ){
+
+            // get pseudo-random number
+                return fract( sin( dot( seed.xy, vec2( 12.9898, 78.233 ) ) ) * 43758.5453 );
+    
+            }
         // based on https://www.shadertoy.com/view/MslGR8
-	vec3 dithering( vec3 color ) {
+	vec3 dithering( vec3 color,vec3 FragCoord) {
 		//Calculate grid position
-		float grid_position = rand( gl_FragCoord.xy );
+		float grid_position = rand( FragCoord.xy );
 
 		//Shift the individual colors differently, thus making it even harder to see the dithering pattern
 		vec3 dither_shift_RGB = vec3( 0.25 / 255.0, -0.25 / 255.0, 0.25 / 255.0 );

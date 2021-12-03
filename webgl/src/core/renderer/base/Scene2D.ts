@@ -43,19 +43,19 @@ export default class Scene2D extends Scene {
         this._pen.spriteFrame = "res/bg_npc_06.png";
         this.addChild(this._pen);
         
-        // var testHttp = new SY.UIImage();
-        // testHttp.setPosition(480,320,-100)
-        // testHttp.pushPassContent(syRender.ShaderType.Sprite,[
-        //     // [syStateStringKey.blend,syStateStringValue.blend.ON],
-        //     // [syStateStringKey.blendSrc,syStateStringValue.blendSrc.SRC_ALPHA],
+        var testHttp = new SY.UIImage();
+        testHttp.setPosition(480,320,-100)
+        testHttp.pushPassContent(syRender.ShaderType.Sprite,[
+            // [syStateStringKey.blend,syStateStringValue.blend.ON],
+            // [syStateStringKey.blendSrc,syStateStringValue.blendSrc.SRC_ALPHA],
             
-        //     // [syStateStringKey.depthWrite,syStateStringValue.depthWrite.OFF]
-        // ],[ 
-        //     [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_FUNC_DITHERING]
-        // ])
-        // testHttp.spriteFrame = "res/good.png";
-        // testHttp.sizeMode = SY.SpriteSizeMode.RAW;
-        // this.addChild(testHttp);
+            // [syStateStringKey.depthWrite,syStateStringValue.depthWrite.OFF]
+        ],[ 
+            [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_FUNC_DITHERING]
+        ])
+        testHttp.spriteFrame = "res/good.png";
+        testHttp.sizeMode = SY.SpriteSizeMode.RAW;
+        this.addChild(testHttp);
 
         // this._uvSprite = new SY.Sprite2D();
         // this._uvSprite.pushPassContent(syRender.ShaderType.UvSprite,[],[
