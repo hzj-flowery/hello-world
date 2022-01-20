@@ -692,10 +692,10 @@ export namespace SY {
             this._node__type = syRender.NodeType.D2;
             this._sizeMode = SpriteSizeMode.RAW;
 
-            this.pushPassContent(syRender.ShaderType.Sprite,[
-            ],[
-                [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_UV]
-            ])
+            // this.pushPassContent(syRender.ShaderType.Sprite,[
+            // ],[
+            //     [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_UV]
+            // ])
         }
         protected isUnpackY: boolean = false;
         private updateUV(): void {

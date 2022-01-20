@@ -45,13 +45,13 @@ export default class Scene2D extends Scene {
         
         var testHttp = new SY.UIImage();
         testHttp.setPosition(480,320,-100)
-        testHttp.pushPassContent(syRender.ShaderType.Sprite,[
+        testHttp.pushPassContent(syRender.ShaderType.Test,[
             // [syStateStringKey.blend,syStateStringValue.blend.ON],
             // [syStateStringKey.blendSrc,syStateStringValue.blendSrc.SRC_ALPHA],
             
             // [syStateStringKey.depthWrite,syStateStringValue.depthWrite.OFF]
         ],[ 
-            [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_FUNC_DITHERING]
+            // [syRender.PassCustomKey.DefineUse, syRender.ShaderDefineValue.SY_USE_FUNC_DITHERING]
         ])
         testHttp.spriteFrame = "res/good.png";
         testHttp.sizeMode = SY.SpriteSizeMode.RAW;
