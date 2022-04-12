@@ -227,14 +227,14 @@ function readInt(buf:Array<number>,pos:number) {
 LoaderManager.instance.load(arr,null,function(){
      
     runBeforeInit();
-    var buf = [0x04,0x31]
-    var buf1 = [];
-    var buf2 = [];
-    encodeInt(1000000,buf1,0);
-    encodeString("猜",buf2,0)
-    parseBinary("863132e78c9cb2")
-    var t=readString(buf2,0)
-    var p = readInt(buf,0)
+    // var buf = [0x04,0x31]
+    // var buf1 = [];
+    // var buf2 = [];
+    // encodeInt(1000000,buf1,0);
+    // encodeString("猜",buf2,0)
+    // parseBinary("863132e78c9cb2")
+    // var t=readString(buf2,0)
+    // var p = readInt(buf,0)
     console.log("-888888----",/mobile|android|iphone|ipad/.test("mobilczjjjjj"));
     let name = "zhangman";
     let value = "xiaogui hen";
@@ -270,5 +270,5 @@ LoaderManager.instance.load(arr,null,function(){
     
     // ShadowMapProjectionTest.run();
 
-    // FogTest.run();
+    // FogTest.run(); 
 })

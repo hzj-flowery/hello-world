@@ -26,33 +26,33 @@ gulp.task("compile", function () {
 		.pipe(gulp.dest(workSpaceDir + "/bin/js"));
 });
 
-gulp.task("glsl", done =>  {
-	// var tokenString = require('glsl-tokenizer/string')
-	// var tokenStream = require('glsl-tokenizer/stream')
-	// var glsl = require('glslify')
-	// var fs = require('fs')
+// gulp.task("glsl", done =>  {
+// 	// var tokenString = require('glsl-tokenizer/string')
+// 	// var tokenStream = require('glsl-tokenizer/stream')
+// 	// var glsl = require('glslify')
+// 	// var fs = require('fs')
 
-	// var descope = require('glsl-token-descope')
-	// var stringify = require('glsl-token-string')
+// 	// var descope = require('glsl-token-descope')
+// 	// var stringify = require('glsl-token-string')
 
-	// Synchronously:
-	// var tokens = tokenString(fs.readFileSync(workSpaceDir + 'bin/res/glsl/vs.glsl'));
-	// //给shader代码中的所有变量名加一个前缀
-    // console.log(stringify(descope(tokens, function (name) {
-	// 	return "a_" + name;
-	// })))
+// 	// Synchronously:
+// 	// var tokens = tokenString(fs.readFileSync(workSpaceDir + 'bin/res/glsl/vs.glsl'));
+// 	// //给shader代码中的所有变量名加一个前缀
+//     // console.log(stringify(descope(tokens, function (name) {
+// 	// 	return "a_" + name;
+// 	// })))
 	
-	//shader代码中可能存在模块调用，将用到的模块合并进来
-	// var sourceCode = glsl.file(workSpaceDir + 'bin/res/glsl/input.glsl');
-	// console.log("合并后的代码---",sourceCode);
-    done();
+// 	//shader代码中可能存在模块调用，将用到的模块合并进来
+// 	// var sourceCode = glsl.file(workSpaceDir + 'bin/res/glsl/input.glsl');
+// 	// console.log("合并后的代码---",sourceCode);
+//     done();
 
-	// Streaming API:
-	// fs.createReadStream(workSpaceDir+'bin/glsl/vs.glsl')
-	// 	.pipe(tokenStream())
-	// 	.on('data', function (token) {
-	// 		console.log(token.data, token.position, token.type)
-	// 	})
-})
+// 	// Streaming API:
+// 	// fs.createReadStream(workSpaceDir+'bin/glsl/vs.glsl')
+// 	// 	.pipe(tokenStream())
+// 	// 	.on('data', function (token) {
+// 	// 		console.log(token.data, token.position, token.type)
+// 	// 	})
+// })
 
-gulp.task("default", gulp.series('compile','glsl'))
+gulp.task("default", gulp.series('compile'))
