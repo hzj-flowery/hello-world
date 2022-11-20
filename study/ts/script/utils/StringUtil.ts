@@ -16,7 +16,6 @@ class StringUtil {
 
         for (i = 0; (i < units.length) && (val > mf); i++)
             val /= mf;
-
         return val.toFixed(pr) + ' ' + units[i];
     }
     private formatTime(param) {
